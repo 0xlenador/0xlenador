@@ -3,49 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0x Leñador | Proyecto</title>
-    <style>
-        /* Estilos básicos para centrar todo */
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #0f172a; /* Azul muy oscuro tipo financiero */
-            color: #f8fafc; /* Blanco suave */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 3rem;
-            letter-spacing: -1px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .highlight {
-            color: #22c55e; /* Verde tipo "profit" o mercado alcista */
-        }
-
-        p {
-            color: #94a3b8;
-            margin-top: 10px;
-            font-size: 1.1rem;
-        }
-    </style>
+    <title>0x Leñador | Finanzas & Estrategia</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased">
 
-    <div class="container">
-        <h1>Proyecto <span class="highlight">0x Leñador</span></h1>
-        <p>Próximamente: Hub de Finanzas, Cripto y Startups</p>
-    </div>
+    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
+        <div class="text-2xl font-bold tracking-tighter text-white">
+            0x<span class="text-emerald-500">Leñador</span>
+        </div>
+        <div class="space-x-6 text-sm font-medium text-slate-400">
+            <a href="#" class="hover:text-emerald-400 transition">Estrategia</a>
+            <a href="https://0xlenador.blogspot.com" target="_blank" class="hover:text-emerald-400 transition">Blog</a>
+            <a href="#" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition">YouTube</a>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto mt-20 text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
+            Gestión de Capital <br>
+            <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                Multiactivo
+            </span>
+        </h1>
+        <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
+            Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto. 
+            Construyendo un portafolio resiliente en la era digital.
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+            <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
+                <div class="text-3xl font-bold text-emerald-400">40%</div>
+                <div class="text-xs uppercase tracking-widest text-slate-500 mt-2">Conservador</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
+                <div class="text-3xl font-bold text-amber-400">25%</div>
+                <div class="text-xs uppercase tracking-widest text-slate-500 mt-2">Arriesgado</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
+                <div class="text-3xl font-bold text-rose-500">15%</div>
+                <div class="text-xs uppercase tracking-widest text-slate-500 mt-2">Startups</div>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
+                <div class="text-3xl font-bold text-cyan-400">20%</div>
+                <div class="text-xs uppercase tracking-widest text-slate-500 mt-2">Liquidez</div>
+            </div>
+        </div>
+
+        <section class="py-12">
+    <h2 class="text-2xl font-bold border-l-4 border-emerald-500 pl-4 mb-8">Directorio del Inversor</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition">
+            <h3 class="font-bold text-white">TradingView</h3>
+            <p class="text-sm text-slate-400 my-2">La mejor herramienta para análisis técnico y gráficas.</p>
+            <a href="#" class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Visitar sitio →</a>
+        </div>
+        </div>
+</section>
+    </main>
+
+    <footer class="mt-32 py-10 border-t border-slate-900 text-center text-slate-600 text-sm">
+        &copy; 2026 0x Leñador - Build in public.
+    </footer>
 
 </body>
 </html>
