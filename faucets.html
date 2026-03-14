@@ -27,8 +27,9 @@
 
     <section class="max-w-6xl mx-auto px-4 py-12">
         <div class="mb-10 text-left">
-            <h2 class="text-3xl font-bold text-white mb-2">Faucets & Redes de Prueba</h2>
+            <h2 class="text-3xl font-bold text-white mb-2">Listado de Faucets Mainnet & Testnet</h2>
             <p class="text-slate-400">Recursos actualizados para desarrolladores y airdrop farmers.</p>
+            <p class="text-slate-500">Explora todos los sitos web de faucets de criptomonedas disponibles en el ecosistema blockcain, acumula criptomonedas gratis para farmear tus airdrops y/o desarrollas tus proyectos.</p>
         </div>
 
         <div class="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl mb-8">
@@ -201,6 +202,67 @@
         renderFaucets();
     </script>
 
+<section class="max-w-4xl mx-auto mt-32 mb-20 px-6">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">Preguntas Frecuentes</h2>
+        <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Todo lo que necesitas saber sobre las Faucets</p>
+    </div>
+
+    <div class="space-y-4">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+            <button onclick="toggleFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
+                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué es una Faucet de criptomonedas?</span>
+                <span id="icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
+            </button>
+            <div id="ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                    Es un sistema que entrega pequeñas cantidades de criptomonedas (o tokens de prueba) de forma gratuita. En Mainnet sirven como incentivo o faucet de goteo, y en Testnet son esenciales para pagar gas sin gastar dinero real durante las pruebas de protocolos.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+            <button onclick="toggleFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
+                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuál es la diferencia entre Mainnet y Testnet?</span>
+                <span id="icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
+            </button>
+            <div id="ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                    Las faucets de <b class="text-emerald-500">Testnet</b> entregan tokens sin valor real para probar dApps. Las de <b class="text-cyan-500">Mainnet</b> entregan criptomonedas reales (como Satoshis o SOL), generalmente a cambio de ver anuncios o completar tareas sencillas.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+            <button onclick="toggleFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
+                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Es seguro conectar mi billetera a estas webs?</span>
+                <span id="icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
+            </button>
+            <div id="ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                    En 0xLeñador filtramos sitios conocidos, pero la regla de oro en cripto es la precaución. <b class="text-rose-500">Usa siempre una "Burner Wallet"</b> (billetera secundaria vacía) para interactuar con faucets y nunca compartas tu frase semilla.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleFaq(id) {
+    const ans = document.getElementById(`ans-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+    
+    if (ans.style.maxHeight === "0px" || !ans.style.maxHeight) {
+        ans.style.maxHeight = ans.scrollHeight + "px";
+        icon.style.transform = "rotate(45deg)";
+        icon.classList.add('text-emerald-400');
+    } else {
+        ans.style.maxHeight = "0px";
+        icon.style.transform = "rotate(0deg)";
+        icon.classList.remove('text-emerald-400');
+    }
+}
+</script>
 
     <footer class="mt-40 border-t border-slate-900 bg-slate-950 py-16 px-6">
     <div class="max-w-6xl mx-auto">

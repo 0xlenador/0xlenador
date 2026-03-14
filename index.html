@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>0x Leñador | Finanzas & Estrategia</title>
-    
+    <link rel="icon" type="image/ico" sizes="32x32" href="./assets/img/favicon.ico">
+    <link rel="apple-touch-icon" href="./assets/img/favicon-32x32.png">
+
     <script src="./assets/css/tailwind.min.js" ></script>
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans antialiased">
 
     <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
         <div class="text-2xl font-bold tracking-tighter text-white">
-            <a href="./index.html">0x<span class="text-emerald-500">Leñador</span></a>
-        </div>
+    <a href="./index.html" class="flex items-center gap-3 group">
+        <img src="./assets/img/favicon-32x32.png" 
+             alt="Logo 0xLeñador" 
+             class="w-8 h-8 object-contain transition-transform" />
+        <span class="leading-none">
+            0x<span class="text-emerald-500 italic">Leñador</span>
+        </span>
+    </a>
+</div>
         <div class="space-x-6 text-sm font-medium text-slate-400">
             <a href="./faucets.html" class="hover:text-emerald-400 transition">Faucets</a>
             <a href="https://0xlenador.blogspot.com" target="_blank" class="hover:text-emerald-400 transition">Blog</a>
@@ -128,6 +137,68 @@
         </div>
     </div>
 </section>
+
+<section class="max-w-4xl mx-auto mt-32 mb-20 px-6">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">Estrategia & Visión</h2>
+        <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Fundamentos de la metodología 0xLeñador</p>
+    </div>
+
+    <div class="space-y-4">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+            <button onclick="toggleHomeFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
+                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuál es el objetivo del bloque Conservador?</span>
+                <span id="h-icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
+            </button>
+            <div id="h-ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                    Este bloque actúa como el ancla del portafolio. Su función principal es la preservación del capital y la generación de estabilidad frente a la incertidumbre. Se enfoca en mercados con valor intrínseco probado y baja volatilidad relativa, permitiendo que la estructura financiera soporte cualquier ciclo económico.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+            <button onclick="toggleHomeFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
+                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué buscamos con el bloque Arriesgado?</span>
+                <span id="h-icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
+            </button>
+            <div id="h-ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                    La finalidad es capturar asimetría positiva. Es la sección del portafolio dedicada a la exposición en tendencias emergentes y tecnologías disruptivas. Aquí aceptamos una mayor volatilidad a cambio de un potencial de crecimiento superior, siempre bajo un control de daños predefinido.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+            <button onclick="toggleHomeFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
+                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cómo se gestiona el equilibrio entre ambos?</span>
+                <span id="h-icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
+            </button>
+            <div id="h-ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                    El equilibrio se mantiene mediante el rebalanceo dinámico. Cuando una de las partes se desvía significativamente de su peso objetivo debido al movimiento del mercado, se ejecutan rotaciones de capital para volver a los niveles de riesgo iniciales, asegurando que las ganancias se consoliden y el riesgo no se descontrole.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleHomeFaq(id) {
+    const ans = document.getElementById(`h-ans-${id}`);
+    const icon = document.getElementById(`h-icon-${id}`);
+    
+    if (ans.style.maxHeight === "0px" || !ans.style.maxHeight) {
+        ans.style.maxHeight = ans.scrollHeight + "px";
+        icon.style.transform = "rotate(45deg)";
+        icon.classList.add('text-emerald-400');
+    } else {
+        ans.style.maxHeight = "0px";
+        icon.style.transform = "rotate(0deg)";
+        icon.classList.remove('text-emerald-400');
+    }
+}
+</script>
 
 <section class="max-w-6xl mx-auto mt-32 mb-20 px-6">
     <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
