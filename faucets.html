@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>0x Leñador | Finanzas & Estrategia</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="./assets/css/tailwind.min.js" ></script>
 </head>
 
 <body class="bg-slate-950 text-slate-200 font-sans antialiased">
@@ -27,7 +27,7 @@
 
     <section class="max-w-6xl mx-auto px-4 py-12">
         <div class="mb-10 text-left">
-            <h2 class="text-3xl font-bold text-white mb-2">Grifos & Redes de Prueba</h2>
+            <h2 class="text-3xl font-bold text-white mb-2">Faucets & Redes de Prueba</h2>
             <p class="text-slate-400">Recursos actualizados para desarrolladores y airdrop farmers.</p>
         </div>
 
@@ -138,43 +138,41 @@
         }
 
         const faucets = [
-            { name: "Superchain", url: "https://console.optimism.io/faucet", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/optimism_logo.jpg", type: "testnet", tags: ["Optimism sepolia", "Unichain Sepolia", "Minato Sepolia", "Zora Sepolia", "Lisk Sepolia", "Metal Sepolia", "Shape Sepolia", "Interop Devnet 0", "Base Sepolia", "Ink Sepolia", "Worldchain Sepolia", "Mode Sepolia", "Cyber Sepolia", "BOB Sepolia", "Sepolia", "Interop Devnet 1"] },
-            { name: "Circle (USDC – EURC)", url: "https://faucet.circle.com/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/circle.png", type: "testnet", tags: ["Ethereum Sepolia", "Algorand Testnet", "Aptos Testnet", "Arbitrum Sepolia", "Avalanche Fuji", "Base Sepolia", "Celo Alfajores", "Hedera Testnet", "Near Testnet", "Noble Testnet", "Optimism Sepolia", "Polkadot Westend", "Polygon PoS Amoy", "Solana Devnet", "Sui Testnet", "Unichain Sepolia", "Stellar Testnet", "ZKsync Sepolia"] },
-            { name: "Alchemy", url: "https://www.alchemy.com/faucets/ethereum-sepolia", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/alchemy.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Ethereum Holesky", "Base Sepolia", "Optimism Sepolia", "Arbitrum Sepolia", "Polygon PoS Amoy", "Starknet Sepolia", "ZKSync Sepolia", "World Chain Sepolia", "Soneium Minato", "CrossFi Testnet", "Lens Sepolia", "Lumia Testnet", "Syndicate Exo", "Gensyn Testnet", "Shape Sepolia", "Monad Testnet", "Humanity Testnet"] },
-            { name: "Freebitcoin", url: "https://freebitco.in/?r=55277595", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/freebitcoin.jpg", type: "mainnet", tags: ["Bitcoin (BTC)"] },
-            { name: "Google Cloud Web3", url: "https://cloud.google.com/application/web3/faucet", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/google.jpg", type: "testnet", tags: ["ZetaChain Testnet", "Injective Testnet", "MANTRA Dukong", "PYUSD Ethereum Sepolia", "PYUSD Solana Devnet", "Ethereum Sepolia", "Ethereum Holešky", "Story Aeneid Testnet"] },
-            { name: "Quicknode", url: "https://faucet.quicknode.com/drip", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/quicknode.jpg", type: "testnet", tags: ["Ethereum Goerli", "Ethereum Holesky", "Ethereum Sepolia", "Polygon Mumbai", "Polygon zkEVM Goerli", "Polygon amoy", "Binance Smart Chain Testnet", "Optimism Sepolia", "Optimism Goerli", "Arbitrum Sepolia", "Arbitrum Goerli", "Avalanche Fuji", "Solana Devnet", "Solana Testnet", "Base Sepolia", "Base Goerli"] },
-            { name: "Binance Faucet", url: "http://bnbchain.org/en/testnet-faucet", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/binance_logo.jpg", type: "testnet", tags: ["Binance Smart Chain Testnet"] },
-            { name: "Chainlink", url: "https://faucets.chain.link/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/chainlink.jpg", type: "testnet", tags: ["Binance Smart Chain Testnet", "Avalanche Fuji", "Fantom Testnet", "Ethereum Sepolia", "Base Sepolia", "Celo Alfajores Testnet", "Scroll Sepolia Testnet", "Polygon Amoy", "Arbitrum Sepolia", "Optimism Sepolia"] },
-            { name: "PoWFaucet pk910", url: "https://faucets.pk910.de/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/fauceth_420.jpg", type: "testnet", tags: ["Ethereum Hoodi", "Ethereum Holesky", "Ethereum Sepolia", "Ethereum Ephemery"] },
-            { name: "Faucet Trade", url: "https://faucet.trade/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/faucet_trade.jpg", type: "testnet", tags: ["0G Galileo Testnet", "MegaETH Testnet", "Monad Testnet", "SaharaAI Testnet", "Somnia Shannon", "Berachain Bepolia", "Soneium Minato Sepolia", "Ethereum Holesky", "Morph Holesky", "Ethereum Sepolia", "Blast Sepolia", "Polygon Amoy", "Binance Smart Chain Testnet", "Avalanche Fuji"] },
-            { name: "Metamask", url: "https://docs.metamask.io/developer-tools/faucet/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/metamask.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Linea Sepolia"] },
-            { name: "Tronpick", url: "https://tronpick.io/?ref=0xdegenerados", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/tronpick.png", type: "mainnet", tags: ["TRON (TRX)"] },
-            { name: "Ethereum-Ecosystem", url: "https://www.ethereum-ecosystem.com/faucets/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/ethereum_eco.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Optimism Sepolia", "Base Sepolia", "Mode Sepolia", "Ethereum Holesky"] },
-            { name: "Core", url: "https://core.app/tools/testnet-faucet/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/core.jpg", type: "testnet", tags: ["Avalanche Fuji", "DeFi Kingdoms Testnet", "Numbers Testnet", "Dispatch AWM Testnet", "Echo AWM Testnet", "Beam Testnet", "MXS Games", "Eclipse", "Orange", "PLYR TAU", "ONIGIRI", "KiteAI Testnet", "Myth Games", "Bitcoin L1 Testnet", "Soshi L1", "GOOD CARE"] },
-            { name: "Nerzo", url: "https://faucet.nerzo.xyz/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/nerzo.jpg", type: "testnet", tags: ["Monad Testnet"] },
-            { name: "Cryptopump", url: "https://cryptopump.info/send.php", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/sin_logo.png", type: "testnet", tags: ["Bitcoin Testnet 3"] },
-            { name: "OKX", url: "https://web3.okx.com/es-la/faucet", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/okx.png", type: "testnet", tags: ["Sahara AI", "Monad Testnet", "Pharos Tesnet", "Nubit", "Fiamma Chain", "BEVM"] },
-            { name: "Morkie", url: "https://faucet.morkie.xyz/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/morkie.jpg", type: "testnet", tags: ["Monad Testnet", "Ethereum Sepolia", "Base Sepolia"] },
-            { name: "Solana Faucet", url: "https://faucet.solana.com/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/solana.jpg", type: "testnet", tags: ["Solana Devnet", "Solana Testnet"] },
-            { name: "BNB Discord", url: "https://discord.com/channels/789402563035660308/1099937267021250560", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/binance_logo.jpg", type: "testnet", tags: ["Binance Smart Chain Testnet"] },
-            { name: "Bitcoin Testnet Faucet", url: "https://bitcoinfaucet.uo1.net/send.php", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/bitcoin_testnet.gif", type: "testnet", tags: ["Bitcoin Testnet 3"] },
-            { name: "Coinfaucet", url: "https://coinfaucet.eu/en/btc-testnet/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/sin_logo.png", type: "testnet", tags: ["Bitcoin Testnet 3"] },
-            { name: "Claim FreeSol", url: "https://claimfreesol.com/eYbdKPYn", img: "https://0xlenador.xyz/wp-content/uploads/2025/06/claimfreesol.jpg", type: "mainnet", tags: ["Solana (SOL)"] },
-            { name: "Betterclaimsol", url: "https://betterclaimsol.xyz?referral_code=i2dFMCy5", img: "https://0xlenador.xyz/wp-content/uploads/2025/06/betterclaimsol.jpg", type: "mainnet", tags: ["Solana (SOL)"] },
-            { name: "HoodRun", url: "https://faucet.hoodscan.io/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/hoodrun.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Ethereum Holesky", "Stride Testnet", "Stargaze Testnet"] },
-            { name: "Solfaucet", url: "https://solfaucet.com/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/solfaucet.png", type: "testnet", tags: ["Solana Devnet", "Solana Testnet"] },
-            { name: "MegaETH", url: "https://testnet.megaeth.com/", img: "https://0xlenador.xyz/wp-content/uploads/2025/04/megaeth_logo.jpg", type: "testnet", tags: ["MegaETH Testnet"] },
-            { name: "0G Faucet", url: "https://faucet.0g.ai/", img: "https://0xlenador.xyz/wp-content/uploads/2025/04/0g_labs.png", type: "testnet", tags: ["0G Galileo Testnet"] },
-            { name: "Sahara AI", url: "https://faucet.saharalabs.ai/", img: "https://0xlenador.xyz/wp-content/uploads/2025/05/sahara_ai.jpg", type: "testnet", tags: ["Sahara Testnet"] },
-            { name: "Rollercoin", url: "https://rollercoin.com/?r=mbh9s06l", img: "https://0xlenador.xyz/wp-content/uploads/2025/06/rollercoin.png", type: "mainnet", tags: ["Rollertoken (RLT)", "Bitcoin (BTC)", "Solana (SOL)", "Dogecoin (DOGE)", "Tron (TRX)", "Ripple (XRP)", "Ethereum (ETH)", "Binance coin (BNB)"] },
-            { name: "Gas zip", url: "https://www.gas.zip/", img: "https://0xlenador.xyz/wp-content/uploads/2025/06/gaszip.jpg", type: "testnet", tags: ["Monad Faucet", "MegaETH Faucet", "Somnia Faucet", "Sepolia Faucet", "Pharos Faucet", "CAMP Faucet", "Incentiv Faucet", "RISE Faucet"] },
-            { name: "Solpick", url: "https://solpick.io/?ref=Felipe_Vargas", img: "https://0xlenador.xyz/wp-content/uploads/2025/06/solpick.png", type: "mainnet", tags: ["Solana (SOL)"] },
-            { name: "Tonpick", url: "https://tonpick.game/?ref=0xlenador", img: "https://0xlenador.xyz/wp-content/uploads/2025/08/tonpick_logo.png", type: "mainnet", tags: ["Toncoin (TON)"] },
-            { name: "FreeShib", url: "https://freeshib.in?ref=4K5JN2uxSE", img: "https://0xlenador.xyz/wp-content/uploads/2025/06/freeshib.jpg", type: "mainnet", tags: ["Shiba Inu (SHIBA)"] },
-            { name: "Campnetwork", url: "https://faucet.campnetwork.xyz/", img: "https://0xlenador.xyz/wp-content/uploads/2025/07/campnetwork_logo.jpg", type: "testnet", tags: ["CAMP Testnet"] },
-            { name: "Bigint", url: "https://faucet.bigint.co/", img: "https://0xlenador.xyz/wp-content/uploads/2025/07/biglnt_logo.jpg", type: "testnet", tags: ["STT Somnia Testnet"] }
-        ];
+    { name: "Superchain", url: "https://console.optimism.io/faucet", img: "./assets/img/cripto/optimism.jpg", type: "testnet", tags: ["Optimism sepolia", "Unichain Sepolia", "Minato Sepolia", "Zora Sepolia", "Lisk Sepolia", "Metal Sepolia", "Shape Sepolia", "Interop Devnet 0", "Base Sepolia", "Ink Sepolia", "Worldchain Sepolia", "Mode Sepolia", "Cyber Sepolia", "BOB Sepolia", "Sepolia", "Interop Devnet 1"] },
+    { name: "Circle (USDC – EURC)", url: "https://faucet.circle.com/", img: "./assets/img/cripto/circle.png", type: "testnet", tags: ["Ethereum Sepolia", "Algorand Testnet", "Aptos Testnet", "Arbitrum Sepolia", "Avalanche Fuji", "Base Sepolia", "Celo Alfajores", "Hedera Testnet", "Near Testnet", "Noble Testnet", "Optimism Sepolia", "Polkadot Westend", "Polygon PoS Amoy", "Solana Devnet", "Sui Testnet", "Unichain Sepolia", "Stellar Testnet", "ZKsync Sepolia"] },
+    { name: "Alchemy", url: "https://www.alchemy.com/faucets/ethereum-sepolia", img: "./assets/img/cripto/alchemy.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Ethereum Holesky", "Base Sepolia", "Optimism Sepolia", "Arbitrum Sepolia", "Polygon PoS Amoy", "Starknet Sepolia", "ZKSync Sepolia", "World Chain Sepolia", "Soneium Minato", "CrossFi Testnet", "Lens Sepolia", "Lumia Testnet", "Syndicate Exo", "Gensyn Testnet", "Shape Sepolia", "Monad Testnet", "Humanity Testnet"] },
+    { name: "Freebitcoin", url: "https://freebitco.in/?r=55277595", img: "./assets/img/cripto/bitcoin.jpg", type: "mainnet", tags: ["Bitcoin (BTC)"] },
+    { name: "Google Cloud Web3", url: "https://cloud.google.com/application/web3/faucet", img: "./assets/img/cripto/google.jpg", type: "testnet", tags: ["ZetaChain Testnet", "Injective Testnet", "MANTRA Dukong", "PYUSD Ethereum Sepolia", "PYUSD Solana Devnet", "Ethereum Sepolia", "Ethereum Holešky", "Story Aeneid Testnet"] },
+    { name: "Quicknode", url: "https://faucet.quicknode.com/drip", img: "./assets/img/cripto/quicknode.jpg", type: "testnet", tags: ["Ethereum Goerli", "Ethereum Holesky", "Ethereum Sepolia", "Polygon Mumbai", "Polygon zkEVM Goerli", "Polygon amoy", "Binance Smart Chain Testnet", "Optimism Sepolia", "Optimism Goerli", "Arbitrum Sepolia", "Arbitrum Goerli", "Avalanche Fuji", "Solana Devnet", "Solana Testnet", "Base Sepolia", "Base Goerli"] },
+    { name: "Binance Faucet", url: "http://bnbchain.org/en/testnet-faucet", img: "./assets/img/cripto/binance.jpg", type: "testnet", tags: ["Binance Smart Chain Testnet"] },
+    { name: "Chainlink", url: "https://faucets.chain.link/", img: "./assets/img/cripto/chainlink.jpg", type: "testnet", tags: ["Binance Smart Chain Testnet", "Avalanche Fuji", "Fantom Testnet", "Ethereum Sepolia", "Base Sepolia", "Celo Alfajores Testnet", "Scroll Sepolia Testnet", "Polygon Amoy", "Arbitrum Sepolia", "Optimism Sepolia"] },
+    { name: "PoWFaucet pk910", url: "https://faucets.pk910.de/", img: "./assets/img/cripto/fauceth420.jpg", type: "testnet", tags: ["Ethereum Hoodi", "Ethereum Holesky", "Ethereum Sepolia", "Ethereum Ephemery"] },
+    { name: "Faucet Trade", url: "https://faucet.trade/", img: "./assets/img/cripto/faucettrade.jpg", type: "testnet", tags: ["0G Galileo Testnet", "MegaETH Testnet", "Monad Testnet", "SaharaAI Testnet", "Somnia Shannon", "Berachain Bepolia", "Soneium Minato Sepolia", "Ethereum Holesky", "Morph Holesky", "Ethereum Sepolia", "Blast Sepolia", "Polygon Amoy", "Binance Smart Chain Testnet", "Avalanche Fuji"] },
+    { name: "Metamask", url: "https://docs.metamask.io/developer-tools/faucet/", img: "./assets/img/cripto/metamask.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Linea Sepolia"] },
+    { name: "Tronpick", url: "https://tronpick.io/?ref=0xdegenerados", img: "./assets/img/cripto/tronpick.png", type: "mainnet", tags: ["TRON (TRX)"] },
+    { name: "Ethereum-Ecosystem", url: "https://www.ethereum-ecosystem.com/faucets/", img: "./assets/img/cripto/ethereum.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Optimism Sepolia", "Base Sepolia", "Mode Sepolia", "Ethereum Holesky"] },
+    { name: "Core", url: "https://core.app/tools/testnet-faucet/", img: "./assets/img/cripto/core.jpg", type: "testnet", tags: ["Avalanche Fuji", "DeFi Kingdoms Testnet", "Numbers Testnet", "Dispatch AWM Testnet", "Echo AWM Testnet", "Beam Testnet", "MXS Games", "Eclipse", "Orange", "PLYR TAU", "ONIGIRI", "KiteAI Testnet", "Myth Games", "Bitcoin L1 Testnet", "Soshi L1", "GOOD CARE"] },
+    { name: "Nerzo", url: "https://faucet.nerzo.xyz/", img: "./assets/img/cripto/nerzo.jpg", type: "testnet", tags: ["Monad Testnet"] },
+    { name: "Cryptopump", url: "https://cryptopump.info/send.php", img: "./assets/img/cripto/cryptopump.jpg", type: "testnet", tags: ["Bitcoin Testnet 3"] },
+    { name: "OKX", url: "https://web3.okx.com/es-la/faucet", img: "./assets/img/cripto/okx.jpg", type: "testnet", tags: ["Sahara AI", "Monad Testnet", "Pharos Tesnet", "Nubit", "Fiamma Chain", "BEVM"] },
+    { name: "Morkie", url: "https://faucet.morkie.xyz/", img: "./assets/img/cripto/morkie.jpg", type: "testnet", tags: ["Monad Testnet", "Ethereum Sepolia", "Base Sepolia"] },
+    { name: "Solana Faucet", url: "https://faucet.solana.com/", img: "./assets/img/cripto/solana.jpg", type: "testnet", tags: ["Solana Devnet", "Solana Testnet"] },
+    { name: "BNB Discord", url: "https://discord.com/channels/789402563035660308/1099937267021250560", img: "./assets/img/cripto/binance.jpg", type: "testnet", tags: ["Binance Smart Chain Testnet"] },
+    { name: "Bitcoin Testnet Faucet", url: "https://bitcoinfaucet.uo1.net/send.php", img: "./assets/img/cripto/bitcointestnet.png", type: "testnet", tags: ["Bitcoin Testnet 3"] },
+    { name: "Coinfaucet", url: "https://coinfaucet.eu/en/btc-testnet/", img: "./assets/img/cripto/bitcoin2.png", type: "testnet", tags: ["Bitcoin Testnet 3"] },
+    { name: "Claim FreeSol", url: "https://claimfreesol.com/eYbdKPYn", img: "./assets/img/cripto/claiimfreesol.jpg", type: "mainnet", tags: ["Solana (SOL)"] },
+    { name: "Betterclaimsol", url: "https://betterclaimsol.xyz?referral_code=i2dFMCy5", img: "./assets/img/cripto/betterclaimsol.jpg", type: "mainnet", tags: ["Solana (SOL)"] },
+    { name: "HoodRun", url: "https://faucet.hoodscan.io/", img: "./assets/img/cripto/hoodrun.jpg", type: "testnet", tags: ["Ethereum Sepolia", "Ethereum Holesky", "Stride Testnet", "Stargaze Testnet"] },
+    { name: "Solfaucet", url: "https://solfaucet.com/", img: "./assets/img/cripto/solfaucet.png", type: "testnet", tags: ["Solana Devnet", "Solana Testnet"] },
+    { name: "MegaETH", url: "https://testnet.megaeth.com/", img: "./assets/img/cripto/megaeth.jpg", type: "testnet", tags: ["MegaETH Testnet"] },
+    { name: "0G Faucet", url: "https://faucet.0g.ai/", img: "./assets/img/cripto/0glabs.png", type: "testnet", tags: ["0G Galileo Testnet"] },
+    { name: "Rollercoin", url: "https://rollercoin.com/?r=mbh9s06l", img: "./assets/img/cripto/rollercoin.png", type: "mainnet", tags: ["Rollertoken (RLT)", "Bitcoin (BTC)", "Solana (SOL)", "Dogecoin (DOGE)", "Tron (TRX)", "Ripple (XRP)", "Ethereum (ETH)", "Binance coin (BNB)"] },
+    { name: "Gas zip", url: "https://www.gas.zip/", img: "./assets/img/cripto/gaszip.jpg", type: "testnet", tags: ["Monad Faucet", "MegaETH Faucet", "Somnia Faucet", "Sepolia Faucet", "Pharos Faucet", "CAMP Faucet", "Incentiv Faucet", "RISE Faucet"] },
+    { name: "Solpick", url: "https://solpick.io/?ref=Felipe_Vargas", img: "./assets/img/cripto/solpick.png", type: "mainnet", tags: ["Solana (SOL)"] },
+    { name: "Tonpick", url: "https://tonpick.game/?ref=0xlenador", img: "./assets/img/cripto/tonpick.png", type: "mainnet", tags: ["Toncoin (TON)"] },
+    { name: "FreeShib", url: "https://freeshib.in?ref=4K5JN2uxSE", img: "./assets/img/cripto/freeshib.jpg", type: "mainnet", tags: ["Shiba Inu (SHIBA)"] },
+    { name: "Campnetwork", url: "https://faucet.campnetwork.xyz/", img: "./assets/img/cripto/campnetwork.jpg", type: "testnet", tags: ["CAMP Testnet"] }
+];
 
         function renderFaucets() {
             const listContainer = document.getElementById('list');
