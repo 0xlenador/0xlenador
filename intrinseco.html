@@ -73,7 +73,18 @@
             box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
         }
 
-        
+        /* Quitar flechas en Chrome, Safari, Edge y Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Quitar flechas en Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
     </style>
 </head>
 
