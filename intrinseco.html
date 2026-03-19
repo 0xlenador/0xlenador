@@ -6,14 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/99.png">
     <link rel="apple-touch-icon" href="./assets/img/favicon-32x32.png">
-    <title>0xLeñador - Valor Intrínseco Profesional</title>
-    <meta name="description" content="Calculadora avanzada de valor intrínseco. Análisis fundamental multiactivo para inversores.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>0xLeñador - Gestión de Capital Multiactivo</title>
+    <meta name="description" content="Navegando entre inversiones tradicionales y disruptivas. Estrategia 60/40 para un portafolio resiliente en la era digital.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://0xlenador.github.io/0xlenador/">
+    <meta property="og:title" content="0xLeñador - Navegando entre Inversiones">
+    <meta property="og:description" content="Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto. Construyendo resiliencia financiera.">
+    <meta property="og:image" content="https://0xlenador.github.io/0xlenador//assets/img/logo.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://0xlenador.github.io/0xlenador/">
+    <meta property="twitter:title" content="0xLeñador - Gestión de Capital">
+    <meta property="twitter:description" content="Estrategia 60/40: El Escudo y la Espada del inversor moderno.">
+    <meta property="twitter:image" content="https://0xlenador.github.io/0xlenador//assets/img/logo.png">
+    <script src="./assets/js/tailwind.min.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <link rel="stylesheet" href="./assets/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
         /* Ocultar barra de scroll globalmente */
-        html, body {
+        html,
+        body {
             background-color: #020617;
         }
 
@@ -55,8 +67,15 @@
         }
 
         @keyframes revealUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Slider personalizado */
@@ -96,22 +115,7 @@
 <body class="bg-slate-950 text-slate-200 font-sans antialiased selection:bg-emerald-500/30">
 
     <!-- Navegación Original 0xLeñador -->
-    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
-        <div class="text-2xl font-bold tracking-tighter text-white">
-            <a href="./index.html" class="flex items-center gap-3 group">
-                <img src="./assets/img/44.png" alt="Logo 0xLeñador" class="w-8 h-8 object-contain transition-transform" />
-                <span class="leading-none">
-                    0x<span class="text-emerald-500 italic">Leñador</span>
-                </span>
-            </a>
-        </div>
-        <div class="space-x-6 text-sm font-medium text-slate-400">
-            <a href="./faucets.html" class="hover:text-emerald-400 transition">Faucets</a>
-            <a href="./intrinseco.html" class="text-white font-bold transition">Intrinseco</a>
-            <a href="https://0xlenador.blogspot.com" target="_blank" class="hover:text-emerald-400 transition">Blog</a>
-            <a href="#" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition">YouTube</a>
-        </div>
-    </nav>
+    <div id="navbar-container"></div>
 
     <!-- Header Centrado -->
     <header class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center reveal">
@@ -131,31 +135,38 @@
 
     <!-- Calculadora Principal -->
     <main class="max-w-3xl mx-auto px-6 pb-20 reveal" style="animation-delay: 0.1s;">
-        
+
         <div class="dashboard-card p-10 md:p-16 rounded-[3rem] shadow-2xl relative">
-            
+
             <!-- Selector de Estrategia -->
             <div class="flex bg-slate-950 p-1 rounded-2xl border border-slate-800 mb-14 max-w-xs mx-auto">
-                <button id="btn-basic" onclick="setMode('basic')" class="flex-1 py-2 rounded-xl text-[10px] font-black tracking-[0.2em] transition active-tab uppercase">Graham</button>
-                <button id="btn-advanced" onclick="setMode('advanced')" class="flex-1 py-2 rounded-xl text-[10px] font-black tracking-[0.2em] text-slate-500 hover:text-white transition uppercase">Buffett</button>
+                <button id="btn-basic" onclick="setMode('basic')"
+                    class="flex-1 py-2 rounded-xl text-[10px] font-black tracking-[0.2em] transition active-tab uppercase">Graham</button>
+                <button id="btn-advanced" onclick="setMode('advanced')"
+                    class="flex-1 py-2 rounded-xl text-[10px] font-black tracking-[0.2em] text-slate-500 hover:text-white transition uppercase">Buffett</button>
             </div>
 
             <!-- Formulario -->
             <div class="space-y-12">
-                
+
                 <div id="form-basic" class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div class="space-y-4">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">EPS (Beneficio Acción)</label>
+                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">EPS
+                            (Beneficio Acción)</label>
                         <div class="relative">
                             <span class="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">$</span>
-                            <input type="number" id="basic-eps" placeholder="0.00" class="input-premium w-full py-5 pl-10 pr-6 text-2xl font-bold rounded-2xl">
+                            <input type="number" id="basic-eps" placeholder="0.00"
+                                class="input-premium w-full py-5 pl-10 pr-6 text-2xl font-bold rounded-2xl">
                         </div>
                     </div>
                     <div class="space-y-4">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">Crecimiento (g %)</label>
+                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">Crecimiento
+                            (g %)</label>
                         <div class="relative">
-                            <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-xl">%</span>
-                            <input type="number" id="basic-growth" placeholder="0" class="input-premium w-full py-5 px-6 text-2xl font-bold rounded-2xl">
+                            <span
+                                class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-xl">%</span>
+                            <input type="number" id="basic-growth" placeholder="0"
+                                class="input-premium w-full py-5 px-6 text-2xl font-bold rounded-2xl">
                         </div>
                     </div>
                 </div>
@@ -164,51 +175,71 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <div class="flex justify-between items-center px-1">
-                                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Free Cash Flow</label>
+                                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Free
+                                    Cash Flow</label>
                                 <!-- Switch FCF -->
                                 <label class="inline-flex items-center cursor-pointer gap-2">
-                                    <span class="text-[9px] font-black text-slate-600 uppercase tracking-tighter">Millones</span>
+                                    <span
+                                        class="text-[9px] font-black text-slate-600 uppercase tracking-tighter">Millones</span>
                                     <div class="relative">
                                         <input type="checkbox" id="fcf-millions-toggle" class="sr-only peer">
-                                        <div class="w-7 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white"></div>
+                                        <div
+                                            class="w-7 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white">
+                                        </div>
                                     </div>
                                 </label>
                             </div>
-                            <input type="number" id="adv-fcf" placeholder="FCF" class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
+                            <input type="number" id="adv-fcf" placeholder="FCF"
+                                class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
                         </div>
                         <div class="space-y-3">
-                            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1 block">Crecimiento %</label>
-                            <input type="number" id="adv-growth" placeholder="10" class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
+                            <label
+                                class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1 block">Crecimiento
+                                %</label>
+                            <input type="number" id="adv-growth" placeholder="10"
+                                class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
                         </div>
                         <div class="space-y-3">
-                            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1 block">Tasa Descuento %</label>
-                            <input type="number" id="adv-discount" value="10" class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
+                            <label
+                                class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1 block">Tasa
+                                Descuento %</label>
+                            <input type="number" id="adv-discount" value="10"
+                                class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
                         </div>
                         <div class="space-y-3">
                             <div class="flex justify-between items-center px-1">
-                                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Acciones Totales</label>
+                                <label
+                                    class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Acciones
+                                    Totales</label>
                                 <!-- Switch Shares -->
                                 <label class="inline-flex items-center cursor-pointer gap-2">
-                                    <span class="text-[9px] font-black text-slate-600 uppercase tracking-tighter">Millones</span>
+                                    <span
+                                        class="text-[9px] font-black text-slate-600 uppercase tracking-tighter">Millones</span>
                                     <div class="relative">
                                         <input type="checkbox" id="shares-millions-toggle" class="sr-only peer">
-                                        <div class="w-7 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white"></div>
+                                        <div
+                                            class="w-7 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white">
+                                        </div>
                                     </div>
                                 </label>
                             </div>
-                            <input type="number" id="adv-shares" placeholder="Shares" class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
+                            <input type="number" id="adv-shares" placeholder="Shares"
+                                class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl">
                         </div>
                     </div>
                     <div class="pt-6 border-t border-slate-800/40">
                         <div class="flex justify-between items-center mb-6">
-                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Margen de Seguridad</span>
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Margen de
+                                Seguridad</span>
                             <span id="margin-label" class="text-3xl font-black text-emerald-400 italic">30%</span>
                         </div>
-                        <input type="range" id="adv-margin" min="5" max="50" value="30" class="w-full cursor-pointer accent-emerald-500">
+                        <input type="range" id="adv-margin" min="5" max="50" value="30"
+                            class="w-full cursor-pointer accent-emerald-500">
                     </div>
                 </div>
 
-                <button id="calc-button" onclick="calculate()" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 py-5 rounded-2xl font-black text-xs tracking-[0.4em] uppercase transition-all active:scale-[0.98] shadow-xl shadow-emerald-500/20 italic">
+                <button id="calc-button" onclick="calculate()"
+                    class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 py-5 rounded-2xl font-black text-xs tracking-[0.4em] uppercase transition-all active:scale-[0.98] shadow-xl shadow-emerald-500/20 italic">
                     Ejecutar Algoritmo
                 </button>
             </div>
@@ -216,19 +247,28 @@
             <!-- Área de Resultados -->
             <div id="result-area" class="hidden mt-16 reveal border-t border-slate-800/60 pt-16">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <div class="bg-slate-950/60 border border-slate-800 p-10 rounded-[2rem] text-center md:text-left flex flex-col justify-center overflow-hidden">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-4 block">Precio Objetivo</span>
-                        <div id="final-price" class="text-5xl md:text-4xl font-black text-white tracking-tighter mb-2 leading-tight break-all overflow-hidden" title="$0.00">$0.00</div>
-                        <div class="text-[9px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-2">
+
+                    <div
+                        class="bg-slate-950/60 border border-slate-800 p-10 rounded-[2rem] text-center md:text-left flex flex-col justify-center overflow-hidden">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-4 block">Precio
+                            Objetivo</span>
+                        <div id="final-price"
+                            class="text-5xl md:text-4xl font-black text-white tracking-tighter mb-2 leading-tight break-all overflow-hidden"
+                            title="$0.00">$0.00</div>
+                        <div
+                            class="text-[9px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             Target Price Multi-Asset
                         </div>
                     </div>
 
-                    <div class="bg-slate-950/60 border border-slate-800 p-10 rounded-[2rem] flex flex-col justify-center overflow-hidden">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-4 block">Estatus Terminal</span>
-                        <div id="status-text" class="text-xl font-bold text-white mb-3 italic tracking-tight truncate overflow-hidden">Análisis Completado</div>
+                    <div
+                        class="bg-slate-950/60 border border-slate-800 p-10 rounded-[2rem] flex flex-col justify-center overflow-hidden">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-4 block">Estatus
+                            Terminal</span>
+                        <div id="status-text"
+                            class="text-xl font-bold text-white mb-3 italic tracking-tight truncate overflow-hidden">
+                            Análisis Completado</div>
                         <p id="final-desc" class="text-[11px] text-slate-500 leading-relaxed font-medium italic"></p>
                     </div>
                 </div>
@@ -239,15 +279,19 @@
             <h2 class="text-2xl font-bold text-white tracking-tight text-center mb-10">Entiende la Valoración</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="p-8 bg-slate-900/20 border border-slate-800 rounded-3xl">
-                    <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">¿Qué es el Valor Intrínseco?</h4>
+                    <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">¿Qué es el Valor
+                        Intrínseco?</h4>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        Es el valor real de un activo basado en sus fundamentos económicos, ignorando el ruido actual del precio de mercado.
+                        Es el valor real de un activo basado en sus fundamentos económicos, ignorando el ruido actual
+                        del precio de mercado.
                     </p>
                 </div>
                 <div class="p-8 bg-slate-900/20 border border-slate-800 rounded-3xl">
-                    <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">¿Por qué usar Margen de Seguridad?</h4>
+                    <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">¿Por qué usar Margen
+                        de Seguridad?</h4>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        Para protegernos de errores de cálculo o imprevistos del mercado. Comprar por debajo del valor intrínseco es la base del Value Investing.
+                        Para protegernos de errores de cálculo o imprevistos del mercado. Comprar por debajo del valor
+                        intrínseco es la base del Value Investing.
                     </p>
                 </div>
             </div>
@@ -256,42 +300,50 @@
         <section class="mt-24">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">Preguntas Frecuentes</h2>
-                <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Todo lo que necesitas saber sobre el análisis</p>
+                <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Todo lo que necesitas saber
+                    sobre el análisis</p>
             </div>
 
             <div class="space-y-4 max-w-2xl mx-auto">
                 <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
                     <button onclick="toggleFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
-                        <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuándo debo comprar una acción?</span>
+                        <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuándo debo
+                            comprar una acción?</span>
                         <span id="icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
                     </button>
                     <div id="ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
-                            Idealmente cuando el precio de mercado esté un 20-30% por debajo del valor calculado (Margen de Seguridad). Esto reduce el riesgo de pérdida y aumenta el potencial de beneficio.
+                            Idealmente cuando el precio de mercado esté un 20-30% por debajo del valor calculado (Margen
+                            de Seguridad). Esto reduce el riesgo de pérdida y aumenta el potencial de beneficio.
                         </p>
                     </div>
                 </div>
 
                 <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
                     <button onclick="toggleFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
-                        <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué EPS debo utilizar?</span>
+                        <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué EPS debo
+                            utilizar?</span>
                         <span id="icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
                     </button>
                     <div id="ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
-                            El EPS TTM (Trailing Twelve Months) es el estándar, aunque el EPS normalizado evita distorsiones por eventos únicos. Asegúrate de verificar si hay dilución de acciones reciente.
+                            El EPS TTM (Trailing Twelve Months) es el estándar, aunque el EPS normalizado evita
+                            distorsiones por eventos únicos. Asegúrate de verificar si hay dilución de acciones
+                            reciente.
                         </p>
                     </div>
                 </div>
 
                 <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
                     <button onclick="toggleFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
-                        <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué tasa de descuento es recomendable?</span>
+                        <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué tasa de
+                            descuento es recomendable?</span>
                         <span id="icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
                     </button>
                     <div id="ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
-                            Generalmente entre el 8% y el 12%, dependiendo del riesgo del sector y los tipos de interés actuales. Una tasa más alta refleja una mayor incertidumbre sobre los flujos futuros.
+                            Generalmente entre el 8% y el 12%, dependiendo del riesgo del sector y los tipos de interés
+                            actuales. Una tasa más alta refleja una mayor incertidumbre sobre los flujos futuros.
                         </p>
                     </div>
                 </div>
@@ -299,47 +351,21 @@
         </section>
 
         <div class="mt-20 text-center">
-            <p class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">Financial Intelligence Engine</p>
+            <p class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">Financial Intelligence
+                Engine</p>
             <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
         </div>
     </main>
 
-    <footer class="mt-40 border-t border-slate-900 bg-slate-950 py-16 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-                <div class="space-y-4">
-                    <div class="text-2xl font-bold tracking-tighter text-white">
-                        0x<span class="text-emerald-500 italic">Leñador</span>
-                    </div>
-                    <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
-                        Navegando entre inversiones tradicionales y disruptivas. 
-                        Análisis independiente y gestión de capital multiactivo.
-                    </p>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Mapa del sitio</h4>
-                    <a href="./index.html" class="text-slate-500 hover:text-emerald-400 text-sm transition w-fit">Inicio</a>
-                    <a href="./faucets.html" class="text-slate-500 hover:text-emerald-400 text-sm transition w-fit">Faucets</a>
-                    <a href="https://0xlenador.blogspot.com" target="_blank" class="text-slate-500 hover:text-emerald-400 text-sm transition w-fit">Blog Estratégico</a>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Comunidad</h4>
-                    <a href="https://www.youtube.com/@0xlenadorgamefi" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">YouTube</a>
-                    <a href="https://t.me/zero0xlenador" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">Telegram</a>
-                    <a href="https://x.com/0xlenador" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">X (Twitter)</a>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-slate-600 text-[10px] uppercase tracking-widest font-mono">
-                    &copy; 2026 0x Leñador • Build in public
-                </p>
-                <div class="flex gap-6">
-                    <span class="text-[10px] text-slate-700 font-mono uppercase tracking-tighter">Status: System Operational</span>
-                    <span class="text-[10px] text-emerald-500/50 font-mono animate-pulse uppercase">● Live Data</span>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-container"></div>
+
+    <!-- conect components-->
+    <script type="module">
+        import { loadNavbar } from './assets/js/components/navbar.js';
+        import { loadFooter } from './assets/js/components/footer.js';
+        loadNavbar();
+        loadFooter();
+    </script>
 
     <script>
         let currentMode = 'basic';
@@ -379,7 +405,7 @@
             const finalDesc = document.getElementById('final-desc');
             const statusText = document.getElementById('status-text');
             const calcButton = document.getElementById('calc-button');
-            
+
             calcButton.disabled = true;
             calcButton.innerText = "Procesando...";
             resultArea.classList.add('hidden');
@@ -426,19 +452,19 @@
                     const terminalPV = terminalVal / Math.pow((1 + discount), 5);
                     const intrinsicPerShare = (totalPV + terminalPV) / shares;
                     result = intrinsicPerShare * (1 - margin);
-                    
+
                     statusText.innerText = "Target Buffett";
                     finalDesc.innerText = "Cálculo DCF avanzado con descuento de flujos y margen de seguridad.";
                 }
 
-                const formattedPrice = `$${result.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                const formattedPrice = `$${result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 finalPrice.innerText = formattedPrice;
                 finalPrice.title = formattedPrice;
-                
+
                 resultArea.classList.remove('hidden');
                 calcButton.disabled = false;
                 calcButton.innerText = "Ejecutar Algoritmo";
-                
+
                 resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 600);
         }
@@ -446,7 +472,7 @@
         function toggleFaq(id) {
             const ans = document.getElementById(`ans-${id}`);
             const icon = document.getElementById(`icon-${id}`);
-            
+
             if (ans.style.maxHeight === "0px" || !ans.style.maxHeight) {
                 ans.style.maxHeight = ans.scrollHeight + "px";
                 icon.style.transform = "rotate(45deg)";
@@ -458,6 +484,8 @@
             }
         }
     </script>
+
+    
 </body>
 
 </html>

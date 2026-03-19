@@ -1,47 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/99.png">
     <link rel="apple-touch-icon" href="./assets/img/favicon-32x32.png">
     <title>0xLeñador - Gestión de Capital Multiactivo</title>
-<meta name="description" content="Navegando entre inversiones tradicionales y disruptivas. Estrategia 60/40 para un portafolio resiliente en la era digital.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://0xlenador.github.io/0xlenador/">
-<meta property="og:title" content="0xLeñador - Navegando entre Inversiones">
-<meta property="og:description" content="Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto. Construyendo resiliencia financiera.">
-<meta property="og:image" content="https://0xlenador.github.io/0xlenador//assets/img/logo.png"> <meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://0xlenador.github.io/0xlenador/">
-<meta property="twitter:title" content="0xLeñador - Gestión de Capital">
-<meta property="twitter:description" content="Estrategia 60/40: El Escudo y la Espada del inversor moderno.">
-<meta property="twitter:image" content="https://0xlenador.github.io/0xlenador//assets/img/logo.png">
-
-    <script src="./assets/css/tailwind.min.js" ></script>
+    <meta name="description" content="Navegando entre inversiones tradicionales y disruptivas. Estrategia 60/40 para un portafolio resiliente en la era digital.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://0xlenador.github.io/0xlenador/">
+    <meta property="og:title" content="0xLeñador - Navegando entre Inversiones">
+    <meta property="og:description" content="Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto. Construyendo resiliencia financiera.">
+    <meta property="og:image" content="https://0xlenador.github.io/0xlenador//assets/img/logo.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://0xlenador.github.io/0xlenador/">
+    <meta property="twitter:title" content="0xLeñador - Gestión de Capital">
+    <meta property="twitter:description" content="Estrategia 60/40: El Escudo y la Espada del inversor moderno.">
+    <meta property="twitter:image" content="https://0xlenador.github.io/0xlenador//assets/img/logo.png">
+    <script src="./assets/js/tailwind.min.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <link rel="stylesheet" href="./assets/css/main.css">
 </head>
+
 <body class="bg-slate-950 text-slate-200 font-sans antialiased">
 
-    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
-        <div class="text-2xl font-bold tracking-tighter text-white">
-    <a href="./index.html" class="flex items-center gap-3 group">
-        <img src="./assets/img/44.png" 
-             alt="Logo 0xLeñador" 
-             class="w-8 h-8 object-contain transition-transform" />
-        <span class="leading-none">
-            0x<span class="text-emerald-500 italic">Leñador</span>
-        </span>
-    </a>
-</div>
-        <div class="space-x-6 text-sm font-medium text-slate-400">
-            <a href="./faucets.html" class="hover:text-emerald-400 transition">Faucets</a>
-            <a href="./intrinseco.html" class="hover:text-emerald-400 transition">Intrinseco</a>
-            <a href="https://0xlenador.blogspot.com" target="_blank" class="hover:text-emerald-400 transition">Blog</a>
-            <a href="#" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition">YouTube</a>
-        </div>
-    </nav>
-
-    
+    <div id="navbar-container"></div>
 
     <main class="max-w-4xl mx-auto mt-20 text-center px-4">
         <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
@@ -51,323 +35,284 @@
             </span>
         </h1>
         <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
-            Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto. 
+            Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto.
             Construyendo un portafolio resiliente en la era digital.
         </p>
 
         <div class="flex flex-wrap justify-center gap-4 mt-16">
-        <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl w-full sm:w-64">
-            <div class="text-4xl font-bold text-emerald-400">60%</div>
-            <div class="text-xs uppercase tracking-widest text-slate-500 mt-2 font-semibold">Conservador</div>
+            <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl w-full sm:w-64">
+                <div class="text-4xl font-bold text-emerald-400">60%</div>
+                <div class="text-xs uppercase tracking-widest text-slate-500 mt-2 font-semibold">Conservador</div>
+            </div>
+
+            <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl w-full sm:w-64">
+                <div class="text-4xl font-bold text-cyan-400">40%</div>
+                <div class="text-xs uppercase tracking-widest text-slate-500 mt-2 font-semibold">Arriesgado</div>
+            </div>
         </div>
-        
-        <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl w-full sm:w-64">
-            <div class="text-4xl font-bold text-cyan-400">40%</div>
-            <div class="text-xs uppercase tracking-widest text-slate-500 mt-2 font-semibold">Arriesgado</div>
-        </div>
-    </div>
     </main>
 
     <div class="max-w-3xl mx-auto mt-24 mb-16 text-center">
-    <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto mb-8"></div>
-    <h3 class="text-2xl md:text-3xl font-light text-slate-300 italic leading-relaxed">
-        "La teoría sin ejecución es solo ruido. <br> 
-        <span class="text-white font-semibold italic">Define tu capital</span> y visualiza cómo el Escudo y la Espada protegen y expanden tu patrimonio."
-    </h3>
-    <p class="text-[10px] font-mono text-slate-600 uppercase tracking-[0.5em] mt-6">Simulador de Tesis 60/40</p>
-</div>
+        <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto mb-8"></div>
+        <h3 class="text-2xl md:text-3xl font-light text-slate-300 italic leading-relaxed">
+            "La teoría sin ejecución es solo ruido. <br>
+            <span class="text-white font-semibold italic">Define tu capital</span> y visualiza cómo el Escudo y la
+            Espada protegen y expanden tu patrimonio."
+        </h3>
+        <p class="text-[10px] font-mono text-slate-600 uppercase tracking-[0.5em] mt-6">Simulador de Tesis 60/40</p>
+    </div>
 
     <section class="max-w-4xl mx-auto mt-24 mb-32 px-4">
-    <div class="bg-slate-900/20 border border-slate-800/50 p-10 rounded-[2.5rem] backdrop-blur-md">
-        
-        <div class="max-w-md mx-auto text-center">
-            <label class="block text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em] mb-6">Simulador de Portafolio</label>
-            
-            <div class="relative group">
-                <input type="number" id="mainCalc" placeholder="0.00" 
-                    class="w-full bg-transparent text-white text-6xl md:text-7xl font-black text-center focus:outline-none placeholder:text-slate-800 transition-all"
-                    onkeyup="liveUpdate(this.value)">
-                <div class="h-[1px] w-0 group-focus-within:w-full bg-gradient-to-r from-transparent via-emerald-500 to-transparent mx-auto transition-all duration-700 mt-4"></div>
-            </div>
-        </div>
+        <div class="bg-slate-900/20 border border-slate-800/50 p-10 rounded-[2.5rem] backdrop-blur-md">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16 border-t border-slate-800/50 pt-12">
-            
-            <div class="space-y-6">
-                <div class="flex justify-between items-end">
-                    <span class="text-xs font-mono text-slate-500 uppercase tracking-widest">🛡️ Capital Protegido (60%)</span>
-                    <span class="text-2xl font-bold text-emerald-400" id="totalCons">$0</span>
-                </div>
-                <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500 w-[60%] opacity-50"></div>
-                </div>
-                <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-                    <span>Blue chips & ETFs: <b id="subReal">$0</b></span>
-                    <span>Liquidez: <b id="subLiq">$0</b></span>
+            <div class="max-w-md mx-auto text-center">
+                <label class="block text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em] mb-6">Simulador de
+                    Portafolio</label>
+
+                <div class="relative group">
+                    <input type="number" id="mainCalc" placeholder="0.00"
+                        class="w-full bg-transparent text-white text-6xl md:text-7xl font-black text-center focus:outline-none placeholder:text-slate-800 transition-all"
+                        onkeyup="liveUpdate(this.value)">
+                    <div
+                        class="h-[1px] w-0 group-focus-within:w-full bg-gradient-to-r from-transparent via-emerald-500 to-transparent mx-auto transition-all duration-700 mt-4">
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="flex justify-between items-end">
-                    <span class="text-xs font-mono text-slate-500 uppercase tracking-widest">⚔️ Capital Expuesto (40%)</span>
-                    <span class="text-2xl font-bold text-rose-500" id="totalArr">$0</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16 border-t border-slate-800/50 pt-12">
+
+                <div class="space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs font-mono text-slate-500 uppercase tracking-widest">🛡️ Capital Protegido
+                            (60%)</span>
+                        <span class="text-2xl font-bold text-emerald-400" id="totalCons">$0</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-[60%] opacity-50"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+                        <span>Blue chips & ETFs: <b id="subReal">$0</b></span>
+                        <span>Liquidez: <b id="subLiq">$0</b></span>
+                    </div>
                 </div>
-                <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                    <div class="h-full bg-rose-500 w-[40%] opacity-50"></div>
+
+                <div class="space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs font-mono text-slate-500 uppercase tracking-widest">⚔️ Capital Expuesto
+                            (40%)</span>
+                        <span class="text-2xl font-bold text-rose-500" id="totalArr">$0</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-rose-500 w-[40%] opacity-50"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+                        <span>Cripto: <b id="subCrypto">$0</b></span>
+                        <span>Small Caps: <b id="subSmall">$0</b></span>
+                    </div>
                 </div>
-                <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-                    <span>Cripto: <b id="subCrypto">$0</b></span>
-                    <span>Small Caps: <b id="subSmall">$0</b></span>
-                </div>
-            </div>
 
-        </div>
-    </div>
-</section>
-
-<section class="max-w-4xl mx-auto px-6 py-12">
-    <div class="bg-slate-900/40 border-l-4 border-emerald-500/50 p-8 rounded-r-3xl backdrop-blur-sm">
-        <div class="flex items-center gap-3 mb-4">
-            <span class="text-emerald-500">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </span>
-            <h4 class="text-xs font-mono text-slate-400 uppercase tracking-[0.3em]">Tesis de Gestión & Riesgo</h4>
-        </div>
-        
-        <div class="space-y-4">
-            <p class="text-sm text-slate-300 leading-relaxed italic">
-                "Esta distribución 60/40 no es una fórmula mágica, es una metodología de supervivencia y captura de valor. Mientras el 60% trabaja en sectores que sostienen la economía global, el 40% busca las anomalías que definen las próximas décadas."
-            </p>
-            
-            <div class="h-[1px] bg-slate-800 w-full my-6"></div>
-            
-            <p class="text-[11px] text-slate-500 leading-relaxed uppercase tracking-tight">
-                <b class="text-slate-400">Disclaimer:</b> Todo el contenido compartido en 0xLenador tiene fines estrictamente educativos y de entretenimiento. No constituye, bajo ninguna circunstancia, asesoría de inversión, legal o fiscal. Cada individuo es responsable de realizar su propio análisis (DYOR) y entender que todo mercado financiero conlleva riesgo de pérdida total de capital.
-            </p>
-        </div>
-    </div>
-</section>
-
-<section class="max-w-4xl mx-auto mt-32 mb-20 px-6">
-    <div class="text-center mb-12">
-        <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">Estrategia & Visión</h2>
-        <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Fundamentos de la metodología 0xLeñador</p>
-    </div>
-
-    <div class="space-y-4">
-        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-            <button onclick="toggleHomeFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
-                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuál es el objetivo del bloque Conservador?</span>
-                <span id="h-icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
-            </button>
-            <div id="h-ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
-                    Este bloque actúa como el ancla del portafolio. Su función principal es la preservación del capital y la generación de estabilidad frente a la incertidumbre. Se enfoca en mercados con valor intrínseco probado y baja volatilidad relativa, permitiendo que la estructura financiera soporte cualquier ciclo económico.
-                </p>
             </div>
         </div>
+    </section>
 
-        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-            <button onclick="toggleHomeFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
-                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué buscamos con el bloque Arriesgado?</span>
-                <span id="h-icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
-            </button>
-            <div id="h-ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
-                    La finalidad es capturar asimetría positiva. Es la sección del portafolio dedicada a la exposición en tendencias emergentes y tecnologías disruptivas. Aquí aceptamos una mayor volatilidad a cambio de un potencial de crecimiento superior, siempre bajo un control de daños predefinido.
-                </p>
+    <section class="max-w-4xl mx-auto px-6 py-12">
+        <div class="bg-slate-900/40 border-l-4 border-emerald-500/50 p-8 rounded-r-3xl backdrop-blur-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-emerald-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </span>
+                <h4 class="text-xs font-mono text-slate-400 uppercase tracking-[0.3em]">Tesis de Gestión & Riesgo</h4>
             </div>
-        </div>
 
-        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-            <button onclick="toggleHomeFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
-                <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cómo se gestiona el equilibrio entre ambos?</span>
-                <span id="h-icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
-            </button>
-            <div id="h-ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
-                    El equilibrio se mantiene mediante el rebalanceo dinámico. Cuando una de las partes se desvía significativamente de su peso objetivo debido al movimiento del mercado, se ejecutan rotaciones de capital para volver a los niveles de riesgo iniciales, asegurando que las ganancias se consoliden y el riesgo no se descontrole.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script>
-function toggleHomeFaq(id) {
-    const ans = document.getElementById(`h-ans-${id}`);
-    const icon = document.getElementById(`h-icon-${id}`);
-    
-    if (ans.style.maxHeight === "0px" || !ans.style.maxHeight) {
-        ans.style.maxHeight = ans.scrollHeight + "px";
-        icon.style.transform = "rotate(45deg)";
-        icon.classList.add('text-emerald-400');
-    } else {
-        ans.style.maxHeight = "0px";
-        icon.style.transform = "rotate(0deg)";
-        icon.classList.remove('text-emerald-400');
-    }
-}
-</script>
-
-<section class="max-w-6xl mx-auto mt-32 mb-20 px-6">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-        <div class="text-left">
-            <h2 class="text-3xl font-black text-white tracking-tighter uppercase">Directorio de Análisis</h2>
-            <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Recursos esenciales para el Escudo y la Espada</p>
-        </div>
-        <div class="h-[1px] flex-1 bg-slate-900 mx-4 hidden md:block mb-3"></div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <a href="https://es.tradingview.com/pricing/?share_your_love=ellenador_eth" target="_blank" class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">MACRO / CHART</span>
-                <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            </div>
-            <h4 class="text-white font-bold text-lg">TradingView</h4>
-            <p class="text-slate-500 text-xs mt-2 leading-relaxed">Gráficos avanzados y seguimiento de mercados globales.</p>
-        </a>
-
-        <a href="https://www.coingecko.com/" target="_blank" class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-rose-500/50 transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="text-[10px] font-mono text-rose-500 bg-rose-500/10 px-2 py-1 rounded">CRIPTO / DATA</span>
-                <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            </div>
-            <h4 class="text-white font-bold text-lg">CoinGecko</h4>
-            <p class="text-slate-500 text-xs mt-2 leading-relaxed">Precios en tiempo real, capitalización y métricas on-chain.</p>
-        </a>
-
-        <a href="https://defillama.com/" target="_blank" class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-rose-500/50 transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="text-[10px] font-mono text-rose-500 bg-rose-500/10 px-2 py-1 rounded">DEFI / TVL</span>
-                <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            </div>
-            <h4 class="text-white font-bold text-lg">DeFiLlama</h4>
-            <p class="text-slate-500 text-xs mt-2 leading-relaxed">Análisis profundo del valor total bloqueado en ecosistemas.</p>
-        </a>
-
-        <a href="https://es.investing.com/" target="_blank" class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">NOTICIAS / ECON</span>
-                <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            </div>
-            <h4 class="text-white font-bold text-lg">Investing.com</h4>
-            <p class="text-slate-500 text-xs mt-2 leading-relaxed">Calendario económico y noticias de impacto financiero.</p>
-        </a>
-
-    </div>
-</section>
-
-<style>
-    /* Quitar flechas en Chrome, Safari, Edge y Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Quitar flechas en Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-    }
-</style>
-
-<script>
-function liveUpdate(val) {
-    const capital = parseFloat(val) || 0;
-    
-    // Cálculos
-    const cons = capital * 0.60;
-    const arr = capital * 0.40;
-
-    // Actualizar UI con formato de moneda
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0
-    });
-
-    document.getElementById('totalCons').innerText = formatter.format(cons);
-    document.getElementById('totalArr').innerText = formatter.format(arr);
-    
-    // Desglose detallado
-    document.getElementById('subReal').innerText = formatter.format(capital * 0.40);
-    document.getElementById('subLiq').innerText = formatter.format(capital * 0.20);
-    document.getElementById('subCrypto').innerText = formatter.format(capital * 0.30);
-    document.getElementById('subSmall').innerText = formatter.format(capital * 0.10);
-}
-</script>
-
-    <footer class="mt-40 border-t border-slate-900 bg-slate-950 py-16 px-6">
-    <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-            
             <div class="space-y-4">
-                <div class="text-2xl font-bold tracking-tighter text-white">
-                    0x<span class="text-emerald-500 italic">Leñador</span>
-                </div>
-                <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
-                    Navegando entre inversiones tradicionales y disruptivas. 
-                    Análisis independiente y gestión de capital multiactivo.
+                <p class="text-sm text-slate-300 leading-relaxed italic">
+                    "Esta distribución 60/40 no es una fórmula mágica, es una metodología de supervivencia y captura de
+                    valor. Mientras el 60% trabaja en sectores que sostienen la economía global, el 40% busca las
+                    anomalías que definen las próximas décadas."
+                </p>
+
+                <div class="h-[1px] bg-slate-800 w-full my-6"></div>
+
+                <p class="text-[11px] text-slate-500 leading-relaxed uppercase tracking-tight">
+                    <b class="text-slate-400">Disclaimer:</b> Todo el contenido compartido en 0xLenador tiene fines
+                    estrictamente educativos y de entretenimiento. No constituye, bajo ninguna circunstancia, asesoría
+                    de inversión, legal o fiscal. Cada individuo es responsable de realizar su propio análisis (DYOR) y
+                    entender que todo mercado financiero conlleva riesgo de pérdida total de capital.
                 </p>
             </div>
+        </div>
+    </section>
 
-            <div class="flex flex-col gap-3">
-                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Mapa del sitio</h4>
-                <a href="./index.html" class="text-slate-500 hover:text-emerald-400 text-sm transition w-fit">Inicio</a>
-                <a href="./faucets.html" class="text-slate-500 hover:text-emerald-400 text-sm transition w-fit">Faucets</a>
-                <a href="https://0xlenador.blogspot.com" target="_blank" class="text-slate-500 hover:text-emerald-400 text-sm transition w-fit">Blog Estratégico</a>
-            </div>
-
-            <div class="flex flex-col gap-3">
-                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Comunidad</h4>
-                <a href="https://www.youtube.com/@0xlenadorgamefi" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">
-                    <span class="p-1 bg-slate-900 rounded group-hover:bg-emerald-500/20 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-</svg></span> YouTube
-                </a>
-                <a href="https://t.me/zero0xlenador" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">
-                    <span class="p-1 bg-slate-900 rounded group-hover:bg-emerald-500/20 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M11.944 0C5.346 0 0 5.346 0 11.944s5.346 11.944 11.944 11.944 11.944-5.346 11.944-11.944S18.542 0 11.944 0zm5.206 8.19l-1.78 8.385c-.134.6-.49.746-.994.464l-2.712-2.002-1.308 1.258c-.144.144-.265.265-.544.265l.195-2.766 5.035-4.547c.218-.195-.048-.304-.338-.11l-6.224 3.92-2.68-.838c-.58-.182-.593-.58.122-.857l10.475-4.037c.484-.182.908.108.76.81z"/>
-</svg></span> Telegram
-                </a>
-                <a href="https://x.com/0xlenador" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">
-                    <span class="p-1 bg-slate-900 rounded group-hover:bg-emerald-500/20 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.49h2.039L6.486 3.24H4.298l13.311 17.403z"/>
-</svg></span> X (Twitter)
-                </a>
-
-                <a href="#" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">
-                    <span class="p-1 bg-slate-900 rounded group-hover:bg-emerald-500/20 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.196.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.158-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.158-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.419-2.157 2.419z"/>
-</svg></span> Discord
-                </a>
-                <a href="#" class="flex items-center gap-2 text-slate-500 hover:text-white text-sm transition group">
-                    <span class="p-1 bg-slate-900 rounded group-hover:bg-emerald-500/20 transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-</svg></span> Facebook
-                </a>
-            </div>
-            
+    <section class="max-w-4xl mx-auto mt-32 mb-20 px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">Estrategia & Visión</h2>
+            <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Fundamentos de la metodología
+                0xLeñador</p>
         </div>
 
-        <div class="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-slate-600 text-[10px] uppercase tracking-widest font-mono">
-                &copy; 2026 0x Leñador • Build in public
-            </p>
-            <div class="flex gap-6">
-                <span class="text-[10px] text-slate-700 font-mono uppercase tracking-tighter">Status: System Operational</span>
-                <span class="text-[10px] text-emerald-500/50 font-mono animate-pulse uppercase">● Live Data</span>
+        <div class="space-y-4">
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+                <button onclick="toggleHomeFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
+                    <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuál es el
+                        objetivo del bloque Conservador?</span>
+                    <span id="h-icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
+                </button>
+                <div id="h-ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                        Este bloque actúa como el ancla del portafolio. Su función principal es la preservación del
+                        capital y la generación de estabilidad frente a la incertidumbre. Se enfoca en mercados con
+                        valor intrínseco probado y baja volatilidad relativa, permitiendo que la estructura financiera
+                        soporte cualquier ciclo económico.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+                <button onclick="toggleHomeFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
+                    <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué buscamos con
+                        el bloque Arriesgado?</span>
+                    <span id="h-icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
+                </button>
+                <div id="h-ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                        La finalidad es capturar asimetría positiva. Es la sección del portafolio dedicada a la
+                        exposición en tendencias emergentes y tecnologías disruptivas. Aquí aceptamos una mayor
+                        volatilidad a cambio de un potencial de crecimiento superior, siempre bajo un control de daños
+                        predefinido.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+                <button onclick="toggleHomeFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
+                    <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cómo se gestiona
+                        el equilibrio entre ambos?</span>
+                    <span id="h-icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
+                </button>
+                <div id="h-ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
+                        El equilibrio se mantiene mediante el rebalanceo dinámico. Cuando una de las partes se desvía
+                        significativamente de su peso objetivo debido al movimiento del mercado, se ejecutan rotaciones
+                        de capital para volver a los niveles de riesgo iniciales, asegurando que las ganancias se
+                        consoliden y el riesgo no se descontrole.
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </section>
 
+    <section class="max-w-6xl mx-auto mt-32 mb-20 px-6">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+            <div class="text-left">
+                <h2 class="text-3xl font-black text-white tracking-tighter uppercase">Directorio de Análisis</h2>
+                <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Recursos esenciales para el
+                    Escudo y la Espada</p>
+            </div>
+            <div class="h-[1px] flex-1 bg-slate-900 mx-4 hidden md:block mb-3"></div>
+        </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <a href="https://es.tradingview.com/pricing/?share_your_love=ellenador_eth" target="_blank"
+                class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">MACRO /
+                        CHART</span>
+                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </div>
+                <h4 class="text-white font-bold text-lg">TradingView</h4>
+                <p class="text-slate-500 text-xs mt-2 leading-relaxed">Gráficos avanzados y seguimiento de mercados
+                    globales.</p>
+            </a>
+
+            <a href="https://www.coingecko.com/" target="_blank"
+                class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-rose-500/50 transition-all duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-mono text-rose-500 bg-rose-500/10 px-2 py-1 rounded">CRIPTO /
+                        DATA</span>
+                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </div>
+                <h4 class="text-white font-bold text-lg">CoinGecko</h4>
+                <p class="text-slate-500 text-xs mt-2 leading-relaxed">Precios en tiempo real, capitalización y métricas
+                    on-chain.</p>
+            </a>
+
+            <a href="https://defillama.com/" target="_blank"
+                class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-rose-500/50 transition-all duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-mono text-rose-500 bg-rose-500/10 px-2 py-1 rounded">DEFI / TVL</span>
+                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </div>
+                <h4 class="text-white font-bold text-lg">DeFiLlama</h4>
+                <p class="text-slate-500 text-xs mt-2 leading-relaxed">Análisis profundo del valor total bloqueado en
+                    ecosistemas.</p>
+            </a>
+
+            <a href="https://es.investing.com/" target="_blank"
+                class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">NOTICIAS /
+                        ECON</span>
+                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </div>
+                <h4 class="text-white font-bold text-lg">Investing.com</h4>
+                <p class="text-slate-500 text-xs mt-2 leading-relaxed">Calendario económico y noticias de impacto
+                    financiero.</p>
+            </a>
+
+        </div>
+    </section>
+
+    <div id="footer-container"></div>
+
+    <!-- conect components-->
+    <script type="module">
+        import { loadNavbar } from './assets/js/components/navbar.js';
+        import { loadFooter } from './assets/js/components/footer.js';
+        loadNavbar();
+        loadFooter();
+    </script>
+
+    <!-- logica calculadora portafolio - Home -->
+    <script>
+        function liveUpdate(val) {
+            const capital = parseFloat(val) || 0;
+
+            // Cálculos
+            const cons = capital * 0.60;
+            const arr = capital * 0.40;
+
+            // Actualizar UI con formato de moneda
+            const formatter = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            });
+
+            document.getElementById('totalCons').innerText = formatter.format(cons);
+            document.getElementById('totalArr').innerText = formatter.format(arr);
+
+            // Desglose detallado
+            document.getElementById('subReal').innerText = formatter.format(capital * 0.40);
+            document.getElementById('subLiq').innerText = formatter.format(capital * 0.20);
+            document.getElementById('subCrypto').innerText = formatter.format(capital * 0.30);
+            document.getElementById('subSmall').innerText = formatter.format(capital * 0.10);
+        }
+    </script>
 </body>
 </html>
