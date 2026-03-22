@@ -34,3 +34,67 @@
             background-color: #059669 !important;
             color: white !important;
         }
+
+/* CLASES DE CALCULADORA TIPO APPLE*/
+/* Estilo para el estado activo de las pestañas */
+        .active-tab {
+            background: linear-gradient(to right, #34d399, #22d3ee) !important;
+            color: #020617 !important;
+            font-weight: 800;
+        }
+
+        /* Tarjeta estilo Dashboard Core */
+        .dashboard-card {
+            background-color: rgba(15, 23, 42, 0.4);
+            border: 1px solid #1e293b;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-premium {
+            background-color: #020617;
+            border: 1px solid #1e293b;
+            color: #ffffff;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-premium:focus {
+            border-color: #34d399;
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2);
+        }
+
+        /* Animación de entrada */
+        .reveal {
+            animation: revealUp 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes revealUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Slider personalizado */
+        input[type=range] {
+            height: 4px;
+            -webkit-appearance: none;
+            background: #1e293b;
+            border-radius: 5px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #34d399;
+            cursor: pointer;
+            border: 3px solid #020617;
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+        }
