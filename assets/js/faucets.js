@@ -65,7 +65,7 @@ function renderFaucets() {
     listContainer.innerHTML = faucets.map(faucet => `
         <div class="item-card bg-slate-900/60 border border-slate-800 p-5 rounded-2xl hover:border-${faucet.type === 'mainnet' ? 'amber' : 'emerald'}-500/30 transition group" data-type="${faucet.type}">
             <div class="flex items-center gap-4 mb-4">
-                <img src="${faucet.img}" class="w-10 h-10 rounded-full border border-slate-700 shadow-lg">
+                <img src="${faucet.img}" loading="lazy" class="w-10 h-10 rounded-full border border-slate-700 shadow-lg">
                 <div class="flex flex-col">
                     <a href="${faucet.url}" target="_blank" class="text-white font-bold hover:text-${faucet.type === 'mainnet' ? 'amber' : 'emerald'}-400 transition flex items-center gap-1 text-lg">
                         ${faucet.name} <span class="text-xs opacity-50">↗</span>
