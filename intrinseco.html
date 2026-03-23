@@ -83,7 +83,7 @@
 
                 <div id="form-basic" class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div class="space-y-4">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">EPS
+                        <label for="basic-eps" class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">EPS
                             (Beneficio Acción)</label>
                         <div class="relative">
                             <span class="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">$</span>
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                     <div class="space-y-4">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">Crecimiento
+                        <label for="basic-growth" class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">Crecimiento
                             (g %)</label>
                         <div class="relative">
                             <span
@@ -107,7 +107,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <div class="flex justify-between items-center px-1">
-                                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Free
+                                <label for="adv-fcf" class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Free
                                     Cash Flow</label>
                                 <!-- Switch FCF -->
                                 <label class="inline-flex items-center cursor-pointer gap-2">
@@ -125,14 +125,14 @@
                                 class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl focus:ring-2 focus:ring-emerald-400/50 focus:outline-none">
                         </div>
                         <div class="space-y-3">
-                            <label
+                            <label for="adv-growth"
                                 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1 block">Crecimiento
                                 %</label>
                             <input type="number" id="adv-growth" placeholder="10"
                                 class="input-premium w-full py-4 px-6 text-xl font-bold rounded-2xl focus:ring-2 focus:ring-emerald-400/50 focus:outline-none">
                         </div>
                         <div class="space-y-3">
-                            <label
+                            <label for="adv-discount"
                                 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1 block">Tasa
                                 Descuento %</label>
                             <input type="number" id="adv-discount" value="10"
@@ -140,7 +140,7 @@
                         </div>
                         <div class="space-y-3">
                             <div class="flex justify-between items-center px-1">
-                                <label
+                                <label for="adv-shares"
                                     class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Acciones
                                     Totales</label>
                                 <!-- Switch Shares -->
@@ -160,14 +160,16 @@
                         </div>
                     </div>
                     <div class="pt-6 border-t border-slate-800/40">
-                        <div class="flex justify-between items-center mb-6">
-                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Margen de
-                                Seguridad</span>
-                            <span id="margin-label" class="text-3xl font-black text-emerald-400 italic">30%</span>
-                        </div>
-                        <input type="range" id="adv-margin" min="5" max="50" value="30"
-                            class="w-full cursor-pointer accent-emerald-500 focus:ring-2 focus:ring-emerald-400/50 focus:outline-none">
-                    </div>
+    <label for="adv-margin" class="flex justify-between items-center mb-6 cursor-pointer">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+            Margen de Seguridad
+        </span>
+        <span id="margin-label" class="text-3xl font-black text-emerald-400 italic">30%</span>
+    </label>
+    
+    <input type="range" id="adv-margin" min="5" max="50" value="30"
+        class="w-full cursor-pointer accent-emerald-500 focus:ring-2 focus:ring-emerald-400/50 focus:outline-none">
+</div>
                 </div>
 
                 <button id="calc-button"
@@ -238,12 +240,12 @@
 
             <div class="space-y-4 max-w-2xl mx-auto">
                 <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-                    <button onclick="toggleFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
+                    <button onclick="toggleFaq(1)" aria-expanded="false" aria-controls="ans-1" class="w-full p-6 text-left flex justify-between items-center group">
                         <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuándo debo
                             comprar una acción?</span>
                         <span id="icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
                     </button>
-                    <div id="ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div id="ans-1" aria-hidden="true" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
                             Idealmente cuando el precio de mercado esté un 20-30% por debajo del valor calculado (Margen
                             de Seguridad). Esto reduce el riesgo de pérdida y aumenta el potencial de beneficio.
@@ -252,12 +254,12 @@
                 </div>
 
                 <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-                    <button onclick="toggleFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
+                    <button onclick="toggleFaq(2)" aria-expanded="false" aria-controls="ans-2" class="w-full p-6 text-left flex justify-between items-center group">
                         <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué EPS debo
                             utilizar?</span>
                         <span id="icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
                     </button>
-                    <div id="ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div id="ans-2" aria-hidden="true" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
                             El EPS TTM (Trailing Twelve Months) es el estándar, aunque el EPS normalizado evita
                             distorsiones por eventos únicos. Asegúrate de verificar si hay dilución de acciones
@@ -267,12 +269,12 @@
                 </div>
 
                 <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-                    <button onclick="toggleFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
+                    <button onclick="toggleFaq(3)" aria-expanded="false" aria-controls="ans-3" class="w-full p-6 text-left flex justify-between items-center group">
                         <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué tasa de
                             descuento es recomendable?</span>
                         <span id="icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
                     </button>
-                    <div id="ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div id="ans-3" aria-hidden="true" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
                             Generalmente entre el 8% y el 12%, dependiendo del riesgo del sector y los tipos de interés
                             actuales. Una tasa más alta refleja una mayor incertidumbre sobre los flujos futuros.

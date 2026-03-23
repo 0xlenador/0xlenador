@@ -1,21 +1,30 @@
 // assets/js/main.js
 
 // Lógica de FAQ: Funciona para todas las páginas
-function toggleFaq(id, isHome = false) {
-    const prefix = isHome ? 'h-' : '';
-    const ans = document.getElementById(`${prefix}ans-${id}`);
-    const icon = document.getElementById(`${prefix}icon-${id}`);
+function toggleFaq(id) {
+    const ans = document.getElementById(`ans-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+    // Buscamos el botón que activó la función
+    const btn = document.querySelector(`button[onclick*="toggleFaq(${id})"]`);
     
-    if (!ans || !icon) return;
+    if (!ans || !icon || !btn) return;
 
-    if (ans.style.maxHeight === "0px" || !ans.style.maxHeight) {
+    const isOpening = ans.style.maxHeight === "0px" || !ans.style.maxHeight;
+
+    if (isOpening) {
         ans.style.maxHeight = ans.scrollHeight + "px";
         icon.style.transform = "rotate(45deg)";
         icon.classList.add('text-emerald-400');
+        // Accesibilidad
+        btn.setAttribute('aria-expanded', 'true');
+        ans.setAttribute('aria-hidden', 'false');
     } else {
         ans.style.maxHeight = "0px";
         icon.style.transform = "rotate(0deg)";
         icon.classList.remove('text-emerald-400');
+        // Accesibilidad
+        btn.setAttribute('aria-expanded', 'false');
+        ans.setAttribute('aria-hidden', 'true');
     }
 }
 

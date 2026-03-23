@@ -93,12 +93,12 @@
 
         <div class="space-y-4">
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-                <button onclick="toggleFaq(1)" class="w-full p-6 text-left flex justify-between items-center group">
+                <button onclick="toggleFaq(1)" aria-expanded="false" aria-controls="ans-1" class="w-full p-6 text-left flex justify-between items-center group">
                     <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Qué es una Faucet
                         de criptomonedas?</span>
                     <span id="icon-1" class="text-slate-500 transition-transform duration-300">＋</span>
                 </button>
-                <div id="ans-1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <div id="ans-1" aria-hidden="true" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                     <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
                         Es un sistema que entrega pequeñas cantidades de criptomonedas (o tokens de prueba) de forma
                         gratuita. En Mainnet sirven como incentivo o faucet de goteo, y en Testnet son esenciales para
@@ -108,12 +108,12 @@
             </div>
 
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-                <button onclick="toggleFaq(2)" class="w-full p-6 text-left flex justify-between items-center group">
+                <button onclick="toggleFaq(2)" aria-expanded="false" aria-controls="ans-2" class="w-full p-6 text-left flex justify-between items-center group">
                     <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Cuál es la
                         diferencia entre Mainnet y Testnet?</span>
                     <span id="icon-2" class="text-slate-500 transition-transform duration-300">＋</span>
                 </button>
-                <div id="ans-2" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <div id="ans-2" aria-hidden="true" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                     <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
                         Las faucets de <b class="text-emerald-500">Testnet</b> entregan tokens sin valor real para
                         probar dApps. Las de <b class="text-cyan-500">Mainnet</b> entregan criptomonedas reales (como
@@ -123,12 +123,12 @@
             </div>
 
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-                <button onclick="toggleFaq(3)" class="w-full p-6 text-left flex justify-between items-center group">
+                <button onclick="toggleFaq(3)" aria-expanded="false" aria-controls="ans-3" class="w-full p-6 text-left flex justify-between items-center group">
                     <span class="text-white font-bold group-hover:text-emerald-400 transition-colors">¿Es seguro
                         conectar mi billetera a estas webs?</span>
                     <span id="icon-3" class="text-slate-500 transition-transform duration-300">＋</span>
                 </button>
-                <div id="ans-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                <div id="ans-3" aria-hidden="true" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                     <p class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50">
                         En 0xLeñador filtramos sitios conocidos, pero la regla de oro en cripto es la precaución. <b
                             class="text-rose-500">Usa siempre una "Burner Wallet"</b> (billetera secundaria vacía) para
