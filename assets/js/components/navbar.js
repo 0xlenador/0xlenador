@@ -16,10 +16,10 @@ export function loadNavbar() {
             </button>
 
             <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-400">
-                <a href="./faucets.html" class="hover:text-emerald-400 transition">Faucets</a>
-                <a href="./intrinseco.html" class="hover:text-emerald-400 transition">Intrínseco</a>
-                <a href="https://0xlenador.blogspot.com" target="_blank" rel="noopener" class="hover:text-emerald-400 transition">Blog</a>
-                <a href="https://www.youtube.com/@0xlenadorgamefi" target="_blank" rel="noopener" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition ml-4">YouTube</a>
+                <a href="./faucets.html" class="hover:text-emerald-400 transition focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none">Faucets</a>
+                <a href="./intrinseco.html" class="hover:text-emerald-400 transition focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none">Intrínseco</a>
+                <a href="https://0xlenador.blogspot.com" target="_blank" rel="noopener" class="hover:text-emerald-400 transition focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none">Blog</a>
+                <a href="https://www.youtube.com/@0xlenadorgamefi" target="_blank" rel="noopener" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition ml-4 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none">YouTube</a>
             </div>
 
             <div id="mobile-menu" class="hidden absolute top-full left-0 right-0 bg-slate-950 border-b border-slate-900 p-6 flex flex-col space-y-4 md:hidden z-40 shadow-2xl">
@@ -50,4 +50,13 @@ export function loadNavbar() {
             });
         }
     }
+
+    // Dentro de loadNavbar, después de los listeners de clic
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
+    }
+});
+
 }

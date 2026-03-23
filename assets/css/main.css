@@ -98,3 +98,16 @@
             border: 3px solid #020617;
             box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
         }
+
+/* Estilo de enfoque global para navegación por teclado */
+:focus-visible {
+    outline: 2px solid #34d399; /* Color emerald-400 */
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* Evita que el anillo de enfoque aparezca al hacer clic con el ratón, 
+   solo se activará con el teclado (Tab) */
+:focus:not(:focus-visible) {
+    outline: none;
+}
