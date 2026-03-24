@@ -25,6 +25,17 @@ export function initIntrinsicPage() {
     if (calcButton) {
         calcButton.addEventListener('click', () => calculate());
     }
+
+    // 4. NUEVO: Listener para calcular al presionar "Enter"
+    const inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Evita comportamientos extraños del navegador
+                calculate();
+            }
+        });
+    });
 }
 
 function setMode(mode) {
@@ -121,4 +132,5 @@ function calculate() {
 
         resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 600);
+
 }
