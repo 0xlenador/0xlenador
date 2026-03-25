@@ -6,7 +6,7 @@ export function loadNavbar() {
         <nav class="py-6 flex justify-between items-center relative" aria-label="Navegación principal">
             <div class="text-2xl font-bold tracking-tighter text-white z-50">
                 <a href="./index.html" class="flex items-center gap-3 group focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none rounded-md">
-                    <img src="./assets/img/44.webp" alt="Logo 0xLeñador" class="w-8 h-8 object-contain" />
+                    <img src="./assets/img/56x.webp" alt="Logo 0xLeñador" class="w-8 h-8 object-contain" />
                     <span class="leading-none">0x<span class="text-emerald-500 italic">Leñador</span></span>
                 </a>
             </div>
