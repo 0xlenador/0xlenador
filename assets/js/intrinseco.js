@@ -63,12 +63,50 @@ function setMode(mode) {
     }
 }
 
+function highlightError(elementId) {
+    const el = document.getElementById(elementId);
+    if (el) {
+        el.classList.add('ring-2', 'ring-rose-500', 'border-rose-500');
+        // Quitamos el resaltado después de 2 segundos
+        setTimeout(() => {
+            el.classList.remove('ring-2', 'ring-rose-500', 'border-rose-500');
+        }, 2000);
+    }
+}
+
 function calculate() {
     const resultArea = document.getElementById('result-area');
     const finalPrice = document.getElementById('final-price');
     const finalDesc = document.getElementById('final-desc');
     const statusText = document.getElementById('status-text');
     const calcButton = document.getElementById('calc-button');
+
+    // 1. Identificar qué campos validar según el modo activo
+    let hasError = false;
+    
+    if (currentMode === 'basic') {
+        const epsInput = document.getElementById('basic-eps');
+        const growthInput = document.getElementById('basic-growth');
+        
+        if (!epsInput.value) { highlightError('basic-eps'); hasError = true; }
+        if (!growthInput.value) { highlightError('basic-growth'); hasError = true; }
+    } else {
+        const advFields = ['adv-fcf', 'adv-growth', 'adv-discount', 'adv-shares'];
+        advFields.forEach(id => {
+            const input = document.getElementById(id);
+            if (!input.value) {
+                highlightError(id);
+                hasError = true;
+            }
+        });
+    }
+
+    // 2. Si hay error, detenemos el proceso
+    if (hasError) {
+        calcButton.innerText = "Ejecutar Algoritmo";
+        calcButton.disabled = false;
+        return; 
+    }
 
     calcButton.disabled = true;
     calcButton.innerText = "Procesando...";
