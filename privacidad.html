@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon-96x96.png">
+    <link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png">
+    <title>Privacidad y Cookies | 0xLeñador</title>
+    <link rel="stylesheet" href="./assets/css/dist.css">
+    <script src="./assets/js/main.js" defer></script>
+</head>
+<body class="bg-slate-950 text-slate-400 font-sans antialiased">
+    <div id="navbar-container"></div>
+
+    <main class="max-w-3xl mx-auto px-6 pt-32 pb-20 reveal">
+        <header class="mb-16">
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter italic uppercase">
+                Privacidad <span class="text-emerald-500">&</span> Cookies
+            </h1>
+            <p class="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em]">Protocolo de Transparencia de Datos</p>
+        </header>
+
+        <div class="space-y-12 leading-relaxed text-sm text-justify">
+            
+            <section>
+                <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    1. Responsable del Proyecto
+                </h2>
+                <p>
+                    El sitio web <span class="text-slate-200">0xlenador.xyz</span> es una plataforma de divulgación educativa operada por <span class="text-slate-200">0x Leñador</span>. Este proyecto tiene como objetivo compartir estrategias de inversión y herramientas de análisis fundamental sin recolectar información personal sensible de sus usuarios.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    2. Procesamiento de Datos en Herramientas
+                </h2>
+                <p>
+                    Nuestras herramientas, incluyendo el <span class="text-slate-200">Simulador 60/40</span> y la <span class="text-slate-200">Calculadora de Valor Intrínseco</span>, están diseñadas para ejecutarse íntegramente en el navegador del usuario (Client-Side). 
+                </p>
+                <div class="mt-4 p-4 bg-slate-900/40 border-l-2 border-emerald-500 rounded-r-xl italic">
+                    Los valores financieros que introduces en estos simuladores no se envían a nuestros servidores ni son almacenados en ninguna base de datos externa.
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    3. Cookies y Métricas de Terceros
+                </h2>
+                <p>
+                    Para optimizar el rendimiento y la experiencia de usuario, utilizamos <span class="text-slate-200">Google Analytics</span> y <span class="text-slate-200">Google Tag Manager</span>. Estos servicios utilizan cookies para recopilar información anónima como:
+                </p>
+                <ul class="list-disc pl-5 mt-4 space-y-2 text-slate-500">
+                    <li>Páginas visitadas y tiempo de navegación.</li>
+                    <li>Tipo de dispositivo y ubicación geográfica general (país/ciudad).</li>
+                    <li>Fuentes de tráfico (de dónde vienes antes de entrar a la web).</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    4. Transparencia en Afiliación
+                </h2>
+                <p>
+                    En cumplimiento con las buenas prácticas de divulgación, informamos que ciertos enlaces en el <span class="text-slate-200">Directorio de Análisis</span> (específicamente <span class="text-white">TradingView</span>) contienen códigos de afiliación. Esto puede generar una comisión para el proyecto si decides adquirir un servicio, ayudando a mantener la plataforma gratuita y sin publicidad invasiva.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    5. Tus Derechos
+                </h2>
+                <p>
+                    Como usuario, tienes derecho a navegar de forma privada utilizando extensiones de bloqueo de rastreo o configurando tu navegador para rechazar cookies. Al ser un sitio estático, no mantenemos perfiles de usuario ni cuentas que requieran la gestión de datos personales directos.
+                </p>
+            </section>
+
+        </div>
+
+        <div class="mt-20 pt-10 border-t border-slate-900 text-center">
+            <p class="text-[9px] font-mono text-slate-600 uppercase tracking-widest">Última actualización: Marzo 2026</p>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- conect components-->
+    <script type="module">
+        import { loadNavbar } from './assets/js/components/navbar.js';
+        import { loadFooter } from './assets/js/components/footer.js';
+        import { loadCookies } from './assets/js/components/cookies.js';
+
+
+        loadNavbar();
+        loadFooter();
+        loadCookies();
+    </script>
+</body>
+</html>
