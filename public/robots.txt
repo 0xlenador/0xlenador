@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Evitar que indexen rutas internas de la API o directorios de datos en bruto si existieran a futuro
+Disallow: /api/
+Disallow: /data/
+
+# Enlace maestro para Googlebot y Bingbot
+Sitemap: https://0xlenador.xyz/sitemap-index.xml
