@@ -1,17 +1,1119 @@
 ---
+// Importamos los componentes globales
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/main.css";
 
+// Metadatos SEO para la página principal
+const seo = {
+  title:
+    "0xLeñador | Divulgador sobre la gestión de Capital y Estrategia de Inversión 60/40",
+  description:
+    "Optimiza tu patrimonio con la estrategia 60/40. Gestión de capital multiactivo combinando inversiones tradicionales, ETFs y activos disruptivos como Cripto y Startups.",
+  url: "https://0xlenador.xyz/",
+  image: "https://0xlenador.xyz/assets/img/44.webp",
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "0x Leñador",
+  url: "https://0xlenador.xyz/",
+  image: "https://0xlenador.xyz/assets/img/44.png",
+  jobTitle: "Divulgador de Inversiones y Web3",
+  description:
+    "Creador de contenido enfocado en la gestión de capital, estrategias de inversión 60/40 y ecosistema cripto.",
+  sameAs: [
+    "https://www.youtube.com/@0xlenadorgamefi",
+    "https://x.com/0xlenador",
+    "https://t.me/zero0xlenador",
+  ],
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/img/favicon-96x96.png"
+    />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+
+    <title>{seo.title}</title>
+    <link rel="canonical" href={seo.url} />
+    <meta name="description" content={seo.description} />
+    <meta
+      name="keywords"
+      content="gestión de capital, estrategia 60/40, inversiones disruptivas, portafolio resiliente, 0xleñador"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={seo.url} />
+    <meta
+      property="og:title"
+      content="0xLeñador - Navegando entre Inversiones"
+    />
+    <meta
+      property="og:description"
+      content="Analizando el mercado desde ETFs tradicionales hasta Startups y Cripto. Construyendo resiliencia financiera."
+    />
+    <meta property="og:image" content={seo.image} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={seo.url} />
+    <meta property="twitter:title" content="0xLeñador - Gestión de Capital" />
+    <meta
+      property="twitter:description"
+      content="Estrategia 60/40: El Escudo y la Espada del inversor moderno."
+    />
+    <meta property="twitter:image" content={seo.image} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+    <meta name="theme-color" content="#020617" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+  </head>
+
+  <body class="bg-slate-950 antialiased selection:bg-emerald-500/30">
+    <Navbar />
+
+    <main class="max-w-6xl mx-auto px-6 pt-14 pb-20">
+      <header
+        class="relative max-w-4xl mx-auto mb-32 text-center overflow-hidden py-8 md:py-16"
+      >
+        <h1
+          class="relative z-10 text-4xl md:text-5xl font-black text-white mb-8 tracking-tighter uppercase leading-none"
+        >
+          El valor no está en el capital, <span
+            class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+            >sino en el entendimiento.</span
+          >
+        </h1>
+        <p
+          class="relative z-10 text-md md:text-lg text-slate-400 font-light leading-relaxed max-w-2xl mx-auto mb-12"
+        >
+          Invertir sin comprender es apostar a la suerte. En <span
+            class="font-semibold text-white">0xLeñador</span
+          >, creemos que nuestra capacidad de involucrarnos en la lógica de un
+          proyecto es lo que define nuestra resiliencia frente al mercado.
+        </p>
+        <div class="relative z-10 flex flex-wrap gap-4 justify-center">
+          <a
+            href="/tesis"
+            class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black uppercase tracking-widest text-xs rounded-xl hover:bg-emerald-500 transition-all italic inline-flex items-center gap-2"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+              ></path></svg
+            >
+            Leer Tesis de Investigación
+          </a>
+          <a
+            href="#simulador-6040"
+            class="px-8 py-4 border border-slate-700 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-slate-900 transition-all"
+            >Calcula tu Inversión</a
+          >
+        </div>
+      </header>
+
+      <section
+        class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-40 items-center"
+      >
+        <div class="space-y-8">
+          <div
+            class="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full"
+          >
+            <span
+              class="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.3em]"
+              >Nuestra Premisa</span
+            >
+          </div>
+          <h2
+            class="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight"
+          >
+            Involucrarse es la única <br /> forma de <span
+              class="italic text-slate-500">mantener el carácter</span
+            >.
+          </h2>
+          <p class="text-slate-400 leading-relaxed text-lg">
+            La volatilidad es el filtro que expulsa a quienes solo buscan
+            retornos rápidos. El entendimiento profundo de la tecnología y la
+            economía de un activo nos otorga la convicción necesaria para operar
+            con frialdad matemática cuando otros dudan.
+          </p>
+          <blockquote
+            class="border-l-2 border-emerald-500 pl-6 italic text-slate-300"
+          >
+            "Vale más lo que comprendemos del proyecto que el capital que
+            depositamos en él."
+          </blockquote>
+        </div>
+
+        <div
+          class="bg-slate-900/20 border border-slate-800 p-10 rounded-[3rem] relative overflow-hidden group"
+        >
+          <div
+            class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/5 blur-[100px] group-hover:bg-emerald-500/10 transition-all"
+          >
+          </div>
+          <div class="space-y-6 relative z-10 font-mono">
+            <div class="flex justify-between border-b border-slate-800 pb-4">
+              <span class="text-slate-600 text-xs">SISTEMA</span>
+              <span class="text-emerald-500 text-xs">ONLINE</span>
+            </div>
+            <div class="text-xs space-y-4">
+              <p class="text-slate-500 text-[10px] uppercase">
+                Protocolo de ejecución:
+              </p>
+              <p class="text-white">> Investigar fundamentos económicos.</p>
+              <p class="text-white">> Validar infraestructura tecnológica.</p>
+              <p class="text-white">> Analizar asimetría de riesgo.</p>
+              <p class="text-white">> Ejecutar con carácter (Convención).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+        <div
+          class="p-8 bg-slate-900/10 border border-slate-900 rounded-3xl hover:border-slate-800 transition-all"
+        >
+          <div
+            class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6"
+          >
+            <svg
+              class="w-5 h-5 text-emerald-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path></svg
+            >
+          </div>
+          <h3
+            class="text-white font-bold mb-4 uppercase tracking-tighter italic"
+          >
+            Investigación
+          </h3>
+          <p class="text-xs leading-relaxed text-slate-500">
+            No seguimos narrativas. Analizamos los datos on-chain y los
+            fundamentos de los proyectos para entender su valor real antes de
+            actuar.
+          </p>
+        </div>
+        <div
+          class="p-8 bg-slate-900/10 border border-slate-900 rounded-3xl hover:border-slate-800 transition-all"
+        >
+          <div
+            class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6"
+          >
+            <svg
+              class="w-5 h-5 text-emerald-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+            >
+          </div>
+          <h3
+            class="text-white font-bold mb-4 uppercase tracking-tighter italic"
+          >
+            Convicción
+          </h3>
+          <p class="text-xs leading-relaxed text-slate-500">
+            Invertir con carácter significa no ser desplazados por el ruido. La
+            convicción es el resultado directo de una investigación exhaustiva.
+          </p>
+        </div>
+        <div
+          class="p-8 bg-slate-900/10 border border-slate-900 rounded-3xl hover:border-slate-800 transition-all"
+        >
+          <div
+            class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6"
+          >
+            <svg
+              class="w-5 h-5 text-emerald-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path></svg
+            >
+          </div>
+          <h3
+            class="text-white font-bold mb-4 uppercase tracking-tighter italic"
+          >
+            Asimetría
+          </h3>
+          <p class="text-xs leading-relaxed text-slate-500">
+            Buscamos escenarios donde el entendimiento nos permita posicionarnos
+            en activos con un potencial de retorno desproporcionado frente al
+            riesgo.
+          </p>
+        </div>
+      </div>
+
+      <section id="simulador-6040" class="max-w-4xl mx-auto mb-12 scroll-mt-24">
+        <div class="text-center mb-12">
+          <div
+            class="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-6"
+          >
+            <span
+              class="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.3em]"
+              >Simulador Interactivo</span
+            >
+          </div>
+          <h2
+            class="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight"
+          >
+            Estrategia <span
+              class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent italic"
+              >60 / 40</span
+            >
+          </h2>
+          <p
+            class="text-slate-400 text-sm mt-4 max-w-2xl mx-auto leading-relaxed"
+          >
+            Una vez que comprendes tu perfil de riesgo y la naturaleza de cada
+            activo, estás listo para invertir con carácter y convicción para tu
+            futuro. Aquí te presentamos el estándar de distribución bajo la
+            tesis de 0xLeñador.
+          </p>
+        </div>
+
+        <div
+          class="bg-slate-900/40 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-2xl"
+        >
+          <div class="mb-8">
+            <label
+              for="capitalInput"
+              class="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3"
+              >Capital a distribuir (USD)</label
+            >
+            <div class="flex items-center gap-3">
+              <span class="text-emerald-500 font-mono text-xl font-bold">$</span
+              >
+              <input
+                id="capitalInput"
+                type="number"
+                min="0"
+                step="100"
+                value="10000"
+                placeholder="10000"
+                oninput="liveUpdate(this.value); document.getElementById('capitalRange').value = this.value"
+                class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none rounded-xl px-4 py-3.5 text-white text-xl font-mono tracking-wide transition-all"
+              />
+            </div>
+            <style>
+              input[type="range"]::-webkit-slider-thumb {
+                background: #10b981;
+                cursor: pointer;
+              }
+            </style>
+            <input
+              id="capitalRange"
+              type="range"
+              min="0"
+              max="1000000"
+              step="500"
+              value="10000"
+              oninput="liveUpdate(this.value); document.getElementById('capitalInput').value = this.value"
+              class="w-full mt-4 cursor-pointer accent-emerald-500 h-1.5 bg-slate-800 rounded-lg appearance-none"
+            />
+
+            <div class="flex flex-wrap gap-2 mt-4">
+              <button
+                onclick="setCapital(5000)"
+                class="sim-preset-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors border border-transparent font-mono"
+                >$5K</button
+              >
+              <button
+                onclick="setCapital(10000)"
+                class="sim-preset-btn sim-preset-active px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 rounded-lg text-sm transition-colors font-mono"
+                >$10K</button
+              >
+              <button
+                onclick="setCapital(25000)"
+                class="sim-preset-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors border border-transparent font-mono"
+                >$25K</button
+              >
+              <button
+                onclick="setCapital(50000)"
+                class="sim-preset-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors border border-transparent font-mono"
+                >$50K</button
+              >
+              <button
+                onclick="setCapital(100000)"
+                class="sim-preset-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors border border-transparent font-mono"
+                >$100K</button
+              >
+              <button
+                onclick="setCapital(500000)"
+                class="sim-preset-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors border border-transparent font-mono"
+                >$500K</button
+              >
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex rounded-xl overflow-hidden h-3 bg-slate-900">
+              <div
+                id="barCons"
+                class="bg-gradient-to-r from-cyan-500 to-cyan-400 transition-all duration-500 ease-out"
+                style="width: 60%"
+              >
+              </div>
+              <div
+                id="barArr"
+                class="bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500 ease-out"
+                style="width: 40%"
+              >
+              </div>
+            </div>
+            <div class="flex justify-between mt-2">
+              <span class="text-[10px] font-mono text-cyan-400">60% Escudo</span
+              >
+              <span class="text-[10px] font-mono text-emerald-400"
+                >40% Espada</span
+              >
+            </div>
+          </div>
+
+          <div class="flex flex-col items-center mb-10">
+            <div class="relative w-56 h-56 md:w-64 md:h-64">
+              <canvas id="chartPortfolio"></canvas>
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+              >
+                <span
+                  class="text-[9px] font-mono text-slate-500 uppercase tracking-widest"
+                  >Total</span
+                >
+                <span
+                  id="chartCenterLabel"
+                  class="text-xl md:text-2xl font-black text-white font-mono"
+                  >$10,000</span
+                >
+              </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 mt-5">
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="w-2.5 h-2.5 rounded-full"
+                  style="background:#06b6d4"
+                >
+                </div><span class="text-[10px] font-mono text-slate-400"
+                  >Renta Fija / ETFs</span
+                >
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="w-2.5 h-2.5 rounded-full"
+                  style="background:#22d3ee"
+                >
+                </div><span class="text-[10px] font-mono text-slate-400"
+                  >Liquidez / Bluechip</span
+                >
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="w-2.5 h-2.5 rounded-full"
+                  style="background:#10b981"
+                >
+                </div><span class="text-[10px] font-mono text-slate-400"
+                  >Cripto / ETFs Arriesgados</span
+                >
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="w-2.5 h-2.5 rounded-full"
+                  style="background:#34d399"
+                >
+                </div><span class="text-[10px] font-mono text-slate-400"
+                  >Startups / Garaje</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div
+              class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 relative overflow-hidden group"
+            >
+              <div
+                class="absolute -bottom-10 -right-10 w-40 h-40 bg-cyan-500/5 blur-[80px] group-hover:bg-cyan-500/15 transition-all duration-500"
+              >
+              </div>
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                    <span
+                      class="text-[10px] font-mono text-slate-500 uppercase tracking-widest"
+                      >Conservador</span
+                    >
+                  </div>
+                  <span
+                    class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full font-bold"
+                    >60%</span
+                  >
+                </div>
+                <p
+                  id="totalCons"
+                  class="text-3xl md:text-4xl font-black text-white font-mono tracking-tight my-3"
+                >
+                  $6,000
+                </p>
+                <p
+                  class="text-[10px] text-slate-600 font-mono uppercase tracking-wide"
+                >
+                  Escudo · Renta Fija, Bluechips, ETFs
+                </p>
+                <div class="mt-5 pt-4 border-t border-slate-800/50 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <svg
+                        class="w-3.5 h-3.5 text-cyan-500/60"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        ><path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                        ></path></svg
+                      >
+                      <span class="text-[10px] font-mono text-slate-500"
+                        >Renta Fija / ETFs</span
+                      >
+                    </div>
+                    <span
+                      id="subRentaFija"
+                      class="text-xs font-bold text-white font-mono"
+                      >$4,000</span
+                    >
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-1">
+                    <div
+                      id="progRentaFija"
+                      class="bg-cyan-500/40 h-1 rounded-full transition-all duration-500"
+                      style="width: 66.6%"
+                    >
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <svg
+                        class="w-3.5 h-3.5 text-cyan-500/60"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        ><path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path></svg
+                      >
+                      <span class="text-[10px] font-mono text-slate-500"
+                        >Liquidez / Bluechip</span
+                      >
+                    </div>
+                    <span
+                      id="subLiquidez"
+                      class="text-xs font-bold text-white font-mono"
+                      >$2,000</span
+                    >
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-1">
+                    <div
+                      id="progLiquidez"
+                      class="bg-cyan-500/40 h-1 rounded-full transition-all duration-500"
+                      style="width: 33.3%"
+                    >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 relative overflow-hidden group"
+            >
+              <div
+                class="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-500/5 blur-[80px] group-hover:bg-emerald-500/15 transition-all duration-500"
+              >
+              </div>
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+                    <span
+                      class="text-[10px] font-mono text-slate-500 uppercase tracking-widest"
+                      >Crecimiento</span
+                    >
+                  </div>
+                  <span
+                    class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full font-bold"
+                    >40%</span
+                  >
+                </div>
+                <p
+                  id="totalArr"
+                  class="text-3xl md:text-4xl font-black text-white font-mono tracking-tight my-3"
+                >
+                  $4,000
+                </p>
+                <p
+                  class="text-[10px] text-slate-600 font-mono uppercase tracking-wide"
+                >
+                  Espada · Cripto, Startups, Asimetrías
+                </p>
+                <div class="mt-5 pt-4 border-t border-slate-800/50 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <svg
+                        class="w-3.5 h-3.5 text-emerald-500/60"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        ><path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                        ></path></svg
+                      >
+                      <span class="text-[10px] font-mono text-slate-500"
+                        >Cripto / ETFs Arriesgados</span
+                      >
+                    </div>
+                    <span
+                      id="subCripto"
+                      class="text-xs font-bold text-white font-mono"
+                      >$2,500</span
+                    >
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-1">
+                    <div
+                      id="progCripto"
+                      class="bg-emerald-500/40 h-1 rounded-full transition-all duration-500"
+                      style="width: 62.5%"
+                    >
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <svg
+                        class="w-3.5 h-3.5 text-emerald-500/60"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        ><path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+                        ></path></svg
+                      >
+                      <span class="text-[10px] font-mono text-slate-500"
+                        >Startups / Fase de Garaje</span
+                      >
+                    </div>
+                    <span
+                      id="subStartups"
+                      class="text-xs font-bold text-white font-mono"
+                      >$1,500</span
+                    >
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-1">
+                    <div
+                      id="progStartups"
+                      class="bg-emerald-500/40 h-1 rounded-full transition-all duration-500"
+                      style="width: 37.5%"
+                    >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-950/60 border border-slate-800/50 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 text-emerald-400"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                  ></path></svg
+                >
+              </div>
+              <div>
+                <p
+                  class="text-[10px] font-mono text-slate-500 uppercase tracking-widest"
+                >
+                  Capital Total Distribuido
+                </p>
+                <p
+                  id="totalCapital"
+                  class="text-lg font-black text-white font-mono"
+                >
+                  $10,000
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 text-[10px] font-mono">
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400"
+                >
+                </div>
+                <span class="text-slate-400">Escudo 60%</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
+                >
+                </div>
+                <span class="text-slate-400">Espada 40%</span>
+              </div>
+            </div>
+          </div>
+
+          <p
+            class="text-[9px] font-mono text-slate-700 text-center mt-6 italic"
+          >
+            Simulación ilustrativa basada en la tesis 0xLeñador. No constituye
+            asesoría financiera.
+          </p>
+        </div>
+      </section>
+
+      <section class="mt-12 pb-20">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl font-black text-white tracking-tighter uppercase italic"
+          >
+            Preguntas Frecuentes
+          </h2>
+          <p
+            class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2"
+          >
+            Entendiendo la mentalidad de investigación
+          </p>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
+          >
+            <button
+              onclick="toggleFaq(101)"
+              aria-expanded="false"
+              class="w-full p-6 text-left flex justify-between items-center faq-btn"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+                >¿Por qué el entendimiento vale más que el capital?</span
+              >
+              <span
+                id="icon-101"
+                class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
+                ><svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
+                ></span
+              >
+            </button>
+            <div
+              id="ans-101"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
+              style="max-height: 0px;"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                El capital sin conocimiento es efímero. Cuando comprendes la
+                lógica económica de un activo, el precio se vuelve secundario;
+                ese entendimiento es lo que te otorga la convicción necesaria
+                para operar con frialdad cuando otros dudan.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
+          >
+            <button
+              onclick="toggleFaq(102)"
+              aria-expanded="false"
+              class="w-full p-6 text-left flex justify-between items-center faq-btn"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+                >¿Qué significa "investigar con carácter"?</span
+              >
+              <span
+                id="icon-102"
+                class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
+                ><svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
+                ></span
+              >
+            </button>
+            <div
+              id="ans-102"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
+              style="max-height: 0px;"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                Es el compromiso de involucrarse en la tecnología y los números
+                de un proyecto hasta dominar sus riesgos. El carácter no es otra
+                cosa que la seguridad resultante de una investigación exhaustiva
+                que te impide ser desplazado por la volatilidad.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
+          >
+            <button
+              onclick="toggleFaq(103)"
+              aria-expanded="false"
+              class="w-full p-6 text-left flex justify-between items-center faq-btn"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+                >¿Este sitio ofrece señales o consejos de compra?</span
+              >
+              <span
+                id="icon-103"
+                class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
+                ><svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
+                ></span
+              >
+            </button>
+            <div
+              id="ans-103"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
+              style="max-height: 0px;"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-[10px] leading-relaxed border-t border-slate-800/50 uppercase font-mono italic"
+              >
+                Absolutamente no. 0xLeñador es un ecosistema de investigación y
+                análisis técnico. Nuestra meta es compartir metodologías de
+                pensamiento crítico para que cada individuo construya su propia
+                convicción operativa.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
+          >
+            <button
+              onclick="toggleFaq(104)"
+              aria-expanded="false"
+              class="w-full p-6 text-left flex justify-between items-center faq-btn"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+                >¿Qué encontrarás en nuestro sitio?</span
+              >
+              <span
+                id="icon-104"
+                class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
+                ><svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
+                ></span
+              >
+            </button>
+            <div
+              id="ans-104"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
+              style="max-height: 0px;"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                Accederás a nuestra tesis de inversión detallada, herramientas
+                de cálculo como la terminal de valor intrínseco y un panel de
+                observación de activos que abarca desde el ecosistema Web3 hasta
+                mercados tradicionales.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <p
+            class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
+          >
+            Research & Conviction Protocol
+          </p>
+          <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+    ></script>
+
+    <script is:inline>
+      // LÓGICA CALCULADORA 60/40
+      let portfolioChart = null;
+
+      function initChart() {
+        const ctx = document.getElementById("chartPortfolio").getContext("2d");
+        portfolioChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: [
+              "Renta Fija / ETFs",
+              "Liquidez / Bluechip",
+              "Cripto / ETFs Arriesgados",
+              "Startups / Garaje",
+            ],
+            datasets: [
+              {
+                data: [4000, 2000, 2500, 1500],
+                backgroundColor: ["#06b6d4", "#22d3ee", "#10b981", "#34d399"],
+                borderColor: "#020617",
+                borderWidth: 3,
+                hoverBorderColor: "#1e293b",
+                hoverOffset: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: "72%",
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "#0f172a",
+                titleColor: "#e2e8f0",
+                bodyColor: "#94a3b8",
+                borderColor: "#1e293b",
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+                titleFont: {
+                  family: "ui-monospace, monospace",
+                  size: 11,
+                  weight: "bold",
+                },
+                bodyFont: { family: "ui-monospace, monospace", size: 10 },
+                callbacks: {
+                  label: function (ctx) {
+                    const fmt = new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      maximumFractionDigits: 0,
+                    });
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct =
+                      total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                    return " " + fmt.format(ctx.parsed) + " (" + pct + "%)";
+                  },
+                },
+              },
+            },
+            animation: {
+              animateRotate: true,
+              duration: 600,
+              easing: "easeOutQuart",
+            },
+          },
+        });
+      }
+
+      function liveUpdate(val) {
+        const capital = parseFloat(val) || 0;
+        const cons = capital * 0.6;
+        const arr = capital * 0.4;
+        const rentaFija = capital * 0.4;
+        const liquidez = capital * 0.2;
+        const cripto = capital * 0.25;
+        const startups = capital * 0.15;
+
+        const fmt = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0,
+        });
+
+        document.getElementById("totalCons").innerText = fmt.format(cons);
+        document.getElementById("totalArr").innerText = fmt.format(arr);
+        document.getElementById("totalCapital").innerText = fmt.format(capital);
+        document.getElementById("subRentaFija").innerText =
+          fmt.format(rentaFija);
+        document.getElementById("subLiquidez").innerText = fmt.format(liquidez);
+        document.getElementById("subCripto").innerText = fmt.format(cripto);
+        document.getElementById("subStartups").innerText = fmt.format(startups);
+
+        if (cons > 0) {
+          document.getElementById("progRentaFija").style.width =
+            (rentaFija / cons) * 100 + "%";
+          document.getElementById("progLiquidez").style.width =
+            (liquidez / cons) * 100 + "%";
+        }
+        if (arr > 0) {
+          document.getElementById("progCripto").style.width =
+            (cripto / arr) * 100 + "%";
+          document.getElementById("progStartups").style.width =
+            (startups / arr) * 100 + "%";
+        }
+
+        if (portfolioChart) {
+          portfolioChart.data.datasets[0].data = [
+            rentaFija,
+            liquidez,
+            cripto,
+            startups,
+          ];
+          portfolioChart.update("active");
+        }
+
+        const centerLabel = document.getElementById("chartCenterLabel");
+        if (centerLabel) centerLabel.innerText = fmt.format(capital);
+      }
+
+      function setCapital(amount) {
+        document.getElementById("capitalInput").value = amount;
+        document.getElementById("capitalRange").value = amount;
+        liveUpdate(amount);
+
+        document.querySelectorAll(".sim-preset-btn").forEach((btn) => {
+          btn.classList.replace("bg-emerald-500/20", "bg-slate-800");
+          btn.classList.replace("text-emerald-400", "text-slate-300");
+          btn.classList.replace("border-emerald-500/30", "border-transparent");
+          btn.classList.remove("sim-preset-active");
+        });
+        event.target.classList.add("sim-preset-active");
+        event.target.classList.replace("bg-slate-800", "bg-emerald-500/20");
+        event.target.classList.replace("text-slate-300", "text-emerald-400");
+        event.target.classList.replace(
+          "border-transparent",
+          "border-emerald-500/30",
+        );
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const waitForChart = setInterval(function () {
+          if (typeof Chart !== "undefined") {
+            clearInterval(waitForChart);
+            initChart();
+          }
+        }, 50);
+      });
+
+      // LÓGICA FAQ (Acordeón Global)
+      function toggleFaq(id) {
+        const ans = document.getElementById(`ans-${id}`);
+        const icon = document.getElementById(`icon-${id}`);
+        const isClosed =
+          ans.style.maxHeight === "0px" || ans.style.maxHeight === "";
+
+        // Cerrar otros
+        document
+          .querySelectorAll(".faq-content")
+          .forEach((el) => (el.style.maxHeight = "0px"));
+        document
+          .querySelectorAll(".icon-rotate")
+          .forEach((el) => (el.style.transform = "rotate(0deg)"));
+
+        if (isClosed) {
+          ans.style.maxHeight = ans.scrollHeight + "px";
+          icon.style.transform = "rotate(180deg)";
+        }
+      }
+    </script>
+  </body>
 </html>

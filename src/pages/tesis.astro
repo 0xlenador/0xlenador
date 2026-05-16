@@ -1,0 +1,703 @@
+---
+// ==========================================
+// 1. IMPORTS DE COMPONENTES Y ESTILOS
+// ==========================================
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/main.css";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/img/favicon-96x96.png"
+    />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+    <title>Estrategia y Activos | 0xLeñador</title>
+  </head>
+  <body
+    class="bg-slate-950 text-slate-400 font-sans antialiased selection:bg-emerald-500/30"
+  >
+    <Navbar />
+
+    <main class="max-w-6xl mx-auto px-6 pt-32 pb-20 reveal">
+      <header class="mb-20">
+        <h1
+          class="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter italic uppercase"
+        >
+          Tesis de <span class="text-emerald-500">Inversión</span>
+        </h1>
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <p
+            class="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em]"
+          >
+            Protocolo: entendimiento estratégico e involucramiento activo
+          </p>
+          <span class="hidden md:block w-12 h-px bg-slate-800"></span>
+          <span class="text-[10px] font-mono text-emerald-500/70 uppercase"
+            >Versión 2.0.0</span
+          >
+        </div>
+      </header>
+
+      <section class="mb-24">
+        <div
+          class="bg-slate-900/20 border border-slate-900 p-8 md:p-12 rounded-[2rem] relative overflow-hidden"
+        >
+          <div
+            class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[120px] rounded-full -mr-32 -mt-32"
+          >
+          </div>
+          <div class="max-w-5xl">
+            <h2 class="text-white font-bold text-xl mb-6">
+              Filosofía de Convicción y Entendimiento
+            </h2>
+            <p class="text-sm text-slate-300 leading-relaxed mb-12">
+              Vale más lo que comprendemos de un proyecto que el capital que
+              depositamos en él. El conocimiento técnico es el único factor que
+              nos condiciona para operar con carácter frente a la volatilidad.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h3
+                  class="text-emerald-500 font-bold text-xs uppercase tracking-widest mb-4"
+                >
+                  01. Entendimiento y Colateralización
+                </h3>
+                <p class="text-xs leading-relaxed text-slate-500">
+                  Mantenemos un 60% en inversiones tradicionales equilibradas
+                  (ETFs y CDTs). No las elegimos por ser "seguras", sino porque
+                  entendemos su estructura. Usamos una fracción en instrumentos
+                  DeFi para capturar recompensas y airdrops, involucrándonos en
+                  la tecnología para exprimir la eficiencia del capital.
+                </p>
+              </div>
+
+              <div>
+                <h3
+                  class="text-emerald-500 font-bold text-xs uppercase tracking-widest mb-4"
+                >
+                  02. Involucramiento Asimétrico
+                </h3>
+                <p class="text-xs leading-relaxed text-slate-500">
+                  Vale más lo que comprendemos de la infraestructura que lo que
+                  invertimos en ella. Nos concentramos en los "rieles"
+                  tecnológicos que dominamos técnicamente, aceptando que este
+                  conocimiento es el que nos permite buscar retornos
+                  exponenciales con convicción absoluta.
+                </p>
+              </div>
+
+              <div>
+                <h3
+                  class="text-emerald-500 font-bold text-xs uppercase tracking-widest mb-4"
+                >
+                  03. Carácter Cuantitativo
+                </h3>
+                <p class="text-xs leading-relaxed text-slate-500">
+                  El carácter ante la volatilidad es el resultado de la
+                  preparación matemática. No operamos por narrativa; operamos
+                  porque el cálculo de probabilidades nos otorga la frialdad
+                  necesaria para mantener la posición cuando el mercado entra en
+                  pánico.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xs font-mono text-slate-600 uppercase tracking-[0.5em]">
+          Activos en Observación
+        </h2>
+        <div class="h-px flex-grow ml-6 bg-slate-900/50"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        <div
+          class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/30 transition-all cursor-pointer"
+        >
+          <div class="flex items-center gap-3 mb-6">
+            <img
+              src="/img/cripto/syp500.webp"
+              alt="S&P 500"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight"
+            >
+              S&P 500 (ETFs)
+            </h3>
+          </div>
+          <p
+            class="text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider"
+          >
+            Ticker: SPY / VOO
+          </p>
+          <p class="text-xs text-slate-500 leading-relaxed mb-6">
+            Benchmark del mercado tradicional. Crecimiento compuesto a largo
+            plazo basado en las 500 líderes de EE.UU.
+          </p>
+
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Compra SPY aquí:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://app.hapi.trade/rewards?code=MANVAR27"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-emerald-500/50 hover:text-emerald-400 transition-all"
+                >Hapi</a
+              >
+              <a
+                href="https://defi.xstocks.fi/points?ref=HOTRLH35"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-emerald-500/50 hover:text-emerald-400 transition-all"
+                >xstocks</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/30 transition-all cursor-pointer"
+        >
+          <div class="flex items-center gap-3 mb-6">
+            <img
+              src="/img/cripto/brk.webp"
+              alt="Berkshire Hathaway"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight"
+            >
+              Berkshire Hathaway
+            </h3>
+          </div>
+          <p
+            class="text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider"
+          >
+            Ticker: BRK.B
+          </p>
+          <p class="text-xs text-slate-500 leading-relaxed mb-6">
+            Fortaleza operativa y gestión de valor intrínseco. El estándar de
+            seguridad en renta variable.
+          </p>
+
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Compra BRK.B aquí:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://app.hapi.trade/rewards?code=MANVAR27"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-emerald-500/50 hover:text-emerald-400 transition-all"
+                >Hapi</a
+              >
+              <a
+                href="https://defi.xstocks.fi/points?ref=HOTRLH35"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-emerald-500/50 hover:text-emerald-400 transition-all"
+                >xstocks</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="relative group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-orange-500/30 transition-all cursor-pointer"
+        >
+          <a href="/bitcoin" class="absolute inset-0 z-0"></a>
+
+          <div
+            class="flex items-center gap-3 mb-6 relative z-10 pointer-events-none"
+          >
+            <img
+              src="/img/cripto/bitcoin.webp"
+              alt="Bitcoin"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-orange-400 transition-colors tracking-tight"
+            >
+              Bitcoin
+            </h3>
+          </div>
+          <p
+            class="text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider relative z-10 pointer-events-none"
+          >
+            Ticker: BTC
+          </p>
+          <p
+            class="text-xs text-slate-500 leading-relaxed mb-6 relative z-10 pointer-events-none"
+          >
+            Reserva de valor digital y piedra angular de la descorrelación
+            financiera.
+          </p>
+
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2 relative z-10"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Consigue BTC aquí:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://www.binance.com/en?ref=11581761"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-orange-500/50 hover:text-orange-400 transition-all"
+                >Binance</a
+              >
+              <a
+                href="https://www.bybit.com/en"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-orange-500/50 hover:text-orange-400 transition-all"
+                >Bybit</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="relative group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/30 transition-all cursor-pointer"
+        >
+          <a href="/ethereum" class="absolute inset-0 z-0"></a>
+
+          <div
+            class="flex items-center gap-3 mb-6 relative z-10 pointer-events-none"
+          >
+            <img
+              src="/img/cripto/ethereum.webp"
+              alt="Ethereum"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-blue-400 transition-colors tracking-tight"
+            >
+              Ethereum
+            </h3>
+          </div>
+          <p
+            class="text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider relative z-10 pointer-events-none"
+          >
+            Ticker: ETH
+          </p>
+          <p
+            class="text-xs text-slate-500 leading-relaxed mb-6 relative z-10 pointer-events-none"
+          >
+            La capa de liquidación de contratos inteligentes. Infraestructura de
+            la economía DeFi.
+          </p>
+
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2 relative z-10"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Consigue ETH aquí:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://www.binance.com/en?ref=11581761"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-blue-500/50 hover:text-blue-400 transition-all"
+                >Binance</a
+              >
+              <a
+                href="https://www.bybit.com/en"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-blue-500/50 hover:text-blue-400 transition-all"
+                >Bybit</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-fuchsia-500/30 transition-all cursor-pointer"
+        >
+          <div class="flex items-center gap-3 mb-6">
+            <img
+              src="/img/cripto/hyperliquid.webp"
+              alt="Hyperliquid"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-fuchsia-400 transition-colors tracking-tight"
+            >
+              Hyperliquid
+            </h3>
+          </div>
+          <p
+            class="text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider"
+          >
+            Ticker: HYPE
+          </p>
+          <p class="text-xs text-slate-500 leading-relaxed mb-6">
+            Ecosistema L1 optimizado para derivados on-chain. Liquidez extrema y
+            alto rendimiento.
+          </p>
+
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Consigue HYPE aquí:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://app.hyperliquid.xyz/join/ELLENAADOR"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-fuchsia-500/50 hover:text-fuchsia-400 transition-all"
+                >Hyperliquid Web</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <h2
+            class="text-xs font-mono text-rose-500 uppercase tracking-[0.5em]"
+          >
+            Fase de Garaje
+          </h2>
+          <div class="h-px flex-grow ml-6 bg-rose-500/20"></div>
+        </div>
+        <p
+          class="text-[10px] font-mono text-rose-500/60 uppercase italic tracking-widest text-right"
+        >
+          ⚠️ Riesgo de asimetría total: 0 o 1.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-rose-500/30 transition-all cursor-pointer"
+        >
+          <div class="flex items-center gap-4 mb-6">
+            <img
+              src="/img/cripto/runestone.webp"
+              alt="Logo"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-rose-400 transition-colors tracking-tight"
+            >
+              Runestone
+            </h3>
+          </div>
+          <p class="text-xs text-slate-500 leading-relaxed italic mb-6">
+            Apuesta por la infraestructura cultural en Bitcoin a través de
+            inscripciones.
+          </p>
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Mercado de Runestone:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://unisat.io/market/collection?collectionId=runestone"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-rose-500/50 hover:text-rose-400 transition-all"
+                >UniSat Market</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-rose-500/30 transition-all cursor-pointer"
+        >
+          <div class="flex items-center gap-4 mb-6">
+            <img
+              src="/img/cripto/sunflowerland.webp"
+              alt="Logo"
+              class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+            />
+            <h3
+              class="text-lg font-bold text-white group-hover:text-rose-400 transition-colors tracking-tight"
+            >
+              Sunflower Land
+            </h3>
+          </div>
+          <p class="text-xs text-slate-500 leading-relaxed italic mb-6">
+            Economía experimental de juego on-chain. Tokenomics de flujo
+            orgánico.
+          </p>
+          <div
+            class="pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2"
+          >
+            <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+              >Comienza en Sunflower Land:</span
+            >
+            <div class="flex flex-wrap gap-1.5">
+              <a
+                href="https://sunflower-land.com/play/?ref=Oxlenador"
+                target="_blank"
+                class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded hover:border-rose-500/50 hover:text-rose-400 transition-all"
+                >Sunflower Land Web</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="mt-24 pb-20 reveal">
+        <div class="text-center mb-12">
+          <h2
+            class="text-3xl font-black text-white tracking-tighter uppercase italic"
+          >
+            Preguntas Frecuentes
+          </h2>
+          <p
+            class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2"
+          >
+            Protocolos y Estrategia de Inversión
+          </p>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
+          >
+            <button
+              onclick="toggleFaq(1)"
+              aria-expanded="false"
+              aria-controls="ans-1"
+              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+              >
+                ¿Qué es una tesis de inversión?
+              </span>
+              <span
+                id="icon-1"
+                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
+                >＋</span
+              >
+            </button>
+            <div
+              id="ans-1"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                Es el conjunto de reglas, lógica y principios matemáticos que
+                dictan cómo se debe asignar el capital. Una tesis elimina el
+                componente emocional, permitiendo que las decisiones de
+                inversión se basen en fundamentos sólidos y objetivos medibles
+                en lugar de intuiciones o tendencias momentáneas.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
+          >
+            <button
+              onclick="toggleFaq(2)"
+              aria-expanded="false"
+              aria-controls="ans-2"
+              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+              >
+                ¿Bajo qué criterios invertimos según nuestra tesis?
+              </span>
+              <span
+                id="icon-2"
+                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
+                >＋</span
+              >
+            </button>
+            <div
+              id="ans-2"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                Nuestros criterios se basan en la **Asimetría Cuantitativa** y
+                la **Infraestructura Base**. Buscamos activos con una relación
+                riesgo/recompensa favorable (matemáticamente probada) y nos
+                enfocamos en protocolos que actúan como "rieles" para el futuro
+                financiero. Si un activo no cumple con el respaldo técnico o
+                matemático, se descarta automáticamente.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
+          >
+            <button
+              onclick="toggleFaq(3)"
+              aria-expanded="false"
+              aria-controls="ans-3"
+              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+              >
+                ¿Por qué es vital conocer nuestro perfil de inversión?
+              </span>
+              <span
+                id="icon-3"
+                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
+                >＋</span
+              >
+            </button>
+            <div
+              id="ans-3"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                Conocer el perfil determina nuestra capacidad de soportar el
+                **drawdown** (caídas) sin comprometer la estrategia. Un
+                portafolio bien estructurado debe estar alineado con tu
+                resiliencia psicológica y necesidades de liquidez para evitar
+                ventas de pánico en ciclos bajistas y permitir que el interés
+                compuesto trabaje a largo plazo.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
+          >
+            <button
+              onclick="toggleFaq(4)"
+              aria-expanded="false"
+              aria-controls="ans-4"
+              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+              >
+                ¿Por qué usamos DeFi mientras holdeamos activos?
+              </span>
+              <span
+                id="icon-4"
+                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
+                >＋</span
+              >
+            </button>
+            <div
+              id="ans-4"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
+              >
+                Es nuestra estrategia de **Colateralización Híbrida**. Mantener
+                activos ociosos es una ineficiencia de capital. Al interactuar
+                con protocolos DeFi de bajo riesgo, podemos utilizar esos
+                activos como colateral para farmear recompensas y calificar para
+                airdrops, añadiendo flujos de valor adicionales sin aumentar la
+                exposición directa al precio.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
+          >
+            <button
+              onclick="toggleFaq(5)"
+              aria-expanded="false"
+              aria-controls="ans-5"
+              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
+            >
+              <span
+                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
+              >
+                ¿Qué significa un activo en "Fase de Garaje"?
+              </span>
+              <span
+                id="icon-5"
+                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
+                >＋</span
+              >
+            </button>
+            <div
+              id="ans-5"
+              aria-hidden="true"
+              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+            >
+              <p
+                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 italic"
+              >
+                Representa activos en etapa experimental o embrionaria. Operamos
+                bajo una mentalidad de "0 o 1": el capital asignado se considera
+                de riesgo total, con el potencial de desaparecer o de generar
+                retornos asimétricos masivos. Es la porción más agresiva y
+                especulativa de nuestra gestión de capital.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <p
+            class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
+          >
+            Financial Intelligence Engine
+          </p>
+          <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+
+    <script is:inline>
+      function toggleFaq(id) {
+        const ans = document.getElementById(`ans-${id}`);
+        const icon = document.getElementById(`icon-${id}`);
+        const isClosed =
+          ans.style.maxHeight === "0px" || ans.style.maxHeight === "";
+
+        // Cerrar colapsables activos para un flujo limpio
+        document
+          .querySelectorAll('[id^="ans-"]')
+          .forEach((el) => (el.style.maxHeight = "0px"));
+        document.querySelectorAll(".icon-rotate").forEach((el) => {
+          el.style.transform = "rotate(0deg)";
+          el.classList.remove("text-emerald-400");
+        });
+
+        if (isClosed) {
+          ans.style.maxHeight = ans.scrollHeight + "px";
+          icon.style.transform = "rotate(45deg)";
+          icon.classList.add("text-emerald-400");
+        }
+      }
+    </script>
+  </body>
+</html>

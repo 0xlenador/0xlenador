@@ -1,0 +1,254 @@
+{
+  "id": "bitcoin",
+  "ticker": "BTC",
+  "name": "Bitcoin",
+  "type": "Cripto",
+  "accentColor": "emerald",
+  "pageUrl": "https://0xlenador.xyz/bitcoin",
+  "image": "./assets/img/cripto/bitcoin.webp",
+  "imageAlt": "Core del Protocolo Bitcoin",
+
+  "seo": {
+    "title": "¿Qué es Bitcoin? Guía Técnica y Tesis de Inversión | 0xLeñador",
+    "description": "Análisis profundo de Bitcoin (BTC). Explora su arquitectura técnica, la matemática de su escasez absoluta y por qué representa el foso de seguridad más sólido del ecosistema Web3.",
+    "keywords": "bitcoin, btc, investigación cripto, oro digital, sha-256, proof of work, halving bitcoin, utxo, definicion de bitcoin, tesis de inversion bitcoin, que es bitcoin, 0xleñador",
+    "ogImage": "https://0xlenador.xyz/assets/img/cripto/previewbitcoin.webp"
+  },
+
+  "price": {
+    "apiUrl": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+    "apiPath": "bitcoin.usd"
+  },
+
+  "definicion": "La primera criptomoneda de la historia. Un sistema de efectivo electrónico de persona a persona que no depende de ninguna institución central para funcionar.",
+
+  "genesis": {
+    "fechaInicio": "03/01/2009",
+    "creador": "Satoshi Nakamoto",
+    "whitepaperUrl": "https://bitcoin.org/bitcoin.pdf"
+  },
+
+  "matematica": {
+    "suministroTotal": "21,000,000",
+    "cicloHalving": "210,000 Bloques"
+  },
+
+  "arquitectura": [
+    { "label": "Seguridad", "value": "SHA-256" },
+    { "label": "Consenso", "value": "PoW" },
+    { "label": "Liquidación", "value": "UTXO" }
+  ],
+
+  "floatingTags": [
+    "L1 Protocol",
+    "Oro Digital",
+    "Escasez Absoluta",
+    "Resistente a Censura"
+  ],
+
+  "datoOculto": {
+    "teaser": "\"Runes y Ordinals blindan el futuro de la red Bitcoin al sustituir el subsidio minero con un mercado de datos productivo.\"",
+    "contenido": [
+      "\"Runes y Ordinals blindan el futuro de la red Bitcoin al sustituir el subsidio minero con un mercado de datos productivo.\"",
+      "A medida que las recompensas por bloque disminuyen (halving), las tarifas de red generadas por este nuevo mercado de inscripciones aseguran la rentabilidad de los mineros a largo plazo.",
+      "Esto soluciona el problema crítico del presupuesto de seguridad de Bitcoin, consolidando a la red no solo como dinero, sino como la base de datos inmutable más segura del planeta."
+    ]
+  },
+
+  "analisisCaracter": "\"Bitcoin se distingue por su red descentralizada robusta, su escasez programada y sus profundos efectos de red, que le otorgan el estatus único de reserva de valor digital global, atrayendo una adopción voluntaria, institucional y duradera.\"",
+
+  "tooling": {
+  "mercados": ["binance", "bybit", "hyperliquid"],
+  "analisis": ["tradingview", "coingecko"],
+  "custodia": ["sparrow", "ledger", "bitpay"],
+  "infraestructura": ["mempool-space", "blockstream"]
+},
+
+  "investigacion": {
+    "titulo": "Investigación Profunda",
+    "subtitulo": "Protocolo de Entendimiento Bitcoin / Nivel de Acceso: Full Node",
+    "pilares": [
+      {
+        "titulo": "1. Tesis de Inversión Fundamental de Bitcoin",
+        "secciones": [
+          {
+            "subtitulo": "¿Cuál es la tesis fundamental de Bitcoin como activo y por qué genera valor intrínseco a largo plazo?",
+            "contenido": "Bitcoin es un activo monetario escaso, descentralizado y global que funciona como \"oro digital\" en la era de monedas fiat ilimitadas. Su valor intrínseco proviene de tres propiedades únicas: (1) oferta fija e inalterable de 21 millones de unidades, (2) red descentralizada imposible de censurar o inflar, y (3) adopción creciente como reserva de valor por parte de instituciones, empresas y naciones. En 2026, tras los ETFs spot y la entrada de capital institucional, Bitcoin ya no compite solo como especulación, sino como una clase de activo estratégico de diversificación macro."
+          },
+          {
+            "subtitulo": "¿Qué ventaja estructural tiene frente al oro, fiat o otras criptomonedas?",
+            "contenido": "Frente al oro, Bitcoin ofrece la misma escasez pero con superior portabilidad, divisibilidad, verificabilidad y liquidez 24/7. Frente al fiat, es inmune a la impresión monetaria y al control político. Frente a otras criptomonedas, su dominio de red (más del 50 % del mercado), su hashrate incomparable y su marca como \"el estándar\" lo convierten en la opción más segura y líquida. Ningún otro activo digital ha logrado replicar su combinación de escasez programada + efectos de red + seguridad probada durante 17 años.",
+            "tabla": {
+              "headers": ["Característica", "Bitcoin", "Oro", "Fiat"],
+              "highlightCol": 1,
+              "rows": [
+                ["Escasez", "Absoluta (21M)", "Alta", "Ilimitada"],
+                ["Portabilidad", "Alta (Digital)", "Baja", "Alta"],
+                ["Censurabilidad", "Inmune", "Moderada", "Alta"]
+              ],
+              "rowColors": [
+                ["", "emerald", "emerald-dim", "red"],
+                ["", "emerald", "red", "emerald-dim"],
+                ["", "emerald", "slate", "red"]
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "titulo": "2. Fundamentos Técnicos y Seguridad de Bitcoin",
+        "secciones": [
+          {
+            "subtitulo": "¿Cuál es el nivel real de seguridad y descentralización de la red?",
+            "contenido": "En mayo 2026 el hashrate de Bitcoin se sitúa alrededor de 1 ZH/s (1.000 EH/s), tras una recuperación de los mínimos temporales de principios de año. Esto hace que un ataque 51 % tenga un costo económico prohibitivo (miles de millones de dólares diarios). La red cuenta con decenas de miles de nodos completos distribuidos globalmente y nunca ha sufrido una interrupción de consenso en su historia. Es, objetivamente, la infraestructura computacional más segura del planeta."
+          },
+          {
+            "subtitulo": "¿Cómo funciona su arquitectura (Proof-of-Work, UTXO) y por qué es difícil de replicar?",
+            "contenido": "El Proof-of-Work convierte energía en seguridad inmutable, haciendo extremadamente costoso alterar la historia de la cadena. El modelo UTXO permite verificación ligera, propiedad directa sin intermediarios y escalabilidad a través de soluciones como Lightning Network. Esta combinación de incentivos económicos + criptografía + consenso social es extraordinariamente difícil de replicar: cualquier fork o alternativa ha perdido liquidez y confianza frente a la cadena original."
+          }
+        ]
+      },
+      {
+        "titulo": "3. Política Monetaria y Escasez de Bitcoin",
+        "secciones": [
+          {
+            "subtitulo": "¿Por qué el límite de 21 millones y los halvings constituyen una ventaja monetaria única e irreplicable?",
+            "contenido": "El límite de 21 millones está codificado en el protocolo desde 2009 y requiere consenso global para cambiarlo (algo que nunca ha ocurrido). Los halvings reducen la emisión nueva cada ~4 años (el último fue en abril 2024; el próximo en 2028). Esto crea una curva de suministro predecible y disinflacionaria que ningún banco central puede igualar. En 2026, con más del 98 % de los bitcoins ya minados en ciclos anteriores, la escasez se vuelve cada vez más pronunciada."
+          },
+          {
+            "subtitulo": "¿Cómo impactan en la dinámica oferta-demanda a futuro?",
+            "contenido": "Cada halving reduce a la mitad la nueva oferta mientras la demanda institucional (ETFs, tesorerías corporativas y soberanas) sigue creciendo. En 2026 los ETFs spot ya absorbieron más de $58.500 millones acumulados y $18.700 millones solo en Q1, absorbiendo más del 100 % de la nueva emisión diaria en periodos de fuerte flujo. Esta dinámica estructural genera presión alcista a largo plazo."
+          }
+        ]
+      },
+      {
+        "titulo": "4. Adopción Institucional y Liquidez de Bitcoin",
+        "secciones": [
+          {
+            "subtitulo": "¿Cuál es el estado actual y la trayectoria de adopción institucional y retail?",
+            "contenido": "En mayo 2026 los ETFs spot estadounidenses superan los $100.000 millones en AUM, con flujos netos récord de $2.440 millones solo en abril. Más de 170 empresas públicas y varias naciones acumulan Bitcoin en tesorería. La adopción retail sigue fuerte a través de wallets y Lightning. La trayectoria es claramente ascendente: analistas de Grayscale y Bitwise estiman que el capital institucional continuará entrando durante todo 2026 y 2027."
+          },
+          {
+            "subtitulo": "¿Qué nivel de liquidez y profundidad de mercado tiene frente a otros activos?",
+            "contenido": "Bitcoin es el criptoactivo más líquido del mundo, con volúmenes diarios que superan consistentemente los de la mayoría de acciones individuales y con spreads extremadamente ajustados en exchanges y OTC. Su profundidad de mercado institucional ha mejorado drásticamente gracias a los ETFs."
+          }
+        ]
+      },
+      {
+        "titulo": "5. Valoración Fundamental de Bitcoin",
+        "secciones": [
+          {
+            "subtitulo": "¿Cómo se valora Bitcoin fundamentalmente?",
+            "contenido": "Los modelos más utilizados son Stock-to-Flow (PlanB), que actualmente sugiere un valor medio del ciclo 2024-2028 muy superior al precio actual; el modelo de adopción Metcalfe (valor proporcional al cuadrado de usuarios); y la comparación con oro (Bitcoin ya supera la capitalización de mercado del oro en términos de \"stock digital\"). Todos apuntan a que Bitcoin sigue infravalorado respecto a su escasez y adopción."
+          },
+          {
+            "subtitulo": "¿Cuál es el rango de precios justificado en los próximos 3-5 años?",
+            "contenido": "Los escenarios base de analistas institucionales para finales de 2026-2027 oscilan entre $100.000 y $250.000, con upside alcista por encima de $500.000 en modelos optimistas de Stock-to-Flow. El consenso es que el precio justo sigue subiendo a medida que la adopción institucional se profundiza."
+          }
+        ]
+      },
+      {
+        "titulo": "6. Análisis de Riesgos, Volatilidad y Asimetría",
+        "secciones": [
+          {
+            "subtitulo": "¿Cuál es el perfil de volatilidad histórica y asimetría riesgo/recompensa?",
+            "contenido": "La volatilidad anualizada histórica de Bitcoin se mantiene entre 40-70 %. Sin embargo, su asimetría es marcadamente positiva a largo plazo: las caídas son violentas pero temporales, mientras que las subidas han generado retornos compuestos extraordinarios. Estudios recientes (Bitwise 2026) muestran que incluso una asignación modesta mejora significativamente el Sharpe ratio de una cartera tradicional."
+          },
+          {
+            "subtitulo": "¿Cuáles son los principales riesgos y su mitigación?",
+            "contenido": "",
+            "riskCards": [
+              { "titulo": "Regulatorio", "texto": "Cada vez más favorable (ETFs aprobados y claridad en EE.UU. y Europa)." },
+              { "titulo": "Energético", "texto": "El mix de energías renovables en minería supera el 50 % en muchas regiones y sigue mejorando." },
+              { "titulo": "Tecnológico", "texto": "La red nunca ha sido hackeada en 17 años." },
+              { "titulo": "Competencia", "texto": "Ninguna otra cripto ha logrado desplazar a Bitcoin como reserva de valor." }
+            ],
+            "riskNote": "Todos los riesgos se mitigan por la descentralización y los incentivos económicos del protocolo."
+          }
+        ]
+      },
+      {
+        "titulo": "7. Ajuste de Bitcoin a una Cartera Institucional",
+        "secciones": [
+          {
+            "subtitulo": "¿Cómo impacta Bitcoin en el Sharpe ratio y diversificación?",
+            "contenido": "Según análisis de Bitwise y otros gestores (2026), una asignación de 10-15 % en Bitcoin + oro puede triplicar el Sharpe ratio de una cartera 60/40 tradicional al mejorar el retorno ajustado por riesgo y reducir drawdowns en escenarios inflacionarios o de devaluación monetaria."
+          },
+          {
+            "subtitulo": "¿Qué correlación tiene con otras clases de activos?",
+            "contenido": "Bitcoin muestra baja correlación histórica con acciones y bonos (especialmente en periodos de inflación y riesgo geopolítico) y correlación variable pero a menudo negativa con el oro. Funciona como barbell perfecto: crecimiento asimétrico + hedge macro.",
+            "correlationTags": [
+              { "label": "Acciones", "value": "Baja" },
+              { "label": "Bonos", "value": "Baja" },
+              { "label": "Oro", "value": "Variable/Negativa" }
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": "8. Horizonte Futuro y Decisión de Inversión",
+        "secciones": [
+          {
+            "subtitulo": "¿Cuáles son los catalizadores y escenarios base para los próximos 5-10 años?",
+            "contenido": "Catalizadores principales: mayor penetración de ETFs en wealth management, adopción soberana, crecimiento de BTCFi (Runes, Ordinals, Lightning), y tokenización de activos reales sobre Bitcoin. Escenario base: Bitcoin consolida su rol como reserva de valor digital global, con adopción institucional pasando del 0,5 % actual a niveles significativos en carteras diversificadas."
+          },
+          {
+            "subtitulo": "¿Es Bitcoin una asignación atractiva en la cartera actual?",
+            "contenido": "Sí. En 2026 Bitcoin representa una de las pocas oportunidades asimétricas restantes: riesgo acotado (máximo drawdown histórico recuperado siempre) y upside estructural por escasez + adopción. La mayoría de comités de inversión institucionales recomiendan una asignación estratégica del 1-5 % (hasta 10 % en perfiles más agresivos) como diversificador y generador de alfa a largo plazo."
+          }
+        ]
+      }
+    ]
+  },
+
+  "faq": {
+    "titulo": "Preguntas Frecuentes",
+    "subtitulo": "Resolución de Dudas / Escenario 2026",
+    "startId": 10,
+    "items": [
+      {
+        "pregunta": "¿De verdad sigue siendo buen momento para invertir en Bitcoin en 2026?",
+        "respuesta": "A ver, la pregunta ya no es si Bitcoin va a sobrevivir, sino cuánto espacio quieres que ocupe en tu estrategia. En 2026, con los ETFs totalmente integrados, el riesgo real es tener \"cero\" exposición. Ya no es una apuesta especulativa de sótano; es el activo que te protege mientras el sistema financiero tradicional sigue imprimiendo deuda sin parar."
+      },
+      {
+        "pregunta": "¿Qué precio podemos esperar razonablemente para este ciclo?",
+        "respuesta": "Nadie tiene una bola de cristal, pero las matemáticas no mienten. Entre el choque de oferta del último halving y la demanda institucional que no frena, los analistas serios apuntan a un rango de entre $100,000 y $250,000. Puede sonar agresivo, pero es el resultado lógico cuando un activo escaso se encuentra con una adopción masiva."
+      },
+      {
+        "pregunta": "¿Los ETFs han hecho que Bitcoin sea menos \"salvaje\" con sus precios?",
+        "respuesta": "Digamos que Bitcoin ha \"madurado\". Los ETFs han traído miles de millones que dan mucha más profundidad al mercado. Seguimos teniendo esas caídas que te quitan el aliento, pero los \"suelos\" ahora son mucho más firmes. Las instituciones no suelen entrar en pánico como el inversor retail, y eso le ha dado a Bitcoin una estabilidad que antes no tenía."
+      },
+      {
+        "pregunta": "¿Cuál es la diferencia real entre Bitcoin y el dinero digital de los bancos centrales (CBDC)?",
+        "respuesta": "Es la diferencia entre libertad y control. Una CBDC es el mismo dinero fiat de siempre, pero con un botón de \"pausa\" que el gobierno puede apretar. Bitcoin es neutral; no le pide permiso a nadie para funcionar. Es dinero que te pertenece a ti, no un software de vigilancia de un banco central."
+      },
+      {
+        "pregunta": "¿Sigue siendo un problema el consumo de energía de la red?",
+        "respuesta": "Ese mito ha quedado atrás. En 2026, la minería de Bitcoin es una de las industrias más limpias del mundo; más del 55% de la red corre con renovables. De hecho, Bitcoin está ayudando a financiar plantas de energía limpia en lugares remotos donde antes no era rentable invertir. Hoy, minar Bitcoin es sinónimo de eficiencia energética."
+      }
+    ]
+  },
+
+  "schemaFaq": [
+    {
+      "pregunta": "¿De verdad sigue siendo buen momento para invertir en Bitcoin en 2026?",
+      "respuesta": "En 2026, Bitcoin se ha consolidado como un activo estratégico. Con los ETFs integrados, el riesgo real ya no es la volatilidad, sino la falta de exposición frente a la devaluación constante de las monedas tradicionales."
+    },
+    {
+      "pregunta": "¿Qué precio podemos esperar razonablemente para Bitcoin en este ciclo?",
+      "respuesta": "Debido al choque de oferta tras el último halving y la demanda institucional constante, los modelos de valoración sitúan el precio objetivo en un rango de entre $100,000 y $250,000 USD."
+    },
+    {
+      "pregunta": "¿Cómo han afectado los ETFs a la estabilidad de Bitcoin?",
+      "respuesta": "Los ETFs han aportado una profundidad de mercado masiva. Aunque la volatilidad persiste, el capital institucional actúa como un soporte que estabiliza los precios y reduce las caídas extremas comparado con ciclos anteriores."
+    },
+    {
+      "pregunta": "¿Cuál es la diferencia entre Bitcoin y las monedas digitales estatales (CBDC)?",
+      "respuesta": "La diferencia fundamental es la soberanía. Bitcoin es dinero descentralizado y neutral con oferta limitada, mientras que las CBDC son herramientas de control estatal con oferta ilimitada."
+    },
+    {
+      "pregunta": "¿Es Bitcoin sostenible a nivel ambiental en la actualidad?",
+      "respuesta": "Sí. Para 2026, más del 55% de la minería de Bitcoin proviene de fuentes renovables, convirtiéndola en una de las industrias más eficientes y pro-energía limpia a nivel global."
+    }
+  ]
+}

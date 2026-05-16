@@ -1,0 +1,180 @@
+---
+// ==========================================
+// 1. IMPORTS Y EXTRACCIÓN DE CONTENIDO NATIVO
+// ==========================================
+import { getCollection } from 'astro:content';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/main.css';
+
+// Traemos todos los artículos en tiempo de compilación desde src/content/blog/
+const allPosts = await getCollection('blog');
+
+// Identificamos tu post de la Estrategia 60/40 para usarlo como el "Destacado" principal
+const featuredPost = allPosts.find(post => post.id === 'estrategia-60-40');
+
+// Filtramos el resto de artículos activos para la rejilla secundaria
+const regularPosts = allPosts.filter(post => post.id !== 'estrategia-60-40');
+
+const seo = {
+    title: "Artículos e Investigación de Capital | 0xLeñador",
+    description: "Espacio de divulgación educativa, tokenomía, análisis macroeconómico y tesis fundamentales de inversión en Web3.",
+    url: "https://0xlenador.xyz/blog"
+};
+
+// Listado de próximos análisis planificados (Estructura de Garaje/Próximamente)
+const proximosArticulos = [
+    {
+        title: "Auditoría de Contratos Inteligentes: Filtros de Seguridad para Burner Wallets",
+        category: "Seguridad",
+        desc: "Cómo leer trazas básicas en Etherscan y detectar funciones maliciosas de drenado antes de interactuar con un nuevo protocolo."
+    },
+    {
+        title: "Flujo de Caja Descontado (DCF) Aplicado a Plataformas de Liquidación L1",
+        category: "Modelado",
+        desc: "Adaptación de las métricas tradicionales de Benjamin Graham para valuar la captura de valor real por tarifas de gas on-chain."
+    }
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-96x96.png">
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <title>{seo.title}</title>
+    <link rel="canonical" href={seo.url}>
+    <meta name="description" content={seo.description}>
+    <meta name="theme-color" content="#020617">
+</head>
+<body class="bg-slate-950 text-slate-400 font-sans antialiased selection:bg-emerald-500/30">
+
+    <Navbar />
+
+    <main class="max-w-6xl mx-auto px-6 pt-32 pb-20 reveal">
+        
+        <header class="mb-20">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter italic uppercase leading-none">
+                Artículos <span class="text-emerald-500">&</span> Análisis
+            </h1>
+            <div class="flex flex-col md:flex-row md:items-center gap-4 font-mono text-[10px]">
+                <p class="text-slate-500 uppercase tracking-[0.4em]">Ecosistema de Investigación y Divulgación Financiera</p>
+                <span class="hidden md:block w-12 h-px bg-slate-800"></span>
+                <span class="text-emerald-500/70 uppercase font-semibold">Terminal de Lectura</span>
+            </div>
+        </header>
+
+        {featuredPost && (
+            <section class="mb-24">
+                <div class="group bg-slate-900/20 border border-slate-900 p-8 md:p-12 rounded-[2rem] relative overflow-hidden hover:border-emerald-500/20 transition-all duration-300">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[120px] rounded-full -mr-32 -mt-32 pointer-events-none"></div>
+                    <div class="max-w-4xl relative z-10">
+                        <div class="flex items-center gap-3 mb-5 font-mono text-[10px] uppercase tracking-wider font-semibold">
+                            <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Destacado</span>
+                            <span class="text-slate-700">•</span>
+                            <span class="text-slate-500">{featuredPost.data.date}</span>
+                        </div>
+                        <h2 class="text-2xl md:text-4xl font-black text-white mb-5 tracking-tight group-hover:text-emerald-400 transition-colors uppercase italic leading-tight">
+                            {featuredPost.data.title}
+                        </h2>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-8 text-justify italic font-light">
+                            {featuredPost.data.description}
+                        </p>
+                        <a href={`/blog/${featuredPost.id}`} class="inline-block px-4 py-2 bg-slate-950 border border-slate-800 text-slate-300 text-xs font-bold uppercase tracking-widest rounded-xl hover:border-emerald-500 hover:text-emerald-400 hover:bg-slate-900/40 transition-all duration-300 italic">
+                            Comenzar Lectura ↗
+                        </a>
+                    </div>
+                </div>
+            </section>
+        )}
+
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-xs font-mono text-slate-600 uppercase tracking-[0.5em] font-semibold">Análisis Fundamentales</h2>
+            <div class="h-px flex-grow ml-6 bg-slate-900/50"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+            {regularPosts.map(post => (
+                <div class="group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all duration-300 flex flex-col justify-between cursor-pointer">
+                    <div>
+                        <div class="flex justify-between items-center mb-4 font-mono text-[9px] uppercase tracking-wider font-semibold">
+                            <span class="text-emerald-500">{post.data.category}</span>
+                            <span class="text-slate-600">{post.data.date}</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight leading-snug mb-3">
+                            {post.data.title}
+                        </h3>
+                        <p class="text-xs text-slate-500 leading-relaxed text-justify italic line-clamp-4 font-light">
+                            {post.data.description}
+                        </p>
+                    </div>
+
+                    <div class="pt-4 mt-6 border-t border-slate-800/50 flex items-center justify-between font-mono text-[9px] text-slate-500 group-hover:text-white transition-colors">
+                        <span class="uppercase tracking-wider">Métrica: {post.data.readTime}</span>
+                        <a href={`/blog/${post.id}`} class="font-bold uppercase tracking-widest italic flex items-center gap-0.5">
+                            Acceder <span class="font-sans text-[8px]">↗</span>
+                        </a>
+                    </div>
+                </div>
+            ))}
+
+            {regularPosts.length === 0 && (
+                <div class="group bg-slate-900/10 border border-slate-900/50 border-dashed p-6 rounded-2xl flex flex-col justify-between opacity-40">
+                    <div>
+                        <div class="w-8 h-2 bg-slate-800 rounded mb-4"></div>
+                        <div class="w-full h-4 bg-slate-800 rounded mb-2"></div>
+                        <div class="w-2/3 h-4 bg-slate-800 rounded mb-6"></div>
+                        <div class="w-full h-12 bg-slate-900/50 rounded"></div>
+                    </div>
+                    <div class="pt-4 mt-6 border-t border-slate-900/40 font-mono text-[9px] text-slate-700">
+                        PENDIENTE DE INDEXACIÓN
+                    </div>
+                </div>
+                <div class="group bg-slate-900/10 border border-slate-900/50 border-dashed p-6 rounded-2xl flex flex-col justify-between opacity-40 hidden md:flex">
+                    <div>
+                        <div class="w-8 h-2 bg-slate-800 rounded mb-4"></div>
+                        <div class="w-full h-4 bg-slate-800 rounded mb-2"></div>
+                        <div class="w-2/3 h-4 bg-slate-800 rounded mb-6"></div>
+                        <div class="w-full h-12 bg-slate-900/50 rounded"></div>
+                    </div>
+                    <div class="pt-4 mt-6 border-t border-slate-900/40 font-mono text-[9px] text-slate-700">
+                        PENDIENTE DE INDEXACIÓN
+                    </div>
+                </div>
+            )}
+        </div>
+
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-xs font-mono text-cyan-500 uppercase tracking-[0.5em] font-semibold">Próximas Investigaciones</h2>
+                <div class="h-px flex-grow ml-6 bg-cyan-500/20"></div>
+            </div>
+            <p class="text-[10px] font-mono text-cyan-500/60 uppercase italic tracking-widest text-right">Pipeline de Research: En fase de auditoría técnica.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {proximosArticulos.map(proximo => (
+                <div class="bg-slate-900/10 border border-slate-900 p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="flex items-center justify-between mb-4 font-mono text-[9px] uppercase tracking-wider font-semibold">
+                        <span class="text-cyan-400 bg-cyan-500/5 border border-cyan-500/10 px-2 py-0.5 rounded">{proximo.category}</span>
+                        <span class="text-slate-700 italic">Próximamente</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-400 tracking-tight leading-snug mb-3">
+                        {proximo.title}
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed text-justify italic font-light">
+                        {proximo.desc}
+                    </p>
+                </div>
+            ))}
+        </div>
+
+    </main>
+
+    <Footer />
+
+</body>
+</html>
