@@ -8,7 +8,7 @@ import "../../styles/main.css";
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
-    params: { slug: post.idy },
+    params: { slug: post.id },
     props: { post },
   }));
 }
