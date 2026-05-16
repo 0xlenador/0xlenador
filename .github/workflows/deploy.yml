@@ -26,11 +26,22 @@ jobs:
         with:
           version: 9
 
-      # Esta es la magia: La acción oficial de Astro instala, compila y sube el artefacto automáticamente
-      - name: Instalar y Compilar con Astro
-        uses: withastro/action@v3
+      - name: Configurar Node.js (Fuerza v22 obligatorio para Astro v6)
+        uses: actions/setup-node@v4
         with:
-          package-manager: pnpm@latest
+          node-version: 22.12.0
+          cache: "pnpm"
+
+      - name: Instalar dependencias
+        run: pnpm install
+
+      - name: Compilar sitio estático
+        run: pnpm run build
+
+      - name: Subir artefacto compilado
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
 
   deploy:
     needs: build
