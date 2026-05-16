@@ -26,29 +26,18 @@ jobs:
         with:
           version: 9
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      # Esta es la magia: La acción oficial de Astro instala, compila y sube el artefacto automáticamente
+      - name: Instalar y Compilar con Astro
+        uses: withastro/action@v3
         with:
-          node-version: 20
-          cache: "pnpm"
-
-      - name: Instalar dependencias
-        run: pnpm install
-
-      - name: Compilar sitio estático con Astro
-        run: pnpm run build
-
-      - name: Subir artefacto de compilación
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+          package-manager: pnpm@latest
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
     steps:
       - name: Desplegar en GitHub Pages
         id: deployment
