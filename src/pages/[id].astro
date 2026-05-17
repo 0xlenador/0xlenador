@@ -5,9 +5,7 @@
 import bitcoinData from "../data/bitcoin.json";
 import ethereumData from "../data/ethereum.json";
 import directoryData from "../data/directory.json";
-import Navbar from "../components/Navbar.astro";
-import Footer from "../components/Footer.astro";
-import "../styles/main.css";
+import Layout from "../layouts/Layout.astro";
 
 export async function getStaticPaths() {
   return [
@@ -116,23 +114,7 @@ const schema = [
 ];
 ---
 
-<!doctype html>
-<html lang="es" class="bg-slate-950 text-slate-300">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{data.seo.title}</title>
-    <meta name="description" content={data.seo.description} />
-    <meta property="og:title" content={data.seo.title} />
-    <meta property="og:description" content={data.seo.description} />
-    <meta property="og:image" content={data.seo.ogImage} />
-    <meta property="og:url" content={data.pageUrl} />
-    <link rel="canonical" href={data.pageUrl} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-  </head>
-  <body class="antialiased font-sans">
-    <Navbar />
+<Layout title={data.seo.title} description={data.seo.description} image={data.seo.ogImage} schema={schema}>
 
     <main class="max-w-7xl mx-auto px-6 pt-10 pb-20">
       <header
@@ -802,7 +784,7 @@ const schema = [
       </section>
     </main>
 
-    <Footer />
+
 
     <script
       define:vars={{ apiUrl: data.price?.apiUrl, apiPath: data.price?.apiPath }}
@@ -895,5 +877,4 @@ const schema = [
         }
       }
     </script>
-  </body>
-</html>
+</Layout>

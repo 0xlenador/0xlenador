@@ -1,0 +1,71 @@
+---
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/main.css";
+
+// 1. Definimos qué datos PUEDE recibir este layout
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  schema?: object | object[];
+  keywords?: string;
+  ogType?: string;
+}
+
+// 2. Extraemos los datos. Si la página no los envía, usamos los genéricos (Fallback)
+const {
+  title = "0xLeñador | Gestión de Capital y Estrategia de Inversión 60/40",
+  description = "Optimiza tu patrimonio combinando inversiones tradicionales, ETFs y activos disruptivos.",
+  image = "/img/44.webp",
+  schema,
+  keywords,
+  ogType = "website",
+} = Astro.props;
+
+// 3. Generación automática de la URL Canónica
+// Astro lee tu astro.config.mjs (https://0xlenador.xyz) y le suma la ruta actual (/blog/articulo-1)
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:url" content={canonicalURL} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.site)} />
+
+    <meta name="theme-color" content="#020617" />
+
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+
+    <!-- Slot para contenido <head> específico de cada página -->
+    <slot name="head" />
+  </head>
+  <body class="bg-slate-950 antialiased selection:bg-emerald-500/30">
+    <Navbar />
+    <slot />
+    <Footer />
+  </body>
+</html>

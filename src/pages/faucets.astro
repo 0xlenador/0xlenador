@@ -1,10 +1,5 @@
 ---
-// ==========================================
-// 1. IMPORTS Y BASE DE DATOS (Renderizado en Servidor)
-// ==========================================
-import Navbar from "../components/Navbar.astro";
-import Footer from "../components/Footer.astro";
-import "../styles/main.css";
+import Layout from "../layouts/Layout.astro";
 
 const faucets = [
   {
@@ -428,45 +423,7 @@ const getCleanImagePath = (rawPath) => {
 };
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/img/favicon-96x96.png"
-    />
-    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
-
-    <title>{seo.title}</title>
-    <link rel="canonical" href={seo.url} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="description" content={seo.description} />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={seo.url} />
-    <meta
-      property="og:title"
-      content="0xLeñador - Faucets Cripto Mainnet & Testnet"
-    />
-    <meta property="og:description" content={seo.description} />
-    <meta property="og:image" content={seo.image} />
-
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="0xLeñador - Gestión de Capital" />
-    <meta property="twitter:description" content={seo.description} />
-    <meta
-      property="twitter:image"
-      content="https://0xlenador.xyz/assets/img/44.webp"
-    />
-    <meta name="theme-color" content="#020617" />
-  </head>
-
-  <body class="bg-slate-950 antialiased selection:bg-emerald-500/30">
-    <Navbar />
+<Layout title={seo.title} description={seo.description} image={seo.image}>
 
     <section class="max-w-6xl mx-auto px-6 py-12">
       <div class="mb-10 text-left">
@@ -663,7 +620,7 @@ const getCleanImagePath = (rawPath) => {
       </div>
     </section>
 
-    <Footer />
+
 
     <script is:inline>
       let activeTab = "all";
@@ -747,5 +704,4 @@ const getCleanImagePath = (rawPath) => {
         });
       });
     </script>
-  </body>
-</html>
+</Layout>

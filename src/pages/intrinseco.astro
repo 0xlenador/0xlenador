@@ -1,7 +1,5 @@
 ---
-import Navbar from "../components/Navbar.astro";
-import Footer from "../components/Footer.astro";
-import "../styles/main.css";
+import Layout from "../layouts/Layout.astro";
 
 const seo = {
   title:
@@ -29,41 +27,7 @@ const schema = {
 };
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/img/favicon-96x96.png"
-    />
-    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
-
-    <title>{seo.title}</title>
-    <link rel="canonical" href={seo.url} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="description" content={seo.description} />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={seo.url} />
-    <meta
-      property="og:title"
-      content="0xLeñador - Calculadora de Valor Intrínseco | Value Investing"
-    />
-    <meta property="og:description" content={seo.description} />
-    <meta property="og:image" content={seo.image} />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="0xLeñador - Gestión de Capital" />
-
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-    <meta name="theme-color" content="#020617" />
-  </head>
-
-  <body class="bg-slate-950 antialiased selection:bg-emerald-500/30">
-    <Navbar />
+<Layout title={seo.title} description={seo.description} image={seo.image} schema={schema}>
 
     <header class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
       <h1
@@ -519,7 +483,7 @@ const schema = {
       </div>
     </main>
 
-    <Footer />
+
 
     <script is:inline>
       let currentMode = "basic";
@@ -708,5 +672,4 @@ const schema = {
         }
       }
     </script>
-  </body>
-</html>
+</Layout>

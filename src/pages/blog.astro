@@ -1,11 +1,6 @@
 ---
-// ==========================================
-// 1. IMPORTS Y EXTRACCIÓN DE CONTENIDO NATIVO
-// ==========================================
 import { getCollection } from 'astro:content';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/main.css';
+import Layout from '../layouts/Layout.astro';
 
 // Traemos todos los artículos en tiempo de compilación desde src/content/blog/
 const allPosts = await getCollection('blog');
@@ -37,23 +32,7 @@ const proximosArticulos = [
 ];
 ---
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-96x96.png">
-    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-    
-    <title>{seo.title}</title>
-    <link rel="canonical" href={seo.url}>
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="description" content={seo.description}>
-    <meta name="theme-color" content="#020617">
-</head>
-<body class="bg-slate-950 text-slate-400 font-sans antialiased selection:bg-emerald-500/30">
-
-    <Navbar />
+<Layout title={seo.title} description={seo.description}>
 
     <main class="max-w-6xl mx-auto px-6 pt-32 pb-20 reveal">
         
@@ -174,8 +153,4 @@ const proximosArticulos = [
         </div>
 
     </main>
-
-    <Footer />
-
-</body>
-</html>
+</Layout>

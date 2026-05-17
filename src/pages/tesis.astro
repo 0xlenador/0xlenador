@@ -1,31 +1,14 @@
 ---
-// ==========================================
-// 1. IMPORTS DE COMPONENTES Y ESTILOS
-// ==========================================
-import Navbar from "../components/Navbar.astro";
-import Footer from "../components/Footer.astro";
-import "../styles/main.css";
+import Layout from "../layouts/Layout.astro";
+
+const seo = {
+  title: "Estrategia y Activos | 0xLeñador",
+  description:
+    "Tesis de inversión 60/40 basada en entendimiento estratégico e involucramiento activo. Activos tradicionales, cripto y fase de garaje.",
+};
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/img/favicon-96x96.png"
-    />
-    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
-    <title>Estrategia y Activos | 0xLeñador</title>
-    <link rel="sitemap" href="/sitemap-index.xml" />
-  </head>
-  <body
-    class="bg-slate-950 text-slate-400 font-sans antialiased selection:bg-emerald-500/30"
-  >
-    <Navbar />
+<Layout title={seo.title} description={seo.description}>
 
     <main class="max-w-6xl mx-auto px-6 pt-32 pb-20 reveal">
       <header class="mb-20">
@@ -675,7 +658,7 @@ import "../styles/main.css";
       </section>
     </main>
 
-    <Footer />
+
 
     <script is:inline>
       function toggleFaq(id) {
@@ -700,5 +683,4 @@ import "../styles/main.css";
         }
       }
     </script>
-  </body>
-</html>
+</Layout>
