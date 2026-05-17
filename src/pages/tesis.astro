@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
 
 const seo = {
   title: "Estrategia y Activos | 0xLeñador",
@@ -443,244 +444,42 @@ const seo = {
         </div>
       </div>
 
-      <section class="mt-24 pb-20 reveal">
-        <div class="text-center mb-12">
-          <h2
-            class="text-3xl font-black text-white tracking-tighter uppercase italic"
-          >
-            Preguntas Frecuentes
-          </h2>
-          <p
-            class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2"
-          >
-            Protocolos y Estrategia de Inversión
-          </p>
-        </div>
+      <FaqAccordion
+        titulo="Preguntas Frecuentes"
+        subtitulo="Protocolos y Estrategia de Inversión"
+        items={[
+          {
+            pregunta: "¿Qué es una tesis de inversión?",
+            respuesta: "Es el conjunto de reglas, lógica y principios matemáticos que dictan cómo se debe asignar el capital. Una tesis elimina el componente emocional, permitiendo que las decisiones de inversión se basen en fundamentos sólidos y objetivos medibles en lugar de intuiciones o tendencias momentáneas."
+          },
+          {
+            pregunta: "¿Bajo qué criterios invertimos según nuestra tesis?",
+            respuesta: "Nuestros criterios se basan en la Asimetría Cuantitativa y la Infraestructura Base. Buscamos activos con una relación riesgo/recompensa favorable (matemáticamente probada) y nos enfocamos en protocolos que actúan como 'rieles' para el futuro financiero. Si un activo no cumple con el respaldo técnico o matemático, se descarta automáticamente."
+          },
+          {
+            pregunta: "¿Por qué es vital conocer nuestro perfil de inversión?",
+            respuesta: "Conocer el perfil determina nuestra capacidad de soportar el drawdown (caídas) sin comprometer la estrategia. Un portafolio bien estructurado debe estar alineado con tu resiliencia psicológica y necesidades de liquidez para evitar ventas de pánico en ciclos bajistas y permitir que el interés compuesto trabaje a largo plazo."
+          },
+          {
+            pregunta: "¿Por qué usamos DeFi mientras holdeamos activos?",
+            respuesta: "Es nuestra estrategia de Colateralización Híbrida. Mantener activos ociosos es una ineficiencia de capital. Al interactuar con protocolos DeFi de bajo riesgo, podemos utilizar esos activos como colateral para farmear recompensas y calificar para airdrops, añadiendo flujos de valor adicionales sin aumentar la exposición directa al precio."
+          },
+          {
+            pregunta: "¿Qué significa un activo en 'Fase de Garaje'?",
+            respuesta: "Representa activos en etapa experimental o embrionaria. Operamos bajo una mentalidad de '0 o 1': el capital asignado se considera de riesgo total, con el potencial de desaparecer o de generar retornos asimétricos masivos. Es la porción más agresiva y especulativa de nuestra gestión de capital."
+          }
+        ]}
+      />
 
-        <div class="space-y-4 max-w-2xl mx-auto">
-          <div
-            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <button
-              onclick="toggleFaq(1)"
-              aria-expanded="false"
-              aria-controls="ans-1"
-              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
-            >
-              <span
-                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >
-                ¿Qué es una tesis de inversión?
-              </span>
-              <span
-                id="icon-1"
-                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
-                >＋</span
-              >
-            </button>
-            <div
-              id="ans-1"
-              aria-hidden="true"
-              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
-            >
-              <p
-                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-              >
-                Es el conjunto de reglas, lógica y principios matemáticos que
-                dictan cómo se debe asignar el capital. Una tesis elimina el
-                componente emocional, permitiendo que las decisiones de
-                inversión se basen en fundamentos sólidos y objetivos medibles
-                en lugar de intuiciones o tendencias momentáneas.
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <button
-              onclick="toggleFaq(2)"
-              aria-expanded="false"
-              aria-controls="ans-2"
-              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
-            >
-              <span
-                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >
-                ¿Bajo qué criterios invertimos según nuestra tesis?
-              </span>
-              <span
-                id="icon-2"
-                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
-                >＋</span
-              >
-            </button>
-            <div
-              id="ans-2"
-              aria-hidden="true"
-              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
-            >
-              <p
-                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-              >
-                Nuestros criterios se basan en la **Asimetría Cuantitativa** y
-                la **Infraestructura Base**. Buscamos activos con una relación
-                riesgo/recompensa favorable (matemáticamente probada) y nos
-                enfocamos en protocolos que actúan como "rieles" para el futuro
-                financiero. Si un activo no cumple con el respaldo técnico o
-                matemático, se descarta automáticamente.
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <button
-              onclick="toggleFaq(3)"
-              aria-expanded="false"
-              aria-controls="ans-3"
-              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
-            >
-              <span
-                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >
-                ¿Por qué es vital conocer nuestro perfil de inversión?
-              </span>
-              <span
-                id="icon-3"
-                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
-                >＋</span
-              >
-            </button>
-            <div
-              id="ans-3"
-              aria-hidden="true"
-              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
-            >
-              <p
-                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-              >
-                Conocer el perfil determina nuestra capacidad de soportar el
-                **drawdown** (caídas) sin comprometer la estrategia. Un
-                portafolio bien estructurado debe estar alineado con tu
-                resiliencia psicológica y necesidades de liquidez para evitar
-                ventas de pánico en ciclos bajistas y permitir que el interés
-                compuesto trabaje a largo plazo.
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <button
-              onclick="toggleFaq(4)"
-              aria-expanded="false"
-              aria-controls="ans-4"
-              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
-            >
-              <span
-                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >
-                ¿Por qué usamos DeFi mientras holdeamos activos?
-              </span>
-              <span
-                id="icon-4"
-                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
-                >＋</span
-              >
-            </button>
-            <div
-              id="ans-4"
-              aria-hidden="true"
-              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
-            >
-              <p
-                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-              >
-                Es nuestra estrategia de **Colateralización Híbrida**. Mantener
-                activos ociosos es una ineficiencia de capital. Al interactuar
-                con protocolos DeFi de bajo riesgo, podemos utilizar esos
-                activos como colateral para farmear recompensas y calificar para
-                airdrops, añadiendo flujos de valor adicionales sin aumentar la
-                exposición directa al precio.
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <button
-              onclick="toggleFaq(5)"
-              aria-expanded="false"
-              aria-controls="ans-5"
-              class="w-full p-6 text-left flex justify-between items-center group cursor-pointer"
-            >
-              <span
-                class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >
-                ¿Qué significa un activo en "Fase de Garaje"?
-              </span>
-              <span
-                id="icon-5"
-                class="text-slate-500 transition-all duration-300 transform font-mono text-lg"
-                >＋</span
-              >
-            </button>
-            <div
-              id="ans-5"
-              aria-hidden="true"
-              class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
-            >
-              <p
-                class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 italic"
-              >
-                Representa activos en etapa experimental o embrionaria. Operamos
-                bajo una mentalidad de "0 o 1": el capital asignado se considera
-                de riesgo total, con el potencial de desaparecer o de generar
-                retornos asimétricos masivos. Es la porción más agresiva y
-                especulativa de nuestra gestión de capital.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-20 text-center">
-          <p
-            class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
-          >
-            Financial Intelligence Engine
-          </p>
-          <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
-        </div>
-      </section>
+      <div class="mt-20 text-center">
+        <p
+          class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
+        >
+          Financial Intelligence Engine
+        </p>
+        <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+      </div>
     </main>
 
 
-
-    <script is:inline>
-      function toggleFaq(id) {
-        const ans = document.getElementById(`ans-${id}`);
-        const icon = document.getElementById(`icon-${id}`);
-        const isClosed =
-          ans.style.maxHeight === "0px" || ans.style.maxHeight === "";
-
-        // Cerrar colapsables activos para un flujo limpio
-        document
-          .querySelectorAll('[id^="ans-"]')
-          .forEach((el) => (el.style.maxHeight = "0px"));
-        document.querySelectorAll(".icon-rotate").forEach((el) => {
-          el.style.transform = "rotate(0deg)";
-          el.classList.remove("text-emerald-400");
-        });
-
-        if (isClosed) {
-          ans.style.maxHeight = ans.scrollHeight + "px";
-          icon.style.transform = "rotate(45deg)";
-          icon.classList.add("text-emerald-400");
-        }
-      }
-    </script>
 </Layout>

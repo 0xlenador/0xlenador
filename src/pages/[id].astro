@@ -6,6 +6,7 @@ import bitcoinData from "../data/bitcoin.json";
 import ethereumData from "../data/ethereum.json";
 import directoryData from "../data/directory.json";
 import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
 
 export async function getStaticPaths() {
   return [
@@ -718,70 +719,12 @@ const schema = [
         </div>
       </section>
 
-      <section class="mt-24 max-w-3xl mx-auto">
-        <div class="mb-12 text-center">
-          <h2
-            class="text-3xl font-black text-white tracking-tighter uppercase italic mb-4"
-          >
-            {data.faq.titulo}
-          </h2>
-          <p
-            class="text-slate-500 font-mono text-[10px] uppercase tracking-[0.4em] italic"
-          >
-            {data.faq.subtitulo}
-          </p>
-        </div>
-        <div class="space-y-4">
-          {
-            data.faq.items.map((item, i) => {
-              const id = data.faq.startId + i;
-              return (
-                <div class="p-6 bg-slate-900/20 border border-slate-800 rounded-3xl group hover:border-slate-700 transition-all duration-300">
-                  <button
-                    onclick={`toggleFaq(${id})`}
-                    class="w-full flex justify-between items-center text-left faq-btn"
-                    aria-expanded="false"
-                  >
-                    <h3 class="text-white font-bold text-sm md:text-base pr-8">
-                      {item.pregunta}
-                    </h3>
-                    <span
-                      id={`icon-${id}`}
-                      class={`${c.text500}/50 transition-all duration-500 transform text-xl font-light icon-rotate`}
-                    >
-                      <svg
-                        class="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <div
-                    id={`ans-${id}`}
-                    class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
-                    aria-hidden="true"
-                    style="max-height: 0px;"
-                  >
-                    <p
-                      class={`text-slate-400 text-sm md:text-base mt-6 leading-relaxed italic border-l-2 ${c.border20} pl-4`}
-                    >
-                      {item.respuesta}
-                    </p>
-                  </div>
-                </div>
-              );
-            })
-          }
-        </div>
-      </section>
+      <FaqAccordion
+        titulo={data.faq.titulo}
+        subtitulo={data.faq.subtitulo}
+        items={data.faq.items}
+        startId={data.faq.startId}
+      />
     </main>
 
 
@@ -857,24 +800,5 @@ const schema = [
       }
     </script>
 
-    <script is:inline>
-      function toggleFaq(id) {
-        const ans = document.getElementById(`ans-${id}`);
-        const icon = document.getElementById(`icon-${id}`);
-        const isClosed =
-          ans.style.maxHeight === "0px" || ans.style.maxHeight === "";
 
-        document
-          .querySelectorAll(".faq-content")
-          .forEach((el) => (el.style.maxHeight = "0px"));
-        document
-          .querySelectorAll(".icon-rotate")
-          .forEach((el) => (el.style.transform = "rotate(0deg)"));
-
-        if (isClosed) {
-          ans.style.maxHeight = ans.scrollHeight + "px";
-          icon.style.transform = "rotate(180deg)";
-        }
-      }
-    </script>
 </Layout>

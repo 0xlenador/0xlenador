@@ -1,6 +1,7 @@
 ---
 // Importamos el Layout maestro (Asegúrate de haber creado src/layouts/Layout.astro)
 import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
 
 // Metadatos específicos de la página principal
 const seo = {
@@ -645,211 +646,39 @@ const schema = {
       </div>
     </section>
 
-    <section class="mt-12 pb-20">
-      <div class="text-center mb-16">
-        <h2
-          class="text-3xl font-black text-white tracking-tighter uppercase italic"
-        >
-          Preguntas Frecuentes
-        </h2>
-        <p
-          class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2"
-        >
-          Entendiendo la mentalidad de investigación
-        </p>
-      </div>
+    <FaqAccordion
+      titulo="Preguntas Frecuentes"
+      subtitulo="Entendiendo la mentalidad de investigación"
+      startId={101}
+      items={[
+        {
+          pregunta: "¿Por qué el entendimiento vale más que el capital?",
+          respuesta: "El capital sin conocimiento es efímero. Cuando comprendes la lógica económica de un activo, el precio se vuelve secundario; ese entendimiento es lo que te otorga la convicción necesaria para operar con frialdad cuando otros dudan."
+        },
+        {
+          pregunta: '¿Qué significa "investigar con carácter"?',
+          respuesta: "Es el compromiso de involucrarse en la tecnología y los números de un proyecto hasta dominar sus riesgos. El carácter no es otra cosa que la seguridad resultante de una investigación exhaustiva que te impide ser desplazado por la volatilidad."
+        },
+        {
+          pregunta: "¿Este sitio ofrece señales o consejos de compra?",
+          respuesta: "Absolutamente no. 0xLeñador es un ecosistema de investigación y análisis técnico. Nuestra meta es compartir metodologías de pensamiento crítico para que cada individuo construya su propia convicción operativa."
+        },
+        {
+          pregunta: "¿Qué encontrarás en nuestro sitio?",
+          respuesta: "Accederás a nuestra tesis de inversión detallada, herramientas de cálculo como la terminal de valor intrínseco y un panel de observación de activos que abarca desde el ecosistema Web3 hasta mercados tradicionales."
+        }
+      ]}
+    />
 
-      <div class="space-y-4 max-w-2xl mx-auto">
-        <div
-          class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
-        >
-          <button
-            onclick="toggleFaq(101)"
-            aria-expanded="false"
-            class="w-full p-6 text-left flex justify-between items-center faq-btn"
-          >
-            <span
-              class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >¿Por qué el entendimiento vale más que el capital?</span
-            >
-            <span
-              id="icon-101"
-              class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
-              ><svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
-              ></span
-            >
-          </button>
-          <div
-            id="ans-101"
-            aria-hidden="true"
-            class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
-            style="max-height: 0px;"
-          >
-            <p
-              class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-            >
-              El capital sin conocimiento es efímero. Cuando comprendes la
-              lógica económica de un activo, el precio se vuelve secundario; ese
-              entendimiento es lo que te otorga la convicción necesaria para
-              operar con frialdad cuando otros dudan.
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
-        >
-          <button
-            onclick="toggleFaq(102)"
-            aria-expanded="false"
-            class="w-full p-6 text-left flex justify-between items-center faq-btn"
-          >
-            <span
-              class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >¿Qué significa "investigar con carácter"?</span
-            >
-            <span
-              id="icon-102"
-              class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
-              ><svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
-              ></span
-            >
-          </button>
-          <div
-            id="ans-102"
-            aria-hidden="true"
-            class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
-            style="max-height: 0px;"
-          >
-            <p
-              class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-            >
-              Es el compromiso de involucrarse en la tecnología y los números de
-              un proyecto hasta dominar sus riesgos. El carácter no es otra cosa
-              que la seguridad resultante de una investigación exhaustiva que te
-              impide ser desplazado por la volatilidad.
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
-        >
-          <button
-            onclick="toggleFaq(103)"
-            aria-expanded="false"
-            class="w-full p-6 text-left flex justify-between items-center faq-btn"
-          >
-            <span
-              class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >¿Este sitio ofrece señales o consejos de compra?</span
-            >
-            <span
-              id="icon-103"
-              class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
-              ><svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
-              ></span
-            >
-          </button>
-          <div
-            id="ans-103"
-            aria-hidden="true"
-            class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
-            style="max-height: 0px;"
-          >
-            <p
-              class="p-6 pt-0 text-slate-400 text-[10px] leading-relaxed border-t border-slate-800/50 uppercase font-mono italic"
-            >
-              Absolutamente no. 0xLeñador es un ecosistema de investigación y
-              análisis técnico. Nuestra meta es compartir metodologías de
-              pensamiento crítico para que cada individuo construya su propia
-              convicción operativa.
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300"
-        >
-          <button
-            onclick="toggleFaq(104)"
-            aria-expanded="false"
-            class="w-full p-6 text-left flex justify-between items-center faq-btn"
-          >
-            <span
-              class="text-white font-bold group-hover:text-emerald-400 transition-colors"
-              >¿Qué encontrarás en nuestro sitio?</span
-            >
-            <span
-              id="icon-104"
-              class="text-slate-500 transition-all duration-500 transform text-xl font-light icon-rotate"
-              ><svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
-              ></span
-            >
-          </button>
-          <div
-            id="ans-104"
-            aria-hidden="true"
-            class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
-            style="max-height: 0px;"
-          >
-            <p
-              class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50"
-            >
-              Accederás a nuestra tesis de inversión detallada, herramientas de
-              cálculo como la terminal de valor intrínseco y un panel de
-              observación de activos que abarca desde el ecosistema Web3 hasta
-              mercados tradicionales.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-20 text-center">
-        <p
-          class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
-        >
-          Research & Conviction Protocol
-        </p>
-        <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
-      </div>
-    </section>
+    <div class="mt-20 text-center">
+      <p
+        class="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
+      >
+        Research & Conviction Protocol
+      </p>
+      <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+    </div>
+  </section>
   </main>
 
   <script
@@ -1004,26 +833,5 @@ const schema = {
         }
       }, 50);
     });
-
-    // LÓGICA FAQ (Acordeón Global)
-    function toggleFaq(id) {
-      const ans = document.getElementById(`ans-${id}`);
-      const icon = document.getElementById(`icon-${id}`);
-      const isClosed =
-        ans.style.maxHeight === "0px" || ans.style.maxHeight === "";
-
-      // Cerrar otros
-      document
-        .querySelectorAll(".faq-content")
-        .forEach((el) => (el.style.maxHeight = "0px"));
-      document
-        .querySelectorAll(".icon-rotate")
-        .forEach((el) => (el.style.transform = "rotate(0deg)"));
-
-      if (isClosed) {
-        ans.style.maxHeight = ans.scrollHeight + "px";
-        icon.style.transform = "rotate(180deg)";
-      }
-    }
   </script>
 </Layout>

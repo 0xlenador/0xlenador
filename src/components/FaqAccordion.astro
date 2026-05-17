@@ -1,0 +1,151 @@
+---
+// ==========================================
+// FaqAccordion.astro — Componente reutilizable de FAQ
+// Recibe un array de items con pregunta/respuesta y
+// renderiza un acordeón con JS encapsulado.
+// ==========================================
+
+interface FaqItem {
+  pregunta: string;
+  respuesta: string;
+}
+
+interface Props {
+  items: FaqItem[];
+  /** Título de la sección FAQ */
+  titulo?: string;
+  /** Subtítulo / descriptor */
+  subtitulo?: string;
+  /** ID numérico inicial para los elementos (evita colisiones entre múltiples instancias) */
+  startId?: number;
+  /** Color de acento para el borde de la respuesta (clases Tailwind como "border-emerald-500/20") */
+  accentBorder?: string;
+  /** Color de acento para texto de la respuesta (clases Tailwind como "text-emerald-400") */
+  accentText?: string;
+}
+
+const {
+  items,
+  titulo = "Preguntas Frecuentes",
+  subtitulo,
+  startId = 1,
+  accentBorder = "border-emerald-500/20",
+  accentText,
+} = Astro.props;
+
+// Generar un ID único por instancia para evitar colisiones de selectores
+const instanceId = `faq-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<section class="mt-24 pb-20 reveal">
+  <div class="text-center mb-12">
+    <h2
+      class="text-3xl font-black text-white tracking-tighter uppercase italic"
+    >
+      {titulo}
+    </h2>
+    {
+      subtitulo && (
+        <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">
+          {subtitulo}
+        </p>
+      )
+    }
+  </div>
+
+  <div class="space-y-4 max-w-2xl mx-auto" data-faq-instance={instanceId}>
+    {
+      items.map((item, i) => {
+        const id = startId + i;
+        return (
+          <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300">
+            <button
+              data-faq-toggle={id}
+              aria-expanded="false"
+              aria-controls={`${instanceId}-ans-${id}`}
+              class="w-full p-6 text-left flex justify-between items-center faq-btn cursor-pointer"
+            >
+              <span class="text-white font-bold group-hover:text-emerald-400 transition-colors pr-4">
+                {item.pregunta}
+              </span>
+              <span
+                data-faq-icon={id}
+                class="text-slate-500 transition-all duration-500 transform text-xl font-light faq-icon-rotate flex-shrink-0"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
+                </svg>
+              </span>
+            </button>
+            <div
+              id={`${instanceId}-ans-${id}`}
+              data-faq-answer={id}
+              class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out faq-content"
+              aria-hidden="true"
+              style="max-height: 0px;"
+            >
+              <p
+                class={`p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 ${accentBorder ? `border-l-2 ${accentBorder} pl-4 mt-4` : ""}`}
+              >
+                {item.respuesta}
+              </p>
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
+
+<script define:vars={{ instanceId }}>
+  // Encapsulado: cada instancia del componente opera solo sobre sus propios elementos
+  (function () {
+    const container = document.querySelector(
+      `[data-faq-instance="${instanceId}"]`,
+    );
+    if (!container) return;
+
+    const buttons = container.querySelectorAll("[data-faq-toggle]");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-faq-toggle");
+        const ans = container.querySelector(`[data-faq-answer="${id}"]`);
+        const icon = container.querySelector(`[data-faq-icon="${id}"]`);
+        if (!ans || !icon) return;
+
+        const isClosed =
+          ans.style.maxHeight === "0px" || ans.style.maxHeight === "";
+
+        // Cerrar todos los paneles abiertos de ESTA instancia
+        container
+          .querySelectorAll(".faq-content")
+          .forEach((el) => (el.style.maxHeight = "0px"));
+        container
+          .querySelectorAll(".faq-icon-rotate")
+          .forEach((el) => (el.style.transform = "rotate(0deg)"));
+
+        // Actualizar aria-expanded en todos los botones
+        container
+          .querySelectorAll("[data-faq-toggle]")
+          .forEach((b) => b.setAttribute("aria-expanded", "false"));
+
+        if (isClosed) {
+          ans.style.maxHeight = ans.scrollHeight + "px";
+          icon.style.transform = "rotate(180deg)";
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
+  })();
+</script>
