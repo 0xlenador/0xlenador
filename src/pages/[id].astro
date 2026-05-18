@@ -63,16 +63,6 @@ const colorMap = {
 
 const c = colorMap[data.accentColor] || colorMap.emerald;
 
-// ==========================================
-// FUNCIÓN PARA LIMPIAR RUTAS DE IMÁGENES
-// ==========================================
-const getCleanImagePath = (rawPath) => {
-  if (!rawPath) return "";
-  // Corrige tanto si empieza por "./assets/img/" como si empieza por "assets/img/"
-  return rawPath
-    .replace("./assets/img/", "/img/")
-    .replace("assets/img/", "/img/");
-};
 
 const toolingSections = [
   { title: "Mercados y Exchanges", key: "mercados" },
@@ -307,7 +297,7 @@ const schema = [
                 class={`relative w-48 h-48 md:w-72 md:h-72 rounded-full flex items-center justify-center ${c.glow} transition-all duration-700 overflow-hidden`}
               >
                 <img
-                  src={getCleanImagePath(data.image)}
+                  src={data.image}
                   alt={data.imageAlt}
                   class="w-full h-full object-cover rounded-full"
                 />
@@ -562,9 +552,7 @@ const schema = [
                         >
                           <div class="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center border border-slate-800">
                             <img
-                              src={getCleanImagePath(
-                                item.image || item.logo || "",
-                              )}
+                              src={item.image || item.logo || ""}
                               alt={item.name}
                               loading="lazy"
                               class="w-6 h-6 object-contain"
