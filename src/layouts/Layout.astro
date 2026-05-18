@@ -11,6 +11,7 @@ interface Props {
   schema?: object | object[];
   keywords?: string;
   ogType?: string;
+  customSpacing?: boolean;
 }
 
 // 2. Extraemos los datos. Si la página no los envía, usamos los genéricos (Fallback)
@@ -21,6 +22,7 @@ const {
   schema,
   keywords,
   ogType = "website",
+  customSpacing = false,
 } = Astro.props;
 
 // 3. Generación automática de la URL Canónica
@@ -35,7 +37,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="/img/favicon-96x96.png"
+    />
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
 
     <title>{title}</title>
@@ -58,14 +65,22 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <meta name="theme-color" content="#020617" />
 
-    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    {
+      schema && (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      )
+    }
 
     <!-- Slot para contenido <head> específico de cada página -->
     <slot name="head" />
   </head>
-  <body class="bg-slate-950 antialiased selection:bg-emerald-500/30">
+  <body
+    class="bg-slate-950 antialiased selection:bg-emerald-500/30 min-h-screen flex flex-col"
+  >
     <Navbar />
-    <slot />
+    <div class:list={["flex-1", !customSpacing && "pt-10 pb-4"]}>
+      <slot />
+    </div>
     <Footer />
   </body>
 </html>
