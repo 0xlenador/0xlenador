@@ -15,6 +15,14 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { title, description, keywords, date, readTime, category } = post.data;
 const { Content } = await render(post);
+
+// Formatear fecha al estilo: Apr 22, 2026
+const formattedDate = new Date(date).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
 ---
 
 <Layout
@@ -66,7 +74,7 @@ const { Content } = await render(post);
 
         <header class="mb-12 border-b border-slate-800/60 pb-10">
           <h1
-            class="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight leading-tight uppercase italic"
+            class="text-2xl md:text-4xl font-extrabold text-slate-100 mb-6 tracking-tight leading-tight"
           >
             {title}
           </h1>
@@ -86,7 +94,7 @@ const { Content } = await render(post);
               class="flex items-center gap-2 border-l border-slate-800 pl-4 md:pl-6"
             >
               <span class="text-slate-500">Actualizado</span>
-              <span class="text-slate-300">{date}</span>
+              <span class="text-slate-300">{formattedDate}</span>
             </div>
             <div
               class="flex items-center gap-2 border-l border-slate-800 pl-4 md:pl-6"
@@ -107,7 +115,7 @@ const { Content } = await render(post);
           </div>
         </header>
 
-        <div class="content relative text-justify" id="article-content">
+        <div class="content relative text-left md:text-justify" id="article-content">
           <Content />
         </div>
 
@@ -132,6 +140,7 @@ const { Content } = await render(post);
 
       <aside class="w-full lg:w-[32%] mt-12 lg:mt-0">
         <div
+          id="sidebar-scroll-container"
           class="sticky top-32 space-y-10 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8 pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           <div
@@ -304,6 +313,17 @@ const { Content } = await render(post);
         const mobileList = document.getElementById("toc-list-mobile");
         if (!container) return;
 
+        // Envolver tablas para que sean responsive en móviles
+        const tables = container.querySelectorAll("table");
+        tables.forEach((table) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "overflow-x-auto my-8 border border-slate-800/80 rounded-xl bg-slate-900/20 max-w-full [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-slate-950 [&::-webkit-scrollbar-thumb]:bg-slate-800 [&::-webkit-scrollbar-thumb]:rounded-full";
+          if (table.parentNode) {
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
+          }
+        });
+
         const headings = container.querySelectorAll("h2, h3");
         headings.forEach((heading, i) => {
           const cleanId = heading.id || `sec-${i}`;
@@ -332,22 +352,73 @@ const { Content } = await render(post);
         });
 
         const links = document.querySelectorAll(".toc-link");
+        const activeSections = new Set();
+        let lastActiveId = "";
+
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
-                const id = entry.target.id;
-                links.forEach((link) => {
-                  if (link.getAttribute("href") === `#${id}`) {
-                    link.classList.add("active");
-                  } else {
-                    link.classList.remove("active");
-                  }
-                });
+                activeSections.add(entry.target.id);
+              } else {
+                activeSections.delete(entry.target.id);
               }
             });
+
+            let currentActiveId = "";
+            if (activeSections.size > 0) {
+              for (const heading of headings) {
+                if (activeSections.has(heading.id)) {
+                  currentActiveId = heading.id;
+                  break;
+                }
+              }
+            }
+
+            if (!currentActiveId && lastActiveId) {
+              currentActiveId = lastActiveId;
+            }
+
+            if (currentActiveId && currentActiveId !== lastActiveId) {
+              lastActiveId = currentActiveId;
+              
+              links.forEach((link) => {
+                const href = link.getAttribute("href");
+                if (href === `#${currentActiveId}`) {
+                  link.classList.add("active");
+                  
+                  // Lógica de scroll-follow para desktop y móvil
+                  const activeItem = link.closest(".toc-item");
+                  const isDesktop = link.closest("#toc-list") !== null;
+                  const scrollContainer = isDesktop 
+                    ? document.getElementById("sidebar-scroll-container")
+                    : document.getElementById("mobile-toc-drawer");
+                  
+                  if (activeItem && scrollContainer) {
+                    const itemOffsetTop = activeItem.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top + scrollContainer.scrollTop;
+                    const itemHeight = activeItem.clientHeight;
+                    const itemOffsetBottom = itemOffsetTop + itemHeight;
+                    const containerHeight = scrollContainer.clientHeight;
+
+                    if (itemOffsetTop < scrollContainer.scrollTop + 20) {
+                      scrollContainer.scrollTo({
+                        top: itemOffsetTop - 20,
+                        behavior: "smooth"
+                      });
+                    } else if (itemOffsetBottom > scrollContainer.scrollTop + containerHeight - 20) {
+                      scrollContainer.scrollTo({
+                        top: itemOffsetBottom - containerHeight + 20,
+                        behavior: "smooth"
+                      });
+                    }
+                  }
+                } else {
+                  link.classList.remove("active");
+                }
+              });
+            }
           },
-          { root: null, rootMargin: "0px 0px -70% 0px", threshold: 0.1 },
+          { root: null, rootMargin: "-10% 0px -75% 0px", threshold: 0 }
         );
 
         headings.forEach((h) => observer.observe(h));
@@ -357,18 +428,30 @@ const { Content } = await render(post);
         const mDrawer = document.getElementById("mobile-toc-drawer");
         const mClose = document.getElementById("close-mobile-toc");
 
+        const closeMobileToc = () => {
+          if (mModal && mDrawer) {
+            mModal.classList.add("pointer-events-none", "opacity-0");
+            mDrawer.classList.add("translate-y-full");
+          }
+        };
+
         if (mBtn && mModal && mDrawer) {
           mBtn.addEventListener("click", () => {
             mModal.classList.remove("pointer-events-none", "opacity-0");
             mDrawer.classList.remove("translate-y-full");
           });
-          const close = () => {
-            mModal.classList.add("pointer-events-none", "opacity-0");
-            mDrawer.classList.add("translate-y-full");
-          };
-          mClose.addEventListener("click", close);
+          if (mClose) mClose.addEventListener("click", closeMobileToc);
           mModal.addEventListener("click", (e) => {
-            if (e.target === mModal) close();
+            if (e.target === mModal) closeMobileToc();
+          });
+        }
+
+        // Cerrar modal móvil al hacer click en un enlace del TOC móvil
+        if (mobileList) {
+          mobileList.addEventListener("click", (e) => {
+            if (e.target.closest(".toc-link")) {
+              closeMobileToc();
+            }
           });
         }
       });
