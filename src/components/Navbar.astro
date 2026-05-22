@@ -1,5 +1,10 @@
 ---
-// Aquí podríamos poner código del servidor si hiciera falta, por ahora queda limpio.
+import { Image } from 'astro:assets';
+
+const { pathname } = Astro.url;
+const activePath = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
+
+const isActive = (href: string) => activePath === href || (href !== '/' && activePath.startsWith(href));
 ---
 
 <div class="max-w-7xl mx-auto px-4 w-full">
@@ -9,13 +14,15 @@
   >
     <div class="flex items-center gap-8 z-50">
       <a
-        href="/"
+        href="/" data-astro-prefetch
         class="text-xl font-bold tracking-tighter text-white flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none rounded-md"
       >
-        <img
+        <Image
           src="/img/56x.webp"
           alt="Logo 0xLeñador"
-          loading="lazy"
+          width={56}
+          height={56}
+          loading="eager"
           class="w-7 h-7 object-contain"
         />
         <span class="leading-none"
@@ -27,14 +34,18 @@
         class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-slate-400"
       >
         <a
-          href="/tesis"
-          class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all"
+          href="/tesis" data-astro-prefetch
+          class:list={[
+            "nav-link px-3 py-2 rounded-lg transition-all",
+            isActive("/tesis") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          ]}
           >Tesis de Inversión</a
         >
 
-        <div class="relative group/activos">
+        <div class="relative group/activos focus-within:ring-2 focus-within:ring-emerald-400 rounded-lg">
           <button
-            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1 cursor-pointer"
+            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
+            aria-haspopup="menu"
           >
             Activos
             <svg
@@ -50,30 +61,40 @@
             >
           </button>
           <div
-            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/activos:opacity-100 group-hover/activos:visible transition-all duration-200 z-50"
+            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/activos:opacity-100 group-hover/activos:visible group-focus-within/activos:opacity-100 group-focus-within/activos:visible transition-all duration-200 z-50"
           >
             <div
               class="bg-slate-900 border border-slate-800 rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
             >
               <a
-                href="/bitcoin"
-                class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all"
+                href="/bitcoin" data-astro-prefetch
+                class:list={[
+                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
+                  isActive("/bitcoin") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                ]}
               >
-                <img
+                <Image
                   src="/img/cripto/bitcoin.webp"
                   alt="Bitcoin"
+                  width={40}
+                  height={40}
                   loading="lazy"
                   class="w-5 h-5 rounded-full"
                 />
                 Bitcoin
               </a>
               <a
-                href="/ethereum"
-                class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all"
+                href="/ethereum" data-astro-prefetch
+                class:list={[
+                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
+                  isActive("/ethereum") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                ]}
               >
-                <img
+                <Image
                   src="/img/cripto/ethereum.webp"
                   alt="Ethereum"
+                  width={40}
+                  height={40}
                   loading="lazy"
                   class="w-5 h-5 rounded-full"
                 />
@@ -93,9 +114,10 @@
           </div>
         </div>
 
-        <div class="relative group/tools">
+        <div class="relative group/tools focus-within:ring-2 focus-within:ring-emerald-400 rounded-lg">
           <button
-            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1 cursor-pointer"
+            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
+            aria-haspopup="menu"
           >
             Tools
             <svg
@@ -111,14 +133,17 @@
             >
           </button>
           <div
-            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/tools:opacity-100 group-hover/tools:visible transition-all duration-200 z-50"
+            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/tools:opacity-100 group-hover/tools:visible group-focus-within/tools:opacity-100 group-focus-within/tools:visible transition-all duration-200 z-50"
           >
             <div
               class="bg-slate-900 border border-slate-800 rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
             >
               <a
-                href="/faucets"
-                class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all"
+                href="/faucets" data-astro-prefetch
+                class:list={[
+                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
+                  isActive("/faucets") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                ]}
               >
                 <svg
                   class="w-5 h-5 text-emerald-500/70"
@@ -135,8 +160,11 @@
                 Faucets
               </a>
               <a
-                href="/intrinseco"
-                class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all"
+                href="/intrinseco" data-astro-prefetch
+                class:list={[
+                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
+                  isActive("/intrinseco") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                ]}
               >
                 <svg
                   class="w-5 h-5 text-emerald-500/70"
@@ -184,15 +212,18 @@
       class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-slate-400"
     >
       <a
-        href="/blog"
-        class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all"
+        href="/blog" data-astro-prefetch
+        class:list={[
+          "nav-link px-3 py-2 rounded-lg transition-all",
+          isActive("/blog") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
         >Blog</a
       >
       <a
         href="https://www.youtube.com/@0xlenador000"
         target="_blank"
         rel="noopener"
-        class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1.5"
+        class="nav-link px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1.5"
       >
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"
           ><path
@@ -235,8 +266,11 @@
       class="hidden absolute top-full left-0 right-0 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 p-6 flex flex-col space-y-1 lg:hidden z-40 shadow-2xl"
     >
       <a
-        href="/tesis"
-        class="nav-link text-slate-400 hover:text-white text-base font-medium transition px-3 py-3 rounded-xl hover:bg-slate-800/50"
+        href="/tesis" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
+          isActive("/tesis") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
         >Tesis de Inversión</a
       >
       <div class="px-3 py-2">
@@ -246,24 +280,34 @@
         >
       </div>
       <a
-        href="/bitcoin"
-        class="nav-link text-slate-400 hover:text-white text-base font-medium transition px-3 py-2.5 rounded-xl hover:bg-slate-800/50 flex items-center gap-2.5 pl-6"
+        href="/bitcoin" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
+          isActive("/bitcoin") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
       >
-        <img
+        <Image
           src="/img/cripto/bitcoin.webp"
           alt="Bitcoin"
+          width={40}
+          height={40}
           loading="lazy"
           class="w-5 h-5 rounded-full"
         />
         Bitcoin
       </a>
       <a
-        href="/ethereum"
-        class="nav-link text-slate-400 hover:text-white text-base font-medium transition px-3 py-2.5 rounded-xl hover:bg-slate-800/50 flex items-center gap-2.5 pl-6"
+        href="/ethereum" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
+          isActive("/ethereum") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
       >
-        <img
+        <Image
           src="/img/cripto/ethereum.webp"
           alt="Ethereum"
+          width={40}
+          height={40}
           loading="lazy"
           class="w-5 h-5 rounded-full"
         />
@@ -276,19 +320,28 @@
         >
       </div>
       <a
-        href="/faucets"
-        class="nav-link text-slate-400 hover:text-white text-base font-medium transition px-3 py-2.5 rounded-xl hover:bg-slate-800/50 pl-6"
+        href="/faucets" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl pl-6",
+          isActive("/faucets") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
         >Faucets</a
       >
       <a
-        href="/intrinseco"
-        class="nav-link text-slate-400 hover:text-white text-base font-medium transition px-3 py-2.5 rounded-xl hover:bg-slate-800/50 pl-6"
+        href="/intrinseco" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl pl-6",
+          isActive("/intrinseco") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
         >Intrínseco</a
       >
       <div class="border-t border-slate-800 my-3"></div>
       <a
-        href="/blog"
-        class="nav-link text-slate-400 hover:text-white text-base font-medium transition px-3 py-3 rounded-xl hover:bg-slate-800/50"
+        href="/blog" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
+          isActive("/blog") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+        ]}
         >Blog</a
       >
     </div>
@@ -296,56 +349,48 @@
 </div>
 
 <script>
-  // Toda tu lógica interactiva original que corre en el navegador del usuario
-  let currentPath = window.location.pathname;
-  if (currentPath.endsWith("/") && currentPath.length > 1) {
-    currentPath = currentPath.slice(0, -1);
-  }
+  const setupMobileMenu = () => {
+    const btn = document.getElementById("mobile-menu-button");
+    const menu = document.getElementById("mobile-menu");
+    const path = document.getElementById("menu-path");
 
-  const allLinks = document.querySelectorAll(".nav-link");
-  allLinks.forEach((link) => {
-    const href = link.getAttribute("href");
-    if (href === currentPath) {
-      link.classList.remove("text-slate-400");
-      link.classList.add("text-white");
+    if (btn && menu && path) {
+      const toggleMenu = (forceClose = false) => {
+        const isClosing = forceClose || !menu.classList.contains("hidden");
+        if (isClosing) {
+          menu.classList.add("hidden");
+          btn.setAttribute("aria-expanded", "false");
+          path.setAttribute("d", "M4 6h16M4 12h16m-7 6h7");
+        } else {
+          menu.classList.remove("hidden");
+          btn.setAttribute("aria-expanded", "true");
+          path.setAttribute("d", "M6 18L18 6M6 6l12 12");
+        }
+      };
+
+      // Limpiamos y asignamos el manejador
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      };
+
+      document.onclick = (e) => {
+        if (
+          !menu.classList.contains("hidden") &&
+          !menu.contains(e.target as Node) &&
+          !btn.contains(e.target as Node)
+        ) {
+          toggleMenu(true);
+        }
+      };
+
+      menu.querySelectorAll("a").forEach((link) => {
+        (link as HTMLElement).onclick = () => toggleMenu(true);
+      });
     }
-  });
+  };
 
-  const btn = document.getElementById("mobile-menu-button");
-  const menu = document.getElementById("mobile-menu");
-  const path = document.getElementById("menu-path");
-
-  if (btn && menu && path) {
-    const toggleMenu = (forceClose = false) => {
-      const isClosing = forceClose || !menu.classList.contains("hidden");
-      if (isClosing) {
-        menu.classList.add("hidden");
-        btn.setAttribute("aria-expanded", "false");
-        path.setAttribute("d", "M4 6h16M4 12h16m-7 6h7");
-      } else {
-        menu.classList.remove("hidden");
-        btn.setAttribute("aria-expanded", "true");
-        path.setAttribute("d", "M6 18L18 6M6 6l12 12");
-      }
-    };
-
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleMenu();
-    });
-
-    document.addEventListener("click", (e) => {
-      if (
-        !menu.classList.contains("hidden") &&
-        !menu.contains(e.target) &&
-        !btn.contains(e.target)
-      ) {
-        toggleMenu(true);
-      }
-    });
-
-    menu.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => toggleMenu(true));
-    });
-  }
+  // Inicializar en la carga inicial y en cada navegación de View Transitions
+  setupMobileMenu();
+  document.addEventListener("astro:page-load", setupMobileMenu);
 </script>
