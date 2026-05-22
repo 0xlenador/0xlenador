@@ -1,0 +1,134 @@
+---
+/**
+ * AssetCard.astro — Tarjeta reutilizable de activo de inversión.
+ * Renderiza imagen, ticker, descripción y links de afiliado.
+ * Opcionalmente la tarjeta completa es un enlace interno (href).
+ */
+
+interface AffiliateLink {
+  nombre: string;
+  url: string;
+}
+
+interface Props {
+  nombre: string;
+  ticker: string;
+  imagen: string;
+  descripcion: string;
+  /** Color de acento para hover. Default: "emerald" */
+  accentColor?: "emerald" | "orange" | "blue" | "fuchsia";
+  /** Si se define, la tarjeta completa actúa como enlace interno */
+  href?: string;
+  /** Texto del CTA sobre los links de afiliado */
+  ctaLabel: string;
+  links: AffiliateLink[];
+}
+
+const {
+  nombre,
+  ticker,
+  imagen,
+  descripcion,
+  accentColor = "emerald",
+  href,
+  ctaLabel,
+  links,
+} = Astro.props;
+
+// Mapa de clases por color de acento
+const colorClasses = {
+  emerald: {
+    hoverBorder: "hover:border-emerald-500/30",
+    hoverText: "group-hover:text-emerald-400",
+    linkHoverBorder: "hover:border-emerald-500/50",
+    linkHoverText: "hover:text-emerald-400",
+  },
+  orange: {
+    hoverBorder: "hover:border-orange-500/30",
+    hoverText: "group-hover:text-orange-400",
+    linkHoverBorder: "hover:border-orange-500/50",
+    linkHoverText: "hover:text-orange-400",
+  },
+  blue: {
+    hoverBorder: "hover:border-blue-500/30",
+    hoverText: "group-hover:text-blue-400",
+    linkHoverBorder: "hover:border-blue-500/50",
+    linkHoverText: "hover:text-blue-400",
+  },
+  fuchsia: {
+    hoverBorder: "hover:border-fuchsia-500/30",
+    hoverText: "group-hover:text-fuchsia-400",
+    linkHoverBorder: "hover:border-fuchsia-500/50",
+    linkHoverText: "hover:text-fuchsia-400",
+  },
+};
+
+const c = colorClasses[accentColor];
+const isLinked = !!href;
+---
+
+<div
+  class={`${isLinked ? "relative" : ""} group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl ${c.hoverBorder} transition-all cursor-pointer`}
+>
+  {isLinked && <a href={href} class="absolute inset-0 z-0"></a>}
+
+  <div
+    class:list={[
+      "flex items-center gap-3 mb-6",
+      isLinked && "relative z-10 pointer-events-none",
+    ]}
+  >
+    <img
+      src={imagen}
+      alt={nombre}
+      class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+    />
+    <h3
+      class={`text-lg font-bold text-white ${c.hoverText} transition-colors tracking-tight`}
+    >
+      {nombre}
+    </h3>
+  </div>
+
+  <p
+    class:list={[
+      "text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider",
+      isLinked && "relative z-10 pointer-events-none",
+    ]}
+  >
+    Ticker: {ticker}
+  </p>
+
+  <p
+    class:list={[
+      "text-xs text-slate-500 leading-relaxed mb-6",
+      isLinked && "relative z-10 pointer-events-none",
+    ]}
+  >
+    {descripcion}
+  </p>
+
+  <div
+    class:list={[
+      "pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2",
+      isLinked && "relative z-10",
+    ]}
+  >
+    <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+      >{ctaLabel}</span
+    >
+    <div class="flex flex-wrap gap-1.5">
+      {
+        links.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            class={`px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded ${c.linkHoverBorder} ${c.linkHoverText} transition-all`}
+          >
+            {link.nombre}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</div>

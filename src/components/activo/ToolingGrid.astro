@@ -1,0 +1,143 @@
+---
+/**
+ * ToolingGrid.astro — Grid de herramientas y conectividad.
+ * Mapea y renderiza las diferentes categorías de herramientas para un activo,
+ * resolviendo sus metadatos desde el archivo central de directorio.
+ */
+import directoryData from "../../data/directory.json";
+
+interface ToolItem {
+  name: string;
+  url: string;
+  image?: string;
+  logo?: string;
+  subtitle?: string;
+  tag?: string;
+  partner?: boolean;
+  sponsored?: boolean;
+}
+
+interface Colors {
+  bg5: string;
+  bg10: string;
+  bg20: string;
+  bg30: string;
+  bg600: string;
+  border20: string;
+  border30: string;
+  border40: string;
+  text400: string;
+  text400_80: string;
+  text500: string;
+  text500_70: string;
+  text500_80: string;
+  borderL: string;
+  bgFull: string;
+  glow: string;
+  overlay: string;
+}
+
+interface Props {
+  tooling: Record<string, (string | ToolItem)[]>;
+  colors: Colors;
+}
+
+const { tooling, colors: c } = Astro.props;
+
+const toolingSections = [
+  { title: "Mercados y Exchanges", key: "mercados" },
+  { title: "Análisis y Gráficos", key: "analisis" },
+  { title: "Custodia (Wallets)", key: "custodia" },
+  { title: "Exploración On-Chain", key: "infraestructura" },
+];
+
+const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
+  if (typeof toolIdOrObj === "string") {
+    const found = directoryData.find((d) => d.id === toolIdOrObj);
+    return (found as ToolItem) || {
+      name: toolIdOrObj,
+      url: "#",
+      subtitle: "No encontrado",
+    };
+  }
+  return toolIdOrObj;
+};
+---
+
+<section
+  class="mt-12 p-8 md:p-12 bg-slate-900/10 border border-slate-800 rounded-[3rem] relative overflow-hidden"
+>
+  <h4
+    class="text-white font-bold mb-10 uppercase tracking-widest text-xs italic font-mono flex items-center gap-3 relative z-10"
+  >
+    <svg
+      class={`w-4 h-4 ${c.text500}`}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+      ></path>
+    </svg>
+    Tooling & Connectivity
+  </h4>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-2 gap-10 font-mono relative z-10"
+  >
+    {
+      toolingSections.map((sec) => {
+        const toolsRaw = tooling[sec.key];
+        if (!toolsRaw || toolsRaw.length === 0) return null;
+        const resolvedTools = toolsRaw.map(resolveTool);
+
+        return (
+          <div>
+            <p
+              class={`${c.text500} uppercase text-[9px] tracking-widest font-bold mb-4 flex items-center gap-2`}
+            >
+              <span class={`w-1.5 h-1.5 rounded-full ${c.bgFull}`} />
+              {sec.title}
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {resolvedTools.map((item) => (
+                <div class="relative group">
+                  {(item.partner || item.sponsored) && (
+                    <span class="absolute -top-2 -right-2 bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full z-10 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                      Partner
+                    </span>
+                  )}
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    class="flex items-center gap-3 p-3 border border-slate-800 bg-slate-900/40 rounded-2xl transition-all hover:bg-slate-800/80 hover:border-slate-700 group-hover:scale-[1.02]"
+                  >
+                    <div class="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center border border-slate-800">
+                      <img
+                        src={item.image || item.logo || ""}
+                        alt={item.name}
+                        loading="lazy"
+                        class="w-6 h-6 object-contain"
+                      />
+                    </div>
+                    <div>
+                      <p class="text-white font-bold text-xs uppercase tracking-wider mb-0.5">
+                        {item.name}
+                      </p>
+                      <p class="text-slate-500 text-[9px] uppercase tracking-widest italic">
+                        {item.subtitle || item.tag || ""}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>

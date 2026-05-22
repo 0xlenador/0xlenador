@@ -1,0 +1,72 @@
+---
+/**
+ * AssetHeader.astro — Cabecera de la página de activo.
+ * Renderiza el badge del tipo de activo, el título/ticker con el color de acento,
+ * y la sección de precio en tiempo real (con un skeleton placeholder que es rellenado por JS en el cliente).
+ */
+
+interface Colors {
+  bg5: string;
+  bg10: string;
+  bg20: string;
+  bg30: string;
+  bg600: string;
+  border20: string;
+  border30: string;
+  border40: string;
+  text400: string;
+  text400_80: string;
+  text500: string;
+  text500_70: string;
+  text500_80: string;
+  borderL: string;
+  bgFull: string;
+  glow: string;
+  overlay: string;
+}
+
+interface Props {
+  type: string;
+  name: string;
+  ticker: string;
+  colors: Colors;
+}
+
+const { type, name, ticker, colors: c } = Astro.props;
+---
+
+<header
+  class="border-b border-slate-800 pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6"
+>
+  <div>
+    <div class="flex items-center gap-3 mb-2">
+      <span
+        class={`px-2 py-0.5 ${c.bg10} border ${c.border20} ${c.text500} text-[10px] font-bold uppercase tracking-widest rounded italic`}
+      >
+        Activo: {type}
+      </span>
+      <span
+        class="text-slate-500 font-mono text-[10px] tracking-widest uppercase"
+      >
+        Protocolo v.1.0.0
+      </span>
+    </div>
+    <h1
+      class="text-6xl font-black text-white tracking-tighter uppercase italic leading-none"
+    >
+      {name}
+      <span class={c.text500}>/ {ticker}</span>
+    </h1>
+  </div>
+  <div class="text-right font-mono italic">
+    <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-1">
+      Mercado / USD
+    </p>
+    <p
+      id="asset-price"
+      class="text-white text-3xl font-black tabular-nums tracking-tighter tracking-widest h-9 flex justify-end items-center"
+    >
+      <span class="w-32 h-8 bg-slate-800/80 rounded-md animate-pulse"></span>
+    </p>
+  </div>
+</header>
