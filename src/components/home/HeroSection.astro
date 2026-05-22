@@ -1,7 +1,9 @@
 ---
+import { Image } from "astro:assets";
+
 /**
  * HeroSection.astro — Header principal de la landing page.
- * Título con gradiente, subtítulo descriptivo y dos CTAs.
+ * Título principal estático y frases animadas abajo, seguido de CTAs.
  */
 
 interface CtaButton {
@@ -10,39 +12,46 @@ interface CtaButton {
 }
 
 interface Props {
-  titulo: string;
-  tituloHighlight: string;
-  subtitulo: string;
+  phrases: string[];
   ctaPrimario: CtaButton;
   ctaSecundario: CtaButton;
 }
 
-const { titulo, tituloHighlight, subtitulo, ctaPrimario, ctaSecundario } =
-  Astro.props;
+const { phrases, ctaPrimario, ctaSecundario } = Astro.props;
 ---
 
 <header
-  class="relative max-w-4xl mx-auto mb-32 text-center overflow-hidden py-8 md:py-16"
+  class="relative max-w-4xl mx-auto mb-16 md:mb-20 text-center py-4 md:py-8 flex flex-col justify-center min-h-[60vh]"
 >
-  <h1
-    class="relative z-10 text-4xl md:text-5xl font-black text-white mb-8 tracking-tighter uppercase leading-none"
-  >
-    {titulo}
-    <span
-      class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+  <div class="flex flex-row items-center justify-center mb-2 gap-2.5">
+    <Image
+      src="/img/56x.webp"
+      alt="Logo 0xLeñador"
+      width={56}
+      height={56}
+      loading="eager"
+      class="w-10 h-10 md:w-12 md:h-12 object-contain"
+    />
+    <p
+      class="text-2xl md:text-4xl font-bold tracking-tighter text-white leading-none m-0"
     >
-      {tituloHighlight}
-    </span>
-  </h1>
-  <p
-    class="relative z-10 text-md md:text-lg text-slate-400 font-light leading-relaxed max-w-2xl mx-auto mb-12"
-  >
-    {subtitulo}
-  </p>
-  <div class="relative z-10 flex flex-wrap gap-4 justify-center">
+      0x<span class="text-emerald-500">Leñador</span>
+    </p>
+  </div>
+
+  <div class="h-24 md:h-32 flex items-center justify-center mb-6 px-4">
+    <h1
+      id="animated-phrase"
+      class="text-4xl md:text-6xl font-bold text-white transition-opacity duration-700 opacity-100 tracking-tight leading-tight"
+    >
+      {phrases[0].charAt(0).toUpperCase() + phrases[0].slice(1)}
+    </h1>
+  </div>
+
+  <div class="relative z-10 flex flex-wrap gap-4 justify-center mt-2">
     <a
       href={ctaPrimario.href}
-      class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black uppercase tracking-widest text-xs rounded-xl hover:bg-emerald-500 transition-all italic inline-flex items-center gap-2"
+      class="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black uppercase tracking-widest text-xs rounded-xl hover:bg-emerald-400 transition-all italic inline-flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
     >
       <svg
         class="w-4 h-4"
@@ -54,15 +63,37 @@ const { titulo, tituloHighlight, subtitulo, ctaPrimario, ctaSecundario } =
           stroke-linecap="round"
           stroke-linejoin="round"
           d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-        ></path></svg
-      >
+        ></path>
+      </svg>
       {ctaPrimario.texto}
     </a>
     <a
       href={ctaSecundario.href}
-      class="px-8 py-4 border border-slate-700 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-slate-900 transition-all"
+      class="px-6 py-3 md:px-8 md:py-4 border border-slate-700 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-slate-900 transition-all"
     >
       {ctaSecundario.texto}
     </a>
   </div>
 </header>
+
+<script define:vars={{ phrases }}>
+  const phraseElement = document.getElementById("animated-phrase");
+  let currentIndex = 0;
+
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  if (phraseElement && phrases && phrases.length > 1) {
+    setInterval(() => {
+      phraseElement.classList.remove("opacity-100");
+      phraseElement.classList.add("opacity-0");
+
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % phrases.length;
+        phraseElement.textContent = capitalize(phrases[currentIndex]);
+
+        phraseElement.classList.remove("opacity-0");
+        phraseElement.classList.add("opacity-100");
+      }, 700);
+    }, 4000);
+  }
+</script>

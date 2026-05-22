@@ -81,13 +81,24 @@ const faqItems = [
 ];
 ---
 
-<Layout title={seo.title} description={seo.description} schema={schema} customSpacing>
+<Layout
+  title={seo.title}
+  description={seo.description}
+  schema={schema}
+  customSpacing
+>
   <main class="max-w-6xl mx-auto px-6 pt-14 pb-20">
     <HeroSection
-      titulo="El valor no está en el capital, "
-      tituloHighlight="sino en el entendimiento."
-      subtitulo="Invertir sin comprender es apostar a la suerte. En 0xLeñador, creemos que nuestra capacidad de involucrarnos en la lógica de un proyecto es lo que define nuestra resiliencia frente al mercado."
-      ctaPrimario={{ texto: "Leer Tesis de Investigación", href: "/tesis" }}
+      phrases={[
+        "El valor no está en el capital",
+        "sino en el entendimiento",
+        "aprende lo nuevo",
+        "usa nuestras herramientas",
+        "o herramientas externas",
+        "Aquí solo divulgamos",
+        "para comprender el futuro",
+      ]}
+      ctaPrimario={{ texto: "Nuestra Tesis", href: "/tesis" }}
       ctaSecundario={{ texto: "Calcula tu Inversión", href: "#simulador-6040" }}
     />
 
