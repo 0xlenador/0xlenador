@@ -490,21 +490,41 @@ input[type=range]::-webkit-slider-thumb {
     }
 }
 
-/* --- Glitch en Imagenes en hover --- */
+/* --- Glitch y Ondas Sutiles en Imagenes en hover --- */
 @keyframes glitch-image-hover {
-    0% { transform: translate(0) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
-    20% { transform: translate(-3px, 3px) scale(1.1); filter: hue-rotate(90deg) contrast(1.2); }
-    40% { transform: translate(-3px, -3px) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
-    60% { transform: translate(3px, 3px) scale(1.1); filter: hue-rotate(-90deg) contrast(1.2); }
-    80% { transform: translate(3px, -3px) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
-    100% { transform: translate(0) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
+    0% { transform: translate(0) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
+    20% { transform: translate(-1px, 1px) scale(1.03); filter: hue-rotate(15deg) contrast(1.05); }
+    40% { transform: translate(-1px, -1px) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
+    60% { transform: translate(1px, 1px) scale(1.03); filter: hue-rotate(-15deg) contrast(1.05); }
+    80% { transform: translate(1px, -1px) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
+    100% { transform: translate(0) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
+}
+
+@keyframes ripple-wave {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+.glitch-hover-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glitch-hover-container:hover::after {
+    animation: ripple-wave 1.5s cubic-bezier(0.0, 0, 0.2, 1) infinite;
 }
 
 .glitch-hover-target {
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glitch-hover-container:hover .glitch-hover-target {
-    animation: glitch-image-hover 0.25s linear infinite;
-    transform: scale(1.1);
+    animation: glitch-image-hover 0.4s linear infinite alternate;
+    transform: scale(1.03);
 }

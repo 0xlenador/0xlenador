@@ -259,12 +259,12 @@ const schema = [
               href={data.officialUrl || "#"}
               target="_blank"
               rel="noopener noreferrer"
-              class={`relative w-48 h-48 md:w-72 md:h-72 rounded-full flex items-center justify-center ${c.glow} transition-all duration-700 overflow-hidden glitch-hover-container`}
+              class={`relative w-48 h-48 md:w-72 md:h-72 rounded-full flex items-center justify-center ${c.glow} transition-all duration-700 glitch-hover-container`}
             >
               <img
                 src={data.image}
                 alt={data.imageAlt}
-                class="w-full h-full object-cover rounded-full glitch-hover-target"
+                class="w-full h-full object-cover rounded-full glitch-hover-target relative z-10"
               />
             </a>
 
