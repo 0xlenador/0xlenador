@@ -489,3 +489,22 @@ input[type=range]::-webkit-slider-thumb {
         opacity: 0;
     }
 }
+
+/* --- Glitch en Imagenes en hover --- */
+@keyframes glitch-image-hover {
+    0% { transform: translate(0) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
+    20% { transform: translate(-3px, 3px) scale(1.1); filter: hue-rotate(90deg) contrast(1.2); }
+    40% { transform: translate(-3px, -3px) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
+    60% { transform: translate(3px, 3px) scale(1.1); filter: hue-rotate(-90deg) contrast(1.2); }
+    80% { transform: translate(3px, -3px) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
+    100% { transform: translate(0) scale(1.1); filter: hue-rotate(0deg) contrast(1); }
+}
+
+.glitch-hover-target {
+    transition: transform 0.3s ease;
+}
+
+.glitch-hover-container:hover .glitch-hover-target {
+    animation: glitch-image-hover 0.25s linear infinite;
+    transform: scale(1.1);
+}

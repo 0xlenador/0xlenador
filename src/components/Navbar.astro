@@ -100,6 +100,23 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
                 />
                 Ethereum
               </a>
+              <a
+                href="/sunflowerland" data-astro-prefetch
+                class:list={[
+                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
+                  isActive("/sunflowerland") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
+                ]}
+              >
+                <Image
+                  src="/img/cripto/sunflowerland.webp"
+                  alt="Sunflower Land"
+                  width={40}
+                  height={40}
+                  loading="lazy"
+                  class="w-5 h-5 rounded-full"
+                />
+                Sunflower Land
+              </a>
               <div class="border-t border-terminal-border my-1.5"></div>
               <span
                 class="flex items-center gap-2.5 px-3 py-2 text-terminal-subtle text-[11px] cursor-default"
@@ -312,6 +329,23 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
           class="w-5 h-5 rounded-full"
         />
         Ethereum
+      </a>
+      <a
+        href="/sunflowerland" data-astro-prefetch
+        class:list={[
+          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
+          isActive("/sunflowerland") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
+        ]}
+      >
+        <Image
+          src="/img/cripto/sunflowerland.webp"
+          alt="Sunflower Land"
+          width={40}
+          height={40}
+          loading="lazy"
+          class="w-5 h-5 rounded-full"
+        />
+        Sunflower Land
       </a>
       <div class="px-3 py-2 mt-2">
         <span

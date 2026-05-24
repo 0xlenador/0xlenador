@@ -10,15 +10,18 @@ interface Props {
   descripcion: string;
   ctaLabel: string;
   link: { nombre: string; url: string };
+  href?: string;
 }
 
-const { nombre, imagen, descripcion, ctaLabel, link } = Astro.props;
+const { nombre, imagen, descripcion, ctaLabel, link, href } = Astro.props;
 ---
 
 <div
-  class="group bg-terminal-surface/40 border border-terminal-border p-6 rounded-2xl hover:border-rose-500/30 transition-all cursor-pointer"
+  class={`${href ? "relative" : ""} group bg-terminal-surface/40 border border-terminal-border p-6 rounded-2xl hover:border-rose-500/30 transition-all cursor-pointer`}
 >
-  <div class="flex items-center gap-4 mb-6">
+  {href && <a href={href} class="absolute inset-0 z-0"></a>}
+
+  <div class={`flex items-center gap-4 mb-6 ${href ? "relative z-10 pointer-events-none" : ""}`}>
     <img
       src={imagen}
       alt={nombre}
@@ -31,12 +34,12 @@ const { nombre, imagen, descripcion, ctaLabel, link } = Astro.props;
     </h3>
   </div>
 
-  <p class="text-xs text-terminal-muted leading-relaxed italic mb-6">
+  <p class={`text-xs text-terminal-muted leading-relaxed italic mb-6 ${href ? "relative z-10 pointer-events-none" : ""}`}>
     {descripcion}
   </p>
 
   <div
-    class="pt-4 border-t border-terminal-border/50 flex flex-wrap items-center gap-2"
+    class={`pt-4 border-t border-terminal-border/50 flex flex-wrap items-center gap-2 ${href ? "relative z-10" : ""}`}
   >
     <span class="text-[9px] font-mono text-terminal-subtle uppercase italic"
       >{ctaLabel}</span
