@@ -68,7 +68,7 @@ const isLinked = !!href;
 ---
 
 <div
-  class={`${isLinked ? "relative" : ""} group bg-slate-900/40 border border-slate-800 p-6 rounded-2xl ${c.hoverBorder} transition-all cursor-pointer`}
+  class={`${isLinked ? "relative" : ""} group bg-terminal-surface/40 border border-terminal-border p-6 rounded-2xl ${c.hoverBorder} transition-all cursor-pointer`}
 >
   {isLinked && <a href={href} class="absolute inset-0 z-0"></a>}
 
@@ -81,7 +81,7 @@ const isLinked = !!href;
     <img
       src={imagen}
       alt={nombre}
-      class="w-8 h-8 rounded bg-slate-800 border border-slate-700 object-contain"
+      class="w-8 h-8 rounded bg-terminal-elevated border border-terminal-border object-contain"
     />
     <h3
       class={`text-lg font-bold text-white ${c.hoverText} transition-colors tracking-tight`}
@@ -92,7 +92,7 @@ const isLinked = !!href;
 
   <p
     class:list={[
-      "text-[10px] font-mono text-slate-500 mb-3 uppercase tracking-wider",
+      "text-[10px] font-mono text-terminal-muted mb-3 uppercase tracking-wider",
       isLinked && "relative z-10 pointer-events-none",
     ]}
   >
@@ -101,7 +101,7 @@ const isLinked = !!href;
 
   <p
     class:list={[
-      "text-xs text-slate-500 leading-relaxed mb-6",
+      "text-xs text-terminal-muted leading-relaxed mb-6",
       isLinked && "relative z-10 pointer-events-none",
     ]}
   >
@@ -110,11 +110,11 @@ const isLinked = !!href;
 
   <div
     class:list={[
-      "pt-4 border-t border-slate-800/50 flex flex-wrap items-center gap-2",
+      "pt-4 border-t border-terminal-border/50 flex flex-wrap items-center gap-2",
       isLinked && "relative z-10",
     ]}
   >
-    <span class="text-[9px] font-mono text-slate-600 uppercase italic"
+    <span class="text-[9px] font-mono text-terminal-subtle uppercase italic"
       >{ctaLabel}</span
     >
     <div class="flex flex-wrap gap-1.5">
@@ -123,7 +123,7 @@ const isLinked = !!href;
           <a
             href={link.url}
             target="_blank"
-            class={`px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 text-[9px] font-bold uppercase rounded ${c.linkHoverBorder} ${c.linkHoverText} transition-all`}
+            class={`px-1.5 py-0.5 bg-terminal-surface border border-terminal-border text-terminal-muted text-[9px] font-bold uppercase rounded ${c.linkHoverBorder} ${c.linkHoverText} transition-all`}
           >
             {link.nombre}
           </a>

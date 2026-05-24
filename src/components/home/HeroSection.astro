@@ -3,7 +3,9 @@ import { Image } from "astro:assets";
 
 /**
  * HeroSection.astro — Header principal de la landing page.
- * Título principal estático y frases animadas abajo, seguido de CTAs.
+ * Efecto typewriter/terminal: el H1 muestra "> " fijo al inicio,
+ * seguido de texto que se escribe carácter por carácter, simulando
+ * una consola ejecutando una tesis de inversión.
  */
 
 interface CtaButton {
@@ -18,12 +20,22 @@ interface Props {
 }
 
 const { phrases, ctaPrimario, ctaSecundario } = Astro.props;
+
+// Calculamos la frase más larga para establecer el ancho fijo del contenedor
+// y evitar que el texto salte o se re-centre con cada letra.
+const longestPhrase = phrases.reduce(
+  (a, b) => (a.length > b.length ? a : b),
+  ""
+);
 ---
 
 <header
-  class="relative max-w-4xl mx-auto mb-16 md:mb-32 text-center pt-4 pb-16 md:pt-8 md:pb-24 flex flex-col justify-start min-h-[80vh] lg:min-h-[85vh]"
+  class="relative max-w-5xl mx-auto mb-16 md:mb-32 text-center pt-4 pb-16 md:pt-8 md:pb-24 flex flex-col justify-center md:justify-start min-h-[80vh] lg:min-h-[85vh]"
 >
-  <div class="flex flex-row items-center justify-center mb-2 gap-2.5">
+  <div
+    id="hero-logo"
+    class="flex flex-row items-center justify-center mb-2 gap-2.5 px-4 opacity-0 transition-opacity duration-1000"
+  >
     <Image
       src="/img/56x.webp"
       alt="Logo 0xLeñador"
@@ -33,25 +45,48 @@ const { phrases, ctaPrimario, ctaSecundario } = Astro.props;
       class="w-8 h-8 md:w-12 md:h-12 object-contain"
     />
     <p
-      class="text-2xl md:text-4xl font-bold tracking-tighter text-white leading-none m-0"
+      class="text-2xl md:text-4xl font-bold tracking-tighter text-terminal-text leading-none m-0"
     >
       0x<span class="text-emerald-500">Leñador</span>
     </p>
   </div>
 
   <div class="h-24 md:h-32 flex items-center justify-center mb-6 px-4">
-    <h1
-      id="animated-phrase"
-      class="text-4xl md:text-7xl font-light text-white transition-opacity duration-700 opacity-100 tracking-tight leading-tight"
-    >
-      {phrases[0].charAt(0).toUpperCase() + phrases[0].slice(1)}
-    </h1>
+    <div class="relative text-left">
+      <!-- Contenedor invisible que mantiene el ancho máximo -->
+      <h1
+        class="text-3xl md:text-5xl lg:text-7xl font-light text-transparent tracking-tight leading-tight select-none pointer-events-none invisible whitespace-nowrap"
+        aria-hidden="true"
+      >
+        <span class="font-mono mr-2 md:mr-3">&gt;</span>{longestPhrase}<span
+          class="font-mono inline-block ml-0.5">|</span
+        >
+      </h1>
+
+      <!-- Animación real superpuesta -->
+      <h1
+        id="hero-typewriter"
+        class="absolute top-0 left-0 w-full h-full text-3xl md:text-5xl lg:text-7xl font-light text-terminal-text tracking-tight leading-tight whitespace-nowrap"
+        aria-label={phrases.join(". ")}
+      >
+        <span class="font-mono text-emerald-500 mr-2 md:mr-3" aria-hidden="true"
+          >&gt;</span
+        ><span id="typewriter-text"></span><span
+          id="typewriter-cursor"
+          class="terminal-cursor font-mono inline-block ml-0.5"
+          aria-hidden="true">|</span
+        >
+      </h1>
+    </div>
   </div>
 
-  <div class="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-2 px-4 max-w-xs sm:max-w-none mx-auto w-full sm:w-auto">
+  <div
+    id="hero-ctas"
+    class="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-2 px-4 max-w-xs sm:max-w-none mx-auto w-full sm:w-auto opacity-0 transition-opacity duration-1000"
+  >
     <a
       href={ctaPrimario.href}
-      class="w-full sm:w-auto px-5 py-2.5 md:px-6 md:py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black uppercase tracking-widest text-xs rounded-xl hover:bg-emerald-400 transition-all italic inline-flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+      class="w-full sm:w-auto px-5 py-2.5 md:px-6 md:py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-terminal-bg font-black uppercase tracking-widest text-xs rounded-xl hover:bg-emerald-400 transition-all italic inline-flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
     >
       <svg
         class="w-4 h-4 shrink-0"
@@ -69,7 +104,7 @@ const { phrases, ctaPrimario, ctaSecundario } = Astro.props;
     </a>
     <a
       href={ctaSecundario.href}
-      class="w-full sm:w-auto px-5 py-2.5 md:px-6 md:py-3 border border-slate-700 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-slate-900 transition-all inline-flex items-center justify-center text-center"
+      class="w-full sm:w-auto px-5 py-2.5 md:px-6 md:py-3 border border-terminal-border text-terminal-text font-black uppercase tracking-widest text-xs rounded-xl hover:bg-terminal-surface transition-all inline-flex items-center justify-center text-center"
     >
       {ctaSecundario.texto}
     </a>
@@ -77,23 +112,67 @@ const { phrases, ctaPrimario, ctaSecundario } = Astro.props;
 </header>
 
 <script define:vars={{ phrases }}>
-  const phraseElement = document.getElementById("animated-phrase");
-  let currentIndex = 0;
+  // ==========================================
+  // MOTOR TYPEWRITER — Terminal Premium
+  // Escribe carácter por carácter, pausa, borra y rota frases.
+  // ==========================================
+  const textEl = document.getElementById("typewriter-text");
 
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  if (textEl && phrases && phrases.length > 0) {
+    let phraseIndex = 0;
+    let isFirstCycle = true;
+    const TYPING_SPEED = 55; // ms por carácter al escribir
+    const ERASING_SPEED = 30; // ms por carácter al borrar
+    const PAUSE_AFTER_TYPE = 5000; // ms de pausa tras completar frase
+    const PAUSE_AFTER_ERASE = 400; // ms de pausa tras borrar antes de la siguiente
 
-  if (phraseElement && phrases && phrases.length > 1) {
-    setInterval(() => {
-      phraseElement.classList.remove("opacity-100");
-      phraseElement.classList.add("opacity-0");
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-      setTimeout(() => {
-        currentIndex = (currentIndex + 1) % phrases.length;
-        phraseElement.textContent = capitalize(phrases[currentIndex]);
+    function typePhrase(text, charIndex, callback) {
+      if (charIndex <= text.length) {
+        textEl.textContent = text.substring(0, charIndex);
+        setTimeout(
+          () => typePhrase(text, charIndex + 1, callback),
+          TYPING_SPEED
+        );
+      } else {
+        if (isFirstCycle) {
+          isFirstCycle = false;
+          const logoEl = document.getElementById("hero-logo");
+          const ctasEl = document.getElementById("hero-ctas");
+          if (logoEl) logoEl.classList.remove("opacity-0");
+          if (ctasEl) ctasEl.classList.remove("opacity-0");
+        }
+        callback();
+      }
+    }
 
-        phraseElement.classList.remove("opacity-0");
-        phraseElement.classList.add("opacity-100");
-      }, 700);
-    }, 4000);
+    function erasePhrase(text, charIndex, callback) {
+      if (charIndex >= 0) {
+        textEl.textContent = text.substring(0, charIndex);
+        setTimeout(
+          () => erasePhrase(text, charIndex - 1, callback),
+          ERASING_SPEED
+        );
+      } else {
+        callback();
+      }
+    }
+
+    function runCycle() {
+      const currentPhrase = capitalize(phrases[phraseIndex]);
+
+      typePhrase(currentPhrase, 0, () => {
+        setTimeout(() => {
+          erasePhrase(currentPhrase, currentPhrase.length, () => {
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            setTimeout(runCycle, PAUSE_AFTER_ERASE);
+          });
+        }, PAUSE_AFTER_TYPE);
+      });
+    }
+
+    // Arrancar el ciclo
+    runCycle();
   }
 </script>

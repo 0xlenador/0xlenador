@@ -36,7 +36,7 @@ const { type, name, ticker, colors: c } = Astro.props;
 ---
 
 <header
-  class="border-b border-slate-800 pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6"
+  class="border-b border-terminal-border pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6"
 >
   <div>
     <div class="flex items-center gap-3 mb-2">
@@ -46,7 +46,7 @@ const { type, name, ticker, colors: c } = Astro.props;
         Activo: {type}
       </span>
       <span
-        class="text-slate-500 font-mono text-[10px] tracking-widest uppercase"
+        class="text-terminal-muted font-mono text-[10px] tracking-widest uppercase"
       >
         Protocolo v.1.0.0
       </span>
@@ -59,14 +59,14 @@ const { type, name, ticker, colors: c } = Astro.props;
     </h1>
   </div>
   <div class="text-right font-mono italic">
-    <p class="text-slate-600 text-[10px] uppercase tracking-widest mb-1">
+    <p class="text-terminal-subtle text-[10px] uppercase tracking-widest mb-1">
       Mercado / USD
     </p>
     <p
       id="asset-price"
       class="text-white text-3xl font-black tabular-nums tracking-tighter tracking-widest h-9 flex justify-end items-center"
     >
-      <span class="w-32 h-8 bg-slate-800/80 rounded-md animate-pulse"></span>
+      <span class="w-32 h-8 bg-terminal-border-subtle/80 rounded-md animate-pulse"></span>
     </p>
   </div>
 </header>

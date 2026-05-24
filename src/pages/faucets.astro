@@ -17,38 +17,38 @@ const seo = {
       <h2 class="text-3xl font-bold text-white mb-2">
         Listado de Faucets Mainnet & Testnet
       </h2>
-      <p class="text-slate-400">
+      <p class="text-terminal-secondary">
         Recursos actualizados para desarrolladores y airdrop farmers.
       </p>
-      <p class="text-slate-500">
+      <p class="text-terminal-muted">
         Explora todos los sitios web de faucets de criptomonedas disponibles en
         el ecosistema blockchain, acumula criptomonedas gratis para farmear tus
         airdrops y/o desarrollar tus proyectos.
       </p>
     </div>
 
-    <div class="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl mb-8">
+    <div class="bg-terminal-surface/40 border border-terminal-border p-6 rounded-2xl mb-8">
       <div class="flex flex-col md:flex-row gap-4 items-center">
         <input
           type="text"
           id="search"
-          class="w-full md:flex-1 bg-slate-950 border border-slate-700 text-slate-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition"
+          class="w-full md:flex-1 bg-terminal-bg border border-terminal-border-subtle text-terminal-text px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition"
           placeholder="Buscar Red (Sepolia, Monad, Bitcoin...)"
         />
 
         <div
-          class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 w-full md:w-auto font-mono"
+          class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border w-full md:w-auto font-mono"
         >
           <button
             class="tab-btn px-6 py-2 rounded-lg text-sm font-bold transition bg-emerald-600 text-white cursor-pointer"
             data-filter="all">TODOS</button
           >
           <button
-            class="tab-btn px-6 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-white transition cursor-pointer"
+            class="tab-btn px-6 py-2 rounded-lg text-sm font-bold text-terminal-muted hover:text-white transition cursor-pointer"
             data-filter="mainnet">MAINNET</button
           >
           <button
-            class="tab-btn px-6 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-white transition cursor-pointer"
+            class="tab-btn px-6 py-2 rounded-lg text-sm font-bold text-terminal-muted hover:text-white transition cursor-pointer"
             data-filter="testnet">TESTNET</button
           >
         </div>
@@ -59,7 +59,7 @@ const seo = {
       {
         faucets.map((faucet) => (
           <div
-            class="item-card bg-slate-900/60 border border-slate-800 p-5 rounded-2xl hover:border-slate-700 transition group"
+            class="item-card bg-terminal-surface/60 border border-terminal-border p-5 rounded-2xl hover:border-terminal-border-subtle transition group"
             data-type={faucet.type}
           >
             <div class="flex items-center gap-4 mb-4">
@@ -67,7 +67,7 @@ const seo = {
                 src={faucet.img}
                 loading="lazy"
                 alt={faucet.name}
-                class="w-10 h-10 rounded-full border border-slate-700 shadow-lg"
+                class="w-10 h-10 rounded-full border border-terminal-border-subtle shadow-lg"
               />
               <div class="flex flex-col">
                 <a
@@ -86,7 +86,7 @@ const seo = {
             </div>
             <div class="flex flex-wrap gap-2">
               {faucet.tags.map((tag) => (
-                <span class="tag bg-slate-950 text-slate-400 text-[11px] px-2 py-1 rounded-md border border-slate-800 transition">
+                <span class="tag bg-terminal-bg text-terminal-secondary text-[11px] px-2 py-1 rounded-md border border-terminal-border transition">
                   {tag}
                 </span>
               ))}
@@ -105,7 +105,7 @@ const seo = {
         Preguntas Frecuentes
       </h2>
       <p
-        class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2"
+        class="text-terminal-muted font-mono text-xs uppercase tracking-widest mt-2"
       >
         Todo lo que necesitas saber sobre las Faucets
       </p>
@@ -113,7 +113,7 @@ const seo = {
 
     <div class="space-y-4">
       <div
-        class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/20 transition-all duration-300"
+        class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden group hover:border-emerald-500/20 transition-all duration-300"
       >
         <button
           class="w-full p-6 text-left flex justify-between items-center cursor-pointer faq-btn"
@@ -123,7 +123,7 @@ const seo = {
             >¿Qué es una Faucet de criptomonedas?</span
           >
           <span
-            class="text-slate-500 transition-all duration-300 transform font-mono text-lg icon-rotate"
+            class="text-terminal-muted transition-all duration-300 transform font-mono text-lg icon-rotate"
             >＋</span
           >
         </button>
@@ -132,7 +132,7 @@ const seo = {
           style="max-height: 0px;"
         >
           <p
-            class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 italic"
+            class="p-6 pt-0 text-terminal-secondary text-sm leading-relaxed border-t border-terminal-border/50 italic"
           >
             Es un systema que entrega pequeñas cantidades de criptomonedas (o
             tokens de prueba) de forma gratuita. En Mainnet sirven como
@@ -143,7 +143,7 @@ const seo = {
       </div>
 
       <div
-        class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/20 transition-all duration-300"
+        class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden group hover:border-emerald-500/20 transition-all duration-300"
       >
         <button
           class="w-full p-6 text-left flex justify-between items-center cursor-pointer faq-btn"
@@ -153,7 +153,7 @@ const seo = {
             >¿Cuál es la diferencia entre Mainnet y Testnet?</span
           >
           <span
-            class="text-slate-500 transition-all duration-300 transform font-mono text-lg icon-rotate"
+            class="text-terminal-muted transition-all duration-300 transform font-mono text-lg icon-rotate"
             >＋</span
           >
         </button>
@@ -162,7 +162,7 @@ const seo = {
           style="max-height: 0px;"
         >
           <p
-            class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 italic"
+            class="p-6 pt-0 text-terminal-secondary text-sm leading-relaxed border-t border-terminal-border/50 italic"
           >
             Las faucets de <b class="text-emerald-500">Testnet</b> entregan tokens
             sin valor real para probar dApps. Las de <b class="text-cyan-500"
@@ -174,7 +174,7 @@ const seo = {
       </div>
 
       <div
-        class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/20 transition-all duration-300"
+        class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden group hover:border-emerald-500/20 transition-all duration-300"
       >
         <button
           class="w-full p-6 text-left flex justify-between items-center cursor-pointer faq-btn"
@@ -184,7 +184,7 @@ const seo = {
             >¿Es seguro conectar mi billetera a estas webs?</span
           >
           <span
-            class="text-slate-500 transition-all duration-300 transform font-mono text-lg icon-rotate"
+            class="text-terminal-muted transition-all duration-300 transform font-mono text-lg icon-rotate"
             >＋</span
           >
         </button>
@@ -193,7 +193,7 @@ const seo = {
           style="max-height: 0px;"
         >
           <p
-            class="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 italic"
+            class="p-6 pt-0 text-terminal-secondary text-sm leading-relaxed border-t border-terminal-border/50 italic"
           >
             En 0xLeñador filtramos sitios conocidos, pero la regla de oro en
             cripto es la precaución. <b class="text-rose-500"
@@ -251,11 +251,11 @@ const seo = {
 
         document.querySelectorAll(".tab-btn").forEach((b) => {
           b.classList.remove("bg-emerald-600", "text-white");
-          b.classList.add("text-slate-500");
+          b.classList.add("text-terminal-muted");
         });
 
         e.target.classList.add("bg-emerald-600", "text-white");
-        e.target.classList.remove("text-slate-500");
+        e.target.classList.remove("text-terminal-muted");
         applyFilters();
       });
     });

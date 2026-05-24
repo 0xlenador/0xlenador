@@ -58,7 +58,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
     >
       <article class="w-full lg:w-[68%]">
         <nav
-          class="flex text-xs text-slate-500 mb-10 font-medium font-mono uppercase tracking-widest"
+          class="flex text-xs text-terminal-muted mb-10 font-medium font-mono uppercase tracking-widest"
         >
           <a href="/" class="hover:text-emerald-400 transition-colors">Inicio</a
           >
@@ -67,20 +67,20 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             >Artículos</a
           >
           <span class="mx-3">›</span>
-          <span class="text-slate-400 truncate max-w-[200px] sm:max-w-xs"
+          <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs"
             >{title}</span
           >
         </nav>
 
-        <header class="mb-12 border-b border-slate-800/60 pb-10">
+        <header class="mb-12 border-b border-terminal-border/60 pb-10">
           <h1
-            class="text-2xl md:text-4xl font-extrabold text-slate-100 mb-6 tracking-tight leading-tight"
+            class="text-2xl md:text-4xl font-extrabold text-terminal-text mb-6 tracking-tight leading-tight"
           >
             {title}
           </h1>
 
           <div
-            class="flex flex-wrap items-center gap-4 md:gap-6 text-slate-400 text-sm font-medium"
+            class="flex flex-wrap items-center gap-4 md:gap-6 text-terminal-secondary text-sm font-medium"
           >
             <div
               class="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md font-mono text-xs uppercase tracking-wider"
@@ -91,16 +91,16 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
               {category}
             </div>
             <div
-              class="flex items-center gap-2 border-l border-slate-800 pl-4 md:pl-6"
+              class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6"
             >
-              <span class="text-slate-500">Actualizado</span>
-              <span class="text-slate-300">{formattedDate}</span>
+              <span class="text-terminal-muted">Actualizado</span>
+              <span class="text-terminal-secondary">{formattedDate}</span>
             </div>
             <div
-              class="flex items-center gap-2 border-l border-slate-800 pl-4 md:pl-6"
+              class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6"
             >
               <svg
-                class="w-4 h-4 text-slate-500"
+                class="w-4 h-4 text-terminal-muted"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -110,7 +110,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
                   stroke-width="2"
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg
               >
-              <span class="text-slate-300">{readTime} de lectura</span>
+              <span class="text-terminal-secondary">{readTime} de lectura</span>
             </div>
           </div>
         </header>
@@ -120,7 +120,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
         </div>
 
         <footer
-          class="mt-20 pt-8 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-6"
+          class="mt-20 pt-8 border-t border-terminal-border/60 flex flex-col sm:flex-row items-center justify-between gap-6"
         >
           <div class="flex items-center gap-4">
             <div
@@ -130,7 +130,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             </div>
             <div>
               <p class="text-white font-bold text-sm">Escrito por 0xLeñador</p>
-              <p class="text-slate-500 text-xs">
+              <p class="text-terminal-muted text-xs">
                 Divulgador sobre la gestión de Capital
               </p>
             </div>
@@ -144,7 +144,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
           class="sticky top-32 space-y-10 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8 pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           <div
-            class="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/60"
+            class="bg-terminal-surface/40 p-6 rounded-2xl border border-terminal-border/60"
           >
             <h3 class="text-white font-bold text-base mb-4">
               Compartir publicación
@@ -152,7 +152,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             <div class="flex items-center gap-3">
               <button
                 onclick={`window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=' + window.location.href, '_blank')`}
-                class="flex-1 flex justify-center p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
+                class="flex-1 flex justify-center p-3 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
                   ><path
@@ -162,7 +162,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
               </button>
               <button
                 onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=' + window.location.href, '_blank')`}
-                class="flex-1 flex justify-center p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
+                class="flex-1 flex justify-center p-3 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
                   ><path
@@ -172,7 +172,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
               </button>
               <button
                 onclick={`window.open('https://t.me/share/url?url=' + window.location.href + '&text=${encodeURIComponent(title)}', '_blank')`}
-                class="flex-1 flex justify-center p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
+                class="flex-1 flex justify-center p-3 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
                   ><path
@@ -182,7 +182,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
               </button>
               <button
                 onclick="navigator.clipboard.writeText(window.location.href); alert('¡Enlace copiado!');"
-                class="flex-1 flex justify-center p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
+                class="flex-1 flex justify-center p-3 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
               >
                 <svg
                   class="w-5 h-5"
@@ -217,10 +217,10 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
               >
               Aspectos clave
             </h3>
-            <div class="relative pl-[9px] ml-[7px] border-l-2 border-slate-800">
+            <div class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border">
               <ul
                 id="toc-list"
-                class="space-y-5 text-[15px] font-medium text-slate-400 relative"
+                class="space-y-5 text-[15px] font-medium text-terminal-secondary relative"
               >
               </ul>
             </div>
@@ -239,7 +239,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
     <button
       id="mobile-toc-btn"
       aria-label="Abrir Índice"
-      class="fixed bottom-6 right-6 z-[60] lg:hidden p-4 rounded-full bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 transition-all cursor-pointer"
+      class="fixed bottom-6 right-6 z-[60] lg:hidden p-4 rounded-full bg-emerald-500 text-terminal-bg shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 transition-all cursor-pointer"
     >
       <svg
         class="w-6 h-6"
@@ -256,11 +256,11 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
 
     <div
       id="mobile-toc-modal"
-      class="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+      class="fixed inset-0 z-[70] bg-terminal-bg/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
     >
       <div
         id="mobile-toc-drawer"
-        class="absolute bottom-0 left-0 w-full bg-slate-900 border-t border-slate-800 rounded-t-3xl p-6 pt-8 max-h-[85vh] overflow-y-auto transform translate-y-full transition-transform duration-300"
+        class="absolute bottom-0 left-0 w-full bg-terminal-surface border-t border-terminal-border rounded-t-3xl p-6 pt-8 max-h-[85vh] overflow-y-auto transform translate-y-full transition-transform duration-300"
       >
         <div class="flex justify-between items-center mb-8">
           <h3 class="text-white font-bold text-xl flex items-center gap-2">
@@ -279,7 +279,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
           </h3>
           <button
             id="close-mobile-toc"
-            class="p-2 text-slate-400 hover:text-white bg-slate-800/50 rounded-full transition-colors cursor-pointer"
+            class="p-2 text-terminal-secondary hover:text-white bg-terminal-border/50 rounded-full transition-colors cursor-pointer"
           >
             <svg
               class="w-5 h-5"
@@ -295,11 +295,11 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
           </button>
         </div>
         <div
-          class="relative pl-[9px] ml-[7px] border-l-2 border-slate-800 pb-10"
+          class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border pb-10"
         >
           <ul
             id="toc-list-mobile"
-            class="space-y-6 text-[15px] font-medium text-slate-400 relative"
+            class="space-y-6 text-[15px] font-medium text-terminal-secondary relative"
           >
           </ul>
         </div>
@@ -317,7 +317,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
         const tables = container.querySelectorAll("table");
         tables.forEach((table) => {
           const wrapper = document.createElement("div");
-          wrapper.className = "overflow-x-auto my-8 border border-slate-800/80 rounded-xl bg-slate-900/20 max-w-full [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-slate-950 [&::-webkit-scrollbar-thumb]:bg-slate-800 [&::-webkit-scrollbar-thumb]:rounded-full";
+          wrapper.className = "overflow-x-auto my-8 border border-terminal-border/80 rounded-xl bg-terminal-surface/20 max-w-full [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-terminal-bg [&::-webkit-scrollbar-thumb]:bg-terminal-border [&::-webkit-scrollbar-thumb]:rounded-full";
           if (table.parentNode) {
             table.parentNode.insertBefore(wrapper, table);
             wrapper.appendChild(table);
@@ -337,11 +337,11 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             const a = document.createElement("a");
             a.href = `#${cleanId}`;
             a.className =
-              "toc-link block w-full text-slate-400 hover:text-emerald-400 transition-colors py-0.5";
+              "toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5";
             a.innerText = text;
             const marker = document.createElement("span");
             marker.className =
-              "toc-marker w-2 h-2 rounded-full border border-slate-700 bg-slate-950 absolute -left-[14px] top-[10px]";
+              "toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[14px] top-[10px]";
             li.appendChild(a);
             li.appendChild(marker);
             return li;

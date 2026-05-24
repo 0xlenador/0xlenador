@@ -97,10 +97,10 @@ const schema = [
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <div class="lg:col-span-3 space-y-8">
         <section
-          class="p-6 bg-slate-900/20 border border-slate-800 rounded-3xl relative overflow-hidden group"
+          class="p-6 bg-terminal-surface/20 border border-terminal-border rounded-3xl relative overflow-hidden group"
         >
           <span
-            class={`absolute top-4 right-6 text-slate-800 font-black text-4xl group-hover:${c.text500}/10 transition-colors`}
+            class={`absolute top-4 right-6 text-terminal-border font-black text-4xl group-hover:${c.text500}/10 transition-colors`}
             >01</span
           >
           <h3
@@ -108,16 +108,16 @@ const schema = [
           >
             Definición
           </h3>
-          <p class="text-slate-300 text-sm leading-relaxed italic">
+          <p class="text-terminal-secondary text-sm leading-relaxed italic">
             {data.definicion}
           </p>
         </section>
 
         <section
-          class="p-6 bg-slate-900/20 border border-slate-800 rounded-3xl relative overflow-hidden group"
+          class="p-6 bg-terminal-surface/20 border border-terminal-border rounded-3xl relative overflow-hidden group"
         >
           <span
-            class={`absolute top-4 right-6 text-slate-800 font-black text-4xl group-hover:${c.text500}/10 transition-colors`}
+            class={`absolute top-4 right-6 text-terminal-border font-black text-4xl group-hover:${c.text500}/10 transition-colors`}
             >02</span
           >
           <h3
@@ -126,21 +126,21 @@ const schema = [
             Génesis e Identidad
           </h3>
           <div class="space-y-4 font-mono text-[11px]">
-            <div class="flex justify-between border-b border-slate-800/50 pb-2">
-              <span class="text-slate-500 italic uppercase"
+            <div class="flex justify-between border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic uppercase"
                 >Fecha de Inicio</span
               >
               <span class="text-white">{data.genesis.fechaInicio}</span>
             </div>
-            <div class="flex justify-between border-b border-slate-800/50 pb-2">
-              <span class="text-slate-500 italic uppercase">Creador(es)</span>
+            <div class="flex justify-between border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic uppercase">Creador(es)</span>
               <span
                 class={`text-white underline decoration-${data.accentColor}-500/30 decoration-dashed`}
                 >{data.genesis.creador}</span
               >
             </div>
-            <div class="flex justify-between border-b border-slate-800/50 pb-2">
-              <span class="text-slate-500 italic uppercase">Whitepaper</span>
+            <div class="flex justify-between border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic uppercase">Whitepaper</span>
               <a
                 href={data.genesis.whitepaperUrl}
                 target="_blank"
@@ -152,10 +152,10 @@ const schema = [
         </section>
 
         <div
-          class={`py-8 px-6 ${c.bg600} rounded-[2rem] text-slate-950 flex flex-col justify-between group overflow-hidden relative`}
+          class={`py-8 px-6 ${c.bg600} rounded-[2rem] text-terminal-bg flex flex-col justify-between group overflow-hidden relative`}
         >
           <svg
-            class="absolute -bottom-4 -right-4 text-slate-950/10 w-32 h-32 transform -rotate-12 group-hover:scale-110 transition-transform"
+            class="absolute -bottom-4 -right-4 text-terminal-bg/10 w-32 h-32 transform -rotate-12 group-hover:scale-110 transition-transform"
             viewBox="0 0 24 24"
             fill="currentColor"
             ><path
@@ -172,13 +172,13 @@ const schema = [
               Dato Oculto
             </h4>
             <p
-              class="text-xs font-bold leading-relaxed italic border-l-2 border-slate-950/20 pl-3 line-clamp-2"
+              class="text-xs font-bold leading-relaxed italic border-l-2 border-terminal-bg/20 pl-3 line-clamp-2"
             >
               {data.datoOculto.teaser}
             </p>
             <button
               id="btn-ver-mas-dato"
-              class="mt-4 text-[9px] font-black uppercase tracking-widest text-slate-900/60 hover:text-slate-900 transition-colors flex items-center gap-1 cursor-pointer relative z-20"
+              class="mt-4 text-[9px] font-black uppercase tracking-widest text-terminal-bg/60 hover:text-terminal-bg transition-colors flex items-center gap-1 cursor-pointer relative z-20"
             >
               Ver más <svg
                 class="w-3 h-3"
@@ -195,11 +195,11 @@ const schema = [
           </div>
           <div
             id="dato-oculto-overlay"
-            class={`absolute inset-0 bg-slate-950/95 backdrop-blur-md ${c.overlay} z-30 p-6 pt-12 flex flex-col opacity-0 pointer-events-none transition-all duration-500 ease-in-out scale-95 border rounded-[2rem]`}
+            class={`absolute inset-0 bg-terminal-bg/95 backdrop-blur-md ${c.overlay} z-30 p-6 pt-12 flex flex-col opacity-0 pointer-events-none transition-all duration-500 ease-in-out scale-95 border rounded-[2rem]`}
           >
             <button
               id="btn-cerrar-dato"
-              class={`absolute top-4 right-4 ${c.text500}/70 hover:${c.text500} bg-slate-900 rounded-full transition-all cursor-pointer p-1.5 z-40`}
+              class={`absolute top-4 right-4 ${c.text500}/70 hover:${c.text500} bg-terminal-surface rounded-full transition-all cursor-pointer p-1.5 z-40`}
             >
               <svg
                 class="w-4 h-4"
@@ -214,7 +214,7 @@ const schema = [
               >
             </button>
             <div
-              class="custom-scrollbar overflow-y-auto flex-1 pr-3 space-y-4 font-mono text-[11px] leading-relaxed text-slate-200 pb-2"
+              class="custom-scrollbar overflow-y-auto flex-1 pr-3 space-y-4 font-mono text-[11px] leading-relaxed text-terminal-secondary pb-2"
             >
               {
                 data.datoOculto.contenido.map((p, i) => (
@@ -228,7 +228,7 @@ const schema = [
 
       <div class="lg:col-span-6">
         <div
-          class="relative bg-slate-900/10 border border-slate-800/50 rounded-[4rem] p-6 md:p-12 min-h-[450px] md:min-h-[550px] flex flex-col items-center justify-between overflow-hidden group"
+          class="relative bg-terminal-surface/10 border border-terminal-border/50 rounded-[4rem] p-6 md:p-12 min-h-[450px] md:min-h-[550px] flex flex-col items-center justify-between overflow-hidden group"
         >
           <div
             class="relative w-full flex-1 flex items-center justify-center py-10 md:py-0"
@@ -263,7 +263,7 @@ const schema = [
                 return (
                   <div class={`absolute ${position} z-10 ${animation}`}>
                     <div
-                      class={`px-3 py-1.5 md:px-5 md:py-2.5 bg-slate-900/60 backdrop-blur-md border ${c.border30} rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(16,185,129,0.2)] flex items-center gap-2 transition-all hover:bg-slate-800/60 hover:scale-105 cursor-default`}
+                      class={`px-3 py-1.5 md:px-5 md:py-2.5 bg-terminal-surface/60 backdrop-blur-md border ${c.border30} rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(16,185,129,0.2)] flex items-center gap-2 transition-all hover:bg-terminal-border/60 hover:scale-105 cursor-default`}
                     >
                       <svg
                         class={`w-3 h-3 ${c.text500_80}`}
@@ -290,7 +290,7 @@ const schema = [
             >
             </div>
             <h3
-              class="text-center text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] italic mb-2"
+              class="text-center text-[10px] font-black text-terminal-subtle uppercase tracking-[0.4em] italic mb-2"
             >
               Arquitectura Base del Protocolo
             </h3>
@@ -340,8 +340,8 @@ const schema = [
             <div class="grid grid-cols-3 gap-4 w-full">
               {
                 data.arquitectura.map((item) => (
-                  <div class="text-center p-3 border border-slate-800/50 rounded-2xl bg-slate-950/40">
-                    <p class="text-[8px] text-slate-500 uppercase mb-1">
+                  <div class="text-center p-3 border border-terminal-border/50 rounded-2xl bg-terminal-bg/40">
+                    <p class="text-[8px] text-terminal-muted uppercase mb-1">
                       {item.label}
                     </p>
                     <p class="text-white font-mono font-bold text-[10px] uppercase italic">
@@ -357,10 +357,10 @@ const schema = [
 
       <div class="lg:col-span-3 space-y-8">
         <section
-          class="p-6 bg-slate-900/20 border border-slate-800 rounded-3xl relative overflow-hidden group"
+          class="p-6 bg-terminal-surface/20 border border-terminal-border rounded-3xl relative overflow-hidden group"
         >
           <span
-            class={`absolute top-4 right-6 text-slate-800 font-black text-4xl group-hover:${c.text500}/10 transition-colors`}
+            class={`absolute top-4 right-6 text-terminal-border font-black text-4xl group-hover:${c.text500}/10 transition-colors`}
             >03</span
           >
           <h3
@@ -369,16 +369,16 @@ const schema = [
             Matemática del Activo
           </h3>
           <div class="space-y-4 font-mono text-[11px]">
-            <div class="flex flex-col border-b border-slate-800/50 pb-2">
-              <span class="text-slate-500 italic mb-1 uppercase text-[8px]"
+            <div class="flex flex-col border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
                 >Suministro Total</span
               >
               <span class="text-white text-base font-bold"
                 >{data.matematica.suministroTotal}</span
               >
             </div>
-            <div class="flex flex-col border-b border-slate-800/50 pb-2">
-              <span class="text-slate-500 italic mb-1 uppercase text-[8px]"
+            <div class="flex flex-col border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
                 >Marketcap FDV</span
               >
               <span
@@ -388,7 +388,7 @@ const schema = [
               >
             </div>
             <div class="flex flex-col pb-2">
-              <span class="text-slate-500 italic mb-1 uppercase text-[8px]"
+              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
                 >Ciclo</span
               >
               <span class="text-white italic"
@@ -400,10 +400,10 @@ const schema = [
 
         <a
           href="#"
-          class={`p-6 border-2 border-dashed border-slate-800 rounded-[2rem] bg-slate-900/10 flex flex-col items-center justify-center text-center group hover:${c.border30} hover:bg-slate-900/30 transition-all`}
+          class={`p-6 border-2 border-dashed border-terminal-border rounded-[2rem] bg-terminal-surface/10 flex flex-col items-center justify-center text-center group hover:${c.border30} hover:bg-terminal-surface/30 transition-all`}
         >
           <svg
-            class="w-5 h-5 text-slate-700 mb-2 group-hover:text-emerald-500/50 transition-colors"
+            class="w-5 h-5 text-terminal-border-subtle mb-2 group-hover:text-emerald-500/50 transition-colors"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -414,16 +414,16 @@ const schema = [
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg
           >
           <span
-            class={`text-slate-600 font-black uppercase tracking-widest text-[9px] italic group-hover:${c.text500} transition-colors`}
+            class={`text-terminal-subtle font-black uppercase tracking-widest text-[9px] italic group-hover:${c.text500} transition-colors`}
             >Próximamente</span
           >
         </a>
 
         <div
-          class="p-6 bg-cyan-400 rounded-[2rem] text-slate-950 flex flex-col justify-between group overflow-hidden relative"
+          class="p-6 bg-cyan-400 rounded-[2rem] text-terminal-bg flex flex-col justify-between group overflow-hidden relative"
         >
           <div
-            class="absolute -bottom-4 -right-4 text-slate-950/10 font-black text-6xl uppercase italic transform -rotate-12 group-hover:scale-110 transition-transform"
+            class="absolute -bottom-4 -right-4 text-terminal-bg/10 font-black text-6xl uppercase italic transform -rotate-12 group-hover:scale-110 transition-transform"
           >
             Moat
           </div>
@@ -434,7 +434,7 @@ const schema = [
               Análisis de Carácter
             </h4>
             <p
-              class="text-xs font-bold leading-relaxed italic border-l-2 border-slate-950/20 pl-3"
+              class="text-xs font-bold leading-relaxed italic border-l-2 border-terminal-bg/20 pl-3"
             >
               {data.analisisCaracter}
             </p>
@@ -453,7 +453,7 @@ const schema = [
           {data.investigacion.titulo}
         </h2>
         <p
-          class="text-slate-500 font-mono text-[10px] uppercase tracking-[0.4em] italic"
+          class="text-terminal-muted font-mono text-[10px] uppercase tracking-[0.4em] italic"
         >
           {data.investigacion.subtitulo}
         </p>
@@ -464,7 +464,7 @@ const schema = [
       >
         {
           data.investigacion.pilares.map((pilar) => (
-            <article class="bg-slate-900/20 border border-slate-800 rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
+            <article class="bg-terminal-surface/20 border border-terminal-border rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
               <div
                 class={`absolute top-0 right-0 w-64 h-64 ${c.bg5} blur-[80px] rounded-full pointer-events-none`}
               />
@@ -477,7 +477,7 @@ const schema = [
                 {pilar.secciones.map((sec, index) => (
                   <div
                     class={
-                      index !== 0 ? "border-t border-slate-800/50 pt-8" : ""
+                      index !== 0 ? "border-t border-terminal-border/50 pt-8" : ""
                     }
                   >
                     <h3
@@ -485,15 +485,15 @@ const schema = [
                     >
                       {sec.subtitulo}
                     </h3>
-                    <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                    <p class="text-terminal-secondary text-sm md:text-base leading-relaxed">
                       {sec.contenido}
                     </p>
 
                     {sec.tabla && (
-                      <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/50 mt-6">
+                      <div class="overflow-x-auto rounded-xl border border-terminal-border bg-terminal-bg/50 mt-6">
                         <table class="w-full text-left text-sm border-collapse min-w-[600px]">
                           <thead>
-                            <tr class="border-b border-slate-800 text-slate-500 uppercase font-mono text-[10px] tracking-widest bg-slate-900/50">
+                            <tr class="border-b border-terminal-border text-terminal-muted uppercase font-mono text-[10px] tracking-widest bg-terminal-surface/50">
                               {sec.tabla.headers.map((h, i) => (
                                 <th
                                   class={`py-4 px-5 ${i === sec.tabla.highlightCol ? c.text500 : ""}`}
@@ -503,9 +503,9 @@ const schema = [
                               ))}
                             </tr>
                           </thead>
-                          <tbody class="text-slate-300">
+                          <tbody class="text-terminal-secondary">
                             {sec.tabla.rows.map((row, i) => (
-                              <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition-colors">
+                              <tr class="border-b border-terminal-border/50 hover:bg-terminal-surface/50 transition-colors">
                                 {row.map((cell, j) => {
                                   const colClass = sec.tabla.rowColors[i][j];
                                   const color =
@@ -515,7 +515,7 @@ const schema = [
                                         ? c.text400_80
                                         : colClass === "red"
                                           ? "text-red-400/80"
-                                          : "text-slate-400";
+                                          : "text-terminal-secondary";
                                   return (
                                     <td
                                       class={`py-3 px-5 ${j === 0 ? "font-bold" : ""} ${color} text-xs`}
@@ -535,19 +535,19 @@ const schema = [
                       <>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                           {sec.riskCards.map((cBox) => (
-                            <div class="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
-                              <h4 class="text-slate-200 font-bold text-xs uppercase mb-2 flex items-center gap-2">
+                            <div class="bg-terminal-bg/50 p-4 rounded-xl border border-terminal-border">
+                              <h4 class="text-terminal-text font-bold text-xs uppercase mb-2 flex items-center gap-2">
                                 <span
                                   class={`w-1.5 h-1.5 ${c.bgFull} rounded-full`}
                                 />{" "}
                                 {cBox.titulo}
                               </h4>
-                              <p class="text-slate-400 text-xs">{cBox.texto}</p>
+                              <p class="text-terminal-secondary text-xs">{cBox.texto}</p>
                             </div>
                           ))}
                         </div>
                         {sec.riskNote && (
-                          <p class="text-slate-500 text-xs mt-4 italic">
+                          <p class="text-terminal-muted text-xs mt-4 italic">
                             {sec.riskNote}
                           </p>
                         )}
@@ -557,7 +557,7 @@ const schema = [
                     {sec.correlationTags && (
                       <div class="flex flex-wrap gap-2 mt-4">
                         {sec.correlationTags.map((t) => (
-                          <span class="px-3 py-1 bg-slate-900/80 border border-slate-800 rounded-lg text-xs text-slate-300 font-mono">
+                          <span class="px-3 py-1 bg-terminal-surface/80 border border-terminal-border rounded-lg text-xs text-terminal-secondary font-mono">
                             <span class={c.text400}>{t.label}:</span> {t.value}
                           </span>
                         ))}

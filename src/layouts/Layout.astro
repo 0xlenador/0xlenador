@@ -63,7 +63,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL(image, Astro.site)} />
 
-    <meta name="theme-color" content="#020617" />
+    <meta name="theme-color" content="#141414" />
 
     {
       schema && (
@@ -75,7 +75,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <slot name="head" />
   </head>
   <body
-    class="bg-slate-950 antialiased selection:bg-emerald-500/30 min-h-screen flex flex-col"
+    class="bg-terminal-bg antialiased selection:bg-emerald-500/30 min-h-screen flex flex-col"
   >
     <Navbar />
     <div class:list={["flex-1", !customSpacing && "pt-10 pb-4"]}>

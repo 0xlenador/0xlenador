@@ -60,35 +60,35 @@ const seo = {
       >
         Ruta no encontrada en el protocolo
       </h2>
-      <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
+      <p class="text-terminal-secondary text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
         El recurso que buscas no existe, fue movido o nunca fue indexado en
         nuestro ecosistema. Verifica la URL o regresa a una ruta segura.
       </p>
 
       <!-- Terminal log simulado -->
       <div
-        class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 mb-10 text-left font-mono text-[11px] space-y-2 max-w-md mx-auto"
+        class="bg-terminal-surface/60 border border-terminal-border rounded-2xl p-5 mb-10 text-left font-mono text-[11px] space-y-2 max-w-md mx-auto"
       >
         <div class="flex items-center gap-2 mb-3">
           <div class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
           <div class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
-          <span class="text-slate-600 text-[9px] ml-2 uppercase tracking-widest"
+          <span class="text-terminal-subtle text-[9px] ml-2 uppercase tracking-widest"
             >0xLeñador Terminal</span
           >
         </div>
-        <p class="text-slate-500 log-line" style="--delay: 0.1s">
-          <span class="text-slate-600">[SYS]</span> Iniciando búsqueda de ruta…
+        <p class="text-terminal-muted log-line" style="--delay: 0.1s">
+          <span class="text-terminal-subtle">[SYS]</span> Iniciando búsqueda de ruta…
         </p>
-        <p class="text-slate-500 log-line" style="--delay: 0.4s">
-          <span class="text-slate-600">[GET]</span>
+        <p class="text-terminal-muted log-line" style="--delay: 0.4s">
+          <span class="text-terminal-subtle">[GET]</span>
           <span class="text-cyan-400 break-all" id="current-path">/*</span>
         </p>
         <p class="text-rose-400/80 log-line" style="--delay: 0.7s">
-          <span class="text-slate-600">[ERR]</span> HTTP 404 · Recurso no indexado
+          <span class="text-terminal-subtle">[ERR]</span> HTTP 404 · Recurso no indexado
         </p>
         <p class="text-emerald-400/70 log-line" style="--delay: 1.0s">
-          <span class="text-slate-600">[FIX]</span> Redirigir a ruta raíz: <span
+          <span class="text-terminal-subtle">[FIX]</span> Redirigir a ruta raíz: <span
             class="text-white">/</span
           ><span class="terminal-cursor">▊</span>
         </p>
@@ -98,7 +98,7 @@ const seo = {
       <div class="flex flex-col sm:flex-row gap-3 justify-center mb-12">
         <a
           href="/"
-          class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black uppercase tracking-widest text-xs rounded-xl hover:shadow-lg hover:shadow-emerald-500/20 transition-all inline-flex items-center justify-center gap-2 italic"
+          class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-terminal-bg font-black uppercase tracking-widest text-xs rounded-xl hover:shadow-lg hover:shadow-emerald-500/20 transition-all inline-flex items-center justify-center gap-2 italic"
         >
           <svg
             class="w-4 h-4"
@@ -117,186 +117,66 @@ const seo = {
         <button
           id="back-button"
           type="button"
-          class="px-8 py-4 border border-slate-700 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-slate-900 hover:border-slate-600 transition-all cursor-pointer"
+          class="px-8 py-4 border border-terminal-border-subtle text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-terminal-surface hover:border-terminal-subtle transition-all cursor-pointer"
         >
           ← Ruta Anterior
         </button>
       </div>
 
       <!-- Grid de atajos rápidos -->
-      <div class="border-t border-slate-800/60 pt-8">
+      <div class="border-t border-terminal-border/60 pt-8">
         <p
-          class="text-[10px] font-mono text-slate-600 uppercase tracking-[0.4em] mb-5"
+          class="text-[10px] font-mono text-terminal-subtle uppercase tracking-[0.4em] mb-5"
         >
           Rutas Disponibles
         </p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto">
           <a
             href="/tesis"
-            class="group p-3 bg-slate-900/30 border border-slate-800/60 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all"
+            class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span
-              class="text-slate-400 group-hover:text-emerald-400 text-xs font-bold transition-colors block"
+              class="text-terminal-secondary group-hover:text-emerald-400 text-xs font-bold transition-colors block"
               >Tesis</span
             >
-            <span class="text-slate-700 text-[9px] font-mono">/tesis</span>
+            <span class="text-terminal-subtle text-[9px] font-mono">/tesis</span>
           </a>
           <a
             href="/blog"
-            class="group p-3 bg-slate-900/30 border border-slate-800/60 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all"
+            class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span
-              class="text-slate-400 group-hover:text-emerald-400 text-xs font-bold transition-colors block"
+              class="text-terminal-secondary group-hover:text-emerald-400 text-xs font-bold transition-colors block"
               >Blog</span
             >
-            <span class="text-slate-700 text-[9px] font-mono">/blog</span>
+            <span class="text-terminal-subtle text-[9px] font-mono">/blog</span>
           </a>
           <a
             href="/faucets"
-            class="group p-3 bg-slate-900/30 border border-slate-800/60 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all"
+            class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span
-              class="text-slate-400 group-hover:text-emerald-400 text-xs font-bold transition-colors block"
+              class="text-terminal-secondary group-hover:text-emerald-400 text-xs font-bold transition-colors block"
               >Faucets</span
             >
-            <span class="text-slate-700 text-[9px] font-mono">/faucets</span>
+            <span class="text-terminal-subtle text-[9px] font-mono">/faucets</span>
           </a>
           <a
             href="/intrinseco"
-            class="group p-3 bg-slate-900/30 border border-slate-800/60 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all"
+            class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span
-              class="text-slate-400 group-hover:text-emerald-400 text-xs font-bold transition-colors block"
+              class="text-terminal-secondary group-hover:text-emerald-400 text-xs font-bold transition-colors block"
               >Intrínseco</span
             >
-            <span class="text-slate-700 text-[9px] font-mono">/intrinseco</span>
+            <span class="text-terminal-subtle text-[9px] font-mono">/intrinseco</span>
           </a>
         </div>
       </div>
     </div>
   </main>
 
-  <style>
-    /* Efecto Glitch sutil en el 404 */
-    .glitch-text {
-      position: relative;
-    }
 
-    .glitch-text::before,
-    .glitch-text::after {
-      content: attr(data-text);
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      background: var(--color-slate-950, #020617);
-      color: white;
-    }
-
-    .glitch-text::before {
-      animation: glitch-top 3s ease-in-out infinite;
-      clip-path: inset(0 0 60% 0);
-      color: rgba(52, 211, 153, 0.6);
-    }
-
-    .glitch-text::after {
-      animation: glitch-bottom 3s ease-in-out infinite;
-      clip-path: inset(60% 0 0 0);
-      color: rgba(34, 211, 238, 0.6);
-    }
-
-    @keyframes glitch-top {
-      0%, 88%, 100% {
-        transform: translate(0);
-        opacity: 0;
-      }
-      90% {
-        transform: translate(-3px, -2px);
-        opacity: 1;
-      }
-      92% {
-        transform: translate(3px, 2px);
-        opacity: 1;
-      }
-      94% {
-        transform: translate(0);
-        opacity: 0;
-      }
-    }
-
-    @keyframes glitch-bottom {
-      0%, 88%, 100% {
-        transform: translate(0);
-        opacity: 0;
-      }
-      91% {
-        transform: translate(3px, 1px);
-        opacity: 1;
-      }
-      93% {
-        transform: translate(-3px, -1px);
-        opacity: 1;
-      }
-      95% {
-        transform: translate(0);
-        opacity: 0;
-      }
-    }
-
-    /* Scanline que cruza el 404 */
-    .scanline {
-      animation: scanline 4s linear infinite;
-    }
-
-    @keyframes scanline {
-      0% {
-        transform: translateY(-80px);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(80px);
-        opacity: 0;
-      }
-    }
-
-    /* Cursor parpadeante del terminal */
-    .terminal-cursor {
-      animation: blink 1s step-end infinite;
-      font-size: 0.8em;
-    }
-
-    @keyframes blink {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0;
-      }
-    }
-
-    /* Líneas del log aparecen escalonadas */
-    .log-line {
-      opacity: 0;
-      animation: fadeInLog 0.4s ease-out forwards;
-      animation-delay: var(--delay);
-    }
-
-    @keyframes fadeInLog {
-      from {
-        opacity: 0;
-        transform: translateX(-8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  </style>
 
   <script>
     // Inyectar la ruta actual en el log del terminal

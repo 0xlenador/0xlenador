@@ -52,9 +52,9 @@ const proximosArticulos = [
     <header class="mb-16 md:mb-24">
       <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 mb-3 block">Bitácora de Investigación</span>
       <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-none">
-        Análisis <span class="text-slate-400 font-light font-serif italic">y Tesis de Capital</span>
+        Análisis <span class="text-terminal-secondary font-light font-serif italic">y Tesis de Capital</span>
       </h1>
-      <p class="text-sm text-slate-400 max-w-xl mt-4 leading-relaxed font-light">
+      <p class="text-sm text-terminal-secondary max-w-xl mt-4 leading-relaxed font-light">
         Perspectivas independientes sobre gestión patrimonial, análisis fundamental de activos Web3 y modelado económico de L1s.
       </p>
     </header>
@@ -63,24 +63,24 @@ const proximosArticulos = [
     {featuredPost && (
       <section class="mb-20 md:mb-28">
         <a href={`/blog/${featuredPost.id}`} class="group block">
-          <div class="relative bg-slate-900/10 border border-slate-900/80 rounded-2xl p-8 md:p-12 hover:border-emerald-500/20 hover:bg-slate-900/30 transition-all duration-500 overflow-hidden shadow-2xl">
+          <div class="relative bg-terminal-surface/10 border border-terminal-border/80 rounded-2xl p-8 md:p-12 hover:border-emerald-500/20 hover:bg-terminal-surface/30 transition-all duration-500 overflow-hidden shadow-2xl">
             <!-- Gradiente de fondo del banner -->
             <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-emerald-500/[0.015] blur-[120px] rounded-full pointer-events-none"></div>
             
             <div class="max-w-4xl relative z-10 space-y-4">
               <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono uppercase tracking-wider">
                 <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-md font-semibold">Análisis Principal</span>
-                <span class="text-slate-800">•</span>
-                <span class="text-slate-500">{formatDate(featuredPost.data.date)}</span>
-                <span class="text-slate-800">•</span>
-                <span class="text-slate-500">{featuredPost.data.readTime} de lectura</span>
+                <span class="text-terminal-border-subtle">•</span>
+                <span class="text-terminal-muted">{formatDate(featuredPost.data.date)}</span>
+                <span class="text-terminal-border-subtle">•</span>
+                <span class="text-terminal-muted">{featuredPost.data.readTime} de lectura</span>
               </div>
               
               <h2 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors duration-300 leading-snug">
                 {featuredPost.data.title}
               </h2>
               
-              <p class="text-slate-400 text-sm md:text-base leading-relaxed text-left max-w-2xl font-light">
+              <p class="text-terminal-secondary text-sm md:text-base leading-relaxed text-left max-w-2xl font-light">
                 {featuredPost.data.description}
               </p>
               
@@ -98,28 +98,28 @@ const proximosArticulos = [
     {regularPosts.length > 0 && (
       <section class="mb-24">
         <div class="flex items-center justify-between mb-8">
-          <h2 class="text-xs font-mono text-slate-500 uppercase tracking-[0.4em] font-semibold">Investigaciones Anteriores</h2>
-          <div class="h-px flex-grow ml-6 bg-slate-900/80"></div>
+          <h2 class="text-xs font-mono text-terminal-muted uppercase tracking-[0.4em] font-semibold">Investigaciones Anteriores</h2>
+          <div class="h-px flex-grow ml-6 bg-terminal-border/80"></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {regularPosts.map(post => (
             <a href={`/blog/${post.id}`} class="group block h-full">
-              <div class="bg-slate-900/20 border border-slate-900 p-6 rounded-2xl hover:border-emerald-500/20 hover:bg-slate-900/35 transition-all duration-300 flex flex-col justify-between h-full">
+              <div class="bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl hover:border-emerald-500/20 hover:bg-terminal-surface/35 transition-all duration-300 flex flex-col justify-between h-full">
                 <div>
                   <div class="flex justify-between items-center mb-4 font-mono text-[9px] uppercase tracking-wider">
                     <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-2 py-0.5 rounded-md font-semibold">{post.data.category}</span>
-                    <span class="text-slate-500">{formatDate(post.data.date)}</span>
+                    <span class="text-terminal-muted">{formatDate(post.data.date)}</span>
                   </div>
                   <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight leading-snug mb-3">
                     {post.data.title}
                   </h3>
-                  <p class="text-xs text-slate-400 leading-relaxed font-light line-clamp-3">
+                  <p class="text-xs text-terminal-secondary leading-relaxed font-light line-clamp-3">
                     {post.data.description}
                   </p>
                 </div>
 
-                <div class="pt-4 mt-6 border-t border-slate-900/50 flex items-center justify-between font-mono text-[9px] text-slate-500">
+                <div class="pt-4 mt-6 border-t border-terminal-border/50 flex items-center justify-between font-mono text-[9px] text-terminal-muted">
                   <span class="uppercase tracking-wider">{post.data.readTime} lectura</span>
                   <span class="font-bold uppercase tracking-widest text-emerald-400 group-hover:translate-x-0.5 transition-transform">Acceder →</span>
                 </div>
@@ -131,35 +131,35 @@ const proximosArticulos = [
     )}
 
     <!-- Sección de Próximos Análisis -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-slate-900 pt-16">
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-terminal-border pt-16">
       <div class="space-y-4">
         <span class="text-xs font-mono uppercase tracking-[0.4em] text-cyan-500 block">En Desarrollo</span>
         <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">Pipeline de Investigación</h2>
-        <p class="text-slate-400 text-sm leading-relaxed max-w-sm font-light">
+        <p class="text-terminal-secondary text-sm leading-relaxed max-w-sm font-light">
           Temas actualmente en fase de modelado financiero, auditoría de código o análisis fundamental macroeconómico.
         </p>
       </div>
       <div class="space-y-6">
         {proximosArticulos.map(proximo => (
-          <div class="p-6 rounded-xl border border-slate-900 bg-slate-950 hover:border-slate-900/80 transition-all duration-300">
+          <div class="p-6 rounded-xl border border-terminal-border bg-terminal-bg hover:border-terminal-border/80 transition-all duration-300">
             <div class="flex items-center gap-3 text-[9px] font-mono uppercase tracking-wider mb-3">
               <span class="text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-md font-semibold">{proximo.category}</span>
-              <span class="text-slate-600">•</span>
-              <span class="text-slate-600">Planificado</span>
+              <span class="text-terminal-subtle">•</span>
+              <span class="text-terminal-subtle">Planificado</span>
             </div>
-            <h3 class="text-base font-bold text-slate-300 leading-snug mb-2">{proximo.title}</h3>
-            <p class="text-xs text-slate-500 leading-relaxed font-light">{proximo.desc}</p>
+            <h3 class="text-base font-bold text-terminal-secondary leading-snug mb-2">{proximo.title}</h3>
+            <p class="text-xs text-terminal-muted leading-relaxed font-light">{proximo.desc}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Tarjeta Dinámica de Activos bajo Observación -->
-    <section class="mt-20 border-t border-slate-900 pt-16">
+    <section class="mt-20 border-t border-terminal-border pt-16">
       <div class="mb-8">
         <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 block mb-2">Monitor Dinámico</span>
         <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">Activos Bajo Seguimiento</h2>
-        <p class="text-slate-400 text-sm leading-relaxed max-w-xl mt-2 font-light">
+        <p class="text-terminal-secondary text-sm leading-relaxed max-w-xl mt-2 font-light">
           Una muestra aleatoria de activos dentro del radar de investigación de 0xLeñador para esta sesión.
         </p>
       </div>
@@ -178,7 +178,7 @@ const proximosArticulos = [
       name: "Bitcoin", 
       category: "Hard Money / Reserva", 
       thesis: "El activo base de escasez absoluta. Cobertura definitiva contra la degradación de monedas fiat tradicionales.", 
-      color: "from-amber-500/5 to-slate-900/10 border-amber-500/10 hover:border-amber-500/30 text-amber-400",
+      color: "from-amber-500/5 to-terminal-surface/10 border-amber-500/10 hover:border-amber-500/30 text-amber-400",
       link: "/bitcoin" 
     },
     { 
@@ -186,7 +186,7 @@ const proximosArticulos = [
       name: "Ethereum", 
       category: "L1 de Liquidación", 
       thesis: "La computadora descentralizada global. Captura valor real de comisiones mediante la quema de su propio suministro.", 
-      color: "from-indigo-500/5 to-slate-900/10 border-indigo-500/10 hover:border-indigo-500/30 text-indigo-400",
+      color: "from-indigo-500/5 to-terminal-surface/10 border-indigo-500/10 hover:border-indigo-500/30 text-indigo-400",
       link: "/ethereum"
     }
   ];
@@ -202,16 +202,16 @@ const proximosArticulos = [
     
     grid.innerHTML = selected.map(asset => `
       <a href="${asset.link}" class="group block h-full">
-        <div class="bg-gradient-to-br ${asset.color} border p-6 rounded-2xl flex flex-col justify-between h-full hover:bg-slate-900/25 transition-all duration-300 relative overflow-hidden">
+        <div class="bg-gradient-to-br ${asset.color} border p-6 rounded-2xl flex flex-col justify-between h-full hover:bg-terminal-surface/25 transition-all duration-300 relative overflow-hidden">
           <div>
             <div class="flex justify-between items-center mb-4">
               <span class="text-xs font-mono font-bold uppercase tracking-wider">${asset.ticker}</span>
-              <span class="text-[9px] font-mono uppercase tracking-wider text-slate-500">${asset.category}</span>
+              <span class="text-[9px] font-mono uppercase tracking-wider text-terminal-muted">${asset.category}</span>
             </div>
             <h3 class="text-base font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors duration-300">${asset.name}</h3>
-            <p class="text-xs text-slate-400 leading-relaxed font-light">${asset.thesis}</p>
+            <p class="text-xs text-terminal-secondary leading-relaxed font-light">${asset.thesis}</p>
           </div>
-          <div class="pt-4 mt-6 border-t border-slate-900/60 flex items-center justify-between text-[9px] font-mono text-slate-500">
+          <div class="pt-4 mt-6 border-t border-terminal-border/60 flex items-center justify-between text-[9px] font-mono text-terminal-muted">
             <span class="font-bold tracking-wider text-emerald-400 group-hover:text-emerald-300">ACCEDER ↗</span>
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
           </div>

@@ -31,25 +31,25 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
       </a>
 
       <div
-        class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-slate-400"
+        class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted"
       >
         <a
           href="/tesis" data-astro-prefetch
           class:list={[
             "nav-link px-3 py-2 rounded-lg transition-all",
-            isActive("/tesis") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+            isActive("/tesis") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
           ]}
           >Tesis de Inversión</a
         >
 
         <div class="relative group/activos focus-within:ring-2 focus-within:ring-emerald-400 rounded-lg">
           <button
-            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
+            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-terminal-elevated/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
             aria-haspopup="menu"
           >
             Activos
             <svg
-              class="w-3.5 h-3.5 text-slate-600 group-hover/activos:text-slate-400 transition-all group-hover/activos:rotate-180"
+              class="w-3.5 h-3.5 text-terminal-subtle group-hover/activos:text-terminal-muted transition-all group-hover/activos:rotate-180"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -64,13 +64,13 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
             class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/activos:opacity-100 group-hover/activos:visible group-focus-within/activos:opacity-100 group-focus-within/activos:visible transition-all duration-200 z-50"
           >
             <div
-              class="bg-slate-900 border border-slate-800 rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
+              class="bg-terminal-surface border border-terminal-border rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
             >
               <a
                 href="/bitcoin" data-astro-prefetch
                 class:list={[
                   "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/bitcoin") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  isActive("/bitcoin") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
                 ]}
               >
                 <Image
@@ -87,7 +87,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
                 href="/ethereum" data-astro-prefetch
                 class:list={[
                   "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/ethereum") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  isActive("/ethereum") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
                 ]}
               >
                 <Image
@@ -100,12 +100,12 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
                 />
                 Ethereum
               </a>
-              <div class="border-t border-slate-800 my-1.5"></div>
+              <div class="border-t border-terminal-border my-1.5"></div>
               <span
-                class="flex items-center gap-2.5 px-3 py-2 text-slate-600 text-[11px] cursor-default"
+                class="flex items-center gap-2.5 px-3 py-2 text-terminal-subtle text-[11px] cursor-default"
               >
                 <span
-                  class="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center text-[9px] text-slate-500"
+                  class="w-5 h-5 rounded-full bg-terminal-elevated flex items-center justify-center text-[9px] text-terminal-muted"
                   >$</span
                 >
                 S&P 500 · Pronto
@@ -116,12 +116,12 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
 
         <div class="relative group/tools focus-within:ring-2 focus-within:ring-emerald-400 rounded-lg">
           <button
-            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
+            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-terminal-elevated/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
             aria-haspopup="menu"
           >
             Tools
             <svg
-              class="w-3.5 h-3.5 text-slate-600 group-hover/tools:text-slate-400 transition-all group-hover/tools:rotate-180"
+              class="w-3.5 h-3.5 text-terminal-subtle group-hover/tools:text-terminal-muted transition-all group-hover/tools:rotate-180"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -136,13 +136,13 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
             class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/tools:opacity-100 group-hover/tools:visible group-focus-within/tools:opacity-100 group-focus-within/tools:visible transition-all duration-200 z-50"
           >
             <div
-              class="bg-slate-900 border border-slate-800 rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
+              class="bg-terminal-surface border border-terminal-border rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
             >
               <a
                 href="/faucets" data-astro-prefetch
                 class:list={[
                   "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/faucets") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  isActive("/faucets") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
                 ]}
               >
                 <svg
@@ -163,7 +163,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
                 href="/intrinseco" data-astro-prefetch
                 class:list={[
                   "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/intrinseco") ? "text-white bg-slate-800/60" : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  isActive("/intrinseco") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
                 ]}
               >
                 <svg
@@ -190,7 +190,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
       id="mobile-menu-button"
       aria-expanded="false"
       aria-controls="mobile-menu"
-      class="lg:hidden text-slate-400 hover:text-white focus:outline-none z-50 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
+      class="lg:hidden text-terminal-muted hover:text-white focus:outline-none z-50 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
     >
       <svg
         id="menu-icon"
@@ -209,13 +209,13 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
     </button>
 
     <div
-      class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-slate-400"
+      class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted"
     >
       <a
         href="/blog" data-astro-prefetch
         class:list={[
           "nav-link px-3 py-2 rounded-lg transition-all",
-          isActive("/blog") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/blog") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
         >Blog</a
       >
@@ -223,7 +223,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         href="https://www.youtube.com/@0xlenador000"
         target="_blank"
         rel="noopener"
-        class="nav-link px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-1.5"
+        class="nav-link px-3 py-2 rounded-lg text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 transition-all flex items-center gap-1.5"
       >
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"
           ><path
@@ -232,13 +232,13 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         >
         YouTube
       </a>
-      <div class="w-px h-5 bg-slate-800 mx-2"></div>
+      <div class="w-px h-5 bg-terminal-border mx-2"></div>
       <a
         href="https://x.com/0xlenador"
         target="_blank"
         rel="noopener"
         aria-label="X (Twitter)"
-        class="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800/50 transition-all"
+        class="p-2 rounded-lg text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 transition-all"
       >
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"
           ><path
@@ -251,7 +251,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         target="_blank"
         rel="noopener"
         aria-label="Telegram"
-        class="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800/50 transition-all"
+        class="p-2 rounded-lg text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 transition-all"
       >
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"
           ><path
@@ -263,19 +263,19 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
 
     <div
       id="mobile-menu"
-      class="hidden absolute top-full left-0 right-0 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 p-6 flex flex-col space-y-1 lg:hidden z-40 shadow-2xl"
+      class="hidden absolute top-full left-0 right-0 bg-terminal-bg/95 backdrop-blur-xl border-b border-terminal-border p-6 flex flex-col space-y-1 lg:hidden z-40 shadow-2xl"
     >
       <a
         href="/tesis" data-astro-prefetch
         class:list={[
           "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
-          isActive("/tesis") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/tesis") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
         >Tesis de Inversión</a
       >
       <div class="px-3 py-2">
         <span
-          class="text-[10px] font-bold text-slate-600 uppercase tracking-widest"
+          class="text-[10px] font-bold text-terminal-subtle uppercase tracking-widest"
           >Activos</span
         >
       </div>
@@ -283,7 +283,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         href="/bitcoin" data-astro-prefetch
         class:list={[
           "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
-          isActive("/bitcoin") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/bitcoin") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
       >
         <Image
@@ -300,7 +300,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         href="/ethereum" data-astro-prefetch
         class:list={[
           "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
-          isActive("/ethereum") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/ethereum") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
       >
         <Image
@@ -315,7 +315,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
       </a>
       <div class="px-3 py-2 mt-2">
         <span
-          class="text-[10px] font-bold text-slate-600 uppercase tracking-widest"
+          class="text-[10px] font-bold text-terminal-subtle uppercase tracking-widest"
           >Tools</span
         >
       </div>
@@ -323,7 +323,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         href="/faucets" data-astro-prefetch
         class:list={[
           "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl pl-6",
-          isActive("/faucets") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/faucets") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
         >Faucets</a
       >
@@ -331,16 +331,16 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         href="/intrinseco" data-astro-prefetch
         class:list={[
           "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl pl-6",
-          isActive("/intrinseco") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/intrinseco") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
         >Intrínseco</a
       >
-      <div class="border-t border-slate-800 my-3"></div>
+      <div class="border-t border-terminal-border my-3"></div>
       <a
         href="/blog" data-astro-prefetch
         class:list={[
           "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
-          isActive("/blog") ? "text-white bg-slate-800/40" : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+          isActive("/blog") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
         ]}
         >Blog</a
       >

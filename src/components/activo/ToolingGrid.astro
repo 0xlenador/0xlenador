@@ -65,7 +65,7 @@ const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
 ---
 
 <section
-  class="mt-12 p-8 md:p-12 bg-slate-900/10 border border-slate-800 rounded-[3rem] relative overflow-hidden"
+  class="mt-12 p-8 md:p-12 bg-terminal-surface/10 border border-terminal-border rounded-[3rem] relative overflow-hidden"
 >
   <h4
     class="text-white font-bold mb-10 uppercase tracking-widest text-xs italic font-mono flex items-center gap-3 relative z-10"
@@ -113,9 +113,9 @@ const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
                   <a
                     href={item.url}
                     target="_blank"
-                    class="flex items-center gap-3 p-3 border border-slate-800 bg-slate-900/40 rounded-2xl transition-all hover:bg-slate-800/80 hover:border-slate-700 group-hover:scale-[1.02]"
+                    class="flex items-center gap-3 p-3 border border-terminal-border bg-terminal-surface/40 rounded-2xl transition-all hover:bg-terminal-border-subtle/80 hover:border-terminal-border-subtle group-hover:scale-[1.02]"
                   >
-                    <div class="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center border border-slate-800">
+                    <div class="w-10 h-10 rounded-xl bg-terminal-bg flex items-center justify-center border border-terminal-border">
                       <img
                         src={item.image || item.logo || ""}
                         alt={item.name}
@@ -127,7 +127,7 @@ const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
                       <p class="text-white font-bold text-xs uppercase tracking-wider mb-0.5">
                         {item.name}
                       </p>
-                      <p class="text-slate-500 text-[9px] uppercase tracking-widest italic">
+                      <p class="text-terminal-muted text-[9px] uppercase tracking-widest italic">
                         {item.subtitle || item.tag || ""}
                       </p>
                     </div>

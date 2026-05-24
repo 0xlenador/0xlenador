@@ -46,7 +46,7 @@ const instanceId = `faq-${Math.random().toString(36).slice(2, 8)}`;
     </h2>
     {
       subtitulo && (
-        <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">
+        <p class="text-terminal-muted font-mono text-xs uppercase tracking-widest mt-2">
           {subtitulo}
         </p>
       )
@@ -58,7 +58,7 @@ const instanceId = `faq-${Math.random().toString(36).slice(2, 8)}`;
       items.map((item, i) => {
         const id = startId + i;
         return (
-          <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300">
+          <div class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden group hover:border-emerald-500/30 transition-all duration-300">
             <button
               data-faq-toggle={id}
               aria-expanded="false"
@@ -70,7 +70,7 @@ const instanceId = `faq-${Math.random().toString(36).slice(2, 8)}`;
               </span>
               <span
                 data-faq-icon={id}
-                class="text-slate-500 transition-all duration-500 transform text-xl font-light faq-icon-rotate flex-shrink-0"
+                class="text-terminal-muted transition-all duration-500 transform text-xl font-light faq-icon-rotate flex-shrink-0"
               >
                 <svg
                   class="w-6 h-6"
@@ -95,7 +95,7 @@ const instanceId = `faq-${Math.random().toString(36).slice(2, 8)}`;
               style="max-height: 0px;"
             >
               <p
-                class={`p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 ${accentBorder ? `border-l-2 ${accentBorder} pl-4 mt-4` : ""}`}
+                class={`p-6 pt-0 text-terminal-secondary text-sm leading-relaxed border-t border-terminal-border/50 ${accentBorder ? `border-l-2 ${accentBorder} pl-4 mt-4` : ""}`}
               >
                 {item.respuesta}
               </p>

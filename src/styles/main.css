@@ -1,26 +1,72 @@
 @import "tailwindcss";
 
 /* ==============================
-   ESTILOS CUSTOM - 0xLeñador
-   Estos estilos van FUERA de @layer para que
-   Tailwind v4 NO los tree-shake.
+   DESIGN SYSTEM - 0xLeñador
+   Terminal Premium / Developer
    ============================== */
 
 /* ==============================
+   TAILWIND v4 — THEME EXTENSION
+   Registramos los nuevos tokens de color
+   para poder usarlos con clases Tailwind.
+   ============================== */
+@theme inline {
+    --color-terminal-bg: #141414;
+    --color-terminal-surface: #1E1E1E;
+    --color-terminal-elevated: #282828;
+    --color-terminal-border: #2A2A2A;
+    --color-terminal-border-subtle: #1F1F1F;
+    --color-terminal-text: #F7FAF7;
+    --color-terminal-secondary: #A8B2C1;
+    --color-terminal-muted: #8892A2;
+    --color-terminal-subtle: #6B7585;
+    --color-terminal-dim: #4A5260;
+}
+
+/* ==============================
+   CSS CUSTOM PROPERTIES
+   Centralizamos todos los valores
+   para facilitar mantenimiento.
+   ============================== */
+:root {
+    /* — Fondos — */
+    --bg-primary: #141414;
+    --bg-surface: #1E1E1E;
+    --bg-elevated: #282828;
+    --bg-surface-alpha: rgba(30, 30, 30, 0.6);
+    --bg-elevated-alpha: rgba(40, 40, 40, 0.5);
+
+    /* — Bordes — */
+    --border-default: #2A2A2A;
+    --border-subtle: #1F1F1F;
+
+    /* — Textos — */
+    --text-primary: #F7FAF7;
+    --text-secondary: #A8B2C1;
+    --text-muted: #8892A2;
+    --text-subtle: #6B7585;
+    --text-dim: #4A5260;
+
+    /* — Acentos (se mantienen) — */
+    --accent-emerald: #10b981;
+    --accent-emerald-light: #34d399;
+    --accent-cyan: #22d3ee;
+    --accent-cyan-deep: #06b6d4;
+}
+
+/* ==============================
    ESTILOS BASE DEL BODY
-   Centralizados aquí para mantener
-   consistencia entre todas las páginas.
    ============================== */
 body {
-    background-color: #020617;       /* bg-slate-950 */
-    color: #94a3b8;                  /* text-slate-400 */
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
     font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-    background-color: rgba(16, 185, 129, 0.3); /* selection:bg-emerald-500/30 */
+    background-color: rgba(16, 185, 129, 0.3);
 }
 
 /* Quitar flechas en Chrome, Safari, Edge y Opera */
@@ -38,7 +84,7 @@ input[type=number] {
 
 /* Estilo de enfoque global para navegación por teclado */
 :focus-visible {
-    outline: 2px solid #34d399;
+    outline: 2px solid var(--accent-emerald-light);
     outline-offset: 4px;
     border-radius: 4px;
 }
@@ -52,7 +98,7 @@ input[type=number] {
 input[type=range] {
     height: 4px;
     -webkit-appearance: none;
-    background: #1e293b;
+    background: var(--border-default);
     border-radius: 5px;
 }
 
@@ -61,17 +107,17 @@ input[type=range]::-webkit-slider-thumb {
     height: 18px;
     width: 18px;
     border-radius: 50%;
-    background: #34d399;
+    background: var(--accent-emerald-light);
     cursor: pointer;
-    border: 3px solid #020617;
+    border: 3px solid var(--bg-primary);
     box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
 }
 
 /* CLASES DE FILTRADO DE TARJETAS */
 .highlight {
-    background-color: #10b981 !important;
-    color: #020617 !important;
-    border-color: #10b981 !important;
+    background-color: var(--accent-emerald) !important;
+    color: var(--bg-primary) !important;
+    border-color: var(--accent-emerald) !important;
     font-weight: bold !important;
     opacity: 1 !important;
 }
@@ -82,14 +128,14 @@ input[type=range]::-webkit-slider-thumb {
 
 /* CLASES DE CALCULADORA */
 .active-tab {
-    background: linear-gradient(to right, #34d399, #22d3ee) !important;
-    color: #020617 !important;
+    background: linear-gradient(to right, var(--accent-emerald-light), var(--accent-cyan)) !important;
+    color: var(--bg-primary) !important;
     font-weight: 800;
 }
 
 .dashboard-card {
-    background-color: rgba(15, 23, 42, 0.4);
-    border: 1px solid #1e293b;
+    background-color: var(--bg-surface-alpha);
+    border: 1px solid var(--border-default);
     backdrop-filter: blur(10px);
 }
 
@@ -97,8 +143,8 @@ input[type=range]::-webkit-slider-thumb {
    SIMULADOR 60/40 - ESTILOS
    ============================== */
 .sim-block {
-    background-color: rgba(2, 6, 23, 0.6);
-    border: 1px solid #1e293b;
+    background-color: rgba(20, 20, 20, 0.6);
+    border: 1px solid var(--border-default);
     border-radius: 1rem;
     padding: 1.5rem;
     position: relative;
@@ -107,7 +153,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .sim-block:hover {
-    border-color: #334155;
+    border-color: var(--text-dim);
     transform: translateY(-2px);
 }
 
@@ -118,35 +164,35 @@ input[type=range]::-webkit-slider-thumb {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #64748b;
-    background-color: rgba(15, 23, 42, 0.5);
-    border: 1px solid #1e293b;
+    color: var(--text-muted);
+    background-color: var(--bg-surface-alpha);
+    border: 1px solid var(--border-default);
     border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sim-preset-btn:hover {
-    border-color: #34d399;
-    color: #34d399;
+    border-color: var(--accent-emerald-light);
+    color: var(--accent-emerald-light);
     background-color: rgba(52, 211, 153, 0.05);
 }
 
 .sim-preset-active {
-    background: linear-gradient(to right, #34d399, #22d3ee) !important;
-    color: #020617 !important;
+    background: linear-gradient(to right, var(--accent-emerald-light), var(--accent-cyan)) !important;
+    color: var(--bg-primary) !important;
     border-color: transparent !important;
 }
 
 .input-premium {
-    background-color: #020617;
-    border: 1px solid #1e293b;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-default);
     color: #ffffff;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input-premium:focus {
-    border-color: #34d399;
+    border-color: var(--accent-emerald-light);
     outline: none;
     box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2);
 }
@@ -161,7 +207,7 @@ input[type=range]::-webkit-slider-thumb {
 
 /* SCROLLBAR PERSONALIZADO PARA OVERLAYS */
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 30, 30, 0.5); border-radius: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(16, 185, 129, 0.4); border-radius: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(16, 185, 129, 0.8); }
 
@@ -170,7 +216,7 @@ input[type=range]::-webkit-slider-thumb {
    Diseño para la plantilla de los posts / blog.
    ============================== */
 .content h1, .content h2, .content h3, .content h4 {
-    color: #f8fafc;
+    color: var(--text-primary);
     font-weight: 800;
     margin-top: 2.5em;
     margin-bottom: 1em;
@@ -180,38 +226,38 @@ input[type=range]::-webkit-slider-thumb {
 
 .content h2 {
     font-size: 1.875rem;
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid var(--border-default);
     padding-bottom: 0.75rem;
 }
 
 .content h3 {
     font-size: 1.5rem;
-    color: #e2e8f0;
+    color: #D8DEE9;
 }
 
 .content p {
     margin-bottom: 1.5rem;
-    color: #94a3b8;
+    color: var(--text-secondary);
     line-height: 1.8;
     font-size: 1.05rem;
 }
 
 .content a {
-    color: #34d399;
+    color: var(--accent-emerald-light);
     text-decoration: none;
     transition: all 0.2s;
     font-weight: 500;
 }
 
 .content a:hover {
-    color: #10b981;
+    color: var(--accent-emerald);
     text-decoration: underline;
 }
 
 .content ul, .content ol {
     margin-bottom: 1.75rem;
     padding-left: 1.5rem;
-    color: #94a3b8;
+    color: var(--text-secondary);
     line-height: 1.8;
 }
 
@@ -221,20 +267,20 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .content ul li::marker {
-    color: #10b981;
+    color: var(--accent-emerald);
 }
 
 .content strong {
-    color: #e2e8f0;
+    color: #D8DEE9;
     font-weight: 700;
 }
 
 .content blockquote {
-    border-left: 4px solid #10b981;
+    border-left: 4px solid var(--accent-emerald);
     margin-top: 2rem;
     margin-bottom: 2rem;
     font-style: italic;
-    color: #cbd5e1;
+    color: #C8D0DC;
     background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 100%);
     padding: 1.25rem 1.5rem;
     border-radius: 0 0.75rem 0.75rem 0;
@@ -246,13 +292,13 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .content code {
-    background-color: #0f172a;
+    background-color: var(--bg-surface);
     padding: 0.2em 0.4em;
     border-radius: 0.375rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     font-size: 0.875em;
-    color: #34d399;
-    border: 1px solid #1e293b;
+    color: var(--accent-emerald-light);
+    border: 1px solid var(--border-default);
 }
 
 .content pre code {
@@ -263,11 +309,11 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .content pre {
-    background-color: #0f172a;
+    background-color: var(--bg-surface);
     padding: 1.25rem;
     border-radius: 0.75rem;
     overflow-x: auto;
-    border: 1px solid #1e293b;
+    border: 1px solid var(--border-default);
     margin-bottom: 1.75rem;
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
@@ -277,7 +323,7 @@ input[type=range]::-webkit-slider-thumb {
     max-width: 100%;
     height: auto;
     margin: 2rem auto;
-    border: 1px solid #1e293b;
+    border: 1px solid var(--border-default);
 }
 
 /* Estilos premium para tablas de markdown (.content table) */
@@ -286,15 +332,15 @@ input[type=range]::-webkit-slider-thumb {
     border-collapse: collapse;
     text-align: left;
     font-size: 0.95rem;
-    color: #cbd5e1; /* text-slate-300 */
+    color: #C8D0DC;
 }
 
 .content th {
-    background-color: rgba(15, 23, 42, 0.6); /* bg-slate-900/60 */
-    color: #f8fafc; /* text-slate-50 */
+    background-color: rgba(30, 30, 30, 0.6);
+    color: var(--text-primary);
     font-weight: 700;
     padding: 0.85rem 1.25rem;
-    border-bottom: 2px solid #1e293b; /* border-slate-800 */
+    border-bottom: 2px solid var(--border-default);
     font-size: 0.825rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -302,7 +348,7 @@ input[type=range]::-webkit-slider-thumb {
 
 .content td {
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid rgba(30, 41, 59, 0.5); /* border-slate-800/50 */
+    border-bottom: 1px solid rgba(42, 42, 42, 0.5);
     line-height: 1.5;
 }
 
@@ -311,6 +357,135 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .content tr:hover td {
-    background-color: rgba(16, 185, 129, 0.02); /* Sutil highlight verde al pasar el ratón */
+    background-color: rgba(16, 185, 129, 0.03);
     color: #ffffff;
+}
+
+/* ==============================
+   ANIMACIONES GLOBALES
+   Reutilizables en toda la app.
+   ============================== */
+
+/* --- Cursor parpadeante de terminal --- */
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.terminal-cursor {
+    animation: cursor-blink 1s step-end infinite;
+    color: var(--accent-emerald-light);
+}
+
+/* --- Efecto Glitch sutil (para separadores y contenedores) --- */
+@keyframes glitch-subtle {
+    0%, 92%, 100% {
+        transform: translate(0);
+        opacity: 0;
+    }
+    93% {
+        transform: translate(-2px, -1px);
+        opacity: 0.8;
+    }
+    95% {
+        transform: translate(2px, 1px);
+        opacity: 0.6;
+    }
+    97% {
+        transform: translate(0);
+        opacity: 0;
+    }
+}
+
+/* Aplicar a un elemento con .glitch-text y data-text="<texto>" */
+.glitch-text {
+    position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--bg-primary);
+    color: white;
+}
+
+.glitch-text::before {
+    animation: glitch-subtle 6s ease-in-out infinite;
+    clip-path: inset(0 0 60% 0);
+    color: rgba(52, 211, 153, 0.6);
+}
+
+.glitch-text::after {
+    animation: glitch-subtle 6s ease-in-out infinite 0.15s;
+    clip-path: inset(60% 0 0 0);
+    color: rgba(34, 211, 238, 0.6);
+}
+
+/* --- Scanline horizontal animada --- */
+@keyframes scanline-move {
+    0% { transform: translateY(-80px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(80px); opacity: 0; }
+}
+
+.scanline {
+    animation: scanline-move 4s linear infinite;
+}
+
+/* --- Líneas de log con aparición escalonada --- */
+.log-line {
+    opacity: 0;
+    animation: fadeInLog 0.4s ease-out forwards;
+    animation-delay: var(--delay);
+}
+
+@keyframes fadeInLog {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Separador con efecto glitch --- */
+.glitch-separator {
+    position: relative;
+    height: 1px;
+    background: var(--border-default);
+    overflow: visible;
+}
+
+.glitch-separator::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-emerald-light), var(--accent-cyan), transparent);
+    opacity: 0;
+    animation: glitch-separator-flash 8s ease-in-out infinite;
+}
+
+@keyframes glitch-separator-flash {
+    0%, 90%, 100% {
+        opacity: 0;
+        transform: translateX(0) scaleX(1);
+    }
+    92% {
+        opacity: 0.7;
+        transform: translateX(-3px) scaleX(1.02);
+    }
+    94% {
+        opacity: 0.5;
+        transform: translateX(2px) scaleX(0.98);
+    }
+    96% {
+        opacity: 0.8;
+        transform: translateX(0) scaleX(1);
+    }
+    98% {
+        opacity: 0;
+    }
 }

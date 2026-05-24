@@ -21,7 +21,7 @@ const { items } = Astro.props;
 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
   {
     items.map((item) => (
-      <div class="p-8 bg-slate-900/10 border border-slate-900 rounded-3xl hover:border-slate-800 transition-all">
+      <div class="p-8 bg-terminal-surface/10 border border-terminal-border-subtle rounded-3xl hover:border-terminal-border transition-all">
         <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6">
           <svg
             class="w-5 h-5 text-emerald-500"
@@ -40,7 +40,7 @@ const { items } = Astro.props;
         <h3 class="text-white font-bold mb-4 uppercase tracking-tighter italic">
           {item.titulo}
         </h3>
-        <p class="text-xs leading-relaxed text-slate-500">{item.descripcion}</p>
+        <p class="text-xs leading-relaxed text-terminal-muted">{item.descripcion}</p>
       </div>
     ))
   }
