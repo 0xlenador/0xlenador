@@ -1,0 +1,66 @@
+---
+// BackToTop.astro
+---
+
+<button
+  id="back-to-top"
+  aria-label="Volver arriba"
+  class="fixed bottom-8 right-8 z-50 flex h-12 w-12 translate-y-20 items-center justify-center rounded-full bg-emerald-500 text-white opacity-0 shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-400 hover:shadow-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-terminal-bg"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    stroke-width="2.5"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M5 15l7-7 7 7"
+    />
+  </svg>
+</button>
+
+<script is:inline>
+  const initBackToTop = () => {
+    const btn = document.getElementById("back-to-top");
+    if (!btn) return;
+
+    const toggleVisibility = () => {
+      // Show button if scrolled more than 300px
+      if (window.scrollY > 300) {
+        btn.classList.remove("opacity-0", "translate-y-20", "pointer-events-none");
+        btn.classList.add("opacity-100", "translate-y-0", "pointer-events-auto");
+      } else {
+        btn.classList.remove("opacity-100", "translate-y-0", "pointer-events-auto");
+        btn.classList.add("opacity-0", "translate-y-20", "pointer-events-none");
+      }
+    };
+
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    };
+
+    // Remove event listeners just in case this runs multiple times
+    window.removeEventListener("scroll", toggleVisibility);
+    btn.removeEventListener("click", scrollToTop);
+
+    // Listeners
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
+    btn.addEventListener("click", scrollToTop);
+
+    // Initial check
+    toggleVisibility();
+  };
+
+  // Ejecutar al cargar (para sitios Astro normales)
+  initBackToTop();
+  
+  // Ejecutar si se usan View Transitions
+  document.addEventListener("astro:after-swap", initBackToTop);
+</script>

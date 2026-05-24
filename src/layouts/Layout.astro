@@ -1,6 +1,7 @@
 ---
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+import BackToTop from "../components/BackToTop.astro";
 import "../styles/main.css";
 
 // 1. Definimos qué datos PUEDE recibir este layout
@@ -82,5 +83,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </div>
     <Footer />
+    <BackToTop />
   </body>
 </html>
