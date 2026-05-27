@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 
 // 2. Extraer los datos y compilar el cuerpo del Markdown a HTML nativo
 const { post } = Astro.props;
-const { title, description, keywords, date, category } = post.data;
+const { title, description, keywords, date, category, coverImage, coverAlt } = post.data;
 const { Content, remarkPluginFrontmatter } = await render(post);
 const readTime = post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min";
 
@@ -115,6 +115,18 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             </div>
           </div>
         </header>
+
+        {coverImage && (
+          <div class="mb-12 rounded-2xl overflow-hidden border border-terminal-border/60 shadow-[0_0_30px_rgba(16,185,129,0.05)] relative group">
+            <div class="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
+            <img 
+              src={coverImage} 
+              alt={coverAlt || `Portada para el artículo: ${title}`} 
+              class="w-full h-auto max-h-[500px] object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+              loading="eager"
+            />
+          </div>
+        )}
 
         <div class="content relative text-left md:text-justify" id="article-content">
           <Content />

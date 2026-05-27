@@ -5,7 +5,11 @@ description: "Aprende estrategias de inversión contra la inflación para proteg
 category: "Estrategia de Inversión"
 date: 2026-05-27
 author: "0xLeñador"
+coverImage: "/img/blog/ganarle-a-la-inflacion.webp"
+coverAlt: "Imagen abstracta sobre estrategias de inversión contra la inflación, con un escudo protegiendo capital, una línea de precios en aumento y gráficos de crecimiento financiero."
 ---
+
+## Introdución
 
 La inflación no siempre se siente como un golpe fuerte. A veces llega en silencio: vas al supermercado, compras lo mismo de siempre y pagas más. Luego miras tus ahorros y, aunque el número en la cuenta sigue igual, entiendes que ese dinero compra menos.
 

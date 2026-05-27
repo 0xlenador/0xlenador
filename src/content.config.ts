@@ -12,7 +12,9 @@ const blog = defineCollection({
     author: z.string().default('0xLeñador'),
     layout: z.string().optional(),
     keywords: z.string().optional(),
-    readTime: z.string().optional()
+    readTime: z.string().optional(),
+    coverImage: z.string().optional(),
+    coverAlt: z.string().optional()
   })
 });
 
