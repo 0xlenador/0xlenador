@@ -13,8 +13,9 @@ export async function getStaticPaths() {
 
 // 2. Extraer los datos y compilar el cuerpo del Markdown a HTML nativo
 const { post } = Astro.props;
-const { title, description, keywords, date, readTime, category } = post.data;
-const { Content } = await render(post);
+const { title, description, keywords, date, category } = post.data;
+const { Content, remarkPluginFrontmatter } = await render(post);
+const readTime = post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min";
 
 // Formatear fecha al estilo: Apr 22, 2026
 const formattedDate = new Date(date).toLocaleDateString("en-US", {
