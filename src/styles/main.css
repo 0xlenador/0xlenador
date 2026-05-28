@@ -57,6 +57,18 @@
 /* ==============================
    ESTILOS BASE DEL BODY
    ============================== */
+html {
+    /* Scroll suave a nivel CSS como base (nuestro JS lo sobreescribe con offset) */
+    scroll-behavior: smooth;
+}
+
+/* Respetar preferencia del usuario de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
 body {
     background-color: var(--bg-primary);
     color: var(--text-secondary);

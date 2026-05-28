@@ -14,8 +14,20 @@ export async function getStaticPaths() {
 // 2. Extraer los datos y compilar el cuerpo del Markdown a HTML nativo
 const { post } = Astro.props;
 const { title, description, keywords, date, category, coverImage, coverAlt } = post.data;
-const { Content, remarkPluginFrontmatter } = await render(post);
+const { Content, remarkPluginFrontmatter, headings } = await render(post);
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 const readTime = post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min";
+
+// Agrupar headings: cada H2 contiene sus H3 hijos
+type TocGroup = { heading: typeof tocHeadings[0]; children: typeof tocHeadings };
+const groupedToc: TocGroup[] = [];
+for (const h of tocHeadings) {
+  if (h.depth === 2) {
+    groupedToc.push({ heading: h, children: [] });
+  } else if (h.depth === 3 && groupedToc.length > 0) {
+    groupedToc[groupedToc.length - 1].children.push(h);
+  }
+}
 
 // Formatear fecha al estilo: Apr 22, 2026
 const formattedDate = new Date(date).toLocaleDateString("en-US", {
@@ -52,7 +64,42 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
       transform: scale(1.3) rotate(45deg);
       box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
     }
+    /* Barra de progreso de lectura */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #34d399, #22d3ee);
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+    /* Acordeón de H3 en el TOC */
+    .toc-h3-group {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+      position: relative;
+    }
+    .toc-h3-group.open {
+      max-height: 500px;
+    }
+    .toc-h3-group::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 8px;
+      width: 1px;
+      background-color: rgba(42, 42, 42, 0.4);
+    }
   </style>
+
+  <!-- Barra de progreso de lectura -->
+  <div id="reading-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuenow={0} aria-valuemin={0} aria-valuemax={100}></div>
 
     <main
       class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row gap-16"
@@ -213,31 +260,54 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             </div>
           </div>
 
-          <div class="hidden lg:block">
-            <h3
-              class="text-white font-bold text-lg mb-6 flex items-center gap-2"
-            >
-              <svg
-                class="w-5 h-5 text-emerald-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h7"></path></svg
-              >
-              Aspectos clave
-            </h3>
-            <div class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border">
-              <ul
-                id="toc-list"
-                class="space-y-5 text-[15px] font-medium text-terminal-secondary relative"
-              >
-              </ul>
+          {groupedToc.length > 0 && (
+            <div id="desktop-toc-container" class="hidden lg:block transition-all duration-300">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                  <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                  Aspectos clave
+                </h3>
+                <button
+                  id="hide-toc-btn"
+                  title="Ocultar índice de la pantalla"
+                  class="text-terminal-secondary hover:text-emerald-400 p-1.5 rounded-lg hover:bg-terminal-surface border border-transparent hover:border-terminal-border transition-colors cursor-pointer"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L21 21m-10.5-8.223a3 3 0 114.24-4.24m0 0a3 3 0 01-4.24 4.24" />
+                  </svg>
+                </button>
+              </div>
+              <div class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border">
+                <ul id="toc-list" class="space-y-5 text-[15px] font-medium text-terminal-secondary relative">
+                  {groupedToc.map(group => (
+                    <li class="toc-item toc-h2-item flex flex-col relative w-full" data-h2={group.heading.slug}>
+                      <div class="flex items-center justify-between gap-4">
+                        <a
+                          href={`#${group.heading.slug}`}
+                          class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-[15px]"
+                        >{group.heading.text}</a>
+                        <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[14px] top-[10px]"></span>
+                      </div>
+                      {group.children.length > 0 && (
+                        <ul class="toc-h3-group pl-6 mt-2 space-y-2">
+                          {group.children.map(child => (
+                            <li class="toc-item toc-h3-item flex items-center justify-between gap-4 relative w-full" data-h3={child.slug}>
+                              <a
+                                href={`#${child.slug}`}
+                                class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-sm"
+                              >{child.text}</a>
+                              <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[20px] top-[10px]"></span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </aside>
 
@@ -252,7 +322,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
     <button
       id="mobile-toc-btn"
       aria-label="Abrir Índice"
-      class="fixed bottom-6 right-6 z-[60] lg:hidden p-4 rounded-full bg-emerald-500 text-terminal-bg shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 transition-all cursor-pointer"
+      class="fixed bottom-24 right-6 z-[60] lg:hidden p-4 rounded-full bg-emerald-500 text-terminal-bg shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 transition-all cursor-pointer"
     >
       <svg
         class="w-6 h-6"
@@ -307,23 +377,54 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
             >
           </button>
         </div>
-        <div
-          class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border pb-10"
-        >
-          <ul
-            id="toc-list-mobile"
-            class="space-y-6 text-[15px] font-medium text-terminal-secondary relative"
-          >
+        <div class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border pb-10">
+          <ul id="toc-list-mobile" class="space-y-6 text-[15px] font-medium text-terminal-secondary relative">
+            {groupedToc.map(group => (
+              <li class="toc-item toc-h2-item flex flex-col relative w-full" data-h2={group.heading.slug}>
+                <div class="flex items-center justify-between gap-4">
+                  <a
+                    href={`#${group.heading.slug}`}
+                    class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-[15px]"
+                  >{group.heading.text}</a>
+                  <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[14px] top-[10px]"></span>
+                </div>
+                {group.children.length > 0 && (
+                  <ul class="toc-h3-group pl-6 mt-2 space-y-3">
+                    {group.children.map(child => (
+                      <li class="toc-item toc-h3-item flex items-center justify-between gap-4 relative w-full" data-h3={child.slug}>
+                        <a
+                          href={`#${child.slug}`}
+                          class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-sm"
+                        >{child.text}</a>
+                        <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[20px] top-[10px]"></span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
     </div>
 
+    <div class="hidden lg:block">
+      <button
+        id="show-toc-btn"
+        title="Mostrar índice"
+        class="fixed right-6 top-32 z-40 hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-terminal-surface/90 border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all shadow-xl backdrop-blur-sm cursor-pointer font-medium text-xs font-mono tracking-wider uppercase"
+      >
+        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Mostrar índice
+      </button>
+    </div>
+
     <script is:inline>
       document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("article-content");
-        const desktopList = document.getElementById("toc-list");
-        const mobileList = document.getElementById("toc-list-mobile");
         if (!container) return;
 
         // Envolver tablas para que sean responsive en móviles
@@ -337,32 +438,77 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
           }
         });
 
+        // --- Gestión de Visibilidad del TOC (Ocultar/Mostrar) ---
+        const hideBtn = document.getElementById("hide-toc-btn");
+        const showBtn = document.getElementById("show-toc-btn");
+        const desktopToc = document.getElementById("desktop-toc-container");
+
+        const updateTocState = (isHidden) => {
+          if (isHidden) {
+            if (desktopToc) {
+              desktopToc.classList.add("opacity-0", "scale-95", "pointer-events-none");
+              setTimeout(() => {
+                desktopToc.style.display = "none";
+              }, 300);
+            }
+            if (showBtn) {
+              showBtn.classList.remove("hidden");
+              showBtn.classList.add("flex");
+            }
+          } else {
+            if (desktopToc) {
+              desktopToc.style.display = "block";
+              setTimeout(() => {
+                desktopToc.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+              }, 10);
+            }
+            if (showBtn) {
+              showBtn.classList.add("hidden");
+              showBtn.classList.remove("flex");
+            }
+          }
+        };
+
+        if (hideBtn) {
+          hideBtn.addEventListener("click", () => {
+            localStorage.setItem("toc-pref", "hidden");
+            updateTocState(true);
+          });
+        }
+
+        if (showBtn) {
+          showBtn.addEventListener("click", () => {
+            localStorage.setItem("toc-pref", "visible");
+            updateTocState(false);
+          });
+        }
+
+        // Inicializar según preferencia guardada
+        const savedPref = localStorage.getItem("toc-pref");
+        if (savedPref === "hidden") {
+          updateTocState(true);
+        }
+        // --------------------------------------------------------
+
+        // Los headings ya están pre-renderizados en el servidor, solo los seleccionamos
         const headings = container.querySelectorAll("h2, h3");
-        headings.forEach((heading, i) => {
-          const cleanId = heading.id || `sec-${i}`;
-          heading.id = cleanId;
-          const text = heading.innerText;
-          const isH3 = heading.tagName.toLowerCase() === "h3";
 
-          const createItem = () => {
-            const li = document.createElement("li");
-            li.className = `toc-item flex items-center justify-between gap-4 relative w-full ${isH3 ? "pl-4 text-sm" : "text-[15px]"}`;
-            const a = document.createElement("a");
-            a.href = `#${cleanId}`;
-            a.className =
-              "toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5";
-            a.innerText = text;
-            const marker = document.createElement("span");
-            marker.className =
-              "toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[14px] top-[10px]";
-            li.appendChild(a);
-            li.appendChild(marker);
-            return li;
+        // Barra de progreso de lectura
+        const progressBar = document.getElementById("reading-progress");
+        if (progressBar) {
+          const updateProgress = () => {
+            const articleEl = document.getElementById("article-content");
+            if (!articleEl) return;
+            const articleTop = articleEl.getBoundingClientRect().top + window.scrollY;
+            const articleHeight = articleEl.scrollHeight;
+            const scrolled = window.scrollY - articleTop;
+            const progress = Math.min(100, Math.max(0, (scrolled / (articleHeight - window.innerHeight)) * 100));
+            progressBar.style.width = `${progress}%`;
+            progressBar.setAttribute("aria-valuenow", Math.round(progress));
           };
-
-          if (desktopList) desktopList.appendChild(createItem());
-          if (mobileList) mobileList.appendChild(createItem());
-        });
+          window.addEventListener("scroll", updateProgress, { passive: true });
+          updateProgress(); // Estado inicial
+        }
 
         const links = document.querySelectorAll(".toc-link");
         const activeSections = new Set();
@@ -394,13 +540,41 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
 
             if (currentActiveId && currentActiveId !== lastActiveId) {
               lastActiveId = currentActiveId;
+
+              // Acordeón: abrir el grupo H3 del H2 activo, cerrar los demás
+              const activeHeadingEl = document.getElementById(currentActiveId);
+              // Buscar el H2 padre del heading activo (puede ser él mismo o su ancestro)
+              let activeH2Id = currentActiveId;
+              if (activeHeadingEl && activeHeadingEl.tagName.toLowerCase() === 'h3') {
+                // Buscar el H2 anterior en el DOM
+                let prev = activeHeadingEl.previousElementSibling;
+                while (prev) {
+                  if (prev.tagName.toLowerCase() === 'h2') {
+                    activeH2Id = prev.id;
+                    break;
+                  }
+                  prev = prev.previousElementSibling;
+                }
+              }
+
+              document.querySelectorAll('.toc-h2-item').forEach(h2item => {
+                const h2Slug = h2item.getAttribute('data-h2');
+                const h3Group = h2item.querySelector('.toc-h3-group');
+                if (h3Group) {
+                  if (h2Slug === activeH2Id) {
+                    h3Group.classList.add('open');
+                  } else {
+                    h3Group.classList.remove('open');
+                  }
+                }
+              });
               
               links.forEach((link) => {
                 const href = link.getAttribute("href");
                 if (href === `#${currentActiveId}`) {
                   link.classList.add("active");
                   
-                  // Lógica de scroll-follow para desktop y móvil
+                  // Scroll-follow: centra el ítem activo en el contenedor del TOC
                   const activeItem = link.closest(".toc-item");
                   const isDesktop = link.closest("#toc-list") !== null;
                   const scrollContainer = isDesktop 
@@ -408,22 +582,17 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
                     : document.getElementById("mobile-toc-drawer");
                   
                   if (activeItem && scrollContainer) {
-                    const itemOffsetTop = activeItem.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top + scrollContainer.scrollTop;
-                    const itemHeight = activeItem.clientHeight;
-                    const itemOffsetBottom = itemOffsetTop + itemHeight;
                     const containerHeight = scrollContainer.clientHeight;
-
-                    if (itemOffsetTop < scrollContainer.scrollTop + 20) {
-                      scrollContainer.scrollTo({
-                        top: itemOffsetTop - 20,
-                        behavior: "smooth"
-                      });
-                    } else if (itemOffsetBottom > scrollContainer.scrollTop + containerHeight - 20) {
-                      scrollContainer.scrollTo({
-                        top: itemOffsetBottom - containerHeight + 20,
-                        behavior: "smooth"
-                      });
-                    }
+                    const itemOffsetTop = activeItem.getBoundingClientRect().top
+                      - scrollContainer.getBoundingClientRect().top
+                      + scrollContainer.scrollTop;
+                    const itemHeight = activeItem.clientHeight;
+                    // Posicionar el ítem en el centro del contenedor, ligeramente más abajo
+                    const targetScroll = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2) + 40;
+                    scrollContainer.scrollTo({
+                      top: Math.max(0, targetScroll),
+                      behavior: "smooth"
+                    });
                   }
                 } else {
                   link.classList.remove("active");
@@ -436,9 +605,49 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
 
         headings.forEach((h) => observer.observe(h));
 
+        // Scroll suave con offset inteligente al hacer click en un enlace del TOC
+        // Evita que el título quede pegado al borde superior de la pantalla
+        const SCROLL_OFFSET = 60;
+        document.querySelectorAll(".toc-link").forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute("href")?.slice(1);
+            const targetEl = targetId ? document.getElementById(targetId) : null;
+            if (targetEl) {
+              const y = targetEl.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+              window.scrollTo({ top: y, behavior: "smooth" });
+              // Actualizar la URL sin recargar la página
+              history.pushState(null, "", `#${targetId}`);
+            }
+          });
+        });
+
+        // Reset del TOC al volver al tope de la página
+        const resetTocScroll = () => {
+          const sidebar = document.getElementById("sidebar-scroll-container");
+          if (sidebar) sidebar.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
+        // Detectar cuando el usuario llega al tope por scroll
+        let tocResetCooldown = false;
+        window.addEventListener("scroll", () => {
+          if (window.scrollY < 80 && !tocResetCooldown) {
+            tocResetCooldown = true;
+            resetTocScroll();
+            setTimeout(() => { tocResetCooldown = false; }, 1000);
+          }
+        }, { passive: true });
+
+        // Detectar clic en el botón back-to-top para resetear el TOC
+        const backToTopBtn = document.getElementById("back-to-top");
+        if (backToTopBtn) {
+          backToTopBtn.addEventListener("click", resetTocScroll);
+        }
+
         const mBtn = document.getElementById("mobile-toc-btn");
         const mModal = document.getElementById("mobile-toc-modal");
         const mDrawer = document.getElementById("mobile-toc-drawer");
+        const mobileList = document.getElementById("toc-list-mobile");
         const mClose = document.getElementById("close-mobile-toc");
 
         const closeMobileToc = () => {
