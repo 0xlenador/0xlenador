@@ -57,6 +57,15 @@ const watchlist = [
     accentColor: "emerald",
   },
   {
+    ticker: "RUNE",
+    nombre: "Runestone",
+    categoria: "Bitcoin Ordinals",
+    href: null,
+    imagen: "/img/cripto/runestone.webp",
+    descripcion: "Activo de la economía de Ordinals y Runes. Riesgo total y alta asimetría.",
+    accentColor: "orange",
+  },
+  {
     ticker: "SFL",
     nombre: "Sunflower Land",
     categoria: "Web3 Game",
@@ -143,17 +152,31 @@ const faqItems = [
             {watchlist.map((activo) => (
               <tr>
                 <td>
-                  <div class="flex items-center gap-3">
-                    <img
-                      src={activo.imagen}
-                      alt={activo.nombre}
-                      width={32}
-                      height={32}
-                      loading="lazy"
-                      class="w-7 h-7 rounded-full object-contain flex-shrink-0"
-                    />
-                    <span class="text-white font-bold text-xs">{activo.nombre}</span>
-                  </div>
+                  {activo.href ? (
+                    <a href={activo.href} class="flex items-center gap-3 group no-underline">
+                      <img
+                        src={activo.imagen}
+                        alt={activo.nombre}
+                        width={32}
+                        height={32}
+                        loading="lazy"
+                        class="w-7 h-7 rounded-full object-contain flex-shrink-0"
+                      />
+                      <span class="text-white font-bold text-xs group-hover:text-emerald-400 transition-colors">{activo.nombre}</span>
+                    </a>
+                  ) : (
+                    <div class="flex items-center gap-3">
+                      <img
+                        src={activo.imagen}
+                        alt={activo.nombre}
+                        width={32}
+                        height={32}
+                        loading="lazy"
+                        class="w-7 h-7 rounded-full object-contain flex-shrink-0"
+                      />
+                      <span class="text-white font-bold text-xs">{activo.nombre}</span>
+                    </div>
+                  )}
                 </td>
                 <td>
                   <span class:list={[
@@ -189,17 +212,36 @@ const faqItems = [
       <div class="grid grid-cols-1 gap-0 divide-y divide-terminal-border md:hidden">
         {watchlist.map((activo) => (
           <div class="p-4 flex items-start gap-3">
-            <img
-              src={activo.imagen}
-              alt={activo.nombre}
-              width={32}
-              height={32}
-              loading="lazy"
-              class="w-8 h-8 rounded-full object-contain flex-shrink-0 mt-0.5"
-            />
+            {activo.href ? (
+              <a href={activo.href} class="block group flex-shrink-0 mt-0.5">
+                <img
+                  src={activo.imagen}
+                  alt={activo.nombre}
+                  width={32}
+                  height={32}
+                  loading="lazy"
+                  class="w-8 h-8 rounded-full object-contain"
+                />
+              </a>
+            ) : (
+              <img
+                src={activo.imagen}
+                alt={activo.nombre}
+                width={32}
+                height={32}
+                loading="lazy"
+                class="w-8 h-8 rounded-full object-contain flex-shrink-0 mt-0.5"
+              />
+            )}
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between gap-2 mb-1">
-                <span class="text-white font-bold text-sm">{activo.nombre}</span>
+                {activo.href ? (
+                  <a href={activo.href} class="text-white font-bold text-sm hover:text-emerald-400 transition-colors no-underline">
+                    {activo.nombre}
+                  </a>
+                ) : (
+                  <span class="text-white font-bold text-sm">{activo.nombre}</span>
+                )}
                 <span class:list={[
                   "font-mono text-[10px] px-1.5 py-0.5 rounded border flex-shrink-0",
                   accentMap[activo.accentColor],
