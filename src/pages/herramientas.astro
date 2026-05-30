@@ -29,29 +29,29 @@ const tools = [
     badge: "Calculadora",
     badgeColor: "cyan",
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
-  },
-  {
-    id: "faucets",
-    href: "/faucets",
-    titulo: "Faucets Directory",
-    descripcion:
-      "Directorio curado de faucets de mainnet y testnet para múltiples redes. Consigue tokens de prueba para desarrollo y experimentación en cadena.",
-    badge: "Directorio",
-    badgeColor: "violet",
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
-  },
+  }
 ];
 
 const faqItems = [
   {
-    pregunta: "¿Las herramientas requieren registro o cuenta?",
+    pregunta: "¿Cuál es la utilidad de nuestro centro de herramientas?",
     respuesta:
-      "No. Todas las herramientas de 0xLeñador son de acceso libre y sin registro. El Simulador 60/40 y la calculadora de Valor Intrínseco funcionan completamente en el lado del cliente, sin enviar datos a ningún servidor.",
+      "El objetivo de este centro es proporcionar modelos matemáticos y calculadoras estructuradas que eliminen la subjetividad y el ruido emocional al momento de evaluar activos. Estas herramientas están diseñadas para ayudarte a estructurar un portafolio equilibrado y determinar el valor real de tus inversiones mediante datos duros.",
   },
   {
-    pregunta: "¿Con qué frecuencia se actualizan las herramientas?",
+    pregunta: "¿Por qué seleccionamos estas herramientas?",
     respuesta:
-      "Las herramientas se actualizan de forma continua según las necesidades operativas de 0xLeñador. El Directorio de Faucets se revisa mensualmente para mantener los enlaces activos y añadir nuevas redes.",
+      "Porque representan los dos pilares fundamentales de la gestión de capital profesional: la asignación de riesgo (Simulador 60/40) y la valoración fundamental (Valor Intrínseco). En lugar de abrumarte con cientos de indicadores inútiles, nos enfocamos estrictamente en lo que funciona en la práctica institucional diaria.",
+  },
+  {
+    pregunta: "¿Los cálculos que realizo son privados?",
+    respuesta:
+      "Sí, absolutamente. Todas las herramientas de 0xLeñador están construidas para operar de manera 100% local en tu dispositivo (Client-Side). No utilizamos bases de datos, no requerimos registro y no guardamos tu información. Una vez que cierras la pestaña, tus cálculos desaparecen.",
+  },
+  {
+    pregunta: "¿Son estas herramientas recomendaciones financieras?",
+    respuesta:
+      "No. Son utilidades matemáticas y analíticas. El Simulador y la Calculadora te darán resultados basados en los números que tú mismo ingreses. Es tu responsabilidad realizar tu propia investigación (DYOR) e interpretar los datos según tu perfil de riesgo.",
   },
   {
     pregunta: "¿Puedo sugerir nuevas herramientas?",
@@ -72,8 +72,7 @@ const faqItems = [
         Centro de <span class="text-emerald-500">Herramientas</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Utilidades operativas para calcular, analizar y explorar. Sin registro, sin anuncios,
-        sin ruido. Solo herramientas que usamos en la práctica diaria.
+        Modelos de cálculo y software de análisis estructurado para evaluar activos y distribuir tu portafolio. Herramientas diseñadas para aportar objetividad matemática a tus decisiones de inversión, operando de forma local y privada en tu navegador.
       </p>
     </header>
 
@@ -83,45 +82,39 @@ const faqItems = [
         <a
           href={tool.href}
           id={`tool-card-${tool.id}`}
-          class="tool-card group relative no-underline"
+          class="flex flex-col relative bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] backdrop-blur-2xl rounded-[24px] p-6 transition-all duration-500 no-underline overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
         >
-          <!-- Badge -->
-          <div class="flex items-center justify-between mb-4">
-            <span class:list={[
-              "badge",
-              tool.badgeColor === "emerald" && "badge-active",
-              tool.badgeColor === "cyan" && "bg-cyan-500/10 text-cyan-400 border border-cyan-500/25",
-              tool.badgeColor === "violet" && "bg-violet-500/10 text-violet-400 border border-violet-500/25",
-            ]}>
-              {tool.badge}
-            </span>
+          <!-- Efecto de brillo superior (Apple style) -->
+          <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          <!-- Header de la tarjeta (Icono + Arrow) -->
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center text-white/[0.7] group-hover:text-white transition-colors duration-300 shadow-inner">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={tool.icon} />
+            </div>
+            
             <svg
-              class="w-4 h-4 text-terminal-subtle group-hover:text-emerald-400 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              class="w-5 h-5 text-white/[0.3] group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1"
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </div>
 
-          <!-- Icono -->
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              set:html={tool.icon} />
+          <!-- Contenido -->
+          <div class="flex flex-col flex-grow">
+            <h2 class="text-white font-semibold text-lg tracking-tight mb-2">
+              {tool.titulo}
+            </h2>
+            <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6">
+              {tool.descripcion}
+            </p>
           </div>
 
-          <!-- Título y descripción -->
-          <h2 class="text-white font-bold text-base mb-2 group-hover:text-emerald-400 transition-colors">
-            {tool.titulo}
-          </h2>
-          <p class="text-terminal-muted text-xs leading-relaxed flex-grow">
-            {tool.descripcion}
-          </p>
-
-          <!-- CTA -->
-          <div class="mt-4 pt-4 border-t border-terminal-border-subtle">
-            <span class="text-emerald-500/70 text-xs font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
-              Abrir herramienta →
+          <!-- Badge minimalista abajo -->
+          <div class="mt-auto">
+            <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide">
+              {tool.badge}
             </span>
           </div>
         </a>
