@@ -1,0 +1,138 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+
+const seo = {
+  title: "Herramientas | 0xLeñador — Utilidades para Web3 y Análisis de Capital",
+  description:
+    "Centro de herramientas operativas de 0xLeñador: simulador de estrategia 60/40, calculadora de valor intrínseco y directorio de faucets para testnet.",
+  image: "/img/meta/home.webp",
+};
+
+const tools = [
+  {
+    id: "simulador",
+    href: "/simulador",
+    titulo: "Simulador 60/40",
+    descripcion:
+      "Calcula la distribución matemática de tu capital bajo la estrategia de 0xLeñador. Ajusta porcentajes y visualiza la asignación entre mercados tradicionales y cripto.",
+    badge: "Interactivo",
+    badgeColor: "emerald",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>`,
+  },
+  {
+    id: "intrinseco",
+    href: "/intrinseco",
+    titulo: "Valor Intrínseco",
+    descripcion:
+      "Terminal de cálculo de valor intrínseco basada en flujo de caja descontado (DCF). Evalúa si un activo cotiza por encima o por debajo de su valor real.",
+    badge: "Calculadora",
+    badgeColor: "cyan",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
+  },
+  {
+    id: "faucets",
+    href: "/faucets",
+    titulo: "Faucets Directory",
+    descripcion:
+      "Directorio curado de faucets de mainnet y testnet para múltiples redes. Consigue tokens de prueba para desarrollo y experimentación en cadena.",
+    badge: "Directorio",
+    badgeColor: "violet",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
+  },
+];
+
+const faqItems = [
+  {
+    pregunta: "¿Las herramientas requieren registro o cuenta?",
+    respuesta:
+      "No. Todas las herramientas de 0xLeñador son de acceso libre y sin registro. El Simulador 60/40 y la calculadora de Valor Intrínseco funcionan completamente en el lado del cliente, sin enviar datos a ningún servidor.",
+  },
+  {
+    pregunta: "¿Con qué frecuencia se actualizan las herramientas?",
+    respuesta:
+      "Las herramientas se actualizan de forma continua según las necesidades operativas de 0xLeñador. El Directorio de Faucets se revisa mensualmente para mantener los enlaces activos y añadir nuevas redes.",
+  },
+  {
+    pregunta: "¿Puedo sugerir nuevas herramientas?",
+    respuesta:
+      "Sí. Si tienes una herramienta que consideres útil para la comunidad, puedes comunicarte a través de Telegram o X (@0xlenador). Las sugerencias con mayor demanda se priorizan en el roadmap.",
+  },
+];
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <!-- Header -->
+    <header class="mb-16">
+      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+        Hub / Herramientas
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        Centro de <span class="text-emerald-500">Herramientas</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        Utilidades operativas para calcular, analizar y explorar. Sin registro, sin anuncios,
+        sin ruido. Solo herramientas que usamos en la práctica diaria.
+      </p>
+    </header>
+
+    <!-- Grid de herramientas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+      {tools.map((tool) => (
+        <a
+          href={tool.href}
+          id={`tool-card-${tool.id}`}
+          class="tool-card group relative no-underline"
+        >
+          <!-- Badge -->
+          <div class="flex items-center justify-between mb-4">
+            <span class:list={[
+              "badge",
+              tool.badgeColor === "emerald" && "badge-active",
+              tool.badgeColor === "cyan" && "bg-cyan-500/10 text-cyan-400 border border-cyan-500/25",
+              tool.badgeColor === "violet" && "bg-violet-500/10 text-violet-400 border border-violet-500/25",
+            ]}>
+              {tool.badge}
+            </span>
+            <svg
+              class="w-4 h-4 text-terminal-subtle group-hover:text-emerald-400 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </div>
+
+          <!-- Icono -->
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              set:html={tool.icon} />
+          </div>
+
+          <!-- Título y descripción -->
+          <h2 class="text-white font-bold text-base mb-2 group-hover:text-emerald-400 transition-colors">
+            {tool.titulo}
+          </h2>
+          <p class="text-terminal-muted text-xs leading-relaxed flex-grow">
+            {tool.descripcion}
+          </p>
+
+          <!-- CTA -->
+          <div class="mt-4 pt-4 border-t border-terminal-border-subtle">
+            <span class="text-emerald-500/70 text-xs font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
+              Abrir herramienta →
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <FaqAccordion
+      titulo="Sobre las Herramientas"
+      subtitulo="Uso y disponibilidad"
+      startId={300}
+      items={faqItems}
+    />
+  </main>
+</Layout>

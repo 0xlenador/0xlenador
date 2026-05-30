@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
 
 // Traemos todos los artículos en tiempo de compilación desde src/content/blog/
 const allPosts = await getCollection('blog');
@@ -184,6 +185,30 @@ const proximosArticulos = [
         <!-- Los activos se inyectarán dinámicamente aquí en el cliente -->
       </div>
     </section>
+
+    <FaqAccordion
+      titulo="Preguntas Frecuentes"
+      subtitulo="Sobre la Bitácora de Investigación"
+      startId={700}
+      items={[
+        {
+          pregunta: "¿Con qué frecuencia se publican artículos?",
+          respuesta: "No hay una frecuencia fija. Los artículos se publican cuando el análisis está lo suficientemente maduro para ser compartido. La calidad y el rigor técnico tienen prioridad sobre la frecuencia de publicación.",
+        },
+        {
+          pregunta: "¿Los artículos son recomendaciones de inversión?",
+          respuesta: "No. Todo el contenido del blog tiene fines educativos e informativos. No constituye asesoría financiera, legal ni fiscal. Cada lector es responsable de sus propias decisiones de inversión.",
+        },
+        {
+          pregunta: "¿Puedo sugerir un tema para investigar?",
+          respuesta: "Sí. Puedes enviar sugerencias de análisis a través de Telegram (@zero0xlenador) o X (@0xlenador). Los temas con mayor demanda e interés técnico se priorizan en el pipeline de investigación.",
+        },
+        {
+          pregunta: "¿Qué formatos de contenido se publican?",
+          respuesta: "Principalmente análisis técnicos en profundidad, guías de herramientas y tesis de inversión documentadas. No se publican señales de compra/venta, resúmenes de noticias ni contenido de opinión superficial.",
+        },
+      ]}
+    />
   </main>
 </Layout>
 

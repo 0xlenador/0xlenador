@@ -1,0 +1,256 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+
+const seo = {
+  title: "Activos | 0xLeñador — Watchlist de Mercados Tradicionales y Web3",
+  description:
+    "Watchlist de activos bajo seguimiento activo: Bitcoin, Ethereum, ETFs S&P 500, Berkshire Hathaway e Hyperliquid. Seguimiento de la tesis de inversión 60/40 de 0xLeñador.",
+  image: "/img/meta/tesis.webp",
+};
+
+// Activos en seguimiento activo — datos estáticos que reflejan la tesis
+const watchlist = [
+  {
+    ticker: "BTC",
+    nombre: "Bitcoin",
+    categoria: "Cripto L1",
+    href: "/bitcoin",
+    imagen: "/img/cripto/bitcoin.webp",
+    descripcion: "Reserva de valor digital. Núcleo de la descorrelación financiera.",
+    accentColor: "orange",
+  },
+  {
+    ticker: "ETH",
+    nombre: "Ethereum",
+    categoria: "Cripto L1",
+    href: "/ethereum",
+    imagen: "/img/cripto/ethereum.webp",
+    descripcion: "Infraestructura de contratos inteligentes y economía DeFi.",
+    accentColor: "blue",
+  },
+  {
+    ticker: "HYPE",
+    nombre: "Hyperliquid",
+    categoria: "DEX / Perps",
+    href: null,
+    imagen: "/img/cripto/hyperliquid.webp",
+    descripcion: "L1 optimizado para derivados on-chain. Asimetría de ecosistema emergente.",
+    accentColor: "fuchsia",
+  },
+  {
+    ticker: "SPY",
+    nombre: "S&P 500 ETF",
+    categoria: "Renta Variable",
+    href: null,
+    imagen: "/img/cripto/syp500.webp",
+    descripcion: "Benchmark del mercado tradicional. 60% del portafolio estructural.",
+    accentColor: "emerald",
+  },
+  {
+    ticker: "BRK.B",
+    nombre: "Berkshire Hathaway",
+    categoria: "Renta Variable",
+    href: null,
+    imagen: "/img/cripto/brk.webp",
+    descripcion: "Valor intrínseco y gestión patrimonial de largo plazo.",
+    accentColor: "emerald",
+  },
+  {
+    ticker: "SFL",
+    nombre: "Sunflower Land",
+    categoria: "Web3 Game",
+    href: "/sunflowerland",
+    imagen: "/img/cripto/sunflowerland.webp",
+    descripcion: "Economía experimental on-chain. Fase de garaje — riesgo total.",
+    accentColor: "yellow",
+  },
+];
+
+// Mapa de colores para el acento de categoría
+const accentMap: Record<string, string> = {
+  orange:  "text-orange-400  border-orange-400/20  bg-orange-400/5",
+  blue:    "text-blue-400    border-blue-400/20    bg-blue-400/5",
+  fuchsia: "text-fuchsia-400 border-fuchsia-400/20 bg-fuchsia-400/5",
+  emerald: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5",
+  yellow:  "text-yellow-400  border-yellow-400/20  bg-yellow-400/5",
+};
+
+const faqItems = [
+  {
+    pregunta: "¿Estos activos son una recomendación de compra?",
+    respuesta:
+      "No. La Watchlist refleja los activos que 0xLeñador sigue activamente en su propia tesis de inversión. No es una señal de compra ni una recomendación financiera personalizada. Cada inversor debe hacer su propia investigación.",
+  },
+  {
+    pregunta: "¿Qué significa 'Fase de Garaje' en la watchlist?",
+    respuesta:
+      "Son activos de alta especulación y asimetría total: o se van a cero o generan retornos masivos. El capital asignado a estos activos se considera completamente arriesgado y no debe ser más del que el inversor puede perder por completo.",
+  },
+  {
+    pregunta: "¿Por qué Bitcoin y Ethereum tienen páginas dedicadas?",
+    respuesta:
+      "Son los dos activos de mayor peso y convicción en la tesis. Tienen análisis técnico, recursos y contexto suficientes para justificar una página completa. Los demás activos se documenten a medida que el análisis madura.",
+  },
+  {
+    pregunta: "¿Con qué frecuencia se actualiza la watchlist?",
+    respuesta:
+      "La watchlist refleja posiciones activas, no precios en tiempo real. Se actualiza cuando hay cambios estructurales en la tesis (entrada, salida o reconfiguración de posición), no con la volatilidad diaria del mercado.",
+  },
+];
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <!-- Header -->
+    <header class="mb-16">
+      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+        Hub / Activos
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        Watchlist de <span class="text-emerald-500">Activos</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        Los activos bajo seguimiento activo en la tesis de 0xLeñador. No son señales de compra,
+        son posiciones documentadas con fundamento técnico y matemático.
+      </p>
+    </header>
+
+    <!-- Watchlist header de tabla -->
+    <div class="flex items-center gap-4 mb-8">
+      <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+        En seguimiento
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/50"></div>
+      <span class="text-[10px] font-mono text-terminal-subtle">{watchlist.length} activos</span>
+    </div>
+
+    <!-- Tabla de activos (desktop) / Cards (móvil) -->
+    <div class="hub-card overflow-hidden mb-20">
+      <!-- Desktop: tabla -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="ops-table">
+          <thead>
+            <tr>
+              <th>Activo</th>
+              <th>Ticker</th>
+              <th>Categoría</th>
+              <th>Tesis</th>
+              <th class="text-right">Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            {watchlist.map((activo) => (
+              <tr>
+                <td>
+                  <div class="flex items-center gap-3">
+                    <img
+                      src={activo.imagen}
+                      alt={activo.nombre}
+                      width={32}
+                      height={32}
+                      loading="lazy"
+                      class="w-7 h-7 rounded-full object-contain flex-shrink-0"
+                    />
+                    <span class="text-white font-bold text-xs">{activo.nombre}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class:list={[
+                    "font-mono text-xs px-2 py-0.5 rounded border",
+                    accentMap[activo.accentColor],
+                  ]}>
+                    {activo.ticker}
+                  </span>
+                </td>
+                <td class="text-terminal-subtle text-xs">{activo.categoria}</td>
+                <td class="text-terminal-muted text-xs max-w-xs">{activo.descripcion}</td>
+                <td class="text-right">
+                  {activo.href ? (
+                    <a
+                      href={activo.href}
+                      class="text-emerald-500/70 hover:text-emerald-400 font-mono text-xs uppercase tracking-widest transition-colors"
+                    >
+                      Ver →
+                    </a>
+                  ) : (
+                    <span class="text-terminal-subtle/40 font-mono text-[10px] uppercase">
+                      Pronto
+                    </span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Móvil: cards -->
+      <div class="grid grid-cols-1 gap-0 divide-y divide-terminal-border md:hidden">
+        {watchlist.map((activo) => (
+          <div class="p-4 flex items-start gap-3">
+            <img
+              src={activo.imagen}
+              alt={activo.nombre}
+              width={32}
+              height={32}
+              loading="lazy"
+              class="w-8 h-8 rounded-full object-contain flex-shrink-0 mt-0.5"
+            />
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-white font-bold text-sm">{activo.nombre}</span>
+                <span class:list={[
+                  "font-mono text-[10px] px-1.5 py-0.5 rounded border flex-shrink-0",
+                  accentMap[activo.accentColor],
+                ]}>
+                  {activo.ticker}
+                </span>
+              </div>
+              <p class="text-terminal-muted text-xs leading-relaxed">{activo.descripcion}</p>
+              {activo.href && (
+                <a href={activo.href} class="text-emerald-500/70 text-xs font-mono mt-2 inline-block hover:text-emerald-400 transition-colors">
+                  Ver análisis →
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Avisos de activos individuales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
+      {watchlist.filter(a => a.href).map((activo) => (
+        <a
+          href={activo.href!}
+          class="hub-card p-5 flex items-center gap-4 group no-underline"
+        >
+          <img
+            src={activo.imagen}
+            alt={activo.nombre}
+            width={48}
+            height={48}
+            loading="lazy"
+            class="w-10 h-10 rounded-full object-contain flex-shrink-0"
+          />
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-bold text-sm group-hover:text-emerald-400 transition-colors">
+              {activo.nombre}
+            </p>
+            <p class="text-terminal-subtle text-[10px] font-mono uppercase tracking-widest">
+              Análisis completo →
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <FaqAccordion
+      titulo="Sobre la Watchlist"
+      subtitulo="Seguimiento de activos"
+      startId={500}
+      items={faqItems}
+    />
+  </main>
+</Layout>

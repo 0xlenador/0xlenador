@@ -4,7 +4,21 @@ import { Image } from 'astro:assets';
 const { pathname } = Astro.url;
 const activePath = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
 
-const isActive = (href: string) => activePath === href || (href !== '/' && activePath.startsWith(href));
+// Un enlace es activo si coincide exactamente o si la ruta actual empieza por ese href
+// Excepción: '/' sólo es activo en la raíz exacta.
+const isActive = (href: string) =>
+  href === '/'
+    ? activePath === '/'
+    : activePath === href || activePath.startsWith(href + '/');
+
+// Los 6 enlaces de primer nivel del Hub Operativo
+const navLinks = [
+  { href: '/herramientas', label: 'Herramientas' },
+  { href: '/directorio',   label: 'Directorio'   },
+  { href: '/activos',      label: 'Activos'       },
+  { href: '/operaciones',  label: 'Operaciones'   },
+  { href: '/blog',         label: 'Blog'          },
+];
 ---
 
 <div class="max-w-7xl mx-auto px-4 w-full">
@@ -12,6 +26,7 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
     class="py-4 flex justify-between items-center relative"
     aria-label="Navegación principal"
   >
+    <!-- Logo / Brand -->
     <div class="flex items-center gap-8 z-50">
       <a
         href="/" data-astro-prefetch
@@ -30,179 +45,25 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         >
       </a>
 
+      <!-- Desktop nav — enlaces planos de primer nivel -->
       <div
-        class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted"
+        class="hidden lg:flex items-center gap-1 text-[13px] font-medium"
       >
-        <a
-          href="/tesis" data-astro-prefetch
-          class:list={[
-            "nav-link px-3 py-2 rounded-lg transition-all",
-            isActive("/tesis") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-          ]}
-          >Tesis de Inversión</a
-        >
-
-        <div class="relative group/activos focus-within:ring-2 focus-within:ring-emerald-400 rounded-lg">
-          <button
-            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-terminal-elevated/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
-            aria-haspopup="menu"
-          >
-            Activos
-            <svg
-              class="w-3.5 h-3.5 text-terminal-subtle group-hover/activos:text-terminal-muted transition-all group-hover/activos:rotate-180"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"></path></svg
-            >
-          </button>
-          <div
-            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/activos:opacity-100 group-hover/activos:visible group-focus-within/activos:opacity-100 group-focus-within/activos:visible transition-all duration-200 z-50"
-          >
-            <div
-              class="bg-terminal-surface border border-terminal-border rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
-            >
-              <a
-                href="/bitcoin" data-astro-prefetch
-                class:list={[
-                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/bitcoin") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
-                ]}
-              >
-                <Image
-                  src="/img/cripto/bitcoin.webp"
-                  alt="Bitcoin"
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  class="w-5 h-5 rounded-full"
-                />
-                Bitcoin
-              </a>
-              <a
-                href="/ethereum" data-astro-prefetch
-                class:list={[
-                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/ethereum") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
-                ]}
-              >
-                <Image
-                  src="/img/cripto/ethereum.webp"
-                  alt="Ethereum"
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  class="w-5 h-5 rounded-full"
-                />
-                Ethereum
-              </a>
-              <a
-                href="/sunflowerland" data-astro-prefetch
-                class:list={[
-                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/sunflowerland") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
-                ]}
-              >
-                <Image
-                  src="/img/cripto/sunflowerland.webp"
-                  alt="Sunflower Land"
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  class="w-5 h-5 rounded-full"
-                />
-                Sunflower Land
-              </a>
-              <div class="border-t border-terminal-border my-1.5"></div>
-              <span
-                class="flex items-center gap-2.5 px-3 py-2 text-terminal-subtle text-[11px] cursor-default"
-              >
-                <span
-                  class="w-5 h-5 rounded-full bg-terminal-elevated flex items-center justify-center text-[9px] text-terminal-muted"
-                  >$</span
-                >
-                S&P 500 · Pronto
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="relative group/tools focus-within:ring-2 focus-within:ring-emerald-400 rounded-lg">
-          <button
-            class="nav-link px-3 py-2 rounded-lg hover:text-white hover:bg-terminal-elevated/50 transition-all flex items-center gap-1 cursor-pointer focus:outline-none"
-            aria-haspopup="menu"
-          >
-            Tools
-            <svg
-              class="w-3.5 h-3.5 text-terminal-subtle group-hover/tools:text-terminal-muted transition-all group-hover/tools:rotate-180"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"></path></svg
-            >
-          </button>
-          <div
-            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/tools:opacity-100 group-hover/tools:visible group-focus-within/tools:opacity-100 group-focus-within/tools:visible transition-all duration-200 z-50"
-          >
-            <div
-              class="bg-terminal-surface border border-terminal-border rounded-xl p-2 min-w-[180px] shadow-2xl shadow-black/40"
-            >
-              <a
-                href="/faucets" data-astro-prefetch
-                class:list={[
-                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/faucets") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
-                ]}
-              >
-                <svg
-                  class="w-5 h-5 text-emerald-500/70"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path></svg
-                >
-                Faucets
-              </a>
-              <a
-                href="/intrinseco" data-astro-prefetch
-                class:list={[
-                  "nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all",
-                  isActive("/intrinseco") ? "text-white bg-terminal-elevated/60" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/60"
-                ]}
-              >
-                <svg
-                  class="w-5 h-5 text-emerald-500/70"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  ></path></svg
-                >
-                Intrínseco
-              </a>
-            </div>
-          </div>
-        </div>
+        {navLinks.map(({ href, label }) => (
+          <a
+            href={href} data-astro-prefetch
+            class:list={[
+              "nav-link px-3 py-2 rounded-lg transition-all",
+              isActive(href)
+                ? "text-white bg-terminal-elevated/40"
+                : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
+            ]}
+          >{label}</a>
+        ))}
       </div>
     </div>
 
+    <!-- Botón hamburguesa (móvil) -->
     <button
       id="mobile-menu-button"
       aria-expanded="false"
@@ -225,17 +86,10 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
       </svg>
     </button>
 
+    <!-- Desktop: redes sociales -->
     <div
       class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted"
     >
-      <a
-        href="/blog" data-astro-prefetch
-        class:list={[
-          "nav-link px-3 py-2 rounded-lg transition-all",
-          isActive("/blog") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-        >Blog</a
-      >
       <a
         href="https://www.youtube.com/@0xlenador000"
         target="_blank"
@@ -278,106 +132,55 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
       </a>
     </div>
 
+    <!-- Menú móvil desplegable -->
     <div
       id="mobile-menu"
       class="hidden absolute top-full left-0 right-0 bg-terminal-bg/95 backdrop-blur-xl border-b border-terminal-border p-6 flex flex-col space-y-1 lg:hidden z-40 shadow-2xl"
     >
-      <a
-        href="/tesis" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
-          isActive("/tesis") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-        >Tesis de Inversión</a
-      >
-      <div class="px-3 py-2">
-        <span
-          class="text-[10px] font-bold text-terminal-subtle uppercase tracking-widest"
-          >Activos</span
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href} data-astro-prefetch
+          class:list={[
+            "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
+            isActive(href)
+              ? "text-white bg-terminal-elevated/40"
+              : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
+          ]}
+        >{label}</a>
+      ))}
+
+      <div class="border-t border-terminal-border pt-4 mt-2 flex items-center gap-4 px-3">
+        <a
+          href="https://www.youtube.com/@0xlenador000"
+          target="_blank" rel="noopener"
+          aria-label="YouTube"
+          class="text-terminal-muted hover:text-white transition"
         >
-      </div>
-      <a
-        href="/bitcoin" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
-          isActive("/bitcoin") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-      >
-        <Image
-          src="/img/cripto/bitcoin.webp"
-          alt="Bitcoin"
-          width={40}
-          height={40}
-          loading="lazy"
-          class="w-5 h-5 rounded-full"
-        />
-        Bitcoin
-      </a>
-      <a
-        href="/ethereum" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
-          isActive("/ethereum") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-      >
-        <Image
-          src="/img/cripto/ethereum.webp"
-          alt="Ethereum"
-          width={40}
-          height={40}
-          loading="lazy"
-          class="w-5 h-5 rounded-full"
-        />
-        Ethereum
-      </a>
-      <a
-        href="/sunflowerland" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl flex items-center gap-2.5 pl-6",
-          isActive("/sunflowerland") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-      >
-        <Image
-          src="/img/cripto/sunflowerland.webp"
-          alt="Sunflower Land"
-          width={40}
-          height={40}
-          loading="lazy"
-          class="w-5 h-5 rounded-full"
-        />
-        Sunflower Land
-      </a>
-      <div class="px-3 py-2 mt-2">
-        <span
-          class="text-[10px] font-bold text-terminal-subtle uppercase tracking-widest"
-          >Tools</span
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
+            ><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg
+          >
+        </a>
+        <a
+          href="https://x.com/0xlenador"
+          target="_blank" rel="noopener"
+          aria-label="X (Twitter)"
+          class="text-terminal-muted hover:text-white transition"
         >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
+            ><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg
+          >
+        </a>
+        <a
+          href="https://t.me/zero0xlenador"
+          target="_blank" rel="noopener"
+          aria-label="Telegram"
+          class="text-terminal-muted hover:text-white transition"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
+            ><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg
+          >
+        </a>
       </div>
-      <a
-        href="/faucets" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl pl-6",
-          isActive("/faucets") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-        >Faucets</a
-      >
-      <a
-        href="/intrinseco" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-2.5 rounded-xl pl-6",
-          isActive("/intrinseco") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-        >Intrínseco</a
-      >
-      <div class="border-t border-terminal-border my-3"></div>
-      <a
-        href="/blog" data-astro-prefetch
-        class:list={[
-          "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
-          isActive("/blog") ? "text-white bg-terminal-elevated/40" : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-        ]}
-        >Blog</a
-      >
     </div>
   </nav>
 </div>
@@ -402,7 +205,6 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
         }
       };
 
-      // Limpiamos y asignamos el manejador
       btn.onclick = (e) => {
         e.stopPropagation();
         toggleMenu();
@@ -424,7 +226,6 @@ const isActive = (href: string) => activePath === href || (href !== '/' && activ
     }
   };
 
-  // Inicializar en la carga inicial y en cada navegación de View Transitions
   setupMobileMenu();
   document.addEventListener("astro:page-load", setupMobileMenu);
 </script>

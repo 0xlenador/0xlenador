@@ -1,31 +1,29 @@
 ---
-// Importamos el Layout maestro
 import Layout from "../layouts/Layout.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import HeroSection from "../components/home/HeroSection.astro";
-import PremisaSection from "../components/home/PremisaSection.astro";
-import FeatureCards from "../components/home/FeatureCards.astro";
-import SimuladorChart from "../components/home/SimuladorChart.astro";
 
-// Metadatos específicos de la página principal
+import operacionesData from "../data/operaciones.json";
+import { getCollection } from "astro:content";
+
+// Metadatos de la página principal
 const seo = {
-  title:
-    "0xLeñador | Divulgador sobre la gestión de Capital y Estrategia de Inversión 60/40",
+  title: "0xLeñador | Hub Operativo — Herramientas, Activos y Operaciones Web3",
   description:
-    "Optimiza tu patrimonio con la estrategia 60/40. Gestión de capital multiactivo combinando inversiones tradicionales, ETFs y activos disruptivos como Cripto y Startups.",
+    "Centro de comando técnico de 0xLeñador: herramientas de análisis, watchlist de activos, bitácora de operaciones y directorio de recursos Web3 y mercados tradicionales.",
   image: "/img/meta/home.webp",
 };
 
-// Datos estructurados (Knowledge Graph de Google)
+// Schema Person actualizado
 const schema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "0x Leñador",
   url: "https://0xlenador.xyz/",
   image: "https://0xlenador.xyz/assets/img/44.png",
-  jobTitle: "Divulgador de Inversiones y Web3",
+  jobTitle: "Operador Web3 e Investigador de Mercados",
   description:
-    "Creador de contenido enfocado en la gestión de capital, estrategias de inversión 60/40 y ecosistema cripto.",
+    "Hub Operativo de herramientas, directorio de recursos y seguimiento de operaciones en mercados Web3 y tradicionales.",
   sameAs: [
     "https://www.youtube.com/@0xlenadorgamefi",
     "https://x.com/0xlenador",
@@ -33,51 +31,78 @@ const schema = {
   ],
 };
 
-// Datos de las tarjetas de features
-const features = [
+// Últimas 3 entradas del blog
+const posts = (await getCollection("blog"))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+
+// Posiciones abiertas para el panel de status
+const posicionesAbiertas = operacionesData.filter((op) => op.estado === "abierta");
+
+// Los 4 módulos del Hub en la página principal
+const modules = [
   {
-    iconPath:
-      "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-    titulo: "Investigación",
-    descripcion:
-      "No seguimos narrativas. Analizamos los datos on-chain y los fundamentos de los proyectos para entender su valor real antes de actuar.",
+    id: "herramientas",
+    href: "/herramientas",
+    titulo: "Herramientas",
+    descripcion: "Simulador 60/40, Valor Intrínseco y Faucets Directory.",
+    count: "3 utilidades",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>`,
+    accentClass: "border-emerald-500/30 hover:border-emerald-500/60",
+    badgeClass: "text-emerald-400 bg-emerald-500/10",
   },
   {
-    iconPath: "M13 10V3L4 14h7v7l9-11h-7z",
-    titulo: "Convicción",
-    descripcion:
-      "Invertir con carácter significa no ser desplazados por el ruido. La convicción es el resultado directo de una investigación exhaustiva.",
+    id: "directorio",
+    href: "/directorio",
+    titulo: "Directorio",
+    descripcion: "Exchanges, wallets, exploradores y faucets curados.",
+    count: "50+ recursos",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>`,
+    accentClass: "border-cyan-500/30 hover:border-cyan-500/60",
+    badgeClass: "text-cyan-400 bg-cyan-500/10",
   },
   {
-    iconPath:
-      "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
-    titulo: "Asimetría",
-    descripcion:
-      "Buscamos escenarios donde el entendimiento nos permita posicionarnos en activos con un potencial de retorno desproporcionado frente al riesgo.",
+    id: "activos",
+    href: "/activos",
+    titulo: "Activos",
+    descripcion: "Watchlist de mercados tradicionales y Web3 en seguimiento.",
+    count: "6 activos",
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>`,
+    accentClass: "border-orange-500/30 hover:border-orange-500/60",
+    badgeClass: "text-orange-400 bg-orange-500/10",
+  },
+  {
+    id: "operaciones",
+    href: "/operaciones",
+    titulo: "Operaciones",
+    descripcion: "Bitácora pública de posiciones abiertas y cerradas.",
+    count: `${posicionesAbiertas.length} abiertas`,
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>`,
+    accentClass: "border-violet-500/30 hover:border-violet-500/60",
+    badgeClass: "text-violet-400 bg-violet-500/10",
   },
 ];
 
-// Datos del FAQ
 const faqItems = [
   {
-    pregunta: "¿Por qué el entendimiento vale más que el capital?",
+    pregunta: "¿Qué es 0xLeñador?",
     respuesta:
-      "El capital sin conocimiento es efímero. Cuando comprendes la lógica económica de un activo, el precio se vuelve secundario; ese entendimiento es lo que te otorga la convicción necesaria para operar con frialdad cuando otros dudan.",
+      "0xLeñador es un Hub Operativo personal: un centro de comando técnico para el seguimiento de activos, bitácora de operaciones y repositorio de herramientas de análisis en mercados Web3 y tradicionales. No es un servicio de asesoría ni una academia.",
   },
   {
-    pregunta: '¿Qué significa "investigar con carácter"?',
+    pregunta: "¿El contenido es una recomendación financiera?",
     respuesta:
-      "Es el compromiso de involucrarse en la tecnología y los números de un proyecto hasta dominar sus riesgos. El carácter no es otra cosa que la seguridad resultante de una investigación exhaustiva que te impide ser desplazado por la volatilidad.",
+      "No. Todo el contenido publicado tiene fines educativos, informativos y de documentación personal. Las posiciones mostradas en la bitácora son operaciones propias documentadas para transparencia, no señales de compra o venta.",
   },
   {
-    pregunta: "¿Este sitio ofrece señales o consejos de compra?",
+    pregunta: "¿Cómo funciona la estrategia 60/40?",
     respuesta:
-      "Absolutamente no. 0xLeñador es un ecosistema de investigación y análisis técnico. Nuestra meta es compartir metodologías de pensamiento crítico para que cada individuo construya su propia convicción operativa.",
+      "Es un modelo de distribución de capital que asigna el 60% a activos de renta variable tradicional (ETFs, acciones de valor) y el 40% a activos de alta asimetría como cripto. El Simulador en la sección de Herramientas te permite calcular tu propia distribución.",
   },
   {
-    pregunta: "¿Qué encontrarás en nuestro sitio?",
+    pregunta: "¿Qué encontraré en el Directorio?",
     respuesta:
-      "Accederás a nuestra tesis de inversión detallada, herramientas de cálculo como la terminal de valor intrínseco y un panel de observación de activos que abarca desde el ecosistema Web3 hasta mercados tradicionales.",
+      "Una colección curada de recursos Web3 en uso activo: exchanges centralizados y descentralizados, wallets de hardware y software, exploradores de bloques, herramientas de análisis on-chain y faucets de mainnet y testnet.",
   },
 ];
 ---
@@ -90,38 +115,190 @@ const faqItems = [
   customSpacing
 >
   <main class="max-w-6xl mx-auto px-6 pt-6 md:pt-14 pb-20">
+
+    <!-- ─── HERO ─── -->
     <HeroSection
       phrases={[
-        "El valor no está en el capital",
-        "sino en el entendimiento",
-        "aprende lo nuevo",
-        "usa nuestras herramientas",
-        "o herramientas externas",
-        "Aquí solo divulgamos",
-        "para comprender el futuro",
+        "Hub Operativo 0xLeñador",
+        "Herramientas de análisis",
+        "Directorio de recursos Web3",
+        "Watchlist de activos",
+        "Bitácora de operaciones",
+        "Build in public",
       ]}
-      ctaPrimario={{ texto: "Nuestra Tesis", href: "/tesis" }}
-      ctaSecundario={{ texto: "Calcula tu Inversión", href: "#simulador-6040" }}
+      ctaPrimario={{ texto: "Ver Herramientas", href: "/herramientas" }}
+      ctaSecundario={{ texto: "Bitácora de Ops", href: "/operaciones" }}
     />
 
-    <PremisaSection />
+    <!-- ─── MÓDULOS DEL HUB ─── -->
+    <section class="mb-20">
+      <div class="flex items-center gap-4 mb-8">
+        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+          Centro de Comando
+        </h2>
+        <div class="h-px flex-grow bg-terminal-border/50"></div>
+      </div>
 
-    <FeatureCards items={features} />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {modules.map((mod) => (
+          <a
+            href={mod.href}
+            id={`hub-module-${mod.id}`}
+            class:list={[
+              "hub-card p-6 flex flex-col gap-4 group no-underline",
+              mod.accentClass,
+            ]}
+          >
+            <!-- Icono -->
+            <div class="w-10 h-10 rounded-xl bg-terminal-elevated/60 border border-terminal-border flex items-center justify-center group-hover:border-current transition-colors">
+              <svg class="w-5 h-5 text-terminal-muted group-hover:text-current transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                set:html={mod.icon}
+              />
+            </div>
 
-    <SimuladorChart />
+            <!-- Contenido -->
+            <div class="flex-1">
+              <h3 class="text-white font-bold text-sm mb-1.5 group-hover:text-current transition-colors">
+                {mod.titulo}
+              </h3>
+              <p class="text-terminal-muted text-xs leading-relaxed">
+                {mod.descripcion}
+              </p>
+            </div>
+
+            <!-- Badge de count -->
+            <div class:list={[
+              "self-start text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold",
+              mod.badgeClass,
+            ]}>
+              {mod.count}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ─── STATUS: POSICIONES ABIERTAS ─── -->
+    <section class="mb-20">
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+          Status: Posiciones Abiertas
+        </h2>
+        <div class="h-px flex-grow bg-terminal-border/50"></div>
+        <a
+          href="/operaciones"
+          class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+        >
+          Ver todas →
+        </a>
+      </div>
+
+      <div class="hub-card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="ops-table">
+            <thead>
+              <tr>
+                <th>Par</th>
+                <th>Tipo</th>
+                <th class="text-right">Entrada</th>
+                <th class="text-right">P&L est.</th>
+                <th>Apertura</th>
+              </tr>
+            </thead>
+            <tbody>
+              {posicionesAbiertas.map((op) => (
+                <tr>
+                  <td>
+                    <span class="text-white font-bold text-xs">{op.par}</span>
+                  </td>
+                  <td>
+                    <span class="badge badge-routine">{op.tipo}</span>
+                  </td>
+                  <td class="text-right font-mono text-xs text-terminal-secondary">
+                    ${op.entrada.toLocaleString("es-CO")}
+                  </td>
+                  <td class="text-right">
+                    <span class:list={[
+                      "font-mono text-xs font-bold",
+                      (op.pnl ?? 0) >= 0 ? "text-emerald-400" : "text-red-400",
+                    ]}>
+                      {(op.pnl ?? 0) >= 0 ? "+" : ""}{op.pnl}%
+                    </span>
+                  </td>
+                  <td class="font-mono text-[10px] text-terminal-subtle">
+                    {op.fecha_apertura}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ÚLTIMAS DEL BLOG ─── -->
+    {posts.length > 0 && (
+      <section class="mb-20">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+            Últimas del Blog
+          </h2>
+          <div class="h-px flex-grow bg-terminal-border/50"></div>
+          <a
+            href="/blog"
+            class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+          >
+            Ver todos →
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {posts.map((post) => (
+            <a
+              href={`/blog/${post.id}`}
+              class="hub-card p-5 flex flex-col gap-3 group no-underline"
+            >
+              {post.data.coverImage && (
+                <img
+                  src={post.data.coverImage}
+                  alt={post.data.coverAlt ?? post.data.title}
+                  width={400}
+                  height={200}
+                  loading="lazy"
+                  class="w-full h-32 object-cover rounded-lg"
+                />
+              )}
+              <div>
+                <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-1.5">
+                  {post.data.category} · {new Date(post.data.date).getFullYear()}
+                </p>
+                <h3 class="text-white text-sm font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
+                  {post.data.title}
+                </h3>
+              </div>
+              <p class="text-terminal-muted text-xs leading-relaxed flex-grow line-clamp-3">
+                {post.data.description}
+              </p>
+              <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
+                Leer artículo →
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     <FaqAccordion
       titulo="Preguntas Frecuentes"
-      subtitulo="Entendiendo la mentalidad de investigación"
+      subtitulo="Sobre el Hub y la metodología"
       startId={101}
       items={faqItems}
     />
 
     <div class="mt-20 text-center">
-      <p
-        class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
-      >
-        Research & Conviction Protocol
+      <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
+        Hub Operativo · Build in Public
       </p>
       <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
     </div>

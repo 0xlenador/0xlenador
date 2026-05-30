@@ -1,0 +1,64 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SimuladorChart from "../components/home/SimuladorChart.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+
+const seo = {
+  title: "Simulador 60/40 | 0xLeñador — Herramienta de Distribución de Capital",
+  description:
+    "Calcula la distribución óptima de tu capital bajo la estrategia 60/40 de 0xLeñador. Ajusta los porcentajes entre mercados tradicionales, cripto y activos de alta asimetría.",
+  image: "/img/meta/home.webp",
+};
+
+const faqItems = [
+  {
+    pregunta: "¿Qué es la estrategia 60/40?",
+    respuesta:
+      "Es un modelo de distribución de capital que asigna el 60% del portafolio a activos de renta fija o bajo riesgo (ETFs, CDTs, bonos) y el 40% restante a activos de mayor volatilidad y potencial de crecimiento como cripto. La lógica es equilibrar la estabilidad con la asimetría.",
+  },
+  {
+    pregunta: "¿Este simulador me dice en qué invertir?",
+    respuesta:
+      "No. Es una herramienta de cálculo matemático. Te muestra la distribución numérica de tu capital bajo el modelo; la decisión de dónde colocar cada parte es tuya y debe estar basada en tu propia investigación y perfil de riesgo.",
+  },
+  {
+    pregunta: "¿Los resultados del simulador son garantías de rendimiento?",
+    respuesta:
+      "Absolutamente no. El simulador muestra proyecciones matemáticas basadas en tasas de crecimiento hipotéticas. Los mercados son impredecibles y el rendimiento pasado no garantiza resultados futuros.",
+  },
+  {
+    pregunta: "¿Por qué 60/40 y no otra distribución?",
+    respuesta:
+      "La proporción 60/40 es un punto de partida probado históricamente para perfiles de riesgo moderado. En la tesis de 0xLeñador se adapta al contexto de mercados emergentes y cripto, donde el 40% de alta asimetría puede capturar retornos exponenciales sin comprometer el núcleo del patrimonio.",
+  },
+];
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <!-- Header de sección -->
+    <header class="mb-12">
+      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+        Herramientas / Simulador
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        Simulador <span class="text-emerald-500">60/40</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        Calcula la distribución matemática de tu capital bajo la estrategia de 0xLeñador.
+        Ajusta los porcentajes y comprende cómo se distribuye tu portafolio entre
+        mercados tradicionales y activos digitales.
+      </p>
+    </header>
+
+    <!-- Componente del simulador reutilizado desde el home -->
+    <SimuladorChart />
+
+    <FaqAccordion
+      titulo="Preguntas sobre el Simulador"
+      subtitulo="Cómo interpretar los resultados"
+      startId={200}
+      items={faqItems}
+    />
+  </main>
+</Layout>

@@ -1,0 +1,217 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+
+import operacionesData from "../data/operaciones.json";
+
+const seo = {
+  title: "Operaciones | 0xLeñador — Bitácora de Trading y Posiciones Activas",
+  description:
+    "Bitácora pública de operaciones de 0xLeñador: posiciones abiertas y cerradas en mercados Web3 y tradicionales. Transparencia operativa sin recomendaciones de inversión.",
+  image: "/img/meta/home.webp",
+};
+
+// Separar operaciones por estado
+const abiertas = operacionesData.filter((op) => op.estado === "abierta");
+const cerradas = operacionesData.filter((op) => op.estado === "cerrada");
+
+// Estadísticas resumen
+const totalOps = operacionesData.length;
+const pnlTotal = operacionesData
+  .reduce((acc, op) => acc + (op.pnl ?? 0), 0)
+  .toFixed(2);
+const ganadoras = cerradas.filter((op) => (op.pnl ?? 0) > 0).length;
+const winRate =
+  cerradas.length > 0
+    ? ((ganadoras / cerradas.length) * 100).toFixed(0)
+    : "N/A";
+
+const faqItems = [
+  {
+    pregunta: "¿Esta bitácora es una señal de trading?",
+    respuesta:
+      "No. La bitácora es un registro público de las operaciones de 0xLeñador con fines de transparencia y documentación personal. No es una invitación a copiar posiciones ni un servicio de señales. Cada operación refleja la tesis propia del operador.",
+  },
+  {
+    pregunta: "¿Los datos de P&L son en tiempo real?",
+    respuesta:
+      "No. Los datos de P&L son actualizaciones manuales periódicas. Para las posiciones abiertas, el P&L mostrado es una referencia aproximada al momento de la última actualización, no un precio en tiempo real.",
+  },
+  {
+    pregunta: "¿Por qué publicar las operaciones?",
+    respuesta:
+      "La transparencia radical es un principio de 0xLeñador. Publicar las operaciones crea rendición de cuentas pública, documenta el proceso de toma de decisiones y demuestra que la metodología se aplica con capital real, no solo en papel.",
+  },
+  {
+    pregunta: "¿Con qué frecuencia se actualiza la bitácora?",
+    respuesta:
+      "Se actualiza cuando hay un evento operativo relevante: apertura de posición, cierre, ajuste de stop o take-profit. No hay una frecuencia fija; el objetivo es reflejar el estado real del portafolio, no generar contenido.",
+  },
+];
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <!-- Header -->
+    <header class="mb-16">
+      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+        Hub / Operaciones
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        Bitácora de <span class="text-emerald-500">Operaciones</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        Registro público de posiciones activas y cerradas. Transparencia operativa — sin señales,
+        sin consejos. Solo el historial documentado de la tesis en acción.
+      </p>
+    </header>
+
+    <!-- Estadísticas resumen -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+      {[
+        { label: "Total Operaciones", value: totalOps, mono: true },
+        { label: "P&L Acumulado",    value: `+${pnlTotal}%`, mono: true, color: parseFloat(pnlTotal) >= 0 ? "text-emerald-400" : "text-red-400" },
+        { label: "Abiertas",         value: abiertas.length, mono: true },
+        { label: "Win Rate",         value: `${winRate}%`, mono: true, color: "text-yellow-400" },
+      ].map((stat) => (
+        <div class="hub-card p-5">
+          <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-2">
+            {stat.label}
+          </p>
+          <p class:list={["text-2xl font-black tracking-tight font-mono", stat.color ?? "text-white"]}>
+            {stat.value}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <!-- ─── POSICIONES ABIERTAS ─── -->
+    <section class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+          Posiciones Abiertas
+        </h2>
+        <div class="h-px flex-grow bg-terminal-border/50"></div>
+        <span class="badge badge-active">{abiertas.length} activas</span>
+      </div>
+
+      <div class="hub-card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="ops-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Par</th>
+                <th>Tipo</th>
+                <th class="text-right">Entrada</th>
+                <th class="text-right">P&L est.</th>
+                <th>Apertura</th>
+                <th>Notas</th>
+              </tr>
+            </thead>
+            <tbody>
+              {abiertas.map((op) => (
+                <tr>
+                  <td>
+                    <span class="font-mono text-terminal-subtle text-[10px]">{op.id}</span>
+                  </td>
+                  <td>
+                    <span class="text-white font-bold text-xs">{op.par}</span>
+                  </td>
+                  <td>
+                    <span class="badge badge-routine">{op.tipo}</span>
+                  </td>
+                  <td class="text-right font-mono text-xs text-terminal-secondary">
+                    ${op.entrada.toLocaleString("es-CO")}
+                  </td>
+                  <td class="text-right">
+                    <span class:list={[
+                      "font-mono text-xs font-bold",
+                      (op.pnl ?? 0) >= 0 ? "text-emerald-400" : "text-red-400",
+                    ]}>
+                      {(op.pnl ?? 0) >= 0 ? "+" : ""}{op.pnl}%
+                    </span>
+                  </td>
+                  <td class="font-mono text-[10px] text-terminal-subtle">
+                    {op.fecha_apertura}
+                  </td>
+                  <td class="text-terminal-muted text-xs max-w-[200px] truncate" title={op.notas ?? ""}>
+                    {op.notas}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── HISTORIAL ─── -->
+    <section class="mb-20">
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+          Historial Cerrado
+        </h2>
+        <div class="h-px flex-grow bg-terminal-border/50"></div>
+        <span class="badge badge-claimed">{cerradas.length} cerradas</span>
+      </div>
+
+      <div class="hub-card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="ops-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Par</th>
+                <th>Tipo</th>
+                <th class="text-right">Entrada</th>
+                <th class="text-right">Salida</th>
+                <th class="text-right">P&L</th>
+                <th>Cierre</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cerradas.map((op) => (
+                <tr>
+                  <td>
+                    <span class="font-mono text-terminal-subtle text-[10px]">{op.id}</span>
+                  </td>
+                  <td>
+                    <span class="text-white font-bold text-xs">{op.par}</span>
+                  </td>
+                  <td>
+                    <span class="badge badge-claimed">{op.tipo}</span>
+                  </td>
+                  <td class="text-right font-mono text-xs text-terminal-secondary">
+                    ${op.entrada.toLocaleString("es-CO")}
+                  </td>
+                  <td class="text-right font-mono text-xs text-terminal-secondary">
+                    ${op.salida?.toLocaleString("es-CO") ?? "—"}
+                  </td>
+                  <td class="text-right">
+                    <span class:list={[
+                      "font-mono text-xs font-black",
+                      (op.pnl ?? 0) >= 0 ? "text-emerald-400" : "text-red-400",
+                    ]}>
+                      {(op.pnl ?? 0) >= 0 ? "+" : ""}{op.pnl}%
+                    </span>
+                  </td>
+                  <td class="font-mono text-[10px] text-terminal-subtle">
+                    {op.fecha_cierre ?? "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <FaqAccordion
+      titulo="Sobre la Bitácora"
+      subtitulo="Transparencia operativa"
+      startId={600}
+      items={faqItems}
+    />
+  </main>
+</Layout>
