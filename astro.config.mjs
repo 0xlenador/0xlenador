@@ -10,6 +10,10 @@ export default defineConfig({
   },
   site: 'https://0xlenador.xyz',
   base: '/',
+  redirects: {
+    // /tesis migrada como artículo del blog (301 = Moved Permanently, preserva SEO)
+    '/tesis': '/blog/tesis-de-inversion',
+  },
   integrations: [
     sitemap()
   ],

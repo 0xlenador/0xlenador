@@ -70,9 +70,9 @@ html {
 }
 
 body {
-    background-color: var(--bg-primary);
-    color: var(--text-secondary);
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    background-color: var(--bg-primary);  /* #141414 — Fondo Primario Global */
+    color: var(--text-primary);           /* #F7FAF7 — Contraste WCAG AAA (18.3:1) */
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -539,4 +539,132 @@ input[type=range]::-webkit-slider-thumb {
 .glitch-hover-container:hover .glitch-hover-target {
     animation: glitch-image-hover 0.4s linear infinite alternate;
     transform: scale(1.03);
+}
+
+/* =====================================================
+   HUB OPERATIVO — UTILIDADES
+   Clases reutilizables para el nuevo hub de 0xLeñador.
+   ===================================================== */
+
+/* Override puntual de tipografía para contenido de lectura larga (Blog) */
+.font-sans-override,
+.font-sans-override * {
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* --- Tarjeta de módulo del Hub (Dashboard y grids internos) --- */
+.hub-card {
+    background-color: var(--bg-surface-alpha);
+    border: 1px solid var(--border-default);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hub-card:hover {
+    border-color: var(--accent-emerald);
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.08);
+}
+
+/* --- Tabla operativa principal (Watchlist y Bitácora) --- */
+.ops-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+}
+
+.ops-table th {
+    background-color: var(--bg-surface);
+    color: var(--text-muted);
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.6875rem;
+    border-bottom: 1px solid var(--border-default);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.ops-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    vertical-align: middle;
+}
+
+.ops-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ops-table tr:hover td {
+    background-color: rgba(16, 185, 129, 0.03);
+    color: var(--text-primary);
+}
+
+/* --- Badges de estado para la Bitácora de Operaciones --- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: ui-monospace, monospace;
+    white-space: nowrap;
+}
+
+/* 🟢 Activo */
+.badge-active {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: var(--accent-emerald-light);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* 🟡 Rutina Diaria */
+.badge-routine {
+    background-color: rgba(234, 179, 8, 0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(234, 179, 8, 0.25);
+}
+
+/* 🔴 Reclamado / Finalizado */
+.badge-claimed {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* --- Prefijo de prompt de terminal en títulos de sección --- */
+.section-prompt::before {
+    content: '> ';
+    color: var(--accent-emerald-light);
+    font-family: ui-monospace, monospace;
+    font-weight: 400;
+}
+
+/* --- Tarjeta de Herramienta / Tool Card --- */
+.tool-card {
+    background-color: var(--bg-surface-alpha);
+    border: 1px solid var(--border-default);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tool-card:hover {
+    border-color: rgba(34, 211, 238, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.06);
 }
