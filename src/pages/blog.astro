@@ -15,7 +15,8 @@ const regularPosts = sortedPosts.slice(1);
 const seo = {
     title: "Artículos e Investigación de Capital | 0xLeñador",
     description: "Espacio de divulgación educativa, tokenomía, análisis macroeconómico y tesis fundamentales de inversión en Web3.",
-    url: "https://0xlenador.xyz/blog"
+    url: "https://0xlenador.xyz/blog",
+    image: "/img/meta/blog.webp"
 };
 
 // Formateador de fecha reutilizable estilo: Apr 22, 2026
@@ -43,7 +44,7 @@ const proximosArticulos = [
 ];
 ---
 
-<Layout title={seo.title} description={seo.description}>
+<Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-12 pb-24 relative z-10">
     <!-- Gradiente decorativo superior sutil -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/[0.03] blur-[130px] rounded-full pointer-events-none -z-10"></div>
