@@ -1,0 +1,76 @@
+---
+import Layout from "../layouts/Layout.astro";
+import RiskfolioChart from "../components/home/RiskfolioChart.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+
+const seo = {
+  title: "Riskfolio | 0xLeñador — Distribución de Capital por Perfil de Riesgo",
+  description:
+    "Herramienta de asignación de capital basada en tu perfil de riesgo. Define cómo distribuir tu portafolio entre renta fija, cripto large-cap, altcoins y reserva de liquidez.",
+  image: "/img/meta/home.webp",
+};
+
+const faqItems = [
+  {
+    pregunta: "¿Por qué estructurar el capital según un perfil de riesgo?",
+    respuesta:
+      "Porque la diversificación no es simplemente comprar activos distintos, sino asignar capital de forma proporcional a tu tolerancia a la pérdida temporal y tu horizonte de inversión. Un perfil conservador prioriza la preservación del capital; uno agresivo acepta mayor volatilidad buscando retornos exponenciales a largo plazo.",
+  },
+  {
+    pregunta: "¿Qué activos incluye cada categoría?",
+    respuesta:
+      "Renta Fija / ETFs incluye bonos del gobierno (US Treasuries, TES), ETFs indexados (SPY, QQQ) y depósitos a término. Cripto Large-Cap son Bitcoin (BTC) y Ethereum (ETH) por su mayor liquidez y madurez. Altcoins / DeFi comprende tokens de protocolos con alta volatilidad y asimetría (ej. SOL, LINK, tokens de gobernanza). Reserva es liquidez inmediata en stablecoins (USDC/USDT) o efectivo.",
+  },
+  {
+    pregunta: "¿Riskfolio me recomienda qué comprar?",
+    respuesta:
+      "No. Es un modelo paramétrico de distribución macro. Te muestra los porcentajes de asignación por categoría de activo, no instrumentos específicos. Qué acciones, qué criptomonedas o qué bonos comprar dentro de cada categoría es tu responsabilidad tras hacer tu propia investigación (DYOR).",
+  },
+  {
+    pregunta: "¿Con qué frecuencia debería rebalancear mi portafolio?",
+    respuesta:
+      "Depende del perfil. Como referencia general: el perfil conservador puede rebalancear anualmente. El moderado, cada 6 meses o cuando alguna categoría se desvíe más de un 5% de la asignación objetivo. El agresivo puede necesitar ajustes trimestrales dada la alta volatilidad de sus posiciones.",
+  },
+];
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+
+    <!-- Breadcrumb -->
+    <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
+      Herramientas / Riskfolio
+    </p>
+
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+        <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Risk</span>folio
+      </h1>
+      <p class="text-terminal-secondary text-sm md:text-base leading-relaxed max-w-2xl font-light">
+        Modelo de distribución de capital basado en tu perfil de riesgo. Selecciona tu perfil,
+        ingresa tu capital disponible y obtén la asignación sugerida para cada categoría de activos.
+      </p>
+    </header>
+
+    <!-- Componente interactivo -->
+    <RiskfolioChart />
+
+    <!-- Sección FAQ -->
+    <div class="mt-16 border-t border-terminal-border/60 pt-14">
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">
+        Metodología del Modelo
+      </h2>
+      <p class="text-xs text-terminal-subtle mb-8">
+        Fundamentos conceptuales de Riskfolio y sus perfiles de distribución.
+      </p>
+      <FaqAccordion
+        titulo="Preguntas sobre Riskfolio"
+        subtitulo="Dudas frecuentes del modelo"
+        startId={400}
+        items={faqItems}
+      />
+    </div>
+
+  </main>
+</Layout>

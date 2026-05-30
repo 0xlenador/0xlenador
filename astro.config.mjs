@@ -13,6 +13,7 @@ export default defineConfig({
   redirects: {
     // /tesis migrada como artículo del blog (301 = Moved Permanently, preserva SEO)
     '/tesis': '/blog/tesis-de-inversion',
+    '/simulador': '/riskfolio',
   },
   integrations: [
     sitemap()
