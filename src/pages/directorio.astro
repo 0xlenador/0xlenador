@@ -8,71 +8,82 @@ import faucetsData from "../data/faucets.json";
 const seo = {
   title: "Directorio Web3 | 0xLeñador — Exchanges, Wallets y Exploradores",
   description:
-    "Directorio curado de recursos Web3: exchanges centralizados y descentralizados, wallets de hardware y software, exploradores de bloques, faucets y herramientas de análisis.",
+    "Directorio curado de plataformas y recursos Web3 en uso activo: exchanges, wallets, exploradores de bloques, herramientas de análisis y faucets.",
   image: "/img/meta/home.webp",
 };
 
-// Extraer categorías únicas del directorio
+// Categorías únicas del directorio, ordenadas
 const tags = [...new Set(directoryData.map((item) => item.tag))].sort();
 
-// Separar faucets por tipo
-const mainnetFaucets = faucetsData.filter((f) => f.type === "mainnet");
-const testnetFaucets = faucetsData.filter((f) => f.type === "testnet");
+// Estadísticas de faucets para el bloque resumen
+const testnetCount = faucetsData.filter((f) => f.type === "testnet").length;
+const mainnetCount = faucetsData.filter((f) => f.type === "mainnet").length;
+
+// Redes más cubiertas: contar frecuencia de cada tag en faucets
+const tagFrequency: Record<string, number> = {};
+faucetsData.forEach((f) => {
+  f.tags.forEach((tag) => {
+    tagFrequency[tag] = (tagFrequency[tag] || 0) + 1;
+  });
+});
+const topNetworks = Object.entries(tagFrequency)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5)
+  .map(([name, count]) => ({ name, count }));
 
 const faqItems = [
   {
-    pregunta: "¿Todos los recursos del directorio son seguros?",
+    pregunta: "¿Qué criterios usa 0xLeñador para incluir un recurso en el directorio?",
     respuesta:
-      "El directorio incluye recursos curados y en uso activo por 0xLeñador. Sin embargo, siempre debes verificar la URL antes de conectar tu wallet. Los enlaces marcados como 'patrocinados' son afiliados: su inclusión no implica respaldo incondicional.",
+      "Cada recurso debe estar en uso activo por 0xLeñador o haber sido evaluado directamente. Se priorizan plataformas con reputación comprobada, historial de seguridad limpio y relevancia operativa para el ecosistema Web3. No se incluyen proyectos sin track record o con señales de riesgo.",
   },
   {
-    pregunta: "¿Cuál es la diferencia entre faucets mainnet y testnet?",
+    pregunta: "¿Qué significa el badge 'patrocinado'?",
     respuesta:
-      "Los faucets de mainnet distribuyen tokens reales de pequeño valor (para experimentación o como incentivo). Los faucets de testnet distribuyen tokens sin valor real, útiles para probar contratos inteligentes y aplicaciones descentralizadas sin arriesgar capital.",
+      "Indica que el enlace contiene un código de referido de 0xLeñador. Si te registras o compras a través de ese enlace, 0xLeñador puede recibir una comisión. Esto no afecta el precio que pagas ni implica un respaldo incondicional del servicio: la inclusión siempre está sujeta a los mismos criterios de calidad.",
   },
   {
-    pregunta: "¿Cómo sugiero un recurso para el directorio?",
+    pregunta: "¿Cómo puedo sugerir un recurso para el directorio?",
     respuesta:
-      "Puedes contactar a 0xLeñador a través de Telegram o X. Los recursos son evaluados por su seguridad, utilidad y relevancia para el ecosistema Web3 antes de ser añadidos.",
+      "Puedes contactar a 0xLeñador a través de Telegram o X (@0xlenador). Los recursos sugeridos pasan por evaluación de seguridad y utilidad antes de ser añadidos. Las solicitudes con mayor demanda de la comunidad se priorizan.",
   },
 ];
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+
+    <!-- Breadcrumb -->
+    <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
+      Hub / Directorio
+    </p>
+
     <!-- Header -->
-    <header class="mb-16">
-      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
-        Hub / Directorio
-      </p>
-      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+    <header class="mb-12 border-b border-terminal-border/50 pb-8">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
         Directorio <span class="text-emerald-500">Web3</span>
       </h1>
-      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Recursos curados y en uso activo. Exchanges, wallets, exploradores y faucets
-        organizados para el flujo operativo diario.
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light">
+        Plataformas y recursos curados en uso operativo activo. Exchanges, wallets de custodia
+        propia, exploradores de bloques, herramientas de análisis y acceso al directorio de faucets.
       </p>
     </header>
 
-    <!-- ─── SECCIÓN: DIRECTORIO PRINCIPAL ─── -->
+    <!-- ─── SECCIÓN 1: Recursos y Plataformas ─── -->
     <section class="mb-20">
-      <div class="flex items-center gap-4 mb-8">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
           Recursos y Plataformas
         </h2>
-        <div class="h-px flex-grow bg-terminal-border/50"></div>
-        <span class="text-[10px] font-mono text-terminal-subtle">
+        <div class="h-px flex-grow bg-terminal-border/40"></div>
+        <span class="text-[10px] font-mono text-terminal-muted whitespace-nowrap">
           {directoryData.length} recursos
         </span>
       </div>
 
-      <!-- Filtro de tags (JS progresivo) -->
+      <!-- Filtros -->
       <div class="flex flex-wrap gap-2 mb-8" id="dir-filter-bar">
-        <button
-          class="badge badge-active filter-btn active"
-          data-filter="all"
-          id="dir-filter-all"
-        >
+        <button class="badge badge-active filter-btn" data-filter="all" id="dir-filter-all">
           Todos
         </button>
         {tags.map((tag) => (
@@ -85,8 +96,9 @@ const faqItems = [
         ))}
       </div>
 
+      <!-- Grid de recursos -->
       <div
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
         id="dir-grid"
       >
         {directoryData.map((item) => (
@@ -96,25 +108,28 @@ const faqItems = [
             rel="noopener noreferrer"
             data-tag={item.tag}
             id={`dir-${item.id}`}
-            class="hub-card p-4 flex flex-col items-center gap-3 text-center group no-underline"
+            class="group flex flex-col items-center gap-2.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all duration-300 no-underline text-center relative overflow-hidden hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
           >
+            <!-- Shimmer line on hover -->
+            <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
             <img
               src={item.logo}
               alt={item.alt_logo}
-              width={48}
-              height={48}
+              width={40}
+              height={40}
               loading="lazy"
-              class="w-10 h-10 object-contain rounded-lg"
+              class="w-10 h-10 object-contain rounded-xl"
             />
             <div>
-              <p class="text-white text-xs font-bold leading-tight group-hover:text-emerald-400 transition-colors">
+              <p class="text-white text-xs font-semibold leading-tight group-hover:text-emerald-400 transition-colors duration-300">
                 {item.name}
               </p>
-              <p class="text-terminal-subtle text-[10px] mt-0.5">{item.tag}</p>
+              <p class="text-terminal-muted text-[9px] mt-0.5 font-mono">{item.tag}</p>
             </div>
             {item.sponsored && (
-              <span class="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">
-                patrocinado
+              <span class="text-[8px] font-mono text-emerald-500/40 uppercase tracking-wider">
+                ref
               </span>
             )}
           </a>
@@ -122,108 +137,81 @@ const faqItems = [
       </div>
     </section>
 
-    <!-- ─── SECCIÓN: FAUCETS ─── -->
+    <!-- ─── SECCIÓN 2: Bloque Resumen Faucets ─── -->
     <section class="mb-20">
-      <div class="flex items-center gap-4 mb-8">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-          Faucets
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
+          Faucets Directory
         </h2>
-        <div class="h-px flex-grow bg-terminal-border/50"></div>
-        <span class="text-[10px] font-mono text-terminal-subtle">
-          {faucetsData.length} faucets
-        </span>
+        <div class="h-px flex-grow bg-terminal-border/40"></div>
       </div>
 
-      <!-- Mainnet -->
-      <div class="mb-10">
-        <h3 class="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-          Mainnet — Tokens Reales
-        </h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mainnetFaucets.map((faucet) => (
-            <a
-              href={faucet.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hub-card p-4 flex items-start gap-3 group no-underline"
-            >
-              <img
-                src={faucet.img}
-                alt={faucet.name}
-                width={40}
-                height={40}
-                loading="lazy"
-                class="w-8 h-8 object-contain rounded-lg flex-shrink-0 mt-0.5"
-              />
-              <div class="min-w-0">
-                <p class="text-white text-xs font-bold group-hover:text-emerald-400 transition-colors truncate">
-                  {faucet.name}
-                </p>
-                <div class="flex flex-wrap gap-1 mt-1.5">
-                  {faucet.tags.map((tag) => (
-                    <span class="text-[9px] font-mono text-terminal-subtle bg-terminal-elevated/60 px-1.5 py-0.5 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </a>
-          ))}
+      <div class="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <!-- Stat: Total -->
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-black text-white font-mono">{faucetsData.length}</p>
+            <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">Faucets indexados</p>
+          </div>
+          <!-- Stat: Testnet -->
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-black text-yellow-400 font-mono">{testnetCount}</p>
+            <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">Testnet (tokens de prueba)</p>
+          </div>
+          <!-- Stat: Mainnet -->
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-black text-amber-500 font-mono">{mainnetCount}</p>
+            <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">Mainnet (con referido)</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Testnet -->
-      <div>
-        <h3 class="text-[10px] font-mono text-yellow-500/80 uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-yellow-500/80 inline-block"></span>
-          Testnet — Sin Valor Real
-        </h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {testnetFaucets.map((faucet) => (
-            <a
-              href={faucet.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hub-card p-4 flex items-start gap-3 group no-underline"
-            >
-              <img
-                src={faucet.img}
-                alt={faucet.name}
-                width={40}
-                height={40}
-                loading="lazy"
-                class="w-8 h-8 object-contain rounded-lg flex-shrink-0 mt-0.5"
-              />
-              <div class="min-w-0">
-                <p class="text-white text-xs font-bold group-hover:text-emerald-400 transition-colors truncate">
-                  {faucet.name}
-                </p>
-                <div class="flex flex-wrap gap-1 mt-1.5">
-                  {faucet.tags.map((tag) => (
-                    <span class="text-[9px] font-mono text-terminal-subtle bg-terminal-elevated/60 px-1.5 py-0.5 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </a>
-          ))}
+        <!-- Redes más cubiertas -->
+        <div class="border-t border-white/[0.05] pt-6 mb-8">
+          <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mb-3">
+            Redes más cubiertas
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {topNetworks.map((net) => (
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-terminal-surface/50 border border-terminal-border text-xs text-terminal-secondary font-mono">
+                {net.name}
+                <span class="text-[9px] text-terminal-muted">×{net.count}</span>
+              </span>
+            ))}
+          </div>
         </div>
+
+        <!-- CTA -->
+        <a
+          href="/faucets"
+          id="faucets-cta-link"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-terminal-surface/60 border border-terminal-border hover:border-emerald-500/50 hover:bg-terminal-surface transition-all duration-300 no-underline"
+        >
+          <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+            Ver directorio completo de Faucets
+          </span>
+          <svg class="w-4 h-4 text-terminal-muted group-hover:text-emerald-400 transition-all duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
       </div>
     </section>
 
-    <FaqAccordion
-      titulo="Sobre el Directorio"
-      subtitulo="Recursos y faucets"
-      startId={400}
-      items={faqItems}
-    />
+    <!-- FAQ -->
+    <div class="border-t border-terminal-border/60 pt-14">
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Sobre el Directorio</h2>
+      <p class="text-xs text-terminal-subtle mb-8">Criterios de curación y uso operativo.</p>
+      <FaqAccordion
+        titulo="Preguntas del Directorio"
+        subtitulo="Criterios y recursos"
+        startId={500}
+        items={faqItems}
+      />
+    </div>
+
   </main>
 </Layout>
 
 <script>
-  // Filtrado progresivo del directorio por tag (sin framework)
   const setupDirectoryFilter = () => {
     const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
     const cards = document.querySelectorAll<HTMLAnchorElement>("#dir-grid a[data-tag]");
@@ -232,7 +220,6 @@ const faqItems = [
       btn.addEventListener("click", () => {
         const filter = btn.dataset.filter;
 
-        // Actualizar estado activo de botones
         buttons.forEach((b) => {
           b.classList.remove("badge-active");
           b.classList.add("bg-terminal-surface/60", "text-terminal-muted");
@@ -240,7 +227,6 @@ const faqItems = [
         btn.classList.add("badge-active");
         btn.classList.remove("bg-terminal-surface/60", "text-terminal-muted");
 
-        // Mostrar/ocultar tarjetas
         cards.forEach((card) => {
           const show = filter === "all" || card.dataset.tag === filter;
           card.style.display = show ? "" : "none";
