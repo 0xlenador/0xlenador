@@ -1,215 +1,269 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
-
-import operacionesData from "../data/operaciones.json";
+import { getCollection } from "astro:content";
 
 const seo = {
-  title: "Operaciones | 0xLeñador — Bitácora de Trading y Posiciones Activas",
+  title: "Operaciones | 0xLeñador — Guías Operativas DeFi, Airdrops y Web3",
   description:
-    "Bitácora pública de operaciones de 0xLeñador: posiciones abiertas y cerradas en mercados Web3 y tradicionales. Transparencia operativa sin recomendaciones de inversión.",
+    "Guías paso a paso de las operaciones del día a día en Web3: farming de airdrops, gestión de posiciones DeFi, juegos on-chain y más. Documentadas con recursos y herramientas reales.",
   image: "/img/meta/home.webp",
 };
 
-// Separar operaciones por estado
-const abiertas = operacionesData.filter((op) => op.estado === "abierta");
-const cerradas = operacionesData.filter((op) => op.estado === "cerrada");
+// Obtener todas las guías de la colección
+const todasLasGuias = await getCollection("guias");
 
-// Estadísticas resumen
-const totalOps = operacionesData.length;
-const pnlTotal = operacionesData
-  .reduce((acc, op) => acc + (op.pnl ?? 0), 0)
-  .toFixed(2);
-const ganadoras = cerradas.filter((op) => (op.pnl ?? 0) > 0).length;
-const winRate =
-  cerradas.length > 0
-    ? ((ganadoras / cerradas.length) * 100).toFixed(0)
-    : "N/A";
+// Ordenar por prioridad descendente, luego por fecha descendente
+const guias = todasLasGuias.sort((a, b) => {
+  if (b.data.prioridad !== a.data.prioridad) return b.data.prioridad - a.data.prioridad;
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+
+const guiasActivas     = guias.filter(g => g.data.estado === "activa");
+const guiasHistoricas  = guias.filter(g => g.data.estado !== "activa");
+const guiaDestacada    = guiasActivas[0];
+
+// Colores por categoría
+const categoriaConfig: Record<string, { color: string; badge: string; icon: string }> = {
+  Airdrop: { color: "emerald", badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", icon: "🎯" },
+  DeFi:    { color: "blue",    badge: "text-blue-400 bg-blue-500/10 border-blue-500/20",          icon: "💧" },
+  Gaming:  { color: "yellow",  badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",    icon: "🎮" },
+  Trading: { color: "fuchsia", badge: "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20", icon: "📈" },
+  Mixta:   { color: "cyan",    badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",           icon: "🔀" },
+};
+
+// Colores del estado
+const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
+  activa:     { label: "Activa",     dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]", text: "text-emerald-400" },
+  completada: { label: "Completada", dot: "bg-blue-500",    text: "text-blue-400"    },
+  expirada:   { label: "Expirada",   dot: "bg-red-500",     text: "text-red-400"     },
+};
+
+// Colores de dificultad
+const dificultadConfig: Record<string, string> = {
+  baja:  "text-emerald-400",
+  media: "text-yellow-400",
+  alta:  "text-red-400",
+};
+
+// Formatear fecha de deadline
+const formatDeadline = (fecha: string) =>
+  new Date(fecha).toLocaleDateString("es-CO", {
+    day: "numeric", month: "short", year: "numeric", timeZone: "UTC",
+  });
 
 const faqItems = [
   {
-    pregunta: "¿Esta bitácora es una señal de trading?",
+    pregunta: "¿Estas guías son recomendaciones de inversión?",
     respuesta:
-      "No. La bitácora es un registro público de las operaciones de 0xLeñador con fines de transparencia y documentación personal. No es una invitación a copiar posiciones ni un servicio de señales. Cada operación refleja la tesis propia del operador.",
+      "No. Las guías documentan las operaciones y actividades que 0xLeñador realiza en su propio portafolio. Son registros de actividad, no asesoría financiera. Cada usuario es responsable de su capital y decisiones.",
   },
   {
-    pregunta: "¿Los datos de P&L son en tiempo real?",
+    pregunta: "¿Qué diferencia hay entre una operación 'Airdrop' y 'DeFi'?",
     respuesta:
-      "No. Los datos de P&L son actualizaciones manuales periódicas. Para las posiciones abiertas, el P&L mostrado es una referencia aproximada al momento de la última actualización, no un precio en tiempo real.",
+      "Las guías de 'Airdrop' documentan actividades cuyo objetivo principal es acumular puntos o tokens futuros de un protocolo (farming). Las de 'DeFi' se enfocan en la gestión activa de posiciones de liquidez, staking o yields. Una categoría 'Mixta' combina ambas —es común en protocolos que requieren LP + interacción social.",
   },
   {
-    pregunta: "¿Por qué publicar las operaciones?",
+    pregunta: "¿Con qué frecuencia se actualizan las guías?",
     respuesta:
-      "La transparencia radical es un principio de 0xLeñador. Publicar las operaciones crea rendición de cuentas pública, documenta el proceso de toma de decisiones y demuestra que la metodología se aplica con capital real, no solo en papel.",
+      "Las guías se actualizan cuando cambian las condiciones del protocolo (nuevas temporadas, cambios en quests, nuevas plataformas). El estado 'activa' indica que la guía corresponde a una oportunidad vigente. 'Completada' significa que la temporada o campaña ya cerró.",
   },
   {
-    pregunta: "¿Con qué frecuencia se actualiza la bitácora?",
+    pregunta: "¿Por qué algunas guías incluyen botones de wallets o exchanges?",
     respuesta:
-      "Se actualiza cuando hay un evento operativo relevante: apertura de posición, cierre, ajuste de stop o take-profit. No hay una frecuencia fija; el objetivo es reflejar el estado real del portafolio, no generar contenido.",
+      "Para cada guía se indican las herramientas necesarias directamente desde el Directorio de 0xLeñador. Si el enlace tiene un referido, se indica claramente con la etiqueta 'ref'. Nunca se fuerza el uso de ninguna plataforma específica.",
   },
 ];
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+
     <!-- Header -->
-    <header class="mb-16">
+    <header class="mb-14">
       <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
         Hub / Operaciones
       </p>
       <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Bitácora de <span class="text-emerald-500">Operaciones</span>
+        Guías <span class="text-emerald-500">Operativas</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Registro público de posiciones activas y cerradas. Transparencia operativa — sin señales,
-        sin consejos. Solo el historial documentado de la tesis en acción.
+        Documentación paso a paso de las actividades del día a día en Web3: farming de airdrops,
+        gestión de posiciones DeFi, juegos on-chain y más. Con recursos y herramientas reales.
       </p>
     </header>
 
-    <!-- Estadísticas resumen -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+    <!-- Tarjetas de resumen -->
+    <div class="grid grid-cols-3 gap-4 mb-14">
       {[
-        { label: "Total Operaciones", value: totalOps, mono: true },
-        { label: "P&L Acumulado",    value: `+${pnlTotal}%`, mono: true, color: parseFloat(pnlTotal) >= 0 ? "text-emerald-400" : "text-red-400" },
-        { label: "Abiertas",         value: abiertas.length, mono: true },
-        { label: "Win Rate",         value: `${winRate}%`, mono: true, color: "text-yellow-400" },
-      ].map((stat) => (
-        <div class="hub-card p-5">
-          <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-2">
-            {stat.label}
-          </p>
-          <p class:list={["text-2xl font-black tracking-tight font-mono", stat.color ?? "text-white"]}>
-            {stat.value}
-          </p>
+        { label: "Guías activas",  value: guiasActivas.length,    color: "text-emerald-400" },
+        { label: "Total guías",    value: guias.length,           color: "text-white" },
+        { label: "Categorías",     value: Object.keys(categoriaConfig).length, color: "text-terminal-secondary" },
+      ].map(stat => (
+        <div class="hub-card p-5 text-center">
+          <p class="text-2xl font-black font-mono tracking-tight mb-1" class:list={[stat.color]}>{stat.value}</p>
+          <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest">{stat.label}</p>
         </div>
       ))}
     </div>
 
-    <!-- ─── POSICIONES ABIERTAS ─── -->
-    <section class="mb-16">
-      <div class="flex items-center gap-4 mb-6">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-          Posiciones Abiertas
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/50"></div>
-        <span class="badge badge-active">{abiertas.length} activas</span>
-      </div>
+    <!-- Guía destacada (la activa con mayor prioridad) -->
+    {guiaDestacada && (() => {
+      const cfg  = categoriaConfig[guiaDestacada.data.categoria] ?? categoriaConfig["Airdrop"];
+      const est  = estadoConfig[guiaDestacada.data.estado];
+      return (
+        <section class="mb-14">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">Guía prioritaria</h2>
+            <div class="h-px flex-grow bg-terminal-border/50"></div>
+          </div>
 
-      <div class="hub-card overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="ops-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Par</th>
-                <th>Tipo</th>
-                <th class="text-right">Entrada</th>
-                <th class="text-right">P&L est.</th>
-                <th>Apertura</th>
-                <th>Notas</th>
-              </tr>
-            </thead>
-            <tbody>
-              {abiertas.map((op) => (
-                <tr>
-                  <td>
-                    <span class="font-mono text-terminal-subtle text-[10px]">{op.id}</span>
-                  </td>
-                  <td>
-                    <span class="text-white font-bold text-xs">{op.par}</span>
-                  </td>
-                  <td>
-                    <span class="badge badge-routine">{op.tipo}</span>
-                  </td>
-                  <td class="text-right font-mono text-xs text-terminal-secondary">
-                    ${op.entrada.toLocaleString("es-CO")}
-                  </td>
-                  <td class="text-right">
-                    <span class:list={[
-                      "font-mono text-xs font-bold",
-                      (op.pnl ?? 0) >= 0 ? "text-emerald-400" : "text-red-400",
-                    ]}>
-                      {(op.pnl ?? 0) >= 0 ? "+" : ""}{op.pnl}%
-                    </span>
-                  </td>
-                  <td class="font-mono text-[10px] text-terminal-subtle">
-                    {op.fecha_apertura}
-                  </td>
-                  <td class="text-terminal-muted text-xs max-w-[200px] truncate" title={op.notas ?? ""}>
-                    {op.notas}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <a
+            href={`/operaciones/${guiaDestacada.id}`}
+            class="hub-card p-6 md:p-8 flex flex-col md:flex-row gap-6 group no-underline block"
+          >
+            {guiaDestacada.data.imagen && (
+              <div class="w-full md:w-40 h-32 md:h-auto rounded-xl overflow-hidden flex-shrink-0 bg-terminal-elevated">
+                <img
+                  src={guiaDestacada.data.imagen}
+                  alt={guiaDestacada.data.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-3">
+                <span class:list={["text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border", cfg.badge]}>
+                  {cfg.icon} {guiaDestacada.data.categoria}
+                </span>
+                <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                  <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]}></span>
+                  <span class:list={[est.text]}>{est.label}</span>
+                </span>
+                {guiaDestacada.data.temporada && (
+                  <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated px-2 py-0.5 rounded-md">
+                    {guiaDestacada.data.temporada}
+                  </span>
+                )}
+              </div>
+
+              <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
+                {guiaDestacada.data.title}
+              </h3>
+              <p class="text-terminal-muted text-sm leading-relaxed mb-4">
+                {guiaDestacada.data.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-terminal-subtle">
+                {guiaDestacada.data.fechaLimite && (
+                  <span class="text-yellow-400/80">⏳ Deadline: {formatDeadline(guiaDestacada.data.fechaLimite)}</span>
+                )}
+                {guiaDestacada.data.tiempoEstimado && (
+                  <span>⏱ {guiaDestacada.data.tiempoEstimado}</span>
+                )}
+                <span class:list={["font-semibold", dificultadConfig[guiaDestacada.data.dificultad]]}>
+                  ● Dificultad {guiaDestacada.data.dificultad}
+                </span>
+                <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
+                  Abrir guía →
+                </span>
+              </div>
+            </div>
+          </a>
+        </section>
+      );
+    })()}
+
+    <!-- Grid de guías activas (sin la destacada) -->
+    {guiasActivas.length > 1 && (
+      <section class="mb-14">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">En seguimiento</h2>
+          <div class="h-px flex-grow bg-terminal-border/50"></div>
+          <span class="text-[10px] font-mono text-terminal-subtle">{guiasActivas.length - 1} guías</span>
         </div>
-      </div>
-    </section>
 
-    <!-- ─── HISTORIAL ─── -->
-    <section class="mb-20">
-      <div class="flex items-center gap-4 mb-6">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-          Historial Cerrado
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/50"></div>
-        <span class="badge badge-claimed">{cerradas.length} cerradas</span>
-      </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {guiasActivas.slice(1).map(guia => {
+            const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"];
+            const est = estadoConfig[guia.data.estado];
+            return (
+              <a
+                href={`/operaciones/${guia.id}`}
+                class="hub-card p-5 flex flex-col group no-underline"
+              >
+                <div class="flex items-start justify-between gap-2 mb-3">
+                  <span class:list={["text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border", cfg.badge]}>
+                    {cfg.icon} {guia.data.categoria}
+                  </span>
+                  <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                    <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]}></span>
+                    <span class:list={[est.text]}>{est.label}</span>
+                  </span>
+                </div>
 
-      <div class="hub-card overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="ops-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Par</th>
-                <th>Tipo</th>
-                <th class="text-right">Entrada</th>
-                <th class="text-right">Salida</th>
-                <th class="text-right">P&L</th>
-                <th>Cierre</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cerradas.map((op) => (
-                <tr>
-                  <td>
-                    <span class="font-mono text-terminal-subtle text-[10px]">{op.id}</span>
-                  </td>
-                  <td>
-                    <span class="text-white font-bold text-xs">{op.par}</span>
-                  </td>
-                  <td>
-                    <span class="badge badge-claimed">{op.tipo}</span>
-                  </td>
-                  <td class="text-right font-mono text-xs text-terminal-secondary">
-                    ${op.entrada.toLocaleString("es-CO")}
-                  </td>
-                  <td class="text-right font-mono text-xs text-terminal-secondary">
-                    ${op.salida?.toLocaleString("es-CO") ?? "—"}
-                  </td>
-                  <td class="text-right">
-                    <span class:list={[
-                      "font-mono text-xs font-black",
-                      (op.pnl ?? 0) >= 0 ? "text-emerald-400" : "text-red-400",
-                    ]}>
-                      {(op.pnl ?? 0) >= 0 ? "+" : ""}{op.pnl}%
-                    </span>
-                  </td>
-                  <td class="font-mono text-[10px] text-terminal-subtle">
-                    {op.fecha_cierre ?? "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors mb-2 leading-snug flex-1">
+                  {guia.data.title}
+                </h3>
+
+                <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-auto pt-3 border-t border-terminal-border/50">
+                  {guia.data.fechaLimite && (
+                    <span class="text-yellow-400/70">⏳ {formatDeadline(guia.data.fechaLimite)}</span>
+                  )}
+                  {guia.data.tiempoEstimado && <span>⏱ {guia.data.tiempoEstimado}</span>}
+                  <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold">Ver →</span>
+                </div>
+              </a>
+            );
+          })}
         </div>
+      </section>
+    )}
+
+    <!-- Historial -->
+    {guiasHistoricas.length > 0 && (
+      <section class="mb-14">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">Historial</h2>
+          <div class="h-px flex-grow bg-terminal-border/50"></div>
+          <span class="text-[10px] font-mono text-terminal-subtle">{guiasHistoricas.length} guías</span>
+        </div>
+
+        <div class="hub-card divide-y divide-terminal-border/50">
+          {guiasHistoricas.map(guia => {
+            const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"];
+            const est = estadoConfig[guia.data.estado];
+            return (
+              <a
+                href={`/operaciones/${guia.id}`}
+                class="flex items-center gap-4 p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
+              >
+                <span class:list={["text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border flex-shrink-0", cfg.badge]}>
+                  {cfg.icon}
+                </span>
+                <span class="text-terminal-secondary text-xs font-medium group-hover:text-white transition-colors flex-1 min-w-0 truncate">
+                  {guia.data.title}
+                </span>
+                <span class:list={["text-[10px] font-mono flex-shrink-0", est.text]}>{est.label}</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- Estado vacío: sin guías activas -->
+    {guiasActivas.length === 0 && guiasHistoricas.length === 0 && (
+      <div class="hub-card p-12 text-center">
+        <p class="text-terminal-subtle text-sm font-mono">// Ninguna guía activa por el momento.</p>
+        <p class="text-terminal-muted text-xs mt-2">Próximamente se agregarán guías de Soneium, Sunflower Land y otros protocolos.</p>
       </div>
-    </section>
+    )}
 
     <FaqAccordion
-      titulo="Sobre la Bitácora"
-      subtitulo="Transparencia operativa"
+      titulo="Sobre las Guías"
+      subtitulo="Operaciones y actividades"
       startId={600}
       items={faqItems}
     />

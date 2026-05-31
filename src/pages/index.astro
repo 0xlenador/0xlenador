@@ -3,7 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import HeroSection from "../components/home/HeroSection.astro";
 
-import operacionesData from "../data/operaciones.json";
+import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import HeroSection from "../components/home/HeroSection.astro";
+
 import { getCollection } from "astro:content";
 
 // Metadatos de la página principal
@@ -36,8 +39,8 @@ const posts = (await getCollection("blog"))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
   .slice(0, 3);
 
-// Posiciones abiertas para el panel de status
-const posicionesAbiertas = operacionesData.filter((op) => op.estado === "abierta");
+// Guías operativas activas
+const guiasActivas = (await getCollection("guias")).filter(g => g.data.estado === "activa");
 
 // Los 4 módulos del Hub en la página principal
 const modules = [
@@ -75,8 +78,8 @@ const modules = [
     id: "operaciones",
     href: "/operaciones",
     titulo: "Operaciones",
-    descripcion: "Bitácora pública de posiciones abiertas y cerradas.",
-    count: `${posicionesAbiertas.length} abiertas`,
+    descripcion: "Hub de guías operativas: airdrops, DeFi y gaming.",
+    count: `${guiasActivas.length} guías activas`,
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>`,
     accentClass: "border-violet-500/30 hover:border-violet-500/60",
     badgeClass: "text-violet-400 bg-violet-500/10",
@@ -179,63 +182,42 @@ const faqItems = [
       </div>
     </section>
 
-    <!-- ─── STATUS: POSICIONES ABIERTAS ─── -->
-    <section class="mb-20">
-      <div class="flex items-center gap-4 mb-6">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-          Status: Posiciones Abiertas
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/50"></div>
-        <a
-          href="/operaciones"
-          class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
-        >
-          Ver todas →
-        </a>
-      </div>
-
-      <div class="hub-card overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="ops-table">
-            <thead>
-              <tr>
-                <th>Par</th>
-                <th>Tipo</th>
-                <th class="text-right">Entrada</th>
-                <th class="text-right">P&L est.</th>
-                <th>Apertura</th>
-              </tr>
-            </thead>
-            <tbody>
-              {posicionesAbiertas.map((op) => (
-                <tr>
-                  <td>
-                    <span class="text-white font-bold text-xs">{op.par}</span>
-                  </td>
-                  <td>
-                    <span class="badge badge-routine">{op.tipo}</span>
-                  </td>
-                  <td class="text-right font-mono text-xs text-terminal-secondary">
-                    ${op.entrada.toLocaleString("es-CO")}
-                  </td>
-                  <td class="text-right">
-                    <span class:list={[
-                      "font-mono text-xs font-bold",
-                      (op.pnl ?? 0) >= 0 ? "text-emerald-400" : "text-red-400",
-                    ]}>
-                      {(op.pnl ?? 0) >= 0 ? "+" : ""}{op.pnl}%
-                    </span>
-                  </td>
-                  <td class="font-mono text-[10px] text-terminal-subtle">
-                    {op.fecha_apertura}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <!-- ─── STATUS: GUÍAS OPERATIVAS ACTIVAS ─── -->
+    {guiasActivas.length > 0 && (
+      <section class="mb-20">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+            Status: Guías Operativas
+          </h2>
+          <div class="h-px flex-grow bg-terminal-border/50"></div>
+          <a
+            href="/operaciones"
+            class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+          >
+            Ver todas →
+          </a>
         </div>
-      </div>
-    </section>
+
+        <div class="hub-card divide-y divide-terminal-border/50">
+          {guiasActivas.map((guia) => (
+            <a href={`/operaciones/${guia.id}`} class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+                <div>
+                  <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">{guia.data.title}</h3>
+                  <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">{guia.data.categoria} • {guia.data.dificultad}</p>
+                </div>
+              </div>
+              {guia.data.fechaLimite && (
+                <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
+                  ⏳ {new Date(guia.data.fechaLimite).toLocaleDateString("es-CO", { day: "numeric", month: "short" })}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     <!-- ─── ÚLTIMAS DEL BLOG ─── -->
     {posts.length > 0 && (
