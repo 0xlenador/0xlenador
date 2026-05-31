@@ -58,8 +58,19 @@ const cfgDif  = dificultadConfig[dificultad];
   <!-- Barra de progreso de lectura -->
   <div id="reading-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuenow={0} aria-valuemin={0} aria-valuemax={100}></div>
 
-  <style is:global slot="head">
-    #reading-progress {
+    <style is:global slot="head">
+      @keyframes drawCheck {
+        0% { stroke-dashoffset: 24; opacity: 0; }
+        20% { opacity: 1; }
+        100% { stroke-dashoffset: 0; opacity: 1; }
+      }
+      .animate-checkmark {
+        stroke-dasharray: 24;
+        stroke-dashoffset: 24;
+        animation: drawCheck 1.2s ease-in-out infinite alternate;
+      }
+
+      #reading-progress {
       position: fixed;
       top: 0; left: 0;
       height: 2px;
@@ -184,12 +195,17 @@ const cfgDif  = dificultadConfig[dificultad];
     <!-- Header de la guía -->
     <header class="mb-10 pb-8 border-b border-terminal-border/60">
 
-      <!-- Imagen de portada -->
-      {imagen && (
-        <div class="mb-6 rounded-2xl overflow-hidden border border-terminal-border/50 h-48 md:h-64">
-          <img src={imagen} alt={title} class="w-full h-full object-cover" loading="eager" />
-        </div>
-      )}
+      <!-- Título principal con logo -->
+      <div class="flex items-center gap-4 mb-5">
+        {imagen && (
+          <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden bg-terminal-surface/80 border border-terminal-border flex items-center justify-center p-2 shadow-inner">
+            <img src={imagen} alt={title} class="w-full h-full object-contain" loading="eager" />
+          </div>
+        )}
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+          {title}
+        </h1>
+      </div>
 
       <!-- Badges de estado y categoría -->
       <div class="flex flex-wrap items-center gap-2 mb-4">
@@ -210,10 +226,6 @@ const cfgDif  = dificultadConfig[dificultad];
         </span>
       </div>
 
-      <!-- Título -->
-      <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-3">
-        {title}
-      </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed">{description}</p>
 
       <!-- Metadatos de la guía -->

@@ -1,12 +1,12 @@
 ---
-title: "Farming en Soneium Portal — Guía Completa"
+title: "Soneium Portal — Guía Completa"
 description: "Guía paso a paso para acumular puntos en el portal de Soneium: misiones diarias, swaps, liquidez, NFTs y tips para llegar a 100/100 (min 80/100) en cada temporada."
 categoria: "Airdrop"
 estado: "activa"
 temporada: "S10"
 fechaLimite: "2026-06-4"
 plataforma: "Soneium"
-imagen: "/img/guias/soneium.webp"
+imagen: "/img/cripto/soneium.webp"
 tags: ["airdrop", "L2", "misiones", "farming", "points"]
 dificultad: "media"
 tiempoEstimado: "10 min / día"
@@ -15,12 +15,35 @@ prioridad: 10
 ---
 
 import ResourceCard from '../../components/guias/ResourceCard.astro';
+import GuideSummary from '../../components/guias/GuideSummary.astro';
+import GuideStep from '../../components/guias/GuideStep.astro';
+
+<GuideSummary>
+  <GuideStep step="1" text="Ve a Soneium Portal">
+    <a href="https://portal.soneium.org/en" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 text-cyan-400 font-bold text-xs font-mono hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 hover:text-cyan-300 transition-all no-underline shadow-[0_0_15px_rgba(6,182,212,0.2)] group hover:scale-105 active:scale-95">
+      <img src="/img/cripto/soneium.webp" alt="Logo de Soneium" class="w-4 h-4 rounded-full object-contain group-hover:brightness-125" />
+      Soneium Portal
+    </a>
+  </GuideStep>
+  <GuideStep step="2" text="Conecta tu wallet">
+    <ResourceCard id="metamask" />
+  </GuideStep>
+  <GuideStep step="3" text="Completa las misiones">
+    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono cursor-default select-none shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+      <svg class="w-4 h-4 animate-checkmark text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+      </svg>
+      Completado
+    </div>
+  </GuideStep>
+</GuideSummary>
 
 ## Requisitos previos
 
 Antes de empezar necesitas una wallet compatible con EVM (Ethereum Virtual Machine) instalada en tu navegador. Las más recomendadas para este protocolo:
 
 <div class="flex flex-wrap gap-2 my-4 not-prose">
+  <ResourceCard id="metamask" />
   <ResourceCard id="rabby" />
   <ResourceCard id="binance" label="Comprar ETH en Binance" />
   <ResourceCard id="bybit" label="Comprar ETH en Bybit" />
