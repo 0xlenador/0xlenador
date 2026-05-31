@@ -20,20 +20,20 @@ import GuideStep from '../../components/guias/GuideStep.astro';
 
 <GuideSummary>
   <GuideStep step="1" text="Ve a Soneium Portal">
-    <a href="https://portal.soneium.org/en" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 text-cyan-400 font-bold text-xs font-mono hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 hover:text-cyan-300 transition-all no-underline shadow-[0_0_15px_rgba(6,182,212,0.2)] group hover:scale-105 active:scale-95">
-      <img src="/img/cripto/soneium.webp" alt="Logo de Soneium" class="w-4 h-4 rounded-full object-contain group-hover:brightness-125" />
-      Soneium Portal
+    <a href="https://portal.soneium.org/en" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 text-cyan-400 font-medium text-xs hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 hover:text-cyan-300 transition-all no-underline shadow-[0_0_15px_rgba(6,182,212,0.2)] group hover:scale-105 active:scale-95">
+      <img src="/img/cripto/soneium.webp" alt="Logo de Soneium" class="w-4 h-4 rounded-full object-contain group-hover:brightness-125 flex-shrink-0" />
+      <span>Soneium Portal</span>
     </a>
   </GuideStep>
   <GuideStep step="2" text="Conecta tu wallet">
     <ResourceCard id="metamask" />
   </GuideStep>
   <GuideStep step="3" text="Completa las misiones">
-    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono cursor-default select-none shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-      <svg class="w-4 h-4 animate-checkmark text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+    <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-medium text-xs cursor-default select-none shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+      <svg class="w-3.5 h-3.5 animate-checkmark text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
       </svg>
-      Completado
+      <span>Completado</span>
     </div>
   </GuideStep>
 </GuideSummary>
@@ -43,20 +43,23 @@ import GuideStep from '../../components/guias/GuideStep.astro';
 Antes de empezar necesitas una wallet compatible con EVM (Ethereum Virtual Machine) instalada en tu navegador. Las más recomendadas para este protocolo:
 
 <div class="flex flex-wrap gap-2 my-4 not-prose">
-  <ResourceCard id="metamask" />
-  <ResourceCard id="rabby" />
-  <ResourceCard id="binance" label="Comprar ETH en Binance" />
-  <ResourceCard id="bybit" label="Comprar ETH en Bybit" />
+  <ResourceCard id="metamask" label="Descargar Metamask" />
+  <ResourceCard id="rabby" label="Descargar Rabby" />
 </div>
 
 **También necesitarás:**
 - ETH para gas en la red Soneium (bridge desde Ethereum u otra red usando puentes oficiales o exchanges)
-- Cuenta de X (Twitter) para algunas misiones sociales
+- Cuenta de X (Twitter) para algunas misiones sociales <a href="https://x.com/soneium" target="_blank" class="text-emerald-500 hover:underline">[@soneium](https://x.com/soneium)</a>
+
+<div class="flex flex-wrap gap-2 my-4 not-prose">
+  <ResourceCard id="binance" label="Comprar ETH en Binance" />
+  <ResourceCard id="bybit" label="Comprar ETH en Bybit" />
+</div>
 
 ## Paso 1: Prepárate
 
 1. **Instala una wallet EVM** (Rabby, MetaMask, etc.)
-2. **Agrega la red Soneium Mainnet:** busca el RPC en [soneium.org](https://soneium.org) o en Chainlist
+2. **Agrega la red Soneium Mainnet:** busca el RPC en [soneium.org](https://soneium.org) o en [Chainlist.org](https://chainlist.org)
 3. **Ten algo de ETH o tokens en Soneium** para cubrir el gas del bridge
 4. **Conéctate al portal:** [portal.soneium.org](https://portal.soneium.org/en) → **Connect Wallet**
 5. **Completa 4 campañas:** Y navega en la interfaz para trackear tu puntos y transacciones.
@@ -81,7 +84,7 @@ Los puntos se acumulan por múltiples actividades simultáneas:
 
 La app de Startale es el punto central para maximizar puntos con el menor esfuerzo:
 
-1. Ve a [app.startale.com](https://app.startale.com)
+1. Ve a [app.startale.com](https://app.startale.com/sign-up?code=VYANVN66)
 2. Inicia sesión con la misma wallet
 3. Completa **mini-apps carnival y misiones diarias** — incluye juegos como:
    - Morning Moon Pocket
