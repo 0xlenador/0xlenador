@@ -10,8 +10,7 @@ const seo = {
   image: "/img/meta/faucets.webp",
 };
 
-const testnetFaucets = faucetsData.filter((f) => f.type === "testnet");
-const mainnetFaucets = faucetsData.filter((f) => f.type === "mainnet");
+// Todos los faucets están en faucetsData (mezclados)
 
 const faqItems = [
   {
@@ -25,7 +24,8 @@ const faqItems = [
       "Los faucets testnet distribuyen tokens sin valor económico, esenciales para probar contratos inteligentes y dApps sin arriesgar capital real. Los faucets mainnet distribuyen criptomonedas reales (Satoshis, SOL, TRX) en cantidades pequeñas, generalmente como incentivo a través de links de referido.",
   },
   {
-    pregunta: "¿Por qué algunos faucets de testnet me piden autenticar con mi wallet o cuenta?",
+    pregunta:
+      "¿Por qué algunos faucets de testnet me piden autenticar con mi wallet o cuenta?",
     respuesta:
       "Es una medida anti-bot. Muchos faucets ahora requieren que la wallet principal tenga un saldo mínimo en mainnet o que te autentiques vía GitHub, redes sociales o Gitcoin Passport. Esto no implica riesgo siempre y cuando el sitio solo lea tu dirección pública (read-only). Nunca firmes transacciones ni apruebes permisos en faucets.",
   },
@@ -44,28 +44,44 @@ const faqItems = [
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
-
     <!-- Breadcrumb -->
-    <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
+    <p
+      class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6"
+    >
       Directorio / Faucets
     </p>
 
     <!-- Header -->
     <header class="mb-10 border-b border-terminal-border/50 pb-8">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
-        Faucets <span class="text-emerald-500">Directory</span>
+      <h1
+        class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3"
+      >
+        Listado de Faucets <span class="text-emerald-500">
+          Mainnet & Testnet</span
+        >
       </h1>
-      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light">
-        {faucetsData.length} faucets indexados para desarrollo Web3 y farming de airdrops.
-        Filtra por tipo de red o busca por nombre de blockchain.
+      <p
+        class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light"
+      >
+        Explora todos los sitios web de faucets de criptomonedas disponibles en el ecosistema blockchain, acumula criptomonedas gratis para farmear tus airdrops y/o desarrollar tus proyectos.
       </p>
     </header>
 
     <!-- Buscador y filtros -->
     <div class="flex flex-col sm:flex-row gap-3 mb-10">
       <div class="relative flex-1">
-        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-terminal-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+        <svg
+          class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-terminal-muted"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+          ></path>
         </svg>
         <input
           type="text"
@@ -75,29 +91,36 @@ const faqItems = [
         />
       </div>
 
-      <div class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border">
-        <button class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold transition-all bg-emerald-600 text-white" data-filter="all">Todos</button>
-        <button class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold text-terminal-muted hover:text-white transition-all" data-filter="testnet">Testnet</button>
-        <button class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold text-terminal-muted hover:text-white transition-all" data-filter="mainnet">Mainnet</button>
+      <div
+        class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border"
+      >
+        <button
+          class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold transition-all bg-emerald-600 text-white"
+          data-filter="all">Todos</button
+        >
+        <button
+          class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold text-terminal-muted hover:text-white transition-all"
+          data-filter="testnet">Testnet</button
+        >
+        <button
+          class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold text-terminal-muted hover:text-white transition-all"
+          data-filter="mainnet">Mainnet</button
+        >
       </div>
     </div>
 
-    <!-- ─── TESTNET ─── -->
-    <section class="mb-14" id="section-testnet">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
-        <h2 class="text-[10px] font-mono text-yellow-400 uppercase tracking-[0.4em]">
-          Testnet — Tokens sin valor real
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/40"></div>
-        <span class="text-[10px] font-mono text-terminal-muted">{testnetFaucets.length}</span>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3" id="grid-testnet">
-        {testnetFaucets.map((faucet) => (
+    <!-- ─── FAUCETS GRID ─── -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-16" id="grid-faucets">
+      {
+        faucetsData.map((faucet) => (
           <div
-            class="item-card group bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.08] rounded-2xl p-4 flex items-start gap-4 transition-all duration-300"
-            data-type="testnet"
+            class:list={[
+              "item-card group border rounded-2xl p-4 flex items-start gap-4 transition-all duration-300",
+              faucet.type === "mainnet"
+                ? "bg-amber-500/[0.03] border-amber-500/[0.08] hover:border-amber-500/20"
+                : "bg-white/[0.02] border-white/[0.05] hover:border-white/[0.08]"
+            ]}
+            data-type={faucet.type}
             data-tags={faucet.tags.join(" ").toLowerCase()}
           >
             <img
@@ -109,88 +132,71 @@ const faqItems = [
               class="w-10 h-10 object-contain rounded-xl flex-shrink-0 mt-0.5"
             />
             <div class="min-w-0">
-              <a
-                href={faucet.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-1 text-white text-sm font-semibold hover:text-emerald-400 transition-colors no-underline mb-2"
-              >
-                {faucet.name}
-                <svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                </svg>
-              </a>
-              <div class="flex flex-wrap gap-1">
-                {faucet.tags.map((tag) => (
-                  <span class="faucet-tag text-[9px] font-mono text-terminal-muted bg-terminal-surface/50 border border-terminal-border/60 px-1.5 py-0.5 rounded-md transition-colors">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- ─── MAINNET ─── -->
-    <section class="mb-16" id="section-mainnet">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span>
-        <h2 class="text-[10px] font-mono text-amber-500 uppercase tracking-[0.4em]">
-          Mainnet — Tokens reales (con referido)
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/40"></div>
-        <span class="text-[10px] font-mono text-terminal-muted">{mainnetFaucets.length}</span>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3" id="grid-mainnet">
-        {mainnetFaucets.map((faucet) => (
-          <div
-            class="item-card group bg-amber-500/[0.03] border border-amber-500/[0.08] hover:border-amber-500/20 rounded-2xl p-4 flex items-start gap-4 transition-all duration-300"
-            data-type="mainnet"
-            data-tags={faucet.tags.join(" ").toLowerCase()}
-          >
-            <img
-              src={faucet.img}
-              alt={faucet.name}
-              width={40}
-              height={40}
-              loading="lazy"
-              class="w-10 h-10 object-contain rounded-xl flex-shrink-0 mt-0.5"
-            />
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 mb-2">
+              <div class="flex items-center gap-2 mb-1">
                 <a
                   href={faucet.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-1 text-white text-sm font-semibold hover:text-amber-400 transition-colors no-underline"
+                  class:list={[
+                    "inline-flex items-center gap-1 text-sm font-semibold transition-colors no-underline",
+                    faucet.type === "mainnet" ? "text-white hover:text-amber-400" : "text-white hover:text-emerald-400"
+                  ]}
                 >
                   {faucet.name}
-                  <svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                  <svg
+                    class="w-3 h-3 opacity-40"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
                   </svg>
                 </a>
-                <span class="text-[8px] font-mono text-amber-500/60 uppercase tracking-wider">ref</span>
               </div>
-              <div class="flex flex-wrap gap-1">
+              <div class="mb-2 flex items-center gap-2">
+                <span class:list={[
+                  "text-[9px] font-mono uppercase tracking-wider font-bold",
+                  faucet.type === "mainnet" ? "text-amber-500" : "text-emerald-500"
+                ]}>
+                  {faucet.type.toUpperCase()}
+                </span>
+                {faucet.type === "mainnet" && (
+                  <span class="text-[8px] font-mono text-amber-500/60 uppercase tracking-wider">
+                    ref
+                  </span>
+                )}
+              </div>
+              <div class="flex flex-wrap gap-1.5 mt-2">
                 {faucet.tags.map((tag) => (
-                  <span class="faucet-tag text-[9px] font-mono text-amber-500/50 bg-amber-500/[0.05] border border-amber-500/[0.1] px-1.5 py-0.5 rounded-md">
+                  <span class:list={[
+                    "faucet-tag text-xs font-medium tracking-tight px-2 py-0.5 rounded-md transition-colors",
+                    faucet.type === "mainnet" 
+                      ? "text-amber-500/70 bg-black/40 border border-amber-500/[0.15]" 
+                      : "text-terminal-muted bg-black/40 border border-terminal-border/40"
+                  ]}>
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    </section>
+        ))
+      }
+    </div>
 
     <!-- FAQ -->
     <div class="border-t border-terminal-border/60 pt-14">
-      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Sobre los Faucets</h2>
-      <p class="text-xs text-terminal-subtle mb-8">Guía de uso y buenas prácticas de seguridad.</p>
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">
+        Sobre los Faucets
+      </h2>
+      <p class="text-xs text-terminal-subtle mb-8">
+        Guía de uso y buenas prácticas de seguridad.
+      </p>
       <FaqAccordion
         titulo="Preguntas sobre Faucets"
         subtitulo="Uso, seguridad y actualización"
@@ -198,7 +204,6 @@ const faqItems = [
         items={faqItems}
       />
     </div>
-
   </main>
 </Layout>
 
@@ -209,10 +214,12 @@ const faqItems = [
     var q = document.getElementById("faucet-search").value.toLowerCase().trim();
     var cards = document.querySelectorAll(".item-card");
 
-    cards.forEach(function(card) {
+    cards.forEach(function (card) {
       var type = card.getAttribute("data-type");
       var tagsText = card.getAttribute("data-tags") || "";
-      var name = card.querySelector("a") ? card.querySelector("a").textContent.toLowerCase() : "";
+      var name = card.querySelector("a")
+        ? card.querySelector("a").textContent.toLowerCase()
+        : "";
 
       var tabMatch = activeTab === "all" || type === activeTab;
       var queryMatch = q === "" || tagsText.includes(q) || name.includes(q);
@@ -225,7 +232,7 @@ const faqItems = [
 
       // Highlight tags que coinciden con la búsqueda
       var tagEls = card.querySelectorAll(".faucet-tag");
-      tagEls.forEach(function(tag) {
+      tagEls.forEach(function (tag) {
         if (q !== "" && tag.textContent.toLowerCase().includes(q)) {
           tag.classList.add("highlight");
           tag.classList.remove("dimmed");
@@ -238,18 +245,14 @@ const faqItems = [
       });
     });
 
-    // Mostrar/ocultar secciones enteras si el filtro de tab lo requiere
-    var testnetSection = document.getElementById("section-testnet");
-    var mainnetSection = document.getElementById("section-mainnet");
-    if (testnetSection) testnetSection.style.display = (activeTab === "mainnet") ? "none" : "";
-    if (mainnetSection) mainnetSection.style.display = (activeTab === "testnet") ? "none" : "";
+    // Fin de función applyFilters
   }
 
-  document.querySelectorAll(".tab-btn").forEach(function(btn) {
-    btn.addEventListener("click", function() {
+  document.querySelectorAll(".tab-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
       activeTab = btn.getAttribute("data-filter");
 
-      document.querySelectorAll(".tab-btn").forEach(function(b) {
+      document.querySelectorAll(".tab-btn").forEach(function (b) {
         b.classList.remove("bg-emerald-600", "text-white");
         b.classList.add("text-terminal-muted");
       });
@@ -260,5 +263,7 @@ const faqItems = [
     });
   });
 
-  document.getElementById("faucet-search").addEventListener("input", applyFilters);
+  document
+    .getElementById("faucet-search")
+    .addEventListener("input", applyFilters);
 </script>
