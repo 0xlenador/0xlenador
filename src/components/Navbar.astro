@@ -1,23 +1,67 @@
 ---
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
 const { pathname } = Astro.url;
-const activePath = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
+const activePath =
+  pathname.endsWith("/") && pathname.length > 1
+    ? pathname.slice(0, -1)
+    : pathname;
 
 // Un enlace es activo si coincide exactamente o si la ruta actual empieza por ese href
 // Excepción: '/' sólo es activo en la raíz exacta.
 const isActive = (href: string) =>
-  href === '/'
-    ? activePath === '/'
-    : activePath === href || activePath.startsWith(href + '/');
+  href === "/"
+    ? activePath === "/"
+    : activePath === href || activePath.startsWith(href + "/");
 
-// Los 6 enlaces de primer nivel del Hub Operativo
+// Los enlaces principales con sus respectivos dropdowns
 const navLinks = [
-  { href: '/herramientas', label: 'Herramientas' },
-  { href: '/directorio',   label: 'Directorio'   },
-  { href: '/activos',      label: 'Activos'       },
-  { href: '/operaciones',  label: 'Operaciones'   },
-  { href: '/blog',         label: 'Blog'          },
+  {
+    href: "/herramientas",
+    label: "Herramientas",
+    dropdown: [
+      { 
+        href: "/riskfolio", 
+        label: "Riskfolio",
+        iconType: "svg",
+        svgPath: "M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" 
+      },
+      { 
+        href: "/intrinseco", 
+        label: "Intrínseco",
+        iconType: "svg",
+        svgPath: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+      },
+    ],
+  },
+  {
+    href: "/directorio",
+    label: "Directorio",
+    dropdown: [
+      { 
+        href: "/faucets", 
+        label: "Faucets",
+        iconType: "svg",
+        svgPath: "M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"
+      }
+    ],
+  },
+  {
+    href: "/activos",
+    label: "Activos",
+    dropdown: [
+      { href: "/bitcoin", label: "Bitcoin", iconType: "img", src: "/img/cripto/bitcoin.webp" },
+      { href: "/ethereum", label: "Ethereum", iconType: "img", src: "/img/cripto/ethereum.webp" },
+      { href: "/sunflowerland", label: "Sunflower Land", iconType: "img", src: "/img/cripto/sunflowerland.webp" },
+    ],
+  },
+  {
+    href: "/operaciones",
+    label: "Operaciones",
+    dropdown: [
+      { href: "/operaciones/soneium-portal", label: "Soneium", iconType: "img", src: "/img/cripto/soneium.webp" },
+    ],
+  },
 ];
 ---
 
@@ -29,7 +73,8 @@ const navLinks = [
     <!-- Logo / Brand -->
     <div class="flex items-center gap-8 z-50">
       <a
-        href="/" data-astro-prefetch
+        href="/"
+        data-astro-prefetch
         class="text-xl font-bold tracking-tighter text-white flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none rounded-md"
       >
         <Image
@@ -45,21 +90,48 @@ const navLinks = [
         >
       </a>
 
-      <!-- Desktop nav — enlaces planos de primer nivel -->
-      <div
-        class="hidden lg:flex items-center gap-1 text-[13px] font-medium"
-      >
-        {navLinks.map(({ href, label }) => (
-          <a
-            href={href} data-astro-prefetch
-            class:list={[
-              "nav-link px-3 py-2 rounded-lg transition-all",
-              isActive(href)
-                ? "text-white bg-terminal-elevated/40"
-                : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-            ]}
-          >{label}</a>
-        ))}
+      <!-- Desktop nav con Dropdowns -->
+      <div class="hidden lg:flex items-center gap-1 text-[13px] font-medium">
+        {
+          navLinks.map(({ href, label, dropdown }) => (
+            <div class="relative group">
+              <a
+                href={href}
+                data-astro-prefetch
+                class:list={[
+                  "nav-link px-3 py-2 rounded-lg transition-all flex items-center gap-1",
+                  isActive(href)
+                    ? "text-white bg-terminal-elevated/40"
+                    : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50",
+                ]}
+              >
+                {label}
+              </a>
+
+              {/* Dropdown Menu */}
+              <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div class="bg-terminal-bg/95 backdrop-blur-xl border border-terminal-border rounded-xl p-2 w-48 shadow-xl flex flex-col gap-1">
+                  {dropdown.map((subItem) => (
+                    <a
+                      href={subItem.href}
+                      data-astro-prefetch
+                      class="px-3 py-2 text-sm text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 rounded-lg transition-colors flex items-center gap-3"
+                    >
+                      {subItem.iconType === 'img' ? (
+                        <img src={subItem.src} alt={subItem.label} class="w-5 h-5 object-contain rounded-full" loading="lazy" />
+                      ) : (
+                        <svg class="w-5 h-5 text-emerald-500/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={subItem.svgPath} />
+                        </svg>
+                      )}
+                      {subItem.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
 
@@ -86,10 +158,23 @@ const navLinks = [
       </svg>
     </button>
 
-    <!-- Desktop: redes sociales -->
+    <!-- Desktop: derecha (Blog + redes sociales) -->
     <div
       class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted"
     >
+      <a
+        href="/blog"
+        data-astro-prefetch
+        class:list={[
+          "nav-link px-3 py-2 rounded-lg transition-all",
+          isActive("/blog")
+            ? "text-white bg-terminal-elevated/40"
+            : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50",
+        ]}
+      >
+        Blog
+      </a>
+      <div class="w-px h-5 bg-terminal-border mx-2"></div>
       <a
         href="https://www.youtube.com/@0xlenador000"
         target="_blank"
@@ -135,49 +220,109 @@ const navLinks = [
     <!-- Menú móvil desplegable -->
     <div
       id="mobile-menu"
-      class="hidden absolute top-full left-0 right-0 bg-terminal-bg/95 backdrop-blur-xl border-b border-terminal-border p-6 flex flex-col space-y-1 lg:hidden z-40 shadow-2xl"
+      class="hidden fixed top-[72px] bottom-0 left-0 right-0 bg-terminal-bg/95 backdrop-blur-xl border-t border-terminal-border px-6 py-4 flex flex-col lg:hidden z-40 overflow-y-auto"
     >
-      {navLinks.map(({ href, label }) => (
-        <a
-          href={href} data-astro-prefetch
-          class:list={[
-            "nav-link text-base font-medium transition px-3 py-3 rounded-xl",
-            isActive(href)
-              ? "text-white bg-terminal-elevated/40"
-              : "text-terminal-muted hover:text-white hover:bg-terminal-elevated/50"
-          ]}
-        >{label}</a>
-      ))}
 
-      <div class="border-t border-terminal-border pt-4 mt-2 flex items-center gap-4 px-3">
+      {
+        navLinks.map(({ href, label, dropdown }) => (
+          <div class="flex flex-col border-b border-terminal-border/50">
+            <button
+              class:list={[
+                "w-full text-base font-medium transition py-4 flex items-center justify-between text-left",
+                isActive(href)
+                  ? "text-white"
+                  : "text-terminal-muted hover:text-white",
+              ]}
+              onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180');"
+            >
+              <span>{label}</span>
+              <svg class="w-4 h-4 opacity-70 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="hidden flex-col gap-1 pb-4">
+              <a
+                href={href}
+                data-astro-prefetch
+                class="py-2 text-sm text-white font-bold hover:text-emerald-400 transition-colors flex items-center gap-2"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Ir a {label} principal
+              </a>
+              {dropdown.map((subItem) => (
+                <a
+                  href={subItem.href}
+                  data-astro-prefetch
+                  class="py-2 text-sm text-terminal-muted hover:text-white transition-colors flex items-center gap-3"
+                >
+                  {subItem.iconType === 'img' ? (
+                    <img src={subItem.src} alt={subItem.label} class="w-5 h-5 object-contain rounded-full ml-1" loading="lazy" />
+                  ) : (
+                    <svg class="w-5 h-5 text-emerald-500/70 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={subItem.svgPath} />
+                    </svg>
+                  )}
+                  {subItem.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+
+      <div
+        class="mt-auto pt-8 pb-12 flex items-center justify-center gap-6 w-full"
+      >
+        <a
+          href="/blog"
+          data-astro-prefetch
+          class:list={[
+            "text-base font-medium transition",
+            isActive("/blog")
+              ? "text-white"
+              : "text-terminal-muted hover:text-white",
+          ]}
+        >
+          Blog
+        </a>
+        <div class="w-px h-5 bg-terminal-border"></div>
         <a
           href="https://www.youtube.com/@0xlenador000"
-          target="_blank" rel="noopener"
+          target="_blank"
+          rel="noopener"
           aria-label="YouTube"
           class="text-terminal-muted hover:text-white transition"
         >
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
-            ><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg
+            ><path
+              d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+            ></path></svg
           >
         </a>
         <a
           href="https://x.com/0xlenador"
-          target="_blank" rel="noopener"
+          target="_blank"
+          rel="noopener"
           aria-label="X (Twitter)"
           class="text-terminal-muted hover:text-white transition"
         >
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
-            ><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg
+            ><path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            ></path></svg
           >
         </a>
         <a
           href="https://t.me/zero0xlenador"
-          target="_blank" rel="noopener"
+          target="_blank"
+          rel="noopener"
           aria-label="Telegram"
           class="text-terminal-muted hover:text-white transition"
         >
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
-            ><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg
+            ><path
+              d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+            ></path></svg
           >
         </a>
       </div>
