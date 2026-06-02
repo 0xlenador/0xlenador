@@ -5,7 +5,7 @@ description: "Tesis de inversión basada en entendimiento estratégico e involuc
 category: "Tesis de Inversión"
 date: 2026-01-01
 author: "0xLeñador"
-coverImage: "/img/meta/tesis.webp"
+coverImage: "/img/blog/tesis.webp"
 coverAlt: "Diagrama de portafolio híbrido 60/40 combinando inversión tradicional y activos digitales Web3."
 ---
 
