@@ -20,17 +20,19 @@ const navLinks = [
     href: "/herramientas",
     label: "Herramientas",
     dropdown: [
-      { 
-        href: "/riskfolio", 
+      {
+        href: "/riskfolio",
         label: "Riskfolio",
         iconType: "svg",
-        svgPath: "M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" 
+        svgPath:
+          "M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
       },
-      { 
-        href: "/intrinseco", 
+      {
+        href: "/intrinseco",
         label: "Intrínseco",
         iconType: "svg",
-        svgPath: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+        svgPath:
+          "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z",
       },
     ],
   },
@@ -38,28 +40,54 @@ const navLinks = [
     href: "/directorio",
     label: "Directorio",
     dropdown: [
-      { 
-        href: "/faucets", 
+      {
+        href: "/faucets",
         label: "Faucets",
         iconType: "svg",
-        svgPath: "M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"
-      }
+        svgPath: "M12 2.69l5.66 5.66a8 8 0 11-11.31 0z",
+      },
     ],
   },
   {
     href: "/activos",
     label: "Activos",
     dropdown: [
-      { href: "/bitcoin", label: "Bitcoin", iconType: "img", src: "/img/cripto/bitcoin.webp" },
-      { href: "/ethereum", label: "Ethereum", iconType: "img", src: "/img/cripto/ethereum.webp" },
-      { href: "/sunflowerland", label: "Sunflower Land", iconType: "img", src: "/img/cripto/sunflowerland.webp" },
+      {
+        href: "/bitcoin",
+        label: "Bitcoin",
+        iconType: "img",
+        src: "/img/cripto/bitcoin.webp",
+      },
+      {
+        href: "/ethereum",
+        label: "Ethereum",
+        iconType: "img",
+        src: "/img/cripto/ethereum.webp",
+      },
+      {
+        href: "/sunflowerland",
+        label: "Sunflower Land",
+        iconType: "img",
+        src: "/img/cripto/sunflowerland.webp",
+      },
     ],
   },
   {
     href: "/operaciones",
     label: "Operaciones",
     dropdown: [
-      { href: "/operaciones/soneium-portal", label: "Soneium", iconType: "img", src: "/img/cripto/soneium.webp" },
+      {
+        href: "/operaciones/soneium-portal",
+        label: "Soneium",
+        iconType: "img",
+        src: "/img/cripto/soneium.webp",
+      },
+      {
+        href: "/operaciones/polymarket",
+        label: "Polymarket",
+        iconType: "img",
+        src: "/img/cripto/polymarket.webp",
+      },
     ],
   },
 ];
@@ -117,11 +145,26 @@ const navLinks = [
                       data-astro-prefetch
                       class="px-3 py-2 text-sm text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 rounded-lg transition-colors flex items-center gap-3"
                     >
-                      {subItem.iconType === 'img' ? (
-                        <img src={subItem.src} alt={subItem.label} class="w-5 h-5 object-contain rounded-full" loading="lazy" />
+                      {subItem.iconType === "img" ? (
+                        <img
+                          src={subItem.src}
+                          alt={subItem.label}
+                          class="w-5 h-5 object-contain rounded-full"
+                          loading="lazy"
+                        />
                       ) : (
-                        <svg class="w-5 h-5 text-emerald-500/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={subItem.svgPath} />
+                        <svg
+                          class="w-5 h-5 text-emerald-500/70"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d={subItem.svgPath}
+                          />
                         </svg>
                       )}
                       {subItem.label}
@@ -222,7 +265,6 @@ const navLinks = [
       id="mobile-menu"
       class="hidden fixed top-[72px] bottom-0 left-0 right-0 bg-terminal-bg/95 backdrop-blur-xl border-t border-terminal-border px-6 py-4 flex flex-col lg:hidden z-40 overflow-y-auto"
     >
-
       {
         navLinks.map(({ href, label, dropdown }) => (
           <div class="flex flex-col border-b border-terminal-border/50">
@@ -236,8 +278,18 @@ const navLinks = [
               onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180');"
             >
               <span>{label}</span>
-              <svg class="w-4 h-4 opacity-70 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <svg
+                class="w-4 h-4 opacity-70 transition-transform duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
             <div class="hidden flex-col gap-1 pb-4">
@@ -246,7 +298,7 @@ const navLinks = [
                 data-astro-prefetch
                 class="py-2 text-sm text-white font-bold hover:text-emerald-400 transition-colors flex items-center gap-2"
               >
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 Ir a {label} principal
               </a>
               {dropdown.map((subItem) => (
@@ -255,11 +307,26 @@ const navLinks = [
                   data-astro-prefetch
                   class="py-2 text-sm text-terminal-muted hover:text-white transition-colors flex items-center gap-3"
                 >
-                  {subItem.iconType === 'img' ? (
-                    <img src={subItem.src} alt={subItem.label} class="w-5 h-5 object-contain rounded-full ml-1" loading="lazy" />
+                  {subItem.iconType === "img" ? (
+                    <img
+                      src={subItem.src}
+                      alt={subItem.label}
+                      class="w-5 h-5 object-contain rounded-full ml-1"
+                      loading="lazy"
+                    />
                   ) : (
-                    <svg class="w-5 h-5 text-emerald-500/70 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={subItem.svgPath} />
+                    <svg
+                      class="w-5 h-5 text-emerald-500/70 ml-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d={subItem.svgPath}
+                      />
                     </svg>
                   )}
                   {subItem.label}
