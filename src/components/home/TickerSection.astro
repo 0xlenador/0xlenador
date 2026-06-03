@@ -48,7 +48,7 @@ const animationClass = isMarqueeDesktop
 ---
 
 <section
-  class="w-full my-16 bg-[#0A0D10] shadow-[0_-4px_25px_rgba(6,182,212,0.15)] overflow-hidden py-10 border-y border-terminal-border/20"
+  class="w-full mt-0 mb-16 bg-[#0A0D10] shadow-[0_-4px_25px_rgba(6,182,212,0.15)] overflow-hidden py-10 border-y border-terminal-border/20"
 >
   <div class="max-w-6xl mx-auto px-6 text-center mb-8">
     <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
@@ -85,30 +85,63 @@ const animationClass = isMarqueeDesktop
           const duplicateClass =
             isDuplicate && !isMarqueeDesktop ? "flex md:hidden" : "flex";
 
+          // Clases condicionales responsivas basadas en si el carrusel móvil está activo o no
+          const cardClass = isMarqueeMobile
+            ? "w-[60vw] sm:w-[220px] md:w-[250px] flex-row justify-between p-4 md:p-6"
+            : "w-[28vw] sm:w-[220px] md:w-[250px] flex-col sm:flex-row items-center sm:justify-between justify-center text-center sm:text-left p-3 sm:p-4 md:p-6";
+
+          const innerLayoutClass = isMarqueeMobile
+            ? "flex items-center gap-3"
+            : "flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3";
+
+          const imageSizeClass = isMarqueeMobile
+            ? "w-10 h-10"
+            : "w-8 h-8 sm:w-10 sm:h-10";
+
+          const textLayoutClass = isMarqueeMobile
+            ? "flex flex-col items-start"
+            : "flex flex-col items-center sm:items-start";
+
+          const tickerClass = isMarqueeMobile
+            ? "text-sm md:text-base font-bold leading-none"
+            : "text-xs sm:text-sm md:text-base font-bold leading-none";
+
+          const nameClass = isMarqueeMobile
+            ? "text-terminal-secondary text-[10px] md:text-xs uppercase font-mono mt-1"
+            : "hidden sm:inline-block text-terminal-secondary text-[10px] md:text-xs uppercase font-mono mt-1";
+
+          const priceWrapperClass = isMarqueeMobile
+            ? "text-right"
+            : "mt-1.5 sm:mt-0 text-center sm:text-right";
+
+          const priceClass = isMarqueeMobile
+            ? "price-value font-mono text-lg md:text-xl font-bold text-emerald-400 group-hover/card:text-emerald-300 transition-colors"
+            : "price-value font-mono text-sm sm:text-lg md:text-xl font-bold text-emerald-400 group-hover/card:text-emerald-300 transition-colors";
+
           return (
             <a
               href={asset.href}
-              class={`${duplicateClass} flex-col items-center justify-center w-[110px] md:w-[220px] shrink-0 p-3 md:p-6 bg-terminal-elevated/20 border border-terminal-border/40 rounded-2xl transition-colors hover:border-cyan-500/30 hover:bg-terminal-elevated/40 group/card cursor-pointer no-underline`}
+              class={`${duplicateClass} ${cardClass} flex shrink-0 bg-terminal-elevated/20 border border-terminal-border/40 rounded-2xl transition-colors hover:border-cyan-500/30 hover:bg-terminal-elevated/40 group/card cursor-pointer no-underline`}
             >
-              <div class="flex flex-col md:flex-row items-center gap-1 md:gap-2 mb-2 md:mb-3">
+              <div class={innerLayoutClass}>
                 <img
                   src={asset.imagen}
                   alt={asset.nombre}
-                  class="w-8 h-8 md:w-8 md:h-8 rounded-full object-contain"
+                  class={`${imageSizeClass} rounded-full object-contain`}
                   loading="lazy"
                 />
-                <div class="flex flex-col">
-                  <span class="text-white text-xs md:text-sm font-bold leading-none">
+                <div class={textLayoutClass}>
+                  <span class={`text-white leading-none ${tickerClass}`}>
                     {asset.ticker}
                   </span>
-                  <span class="text-terminal-subtle text-[10px] uppercase font-mono">
+                  <span class={nameClass}>
                     {asset.nombre}
                   </span>
                 </div>
               </div>
-              <div class="w-full text-center">
+              <div class={priceWrapperClass}>
                 <span
-                  class="price-value font-mono text-lg md:text-xl font-bold text-emerald-400 group-hover/card:text-emerald-300 transition-colors"
+                  class={priceClass}
                   data-coin-id={asset.id}
                   data-is-nft={asset.isNft ? "true" : "false"}
                 >
@@ -197,14 +230,21 @@ const animationClass = isMarqueeDesktop
             if (data[id] && data[id].usd) {
               const price = data[id].usd;
               const formattedPrice =
-                price < 0.01
-                  ? "$" + price.toPrecision(4)
-                  : price.toLocaleString("en-US", {
+                price >= 100
+                  ? price.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 4,
-                    });
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })
+                  : price < 0.01
+                    ? "$" + price.toPrecision(4)
+                    : price.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 4,
+                      });
 
               el.textContent = formattedPrice;
             }
@@ -243,14 +283,21 @@ const animationClass = isMarqueeDesktop
               el.getAttribute("data-is-nft") === "true"
             ) {
               const formattedPrice =
-                nftUsdPrice < 0.01
-                  ? "$" + nftUsdPrice.toPrecision(4)
-                  : nftUsdPrice.toLocaleString("en-US", {
+                nftUsdPrice >= 100
+                  ? nftUsdPrice.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 4,
-                    });
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })
+                  : nftUsdPrice < 0.01
+                    ? "$" + nftUsdPrice.toPrecision(4)
+                    : nftUsdPrice.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 4,
+                      });
               el.textContent = formattedPrice;
             }
           });

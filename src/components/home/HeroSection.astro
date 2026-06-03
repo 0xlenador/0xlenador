@@ -30,7 +30,7 @@ const longestPhrase = phrases.reduce(
 ---
 
 <header
-  class="relative max-w-4xl mx-auto mb-16 md:mb-32 text-center pt-2 pb-28 md:pt-8 md:pb-24 flex flex-col justify-center md:justify-start min-h-[80vh] lg:min-h-[85vh]"
+  class="relative max-w-4xl mx-auto mb-0 text-center pt-2 pb-6 md:pb-8 flex flex-col justify-center min-h-[calc(100vh-80px)]"
 >
   <div
     id="hero-logo"
@@ -55,7 +55,7 @@ const longestPhrase = phrases.reduce(
     <div class="relative text-left">
       <!-- Contenedor invisible que mantiene el ancho máximo -->
       <h1
-        class="text-3xl md:text-5xl lg:text-7xl font-light text-transparent tracking-tight leading-tight select-none pointer-events-none invisible whitespace-nowrap"
+        class="text-[6vw] sm:text-3xl md:text-5xl lg:text-7xl font-light text-transparent tracking-tight leading-tight select-none pointer-events-none invisible whitespace-nowrap"
         aria-hidden="true"
       >
         <span class="font-mono mr-2 md:mr-3">&gt;</span>{longestPhrase}<span
@@ -66,7 +66,7 @@ const longestPhrase = phrases.reduce(
       <!-- Animación real superpuesta -->
       <h1
         id="hero-typewriter"
-        class="absolute top-0 left-0 w-full h-full text-3xl md:text-5xl lg:text-7xl font-light text-terminal-text tracking-tight leading-tight whitespace-nowrap"
+        class="absolute top-0 left-0 w-full h-full text-[6vw] sm:text-3xl md:text-5xl lg:text-7xl font-light text-terminal-text tracking-tight leading-tight whitespace-nowrap"
         aria-label={phrases.join(". ")}
       >
         <span class="font-mono text-emerald-500 mr-2 md:mr-3" aria-hidden="true"
