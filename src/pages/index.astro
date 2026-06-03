@@ -2,10 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import FaqAccordion from "../components/FaqAccordion.astro";
 import HeroSection from "../components/home/HeroSection.astro";
-
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
-import HeroSection from "../components/home/HeroSection.astro";
+import TickerSection from "../components/home/TickerSection.astro";
+import PremisaSection from "../components/home/PremisaSection.astro";
 
 import { getCollection } from "astro:content";
 
@@ -133,9 +131,17 @@ const faqItems = [
         "Watchlist de activos",
         "Bitácora de operaciones",
       ]}
-      ctaPrimario={{ texto: "Ver Herramientas", href: "/herramientas" }}
+      ctaPrimario={{ texto: "Ver directorio", href: "/directorio" }}
       ctaSecundario={{ texto: "Bitácora de Ops", href: "/operaciones" }}
     />
+  </main>
+
+  <!-- ─── TICKER ─── -->
+  <TickerSection />
+
+  <main class="max-w-6xl mx-auto px-6 pb-20">
+    <!-- ─── PREMISA ─── -->
+    <PremisaSection />
 
     <!-- ─── MÓDULOS DEL HUB ─── -->
     <section class="mb-20">
@@ -206,7 +212,16 @@ const faqItems = [
           {guiasActivas.map((guia) => (
             <a href={`/operaciones/${guia.id}`} class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors">
               <div class="flex items-center gap-3">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+                <div class="relative flex-shrink-0">
+                  {guia.data.imagen ? (
+                    <img src={guia.data.imagen} alt={guia.data.title} class="w-8 h-8 rounded-full object-cover border border-terminal-border bg-terminal-elevated" />
+                  ) : (
+                    <div class="w-8 h-8 rounded-full bg-terminal-elevated border border-terminal-border flex items-center justify-center">
+                      <span class="text-[10px] text-terminal-muted font-bold">{guia.data.title.charAt(0)}</span>
+                    </div>
+                  )}
+                  <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#0D0D0D] shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+                </div>
                 <div>
                   <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">{guia.data.title}</h3>
                   <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">{guia.data.categoria} • {guia.data.dificultad}</p>
