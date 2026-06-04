@@ -69,7 +69,7 @@ const proximosArticulos = [
             
             {featuredPost.data.coverImage ? (
               <>
-                <img src={featuredPost.data.coverImage} alt={featuredPost.data.coverAlt || featuredPost.data.title} class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-all duration-1000 ease-out z-0 opacity-30 group-hover:opacity-40" />
+                <img src={featuredPost.data.coverImage.src} alt={featuredPost.data.coverAlt || featuredPost.data.title} class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-all duration-1000 ease-out z-0 opacity-30 group-hover:opacity-40" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none"></div>
               </>
             ) : (
@@ -118,7 +118,7 @@ const proximosArticulos = [
               <div class="bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl hover:border-emerald-500/20 hover:bg-terminal-surface/35 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden">
                 {post.data.coverImage && (
                   <div class="mb-5 -mx-6 -mt-6 aspect-video overflow-hidden border-b border-terminal-border/50">
-                    <img src={post.data.coverImage} alt={post.data.coverAlt || post.data.title} class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
+                    <img src={post.data.coverImage.src} alt={post.data.coverAlt || post.data.title} class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
                   </div>
                 )}
                 <div class="flex flex-col flex-grow justify-between">

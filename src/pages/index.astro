@@ -262,7 +262,7 @@ const faqItems = [
             >
               {post.data.coverImage && (
                 <img
-                  src={post.data.coverImage}
+                  src={post.data.coverImage.src}
                   alt={post.data.coverAlt ?? post.data.title}
                   width={400}
                   height={200}
