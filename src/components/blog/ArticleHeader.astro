@@ -1,0 +1,92 @@
+---
+/**
+ * ArticleHeader.astro — Cabecera de artículo del blog.
+ * Incluye: breadcrumb de navegación, título H1, metadatos (categoría, fecha,
+ * tiempo de lectura) y la imagen de portada opcional.
+ */
+
+interface Props {
+  title: string;
+  category: string;
+  formattedDate: string;
+  readTime: string;
+  coverImage?: string;
+  coverAlt?: string;
+}
+
+const { title, category, formattedDate, readTime, coverImage, coverAlt } =
+  Astro.props;
+---
+
+<!-- Breadcrumb de navegación -->
+<nav
+  class="flex text-xs text-terminal-muted mb-10 font-medium font-mono uppercase tracking-widest"
+>
+  <a href="/" class="hover:text-emerald-400 transition-colors">Inicio</a>
+  <span class="mx-3">›</span>
+  <a href="/blog" class="hover:text-emerald-400 transition-colors">Artículos</a>
+  <span class="mx-3">›</span>
+  <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs"
+    >{title}</span
+  >
+</nav>
+
+<!-- Cabecera principal del artículo -->
+<header class="mb-12 border-b border-terminal-border/60 pb-10">
+  <h1
+    class="text-2xl md:text-4xl font-extrabold text-terminal-text mb-6 tracking-tight leading-tight"
+  >
+    {title}
+  </h1>
+
+  <div
+    class="flex flex-wrap items-center gap-4 md:gap-6 text-terminal-secondary text-sm font-medium"
+  >
+    <!-- Badge de categoría -->
+    <div
+      class="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md font-mono text-xs uppercase tracking-wider"
+    >
+      <span
+        class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+      ></span>
+      {category}
+    </div>
+
+    <!-- Fecha -->
+    <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
+      <span class="text-terminal-muted">Actualizado</span>
+      <span class="text-terminal-secondary">{formattedDate}</span>
+    </div>
+
+    <!-- Tiempo de lectura -->
+    <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
+      <svg
+        class="w-4 h-4 text-terminal-muted"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        ><path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg
+      >
+      <span class="text-terminal-secondary">{readTime} de lectura</span>
+    </div>
+  </div>
+</header>
+
+<!-- Imagen de portada (opcional) -->
+{
+  coverImage && (
+    <div class="mb-12 rounded-2xl overflow-hidden border border-terminal-border/60 shadow-[0_0_30px_rgba(16,185,129,0.05)] relative group">
+      <div class="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+      <img
+        src={coverImage}
+        alt={coverAlt || `Portada para el artículo: ${title}`}
+        class="w-full h-auto max-h-[500px] object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+        loading="eager"
+      />
+    </div>
+  )
+}

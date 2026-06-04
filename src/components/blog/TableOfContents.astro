@@ -1,0 +1,399 @@
+---
+/**
+ * TableOfContents.astro — Tabla de contenidos jerárquica para artículos del blog.
+ *
+ * Recibe el árbol de headings ya agrupado (H2 con sus H3 hijos).
+ * Renderiza dos variantes:
+ *   - Desktop: sidebar sticky en columna derecha con botón ocultar/mostrar.
+ *   - Móvil: drawer desde abajo, activado con botón flotante.
+ *
+ * El comportamiento interactivo (scroll-follow, acordeón, barra de progreso,
+ * highlight activo) vive en el <script> al final de este componente.
+ */
+
+// Tipos inferidos del sistema de headings de Astro
+type Heading = { depth: number; slug: string; text: string };
+type TocGroup = { heading: Heading; children: Heading[] };
+
+interface Props {
+  groupedToc: TocGroup[];
+}
+
+const { groupedToc } = Astro.props;
+---
+
+{groupedToc.length > 0 && (
+  <>
+    <!-- ─── SIDEBAR DESKTOP (sticky) ─── -->
+    <div id="desktop-toc-container" class="hidden lg:block transition-all duration-300">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-white font-bold text-lg flex items-center gap-2">
+          <svg
+            class="w-5 h-5 text-emerald-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+          </svg>
+          Aspectos clave
+        </h3>
+        <button
+          id="hide-toc-btn"
+          title="Ocultar índice de la pantalla"
+          class="text-terminal-secondary hover:text-emerald-400 p-1.5 rounded-lg hover:bg-terminal-surface border border-transparent hover:border-terminal-border transition-colors cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L21 21m-10.5-8.223a3 3 0 114.24-4.24m0 0a3 3 0 01-4.24 4.24" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Lista jerárquica de headings -->
+      <div class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border">
+        <ul id="toc-list" class="space-y-5 text-[15px] font-medium text-terminal-secondary relative">
+          {groupedToc.map((group) => (
+            <li class="toc-item toc-h2-item flex flex-col relative w-full" data-h2={group.heading.slug}>
+              <div class="flex items-center justify-between gap-4">
+                <a
+                  href={`#${group.heading.slug}`}
+                  class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-[15px]"
+                >
+                  {group.heading.text}
+                </a>
+                <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[14px] top-[10px]" />
+              </div>
+              {group.children.length > 0 && (
+                <ul class="toc-h3-group pl-6 mt-2 space-y-2">
+                  {group.children.map((child) => (
+                    <li class="toc-item toc-h3-item flex items-center justify-between gap-4 relative w-full" data-h3={child.slug}>
+                      <a
+                        href={`#${child.slug}`}
+                        class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-sm"
+                      >
+                        {child.text}
+                      </a>
+                      <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[20px] top-[10px]" />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- ─── BOTÓN "Mostrar índice" (solo se ve si el usuario lo ocultó) ─── -->
+    <div class="hidden lg:block">
+      <button
+        id="show-toc-btn"
+        title="Mostrar índice"
+        class="fixed right-6 top-32 z-40 hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-terminal-surface/90 border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all shadow-xl backdrop-blur-sm cursor-pointer font-medium text-xs font-mono tracking-wider uppercase"
+      >
+        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Mostrar índice
+      </button>
+    </div>
+
+    <!-- ─── BOTÓN FLOTANTE MÓVIL ─── -->
+    <button
+      id="mobile-toc-btn"
+      aria-label="Abrir Índice"
+      class="fixed bottom-24 right-6 z-[60] lg:hidden p-4 rounded-full bg-emerald-500 text-terminal-bg shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 transition-all cursor-pointer"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16" />
+      </svg>
+    </button>
+
+    <!-- ─── MODAL + DRAWER MÓVIL ─── -->
+    <div
+      id="mobile-toc-modal"
+      class="fixed inset-0 z-[70] bg-terminal-bg/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+    >
+      <div
+        id="mobile-toc-drawer"
+        class="absolute bottom-0 left-0 w-full bg-terminal-surface border-t border-terminal-border rounded-t-3xl p-6 pt-8 max-h-[85vh] overflow-y-auto transform translate-y-full transition-transform duration-300"
+      >
+        <div class="flex justify-between items-center mb-8">
+          <h3 class="text-white font-bold text-xl flex items-center gap-2">
+            <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+            Aspectos clave
+          </h3>
+          <button
+            id="close-mobile-toc"
+            aria-label="Cerrar índice"
+            class="p-2 text-terminal-secondary hover:text-white bg-terminal-border/50 rounded-full transition-colors cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="relative pl-[9px] ml-[7px] border-l-2 border-terminal-border pb-10">
+          <ul id="toc-list-mobile" class="space-y-6 text-[15px] font-medium text-terminal-secondary relative">
+            {groupedToc.map((group) => (
+              <li class="toc-item toc-h2-item flex flex-col relative w-full" data-h2={group.heading.slug}>
+                <div class="flex items-center justify-between gap-4">
+                  <a
+                    href={`#${group.heading.slug}`}
+                    class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-[15px]"
+                  >
+                    {group.heading.text}
+                  </a>
+                  <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[14px] top-[10px]" />
+                </div>
+                {group.children.length > 0 && (
+                  <ul class="toc-h3-group pl-6 mt-2 space-y-3">
+                    {group.children.map((child) => (
+                      <li class="toc-item toc-h3-item flex items-center justify-between gap-4 relative w-full" data-h3={child.slug}>
+                        <a
+                          href={`#${child.slug}`}
+                          class="toc-link block w-full text-terminal-secondary hover:text-emerald-400 transition-colors py-0.5 text-sm"
+                        >
+                          {child.text}
+                        </a>
+                        <span class="toc-marker w-2 h-2 rounded-full border border-terminal-border-subtle bg-terminal-bg absolute -left-[20px] top-[10px]" />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </>
+)}
+
+<script>
+  /**
+   * Lógica interactiva del TOC:
+   * - Ocultar/mostrar sidebar (preferencia persistida en localStorage)
+   * - IntersectionObserver para activar enlace activo y acordeón H3
+   * - Scroll-follow: el TOC sigue al lector
+   * - Barra de progreso de lectura
+   * - Scroll suave con offset para los links del TOC
+   * - Drawer móvil (abrir/cerrar)
+   */
+  function setupToc() {
+    const container = document.getElementById("article-content");
+    if (!container) return;
+
+    // ── Ocultar / Mostrar TOC ──────────────────────────────────────────────
+    const hideBtn = document.getElementById("hide-toc-btn");
+    const showBtn = document.getElementById("show-toc-btn");
+    const desktopToc = document.getElementById("desktop-toc-container");
+
+    const updateTocVisibility = (hidden: boolean) => {
+      if (hidden) {
+        if (desktopToc) {
+          desktopToc.classList.add("opacity-0", "scale-95", "pointer-events-none");
+          setTimeout(() => { desktopToc.style.display = "none"; }, 300);
+        }
+        showBtn?.classList.replace("hidden", "flex");
+      } else {
+        if (desktopToc) {
+          desktopToc.style.display = "block";
+          setTimeout(() => {
+            desktopToc.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+          }, 10);
+        }
+        showBtn?.classList.replace("flex", "hidden");
+      }
+    };
+
+    hideBtn?.addEventListener("click", () => {
+      localStorage.setItem("toc-pref", "hidden");
+      updateTocVisibility(true);
+    });
+
+    showBtn?.addEventListener("click", () => {
+      localStorage.setItem("toc-pref", "visible");
+      updateTocVisibility(false);
+    });
+
+    if (localStorage.getItem("toc-pref") === "hidden") {
+      updateTocVisibility(true);
+    }
+
+    // ── Barra de progreso de lectura ───────────────────────────────────────
+    const progressBar = document.getElementById("reading-progress");
+    if (progressBar) {
+      const updateProgress = () => {
+        const articleEl = document.getElementById("article-content");
+        if (!articleEl) return;
+        const articleTop = articleEl.getBoundingClientRect().top + window.scrollY;
+        const articleHeight = articleEl.scrollHeight;
+        const scrolled = window.scrollY - articleTop;
+        const progress = Math.min(
+          100,
+          Math.max(0, (scrolled / (articleHeight - window.innerHeight)) * 100)
+        );
+        progressBar.style.width = `${progress}%`;
+        progressBar.setAttribute("aria-valuenow", String(Math.round(progress)));
+      };
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      updateProgress();
+    }
+
+    // ── IntersectionObserver: link activo + acordeón ───────────────────────
+    const headings = container.querySelectorAll("h2, h3");
+    const links = document.querySelectorAll(".toc-link");
+    const activeSections = new Set<string>();
+    let lastActiveId = "";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activeSections.add(entry.target.id);
+          } else {
+            activeSections.delete(entry.target.id);
+          }
+        });
+
+        let currentActiveId = "";
+        if (activeSections.size > 0) {
+          for (const heading of headings) {
+            if (activeSections.has((heading as HTMLElement).id)) {
+              currentActiveId = (heading as HTMLElement).id;
+              break;
+            }
+          }
+        }
+        if (!currentActiveId && lastActiveId) currentActiveId = lastActiveId;
+        if (!currentActiveId || currentActiveId === lastActiveId) return;
+
+        lastActiveId = currentActiveId;
+
+        // Acordeón: abrir el grupo H3 del H2 activo, cerrar los demás
+        const activeEl = document.getElementById(currentActiveId);
+        let activeH2Id = currentActiveId;
+        if (activeEl?.tagName.toLowerCase() === "h3") {
+          let prev = activeEl.previousElementSibling;
+          while (prev) {
+            if (prev.tagName.toLowerCase() === "h2") {
+              activeH2Id = (prev as HTMLElement).id;
+              break;
+            }
+            prev = prev.previousElementSibling;
+          }
+        }
+
+        document.querySelectorAll(".toc-h2-item").forEach((h2item) => {
+          const h3Group = h2item.querySelector(".toc-h3-group");
+          if (h3Group) {
+            h3Group.classList.toggle(
+              "open",
+              h2item.getAttribute("data-h2") === activeH2Id
+            );
+          }
+        });
+
+        // Actualizar clases activas y scroll-follow del sidebar
+        links.forEach((link) => {
+          const isActive = link.getAttribute("href") === `#${currentActiveId}`;
+          link.classList.toggle("active", isActive);
+
+          if (isActive) {
+            const activeItem = link.closest(".toc-item");
+            const isDesktop = link.closest("#toc-list") !== null;
+            const scrollContainer = isDesktop
+              ? document.getElementById("sidebar-scroll-container")
+              : document.getElementById("mobile-toc-drawer");
+
+            if (activeItem && scrollContainer) {
+              const targetScroll =
+                (activeItem as HTMLElement).getBoundingClientRect().top -
+                scrollContainer.getBoundingClientRect().top +
+                scrollContainer.scrollTop -
+                scrollContainer.clientHeight / 2 +
+                (activeItem as HTMLElement).clientHeight / 2 +
+                40;
+              scrollContainer.scrollTo({ top: Math.max(0, targetScroll), behavior: "smooth" });
+            }
+          }
+        });
+      },
+      { root: null, rootMargin: "-10% 0px -75% 0px", threshold: 0 }
+    );
+
+    headings.forEach((h) => observer.observe(h));
+
+    // ── Scroll suave con offset al hacer clic en TOC ───────────────────────
+    const SCROLL_OFFSET = 60;
+    links.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute("href")?.slice(1);
+        const targetEl = targetId ? document.getElementById(targetId) : null;
+        if (targetEl) {
+          const y = targetEl.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+          window.scrollTo({ top: y, behavior: "smooth" });
+          history.pushState(null, "", `#${targetId}`);
+        }
+      });
+    });
+
+    // ── Reset del TOC al volver al inicio ─────────────────────────────────
+    const resetTocScroll = () => {
+      document.getElementById("sidebar-scroll-container")?.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    let tocResetCooldown = false;
+    window.addEventListener("scroll", () => {
+      if (window.scrollY < 80 && !tocResetCooldown) {
+        tocResetCooldown = true;
+        resetTocScroll();
+        setTimeout(() => { tocResetCooldown = false; }, 1000);
+      }
+    }, { passive: true });
+    document.getElementById("back-to-top")?.addEventListener("click", resetTocScroll);
+
+    // ── Drawer móvil ──────────────────────────────────────────────────────
+    const mBtn = document.getElementById("mobile-toc-btn");
+    const mModal = document.getElementById("mobile-toc-modal");
+    const mDrawer = document.getElementById("mobile-toc-drawer");
+    const mClose = document.getElementById("close-mobile-toc");
+    const mobileList = document.getElementById("toc-list-mobile");
+
+    const closeMobileToc = () => {
+      mModal?.classList.add("pointer-events-none", "opacity-0");
+      mDrawer?.classList.add("translate-y-full");
+    };
+
+    mBtn?.addEventListener("click", () => {
+      mModal?.classList.remove("pointer-events-none", "opacity-0");
+      mDrawer?.classList.remove("translate-y-full");
+    });
+    mClose?.addEventListener("click", closeMobileToc);
+    mModal?.addEventListener("click", (e) => {
+      if (e.target === mModal) closeMobileToc();
+    });
+    mobileList?.addEventListener("click", (e) => {
+      if ((e.target as Element).closest(".toc-link")) closeMobileToc();
+    });
+
+    // ── Envolver tablas para responsividad ────────────────────────────────
+    container.querySelectorAll("table").forEach((table) => {
+      if (table.parentElement?.classList.contains("overflow-x-auto")) return;
+      const wrapper = document.createElement("div");
+      wrapper.className =
+        "overflow-x-auto my-8 border border-terminal-border/80 rounded-xl bg-terminal-surface/20 max-w-full [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-terminal-bg [&::-webkit-scrollbar-thumb]:bg-terminal-border [&::-webkit-scrollbar-thumb]:rounded-full";
+      table.parentNode?.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  }
+
+  // Ejecutar en carga inicial y en navegación por rutas de Astro
+  document.addEventListener("astro:page-load", setupToc);
+  setupToc();
+</script>
