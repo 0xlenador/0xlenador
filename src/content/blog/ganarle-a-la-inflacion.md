@@ -5,7 +5,7 @@ description: "Aprende estrategias de inversión contra la inflación para proteg
 category: "Estrategia de Inversión"
 date: 2026-05-27
 author: "0xLeñador"
-coverImage: "/img/blog/ganarle-a-la-inflacion.webp"
+coverImage: "./ganarle-a-la-inflacion.webp"
 coverAlt: "Imagen abstracta sobre estrategias de inversión contra la inflación, con un escudo protegiendo capital, una línea de precios en aumento y gráficos de crecimiento financiero."
 ---
 

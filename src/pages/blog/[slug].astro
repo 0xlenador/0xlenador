@@ -43,6 +43,8 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
   day: "numeric",
   timeZone: "UTC",
 });
+// coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
+const ogImage = coverImage?.src;
 ---
 
 <Layout
@@ -50,7 +52,7 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
   description={description}
   keywords={keywords}
   ogType="article"
-  image={coverImage}
+  image={ogImage}
 >
   <!-- Barra de progreso de lectura (estilos en main.css → #reading-progress) -->
   <div

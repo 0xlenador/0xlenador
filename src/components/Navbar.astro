@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import logoImg from "../assets/img/logo.webp";
 
 const { pathname } = Astro.url;
 const activePath =
@@ -106,7 +107,7 @@ const navLinks = [
         class="text-xl font-bold tracking-tighter text-white flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none rounded-md"
       >
         <Image
-          src="/img/56x.webp"
+          src={logoImg}
           alt="Logo 0xLeñador"
           width={56}
           height={56}

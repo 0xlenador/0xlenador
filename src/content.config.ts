@@ -4,16 +4,18 @@ import { glob } from 'astro/loaders'; // Requerido en Astro v6
 const blog = defineCollection({
   // Define el cargador para buscar los archivos .md en tu carpeta de contenido
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
-  schema: z.object({
+  schema: ({ image: img }) => z.object({
     title: z.string(),
     description: z.string(),
     category: z.string().default('Investigación'),
-    date: z.coerce.string(), 
+    date: z.coerce.string(),
     author: z.string().default('0xLeñador'),
     layout: z.string().optional(),
     keywords: z.string().optional(),
     readTime: z.string().optional(),
-    coverImage: z.string().optional(),
+    // image() activa el pipeline de optimización de Astro para imágenes locales.
+    // Los paths en el frontmatter deben ser relativos al archivo .md.
+    coverImage: img().optional(),
     coverAlt: z.string().optional()
   })
 });

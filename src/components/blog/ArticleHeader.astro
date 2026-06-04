@@ -3,14 +3,20 @@
  * ArticleHeader.astro — Cabecera de artículo del blog.
  * Incluye: breadcrumb de navegación, título H1, metadatos (categoría, fecha,
  * tiempo de lectura) y la imagen de portada opcional.
+ *
+ * coverImage recibe un objeto ImageMetadata (procesado por Astro mediante
+ * el helper image() en el schema de content.config.ts), lo que permite
+ * que <Image> aplique optimización automática (formato, srcset, CLS).
  */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 interface Props {
   title: string;
   category: string;
   formattedDate: string;
   readTime: string;
-  coverImage?: string;
+  coverImage?: ImageMetadata;
   coverAlt?: string;
 }
 
@@ -53,13 +59,17 @@ const { title, category, formattedDate, readTime, coverImage, coverAlt } =
     </div>
 
     <!-- Fecha -->
-    <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
+    <div
+      class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6"
+    >
       <span class="text-terminal-muted">Actualizado</span>
       <span class="text-terminal-secondary">{formattedDate}</span>
     </div>
 
     <!-- Tiempo de lectura -->
-    <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
+    <div
+      class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6"
+    >
       <svg
         class="w-4 h-4 text-terminal-muted"
         fill="none"
@@ -76,16 +86,18 @@ const { title, category, formattedDate, readTime, coverImage, coverAlt } =
   </div>
 </header>
 
-<!-- Imagen de portada (opcional) -->
+<!-- Imagen de portada — optimizada por el pipeline de Astro -->
 {
   coverImage && (
     <div class="mb-12 rounded-2xl overflow-hidden border border-terminal-border/60 shadow-[0_0_30px_rgba(16,185,129,0.05)] relative group">
       <div class="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
-      <img
+      <Image
         src={coverImage}
         alt={coverAlt || `Portada para el artículo: ${title}`}
         class="w-full h-auto max-h-[500px] object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
         loading="eager"
+        widths={[640, 960, 1280]}
+        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 68vw, 800px"
       />
     </div>
   )

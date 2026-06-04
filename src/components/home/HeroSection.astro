@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import logoImg from "../../assets/img/logo.webp";
 
 /**
  * HeroSection.astro — Header principal de la landing page.
@@ -37,7 +38,7 @@ const longestPhrase = phrases.reduce(
     class="flex flex-row items-center justify-center mb-2 gap-2.5 px-4 opacity-0 transition-opacity duration-1000"
   >
     <Image
-      src="/img/56x.webp"
+      src={logoImg}
       alt="Logo 0xLeñador"
       width={56}
       height={56}
