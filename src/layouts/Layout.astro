@@ -13,6 +13,10 @@ interface Props {
   keywords?: string;
   ogType?: string;
   customSpacing?: boolean;
+  /** ISO 8601 — solo para ogType="article" */
+  publishedTime?: string;
+  /** Nombre del autor — solo para ogType="article" */
+  author?: string;
 }
 
 // 2. Extraemos los datos. Si la página no los envía, usamos los genéricos (Fallback)
@@ -24,6 +28,8 @@ const {
   keywords,
   ogType = "website",
   customSpacing = false,
+  publishedTime,
+  author,
 } = Astro.props;
 
 // 3. Generación automática de la URL Canónica
@@ -58,6 +64,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.site)} />
     <meta property="og:url" content={canonicalURL} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {author && <meta property="article:author" content={author} />}
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content={title} />

@@ -270,13 +270,14 @@ const navLinks = [
         navLinks.map(({ href, label, dropdown }) => (
           <div class="flex flex-col border-b border-terminal-border/50">
             <button
+              aria-expanded="false"
+              aria-controls={`dropdown-${href.replace('/', '')}`}
               class:list={[
-                "w-full text-base font-medium transition py-4 flex items-center justify-between text-left",
+                "mobile-accordion-btn w-full text-base font-medium transition py-4 flex items-center justify-between text-left",
                 isActive(href)
                   ? "text-white"
                   : "text-terminal-muted hover:text-white",
               ]}
-              onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180');"
             >
               <span>{label}</span>
               <svg
@@ -284,6 +285,7 @@ const navLinks = [
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -293,7 +295,7 @@ const navLinks = [
                 />
               </svg>
             </button>
-            <div class="hidden flex-col gap-1 pb-4">
+            <div id={`dropdown-${href.replace('/', '')}`} class="hidden flex-col gap-1 pb-4">
               <a
                 href={href}
                 data-astro-prefetch
@@ -441,4 +443,30 @@ const navLinks = [
 
   setupMobileMenu();
   document.addEventListener("astro:page-load", setupMobileMenu);
+
+  // 5.1 — Acordeón del menú móvil: aria-expanded gestionado desde el script
+  const setupAccordions = () => {
+    document
+      .querySelectorAll<HTMLButtonElement>(".mobile-accordion-btn")
+      .forEach((btn) => {
+        // Clonar para evitar listeners duplicados en navegaciones de Astro
+        const fresh = btn.cloneNode(true) as HTMLButtonElement;
+        btn.replaceWith(fresh);
+
+        fresh.addEventListener("click", () => {
+          const isExpanded = fresh.getAttribute("aria-expanded") === "true";
+          const targetId = fresh.getAttribute("aria-controls");
+          const panel = targetId ? document.getElementById(targetId) : null;
+
+          fresh.setAttribute("aria-expanded", String(!isExpanded));
+          fresh
+            .querySelector("svg")
+            ?.classList.toggle("rotate-180", !isExpanded);
+          panel?.classList.toggle("hidden", isExpanded);
+        });
+      });
+  };
+
+  setupAccordions();
+  document.addEventListener("astro:page-load", setupAccordions);
 </script>

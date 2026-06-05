@@ -2,8 +2,16 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders'; // Requerido en Astro v6
 
 const blog = defineCollection({
-  // Define el cargador para buscar los archivos .md en tu carpeta de contenido
-  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  // Cada post vive en su propia carpeta: src/content/blog/<slug>/index.md
+  // Las imágenes se co-localizan junto al index.md de cada artículo.
+  // generateId elimina el sufijo "/index" para que las URLs queden limpias:
+  //   ganarle-a-la-inflacion/index.md → id: "ganarle-a-la-inflacion"
+  loader: glob({
+    pattern: '**/index.md',
+    base: './src/content/blog',
+    generateId: ({ entry }: { entry: string }) =>
+      entry.replace(/\/index\.md$/, ''),
+  }),
   schema: ({ image: img }) => z.object({
     title: z.string(),
     description: z.string(),

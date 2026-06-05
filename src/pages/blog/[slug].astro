@@ -45,6 +45,30 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
 });
 // coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
 const ogImage = coverImage?.src;
+
+// Schema.org BlogPosting para SEO estructurado
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  datePublished: new Date(date).toISOString(),
+  author: {
+    "@type": "Person",
+    name: "0xLeñador",
+    url: "https://0xlenador.xyz",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "0xLeñador",
+    url: "https://0xlenador.xyz",
+  },
+  image: ogImage ? new URL(ogImage, "https://0xlenador.xyz").href : undefined,
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": new URL(Astro.url.pathname, Astro.site).href,
+  },
+};
 ---
 
 <Layout
@@ -53,6 +77,9 @@ const ogImage = coverImage?.src;
   keywords={keywords}
   ogType="article"
   image={ogImage}
+  schema={blogSchema}
+  publishedTime={new Date(date).toISOString()}
+  author="0xLeñador"
 >
   <!-- Barra de progreso de lectura (estilos en main.css → #reading-progress) -->
   <div
