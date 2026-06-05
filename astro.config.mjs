@@ -16,6 +16,11 @@ export default defineConfig({
     // /tesis migrada como artículo del blog (301 = Moved Permanently, preserva SEO)
     '/tesis': '/blog/tesis-de-inversion',
     '/simulador': '/riskfolio',
+    // Activos: movidos de la raíz a /activos/ para evitar el efecto catch-all.
+    // Los redirects 301 aseguran que los enlaces externos y el SEO se preserven.
+    '/bitcoin': '/activos/bitcoin',
+    '/ethereum': '/activos/ethereum',
+    '/sunflowerland': '/activos/sunflowerland',
   },
   integrations: [
     mdx(),
