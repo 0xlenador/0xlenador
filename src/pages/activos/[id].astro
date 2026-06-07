@@ -12,26 +12,26 @@
 // sin interpolación dinámica, para que el scanner de Tailwind v4 las detecte.
 // ==========================================
 
-import bitcoinData from "../../data/bitcoin.json";
-import ethereumData from "../../data/ethereum.json";
-import sunflowerLandData from "../../data/sunflowerland.json";
-import Layout from "../../layouts/Layout.astro";
-import FaqAccordion from "../../components/FaqAccordion.astro";
-import AssetHeader from "../../components/activo/AssetHeader.astro";
-import ToolingGrid from "../../components/activo/ToolingGrid.astro";
-import { colorMap } from "../../lib/colors";
-import type { AssetColor } from "../../lib/colors";
+import bitcoinData from "../../data/bitcoin.json"
+import ethereumData from "../../data/ethereum.json"
+import sunflowerLandData from "../../data/sunflowerland.json"
+import Layout from "../../layouts/Layout.astro"
+import FaqAccordion from "../../components/FaqAccordion.astro"
+import AssetHeader from "../../components/activo/AssetHeader.astro"
+import ToolingGrid from "../../components/activo/ToolingGrid.astro"
+import { colorMap } from "../../lib/colors"
+import type { AssetColor } from "../../lib/colors"
 
 export async function getStaticPaths() {
   return [
     { params: { id: "bitcoin" }, props: { data: bitcoinData } },
     { params: { id: "ethereum" }, props: { data: ethereumData } },
     { params: { id: "sunflowerland" }, props: { data: sunflowerLandData } },
-  ];
+  ]
 }
 
-const { data } = Astro.props;
-const c = colorMap[(data.accentColor as AssetColor)] ?? colorMap.emerald;
+const { data } = Astro.props
+const c = colorMap[data.accentColor as AssetColor] ?? colorMap.emerald
 
 // Estructura Schema.org para SEO
 const schema = [
@@ -49,7 +49,7 @@ const schema = [
     publisher: { "@type": "Organization", name: "0xLeñador" },
     mainEntityOfPage: { "@type": "WebPage", "@id": data.pageUrl },
   },
-];
+]
 ---
 
 <Layout
@@ -59,12 +59,7 @@ const schema = [
   schema={schema}
 >
   <main class="max-w-7xl mx-auto px-6">
-    <AssetHeader
-      type={data.type}
-      name={data.name}
-      ticker={data.ticker}
-      colors={c}
-    />
+    <AssetHeader type={data.type} name={data.name} ticker={data.ticker} colors={c} />
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <div class="lg:col-span-3 space-y-8">
@@ -101,37 +96,23 @@ const schema = [
             Génesis e Identidad
           </h3>
           <div class="space-y-4 font-mono text-[11px]">
-            <div
-              class="flex justify-between border-b border-terminal-border/50 pb-2"
-            >
-              <span class="text-terminal-muted italic uppercase"
-                >Fecha de Inicio</span
-              >
+            <div class="flex justify-between border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic uppercase">Fecha de Inicio</span>
               <span class="text-white">{data.genesis.fechaInicio}</span>
             </div>
-            <div
-              class="flex justify-between border-b border-terminal-border/50 pb-2"
-            >
-              <span class="text-terminal-muted italic uppercase"
-                >Creador(es)</span
-              >
+            <div class="flex justify-between border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic uppercase">Creador(es)</span>
               <!-- c.decorationCreator reemplaza `decoration-${data.accentColor}-500/30 decoration-dashed` -->
-              <span
-                class={`text-white underline ${c.decorationCreator}`}
+              <span class={`text-white underline ${c.decorationCreator}`}
                 >{data.genesis.creador}
               </span>
             </div>
-            <div
-              class="flex justify-between border-b border-terminal-border/50 pb-2"
-            >
-              <span class="text-terminal-muted italic uppercase"
-                >Whitepaper</span
-              >
+            <div class="flex justify-between border-b border-terminal-border/50 pb-2">
+              <span class="text-terminal-muted italic uppercase">Whitepaper</span>
               <a
                 href={data.genesis.whitepaperUrl}
                 target="_blank"
-                class={`${c.text500} hover:text-white transition-colors`}
-                >VER PDF -></a
+                class={`${c.text500} hover:text-white transition-colors`}>VER PDF -&gt;</a
               >
             </div>
           </div>
@@ -153,9 +134,7 @@ const schema = [
             class="relative z-10 transition-opacity duration-500 ease-in-out"
             id="dato-oculto-content"
           >
-            <h4
-              class="font-black uppercase tracking-widest text-[10px] mb-4 italic"
-            >
+            <h4 class="font-black uppercase tracking-widest text-[10px] mb-4 italic">
               Dato Oculto
             </h4>
             <p
@@ -173,10 +152,8 @@ const schema = [
                 stroke="currentColor"
                 viewBox="0 0 24 24"
                 stroke-width="2"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                ><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"
+                ></path>
               </svg>
             </button>
           </div>
@@ -189,11 +166,7 @@ const schema = [
               id="btn-cerrar-dato"
               class={`absolute top-4 right-4 ${c.text500_70} ${c.hoverText500} bg-terminal-surface rounded-full transition-all cursor-pointer p-1.5 z-40`}
             >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 ><path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -219,9 +192,7 @@ const schema = [
         <div
           class="relative bg-terminal-surface/10 border border-terminal-border/50 rounded-[4rem] p-6 md:p-12 min-h-[450px] md:min-h-[550px] flex flex-col items-center justify-between overflow-hidden group"
         >
-          <div
-            class="relative w-full flex-1 flex items-center justify-center py-10 md:py-0"
-          >
+          <div class="relative w-full flex-1 flex items-center justify-center py-10 md:py-0">
             <div
               class={`absolute w-48 h-48 md:w-64 md:h-64 ${c.bg5} blur-[100px] rounded-full animate-pulse`}
             >
@@ -242,16 +213,15 @@ const schema = [
 
             {
               data.floatingTags.map((tag, i) => {
-                const animation =
-                  i % 2 === 0 ? "animate-bounce-slow" : "animate-bounce-slower";
+                const animation = i % 2 === 0 ? "animate-bounce-slow" : "animate-bounce-slower"
                 const position =
                   i === 0
                     ? "top-0 left-0 md:top-10 md:left-10"
                     : i === 1
-                    ? "top-10 right-0 md:top-20 md:right-0"
-                    : i === 2
-                    ? "bottom-16 left-0 md:bottom-20 md:left-0"
-                    : "bottom-0 right-0 md:bottom-10 md:right-10";
+                      ? "top-10 right-0 md:top-20 md:right-0"
+                      : i === 2
+                        ? "bottom-16 left-0 md:bottom-20 md:left-0"
+                        : "bottom-0 right-0 md:bottom-10 md:right-10"
                 return (
                   <div class={`absolute ${position} z-10 ${animation}`}>
                     <div
@@ -271,16 +241,14 @@ const schema = [
                       </span>
                     </div>
                   </div>
-                );
+                )
               })
             }
           </div>
 
           <!-- Arquitectura Base del Protocolo -->
           <div class="w-full flex flex-col items-center mt-4 z-10">
-            <div
-              class={`w-px h-12 bg-transparent border-l-2 border-dashed ${c.border20} mb-4`}
-            >
+            <div class={`w-px h-12 bg-transparent border-l-2 border-dashed ${c.border20} mb-4`}>
             </div>
             <h3
               class="text-center text-[10px] font-black text-terminal-subtle uppercase tracking-[0.4em] italic mb-2"
@@ -288,13 +256,8 @@ const schema = [
               Arquitectura Base del Protocolo
             </h3>
             <div class="w-full flex flex-col items-center mt-2 mb-8 relative">
-              <div
-                class={`w-px h-10 bg-transparent border-l-2 border-dashed ${c.border40}`}
-              >
-              </div>
-              <div
-                class={`w-[66%] h-px border-t-2 border-dashed ${c.border40} relative`}
-              >
+              <div class={`w-px h-10 bg-transparent border-l-2 border-dashed ${c.border40}`}></div>
+              <div class={`w-[66%] h-px border-t-2 border-dashed ${c.border40} relative`}>
                 <div
                   class={`absolute left-0 top-0 w-px h-6 border-l-2 border-dashed ${c.border40}`}
                 >
@@ -303,8 +266,7 @@ const schema = [
                   class={`absolute -left-1.5 top-5 w-3 h-3 ${c.text500_70}`}
                   fill="currentColor"
                   viewBox="0 0 24 24"
-                  ><path d="M12 21L3 12L5.8 9.2L12 15.4L18.2 9.2L21 12L12 21Z"
-                  ></path>
+                  ><path d="M12 21L3 12L5.8 9.2L12 15.4L18.2 9.2L21 12L12 21Z"></path>
                 </svg>
                 <div
                   class={`absolute left-1/2 top-0 w-px h-6 border-l-2 border-dashed ${c.border40} transform -translate-x-1/2`}
@@ -314,8 +276,7 @@ const schema = [
                   class={`absolute left-1/2 top-5 w-3 h-3 ${c.text500_70} transform -translate-x-1/2`}
                   fill="currentColor"
                   viewBox="0 0 24 24"
-                  ><path d="M12 21L3 12L5.8 9.2L12 15.4L18.2 9.2L21 12L12 21Z"
-                  ></path>
+                  ><path d="M12 21L3 12L5.8 9.2L12 15.4L18.2 9.2L21 12L12 21Z"></path>
                 </svg>
                 <div
                   class={`absolute right-0 top-0 w-px h-6 border-l-2 border-dashed ${c.border40}`}
@@ -325,8 +286,7 @@ const schema = [
                   class={`absolute -right-1.5 top-5 w-3 h-3 ${c.text500_70}`}
                   fill="currentColor"
                   viewBox="0 0 24 24"
-                  ><path d="M12 21L3 12L5.8 9.2L12 15.4L18.2 9.2L21 12L12 21Z"
-                  ></path>
+                  ><path d="M12 21L3 12L5.8 9.2L12 15.4L18.2 9.2L21 12L12 21Z"></path>
                 </svg>
               </div>
             </div>
@@ -334,9 +294,7 @@ const schema = [
               {
                 data.arquitectura.map((item) => (
                   <div class="text-center p-3 border border-terminal-border/50 rounded-2xl bg-terminal-bg/40">
-                    <p class="text-[8px] text-terminal-muted uppercase mb-1">
-                      {item.label}
-                    </p>
+                    <p class="text-[8px] text-terminal-muted uppercase mb-1">{item.label}</p>
                     <p class="text-white font-mono font-bold text-[10px] uppercase italic">
                       {item.value}
                     </p>
@@ -368,13 +326,10 @@ const schema = [
               <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
                 >Suministro Total</span
               >
-              <span class="text-white text-base font-bold"
-                >{data.matematica.suministroTotal}
-              </span>
+              <span class="text-white text-base font-bold">{data.matematica.suministroTotal} </span>
             </div>
             <div class="flex flex-col border-b border-terminal-border/50 pb-2">
-              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
-                >Marketcap FDV</span
+              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]">Marketcap FDV</span
               >
               <span
                 id="asset-fdv"
@@ -383,12 +338,8 @@ const schema = [
               >
             </div>
             <div class="flex flex-col pb-2">
-              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
-                >Ciclo</span
-              >
-              <span class="text-white italic"
-                >{data.matematica.cicloHalving}
-              </span>
+              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]">Ciclo</span>
+              <span class="text-white italic">{data.matematica.cicloHalving} </span>
             </div>
           </div>
         </section>
@@ -427,9 +378,7 @@ const schema = [
             Moat
           </div>
           <div class="relative z-10">
-            <h4
-              class="font-black uppercase tracking-widest text-[10px] mb-4 italic"
-            >
+            <h4 class="font-black uppercase tracking-widest text-[10px] mb-4 italic">
               Análisis de Carácter
             </h4>
             <p
@@ -447,21 +396,15 @@ const schema = [
     <!-- Sección de Investigación -->
     <section class="mt-12 w-full pt-20">
       <div class="mb-20 text-center">
-        <h2
-          class="text-4xl font-black text-white tracking-tighter uppercase italic mb-4"
-        >
+        <h2 class="text-4xl font-black text-white tracking-tighter uppercase italic mb-4">
           {data.investigacion.titulo}
         </h2>
-        <p
-          class="text-terminal-muted font-mono text-[10px] uppercase tracking-[0.4em] italic"
-        >
+        <p class="text-terminal-muted font-mono text-[10px] uppercase tracking-[0.4em] italic">
           {data.investigacion.subtitulo}
         </p>
       </div>
 
-      <div
-        class="grid grid-cols-1 gap-8 lg:gap-12 items-start max-w-4xl mx-auto"
-      >
+      <div class="grid grid-cols-1 gap-8 lg:gap-12 items-start max-w-4xl mx-auto">
         {
           data.investigacion.pilares.map((pilar) => (
             <article class="bg-terminal-surface/20 border border-terminal-border rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
@@ -475,13 +418,7 @@ const schema = [
               </h2>
               <div class="space-y-8 relative z-10">
                 {pilar.secciones.map((sec, index) => (
-                  <div
-                    class={
-                      index !== 0
-                        ? "border-t border-terminal-border/50 pt-8"
-                        : ""
-                    }
-                  >
+                  <div class={index !== 0 ? "border-t border-terminal-border/50 pt-8" : ""}>
                     <h3
                       class={`${c.text400} font-bold uppercase tracking-widest text-xs font-mono mb-3`}
                     >
@@ -499,9 +436,7 @@ const schema = [
                               {sec.tabla.headers.map((h, i) => (
                                 <th
                                   class={`py-4 px-5 ${
-                                    i === sec.tabla.highlightCol
-                                      ? c.text500
-                                      : ""
+                                    i === sec.tabla.highlightCol ? c.text500 : ""
                                   }`}
                                 >
                                   {h}
@@ -513,15 +448,15 @@ const schema = [
                             {sec.tabla.rows.map((row, i) => (
                               <tr class="border-b border-terminal-border/50 hover:bg-terminal-surface/50 transition-colors">
                                 {row.map((cell, j) => {
-                                  const colClass = sec.tabla.rowColors[i][j];
+                                  const colClass = sec.tabla.rowColors[i][j]
                                   const color =
                                     colClass === "emerald"
                                       ? c.text400
                                       : colClass === "emerald-dim"
-                                      ? c.text400_80
-                                      : colClass === "red"
-                                      ? "text-red-400/80"
-                                      : "text-terminal-secondary";
+                                        ? c.text400_80
+                                        : colClass === "red"
+                                          ? "text-red-400/80"
+                                          : "text-terminal-secondary"
                                   return (
                                     <td
                                       class={`py-3 px-5 ${
@@ -530,7 +465,7 @@ const schema = [
                                     >
                                       {cell}
                                     </td>
-                                  );
+                                  )
                                 })}
                               </tr>
                             ))}
@@ -545,21 +480,15 @@ const schema = [
                           {sec.riskCards.map((cBox) => (
                             <div class="bg-terminal-bg/50 p-4 rounded-xl border border-terminal-border">
                               <h4 class="text-terminal-text font-bold text-xs uppercase mb-2 flex items-center gap-2">
-                                <span
-                                  class={`w-1.5 h-1.5 ${c.bgFull} rounded-full`}
-                                />{" "}
+                                <span class={`w-1.5 h-1.5 ${c.bgFull} rounded-full`} />{" "}
                                 {cBox.titulo}
                               </h4>
-                              <p class="text-terminal-secondary text-xs">
-                                {cBox.texto}
-                              </p>
+                              <p class="text-terminal-secondary text-xs">{cBox.texto}</p>
                             </div>
                           ))}
                         </div>
                         {sec.riskNote && (
-                          <p class="text-terminal-muted text-xs mt-4 italic">
-                            {sec.riskNote}
-                          </p>
+                          <p class="text-terminal-muted text-xs mt-4 italic">{sec.riskNote}</p>
                         )}
                       </>
                     )}
@@ -590,62 +519,57 @@ const schema = [
     />
   </main>
 
-  <script
-    define:vars={{ apiUrl: data.price?.apiUrl, apiPath: data.price?.apiPath }}
-  >
+  <script define:vars={{ apiUrl: data.price?.apiUrl, apiPath: data.price?.apiPath }}>
     async function updatePrice() {
-      if (!apiUrl) return;
+      if (!apiUrl) return
       try {
-        const res = await fetch(apiUrl);
-        const apiData = await res.json();
-        const price = apiPath
-          .split(".")
-          .reduce((obj, key) => obj[key], apiData);
+        const res = await fetch(apiUrl)
+        const apiData = await res.json()
+        const price = apiPath.split(".").reduce((obj, key) => obj[key], apiData)
 
-        const priceEl = document.getElementById("asset-price");
+        const priceEl = document.getElementById("asset-price")
         if (priceEl) {
-          priceEl.textContent =
-            "$" + price.toLocaleString("en-US", { minimumFractionDigits: 2 });
+          priceEl.textContent = "$" + price.toLocaleString("en-US", { minimumFractionDigits: 2 })
         }
 
-        const fdvEl = document.getElementById("asset-fdv");
+        const fdvEl = document.getElementById("asset-fdv")
         if (fdvEl) {
-          const supplyRaw = fdvEl.getAttribute("data-supply");
+          const supplyRaw = fdvEl.getAttribute("data-supply")
           if (supplyRaw) {
-            const supply = Number(supplyRaw.replace(/,/g, ""));
-            const fdv = price * supply;
-            fdvEl.classList.remove("animate-pulse");
+            const supply = Number(supplyRaw.replace(/,/g, ""))
+            const fdv = price * supply
+            fdvEl.classList.remove("animate-pulse")
             fdvEl.textContent = new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
               notation: "compact",
               maximumFractionDigits: 2,
-            }).format(fdv);
+            }).format(fdv)
           }
         }
       } catch (e) {
-        console.error("Error consultando API:", e);
+        console.error("Error consultando API:", e)
       }
     }
-    updatePrice();
-    setInterval(updatePrice, 3600000);
+    updatePrice()
+    setInterval(updatePrice, 3600000)
 
-    const btnVerMas = document.getElementById("btn-ver-mas-dato");
-    const btnCerrar = document.getElementById("btn-cerrar-dato");
-    const overlay = document.getElementById("dato-oculto-overlay");
-    const mainContent = document.getElementById("dato-oculto-content");
+    const btnVerMas = document.getElementById("btn-ver-mas-dato")
+    const btnCerrar = document.getElementById("btn-cerrar-dato")
+    const overlay = document.getElementById("dato-oculto-overlay")
+    const mainContent = document.getElementById("dato-oculto-content")
 
     if (btnVerMas && btnCerrar && overlay) {
       btnVerMas.addEventListener("click", () => {
-        overlay.classList.remove("opacity-0", "pointer-events-none", "scale-95");
-        overlay.classList.add("opacity-100", "pointer-events-auto", "scale-100");
-        mainContent.classList.add("opacity-0", "pointer-events-none");
-      });
+        overlay.classList.remove("opacity-0", "pointer-events-none", "scale-95")
+        overlay.classList.add("opacity-100", "pointer-events-auto", "scale-100")
+        mainContent.classList.add("opacity-0", "pointer-events-none")
+      })
       btnCerrar.addEventListener("click", () => {
-        overlay.classList.remove("opacity-100", "pointer-events-auto", "scale-100");
-        overlay.classList.add("opacity-0", "pointer-events-none", "scale-95");
-        mainContent.classList.remove("opacity-0", "pointer-events-none");
-      });
+        overlay.classList.remove("opacity-100", "pointer-events-auto", "scale-100")
+        overlay.classList.add("opacity-0", "pointer-events-none", "scale-95")
+        mainContent.classList.remove("opacity-0", "pointer-events-none")
+      })
     }
   </script>
 </Layout>

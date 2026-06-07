@@ -95,4 +95,4 @@ La diferencia entre especulación y estrategia es la sistematización. Una tesis
 
 El protocolo de 0xLeñador no busca el máximo rendimiento posible. Busca el **rendimiento sostenible con comprensión total** de lo que se está haciendo y por qué.
 
-> *"La habilidad de mantener una posición durante la volatilidad no es una virtud emocional. Es una consecuencia directa de haber hecho la tarea técnica antes de entrar."*
+> _"La habilidad de mantener una posición durante la volatilidad no es una virtud emocional. Es una consecuencia directa de haber hecho la tarea técnica antes de entrar."_

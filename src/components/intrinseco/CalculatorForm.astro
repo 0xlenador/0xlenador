@@ -35,10 +35,7 @@
           >EPS (Beneficio Acción)</label
         >
         <div class="relative">
-          <span
-            class="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold"
-            >$</span
-          >
+          <span class="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">$</span>
           <input
             type="number"
             id="basic-eps"
@@ -81,16 +78,11 @@
               >Free Cash Flow</label
             >
             <label class="inline-flex items-center cursor-pointer gap-2">
-              <span
-                class="text-[9px] font-black text-terminal-subtle uppercase tracking-tighter"
+              <span class="text-[9px] font-black text-terminal-subtle uppercase tracking-tighter"
                 >Millones</span
               >
               <div class="relative">
-                <input
-                  type="checkbox"
-                  id="fcf-millions-toggle"
-                  class="sr-only peer"
-                />
+                <input type="checkbox" id="fcf-millions-toggle" class="sr-only peer" />
                 <div
                   class="w-7 h-4 bg-terminal-border-subtle rounded-full peer peer-checked:bg-emerald-500 peer-checked:after:translate-x-3 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-terminal-secondary peer-checked:after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all"
                 >
@@ -142,16 +134,11 @@
               >Acciones Totales</label
             >
             <label class="inline-flex items-center cursor-pointer gap-2">
-              <span
-                class="text-[9px] font-black text-terminal-subtle uppercase tracking-tighter"
+              <span class="text-[9px] font-black text-terminal-subtle uppercase tracking-tighter"
                 >Millones</span
               >
               <div class="relative">
-                <input
-                  type="checkbox"
-                  id="shares-millions-toggle"
-                  class="sr-only peer"
-                />
+                <input type="checkbox" id="shares-millions-toggle" class="sr-only peer" />
                 <div
                   class="w-7 h-4 bg-terminal-border-subtle rounded-full peer peer-checked:bg-emerald-500 peer-checked:after:translate-x-3 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-terminal-secondary peer-checked:after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all"
                 >
@@ -169,18 +156,11 @@
         </div>
       </div>
       <div class="pt-6 border-t border-terminal-border/40">
-        <label
-          for="adv-margin"
-          class="flex justify-between items-center mb-6 cursor-pointer"
-        >
-          <span
-            class="text-[11px] font-bold text-terminal-secondary uppercase tracking-widest"
+        <label for="adv-margin" class="flex justify-between items-center mb-6 cursor-pointer">
+          <span class="text-[11px] font-bold text-terminal-secondary uppercase tracking-widest"
             >Margen de Seguridad</span
           >
-          <span
-            id="margin-label"
-            class="text-3xl font-black text-emerald-400 italic">30%</span
-          >
+          <span id="margin-label" class="text-3xl font-black text-emerald-400 italic">30%</span>
         </label>
         <input
           type="range"
@@ -205,10 +185,7 @@
   </div>
 
   <!-- Zona de resultados -->
-  <div
-    id="result-area"
-    class="hidden mt-16 border-t border-terminal-border/60 pt-16"
-  >
+  <div id="result-area" class="hidden mt-16 border-t border-terminal-border/60 pt-16">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div
         class="bg-terminal-bg/60 border border-terminal-border p-10 rounded-[2rem] text-center md:text-left flex flex-col justify-center overflow-hidden"
@@ -227,9 +204,7 @@
         <div
           class="text-[9px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-2"
         >
-          <span
-            class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"
-          ></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
           Target Price Multi-Asset
         </div>
       </div>
@@ -263,144 +238,164 @@
   //       Todo queda en el scope de esta función, sin contaminar window.
   // ============================================================
   function setupCalculator() {
-    let currentMode = "basic";
+    let currentMode = "basic"
 
-    const btnBasic   = document.getElementById("btn-basic") as HTMLButtonElement | null;
-    const btnAdv     = document.getElementById("btn-advanced") as HTMLButtonElement | null;
-    const formBasic  = document.getElementById("form-basic");
-    const formAdv    = document.getElementById("form-advanced");
-    const resultArea = document.getElementById("result-area");
-    const finalPrice = document.getElementById("final-price");
-    const finalDesc  = document.getElementById("final-desc");
-    const statusText = document.getElementById("status-text");
-    const calcButton = document.getElementById("calc-button") as HTMLButtonElement | null;
+    const btnBasic = document.getElementById("btn-basic") as HTMLButtonElement | null
+    const btnAdv = document.getElementById("btn-advanced") as HTMLButtonElement | null
+    const formBasic = document.getElementById("form-basic")
+    const formAdv = document.getElementById("form-advanced")
+    const resultArea = document.getElementById("result-area")
+    const finalPrice = document.getElementById("final-price")
+    const finalDesc = document.getElementById("final-desc")
+    const statusText = document.getElementById("status-text")
+    const calcButton = document.getElementById("calc-button") as HTMLButtonElement | null
 
-    if (!btnBasic || !btnAdv || !formBasic || !formAdv || !resultArea) return;
+    if (!btnBasic || !btnAdv || !formBasic || !formAdv || !resultArea) return
 
     // ── Helpers ───────────────────────────────────────────────
     const highlightError = (elementId: string) => {
-      const el = document.getElementById(elementId);
+      const el = document.getElementById(elementId)
       if (el) {
-        el.classList.add("ring-2", "ring-rose-500", "border-rose-500");
+        el.classList.add("ring-2", "ring-rose-500", "border-rose-500")
         setTimeout(() => {
-          el.classList.remove("ring-2", "ring-rose-500", "border-rose-500");
-        }, 2000);
+          el.classList.remove("ring-2", "ring-rose-500", "border-rose-500")
+        }, 2000)
       }
-    };
+    }
 
     const setMode = (mode: "basic" | "advanced") => {
-      currentMode = mode;
-      resultArea.classList.add("hidden");
+      currentMode = mode
+      resultArea.classList.add("hidden")
 
       if (mode === "basic") {
-        btnBasic.classList.replace("text-terminal-muted", "text-white");
-        btnBasic.classList.add("bg-terminal-border-subtle");
-        btnAdv.classList.replace("text-white", "text-terminal-muted");
-        btnAdv.classList.remove("bg-terminal-border-subtle");
-        formBasic.classList.remove("hidden");
-        formAdv.classList.add("hidden");
+        btnBasic.classList.replace("text-terminal-muted", "text-white")
+        btnBasic.classList.add("bg-terminal-border-subtle")
+        btnAdv.classList.replace("text-white", "text-terminal-muted")
+        btnAdv.classList.remove("bg-terminal-border-subtle")
+        formBasic.classList.remove("hidden")
+        formAdv.classList.add("hidden")
       } else {
-        btnAdv.classList.replace("text-terminal-muted", "text-white");
-        btnAdv.classList.add("bg-terminal-border-subtle");
-        btnBasic.classList.replace("text-white", "text-terminal-muted");
-        btnBasic.classList.remove("bg-terminal-border-subtle");
-        formAdv.classList.remove("hidden");
-        formBasic.classList.add("hidden");
+        btnAdv.classList.replace("text-terminal-muted", "text-white")
+        btnAdv.classList.add("bg-terminal-border-subtle")
+        btnBasic.classList.replace("text-white", "text-terminal-muted")
+        btnBasic.classList.remove("bg-terminal-border-subtle")
+        formAdv.classList.remove("hidden")
+        formBasic.classList.add("hidden")
       }
-    };
+    }
 
     const calculate = () => {
-      if (!calcButton || !finalPrice || !finalDesc || !statusText) return;
+      if (!calcButton || !finalPrice || !finalDesc || !statusText) return
 
-      let hasError = false;
+      let hasError = false
 
       if (currentMode === "basic") {
-        const epsInput    = document.getElementById("basic-eps") as HTMLInputElement | null;
-        const growthInput = document.getElementById("basic-growth") as HTMLInputElement | null;
-        if (!epsInput?.value)    { highlightError("basic-eps");    hasError = true; }
-        if (!growthInput?.value) { highlightError("basic-growth"); hasError = true; }
+        const epsInput = document.getElementById("basic-eps") as HTMLInputElement | null
+        const growthInput = document.getElementById("basic-growth") as HTMLInputElement | null
+        if (!epsInput?.value) {
+          highlightError("basic-eps")
+          hasError = true
+        }
+        if (!growthInput?.value) {
+          highlightError("basic-growth")
+          hasError = true
+        }
       } else {
-        ["adv-fcf", "adv-growth", "adv-discount", "adv-shares"].forEach((id) => {
-          const input = document.getElementById(id) as HTMLInputElement | null;
-          if (!input?.value) { highlightError(id); hasError = true; }
-        });
+        ;["adv-fcf", "adv-growth", "adv-discount", "adv-shares"].forEach((id) => {
+          const input = document.getElementById(id) as HTMLInputElement | null
+          if (!input?.value) {
+            highlightError(id)
+            hasError = true
+          }
+        })
       }
 
-      if (hasError) return;
+      if (hasError) return
 
-      calcButton.disabled = true;
-      calcButton.innerText = "Procesando...";
-      resultArea.classList.add("hidden");
+      calcButton.disabled = true
+      calcButton.innerText = "Procesando..."
+      resultArea.classList.add("hidden")
 
       setTimeout(() => {
-        let result = 0;
+        let result = 0
 
         if (currentMode === "basic") {
-          const eps    = parseFloat((document.getElementById("basic-eps")    as HTMLInputElement).value);
-          const growth = parseFloat((document.getElementById("basic-growth") as HTMLInputElement).value);
+          const eps = parseFloat((document.getElementById("basic-eps") as HTMLInputElement).value)
+          const growth = parseFloat(
+            (document.getElementById("basic-growth") as HTMLInputElement).value,
+          )
 
           if (isNaN(eps) || isNaN(growth)) {
-            calcButton.disabled = false;
-            calcButton.innerText = "Ejecutar Algoritmo";
-            return;
+            calcButton.disabled = false
+            calcButton.innerText = "Ejecutar Algoritmo"
+            return
           }
-          result = eps * (8.5 + 2 * growth);
-          statusText.innerText = "Target Graham";
-          finalDesc.innerText  = "Estimación fundamental rápida basada en el beneficio neto actual.";
+          result = eps * (8.5 + 2 * growth)
+          statusText.innerText = "Target Graham"
+          finalDesc.innerText = "Estimación fundamental rápida basada en el beneficio neto actual."
         } else {
-          let fcf      = parseFloat((document.getElementById("adv-fcf")      as HTMLInputElement).value);
-          const growth = parseFloat((document.getElementById("adv-growth")   as HTMLInputElement).value) / 100;
-          const discount = parseFloat((document.getElementById("adv-discount") as HTMLInputElement).value) / 100;
-          let shares   = parseFloat((document.getElementById("adv-shares")   as HTMLInputElement).value);
-          const margin = parseFloat((document.getElementById("adv-margin")   as HTMLInputElement).value) / 100;
+          let fcf = parseFloat((document.getElementById("adv-fcf") as HTMLInputElement).value)
+          const growth =
+            parseFloat((document.getElementById("adv-growth") as HTMLInputElement).value) / 100
+          const discount =
+            parseFloat((document.getElementById("adv-discount") as HTMLInputElement).value) / 100
+          let shares = parseFloat((document.getElementById("adv-shares") as HTMLInputElement).value)
+          const margin =
+            parseFloat((document.getElementById("adv-margin") as HTMLInputElement).value) / 100
 
           if (isNaN(fcf) || isNaN(growth) || isNaN(discount) || isNaN(shares)) {
-            calcButton.disabled = false;
-            calcButton.innerText = "Ejecutar Algoritmo";
-            return;
+            calcButton.disabled = false
+            calcButton.innerText = "Ejecutar Algoritmo"
+            return
           }
 
-          if ((document.getElementById("fcf-millions-toggle")   as HTMLInputElement)?.checked) fcf    *= 1_000_000;
-          if ((document.getElementById("shares-millions-toggle") as HTMLInputElement)?.checked) shares *= 1_000_000;
+          if ((document.getElementById("fcf-millions-toggle") as HTMLInputElement)?.checked)
+            fcf *= 1_000_000
+          if ((document.getElementById("shares-millions-toggle") as HTMLInputElement)?.checked)
+            shares *= 1_000_000
 
-          let totalPV = 0;
-          let currentFCF = fcf;
+          let totalPV = 0
+          let currentFCF = fcf
           for (let i = 1; i <= 5; i++) {
-            currentFCF *= 1 + growth;
-            totalPV += currentFCF / Math.pow(1 + discount, i);
+            currentFCF *= 1 + growth
+            totalPV += currentFCF / Math.pow(1 + discount, i)
           }
-          const terminalVal = (currentFCF * 1.025) / (discount - 0.025);
-          const terminalPV  = terminalVal / Math.pow(1 + discount, 5);
-          result = ((totalPV + terminalPV) / shares) * (1 - margin);
+          const terminalVal = (currentFCF * 1.025) / (discount - 0.025)
+          const terminalPV = terminalVal / Math.pow(1 + discount, 5)
+          result = ((totalPV + terminalPV) / shares) * (1 - margin)
 
-          statusText.innerText = "Target Buffett";
-          finalDesc.innerText  = "Cálculo DCF avanzado con descuento de flujos y margen de seguridad.";
+          statusText.innerText = "Target Buffett"
+          finalDesc.innerText =
+            "Cálculo DCF avanzado con descuento de flujos y margen de seguridad."
         }
 
-        const formattedPrice = `$${result.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        finalPrice.innerText = formattedPrice;
-        (finalPrice as HTMLElement).title = formattedPrice;
+        const formattedPrice = `$${result.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        finalPrice.innerText = formattedPrice
+        ;(finalPrice as HTMLElement).title = formattedPrice
 
-        resultArea.classList.remove("hidden");
-        calcButton.disabled = false;
-        calcButton.innerText = "Ejecutar Algoritmo";
+        resultArea.classList.remove("hidden")
+        calcButton.disabled = false
+        calcButton.innerText = "Ejecutar Algoritmo"
 
-        resultArea.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 600);
-    };
+        resultArea.scrollIntoView({ behavior: "smooth", block: "center" })
+      }, 600)
+    }
 
     // ── Listeners ─────────────────────────────────────────────
-    btnBasic.addEventListener("click",  () => setMode("basic"));
-    btnAdv.addEventListener("click",    () => setMode("advanced"));
-    calcButton?.addEventListener("click", calculate);
+    btnBasic.addEventListener("click", () => setMode("basic"))
+    btnAdv.addEventListener("click", () => setMode("advanced"))
+    calcButton?.addEventListener("click", calculate)
 
     document.querySelectorAll<HTMLInputElement>('input[type="number"]').forEach((input) => {
       input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") { e.preventDefault(); calculate(); }
-      });
-    });
+        if (e.key === "Enter") {
+          e.preventDefault()
+          calculate()
+        }
+      })
+    })
   }
 
-  setupCalculator();
-  document.addEventListener("astro:page-load", setupCalculator);
+  setupCalculator()
+  document.addEventListener("astro:page-load", setupCalculator)
 </script>

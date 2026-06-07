@@ -6,22 +6,22 @@
  */
 
 interface AffiliateLink {
-  nombre: string;
-  url: string;
+  nombre: string
+  url: string
 }
 
 interface Props {
-  nombre: string;
-  ticker: string;
-  imagen: string;
-  descripcion: string;
+  nombre: string
+  ticker: string
+  imagen: string
+  descripcion: string
   /** Color de acento para hover. Default: "emerald" */
-  accentColor?: "emerald" | "orange" | "blue" | "fuchsia";
+  accentColor?: "emerald" | "orange" | "blue" | "fuchsia"
   /** Si se define, la tarjeta completa actúa como enlace interno */
-  href?: string;
+  href?: string
   /** Texto del CTA sobre los links de afiliado */
-  ctaLabel: string;
-  links: AffiliateLink[];
+  ctaLabel: string
+  links: AffiliateLink[]
 }
 
 const {
@@ -33,7 +33,7 @@ const {
   href,
   ctaLabel,
   links,
-} = Astro.props;
+} = Astro.props
 
 // Mapa de clases por color de acento
 const colorClasses = {
@@ -61,31 +61,26 @@ const colorClasses = {
     linkHoverBorder: "hover:border-fuchsia-500/50",
     linkHoverText: "hover:text-fuchsia-400",
   },
-};
+}
 
-const c = colorClasses[accentColor];
-const isLinked = !!href;
+const c = colorClasses[accentColor]
+const isLinked = !!href
 ---
 
 <div
   class={`${isLinked ? "relative" : ""} group bg-terminal-surface/40 border border-terminal-border p-6 rounded-2xl ${c.hoverBorder} transition-all cursor-pointer`}
 >
-  {isLinked && <a href={href} class="absolute inset-0 z-0"></a>}
+  {isLinked && <a href={href} class="absolute inset-0 z-0" />}
 
   <div
-    class:list={[
-      "flex items-center gap-3 mb-6",
-      isLinked && "relative z-10 pointer-events-none",
-    ]}
+    class:list={["flex items-center gap-3 mb-6", isLinked && "relative z-10 pointer-events-none"]}
   >
     <img
       src={imagen}
       alt={nombre}
       class="w-8 h-8 rounded bg-terminal-elevated border border-terminal-border object-contain"
     />
-    <h3
-      class={`text-lg font-bold text-white ${c.hoverText} transition-colors tracking-tight`}
-    >
+    <h3 class={`text-lg font-bold text-white ${c.hoverText} transition-colors tracking-tight`}>
       {nombre}
     </h3>
   </div>
@@ -114,9 +109,7 @@ const isLinked = !!href;
       isLinked && "relative z-10",
     ]}
   >
-    <span class="text-[9px] font-mono text-terminal-subtle uppercase italic"
-      >{ctaLabel}</span
-    >
+    <span class="text-[9px] font-mono text-terminal-subtle uppercase italic">{ctaLabel}</span>
     <div class="flex flex-wrap gap-1.5">
       {
         links.map((link) => (

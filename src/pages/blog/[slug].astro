@@ -1,38 +1,36 @@
 ---
-import { getCollection, render } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
-import ArticleHeader from "../../components/blog/ArticleHeader.astro";
-import ShareButtons from "../../components/blog/ShareButtons.astro";
-import TableOfContents from "../../components/blog/TableOfContents.astro";
+import { getCollection, render } from "astro:content"
+import Layout from "../../layouts/Layout.astro"
+import ArticleHeader from "../../components/blog/ArticleHeader.astro"
+import ShareButtons from "../../components/blog/ShareButtons.astro"
+import TableOfContents from "../../components/blog/TableOfContents.astro"
 
 // 1. Generar automáticamente las rutas basadas en los nombres de los archivos .md
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
+  const posts = await getCollection("blog")
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
-  }));
+  }))
 }
 
 // 2. Extraer los datos y compilar el cuerpo del Markdown a HTML nativo
-const { post } = Astro.props;
-const { title, description, keywords, date, category, coverImage, coverAlt } =
-  post.data;
-const { Content, remarkPluginFrontmatter, headings } = await render(post);
-const readTime =
-  post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min";
+const { post } = Astro.props
+const { title, description, keywords, date, category, coverImage, coverAlt } = post.data
+const { Content, remarkPluginFrontmatter, headings } = await render(post)
+const readTime = post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min"
 
 // 3. Agrupar headings: cada H2 contiene sus H3 hijos
-type Heading = (typeof headings)[0];
-type TocGroup = { heading: Heading; children: Heading[] };
+type Heading = (typeof headings)[0]
+type TocGroup = { heading: Heading; children: Heading[] }
 
-const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
-const groupedToc: TocGroup[] = [];
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3)
+const groupedToc: TocGroup[] = []
 for (const h of tocHeadings) {
   if (h.depth === 2) {
-    groupedToc.push({ heading: h, children: [] });
+    groupedToc.push({ heading: h, children: [] })
   } else if (h.depth === 3 && groupedToc.length > 0) {
-    groupedToc[groupedToc.length - 1].children.push(h);
+    groupedToc[groupedToc.length - 1].children.push(h)
   }
 }
 
@@ -42,9 +40,9 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
   month: "short",
   day: "numeric",
   timeZone: "UTC",
-});
+})
 // coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
-const ogImage = coverImage?.src;
+const ogImage = coverImage?.src
 
 // Schema.org BlogPosting para SEO estructurado
 const blogSchema = {
@@ -68,7 +66,7 @@ const blogSchema = {
     "@type": "WebPage",
     "@id": new URL(Astro.url.pathname, Astro.site).href,
   },
-};
+}
 ---
 
 <Layout
@@ -93,10 +91,8 @@ const blogSchema = {
   </div>
 
   <main class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row gap-16">
-
     <!-- ─── COLUMNA PRINCIPAL: ARTÍCULO ─── -->
     <article class="w-full lg:w-[68%]">
-
       <!-- Breadcrumb + título + meta + imagen de portada -->
       <ArticleHeader
         title={title}

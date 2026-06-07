@@ -41,11 +41,11 @@ El error es creer que todo el dinero debe estar en efectivo. Tener liquidez es s
 
 La rentabilidad nominal es lo que una inversión dice que ganó. La rentabilidad real es lo que ganaste después de descontar inflación.
 
-| Concepto | Ejemplo |
-|---|---:|
+| Concepto                     |   Ejemplo |
+| ---------------------------- | --------: |
 | Rentabilidad de la inversión | 10% anual |
-| Inflación del periodo | 7% anual |
-| Rentabilidad real aproximada | 3% anual |
+| Inflación del periodo        |  7% anual |
+| Rentabilidad real aproximada |  3% anual |
 
 Si una inversión te da 6%, pero la inflación fue 8%, en realidad perdiste poder adquisitivo. No viste una pérdida en pantalla, pero tu dinero compra menos.
 
@@ -223,40 +223,40 @@ Una buena estrategia contra la inflación no depende de un solo activo. Depende 
 
 No se trata de elegir entre CDTs o acciones, bonos o cripto, oro o bienes raíces. Se trata de entender qué papel cumple cada activo dentro de tu portafolio.
 
-| Bloque | Objetivo | Ejemplos |
-|---|---|---|
-| Estabilidad | Proteger capital y reducir volatilidad | CDTs, bonos, renta fija, liquidez |
-| Crecimiento | Aumentar patrimonio a largo plazo | Acciones, ETFs, blue chips, bienes raíces |
-| Alto riesgo | Buscar retornos asimétricos | Small caps, cripto, startups, proyectos emergentes |
+| Bloque      | Objetivo                               | Ejemplos                                           |
+| ----------- | -------------------------------------- | -------------------------------------------------- |
+| Estabilidad | Proteger capital y reducir volatilidad | CDTs, bonos, renta fija, liquidez                  |
+| Crecimiento | Aumentar patrimonio a largo plazo      | Acciones, ETFs, blue chips, bienes raíces          |
+| Alto riesgo | Buscar retornos asimétricos            | Small caps, cripto, startups, proyectos emergentes |
 
 La proporción depende de tu perfil. No hay una fórmula perfecta. La mejor estrategia es la que puedes sostener sin entrar en pánico ni dormir mal.
 
 ### Ejemplos de portafolio según perfil
 
-| Perfil | Liquidez / renta fija | Acciones / ETFs / bienes raíces | Alto riesgo |
-|---|---:|---:|---:|
-| Conservador | 70% - 80% | 15% - 25% | 0% - 5% |
-| Moderado | 40% - 50% | 35% - 45% | 5% - 15% |
-| Agresivo | 20% - 30% | 35% - 45% | 20% - 35% |
+| Perfil      | Liquidez / renta fija | Acciones / ETFs / bienes raíces | Alto riesgo |
+| ----------- | --------------------: | ------------------------------: | ----------: |
+| Conservador |             70% - 80% |                       15% - 25% |     0% - 5% |
+| Moderado    |             40% - 50% |                       35% - 45% |    5% - 15% |
+| Agresivo    |             20% - 30% |                       35% - 45% |   20% - 35% |
 
 Estos porcentajes son solo ejemplos educativos. La pregunta clave no es “¿cuánto puedo ganar?”, sino “¿puedo soportar emocional y financieramente una caída grande sin destruir mi plan?”.
 
 ## Tabla comparativa de activos contra la inflación
 
-| Activo | Riesgo | Liquidez | Utilidad contra inflación |
-|---|---|---|---|
-| Efectivo | Bajo en corto plazo, alto en largo plazo | Muy alta | Baja |
-| CDTs / depósitos a plazo | Bajo-medio | Media | Media si superan inflación e impuestos |
-| Bonos / renta fija | Bajo-medio | Media | Media, según tasa, plazo y moneda |
-| Acciones blue chip | Medio | Alta | Media-alta en largo plazo |
-| ETFs indexados | Medio | Alta | Alta en largo plazo por diversificación |
-| Bienes raíces | Medio | Baja | Alta, pero requiere capital y gestión |
-| REITs / fondos inmobiliarios | Medio | Alta | Media-alta |
-| Oro | Medio | Alta según vehículo | Media como refugio |
-| Materias primas | Alto | Media-alta | Variable y volátil |
-| Small caps | Alto | Media | Variable, con alto potencial y riesgo |
-| Bitcoin / Ethereum | Muy alto | Alta | Especulativa, no garantizada |
-| Altcoins pequeñas | Extremo | Variable | Muy especulativa |
+| Activo                       | Riesgo                                   | Liquidez            | Utilidad contra inflación               |
+| ---------------------------- | ---------------------------------------- | ------------------- | --------------------------------------- |
+| Efectivo                     | Bajo en corto plazo, alto en largo plazo | Muy alta            | Baja                                    |
+| CDTs / depósitos a plazo     | Bajo-medio                               | Media               | Media si superan inflación e impuestos  |
+| Bonos / renta fija           | Bajo-medio                               | Media               | Media, según tasa, plazo y moneda       |
+| Acciones blue chip           | Medio                                    | Alta                | Media-alta en largo plazo               |
+| ETFs indexados               | Medio                                    | Alta                | Alta en largo plazo por diversificación |
+| Bienes raíces                | Medio                                    | Baja                | Alta, pero requiere capital y gestión   |
+| REITs / fondos inmobiliarios | Medio                                    | Alta                | Media-alta                              |
+| Oro                          | Medio                                    | Alta según vehículo | Media como refugio                      |
+| Materias primas              | Alto                                     | Media-alta          | Variable y volátil                      |
+| Small caps                   | Alto                                     | Media               | Variable, con alto potencial y riesgo   |
+| Bitcoin / Ethereum           | Muy alto                                 | Alta                | Especulativa, no garantizada            |
+| Altcoins pequeñas            | Extremo                                  | Variable            | Muy especulativa                        |
 
 ## Errores comunes al invertir contra la inflación
 

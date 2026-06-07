@@ -6,33 +6,33 @@
  */
 
 interface Colors {
-  bg5: string;
-  bg10: string;
-  bg20: string;
-  bg30: string;
-  bg600: string;
-  border20: string;
-  border30: string;
-  border40: string;
-  text400: string;
-  text400_80: string;
-  text500: string;
-  text500_70: string;
-  text500_80: string;
-  borderL: string;
-  bgFull: string;
-  glow: string;
-  overlay: string;
+  bg5: string
+  bg10: string
+  bg20: string
+  bg30: string
+  bg600: string
+  border20: string
+  border30: string
+  border40: string
+  text400: string
+  text400_80: string
+  text500: string
+  text500_70: string
+  text500_80: string
+  borderL: string
+  bgFull: string
+  glow: string
+  overlay: string
 }
 
 interface Props {
-  type: string;
-  name: string;
-  ticker: string;
-  colors: Colors;
+  type: string
+  name: string
+  ticker: string
+  colors: Colors
 }
 
-const { type, name, ticker, colors: c } = Astro.props;
+const { type, name, ticker, colors: c } = Astro.props
 ---
 
 <header
@@ -45,23 +45,17 @@ const { type, name, ticker, colors: c } = Astro.props;
       >
         Activo: {type}
       </span>
-      <span
-        class="text-terminal-muted font-mono text-[10px] tracking-widest uppercase"
-      >
+      <span class="text-terminal-muted font-mono text-[10px] tracking-widest uppercase">
         Protocolo v.1.0.0
       </span>
     </div>
-    <h1
-      class="text-6xl font-black text-white tracking-tighter uppercase italic leading-none"
-    >
+    <h1 class="text-6xl font-black text-white tracking-tighter uppercase italic leading-none">
       {name}
       <span class={c.text500}>/ {ticker}</span>
     </h1>
   </div>
   <div class="text-right font-mono italic">
-    <p class="text-terminal-subtle text-[10px] uppercase tracking-widest mb-1">
-      Mercado / USD
-    </p>
+    <p class="text-terminal-subtle text-[10px] uppercase tracking-widest mb-1">Mercado / USD</p>
     <p
       id="asset-price"
       class="text-white text-3xl font-black tabular-nums tracking-tighter tracking-widest h-9 flex justify-end items-center"

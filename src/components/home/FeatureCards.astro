@@ -6,16 +6,16 @@
 
 interface FeatureItem {
   /** SVG path (atributo 'd') del icono */
-  iconPath: string;
-  titulo: string;
-  descripcion: string;
+  iconPath: string
+  titulo: string
+  descripcion: string
 }
 
 interface Props {
-  items: FeatureItem[];
+  items: FeatureItem[]
 }
 
-const { items } = Astro.props;
+const { items } = Astro.props
 ---
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
@@ -37,9 +37,7 @@ const { items } = Astro.props;
             />
           </svg>
         </div>
-        <h3 class="text-white font-bold mb-4 uppercase tracking-tighter italic">
-          {item.titulo}
-        </h3>
+        <h3 class="text-white font-bold mb-4 uppercase tracking-tighter italic">{item.titulo}</h3>
         <p class="text-xs leading-relaxed text-terminal-muted">{item.descripcion}</p>
       </div>
     ))

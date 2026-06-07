@@ -4,64 +4,66 @@
  * Mapea y renderiza las diferentes categorías de herramientas para un activo,
  * resolviendo sus metadatos desde el archivo central de directorio.
  */
-import directoryData from "../../data/directory.json";
+import directoryData from "../../data/directory.json"
 
 interface ToolItem {
-  name: string;
-  url: string;
-  image?: string;
-  logo?: string;
-  subtitle?: string;
-  tag?: string;
-  partner?: boolean;
-  sponsored?: boolean;
+  name: string
+  url: string
+  image?: string
+  logo?: string
+  subtitle?: string
+  tag?: string
+  partner?: boolean
+  sponsored?: boolean
 }
 
 interface Colors {
-  bg5: string;
-  bg10: string;
-  bg20: string;
-  bg30: string;
-  bg600: string;
-  border20: string;
-  border30: string;
-  border40: string;
-  text400: string;
-  text400_80: string;
-  text500: string;
-  text500_70: string;
-  text500_80: string;
-  borderL: string;
-  bgFull: string;
-  glow: string;
-  overlay: string;
+  bg5: string
+  bg10: string
+  bg20: string
+  bg30: string
+  bg600: string
+  border20: string
+  border30: string
+  border40: string
+  text400: string
+  text400_80: string
+  text500: string
+  text500_70: string
+  text500_80: string
+  borderL: string
+  bgFull: string
+  glow: string
+  overlay: string
 }
 
 interface Props {
-  tooling: Record<string, (string | ToolItem)[]>;
-  colors: Colors;
+  tooling: Record<string, (string | ToolItem)[]>
+  colors: Colors
 }
 
-const { tooling, colors: c } = Astro.props;
+const { tooling, colors: c } = Astro.props
 
 const toolingSections = [
   { title: "Mercados y Exchanges", key: "mercados" },
   { title: "Análisis y Gráficos", key: "analisis" },
   { title: "Custodia (Wallets)", key: "custodia" },
   { title: "Exploración On-Chain", key: "infraestructura" },
-];
+]
 
 const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
   if (typeof toolIdOrObj === "string") {
-    const found = directoryData.find((d) => d.id === toolIdOrObj);
-    return (found as ToolItem) || {
-      name: toolIdOrObj,
-      url: "#",
-      subtitle: "No encontrado",
-    };
+    const found = directoryData.find((d) => d.id === toolIdOrObj)
+    return (
+      (found as ToolItem) || {
+        name: toolIdOrObj,
+        url: "#",
+        subtitle: "No encontrado",
+      }
+    )
   }
-  return toolIdOrObj;
-};
+  return toolIdOrObj
+}
 ---
 
 <section
@@ -70,12 +72,7 @@ const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
   <h4
     class="text-white font-bold mb-10 uppercase tracking-widest text-xs italic font-mono flex items-center gap-3 relative z-10"
   >
-    <svg
-      class={`w-4 h-4 ${c.text500}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
+    <svg class={`w-4 h-4 ${c.text500}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -85,14 +82,12 @@ const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
     </svg>
     Tooling & Connectivity
   </h4>
-  <div
-    class="grid grid-cols-1 lg:grid-cols-2 gap-10 font-mono relative z-10"
-  >
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 font-mono relative z-10">
     {
       toolingSections.map((sec) => {
-        const toolsRaw = tooling[sec.key];
-        if (!toolsRaw || toolsRaw.length === 0) return null;
-        const resolvedTools = toolsRaw.map(resolveTool);
+        const toolsRaw = tooling[sec.key]
+        if (!toolsRaw || toolsRaw.length === 0) return null
+        const resolvedTools = toolsRaw.map(resolveTool)
 
         return (
           <div>
@@ -136,7 +131,7 @@ const resolveTool = (toolIdOrObj: string | ToolItem): ToolItem => {
               ))}
             </div>
           </div>
-        );
+        )
       })
     }
   </div>

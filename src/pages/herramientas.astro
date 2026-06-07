@@ -1,13 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
+import Layout from "../layouts/Layout.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
 
 const seo = {
   title: "Herramientas | 0xLeñador — Utilidades para Web3 y Análisis de Capital",
   description:
     "Modelos de cálculo y software de análisis para Web3: Simulador de portafolio 60/40 y Calculadora de Valor Intrínseco (DCF). Herramientas 100% locales, sin registro.",
   image: "/img/meta/home.webp",
-};
+}
 
 const tools = [
   {
@@ -27,8 +27,8 @@ const tools = [
       "Terminal de cálculo de valor intrínseco basada en flujo de caja descontado (DCF). Evalúa si un activo cotiza por encima o por debajo de su valor real.",
     badge: "Calculadora",
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
-  }
-];
+  },
+]
 
 const faqItems = [
   {
@@ -56,7 +56,7 @@ const faqItems = [
     respuesta:
       "Sí. Si tienes una herramienta que consideres útil para la comunidad, puedes comunicarte a través de Telegram o X (@0xlenador). Las sugerencias con mayor demanda se priorizan en el roadmap.",
   },
-];
+]
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
@@ -70,53 +70,68 @@ const faqItems = [
         Centro de <span class="text-emerald-500">Herramientas</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Modelos de cálculo y software de análisis estructurado para evaluar activos y distribuir tu portafolio. Herramientas diseñadas para aportar objetividad matemática a tus decisiones de inversión, operando de forma local y privada en tu navegador.
+        Modelos de cálculo y software de análisis estructurado para evaluar activos y distribuir tu
+        portafolio. Herramientas diseñadas para aportar objetividad matemática a tus decisiones de
+        inversión, operando de forma local y privada en tu navegador.
       </p>
     </header>
 
     <!-- Grid de herramientas -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
-      {tools.map((tool) => (
-        <a
-          href={tool.href}
-          id={`tool-card-${tool.id}`}
-          class="flex flex-col relative bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] backdrop-blur-2xl rounded-[24px] p-6 transition-all duration-500 no-underline overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
-        >
-          <!-- Efecto de brillo superior (Apple style) -->
-          <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      {
+        tools.map((tool) => (
+          <a
+            href={tool.href}
+            id={`tool-card-${tool.id}`}
+            class="flex flex-col relative bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] backdrop-blur-2xl rounded-[24px] p-6 transition-all duration-500 no-underline overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
+          >
+            {/* Efecto de brillo superior (Apple style) */}
+            <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <!-- Header de la tarjeta (Icono + Arrow) -->
-          <div class="flex items-start justify-between mb-6">
-            <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center text-white/[0.7] group-hover:text-white transition-colors duration-300 shadow-inner">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={tool.icon} />
+            {/* Header de la tarjeta (Icono + Arrow) */}
+            <div class="flex items-start justify-between mb-6">
+              <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center text-white/[0.7] group-hover:text-white transition-colors duration-300 shadow-inner">
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  set:html={tool.icon}
+                />
+              </div>
+
+              <svg
+                class="w-5 h-5 text-white/[0.3] group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
             </div>
-            
-            <svg
-              class="w-5 h-5 text-white/[0.3] group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </div>
 
-          <!-- Contenido -->
-          <div class="flex flex-col flex-grow">
-            <h2 class="text-white font-semibold text-lg tracking-tight mb-2">
-              {tool.titulo}
-            </h2>
-            <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6">
-              {tool.descripcion}
-            </p>
-          </div>
+            {/* Contenido */}
+            <div class="flex flex-col flex-grow">
+              <h2 class="text-white font-semibold text-lg tracking-tight mb-2">{tool.titulo}</h2>
+              <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6">
+                {tool.descripcion}
+              </p>
+            </div>
 
-          <!-- Badge minimalista abajo -->
-          <div class="mt-auto">
-            <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide">
-              {tool.badge}
-            </span>
-          </div>
-        </a>
-      ))}
+            {/* Badge minimalista abajo */}
+            <div class="mt-auto">
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide">
+                {tool.badge}
+              </span>
+            </div>
+          </a>
+        ))
+      }
     </div>
 
     <FaqAccordion

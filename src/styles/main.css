@@ -11,336 +11,373 @@
    para poder usarlos con clases Tailwind.
    ============================== */
 @theme inline {
-    --color-terminal-bg: #141414;
-    --color-terminal-surface: #1E1E1E;
-    --color-terminal-elevated: #282828;
-    --color-terminal-border: #2A2A2A;
-    --color-terminal-border-subtle: #1F1F1F;
-    --color-terminal-text: #F7FAF7;
-    --color-terminal-secondary: #A8B2C1;
-    --color-terminal-muted: #8892A2;
-    --color-terminal-subtle: #6B7585;
-    --color-terminal-dim: #4A5260;
+  --color-terminal-bg: #141414;
+  --color-terminal-surface: #1e1e1e;
+  --color-terminal-elevated: #282828;
+  --color-terminal-border: #2a2a2a;
+  --color-terminal-border-subtle: #1f1f1f;
+  --color-terminal-text: #f7faf7;
+  --color-terminal-secondary: #a8b2c1;
+  --color-terminal-muted: #8892a2;
+  --color-terminal-subtle: #6b7585;
+  --color-terminal-dim: #4a5260;
 }
-
 
 /* ==============================
    ESTILOS BASE DEL BODY
    ============================== */
 html {
-    /* Scroll suave a nivel CSS como base (nuestro JS lo sobreescribe con offset) */
-    scroll-behavior: smooth;
+  /* Scroll suave a nivel CSS como base (nuestro JS lo sobreescribe con offset) */
+  scroll-behavior: smooth;
 }
 
 /* Respetar preferencia del usuario de reducir movimiento */
 @media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-    background-color: var(--color-terminal-bg);  /* #141414 — Fondo Primario Global */
-    color: var(--color-terminal-text);           /* #F7FAF7 — Contraste WCAG AAA (18.3:1) */
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-terminal-bg); /* #141414 — Fondo Primario Global */
+  color: var(--color-terminal-text); /* #F7FAF7 — Contraste WCAG AAA (18.3:1) */
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-    background-color: rgba(16, 185, 129, 0.3);
+  background-color: rgba(16, 185, 129, 0.3);
 }
 
 /* Quitar flechas en Chrome, Safari, Edge y Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Quitar flechas en Firefox */
-input[type=number] {
-    -moz-appearance: textfield;
-    appearance: textfield;
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Estilo de enfoque global para navegación por teclado */
 :focus-visible {
-    outline: 2px solid var(--color-emerald-400);
-    outline-offset: 4px;
-    border-radius: 4px;
+  outline: 2px solid var(--color-emerald-400);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 /* Evita que el anillo de enfoque aparezca al hacer clic con el ratón */
 :focus:not(:focus-visible) {
-    outline: none;
+  outline: none;
 }
 
 /* Slider personalizado */
-input[type=range] {
-    height: 4px;
-    -webkit-appearance: none;
-    background: var(--color-terminal-border);
-    border-radius: 5px;
+input[type="range"] {
+  height: 4px;
+  -webkit-appearance: none;
+  background: var(--color-terminal-border);
+  border-radius: 5px;
 }
 
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    background: var(--color-emerald-400);
-    cursor: pointer;
-    border: 3px solid var(--color-terminal-bg);
-    box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--color-emerald-400);
+  cursor: pointer;
+  border: 3px solid var(--color-terminal-bg);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
 }
 
 /* CLASES DE FILTRADO DE TARJETAS */
 .highlight {
-    background-color: var(--color-emerald-500) !important;
-    color: var(--color-terminal-bg) !important;
-    border-color: var(--color-emerald-500) !important;
-    font-weight: bold !important;
-    opacity: 1 !important;
+  background-color: var(--color-emerald-500) !important;
+  color: var(--color-terminal-bg) !important;
+  border-color: var(--color-emerald-500) !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
 }
 
 .dimmed {
-    opacity: 0.15 !important;
+  opacity: 0.15 !important;
 }
 
 /* CLASES DE CALCULADORA */
 .active-tab {
-    background: linear-gradient(to right, var(--color-emerald-400), var(--color-cyan-400)) !important;
-    color: var(--color-terminal-bg) !important;
-    font-weight: 800;
+  background: linear-gradient(to right, var(--color-emerald-400), var(--color-cyan-400)) !important;
+  color: var(--color-terminal-bg) !important;
+  font-weight: 800;
 }
 
 .dashboard-card {
-    background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
-    border: 1px solid var(--color-terminal-border);
-    backdrop-filter: blur(10px);
+  background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
+  border: 1px solid var(--color-terminal-border);
+  backdrop-filter: blur(10px);
 }
 
 /* ==============================
    SIMULADOR 60/40 - ESTILOS
    ============================== */
 .sim-block {
-    background-color: rgba(20, 20, 20, 0.6);
-    border: 1px solid var(--color-terminal-border);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: rgba(20, 20, 20, 0.6);
+  border: 1px solid var(--color-terminal-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sim-block:hover {
-    border-color: var(--color-terminal-dim);
-    transform: translateY(-2px);
+  border-color: var(--color-terminal-dim);
+  transform: translateY(-2px);
 }
 
 .sim-preset-btn {
-    padding: 0.375rem 0.875rem;
-    font-size: 0.625rem;
-    font-family: ui-monospace, monospace;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-terminal-muted);
-    background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
-    border: 1px solid var(--color-terminal-border);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.375rem 0.875rem;
+  font-size: 0.625rem;
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-terminal-muted);
+  background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
+  border: 1px solid var(--color-terminal-border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sim-preset-btn:hover {
-    border-color: var(--color-emerald-400);
-    color: var(--color-emerald-400);
-    background-color: rgba(52, 211, 153, 0.05);
+  border-color: var(--color-emerald-400);
+  color: var(--color-emerald-400);
+  background-color: rgba(52, 211, 153, 0.05);
 }
 
 .sim-preset-active {
-    background: linear-gradient(to right, var(--color-emerald-400), var(--color-cyan-400)) !important;
-    color: var(--color-terminal-bg) !important;
-    border-color: transparent !important;
+  background: linear-gradient(to right, var(--color-emerald-400), var(--color-cyan-400)) !important;
+  color: var(--color-terminal-bg) !important;
+  border-color: transparent !important;
 }
 
 .input-premium {
-    background-color: var(--color-terminal-bg);
-    border: 1px solid var(--color-terminal-border);
-    color: #ffffff;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--color-terminal-bg);
+  border: 1px solid var(--color-terminal-border);
+  color: #ffffff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input-premium:focus {
-    border-color: var(--color-emerald-400);
-    outline: none;
-    box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2);
+  border-color: var(--color-emerald-400);
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2);
 }
 
 /* ==============================
    FICHAS DE ACTIVOS - ESTILOS
    ============================== */
-@keyframes bounce-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes bounce-slower { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-.animate-bounce-slow { animation: bounce-slow 4s infinite ease-in-out; }
-.animate-bounce-slower { animation: bounce-slower 6s infinite ease-in-out; }
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes bounce-slower {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 4s infinite ease-in-out;
+}
+.animate-bounce-slower {
+  animation: bounce-slower 6s infinite ease-in-out;
+}
 
 /* SCROLLBAR PERSONALIZADO PARA OVERLAYS */
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 30, 30, 0.5); border-radius: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(16, 185, 129, 0.4); border-radius: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(16, 185, 129, 0.8); }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 30, 30, 0.5);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(16, 185, 129, 0.4);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(16, 185, 129, 0.8);
+}
 
 /* ==============================
    ESTILOS DE CONTENIDO MARKDOWN (.content)
    Diseño para la plantilla de los posts / blog.
    ============================== */
-.content h1, .content h2, .content h3, .content h4 {
-    color: var(--color-terminal-text);
-    font-weight: 800;
-    margin-top: 2.5em;
-    margin-bottom: 1em;
-    line-height: 1.3;
-    letter-spacing: -0.025em;
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
+  color: var(--color-terminal-text);
+  font-weight: 800;
+  margin-top: 2.5em;
+  margin-bottom: 1em;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
 }
 
 .content h2 {
-    font-size: 1.875rem;
-    border-bottom: 1px solid var(--color-terminal-border);
-    padding-bottom: 0.75rem;
+  font-size: 1.875rem;
+  border-bottom: 1px solid var(--color-terminal-border);
+  padding-bottom: 0.75rem;
 }
 
 .content h3 {
-    font-size: 1.5rem;
-    color: #D8DEE9;
+  font-size: 1.5rem;
+  color: #d8dee9;
 }
 
 .content p {
-    margin-bottom: 1.5rem;
-    color: var(--color-terminal-secondary);
-    line-height: 1.8;
-    font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-terminal-secondary);
+  line-height: 1.8;
+  font-size: 1.05rem;
 }
 
 .content a {
-    color: var(--color-emerald-400);
-    text-decoration: none;
-    transition: all 0.2s;
-    font-weight: 500;
+  color: var(--color-emerald-400);
+  text-decoration: none;
+  transition: all 0.2s;
+  font-weight: 500;
 }
 
 .content a:hover {
-    color: var(--color-emerald-500);
-    text-decoration: underline;
+  color: var(--color-emerald-500);
+  text-decoration: underline;
 }
 
-.content ul, .content ol {
-    margin-bottom: 1.75rem;
-    padding-left: 1.5rem;
-    color: var(--color-terminal-secondary);
-    line-height: 1.8;
+.content ul,
+.content ol {
+  margin-bottom: 1.75rem;
+  padding-left: 1.5rem;
+  color: var(--color-terminal-secondary);
+  line-height: 1.8;
 }
 
 .content ul li {
-    list-style-type: disc;
-    margin-bottom: 0.5rem;
+  list-style-type: disc;
+  margin-bottom: 0.5rem;
 }
 
 .content ul li::marker {
-    color: var(--color-emerald-500);
+  color: var(--color-emerald-500);
 }
 
 .content strong {
-    color: #D8DEE9;
-    font-weight: 700;
+  color: #d8dee9;
+  font-weight: 700;
 }
 
 .content blockquote {
-    border-left: 4px solid var(--color-emerald-500);
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    font-style: italic;
-    color: #C8D0DC;
-    background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 100%);
-    padding: 1.25rem 1.5rem;
-    border-radius: 0 0.75rem 0.75rem 0;
-    font-size: 1.1rem;
+  border-left: 4px solid var(--color-emerald-500);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+  color: #c8d0dc;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 100%);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-size: 1.1rem;
 }
 
 .content blockquote p:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .content code {
-    background-color: var(--color-terminal-surface);
-    padding: 0.2em 0.4em;
-    border-radius: 0.375rem;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 0.875em;
-    color: var(--color-emerald-400);
-    border: 1px solid var(--color-terminal-border);
+  background-color: var(--color-terminal-surface);
+  padding: 0.2em 0.4em;
+  border-radius: 0.375rem;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+  font-size: 0.875em;
+  color: var(--color-emerald-400);
+  border: 1px solid var(--color-terminal-border);
 }
 
 .content pre code {
-    background-color: transparent;
-    padding: 0;
-    color: inherit;
-    border: none;
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+  border: none;
 }
 
 .content pre {
-    background-color: var(--color-terminal-surface);
-    padding: 1.25rem;
-    border-radius: 0.75rem;
-    overflow-x: auto;
-    border: 1px solid var(--color-terminal-border);
-    margin-bottom: 1.75rem;
-    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  background-color: var(--color-terminal-surface);
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  border: 1px solid var(--color-terminal-border);
+  margin-bottom: 1.75rem;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 .content img {
-    border-radius: 0.75rem;
-    max-width: 100%;
-    height: auto;
-    margin: 2rem auto;
-    border: 1px solid var(--color-terminal-border);
+  border-radius: 0.75rem;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto;
+  border: 1px solid var(--color-terminal-border);
 }
 
 /* Estilos premium para tablas de markdown (.content table) */
 .content table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 0.95rem;
-    color: #C8D0DC;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #c8d0dc;
 }
 
 .content th {
-    background-color: rgba(30, 30, 30, 0.6);
-    color: var(--color-terminal-text);
-    font-weight: 700;
-    padding: 0.85rem 1.25rem;
-    border-bottom: 2px solid var(--color-terminal-border);
-    font-size: 0.825rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  background-color: rgba(30, 30, 30, 0.6);
+  color: var(--color-terminal-text);
+  font-weight: 700;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 2px solid var(--color-terminal-border);
+  font-size: 0.825rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .content td {
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.5);
-    line-height: 1.5;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+  line-height: 1.5;
 }
 
 .content tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .content tr:hover td {
-    background-color: rgba(16, 185, 129, 0.03);
-    color: #ffffff;
+  background-color: rgba(16, 185, 129, 0.03);
+  color: #ffffff;
 }
 
 /* ==============================
@@ -350,165 +387,220 @@ input[type=range]::-webkit-slider-thumb {
 
 /* --- Cursor parpadeante de terminal --- */
 @keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .terminal-cursor {
-    animation: cursor-blink 1s step-end infinite;
-    color: var(--color-emerald-400);
+  animation: cursor-blink 1s step-end infinite;
+  color: var(--color-emerald-400);
 }
 
 /* --- Efecto Glitch sutil (para separadores y contenedores) --- */
 @keyframes glitch-subtle {
-    0%, 92%, 100% {
-        transform: translate(0);
-        opacity: 0;
-    }
-    93% {
-        transform: translate(-2px, -1px);
-        opacity: 0.8;
-    }
-    95% {
-        transform: translate(2px, 1px);
-        opacity: 0.6;
-    }
-    97% {
-        transform: translate(0);
-        opacity: 0;
-    }
+  0%,
+  92%,
+  100% {
+    transform: translate(0);
+    opacity: 0;
+  }
+  93% {
+    transform: translate(-2px, -1px);
+    opacity: 0.8;
+  }
+  95% {
+    transform: translate(2px, 1px);
+    opacity: 0.6;
+  }
+  97% {
+    transform: translate(0);
+    opacity: 0;
+  }
 }
 
 /* Aplicar a un elemento con .glitch-text y data-text="<texto>" */
 .glitch-text {
-    position: relative;
+  position: relative;
 }
 
 .glitch-text::before,
 .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    background: var(--color-terminal-bg);
-    color: white;
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-terminal-bg);
+  color: white;
 }
 
 .glitch-text::before {
-    animation: glitch-subtle 6s ease-in-out infinite;
-    clip-path: inset(0 0 60% 0);
-    color: rgba(52, 211, 153, 0.6);
+  animation: glitch-subtle 6s ease-in-out infinite;
+  clip-path: inset(0 0 60% 0);
+  color: rgba(52, 211, 153, 0.6);
 }
 
 .glitch-text::after {
-    animation: glitch-subtle 6s ease-in-out infinite 0.15s;
-    clip-path: inset(60% 0 0 0);
-    color: rgba(34, 211, 238, 0.6);
+  animation: glitch-subtle 6s ease-in-out infinite 0.15s;
+  clip-path: inset(60% 0 0 0);
+  color: rgba(34, 211, 238, 0.6);
 }
 
 /* --- Scanline horizontal animada --- */
 @keyframes scanline-move {
-    0% { transform: translateY(-80px); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(80px); opacity: 0; }
+  0% {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(80px);
+    opacity: 0;
+  }
 }
 
 .scanline {
-    animation: scanline-move 4s linear infinite;
+  animation: scanline-move 4s linear infinite;
 }
 
 /* --- Líneas de log con aparición escalonada --- */
 .log-line {
-    opacity: 0;
-    animation: fadeInLog 0.4s ease-out forwards;
-    animation-delay: var(--delay);
+  opacity: 0;
+  animation: fadeInLog 0.4s ease-out forwards;
+  animation-delay: var(--delay);
 }
 
 @keyframes fadeInLog {
-    from { opacity: 0; transform: translateX(-8px); }
-    to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* --- Separador con efecto glitch --- */
 .glitch-separator {
-    position: relative;
-    height: 1px;
-    background: var(--color-terminal-border);
-    overflow: visible;
+  position: relative;
+  height: 1px;
+  background: var(--color-terminal-border);
+  overflow: visible;
 }
 
 .glitch-separator::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-emerald-400), var(--color-cyan-400), transparent);
-    opacity: 0;
-    animation: glitch-separator-flash 8s ease-in-out infinite;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-emerald-400),
+    var(--color-cyan-400),
+    transparent
+  );
+  opacity: 0;
+  animation: glitch-separator-flash 8s ease-in-out infinite;
 }
 
 @keyframes glitch-separator-flash {
-    0%, 90%, 100% {
-        opacity: 0;
-        transform: translateX(0) scaleX(1);
-    }
-    92% {
-        opacity: 0.7;
-        transform: translateX(-3px) scaleX(1.02);
-    }
-    94% {
-        opacity: 0.5;
-        transform: translateX(2px) scaleX(0.98);
-    }
-    96% {
-        opacity: 0.8;
-        transform: translateX(0) scaleX(1);
-    }
-    98% {
-        opacity: 0;
-    }
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+    transform: translateX(0) scaleX(1);
+  }
+  92% {
+    opacity: 0.7;
+    transform: translateX(-3px) scaleX(1.02);
+  }
+  94% {
+    opacity: 0.5;
+    transform: translateX(2px) scaleX(0.98);
+  }
+  96% {
+    opacity: 0.8;
+    transform: translateX(0) scaleX(1);
+  }
+  98% {
+    opacity: 0;
+  }
 }
 
 /* --- Glitch y Ondas Sutiles en Imagenes en hover --- */
 @keyframes glitch-image-hover {
-    0% { transform: translate(0) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
-    20% { transform: translate(-1px, 1px) scale(1.03); filter: hue-rotate(15deg) contrast(1.05); }
-    40% { transform: translate(-1px, -1px) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
-    60% { transform: translate(1px, 1px) scale(1.03); filter: hue-rotate(-15deg) contrast(1.05); }
-    80% { transform: translate(1px, -1px) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
-    100% { transform: translate(0) scale(1.03); filter: hue-rotate(0deg) contrast(1); }
+  0% {
+    transform: translate(0) scale(1.03);
+    filter: hue-rotate(0deg) contrast(1);
+  }
+  20% {
+    transform: translate(-1px, 1px) scale(1.03);
+    filter: hue-rotate(15deg) contrast(1.05);
+  }
+  40% {
+    transform: translate(-1px, -1px) scale(1.03);
+    filter: hue-rotate(0deg) contrast(1);
+  }
+  60% {
+    transform: translate(1px, 1px) scale(1.03);
+    filter: hue-rotate(-15deg) contrast(1.05);
+  }
+  80% {
+    transform: translate(1px, -1px) scale(1.03);
+    filter: hue-rotate(0deg) contrast(1);
+  }
+  100% {
+    transform: translate(0) scale(1.03);
+    filter: hue-rotate(0deg) contrast(1);
+  }
 }
 
 @keyframes ripple-wave {
-    0% { transform: scale(1); opacity: 0.5; }
-    100% { transform: scale(1.4); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
 }
 
 .glitch-hover-container::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 0;
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .glitch-hover-container:hover::after {
-    animation: ripple-wave 1.5s cubic-bezier(0.0, 0, 0.2, 1) infinite;
+  animation: ripple-wave 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 .glitch-hover-target {
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glitch-hover-container:hover .glitch-hover-target {
-    animation: glitch-image-hover 0.4s linear infinite alternate;
-    transform: scale(1.03);
+  animation: glitch-image-hover 0.4s linear infinite alternate;
+  transform: scale(1.03);
 }
 
 /* =====================================================
@@ -519,124 +611,130 @@ input[type=range]::-webkit-slider-thumb {
 /* Override puntual de tipografía para contenido de lectura larga (Blog) */
 .font-sans-override,
 .font-sans-override * {
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
 }
 
 /* --- Tarjeta de módulo del Hub (Dashboard y grids internos) --- */
 .hub-card {
-    background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
-    border: 1px solid var(--color-terminal-border);
-    border-radius: 1rem;
-    backdrop-filter: blur(10px);
-    transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
+  border: 1px solid var(--color-terminal-border);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  transition:
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hub-card:hover {
-    border-color: var(--color-emerald-500);
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.08);
+  border-color: var(--color-emerald-500);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.08);
 }
 
 /* --- Tabla operativa principal (Watchlist y Bitácora) --- */
 .ops-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.8125rem;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
 }
 
 .ops-table th {
-    background-color: var(--color-terminal-surface);
-    color: var(--color-terminal-muted);
-    font-weight: 700;
-    padding: 0.75rem 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.6875rem;
-    border-bottom: 1px solid var(--color-terminal-border);
-    text-align: left;
-    white-space: nowrap;
+  background-color: var(--color-terminal-surface);
+  color: var(--color-terminal-muted);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  border-bottom: 1px solid var(--color-terminal-border);
+  text-align: left;
+  white-space: nowrap;
 }
 
 .ops-table td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--color-terminal-border-subtle);
-    color: var(--color-terminal-secondary);
-    vertical-align: middle;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-terminal-border-subtle);
+  color: var(--color-terminal-secondary);
+  vertical-align: middle;
 }
 
 .ops-table tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .ops-table tr:hover td {
-    background-color: rgba(16, 185, 129, 0.03);
-    color: var(--color-terminal-text);
+  background-color: rgba(16, 185, 129, 0.03);
+  color: var(--color-terminal-text);
 }
 
 /* --- Badges de estado para la Bitácora de Operaciones --- */
 .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-family: ui-monospace, monospace;
-    white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
 }
 
 /* 🟢 Activo */
 .badge-active {
-    background-color: rgba(16, 185, 129, 0.12);
-    color: var(--color-emerald-400);
-    border: 1px solid rgba(16, 185, 129, 0.25);
+  background-color: rgba(16, 185, 129, 0.12);
+  color: var(--color-emerald-400);
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 /* 🟡 Rutina Diaria */
 .badge-routine {
-    background-color: rgba(234, 179, 8, 0.12);
-    color: #fbbf24;
-    border: 1px solid rgba(234, 179, 8, 0.25);
+  background-color: rgba(234, 179, 8, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(234, 179, 8, 0.25);
 }
 
 /* 🔴 Reclamado / Finalizado */
 .badge-claimed {
-    background-color: rgba(239, 68, 68, 0.12);
-    color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 /* --- Prefijo de prompt de terminal en títulos de sección --- */
 .section-prompt::before {
-    content: '> ';
-    color: var(--color-emerald-400);
-    font-family: ui-monospace, monospace;
-    font-weight: 400;
+  content: "> ";
+  color: var(--color-emerald-400);
+  font-family: ui-monospace, monospace;
+  font-weight: 400;
 }
 
 /* --- Tarjeta de Herramienta / Tool Card --- */
 .tool-card {
-    background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
-    border: 1px solid var(--color-terminal-border);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    backdrop-filter: blur(10px);
-    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  background-color: color-mix(in srgb, var(--color-terminal-surface) 60%, transparent);
+  border: 1px solid var(--color-terminal-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .tool-card:hover {
-    border-color: rgba(34, 211, 238, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 0 24px rgba(34, 211, 238, 0.06);
+  border-color: rgba(34, 211, 238, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.06);
 }
 
 /* ==============================
@@ -647,62 +745,67 @@ input[type=range]::-webkit-slider-thumb {
 
 /* Enlace activo en el índice */
 .toc-link {
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .toc-link.active {
-    color: var(--color-emerald-400) !important;
-    font-weight: 600;
+  color: var(--color-emerald-400) !important;
+  font-weight: 600;
 }
 
 /* Marcador lateral del ítem */
 .toc-marker {
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .toc-item:hover .toc-marker {
-    border-color: var(--color-emerald-400) !important;
+  border-color: var(--color-emerald-400) !important;
 }
 
 .toc-item:has(.active) .toc-marker {
-    background-color: var(--color-emerald-400) !important;
-    border-color: var(--color-emerald-400) !important;
-    transform: scale(1.3) rotate(45deg);
-    box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+  background-color: var(--color-emerald-400) !important;
+  border-color: var(--color-emerald-400) !important;
+  transform: scale(1.3) rotate(45deg);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
 }
 
 /* Acordeón de H3 dentro de un grupo H2 */
 .toc-h3-group {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-    position: relative;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  position: relative;
 }
 
 .toc-h3-group.open {
-    max-height: 500px;
+  max-height: 500px;
 }
 
 .toc-h3-group::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 8px;
-    width: 1px;
-    background-color: rgba(42, 42, 42, 0.4);
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 8px;
+  width: 1px;
+  background-color: rgba(42, 42, 42, 0.4);
 }
 
 /* Barra de progreso de lectura */
 #reading-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 2px;
-    width: 0%;
-    background: linear-gradient(90deg, var(--color-emerald-500), var(--color-emerald-400), var(--color-cyan-400));
-    box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
-    z-index: 9999;
-    transition: width 0.1s linear;
-    border-radius: 0 2px 2px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    var(--color-emerald-500),
+    var(--color-emerald-400),
+    var(--color-cyan-400)
+  );
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+  z-index: 9999;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
 }

@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
-import HeroSection from "../components/home/HeroSection.astro";
-import TickerSection from "../components/home/TickerSection.astro";
-import PremisaSection from "../components/home/PremisaSection.astro";
+import Layout from "../layouts/Layout.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
+import HeroSection from "../components/home/HeroSection.astro"
+import TickerSection from "../components/home/TickerSection.astro"
+import PremisaSection from "../components/home/PremisaSection.astro"
 
-import { getCollection } from "astro:content";
+import { getCollection } from "astro:content"
 
 // Metadatos de la página principal
 const seo = {
@@ -13,7 +13,7 @@ const seo = {
   description:
     "Centro de comando técnico de 0xLeñador: herramientas de análisis, watchlist de activos, bitácora de operaciones y directorio de recursos Web3 y mercados tradicionales.",
   image: "/img/meta/home.webp",
-};
+}
 
 // Schema Person actualizado
 const schema = {
@@ -30,15 +30,15 @@ const schema = {
     "https://x.com/0xlenador",
     "https://t.me/zero0xlenador",
   ],
-};
+}
 
 // Últimas 3 entradas del blog
 const posts = (await getCollection("blog"))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-  .slice(0, 3);
+  .slice(0, 3)
 
 // Guías operativas activas
-const guiasActivas = (await getCollection("guias")).filter(g => g.data.estado === "activa");
+const guiasActivas = (await getCollection("guias")).filter((g) => g.data.estado === "activa")
 
 // Los 4 módulos del Hub en la página principal
 const modules = [
@@ -82,7 +82,7 @@ const modules = [
     accentClass: "border-violet-500/30 hover:border-violet-500/60",
     badgeClass: "text-violet-400 bg-violet-500/10",
   },
-];
+]
 
 const faqItems = [
   {
@@ -110,7 +110,7 @@ const faqItems = [
     respuesta:
       "Todo el directorio y los enlaces provistos en las guías son curados manualmente apuntando exclusivamente a las fuentes oficiales de los protocolos. Sin embargo, el ecosistema Web3 conlleva riesgos; se recomienda aplicar siempre buenas prácticas, como revocar permisos regularmente y usar 'burner wallets' para tareas de farming.",
   },
-];
+]
 ---
 
 <Layout
@@ -121,7 +121,6 @@ const faqItems = [
   customSpacing
 >
   <main class="max-w-6xl mx-auto px-6 pt-6 md:pt-10 pb-0">
-
     <!-- ─── HERO ─── -->
     <HeroSection
       phrases={[
@@ -146,149 +145,174 @@ const faqItems = [
     <!-- ─── MÓDULOS DEL HUB ─── -->
     <section class="mb-20">
       <div class="flex items-center gap-4 mb-8">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+        <h2
+          class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]"
+        >
           Centro de Comando
         </h2>
         <div class="h-px flex-grow bg-terminal-border/50"></div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {modules.map((mod) => (
-          <a
-            href={mod.href}
-            id={`hub-module-${mod.id}`}
-            class:list={[
-              "hub-card p-6 flex flex-col gap-4 group no-underline",
-              mod.accentClass,
-            ]}
-          >
-            <!-- Icono -->
-            <div class="w-10 h-10 rounded-xl bg-terminal-elevated/60 border border-terminal-border flex items-center justify-center group-hover:border-current transition-colors">
-              <svg class="w-5 h-5 text-terminal-muted group-hover:text-current transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                set:html={mod.icon}
-              />
-            </div>
+        {
+          modules.map((mod) => (
+            <a
+              href={mod.href}
+              id={`hub-module-${mod.id}`}
+              class:list={["hub-card p-6 flex flex-col gap-4 group no-underline", mod.accentClass]}
+            >
+              {/* Icono */}
+              <div class="w-10 h-10 rounded-xl bg-terminal-elevated/60 border border-terminal-border flex items-center justify-center group-hover:border-current transition-colors">
+                <svg
+                  class="w-5 h-5 text-terminal-muted group-hover:text-current transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  set:html={mod.icon}
+                />
+              </div>
 
-            <!-- Contenido -->
-            <div class="flex-1">
-              <h3 class="text-white font-bold text-sm mb-1.5 group-hover:text-current transition-colors">
-                {mod.titulo}
-              </h3>
-              <p class="text-terminal-muted text-xs leading-relaxed">
-                {mod.descripcion}
-              </p>
-            </div>
+              {/* Contenido */}
+              <div class="flex-1">
+                <h3 class="text-white font-bold text-sm mb-1.5 group-hover:text-current transition-colors">
+                  {mod.titulo}
+                </h3>
+                <p class="text-terminal-muted text-xs leading-relaxed">{mod.descripcion}</p>
+              </div>
 
-            <!-- Badge de count -->
-            <div class:list={[
-              "self-start text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold",
-              mod.badgeClass,
-            ]}>
-              {mod.count}
-            </div>
-          </a>
-        ))}
+              {/* Badge de count */}
+              <div
+                class:list={[
+                  "self-start text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold",
+                  mod.badgeClass,
+                ]}
+              >
+                {mod.count}
+              </div>
+            </a>
+          ))
+        }
       </div>
     </section>
 
     <!-- ─── STATUS: GUÍAS OPERATIVAS ACTIVAS ─── -->
-    {guiasActivas.length > 0 && (
-      <section class="mb-20">
-        <div class="flex items-center gap-4 mb-6">
-          <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-            Status: Guías Operativas
-          </h2>
-          <div class="h-px flex-grow bg-terminal-border/50"></div>
-          <a
-            href="/operaciones"
-            class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
-          >
-            Ver todas →
-          </a>
-        </div>
-
-        <div class="hub-card divide-y divide-terminal-border/50">
-          {guiasActivas.map((guia) => (
-            <a href={`/operaciones/${guia.id}`} class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="relative flex-shrink-0">
-                  {guia.data.imagen ? (
-                    <img src={guia.data.imagen} alt={guia.data.title} class="w-8 h-8 rounded-full object-cover border border-terminal-border bg-terminal-elevated" />
-                  ) : (
-                    <div class="w-8 h-8 rounded-full bg-terminal-elevated border border-terminal-border flex items-center justify-center">
-                      <span class="text-[10px] text-terminal-muted font-bold">{guia.data.title.charAt(0)}</span>
-                    </div>
-                  )}
-                  <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#0D0D0D] shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
-                </div>
-                <div>
-                  <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">{guia.data.title}</h3>
-                  <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">{guia.data.categoria} • {guia.data.dificultad}</p>
-                </div>
-              </div>
-              {guia.data.fechaLimite && (
-                <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
-                  ⏳ {new Date(guia.data.fechaLimite).toLocaleDateString("es-CO", { day: "numeric", month: "short" })}
-                </span>
-              )}
+    {
+      guiasActivas.length > 0 && (
+        <section class="mb-20">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+              Status: Guías Operativas
+            </h2>
+            <div class="h-px flex-grow bg-terminal-border/50" />
+            <a
+              href="/operaciones"
+              class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+            >
+              Ver todas →
             </a>
-          ))}
-        </div>
-      </section>
-    )}
+          </div>
+
+          <div class="hub-card divide-y divide-terminal-border/50">
+            {guiasActivas.map((guia) => (
+              <a
+                href={`/operaciones/${guia.id}`}
+                class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <div class="relative flex-shrink-0">
+                    {guia.data.imagen ? (
+                      <img
+                        src={guia.data.imagen}
+                        alt={guia.data.title}
+                        class="w-8 h-8 rounded-full object-cover border border-terminal-border bg-terminal-elevated"
+                      />
+                    ) : (
+                      <div class="w-8 h-8 rounded-full bg-terminal-elevated border border-terminal-border flex items-center justify-center">
+                        <span class="text-[10px] text-terminal-muted font-bold">
+                          {guia.data.title.charAt(0)}
+                        </span>
+                      </div>
+                    )}
+                    <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#0D0D0D] shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                  </div>
+                  <div>
+                    <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">
+                      {guia.data.title}
+                    </h3>
+                    <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">
+                      {guia.data.categoria} • {guia.data.dificultad}
+                    </p>
+                  </div>
+                </div>
+                {guia.data.fechaLimite && (
+                  <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
+                    ⏳{" "}
+                    {new Date(guia.data.fechaLimite).toLocaleDateString("es-CO", {
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </span>
+                )}
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
 
     <!-- ─── ÚLTIMAS DEL BLOG ─── -->
-    {posts.length > 0 && (
-      <section class="mb-20">
-        <div class="flex items-center gap-4 mb-6">
-          <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-            Últimas del Blog
-          </h2>
-          <div class="h-px flex-grow bg-terminal-border/50"></div>
-          <a
-            href="/blog"
-            class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
-          >
-            Ver todos →
-          </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {posts.map((post) => (
+    {
+      posts.length > 0 && (
+        <section class="mb-20">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+              Últimas del Blog
+            </h2>
+            <div class="h-px flex-grow bg-terminal-border/50" />
             <a
-              href={`/blog/${post.id}`}
-              class="hub-card p-5 flex flex-col gap-3 group no-underline"
+              href="/blog"
+              class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
-              {post.data.coverImage && (
-                <img
-                  src={post.data.coverImage.src}
-                  alt={post.data.coverAlt ?? post.data.title}
-                  width={400}
-                  height={200}
-                  loading="lazy"
-                  class="w-full h-32 object-cover rounded-lg"
-                />
-              )}
-              <div>
-                <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-1.5">
-                  {post.data.category} · {new Date(post.data.date).getFullYear()}
-                </p>
-                <h3 class="text-white text-sm font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
-                  {post.data.title}
-                </h3>
-              </div>
-              <p class="text-terminal-muted text-xs leading-relaxed flex-grow line-clamp-3">
-                {post.data.description}
-              </p>
-              <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
-                Leer artículo →
-              </span>
+              Ver todos →
             </a>
-          ))}
-        </div>
-      </section>
-    )}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {posts.map((post) => (
+              <a
+                href={`/blog/${post.id}`}
+                class="hub-card p-5 flex flex-col gap-3 group no-underline"
+              >
+                {post.data.coverImage && (
+                  <img
+                    src={post.data.coverImage.src}
+                    alt={post.data.coverAlt ?? post.data.title}
+                    width={400}
+                    height={200}
+                    loading="lazy"
+                    class="w-full h-32 object-cover rounded-lg"
+                  />
+                )}
+                <div>
+                  <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-1.5">
+                    {post.data.category} · {new Date(post.data.date).getFullYear()}
+                  </p>
+                  <h3 class="text-white text-sm font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
+                    {post.data.title}
+                  </h3>
+                </div>
+                <p class="text-terminal-muted text-xs leading-relaxed flex-grow line-clamp-3">
+                  {post.data.description}
+                </p>
+                <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
+                  Leer artículo →
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
 
     <FaqAccordion
       titulo="Preguntas Frecuentes"

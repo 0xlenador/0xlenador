@@ -1,14 +1,14 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
-import faucetsData from "../data/faucets.json";
+import Layout from "../layouts/Layout.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
+import faucetsData from "../data/faucets.json"
 
 const seo = {
   title: "Faucets Cripto Mainnet & Testnet | 0xLeñador — Tokens Gratis",
   description:
     "Directorio completo de faucets de criptomonedas. Obtén tokens de prueba para Ethereum Sepolia, Monad, Base, Solana y más de 30 redes. Esencial para desarrollo Web3 y farming de airdrops.",
   image: "/img/meta/faucets.webp",
-};
+}
 
 // Todos los faucets están en faucetsData (mezclados)
 
@@ -24,8 +24,7 @@ const faqItems = [
       "Los faucets testnet distribuyen tokens sin valor económico, esenciales para probar contratos inteligentes y dApps sin arriesgar capital real. Los faucets mainnet distribuyen criptomonedas reales (Satoshis, SOL, TRX) en cantidades pequeñas, generalmente como incentivo a través de links de referido.",
   },
   {
-    pregunta:
-      "¿Por qué algunos faucets de testnet me piden autenticar con mi wallet o cuenta?",
+    pregunta: "¿Por qué algunos faucets de testnet me piden autenticar con mi wallet o cuenta?",
     respuesta:
       "Es una medida anti-bot. Muchos faucets ahora requieren que la wallet principal tenga un saldo mínimo en mainnet o que te autentiques vía GitHub, redes sociales o Gitcoin Passport. Esto no implica riesgo siempre y cuando el sitio solo lea tu dirección pública (read-only). Nunca firmes transacciones ni apruebes permisos en faucets.",
   },
@@ -39,31 +38,25 @@ const faqItems = [
     respuesta:
       "El directorio se revisa mensualmente. Los ecosistemas de testnet cambian con frecuencia: algunas redes deprecan sus testnets (como Ethereum Goerli) y lanzan nuevas (Holesky, Hoodi). Si detectas un faucet caído o tienes una sugerencia, puedes reportarlo vía Telegram o X (@0xlenador).",
   },
-];
+]
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
     <!-- Breadcrumb -->
-    <p
-      class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6"
-    >
+    <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
       Directorio / Faucets
     </p>
 
     <!-- Header -->
     <header class="mb-10 border-b border-terminal-border/50 pb-8">
-      <h1
-        class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3"
-      >
-        Listado de Faucets <span class="text-emerald-500">
-          Mainnet & Testnet</span
-        >
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
+        Listado de Faucets <span class="text-emerald-500"> Mainnet & Testnet</span>
       </h1>
-      <p
-        class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light"
-      >
-        Explora todos los sitios web de faucets de criptomonedas disponibles en el ecosistema blockchain, acumula criptomonedas gratis para farmear tus airdrops y/o desarrollar tus proyectos.
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light">
+        Explora todos los sitios web de faucets de criptomonedas disponibles en el ecosistema
+        blockchain, acumula criptomonedas gratis para farmear tus airdrops y/o desarrollar tus
+        proyectos.
       </p>
     </header>
 
@@ -80,8 +73,7 @@ const faqItems = [
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="1.5"
-            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-          ></path>
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
         </svg>
         <input
           type="text"
@@ -91,9 +83,7 @@ const faqItems = [
         />
       </div>
 
-      <div
-        class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border"
-      >
+      <div class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border">
         <button
           class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold transition-all bg-emerald-600 text-white"
           data-filter="all">Todos</button
@@ -118,7 +108,7 @@ const faqItems = [
               "item-card group border rounded-2xl p-4 flex items-start gap-4 transition-all duration-300",
               faucet.type === "mainnet"
                 ? "bg-amber-500/[0.03] border-amber-500/[0.08] hover:border-amber-500/20"
-                : "bg-white/[0.02] border-white/[0.05] hover:border-white/[0.08]"
+                : "bg-white/[0.02] border-white/[0.05] hover:border-white/[0.08]",
             ]}
             data-type={faucet.type}
             data-tags={faucet.tags.join(" ").toLowerCase()}
@@ -139,7 +129,9 @@ const faqItems = [
                   rel="noopener noreferrer"
                   class:list={[
                     "inline-flex items-center gap-1 text-sm font-semibold transition-colors no-underline",
-                    faucet.type === "mainnet" ? "text-white hover:text-amber-400" : "text-white hover:text-emerald-400"
+                    faucet.type === "mainnet"
+                      ? "text-white hover:text-amber-400"
+                      : "text-white hover:text-emerald-400",
                   ]}
                 >
                   {faucet.name}
@@ -159,10 +151,12 @@ const faqItems = [
                 </a>
               </div>
               <div class="mb-2 flex items-center gap-2">
-                <span class:list={[
-                  "text-[9px] font-mono uppercase tracking-wider font-bold",
-                  faucet.type === "mainnet" ? "text-amber-500" : "text-emerald-500"
-                ]}>
+                <span
+                  class:list={[
+                    "text-[9px] font-mono uppercase tracking-wider font-bold",
+                    faucet.type === "mainnet" ? "text-amber-500" : "text-emerald-500",
+                  ]}
+                >
                   {faucet.type.toUpperCase()}
                 </span>
                 {faucet.type === "mainnet" && (
@@ -173,12 +167,14 @@ const faqItems = [
               </div>
               <div class="flex flex-wrap gap-1.5 mt-2">
                 {faucet.tags.map((tag) => (
-                  <span class:list={[
-                    "faucet-tag text-xs font-medium tracking-tight px-2 py-0.5 rounded-md transition-colors",
-                    faucet.type === "mainnet" 
-                      ? "text-amber-500/70 bg-black/40 border border-amber-500/[0.15]" 
-                      : "text-terminal-muted bg-black/40 border border-terminal-border/40"
-                  ]}>
+                  <span
+                    class:list={[
+                      "faucet-tag text-xs font-medium tracking-tight px-2 py-0.5 rounded-md transition-colors",
+                      faucet.type === "mainnet"
+                        ? "text-amber-500/70 bg-black/40 border border-amber-500/[0.15]"
+                        : "text-terminal-muted bg-black/40 border border-terminal-border/40",
+                    ]}
+                  >
                     {tag}
                   </span>
                 ))}
@@ -191,12 +187,8 @@ const faqItems = [
 
     <!-- FAQ -->
     <div class="border-t border-terminal-border/60 pt-14">
-      <h2 class="text-xl font-bold text-white tracking-tight mb-1">
-        Sobre los Faucets
-      </h2>
-      <p class="text-xs text-terminal-subtle mb-8">
-        Guía de uso y buenas prácticas de seguridad.
-      </p>
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Sobre los Faucets</h2>
+      <p class="text-xs text-terminal-subtle mb-8">Guía de uso y buenas prácticas de seguridad.</p>
       <FaqAccordion
         titulo="Preguntas sobre Faucets"
         subtitulo="Uso, seguridad y actualización"
@@ -208,62 +200,58 @@ const faqItems = [
 </Layout>
 
 <script is:inline>
-  var activeTab = "all";
+  var activeTab = "all"
 
   function applyFilters() {
-    var q = document.getElementById("faucet-search").value.toLowerCase().trim();
-    var cards = document.querySelectorAll(".item-card");
+    var q = document.getElementById("faucet-search").value.toLowerCase().trim()
+    var cards = document.querySelectorAll(".item-card")
 
     cards.forEach(function (card) {
-      var type = card.getAttribute("data-type");
-      var tagsText = card.getAttribute("data-tags") || "";
-      var name = card.querySelector("a")
-        ? card.querySelector("a").textContent.toLowerCase()
-        : "";
+      var type = card.getAttribute("data-type")
+      var tagsText = card.getAttribute("data-tags") || ""
+      var name = card.querySelector("a") ? card.querySelector("a").textContent.toLowerCase() : ""
 
-      var tabMatch = activeTab === "all" || type === activeTab;
-      var queryMatch = q === "" || tagsText.includes(q) || name.includes(q);
+      var tabMatch = activeTab === "all" || type === activeTab
+      var queryMatch = q === "" || tagsText.includes(q) || name.includes(q)
 
       if (tabMatch && queryMatch) {
-        card.classList.remove("hidden");
+        card.classList.remove("hidden")
       } else {
-        card.classList.add("hidden");
+        card.classList.add("hidden")
       }
 
       // Highlight tags que coinciden con la búsqueda
-      var tagEls = card.querySelectorAll(".faucet-tag");
+      var tagEls = card.querySelectorAll(".faucet-tag")
       tagEls.forEach(function (tag) {
         if (q !== "" && tag.textContent.toLowerCase().includes(q)) {
-          tag.classList.add("highlight");
-          tag.classList.remove("dimmed");
+          tag.classList.add("highlight")
+          tag.classList.remove("dimmed")
         } else if (q !== "") {
-          tag.classList.remove("highlight");
-          tag.classList.add("dimmed");
+          tag.classList.remove("highlight")
+          tag.classList.add("dimmed")
         } else {
-          tag.classList.remove("highlight", "dimmed");
+          tag.classList.remove("highlight", "dimmed")
         }
-      });
-    });
+      })
+    })
 
     // Fin de función applyFilters
   }
 
   document.querySelectorAll(".tab-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      activeTab = btn.getAttribute("data-filter");
+      activeTab = btn.getAttribute("data-filter")
 
       document.querySelectorAll(".tab-btn").forEach(function (b) {
-        b.classList.remove("bg-emerald-600", "text-white");
-        b.classList.add("text-terminal-muted");
-      });
-      btn.classList.add("bg-emerald-600", "text-white");
-      btn.classList.remove("text-terminal-muted");
+        b.classList.remove("bg-emerald-600", "text-white")
+        b.classList.add("text-terminal-muted")
+      })
+      btn.classList.add("bg-emerald-600", "text-white")
+      btn.classList.remove("text-terminal-muted")
 
-      applyFilters();
-    });
-  });
+      applyFilters()
+    })
+  })
 
-  document
-    .getElementById("faucet-search")
-    .addEventListener("input", applyFilters);
+  document.getElementById("faucet-search").addEventListener("input", applyFilters)
 </script>

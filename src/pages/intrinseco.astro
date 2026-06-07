@@ -1,16 +1,15 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
-import CalculatorForm from "../components/intrinseco/CalculatorForm.astro";
+import Layout from "../layouts/Layout.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
+import CalculatorForm from "../components/intrinseco/CalculatorForm.astro"
 
 const seo = {
-  title:
-    "Calculadora de Valor Intrínseco | Análisis Fundamental Graham y Buffett",
+  title: "Calculadora de Valor Intrínseco | Análisis Fundamental Graham y Buffett",
   description:
     "Calcula el valor real de tus acciones con precisión. Herramienta avanzada basada en la fórmula de Graham y el modelo de flujos descontados de Warren Buffett.",
   url: "https://0xlenador.xyz/intrinseco",
   image: "/img/meta/intrinseco.webp",
-};
+}
 
 const schema = {
   "@context": "https://schema.org",
@@ -26,97 +25,90 @@ const schema = {
     url: "https://0xlenador.xyz/",
   },
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-};
+}
 ---
 
-<Layout title={seo.title} description={seo.description} image={seo.image} schema={schema} customSpacing>
+<Layout
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  schema={schema}
+  customSpacing
+>
+  <header class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
+    <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight leading-tight">
+      Calculadora de <br />
+      <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        Valor Intrínseco
+      </span>
+    </h1>
+    <p class="text-terminal-muted text-xs md:text-sm font-bold uppercase tracking-[0.4em] mb-2">
+      Terminal de Análisis Fundamental
+    </p>
+    <p class="text-terminal-secondary text-lg md:text-xl font-light max-w-xl mx-auto">
+      Calcula el valor real de tus activos con precisión algorítmica.
+    </p>
+  </header>
 
-    <header class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
-      <h1
-        class="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight leading-tight"
-      >
-        Calculadora de <br />
-        <span
-          class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
-        >
-          Valor Intrínseco
-        </span>
-      </h1>
-      <p
-        class="text-terminal-muted text-xs md:text-sm font-bold uppercase tracking-[0.4em] mb-2"
-      >
-        Terminal de Análisis Fundamental
-      </p>
-      <p class="text-terminal-secondary text-lg md:text-xl font-light max-w-xl mx-auto">
-        Calcula el valor real de tus activos con precisión algorítmica.
-      </p>
-    </header>
+  <main class="max-w-3xl mx-auto px-6 pb-20">
+    <CalculatorForm />
 
-    <main class="max-w-3xl mx-auto px-6 pb-20">
-      <CalculatorForm />
-
-      <section class="mt-20 space-y-6">
-        <h2
-          class="text-2xl font-bold text-white tracking-tight text-center mb-10"
-        >
-          Entiende la Valoración
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-8 bg-terminal-surface/20 border border-terminal-border rounded-3xl">
-            <h4
-              class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest"
-            >
-              ¿Qué es el Valor Intrínseco?
-            </h4>
-            <p class="text-xs text-terminal-secondary leading-relaxed">
-              Es el valor real de un activo basado en sus fundamentos
-              económicos, ignorando el ruido actual del precio de mercado.
-            </p>
-          </div>
-          <div class="p-8 bg-terminal-surface/20 border border-terminal-border rounded-3xl">
-            <h4
-              class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest"
-            >
-              ¿Por qué usar Margen de Seguridad?
-            </h4>
-            <p class="text-xs text-terminal-secondary leading-relaxed">
-              Para protegernos de errores de cálculo o imprevistos del mercado.
-              Comprar por debajo del valor intrínseco es la base del Value
-              Investing.
-            </p>
-          </div>
+    <section class="mt-20 space-y-6">
+      <h2 class="text-2xl font-bold text-white tracking-tight text-center mb-10">
+        Entiende la Valoración
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-8 bg-terminal-surface/20 border border-terminal-border rounded-3xl">
+          <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">
+            ¿Qué es el Valor Intrínseco?
+          </h4>
+          <p class="text-xs text-terminal-secondary leading-relaxed">
+            Es el valor real de un activo basado en sus fundamentos económicos, ignorando el ruido
+            actual del precio de mercado.
+          </p>
         </div>
-      </section>
-
-      <FaqAccordion
-        titulo="Preguntas Frecuentes"
-        subtitulo="Todo lo que necesitas saber sobre el análisis"
-        items={[
-          {
-            pregunta: "¿Cuándo debo comprar una acción?",
-            preguntaId: "faq-buy-when",
-            respuesta: "Idealmente cuando el precio de mercado esté un 20-30% por debajo del valor calculado (Margen de Seguridad). Esto reduce el riesgo de pérdida y aumenta el potencial de beneficio."
-          },
-          {
-            pregunta: "¿Qué EPS debo utilizar?",
-            preguntaId: "faq-eps-use",
-            respuesta: "El EPS TTM (Trailing Twelve Months) es el estándar, aunque el EPS normalizado evita distorsiones por eventos únicos. Asegúrate de verificar si hay dilución de acciones reciente."
-          },
-          {
-            pregunta: "¿Qué tasa de descuento es recomendable?",
-            preguntaId: "faq-discount-rate",
-            respuesta: "Generalmente entre el 8% y el 12%, dependiendo del riesgo del sector y los tipos de interés actuales. Una tasa más alta refleja una mayor incertidumbre sobre los flujos futuros."
-          }
-        ]}
-      />
-
-      <div class="mt-20 text-center">
-        <p
-          class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4"
-        >
-          Financial Intelligence Engine
-        </p>
-        <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+        <div class="p-8 bg-terminal-surface/20 border border-terminal-border rounded-3xl">
+          <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">
+            ¿Por qué usar Margen de Seguridad?
+          </h4>
+          <p class="text-xs text-terminal-secondary leading-relaxed">
+            Para protegernos de errores de cálculo o imprevistos del mercado. Comprar por debajo del
+            valor intrínseco es la base del Value Investing.
+          </p>
+        </div>
       </div>
-    </main>
+    </section>
+
+    <FaqAccordion
+      titulo="Preguntas Frecuentes"
+      subtitulo="Todo lo que necesitas saber sobre el análisis"
+      items={[
+        {
+          pregunta: "¿Cuándo debo comprar una acción?",
+          preguntaId: "faq-buy-when",
+          respuesta:
+            "Idealmente cuando el precio de mercado esté un 20-30% por debajo del valor calculado (Margen de Seguridad). Esto reduce el riesgo de pérdida y aumenta el potencial de beneficio.",
+        },
+        {
+          pregunta: "¿Qué EPS debo utilizar?",
+          preguntaId: "faq-eps-use",
+          respuesta:
+            "El EPS TTM (Trailing Twelve Months) es el estándar, aunque el EPS normalizado evita distorsiones por eventos únicos. Asegúrate de verificar si hay dilución de acciones reciente.",
+        },
+        {
+          pregunta: "¿Qué tasa de descuento es recomendable?",
+          preguntaId: "faq-discount-rate",
+          respuesta:
+            "Generalmente entre el 8% y el 12%, dependiendo del riesgo del sector y los tipos de interés actuales. Una tasa más alta refleja una mayor incertidumbre sobre los flujos futuros.",
+        },
+      ]}
+    />
+
+    <div class="mt-20 text-center">
+      <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
+        Financial Intelligence Engine
+      </p>
+      <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+    </div>
+  </main>
 </Layout>

@@ -1,14 +1,14 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import RiskfolioChart from "../components/home/RiskfolioChart.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
+import Layout from "../layouts/Layout.astro"
+import RiskfolioChart from "../components/home/RiskfolioChart.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
 
 const seo = {
   title: "Riskfolio | 0xLeñador — Distribución de Capital por Perfil de Riesgo",
   description:
     "Herramienta de asignación de capital basada en tu perfil de riesgo. Define cómo distribuir tu portafolio entre renta fija, cripto large-cap, altcoins y reserva de liquidez.",
   image: "/img/meta/home.webp",
-};
+}
 
 const faqItems = [
   {
@@ -31,12 +31,11 @@ const faqItems = [
     respuesta:
       "Depende del perfil. Como referencia general: el perfil conservador puede rebalancear anualmente. El moderado, cada 6 meses o cuando alguna categoría se desvíe más de un 5% de la asignación objetivo. El agresivo puede necesitar ajustes trimestrales dada la alta volatilidad de sus posiciones.",
   },
-];
+]
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
-
     <!-- Breadcrumb -->
     <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
       Herramientas / Riskfolio
@@ -45,7 +44,9 @@ const faqItems = [
     <!-- Header -->
     <header class="mb-12">
       <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-        <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Risk</span>folio
+        <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+          >Risk</span
+        >folio
       </h1>
       <p class="text-terminal-secondary text-sm md:text-base leading-relaxed max-w-2xl font-light">
         Modelo de distribución de capital basado en tu perfil de riesgo. Selecciona tu perfil,
@@ -58,9 +59,7 @@ const faqItems = [
 
     <!-- Sección FAQ -->
     <div class="mt-16 border-t border-terminal-border/60 pt-14">
-      <h2 class="text-xl font-bold text-white tracking-tight mb-1">
-        Metodología del Modelo
-      </h2>
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Metodología del Modelo</h2>
       <p class="text-xs text-terminal-subtle mb-8">
         Fundamentos conceptuales de Riskfolio y sus perfiles de distribución.
       </p>
@@ -71,6 +70,5 @@ const faqItems = [
         items={faqItems}
       />
     </div>
-
   </main>
 </Layout>

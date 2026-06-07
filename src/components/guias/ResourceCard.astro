@@ -9,51 +9,65 @@
  *  - isFaucet?: boolean — si es true, busca en faucets.json en vez de directory.json
  *  - label?: string — texto del botón (por defecto usa el nombre del recurso)
  */
-import directoryData from "../../data/directory.json";
-import faucetsData from "../../data/faucets.json";
+import directoryData from "../../data/directory.json"
+import faucetsData from "../../data/faucets.json"
 
 interface Props {
-  id: string;
-  isFaucet?: boolean;
-  label?: string;
+  id: string
+  isFaucet?: boolean
+  label?: string
 }
 
-const { id, isFaucet = false, label } = Astro.props;
+const { id, isFaucet = false, label } = Astro.props
 
 // Buscar en la fuente correcta
-const source = isFaucet ? faucetsData : directoryData;
-const resource = source.find((item: any) => item.id === id);
+const source = isFaucet ? faucetsData : directoryData
+const resource = source.find((item: any) => item.id === id)
 ---
 
-{resource ? (
-  <a
-    href={resource.url}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="resource-card inline-flex items-center gap-2.5 px-3 py-2 rounded-xl border border-terminal-border bg-terminal-surface/60 text-terminal-secondary hover:text-white hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-200 text-xs font-medium no-underline group"
-    title={resource.name}
-  >
-    {resource.logo && (
-      <img
-        src={resource.logo}
-        alt={resource.alt_logo || resource.name}
-        width={18}
-        height={18}
-        loading="lazy"
-        class="w-4 h-4 rounded-full object-contain flex-shrink-0"
-      />
-    )}
-    <span>{label || resource.name}</span>
-    {resource.sponsored && (
-      <span class="text-[9px] font-mono text-emerald-500/60 uppercase tracking-wider">ref</span>
-    )}
-    <svg class="w-3 h-3 opacity-40 group-hover:opacity-80 transition-opacity flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-    </svg>
-  </a>
-) : (
-  <!-- Fallback si no se encuentra el recurso -->
-  <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400/70 text-xs font-mono">
-    ⚠ id "{id}" no encontrado
-  </span>
-)}
+{
+  resource ? (
+    <a
+      href={resource.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="resource-card inline-flex items-center gap-2.5 px-3 py-2 rounded-xl border border-terminal-border bg-terminal-surface/60 text-terminal-secondary hover:text-white hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-200 text-xs font-medium no-underline group"
+      title={resource.name}
+    >
+      {resource.logo && (
+        <img
+          src={resource.logo}
+          alt={resource.alt_logo || resource.name}
+          width={18}
+          height={18}
+          loading="lazy"
+          class="w-4 h-4 rounded-full object-contain flex-shrink-0"
+        />
+      )}
+      <span>{label || resource.name}</span>
+      {resource.sponsored && (
+        <span class="text-[9px] font-mono text-emerald-500/60 uppercase tracking-wider">ref</span>
+      )}
+      <svg
+        class="w-3 h-3 opacity-40 group-hover:opacity-80 transition-opacity flex-shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+        />
+      </svg>
+    </a>
+  ) : (
+    <>
+      {/* Fallback si no se encuentra el recurso */}
+      <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400/70 text-xs font-mono">
+        ⚠ id "{id}" no encontrado
+      </span>
+    </>
+  )
+}

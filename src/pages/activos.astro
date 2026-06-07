@@ -1,13 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
+import Layout from "../layouts/Layout.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
 
 const seo = {
   title: "Activos | 0xLeñador — Watchlist de Mercados Tradicionales y Web3",
   description:
     "Watchlist de activos bajo seguimiento activo: Bitcoin, Ethereum, ETFs S&P 500, Berkshire Hathaway e Hyperliquid. Seguimiento de la tesis de inversión 60/40 de 0xLeñador.",
   image: "/img/meta/tesis.webp",
-};
+}
 
 // Activos en seguimiento activo — datos estáticos que reflejan la tesis
 const watchlist = [
@@ -74,16 +74,16 @@ const watchlist = [
     descripcion: "Economía experimental on-chain. Fase de garaje — riesgo total.",
     accentColor: "yellow",
   },
-];
+]
 
 // Mapa de colores para el acento de categoría
 const accentMap: Record<string, string> = {
-  orange:  "text-orange-400  border-orange-400/20  bg-orange-400/5",
-  blue:    "text-blue-400    border-blue-400/20    bg-blue-400/5",
+  orange: "text-orange-400  border-orange-400/20  bg-orange-400/5",
+  blue: "text-blue-400    border-blue-400/20    bg-blue-400/5",
   fuchsia: "text-fuchsia-400 border-fuchsia-400/20 bg-fuchsia-400/5",
   emerald: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5",
-  yellow:  "text-yellow-400  border-yellow-400/20  bg-yellow-400/5",
-};
+  yellow: "text-yellow-400  border-yellow-400/20  bg-yellow-400/5",
+}
 
 const faqItems = [
   {
@@ -106,7 +106,7 @@ const faqItems = [
     respuesta:
       "La watchlist refleja posiciones activas, no precios en tiempo real. Se actualiza cuando hay cambios estructurales en la tesis (entrada, salida o reconfiguración de posición), no con la volatilidad diaria del mercado.",
   },
-];
+]
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
@@ -120,8 +120,8 @@ const faqItems = [
         Watchlist de <span class="text-emerald-500">Activos</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Los activos bajo seguimiento activo en la tesis de 0xLeñador. No son señales de compra,
-        son posiciones documentadas con fundamento técnico y matemático.
+        Los activos bajo seguimiento activo en la tesis de 0xLeñador. No son señales de compra, son
+        posiciones documentadas con fundamento técnico y matemático.
       </p>
     </header>
 
@@ -149,143 +149,160 @@ const faqItems = [
             </tr>
           </thead>
           <tbody>
-            {watchlist.map((activo) => (
-              <tr>
-                <td>
-                  {activo.href ? (
-                    <a href={activo.href} class="flex items-center gap-3 group no-underline">
-                      <img
-                        src={activo.imagen}
-                        alt={activo.nombre}
-                        width={32}
-                        height={32}
-                        loading="lazy"
-                        class="w-7 h-7 rounded-full object-contain flex-shrink-0"
-                      />
-                      <span class="text-white font-bold text-xs group-hover:text-emerald-400 transition-colors">{activo.nombre}</span>
-                    </a>
-                  ) : (
-                    <div class="flex items-center gap-3">
-                      <img
-                        src={activo.imagen}
-                        alt={activo.nombre}
-                        width={32}
-                        height={32}
-                        loading="lazy"
-                        class="w-7 h-7 rounded-full object-contain flex-shrink-0"
-                      />
-                      <span class="text-white font-bold text-xs">{activo.nombre}</span>
-                    </div>
-                  )}
-                </td>
-                <td>
-                  <span class:list={[
-                    "font-mono text-xs px-2 py-0.5 rounded border",
-                    accentMap[activo.accentColor],
-                  ]}>
-                    {activo.ticker}
-                  </span>
-                </td>
-                <td class="text-terminal-subtle text-xs">{activo.categoria}</td>
-                <td class="text-terminal-muted text-xs max-w-xs">{activo.descripcion}</td>
-                <td class="text-right">
-                  {activo.href ? (
-                    <a
-                      href={activo.href}
-                      class="text-emerald-500/70 hover:text-emerald-400 font-mono text-xs uppercase tracking-widest transition-colors"
+            {
+              watchlist.map((activo) => (
+                <tr>
+                  <td>
+                    {activo.href ? (
+                      <a href={activo.href} class="flex items-center gap-3 group no-underline">
+                        <img
+                          src={activo.imagen}
+                          alt={activo.nombre}
+                          width={32}
+                          height={32}
+                          loading="lazy"
+                          class="w-7 h-7 rounded-full object-contain flex-shrink-0"
+                        />
+                        <span class="text-white font-bold text-xs group-hover:text-emerald-400 transition-colors">
+                          {activo.nombre}
+                        </span>
+                      </a>
+                    ) : (
+                      <div class="flex items-center gap-3">
+                        <img
+                          src={activo.imagen}
+                          alt={activo.nombre}
+                          width={32}
+                          height={32}
+                          loading="lazy"
+                          class="w-7 h-7 rounded-full object-contain flex-shrink-0"
+                        />
+                        <span class="text-white font-bold text-xs">{activo.nombre}</span>
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <span
+                      class:list={[
+                        "font-mono text-xs px-2 py-0.5 rounded border",
+                        accentMap[activo.accentColor],
+                      ]}
                     >
-                      Ver →
-                    </a>
-                  ) : (
-                    <span class="text-terminal-subtle/40 font-mono text-[10px] uppercase">
-                      Pronto
+                      {activo.ticker}
                     </span>
-                  )}
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td class="text-terminal-subtle text-xs">{activo.categoria}</td>
+                  <td class="text-terminal-muted text-xs max-w-xs">{activo.descripcion}</td>
+                  <td class="text-right">
+                    {activo.href ? (
+                      <a
+                        href={activo.href}
+                        class="text-emerald-500/70 hover:text-emerald-400 font-mono text-xs uppercase tracking-widest transition-colors"
+                      >
+                        Ver →
+                      </a>
+                    ) : (
+                      <span class="text-terminal-subtle/40 font-mono text-[10px] uppercase">
+                        Pronto
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
       </div>
 
       <!-- Móvil: cards -->
       <div class="grid grid-cols-1 gap-0 divide-y divide-terminal-border md:hidden">
-        {watchlist.map((activo) => (
-          <div class="p-4 flex items-start gap-3">
-            {activo.href ? (
-              <a href={activo.href} class="block group flex-shrink-0 mt-0.5">
+        {
+          watchlist.map((activo) => (
+            <div class="p-4 flex items-start gap-3">
+              {activo.href ? (
+                <a href={activo.href} class="block group flex-shrink-0 mt-0.5">
+                  <img
+                    src={activo.imagen}
+                    alt={activo.nombre}
+                    width={32}
+                    height={32}
+                    loading="lazy"
+                    class="w-8 h-8 rounded-full object-contain"
+                  />
+                </a>
+              ) : (
                 <img
                   src={activo.imagen}
                   alt={activo.nombre}
                   width={32}
                   height={32}
                   loading="lazy"
-                  class="w-8 h-8 rounded-full object-contain"
+                  class="w-8 h-8 rounded-full object-contain flex-shrink-0 mt-0.5"
                 />
-              </a>
-            ) : (
-              <img
-                src={activo.imagen}
-                alt={activo.nombre}
-                width={32}
-                height={32}
-                loading="lazy"
-                class="w-8 h-8 rounded-full object-contain flex-shrink-0 mt-0.5"
-              />
-            )}
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2 mb-1">
-                {activo.href ? (
-                  <a href={activo.href} class="text-white font-bold text-sm hover:text-emerald-400 transition-colors no-underline">
-                    {activo.nombre}
-                  </a>
-                ) : (
-                  <span class="text-white font-bold text-sm">{activo.nombre}</span>
-                )}
-                <span class:list={[
-                  "font-mono text-[10px] px-1.5 py-0.5 rounded border flex-shrink-0",
-                  accentMap[activo.accentColor],
-                ]}>
-                  {activo.ticker}
-                </span>
-              </div>
-              <p class="text-terminal-muted text-xs leading-relaxed">{activo.descripcion}</p>
-              {activo.href && (
-                <a href={activo.href} class="text-emerald-500/70 text-xs font-mono mt-2 inline-block hover:text-emerald-400 transition-colors">
-                  Ver análisis →
-                </a>
               )}
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  {activo.href ? (
+                    <a
+                      href={activo.href}
+                      class="text-white font-bold text-sm hover:text-emerald-400 transition-colors no-underline"
+                    >
+                      {activo.nombre}
+                    </a>
+                  ) : (
+                    <span class="text-white font-bold text-sm">{activo.nombre}</span>
+                  )}
+                  <span
+                    class:list={[
+                      "font-mono text-[10px] px-1.5 py-0.5 rounded border flex-shrink-0",
+                      accentMap[activo.accentColor],
+                    ]}
+                  >
+                    {activo.ticker}
+                  </span>
+                </div>
+                <p class="text-terminal-muted text-xs leading-relaxed">{activo.descripcion}</p>
+                {activo.href && (
+                  <a
+                    href={activo.href}
+                    class="text-emerald-500/70 text-xs font-mono mt-2 inline-block hover:text-emerald-400 transition-colors"
+                  >
+                    Ver análisis →
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
 
     <!-- Avisos de activos individuales -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
-      {watchlist.filter(a => a.href).map((activo) => (
-        <a
-          href={activo.href!}
-          class="hub-card p-5 flex items-center gap-4 group no-underline"
-        >
-          <img
-            src={activo.imagen}
-            alt={activo.nombre}
-            width={48}
-            height={48}
-            loading="lazy"
-            class="w-10 h-10 rounded-full object-contain flex-shrink-0"
-          />
-          <div class="flex-1 min-w-0">
-            <p class="text-white font-bold text-sm group-hover:text-emerald-400 transition-colors">
-              {activo.nombre}
-            </p>
-            <p class="text-terminal-subtle text-[10px] font-mono uppercase tracking-widest">
-              Análisis completo →
-            </p>
-          </div>
-        </a>
-      ))}
+      {
+        watchlist
+          .filter((a) => a.href)
+          .map((activo) => (
+            <a href={activo.href!} class="hub-card p-5 flex items-center gap-4 group no-underline">
+              <img
+                src={activo.imagen}
+                alt={activo.nombre}
+                width={48}
+                height={48}
+                loading="lazy"
+                class="w-10 h-10 rounded-full object-contain flex-shrink-0"
+              />
+              <div class="flex-1 min-w-0">
+                <p class="text-white font-bold text-sm group-hover:text-emerald-400 transition-colors">
+                  {activo.nombre}
+                </p>
+                <p class="text-terminal-subtle text-[10px] font-mono uppercase tracking-widest">
+                  Análisis completo →
+                </p>
+              </div>
+            </a>
+          ))
+      }
     </div>
 
     <FaqAccordion

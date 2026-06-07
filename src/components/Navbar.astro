@@ -1,19 +1,14 @@
 ---
-import { Image } from "astro:assets";
-import logoImg from "../assets/img/logo.webp";
+import { Image } from "astro:assets"
+import logoImg from "../assets/img/logo.webp"
 
-const { pathname } = Astro.url;
-const activePath =
-  pathname.endsWith("/") && pathname.length > 1
-    ? pathname.slice(0, -1)
-    : pathname;
+const { pathname } = Astro.url
+const activePath = pathname.endsWith("/") && pathname.length > 1 ? pathname.slice(0, -1) : pathname
 
 // Un enlace es activo si coincide exactamente o si la ruta actual empieza por ese href
 // Excepción: '/' sólo es activo en la raíz exacta.
 const isActive = (href: string) =>
-  href === "/"
-    ? activePath === "/"
-    : activePath === href || activePath.startsWith(href + "/");
+  href === "/" ? activePath === "/" : activePath === href || activePath.startsWith(href + "/")
 
 // Los enlaces principales con sus respectivos dropdowns
 const navLinks = [
@@ -91,14 +86,11 @@ const navLinks = [
       },
     ],
   },
-];
+]
 ---
 
 <div class="max-w-7xl mx-auto px-4 w-full">
-  <nav
-    class="py-4 flex justify-between items-center relative"
-    aria-label="Navegación principal"
-  >
+  <nav class="py-4 flex justify-between items-center relative" aria-label="Navegación principal">
     <!-- Logo / Brand -->
     <div class="flex items-center gap-8 z-50">
       <a
@@ -114,9 +106,7 @@ const navLinks = [
           loading="eager"
           class="w-7 h-7 object-contain"
         />
-        <span class="leading-none"
-          >0x<span class="text-emerald-500">Leñador</span></span
-        >
+        <span class="leading-none">0x<span class="text-emerald-500">Leñador</span></span>
       </a>
 
       <!-- Desktop nav con Dropdowns -->
@@ -186,13 +176,7 @@ const navLinks = [
       aria-controls="mobile-menu"
       class="lg:hidden text-terminal-muted hover:text-white focus:outline-none z-50 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
     >
-      <svg
-        id="menu-icon"
-        class="w-7 h-7"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg id="menu-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           id="menu-path"
           stroke-linecap="round"
@@ -203,9 +187,7 @@ const navLinks = [
     </button>
 
     <!-- Desktop: derecha (Blog + redes sociales) -->
-    <div
-      class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted"
-    >
+    <div class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted">
       <a
         href="/blog"
         data-astro-prefetch
@@ -271,12 +253,10 @@ const navLinks = [
           <div class="flex flex-col border-b border-terminal-border/50">
             <button
               aria-expanded="false"
-              aria-controls={`dropdown-${href.replace('/', '')}`}
+              aria-controls={`dropdown-${href.replace("/", "")}`}
               class:list={[
                 "mobile-accordion-btn w-full text-base font-medium transition py-4 flex items-center justify-between text-left",
-                isActive(href)
-                  ? "text-white"
-                  : "text-terminal-muted hover:text-white",
+                isActive(href) ? "text-white" : "text-terminal-muted hover:text-white",
               ]}
             >
               <span>{label}</span>
@@ -295,7 +275,7 @@ const navLinks = [
                 />
               </svg>
             </button>
-            <div id={`dropdown-${href.replace('/', '')}`} class="hidden flex-col gap-1 pb-4">
+            <div id={`dropdown-${href.replace("/", "")}`} class="hidden flex-col gap-1 pb-4">
               <a
                 href={href}
                 data-astro-prefetch
@@ -340,17 +320,13 @@ const navLinks = [
         ))
       }
 
-      <div
-        class="mt-auto pt-8 pb-12 flex items-center justify-center gap-6 w-full"
-      >
+      <div class="mt-auto pt-8 pb-12 flex items-center justify-center gap-6 w-full">
         <a
           href="/blog"
           data-astro-prefetch
           class:list={[
             "text-base font-medium transition",
-            isActive("/blog")
-              ? "text-white"
-              : "text-terminal-muted hover:text-white",
+            isActive("/blog") ? "text-white" : "text-terminal-muted hover:text-white",
           ]}
         >
           Blog
@@ -402,28 +378,28 @@ const navLinks = [
 
 <script>
   const setupMobileMenu = () => {
-    const btn = document.getElementById("mobile-menu-button");
-    const menu = document.getElementById("mobile-menu");
-    const path = document.getElementById("menu-path");
+    const btn = document.getElementById("mobile-menu-button")
+    const menu = document.getElementById("mobile-menu")
+    const path = document.getElementById("menu-path")
 
     if (btn && menu && path) {
       const toggleMenu = (forceClose = false) => {
-        const isClosing = forceClose || !menu.classList.contains("hidden");
+        const isClosing = forceClose || !menu.classList.contains("hidden")
         if (isClosing) {
-          menu.classList.add("hidden");
-          btn.setAttribute("aria-expanded", "false");
-          path.setAttribute("d", "M4 6h16M4 12h16m-7 6h7");
+          menu.classList.add("hidden")
+          btn.setAttribute("aria-expanded", "false")
+          path.setAttribute("d", "M4 6h16M4 12h16m-7 6h7")
         } else {
-          menu.classList.remove("hidden");
-          btn.setAttribute("aria-expanded", "true");
-          path.setAttribute("d", "M6 18L18 6M6 6l12 12");
+          menu.classList.remove("hidden")
+          btn.setAttribute("aria-expanded", "true")
+          path.setAttribute("d", "M6 18L18 6M6 6l12 12")
         }
-      };
+      }
 
       btn.onclick = (e) => {
-        e.stopPropagation();
-        toggleMenu();
-      };
+        e.stopPropagation()
+        toggleMenu()
+      }
 
       document.onclick = (e) => {
         if (
@@ -431,42 +407,38 @@ const navLinks = [
           !menu.contains(e.target as Node) &&
           !btn.contains(e.target as Node)
         ) {
-          toggleMenu(true);
+          toggleMenu(true)
         }
-      };
+      }
 
       menu.querySelectorAll("a").forEach((link) => {
-        (link as HTMLElement).onclick = () => toggleMenu(true);
-      });
+        ;(link as HTMLElement).onclick = () => toggleMenu(true)
+      })
     }
-  };
+  }
 
-  setupMobileMenu();
-  document.addEventListener("astro:page-load", setupMobileMenu);
+  setupMobileMenu()
+  document.addEventListener("astro:page-load", setupMobileMenu)
 
   // 5.1 — Acordeón del menú móvil: aria-expanded gestionado desde el script
   const setupAccordions = () => {
-    document
-      .querySelectorAll<HTMLButtonElement>(".mobile-accordion-btn")
-      .forEach((btn) => {
-        // Clonar para evitar listeners duplicados en navegaciones de Astro
-        const fresh = btn.cloneNode(true) as HTMLButtonElement;
-        btn.replaceWith(fresh);
+    document.querySelectorAll<HTMLButtonElement>(".mobile-accordion-btn").forEach((btn) => {
+      // Clonar para evitar listeners duplicados en navegaciones de Astro
+      const fresh = btn.cloneNode(true) as HTMLButtonElement
+      btn.replaceWith(fresh)
 
-        fresh.addEventListener("click", () => {
-          const isExpanded = fresh.getAttribute("aria-expanded") === "true";
-          const targetId = fresh.getAttribute("aria-controls");
-          const panel = targetId ? document.getElementById(targetId) : null;
+      fresh.addEventListener("click", () => {
+        const isExpanded = fresh.getAttribute("aria-expanded") === "true"
+        const targetId = fresh.getAttribute("aria-controls")
+        const panel = targetId ? document.getElementById(targetId) : null
 
-          fresh.setAttribute("aria-expanded", String(!isExpanded));
-          fresh
-            .querySelector("svg")
-            ?.classList.toggle("rotate-180", !isExpanded);
-          panel?.classList.toggle("hidden", isExpanded);
-        });
-      });
-  };
+        fresh.setAttribute("aria-expanded", String(!isExpanded))
+        fresh.querySelector("svg")?.classList.toggle("rotate-180", !isExpanded)
+        panel?.classList.toggle("hidden", isExpanded)
+      })
+    })
+  }
 
-  setupAccordions();
-  document.addEventListener("astro:page-load", setupAccordions);
+  setupAccordions()
+  document.addEventListener("astro:page-load", setupAccordions)
 </script>

@@ -14,14 +14,22 @@ date: 2026-06-5
 prioridad: 10
 ---
 
-import ResourceCard from '../../components/guias/ResourceCard.astro';
-import GuideSummary from '../../components/guias/GuideSummary.astro';
-import GuideStep from '../../components/guias/GuideStep.astro';
+import ResourceCard from "../../components/guias/ResourceCard.astro"
+import GuideSummary from "../../components/guias/GuideSummary.astro"
+import GuideStep from "../../components/guias/GuideStep.astro"
 
 <GuideSummary>
   <GuideStep step="1" text="Ve a Soneium Portal">
-    <a href="https://portal.soneium.org/en" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 text-cyan-400 font-medium text-xs hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 hover:text-cyan-300 transition-all no-underline shadow-[0_0_15px_rgba(6,182,212,0.2)] group hover:scale-105 active:scale-95">
-      <img src="/img/cripto/soneium.webp" alt="Logo de Soneium" class="w-4 h-4 rounded-full object-contain group-hover:brightness-125 flex-shrink-0" />
+    <a
+      href="https://portal.soneium.org/en"
+      target="_blank"
+      class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 text-cyan-400 font-medium text-xs hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 hover:text-cyan-300 transition-all no-underline shadow-[0_0_15px_rgba(6,182,212,0.2)] group hover:scale-105 active:scale-95"
+    >
+      <img
+        src="/img/cripto/soneium.webp"
+        alt="Logo de Soneium"
+        class="w-4 h-4 rounded-full object-contain group-hover:brightness-125 flex-shrink-0"
+      />
       <span>Soneium Portal</span>
     </a>
   </GuideStep>
@@ -30,7 +38,13 @@ import GuideStep from '../../components/guias/GuideStep.astro';
   </GuideStep>
   <GuideStep step="3" text="Completa las misiones">
     <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-medium text-xs cursor-default select-none shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-      <svg class="w-3.5 h-3.5 animate-checkmark text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+      <svg
+        class="w-3.5 h-3.5 animate-checkmark text-emerald-400 flex-shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        stroke-width="3"
+      >
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
       </svg>
       <span>Completado</span>
@@ -48,6 +62,7 @@ Antes de empezar necesitas una wallet compatible con EVM (Ethereum Virtual Machi
 </div>
 
 **También necesitarás:**
+
 - ETH para gas en la red Soneium (bridge desde Ethereum u otra red usando puentes oficiales o exchanges)
 - Cuenta de X (Twitter) para algunas misiones sociales <a href="https://x.com/soneium" target="_blank" class="text-emerald-500 hover:underline">[@soneium](https://x.com/soneium)</a>
 
@@ -68,13 +83,13 @@ Antes de empezar necesitas una wallet compatible con EVM (Ethereum Virtual Machi
 
 Los puntos se acumulan por múltiples actividades simultáneas:
 
-| Actividad | Descripción |
-|-----------|-------------|
-| 🔄 **Transacciones** | Swaps, bridges y cualquier interacción on-chain |
+| Actividad            | Descripción                                        |
+| -------------------- | -------------------------------------------------- |
+| 🔄 **Transacciones** | Swaps, bridges y cualquier interacción on-chain    |
 | 💧 **Liquidez (LP)** | Proporcionar liquidez en pools DeFi del ecosistema |
-| 🎨 **NFTs** | Holding de badges y coleccionables del ecosistema |
-| 🎯 **Quests** | Misiones específicas con bonus de puntos |
-| 📅 **Días activos** | Consistencia diaria (streaks) |
+| 🎨 **NFTs**          | Holding de badges y coleccionables del ecosistema  |
+| 🎯 **Quests**        | Misiones específicas con bonus de puntos           |
+| 📅 **Días activos**  | Consistencia diaria (streaks)                      |
 
 > 💡 **Clave:** Los puntos no vienen de una sola acción sino de la combinación de todas. La consistencia diaria multiplica el resultado.
 

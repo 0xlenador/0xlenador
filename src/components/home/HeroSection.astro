@@ -1,6 +1,6 @@
 ---
-import { Image } from "astro:assets";
-import logoImg from "../../assets/img/logo.webp";
+import { Image } from "astro:assets"
+import logoImg from "../../assets/img/logo.webp"
 
 /**
  * HeroSection.astro — Header principal de la landing page.
@@ -10,24 +10,21 @@ import logoImg from "../../assets/img/logo.webp";
  */
 
 interface CtaButton {
-  texto: string;
-  href: string;
+  texto: string
+  href: string
 }
 
 interface Props {
-  phrases: string[];
-  ctaPrimario: CtaButton;
-  ctaSecundario: CtaButton;
+  phrases: string[]
+  ctaPrimario: CtaButton
+  ctaSecundario: CtaButton
 }
 
-const { phrases, ctaPrimario, ctaSecundario } = Astro.props;
+const { phrases, ctaPrimario, ctaSecundario } = Astro.props
 
 // Calculamos la frase más larga para establecer el ancho fijo del contenedor
 // y evitar que el texto salte o se re-centre con cada letra.
-const longestPhrase = phrases.reduce(
-  (a, b) => (a.length > b.length ? a : b),
-  ""
-);
+const longestPhrase = phrases.reduce((a, b) => (a.length > b.length ? a : b), "")
 ---
 
 <header
@@ -45,9 +42,7 @@ const longestPhrase = phrases.reduce(
       loading="eager"
       class="w-8 h-8 md:w-12 md:h-12 object-contain"
     />
-    <p
-      class="text-2xl md:text-4xl font-bold tracking-tighter text-terminal-text leading-none m-0"
-    >
+    <p class="text-2xl md:text-4xl font-bold tracking-tighter text-terminal-text leading-none m-0">
       0x<span class="text-emerald-500">Leñador</span>
     </p>
   </div>
@@ -70,9 +65,8 @@ const longestPhrase = phrases.reduce(
         class="absolute top-0 left-0 w-full h-full text-[6vw] sm:text-3xl md:text-5xl lg:text-7xl font-light text-terminal-text tracking-tight leading-tight whitespace-nowrap"
         aria-label={phrases.join(". ")}
       >
-        <span class="font-mono text-emerald-500 mr-2 md:mr-3" aria-hidden="true"
-          >&gt;</span
-        ><span id="typewriter-text"></span><span
+        <span class="font-mono text-emerald-500 mr-2 md:mr-3" aria-hidden="true">&gt;</span><span
+          id="typewriter-text"></span><span
           id="typewriter-cursor"
           class="terminal-cursor font-mono inline-block ml-0.5"
           aria-hidden="true">|</span
@@ -85,7 +79,9 @@ const longestPhrase = phrases.reduce(
     id="hero-ctas"
     class="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-2 px-4 max-w-xs sm:max-w-none mx-auto w-full sm:w-auto opacity-0 transition-opacity duration-1000"
   >
-    <div class="relative group w-full sm:w-auto p-[1px] rounded-xl bg-gradient-to-r from-transparent via-cyan-500/80 to-transparent shadow-[0_0_25px_rgba(6,182,212,0.2)] hover:shadow-[0_0_35px_rgba(6,182,212,0.4)] transition-all">
+    <div
+      class="relative group w-full sm:w-auto p-[1px] rounded-xl bg-gradient-to-r from-transparent via-cyan-500/80 to-transparent shadow-[0_0_25px_rgba(6,182,212,0.2)] hover:shadow-[0_0_35px_rgba(6,182,212,0.4)] transition-all"
+    >
       <a
         href={ctaPrimario.href}
         class="w-full h-full px-5 py-2.5 md:px-6 md:py-3 bg-[#0A0D10] group-hover:bg-[#0f171e] text-cyan-400 font-black uppercase tracking-widest text-xs rounded-xl transition-all italic flex items-center justify-center gap-2"
@@ -119,63 +115,57 @@ const longestPhrase = phrases.reduce(
   // MOTOR TYPEWRITER — Terminal Premium
   // Escribe carácter por carácter, pausa, borra y rota frases.
   // ==========================================
-  const textEl = document.getElementById("typewriter-text");
+  const textEl = document.getElementById("typewriter-text")
 
   if (textEl && phrases && phrases.length > 0) {
-    let phraseIndex = 0;
-    let isFirstCycle = true;
-    const TYPING_SPEED = 55; // ms por carácter al escribir
-    const ERASING_SPEED = 30; // ms por carácter al borrar
-    const PAUSE_AFTER_TYPE = 5000; // ms de pausa tras completar frase
-    const PAUSE_AFTER_ERASE = 400; // ms de pausa tras borrar antes de la siguiente
+    let phraseIndex = 0
+    let isFirstCycle = true
+    const TYPING_SPEED = 55 // ms por carácter al escribir
+    const ERASING_SPEED = 30 // ms por carácter al borrar
+    const PAUSE_AFTER_TYPE = 5000 // ms de pausa tras completar frase
+    const PAUSE_AFTER_ERASE = 400 // ms de pausa tras borrar antes de la siguiente
 
-    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
     function typePhrase(text, charIndex, callback) {
       if (charIndex <= text.length) {
-        textEl.textContent = text.substring(0, charIndex);
-        setTimeout(
-          () => typePhrase(text, charIndex + 1, callback),
-          TYPING_SPEED
-        );
+        textEl.textContent = text.substring(0, charIndex)
+        setTimeout(() => typePhrase(text, charIndex + 1, callback), TYPING_SPEED)
       } else {
         if (isFirstCycle) {
-          isFirstCycle = false;
-          const logoEl = document.getElementById("hero-logo");
-          const ctasEl = document.getElementById("hero-ctas");
-          if (logoEl) logoEl.classList.remove("opacity-0");
-          if (ctasEl) ctasEl.classList.remove("opacity-0");
+          isFirstCycle = false
+          const logoEl = document.getElementById("hero-logo")
+          const ctasEl = document.getElementById("hero-ctas")
+          if (logoEl) logoEl.classList.remove("opacity-0")
+          if (ctasEl) ctasEl.classList.remove("opacity-0")
         }
-        callback();
+        callback()
       }
     }
 
     function erasePhrase(text, charIndex, callback) {
       if (charIndex >= 0) {
-        textEl.textContent = text.substring(0, charIndex);
-        setTimeout(
-          () => erasePhrase(text, charIndex - 1, callback),
-          ERASING_SPEED
-        );
+        textEl.textContent = text.substring(0, charIndex)
+        setTimeout(() => erasePhrase(text, charIndex - 1, callback), ERASING_SPEED)
       } else {
-        callback();
+        callback()
       }
     }
 
     function runCycle() {
-      const currentPhrase = capitalize(phrases[phraseIndex]);
+      const currentPhrase = capitalize(phrases[phraseIndex])
 
       typePhrase(currentPhrase, 0, () => {
         setTimeout(() => {
           erasePhrase(currentPhrase, currentPhrase.length, () => {
-            phraseIndex = (phraseIndex + 1) % phrases.length;
-            setTimeout(runCycle, PAUSE_AFTER_ERASE);
-          });
-        }, PAUSE_AFTER_TYPE);
-      });
+            phraseIndex = (phraseIndex + 1) % phrases.length
+            setTimeout(runCycle, PAUSE_AFTER_ERASE)
+          })
+        }, PAUSE_AFTER_TYPE)
+      })
     }
 
     // Arrancar el ciclo
-    runCycle();
+    runCycle()
   }
 </script>

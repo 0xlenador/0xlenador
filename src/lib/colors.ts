@@ -13,37 +13,37 @@
  * reemplaza todos los valores. Astro escaneará este archivo en build.
  */
 
-export type AssetColor = "emerald" | "cyan";
+export type AssetColor = "emerald" | "cyan"
 
 export type ColorTokens = {
   // Fondos
-  bg5: string;
-  bg10: string;
-  bg20: string;
-  bg30: string;
-  bg600: string;
-  bgFull: string;
+  bg5: string
+  bg10: string
+  bg20: string
+  bg30: string
+  bg600: string
+  bgFull: string
   // Bordes
-  border20: string;
-  border30: string;
-  border40: string;
-  borderL: string;
+  border20: string
+  border30: string
+  border40: string
+  borderL: string
   // Textos
-  text400: string;
-  text400_80: string;
-  text500: string;
-  text500_70: string;
-  text500_80: string;
+  text400: string
+  text400_80: string
+  text500: string
+  text500_70: string
+  text500_80: string
   // Clases compuestas — anteriormente generadas por interpolación dinámica
-  groupHoverText10: string;   // group-hover:text-*-500/10  (números decorativos)
-  hoverText500: string;       // hover:text-*-500            (botón cerrar overlay)
-  groupHoverText500: string;  // group-hover:text-*-500      (badge "Próximamente")
-  hoverBorder30: string;      // hover:border-*-500/30       (tarjeta "Próximamente")
-  decorationCreator: string;  // decoration-*-500/30 decoration-dashed (campo Creador)
+  groupHoverText10: string // group-hover:text-*-500/10  (números decorativos)
+  hoverText500: string // hover:text-*-500            (botón cerrar overlay)
+  groupHoverText500: string // group-hover:text-*-500      (badge "Próximamente")
+  hoverBorder30: string // hover:border-*-500/30       (tarjeta "Próximamente")
+  decorationCreator: string // decoration-*-500/30 decoration-dashed (campo Creador)
   // Efectos
-  glow: string;
-  overlay: string;
-};
+  glow: string
+  overlay: string
+}
 
 export const colorMap: Record<AssetColor, ColorTokens> = {
   emerald: {
@@ -96,4 +96,4 @@ export const colorMap: Record<AssetColor, ColorTokens> = {
     glow: "group-hover:drop-shadow-[0_0_20px_rgba(6,182,212,0.3)]",
     overlay: "text-cyan-400 border-cyan-500/20",
   },
-};
+}

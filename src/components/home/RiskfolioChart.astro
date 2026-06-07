@@ -11,15 +11,15 @@
 ---
 
 <section id="riskfolio-calculator" class="max-w-4xl mx-auto mb-12 scroll-mt-24">
-  <div class="bg-terminal-surface/40 border border-terminal-border rounded-3xl p-6 md:p-10 shadow-2xl">
-
+  <div
+    class="bg-terminal-surface/40 border border-terminal-border rounded-3xl p-6 md:p-10 shadow-2xl"
+  >
     <!-- Paso 1: Perfil de Riesgo -->
     <div class="mb-10">
       <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mb-4">
         Paso 1 — Selecciona tu perfil de riesgo
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="profile-grid">
-
         <!-- Tarjeta: Conservador -->
         <button
           onclick="setProfile('conservador')"
@@ -28,10 +28,15 @@
           class="profile-card text-left p-5 rounded-2xl border border-terminal-border/80 bg-terminal-bg/40 hover:bg-terminal-surface/60 transition-all duration-300 relative overflow-hidden"
         >
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.6)]"></div>
-            <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">Conservador</span>
+            <div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.6)]">
+            </div>
+            <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest"
+              >Conservador</span
+            >
           </div>
-          <h3 class="text-base font-bold text-white mb-1.5 leading-tight">Preservación de Capital</h3>
+          <h3 class="text-base font-bold text-white mb-1.5 leading-tight">
+            Preservación de Capital
+          </h3>
           <p class="text-xs text-terminal-secondary leading-relaxed font-light">
             Prioriza la estabilidad con exposición mínima a la volatilidad del mercado.
           </p>
@@ -46,10 +51,15 @@
           style="border-color: rgba(16,185,129,0.5); background: rgba(16,185,129,0.08); box-shadow: 0 0 20px rgba(16,185,129,0.08);"
         >
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]"></div>
-            <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">Moderado</span>
+            <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]">
+            </div>
+            <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest"
+              >Moderado</span
+            >
           </div>
-          <h3 class="text-base font-bold text-emerald-400 mb-1.5 leading-tight">Equilibrio Óptimo</h3>
+          <h3 class="text-base font-bold text-emerald-400 mb-1.5 leading-tight">
+            Equilibrio Óptimo
+          </h3>
           <p class="text-xs leading-relaxed font-light" style="color: rgba(167,243,208,0.7);">
             Balance entre preservación de riqueza y exposición a asimetrías de alto potencial.
           </p>
@@ -63,15 +73,17 @@
           class="profile-card text-left p-5 rounded-2xl border border-terminal-border/80 bg-terminal-bg/40 hover:bg-terminal-surface/60 transition-all duration-300 relative overflow-hidden"
         >
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-2 h-2 rounded-full bg-violet-400 shadow-[0_0_6px_rgba(167,139,250,0.6)]"></div>
-            <span class="text-[10px] font-mono text-violet-400 uppercase tracking-widest">Agresivo</span>
+            <div class="w-2 h-2 rounded-full bg-violet-400 shadow-[0_0_6px_rgba(167,139,250,0.6)]">
+            </div>
+            <span class="text-[10px] font-mono text-violet-400 uppercase tracking-widest"
+              >Agresivo</span
+            >
           </div>
           <h3 class="text-base font-bold text-white mb-1.5 leading-tight">Máxima Asimetría</h3>
           <p class="text-xs text-terminal-secondary leading-relaxed font-light">
             Alta exposición a criptoactivos de convexidad positiva. Mayor riesgo, mayor potencial.
           </p>
         </button>
-
       </div>
     </div>
 
@@ -101,7 +113,7 @@
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          box-shadow: 0 0 8px rgba(16,185,129,0.6);
+          box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
         }
       </style>
       <input
@@ -115,33 +127,65 @@
         class="w-full mt-4 cursor-pointer accent-emerald-500 h-1.5 bg-terminal-border rounded-lg appearance-none"
       />
       <div class="flex flex-wrap gap-2 mt-4">
-        <button onclick="setCapital(5000, this)"   class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono">$5K</button>
-        <button onclick="setCapital(10000, this)"  class="preset-btn preset-btn--active px-4 py-2 rounded-lg text-sm border font-mono transition-all" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;">$10K</button>
-        <button onclick="setCapital(25000, this)"  class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono">$25K</button>
-        <button onclick="setCapital(50000, this)"  class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono">$50K</button>
-        <button onclick="setCapital(100000, this)" class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono">$100K</button>
-        <button onclick="setCapital(500000, this)" class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono">$500K</button>
+        <button
+          onclick="setCapital(5000, this)"
+          class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono"
+          >$5K</button
+        >
+        <button
+          onclick="setCapital(10000, this)"
+          class="preset-btn preset-btn--active px-4 py-2 rounded-lg text-sm border font-mono transition-all"
+          style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;"
+          >$10K</button
+        >
+        <button
+          onclick="setCapital(25000, this)"
+          class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono"
+          >$25K</button
+        >
+        <button
+          onclick="setCapital(50000, this)"
+          class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono"
+          >$50K</button
+        >
+        <button
+          onclick="setCapital(100000, this)"
+          class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono"
+          >$100K</button
+        >
+        <button
+          onclick="setCapital(500000, this)"
+          class="preset-btn px-4 py-2 text-terminal-secondary hover:text-white rounded-lg text-sm border border-terminal-border/50 hover:border-terminal-border bg-terminal-surface/30 hover:bg-terminal-surface transition-all font-mono"
+          >$500K</button
+        >
       </div>
     </div>
 
     <!-- Resultados -->
     <div class="border-t border-terminal-border/50 pt-8">
       <div class="flex items-center gap-2 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]" id="result-indicator"></span>
+        <span
+          class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"
+          id="result-indicator"></span>
         <h3 class="text-sm font-mono text-terminal-muted uppercase tracking-widest">
           Asignación — <span id="active-profile-label" class="text-white">Moderado</span>
         </h3>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-
         <!-- Chart doughnut -->
         <div class="flex flex-col items-center">
           <div class="relative w-60 h-60 md:w-72 md:h-72">
             <canvas id="chartRiskfolio"></canvas>
-            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mb-1">Total</span>
-              <span id="chartCenterLabel" class="text-2xl font-black text-white font-mono">$10,000</span>
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            >
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mb-1"
+                >Total</span
+              >
+              <span id="chartCenterLabel" class="text-2xl font-black text-white font-mono"
+                >$10,000</span
+              >
             </div>
           </div>
         </div>
@@ -150,7 +194,6 @@
         <div class="space-y-4" id="breakdown-container">
           <!-- Renderizado dinámicamente por JS -->
         </div>
-
       </div>
     </div>
 
@@ -158,7 +201,6 @@
     <p class="text-[10px] font-mono text-terminal-dim text-center mt-8 italic opacity-60">
       Modelo paramétrico ilustrativo. No constituye asesoría financiera. DYOR.
     </p>
-
   </div>
 </section>
 
@@ -176,9 +218,9 @@
       activeShadow: "0 0 20px rgba(6,182,212,0.08)",
       allocations: [
         { name: "Renta Fija / ETFs Tradicionales", pct: 70, color: "#06b6d4" },
-        { name: "Cripto Large-Cap (BTC, ETH)",      pct: 15, color: "#22d3ee" },
+        { name: "Cripto Large-Cap (BTC, ETH)", pct: 15, color: "#22d3ee" },
         { name: "Reserva (Stablecoins / Efectivo)", pct: 10, color: "#94a3b8" },
-        { name: "Altcoins / DeFi / Asimetría",      pct:  5, color: "#10b981" },
+        { name: "Altcoins / DeFi / Asimetría", pct: 5, color: "#10b981" },
       ],
     },
     moderado: {
@@ -189,8 +231,8 @@
       activeShadow: "0 0 20px rgba(16,185,129,0.08)",
       allocations: [
         { name: "Renta Fija / ETFs Tradicionales", pct: 45, color: "#06b6d4" },
-        { name: "Cripto Large-Cap (BTC, ETH)",      pct: 30, color: "#22d3ee" },
-        { name: "Altcoins / DeFi / Asimetría",      pct: 15, color: "#10b981" },
+        { name: "Cripto Large-Cap (BTC, ETH)", pct: 30, color: "#22d3ee" },
+        { name: "Altcoins / DeFi / Asimetría", pct: 15, color: "#10b981" },
         { name: "Reserva (Stablecoins / Efectivo)", pct: 10, color: "#94a3b8" },
       ],
     },
@@ -201,39 +243,41 @@
       activeBorder: "rgba(139,92,246,0.5)",
       activeShadow: "0 0 20px rgba(139,92,246,0.08)",
       allocations: [
-        { name: "Cripto Large-Cap (BTC, ETH)",      pct: 35, color: "#22d3ee" },
-        { name: "Altcoins / DeFi / Asimetría",      pct: 35, color: "#10b981" },
-        { name: "Renta Fija / ETFs Tradicionales",  pct: 20, color: "#06b6d4" },
+        { name: "Cripto Large-Cap (BTC, ETH)", pct: 35, color: "#22d3ee" },
+        { name: "Altcoins / DeFi / Asimetría", pct: 35, color: "#10b981" },
+        { name: "Renta Fija / ETFs Tradicionales", pct: 20, color: "#06b6d4" },
         { name: "Reserva (Stablecoins / Efectivo)", pct: 10, color: "#94a3b8" },
       ],
     },
-  };
+  }
 
   // ─── Estado global ────────────────────────────────────────────────
-  let currentProfile = "moderado";
-  let currentCapital = 10000;
-  let riskChart = null;
+  let currentProfile = "moderado"
+  let currentCapital = 10000
+  let riskChart = null
 
   const fmt = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
-  });
+  })
 
   // ─── Inicializar Chart.js ─────────────────────────────────────────
   function initChart() {
-    const ctx = document.getElementById("chartRiskfolio").getContext("2d");
+    const ctx = document.getElementById("chartRiskfolio").getContext("2d")
     riskChart = new Chart(ctx, {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{
-          data: [],
-          backgroundColor: [],
-          borderColor: "#0d1117",
-          borderWidth: 3,
-          hoverOffset: 6,
-        }],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: [],
+            borderColor: "#0d1117",
+            borderWidth: 3,
+            hoverOffset: 6,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -250,142 +294,161 @@
             cornerRadius: 10,
             padding: 12,
             titleFont: { family: "ui-monospace, monospace", size: 11, weight: "bold" },
-            bodyFont:  { family: "ui-monospace, monospace", size: 10 },
+            bodyFont: { family: "ui-monospace, monospace", size: 10 },
             callbacks: {
-              label: function(ctx) {
-                return " " + fmt.format(ctx.parsed) + " (" + ctx.parsed + ")";
+              label: function (ctx) {
+                return " " + fmt.format(ctx.parsed) + " (" + ctx.parsed + ")"
               },
             },
           },
         },
         animation: { animateRotate: true, duration: 500, easing: "easeOutQuart" },
       },
-    });
-    render();
+    })
+    render()
   }
 
   // ─── Cambiar perfil ───────────────────────────────────────────────
   function setProfile(key) {
-    currentProfile = key;
+    currentProfile = key
 
     // Reset todas las tarjetas
-    document.querySelectorAll(".profile-card").forEach(function(card) {
-      card.style.background = "";
-      card.style.borderColor = "";
-      card.style.boxShadow = "";
-      card.classList.remove("profile-card--active");
-      card.classList.add("border-terminal-border/80", "bg-terminal-bg/40");
-      var h3 = card.querySelector("h3");
-      if (h3) { h3.style.color = ""; }
-      var p = card.querySelector("p");
-      if (p) { p.style.color = ""; }
-    });
+    document.querySelectorAll(".profile-card").forEach(function (card) {
+      card.style.background = ""
+      card.style.borderColor = ""
+      card.style.boxShadow = ""
+      card.classList.remove("profile-card--active")
+      card.classList.add("border-terminal-border/80", "bg-terminal-bg/40")
+      var h3 = card.querySelector("h3")
+      if (h3) {
+        h3.style.color = ""
+      }
+      var p = card.querySelector("p")
+      if (p) {
+        p.style.color = ""
+      }
+    })
 
     // Activar tarjeta seleccionada
-    var activeCard = document.getElementById("btn-" + key);
-    var profile = PROFILES[key];
-    activeCard.classList.remove("border-terminal-border/80", "bg-terminal-bg/40");
-    activeCard.classList.add("profile-card--active");
-    activeCard.style.background = profile.activeBg;
-    activeCard.style.borderColor = profile.activeBorder;
-    activeCard.style.boxShadow = profile.activeShadow;
-    var h3 = activeCard.querySelector("h3");
-    if (h3) h3.style.color = profile.accentColor;
-    var p = activeCard.querySelector("p");
-    if (p) p.style.color = profile.accentColor.replace("1)", "0.65)");
+    var activeCard = document.getElementById("btn-" + key)
+    var profile = PROFILES[key]
+    activeCard.classList.remove("border-terminal-border/80", "bg-terminal-bg/40")
+    activeCard.classList.add("profile-card--active")
+    activeCard.style.background = profile.activeBg
+    activeCard.style.borderColor = profile.activeBorder
+    activeCard.style.boxShadow = profile.activeShadow
+    var h3 = activeCard.querySelector("h3")
+    if (h3) h3.style.color = profile.accentColor
+    var p = activeCard.querySelector("p")
+    if (p) p.style.color = profile.accentColor.replace("1)", "0.65)")
 
     // Actualizar indicador de resultado
-    document.getElementById("active-profile-label").textContent = profile.label;
-    document.getElementById("active-profile-label").style.color = profile.accentColor;
+    document.getElementById("active-profile-label").textContent = profile.label
+    document.getElementById("active-profile-label").style.color = profile.accentColor
 
-    render();
+    render()
   }
 
   // ─── Cambiar capital (presets) ────────────────────────────────────
   function setCapital(amount, btnEl) {
-    currentCapital = parseFloat(amount) || 0;
-    document.getElementById("capitalInput").value = currentCapital;
-    document.getElementById("capitalRange").value = currentCapital;
+    currentCapital = parseFloat(amount) || 0
+    document.getElementById("capitalInput").value = currentCapital
+    document.getElementById("capitalRange").value = currentCapital
 
-    document.querySelectorAll(".preset-btn").forEach(function(btn) {
-      btn.style.background = "";
-      btn.style.borderColor = "";
-      btn.style.color = "";
-      btn.classList.remove("preset-btn--active");
-    });
+    document.querySelectorAll(".preset-btn").forEach(function (btn) {
+      btn.style.background = ""
+      btn.style.borderColor = ""
+      btn.style.color = ""
+      btn.classList.remove("preset-btn--active")
+    })
 
     if (btnEl) {
-      btnEl.classList.add("preset-btn--active");
-      btnEl.style.background = "rgba(16,185,129,0.15)";
-      btnEl.style.borderColor = "rgba(16,185,129,0.4)";
-      btnEl.style.color = "#34d399";
+      btnEl.classList.add("preset-btn--active")
+      btnEl.style.background = "rgba(16,185,129,0.15)"
+      btnEl.style.borderColor = "rgba(16,185,129,0.4)"
+      btnEl.style.color = "#34d399"
     }
 
-    render();
+    render()
   }
 
   // ─── Actualizar desde input/slider ───────────────────────────────
   function liveUpdate(val) {
-    currentCapital = parseFloat(val) || 0;
+    currentCapital = parseFloat(val) || 0
     // Limpiar preset activo al escribir manualmente
-    document.querySelectorAll(".preset-btn").forEach(function(btn) {
-      btn.style.background = "";
-      btn.style.borderColor = "";
-      btn.style.color = "";
-      btn.classList.remove("preset-btn--active");
-    });
-    render();
+    document.querySelectorAll(".preset-btn").forEach(function (btn) {
+      btn.style.background = ""
+      btn.style.borderColor = ""
+      btn.style.color = ""
+      btn.classList.remove("preset-btn--active")
+    })
+    render()
   }
 
   // ─── Renderizar UI y Chart ────────────────────────────────────────
   function render() {
-    var profile = PROFILES[currentProfile];
-    var labels   = [];
-    var dataVals = [];
-    var colors   = [];
-    var html = "";
+    var profile = PROFILES[currentProfile]
+    var labels = []
+    var dataVals = []
+    var colors = []
+    var html = ""
 
-    profile.allocations.forEach(function(alloc) {
-      var amount = currentCapital * (alloc.pct / 100);
-      labels.push(alloc.name);
-      dataVals.push(amount);
-      colors.push(alloc.color);
+    profile.allocations.forEach(function (alloc) {
+      var amount = currentCapital * (alloc.pct / 100)
+      labels.push(alloc.name)
+      dataVals.push(amount)
+      colors.push(alloc.color)
 
-      html += '<div>' +
+      html +=
+        "<div>" +
         '<div class="flex items-center justify-between mb-1.5">' +
-          '<div class="flex items-center gap-2">' +
-            '<div class="w-2 h-2 rounded-full flex-shrink-0" style="background:' + alloc.color + ';box-shadow:0 0 6px ' + alloc.color + '66"></div>' +
-            '<span class="text-xs font-mono text-terminal-secondary">' + alloc.name + '</span>' +
-          '</div>' +
-          '<div class="flex items-center gap-2">' +
-            '<span class="text-sm font-bold text-white font-mono">' + fmt.format(amount) + '</span>' +
-            '<span class="text-[10px] text-terminal-muted font-mono w-8 text-right">' + alloc.pct + '%</span>' +
-          '</div>' +
-        '</div>' +
+        '<div class="flex items-center gap-2">' +
+        '<div class="w-2 h-2 rounded-full flex-shrink-0" style="background:' +
+        alloc.color +
+        ";box-shadow:0 0 6px " +
+        alloc.color +
+        '66"></div>' +
+        '<span class="text-xs font-mono text-terminal-secondary">' +
+        alloc.name +
+        "</span>" +
+        "</div>" +
+        '<div class="flex items-center gap-2">' +
+        '<span class="text-sm font-bold text-white font-mono">' +
+        fmt.format(amount) +
+        "</span>" +
+        '<span class="text-[10px] text-terminal-muted font-mono w-8 text-right">' +
+        alloc.pct +
+        "%</span>" +
+        "</div>" +
+        "</div>" +
         '<div class="w-full bg-terminal-bg rounded-full h-1 overflow-hidden">' +
-          '<div class="h-1 rounded-full transition-all duration-700 ease-out" style="width:' + alloc.pct + '%;background:' + alloc.color + '"></div>' +
-        '</div>' +
-      '</div>';
-    });
+        '<div class="h-1 rounded-full transition-all duration-700 ease-out" style="width:' +
+        alloc.pct +
+        "%;background:" +
+        alloc.color +
+        '"></div>' +
+        "</div>" +
+        "</div>"
+    })
 
-    document.getElementById("breakdown-container").innerHTML = html;
-    document.getElementById("chartCenterLabel").textContent = fmt.format(currentCapital);
+    document.getElementById("breakdown-container").innerHTML = html
+    document.getElementById("chartCenterLabel").textContent = fmt.format(currentCapital)
 
     if (riskChart) {
-      riskChart.data.labels = labels;
-      riskChart.data.datasets[0].data = dataVals;
-      riskChart.data.datasets[0].backgroundColor = colors;
-      riskChart.update("active");
+      riskChart.data.labels = labels
+      riskChart.data.datasets[0].data = dataVals
+      riskChart.data.datasets[0].backgroundColor = colors
+      riskChart.update("active")
     }
   }
 
   // ─── Arrancar cuando el DOM esté listo ───────────────────────────
-  document.addEventListener("DOMContentLoaded", function() {
-    var wait = setInterval(function() {
+  document.addEventListener("DOMContentLoaded", function () {
+    var wait = setInterval(function () {
       if (typeof Chart !== "undefined") {
-        clearInterval(wait);
-        initChart();
+        clearInterval(wait)
+        initChart()
       }
-    }, 50);
-  });
+    }, 50)
+  })
 </script>

@@ -1,56 +1,75 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import FaqAccordion from "../components/FaqAccordion.astro";
-import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro"
+import FaqAccordion from "../components/FaqAccordion.astro"
+import { getCollection } from "astro:content"
 
 const seo = {
   title: "Operaciones | 0xLeñador — Guías Operativas DeFi, Airdrops y Web3",
   description:
     "Guías paso a paso de las operaciones del día a día en Web3: farming de airdrops, gestión de posiciones DeFi, juegos on-chain y más. Documentadas con recursos y herramientas reales.",
   image: "/img/meta/home.webp",
-};
+}
 
 // Obtener todas las guías de la colección
-const todasLasGuias = await getCollection("guias");
+const todasLasGuias = await getCollection("guias")
 
 // Ordenar por prioridad descendente, luego por fecha descendente
 const guias = todasLasGuias.sort((a, b) => {
-  if (b.data.prioridad !== a.data.prioridad) return b.data.prioridad - a.data.prioridad;
-  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
-});
+  if (b.data.prioridad !== a.data.prioridad) return b.data.prioridad - a.data.prioridad
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+})
 
-const guiasActivas     = guias.filter(g => g.data.estado === "activa");
-const guiasHistoricas  = guias.filter(g => g.data.estado !== "activa");
-const guiaDestacada    = guiasActivas[0];
+const guiasActivas = guias.filter((g) => g.data.estado === "activa")
+const guiasHistoricas = guias.filter((g) => g.data.estado !== "activa")
+const guiaDestacada = guiasActivas[0]
 
 // Colores por categoría
 const categoriaConfig: Record<string, { color: string; badge: string; icon: string }> = {
-  Airdrop: { color: "emerald", badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", icon: "🎯" },
-  DeFi:    { color: "blue",    badge: "text-blue-400 bg-blue-500/10 border-blue-500/20",          icon: "💧" },
-  Gaming:  { color: "yellow",  badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",    icon: "🎮" },
-  Trading: { color: "fuchsia", badge: "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20", icon: "📈" },
-  Mixta:   { color: "cyan",    badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",           icon: "🔀" },
-};
+  Airdrop: {
+    color: "emerald",
+    badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+    icon: "🎯",
+  },
+  DeFi: { color: "blue", badge: "text-blue-400 bg-blue-500/10 border-blue-500/20", icon: "💧" },
+  Gaming: {
+    color: "yellow",
+    badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
+    icon: "🎮",
+  },
+  Trading: {
+    color: "fuchsia",
+    badge: "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20",
+    icon: "📈",
+  },
+  Mixta: { color: "cyan", badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: "🔀" },
+}
 
 // Colores del estado
 const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
-  activa:     { label: "Activa",     dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]", text: "text-emerald-400" },
-  completada: { label: "Completada", dot: "bg-blue-500",    text: "text-blue-400"    },
-  expirada:   { label: "Expirada",   dot: "bg-red-500",     text: "text-red-400"     },
-};
+  activa: {
+    label: "Activa",
+    dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]",
+    text: "text-emerald-400",
+  },
+  completada: { label: "Completada", dot: "bg-blue-500", text: "text-blue-400" },
+  expirada: { label: "Expirada", dot: "bg-red-500", text: "text-red-400" },
+}
 
 // Colores de dificultad
 const dificultadConfig: Record<string, string> = {
-  baja:  "text-emerald-400",
+  baja: "text-emerald-400",
   media: "text-yellow-400",
-  alta:  "text-red-400",
-};
+  alta: "text-red-400",
+}
 
 // Formatear fecha de deadline
 const formatDeadline = (fecha: string) =>
   new Date(fecha).toLocaleDateString("es-CO", {
-    day: "numeric", month: "short", year: "numeric", timeZone: "UTC",
-  });
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  })
 
 const faqItems = [
   {
@@ -73,12 +92,11 @@ const faqItems = [
     respuesta:
       "Para cada guía se indican las herramientas necesarias directamente desde el Directorio de 0xLeñador. Si el enlace tiene un referido, se indica claramente con la etiqueta 'ref'. Nunca se fuerza el uso de ninguna plataforma específica.",
   },
-];
+]
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
-
     <!-- Header -->
     <header class="mb-14">
       <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
@@ -95,171 +113,232 @@ const faqItems = [
 
     <!-- Tarjetas de resumen -->
     <div class="grid grid-cols-3 gap-4 mb-14">
-      {[
-        { label: "Guías activas",  value: guiasActivas.length,    color: "text-emerald-400" },
-        { label: "Total guías",    value: guias.length,           color: "text-white" },
-        { label: "Categorías",     value: Object.keys(categoriaConfig).length, color: "text-terminal-secondary" },
-      ].map(stat => (
-        <div class="hub-card p-5 text-center">
-          <p class="text-2xl font-black font-mono tracking-tight mb-1" class:list={[stat.color]}>{stat.value}</p>
-          <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest">{stat.label}</p>
-        </div>
-      ))}
+      {
+        [
+          { label: "Guías activas", value: guiasActivas.length, color: "text-emerald-400" },
+          { label: "Total guías", value: guias.length, color: "text-white" },
+          {
+            label: "Categorías",
+            value: Object.keys(categoriaConfig).length,
+            color: "text-terminal-secondary",
+          },
+        ].map((stat) => (
+          <div class="hub-card p-5 text-center">
+            <p class="text-2xl font-black font-mono tracking-tight mb-1" class:list={[stat.color]}>
+              {stat.value}
+            </p>
+            <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest">
+              {stat.label}
+            </p>
+          </div>
+        ))
+      }
     </div>
 
     <!-- Guía destacada (la activa con mayor prioridad) -->
-    {guiaDestacada && (() => {
-      const cfg  = categoriaConfig[guiaDestacada.data.categoria] ?? categoriaConfig["Airdrop"];
-      const est  = estadoConfig[guiaDestacada.data.estado];
-      return (
-        <section class="mb-14">
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">Guía prioritaria</h2>
-            <div class="h-px flex-grow bg-terminal-border/50"></div>
-          </div>
-
-          <a
-            href={`/operaciones/${guiaDestacada.id}`}
-            class="hub-card p-6 md:p-8 flex flex-col md:flex-row gap-6 group no-underline block"
-          >
-            {guiaDestacada.data.imagen && (
-              <div class="w-full md:w-40 h-32 md:h-auto rounded-xl overflow-hidden flex-shrink-0 bg-terminal-elevated">
-                <img
-                  src={guiaDestacada.data.imagen}
-                  alt={guiaDestacada.data.title}
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-              </div>
-            )}
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-wrap items-center gap-2 mb-3">
-                <span class:list={["text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border", cfg.badge]}>
-                  {cfg.icon} {guiaDestacada.data.categoria}
-                </span>
-                <span class="flex items-center gap-1.5 text-[10px] font-mono">
-                  <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]}></span>
-                  <span class:list={[est.text]}>{est.label}</span>
-                </span>
-                {guiaDestacada.data.temporada && (
-                  <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated px-2 py-0.5 rounded-md">
-                    {guiaDestacada.data.temporada}
-                  </span>
-                )}
+    {
+      guiaDestacada &&
+        (() => {
+          const cfg = categoriaConfig[guiaDestacada.data.categoria] ?? categoriaConfig["Airdrop"]
+          const est = estadoConfig[guiaDestacada.data.estado]
+          return (
+            <section class="mb-14">
+              <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+                  Guía prioritaria
+                </h2>
+                <div class="h-px flex-grow bg-terminal-border/50" />
               </div>
 
-              <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
-                {guiaDestacada.data.title}
-              </h3>
-              <p class="text-terminal-muted text-sm leading-relaxed mb-4">
-                {guiaDestacada.data.description}
-              </p>
+              <a
+                href={`/operaciones/${guiaDestacada.id}`}
+                class="hub-card p-6 md:p-8 flex flex-col md:flex-row gap-6 group no-underline block"
+              >
+                {guiaDestacada.data.imagen && (
+                  <div class="w-full md:w-40 h-32 md:h-auto rounded-xl overflow-hidden flex-shrink-0 bg-terminal-elevated">
+                    <img
+                      src={guiaDestacada.data.imagen}
+                      alt={guiaDestacada.data.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span
+                      class:list={[
+                        "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
+                        cfg.badge,
+                      ]}
+                    >
+                      {cfg.icon} {guiaDestacada.data.categoria}
+                    </span>
+                    <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                      <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
+                      <span class:list={[est.text]}>{est.label}</span>
+                    </span>
+                    {guiaDestacada.data.temporada && (
+                      <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated px-2 py-0.5 rounded-md">
+                        {guiaDestacada.data.temporada}
+                      </span>
+                    )}
+                  </div>
 
-              <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-terminal-subtle">
-                {guiaDestacada.data.fechaLimite && (
-                  <span class="text-yellow-400/80">⏳ Deadline: {formatDeadline(guiaDestacada.data.fechaLimite)}</span>
-                )}
-                {guiaDestacada.data.tiempoEstimado && (
-                  <span>⏱ {guiaDestacada.data.tiempoEstimado}</span>
-                )}
-                <span class:list={["font-semibold", dificultadConfig[guiaDestacada.data.dificultad]]}>
-                  ● Dificultad {guiaDestacada.data.dificultad}
-                </span>
-                <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
-                  Abrir guía →
-                </span>
-              </div>
-            </div>
-          </a>
-        </section>
-      );
-    })()}
+                  <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
+                    {guiaDestacada.data.title}
+                  </h3>
+                  <p class="text-terminal-muted text-sm leading-relaxed mb-4">
+                    {guiaDestacada.data.description}
+                  </p>
+
+                  <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-terminal-subtle">
+                    {guiaDestacada.data.fechaLimite && (
+                      <span class="text-yellow-400/80">
+                        ⏳ Deadline: {formatDeadline(guiaDestacada.data.fechaLimite)}
+                      </span>
+                    )}
+                    {guiaDestacada.data.tiempoEstimado && (
+                      <span>⏱ {guiaDestacada.data.tiempoEstimado}</span>
+                    )}
+                    <span
+                      class:list={[
+                        "font-semibold",
+                        dificultadConfig[guiaDestacada.data.dificultad],
+                      ]}
+                    >
+                      ● Dificultad {guiaDestacada.data.dificultad}
+                    </span>
+                    <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
+                      Abrir guía →
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </section>
+          )
+        })()
+    }
 
     <!-- Grid de guías activas (sin la destacada) -->
-    {guiasActivas.length > 1 && (
-      <section class="mb-14">
-        <div class="flex items-center gap-4 mb-6">
-          <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">En seguimiento</h2>
-          <div class="h-px flex-grow bg-terminal-border/50"></div>
-          <span class="text-[10px] font-mono text-terminal-subtle">{guiasActivas.length - 1} guías</span>
-        </div>
+    {
+      guiasActivas.length > 1 && (
+        <section class="mb-14">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+              En seguimiento
+            </h2>
+            <div class="h-px flex-grow bg-terminal-border/50" />
+            <span class="text-[10px] font-mono text-terminal-subtle">
+              {guiasActivas.length - 1} guías
+            </span>
+          </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {guiasActivas.slice(1).map(guia => {
-            const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"];
-            const est = estadoConfig[guia.data.estado];
-            return (
-              <a
-                href={`/operaciones/${guia.id}`}
-                class="hub-card p-5 flex flex-col group no-underline"
-              >
-                <div class="flex items-start justify-between gap-2 mb-3">
-                  <span class:list={["text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border", cfg.badge]}>
-                    {cfg.icon} {guia.data.categoria}
-                  </span>
-                  <span class="flex items-center gap-1.5 text-[10px] font-mono">
-                    <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]}></span>
-                    <span class:list={[est.text]}>{est.label}</span>
-                  </span>
-                </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {guiasActivas.slice(1).map((guia) => {
+              const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"]
+              const est = estadoConfig[guia.data.estado]
+              return (
+                <a
+                  href={`/operaciones/${guia.id}`}
+                  class="hub-card p-5 flex flex-col group no-underline"
+                >
+                  <div class="flex items-start justify-between gap-2 mb-3">
+                    <span
+                      class:list={[
+                        "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
+                        cfg.badge,
+                      ]}
+                    >
+                      {cfg.icon} {guia.data.categoria}
+                    </span>
+                    <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                      <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
+                      <span class:list={[est.text]}>{est.label}</span>
+                    </span>
+                  </div>
 
-                <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors mb-2 leading-snug flex-1">
-                  {guia.data.title}
-                </h3>
+                  <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors mb-2 leading-snug flex-1">
+                    {guia.data.title}
+                  </h3>
 
-                <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-auto pt-3 border-t border-terminal-border/50">
-                  {guia.data.fechaLimite && (
-                    <span class="text-yellow-400/70">⏳ {formatDeadline(guia.data.fechaLimite)}</span>
-                  )}
-                  {guia.data.tiempoEstimado && <span>⏱ {guia.data.tiempoEstimado}</span>}
-                  <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold">Ver →</span>
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-    )}
+                  <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-auto pt-3 border-t border-terminal-border/50">
+                    {guia.data.fechaLimite && (
+                      <span class="text-yellow-400/70">
+                        ⏳ {formatDeadline(guia.data.fechaLimite)}
+                      </span>
+                    )}
+                    {guia.data.tiempoEstimado && <span>⏱ {guia.data.tiempoEstimado}</span>}
+                    <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold">
+                      Ver →
+                    </span>
+                  </div>
+                </a>
+              )
+            })}
+          </div>
+        </section>
+      )
+    }
 
     <!-- Historial -->
-    {guiasHistoricas.length > 0 && (
-      <section class="mb-14">
-        <div class="flex items-center gap-4 mb-6">
-          <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">Historial</h2>
-          <div class="h-px flex-grow bg-terminal-border/50"></div>
-          <span class="text-[10px] font-mono text-terminal-subtle">{guiasHistoricas.length} guías</span>
-        </div>
+    {
+      guiasHistoricas.length > 0 && (
+        <section class="mb-14">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+              Historial
+            </h2>
+            <div class="h-px flex-grow bg-terminal-border/50" />
+            <span class="text-[10px] font-mono text-terminal-subtle">
+              {guiasHistoricas.length} guías
+            </span>
+          </div>
 
-        <div class="hub-card divide-y divide-terminal-border/50">
-          {guiasHistoricas.map(guia => {
-            const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"];
-            const est = estadoConfig[guia.data.estado];
-            return (
-              <a
-                href={`/operaciones/${guia.id}`}
-                class="flex items-center gap-4 p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
-              >
-                <span class:list={["text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border flex-shrink-0", cfg.badge]}>
-                  {cfg.icon}
-                </span>
-                <span class="text-terminal-secondary text-xs font-medium group-hover:text-white transition-colors flex-1 min-w-0 truncate">
-                  {guia.data.title}
-                </span>
-                <span class:list={["text-[10px] font-mono flex-shrink-0", est.text]}>{est.label}</span>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-    )}
+          <div class="hub-card divide-y divide-terminal-border/50">
+            {guiasHistoricas.map((guia) => {
+              const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"]
+              const est = estadoConfig[guia.data.estado]
+              return (
+                <a
+                  href={`/operaciones/${guia.id}`}
+                  class="flex items-center gap-4 p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
+                >
+                  <span
+                    class:list={[
+                      "text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border flex-shrink-0",
+                      cfg.badge,
+                    ]}
+                  >
+                    {cfg.icon}
+                  </span>
+                  <span class="text-terminal-secondary text-xs font-medium group-hover:text-white transition-colors flex-1 min-w-0 truncate">
+                    {guia.data.title}
+                  </span>
+                  <span class:list={["text-[10px] font-mono flex-shrink-0", est.text]}>
+                    {est.label}
+                  </span>
+                </a>
+              )
+            })}
+          </div>
+        </section>
+      )
+    }
 
     <!-- Estado vacío: sin guías activas -->
-    {guiasActivas.length === 0 && guiasHistoricas.length === 0 && (
-      <div class="hub-card p-12 text-center">
-        <p class="text-terminal-subtle text-sm font-mono">// Ninguna guía activa por el momento.</p>
-        <p class="text-terminal-muted text-xs mt-2">Próximamente se agregarán guías de Soneium, Sunflower Land y otros protocolos.</p>
-      </div>
-    )}
+    {
+      guiasActivas.length === 0 && guiasHistoricas.length === 0 && (
+        <div class="hub-card p-12 text-center">
+          <p class="text-terminal-subtle text-sm font-mono">
+            // Ninguna guía activa por el momento.
+          </p>
+          <p class="text-terminal-muted text-xs mt-2">
+            Próximamente se agregarán guías de Soneium, Sunflower Land y otros protocolos.
+          </p>
+        </div>
+      )
+    }
 
     <FaqAccordion
       titulo="Sobre las Guías"

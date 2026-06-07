@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "../layouts/Layout.astro"
 
 const seo = {
   title: "404 — Ruta No Encontrada | 0xLeñador",
   description:
     "La página que buscas no existe o fue movida. Regresa al inicio para seguir navegando el ecosistema 0xLeñador.",
-};
+}
 ---
 
 <Layout title={seo.title} description={seo.description} customSpacing>
@@ -25,10 +25,8 @@ const seo = {
       <div
         class="inline-flex items-center gap-2 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full mb-8"
       >
-        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"
-        ></span>
-        <span
-          class="text-[10px] font-mono text-rose-400 uppercase tracking-[0.3em] font-bold"
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+        <span class="text-[10px] font-mono text-rose-400 uppercase tracking-[0.3em] font-bold"
           >Error de Protocolo</span
         >
       </div>
@@ -39,14 +37,11 @@ const seo = {
           class="text-[8rem] md:text-[12rem] font-black text-white leading-none tracking-tighter select-none glitch-text"
           data-text="404"
         >
-          4<span
-            class="bg-gradient-to-b from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+          4<span class="bg-gradient-to-b from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
             >0</span
           >4
         </h1>
-        <div
-          class="absolute inset-0 flex items-center justify-center pointer-events-none"
-        >
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div
             class="w-full h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent scanline"
           >
@@ -55,14 +50,14 @@ const seo = {
       </div>
 
       <!-- Mensaje principal -->
-      <h2
-        class="text-xl md:text-2xl font-bold text-white mb-4 tracking-tight"
-      >
+      <h2 class="text-xl md:text-2xl font-bold text-white mb-4 tracking-tight">
         Ruta no encontrada en el protocolo
       </h2>
-      <p class="text-terminal-secondary text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto">
-        El recurso que buscas no existe, fue movido o nunca fue indexado en
-        nuestro ecosistema. Verifica la URL o regresa a una ruta segura.
+      <p
+        class="text-terminal-secondary text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto"
+      >
+        El recurso que buscas no existe, fue movido o nunca fue indexado en nuestro ecosistema.
+        Verifica la URL o regresa a una ruta segura.
       </p>
 
       <!-- Terminal log simulado -->
@@ -125,9 +120,7 @@ const seo = {
 
       <!-- Grid de atajos rápidos -->
       <div class="border-t border-terminal-border/60 pt-8">
-        <p
-          class="text-[10px] font-mono text-terminal-subtle uppercase tracking-[0.4em] mb-5"
-        >
+        <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-[0.4em] mb-5">
           Rutas Disponibles
         </p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto">
@@ -176,25 +169,23 @@ const seo = {
     </div>
   </main>
 
-
-
   <script>
     // Inyectar la ruta actual en el log del terminal
-    const pathEl = document.getElementById("current-path");
+    const pathEl = document.getElementById("current-path")
     if (pathEl) {
-      pathEl.textContent = window.location.pathname;
+      pathEl.textContent = window.location.pathname
     }
 
     // Manejar el botón de regresar con fallback inteligente
-    const backBtn = document.getElementById("back-button");
+    const backBtn = document.getElementById("back-button")
     if (backBtn) {
       backBtn.addEventListener("click", () => {
         if (document.referrer) {
-          window.history.back();
+          window.history.back()
         } else {
-          window.location.href = "/";
+          window.location.href = "/"
         }
-      });
+      })
     }
   </script>
 </Layout>
