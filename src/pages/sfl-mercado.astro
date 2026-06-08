@@ -1,0 +1,253 @@
+---
+import Layout from "../layouts/Layout.astro"
+import sflIds from "../data/sfl_ids.json"
+
+const seo = {
+  title: "Mercado SFL | 0xLeñador — Precios P2P de Sunflower Land",
+  description:
+    "Consulta en tiempo real los precios del mercado P2P de Sunflower Land. Monitorea volumen, ventas recientes y floor prices de items y wearables.",
+  image: "/img/cripto/sunflowerland.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-7xl mx-auto px-6 pt-10 pb-20">
+    <header class="mb-12">
+      <div class="flex items-center gap-4 mb-3">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
+        <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
+          Herramientas / Mercado
+        </p>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        Mercado <span class="text-emerald-500">SFL</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        Monitor de precios y volumen de transacciones del mercado P2P de Sunflower Land. 
+        Los datos se extraen de forma local y segura usando la API pública del juego.
+      </p>
+    </header>
+
+    <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8 relative z-10">
+        <div class="w-full md:w-1/3">
+          <label class="block text-xs font-mono text-terminal-muted mb-2 uppercase tracking-widest">Buscar Item</label>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Ej. Sunflower, Axe..." 
+            class="w-full bg-terminal-bg/50 border border-white/[0.1] rounded-xl px-4 py-3 text-white placeholder-white/[0.3] focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all text-sm"
+          />
+        </div>
+        <div class="w-full md:w-auto">
+          <button id="fetchBtn" class="w-full md:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm rounded-xl transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]">
+            Refrescar
+          </button>
+        </div>
+      </div>
+
+      <div id="loadingState" class="hidden py-20 flex flex-col items-center justify-center relative z-10">
+        <svg class="animate-spin h-8 w-8 text-emerald-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-terminal-muted font-mono text-xs animate-pulse">Consultando API de SFL...</p>
+      </div>
+
+      <div id="errorState" class="hidden py-12 px-6 bg-red-500/10 border border-red-500/20 rounded-xl relative z-10">
+        <p id="errorMsg" class="text-red-400 text-sm text-center">Error al cargar los datos.</p>
+      </div>
+
+      <div id="dataContainer" class="hidden relative z-10">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-white">Actividad del Mercado</h2>
+          <span id="totalVolume" class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20"></span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-white/[0.05]">
+                <th class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider">Item</th>
+                <th class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-right">Última Venta</th>
+                <th class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-right">Floor (Low)</th>
+                <th class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-right">Volumen</th>
+                <th class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-right">Trades</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-white/[0.02]">
+              <!-- Filas dinámicas -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script define:vars={{ sflIds }}>
+  const searchInput = document.getElementById("searchInput");
+  const fetchBtn = document.getElementById("fetchBtn");
+  const loadingState = document.getElementById("loadingState");
+  const errorState = document.getElementById("errorState");
+  const errorMsg = document.getElementById("errorMsg");
+  const dataContainer = document.getElementById("dataContainer");
+  const tableBody = document.getElementById("tableBody");
+  const totalVolumeEl = document.getElementById("totalVolume");
+
+  let marketData = [];
+
+  // Formatear números
+  const formatNumber = (num, decimals = 2) => {
+    if (num === undefined || num === null) return "0";
+    if (num < 0.0001) return num.toExponential(2);
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimals,
+    }).format(num);
+  };
+
+  // Extraer el nombre del ID
+  const getItemName = (key) => {
+    // ej: collectibles-201 -> 201
+    const idMatch = key.match(/-(\d+)$/);
+    if (idMatch && idMatch[1]) {
+      const id = idMatch[1];
+      if (sflIds[id]) return sflIds[id];
+    }
+    return key;
+  };
+
+  const renderTable = (filterText = "") => {
+    if (!marketData.length) return;
+
+    const lowerFilter = filterText.toLowerCase();
+    const filtered = marketData.filter(item => 
+      item.name.toLowerCase().includes(lowerFilter) || 
+      item.key.toLowerCase().includes(lowerFilter)
+    );
+
+    tableBody.innerHTML = "";
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-terminal-muted text-sm">No se encontraron items que coincidan con la búsqueda.</td></tr>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-white/[0.02] transition-colors group";
+      
+      tr.innerHTML = `
+        <td class="py-4 px-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-terminal-elevated border border-white/[0.05] flex items-center justify-center overflow-hidden shrink-0 group-hover:border-emerald-500/30 transition-colors">
+              <span class="text-[9px] uppercase font-bold text-white/40 group-hover:text-emerald-500/50">${item.key.split('-')[0].substring(0,3)}</span>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
+              <p class="text-[10px] font-mono text-terminal-muted/70">${item.key}</p>
+            </div>
+          </div>
+        </td>
+        <td class="py-4 px-4 text-right">
+          <span class="text-sm font-medium text-white">${formatNumber(item.latestSale, 4)}</span>
+          <span class="text-[10px] text-emerald-500/70 ml-1">SFL</span>
+        </td>
+        <td class="py-4 px-4 text-right">
+          <span class="text-sm text-white/80">${formatNumber(item.low, 4)}</span>
+        </td>
+        <td class="py-4 px-4 text-right">
+          <span class="text-sm text-white/80">${formatNumber(item.volume, 0)}</span>
+        </td>
+        <td class="py-4 px-4 text-right">
+          <span class="text-sm font-mono text-terminal-muted">${formatNumber(item.trades, 0)}</span>
+        </td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  };
+
+  const fetchData = async () => {
+    try {
+      loadingState.classList.remove("hidden");
+      errorState.classList.add("hidden");
+      dataContainer.classList.add("hidden");
+
+      // Consultar el asset estático que actualiza el cron job
+      const response = await fetch('/api/sfl_data.json');
+      
+      if (!response.ok) {
+        throw new Error(`No se pudo cargar el archivo local: ${response.status}`);
+      }
+
+      const json = await response.json();
+      
+      if (!json.data || !json.data.reports) {
+        throw new Error(`El archivo de datos estáticos no contiene reportes.`);
+      }
+
+      // Extraer dinámicamente la fecha del reporte guardado
+      const reportDate = Object.keys(json.data.reports)[0];
+      const report = json.data.reports[reportDate];
+      const itemsObj = report.items;
+      
+      // Mapear objeto a array y ordenar por volumen
+      marketData = Object.entries(itemsObj).map(([key, data]) => ({
+        key,
+        name: getItemName(key),
+        ...data
+      })).sort((a, b) => b.volume - a.volume);
+
+      totalVolumeEl.innerText = `Volumen Total: ${formatNumber(report.totals.volume, 0)} SFL`;
+
+      renderTable(searchInput.value);
+      dataContainer.classList.remove("hidden");
+
+    } catch (err) {
+      console.error(err);
+      errorMsg.innerText = err.message || "Error desconocido al consultar la API.";
+      errorState.classList.remove("hidden");
+    } finally {
+      loadingState.classList.add("hidden");
+    }
+  };
+
+  // Prevenir inicializaciones dobles en Astro
+  const init = () => {
+    // Si ya inicializamos, salimos
+    if (window.__sflMarketInitialized) return;
+    window.__sflMarketInitialized = true;
+
+    if(fetchBtn) {
+      fetchBtn.addEventListener("click", () => {
+        fetchData();
+      });
+    }
+
+    if(searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+      });
+    }
+
+    // Primer fetch automático
+    fetchData();
+  };
+
+  // Manejar el ciclo de vida de Astro ViewTransitions
+  document.addEventListener("astro:page-load", () => {
+    window.__sflMarketInitialized = false; // Reset en navegacion
+    init();
+  });
+  
+  // Por si ViewTransitions no está activo
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(init, 1);
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
+</script>
