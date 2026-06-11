@@ -65,42 +65,42 @@ const seo = {
         
         <!-- Dashboard Resumen (Coming Soon) -->
         <div class="relative mb-10">
-          <div class="absolute inset-0 z-20 backdrop-blur-[3px] bg-terminal-bg/40 rounded-[20px] flex items-center justify-center border border-emerald-500/20">
-            <div class="bg-black/80 px-6 py-3 rounded-full border border-emerald-500/30 flex items-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
-              <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-              </span>
-              <span class="font-mono text-sm text-emerald-400 uppercase tracking-widest font-bold">Pro Features • Coming Soon</span>
-            </div>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-40 select-none pointer-events-none">
-            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 shadow-inner">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 shadow-inner flex flex-col justify-center">
               <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
                 <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                 Top Volume 24h
               </h3>
-              <div class="h-8 bg-white/[0.05] rounded-lg w-3/4 mb-2 animate-pulse"></div>
-              <div class="h-4 bg-white/[0.05] rounded w-1/2 animate-pulse"></div>
+              <div id="dashTopVolume" class="h-12 flex items-center">
+                <div class="h-8 bg-white/[0.05] rounded-lg w-3/4 animate-pulse"></div>
+              </div>
             </div>
-            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 shadow-inner">
-              <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-                Mayor Ganador 7d
-              </h3>
-              <div class="h-8 bg-white/[0.05] rounded-lg w-2/3 mb-2 animate-pulse"></div>
-              <div class="h-4 bg-white/[0.05] rounded w-1/3 animate-pulse"></div>
+            
+            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] overflow-hidden">
+              <div id="dashTopGainerCarousel" class="w-full h-full absolute inset-0 p-5">
+                <div class="flex flex-col justify-center h-full">
+                  <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                    Calculando...
+                  </h3>
+                  <div class="h-12 flex items-center">
+                    <div class="h-8 bg-white/[0.05] rounded-lg w-2/3 animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 shadow-inner">
-              <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                Productos Nuevos
-              </h3>
-              <div class="flex gap-2 mb-2">
-                <div class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"></div>
-                <div class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"></div>
-                <div class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"></div>
+            
+            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] overflow-hidden">
+              <div id="dashAthAtlCarousel" class="w-full h-full absolute inset-0 p-5">
+                <div class="flex flex-col justify-center h-full">
+                  <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Calculando...
+                  </h3>
+                  <div class="flex flex-wrap gap-2 h-auto min-h-12 items-center">
+                    <div class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -157,7 +157,6 @@ const seo = {
 
   // Extraer el nombre del ID
   const getItemName = (key) => {
-    // ej: collectibles-201 -> 201
     const idMatch = key.match(/-(\d+)$/);
     if (idMatch && idMatch[1]) {
       const id = idMatch[1];
@@ -169,7 +168,6 @@ const seo = {
   // Helper para SVG Sparkline Nativo
   const createSparklineSVG = (dataArray, isPositive) => {
     if (!dataArray) return '';
-    // Filtrar nulos para trazar linea continua
     const validData = dataArray.filter(v => v !== null && v !== undefined);
     if (validData.length < 2) return ''; 
 
@@ -188,10 +186,9 @@ const seo = {
     const minIndex = validData.indexOf(min);
     const finalIndex = validData.length - 1;
 
-    const strokeColor = isPositive ? '#10b981' : '#ef4444'; // emerald-500 o red-500
-    const dotColor = '#f59e0b'; // amber-500 para los puntos clave
+    const strokeColor = isPositive ? '#10b981' : '#ef4444'; 
+    const dotColor = '#f59e0b';
     
-    // Sparkline con interactividad
     return `
       <div class="relative w-full h-full sparkline-container cursor-crosshair group/spark" 
            data-points='${JSON.stringify(validData)}' 
@@ -200,17 +197,14 @@ const seo = {
         <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0">
           <path d="M ${points}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
           
-          <!-- Puntos fijos (Max, Min, Final) -->
           <circle cx="${getX(maxIndex)}" cy="${getY(max)}" r="1.5" fill="${dotColor}" />
           <circle cx="${getX(minIndex)}" cy="${getY(min)}" r="1.5" fill="${dotColor}" />
           <circle cx="${getX(finalIndex)}" cy="${getY(validData[finalIndex])}" r="1.5" fill="${dotColor}" />
           
-          <!-- Elementos de Hover interactivos -->
           <line class="hover-line hidden pointer-events-none" y1="-2" y2="34" stroke="rgba(255,255,255,0.4)" stroke-width="0.5" />
           <circle class="hover-dot hidden pointer-events-none" r="2" fill="${strokeColor}" stroke="#1e1e1e" stroke-width="1" />
         </svg>
         
-        <!-- Tooltip HTML -->
         <div class="hover-tooltip hidden absolute bg-terminal-dark border border-white/20 text-white text-[9px] font-mono px-1.5 py-0.5 rounded shadow-xl pointer-events-none z-10 transition-all duration-75 whitespace-nowrap" 
              style="transform: translateX(-50%) translateY(-100%); margin-top: -6px;">
         </div>
@@ -254,6 +248,161 @@ const seo = {
         ${sparklineHTML}
       </div>
     `;
+  };
+
+  const renderDashboard = () => {
+    const topVolItem = marketData[0];
+    if (topVolItem) {
+      document.getElementById("dashTopVolume").innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1.5 shrink-0">
+            <img src="/img/sunflowerland/${topVolItem.name}.png" class="w-full h-full object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-white font-bold">${topVolItem.name}</span>
+            <span class="text-xs text-emerald-400 font-mono">${formatNumber(topVolItem.volume, 0)} vol</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Mayor Ganador Carrusel (24h, 7d, 30d, 180d)
+    const getTopGainer = (periodKey) => {
+      const sorted = [...marketData].map(item => {
+        const change = calculateChange(item.currentPrice, item.history[periodKey]);
+        return { ...item, changeObj: change };
+      }).sort((a, b) => b.changeObj.val - a.changeObj.val);
+      return sorted[0];
+    };
+
+    const slidesData = [
+      { title: "Mayor Ganador 24H", data: getTopGainer("1d") },
+      { title: "Mayor Ganador 7D", data: getTopGainer("7d") },
+      { title: "Mayor Ganador 30D", data: getTopGainer("30d") },
+      { title: "Mayor Ganador 180D", data: getTopGainer("180d") }
+    ];
+
+    let carouselHTML = '';
+    slidesData.forEach((slide, idx) => {
+      if(!slide.data) return;
+      const isFirst = idx === 0;
+      carouselHTML += `
+        <div class="gainer-slide absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+            ${slide.title}
+          </h3>
+          <div class="flex items-center gap-3 h-12">
+            <div class="w-10 h-10 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1.5 shrink-0">
+              <img src="/img/sunflowerland/${slide.data.name}.png" class="w-full h-full object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-white font-bold">${slide.data.name}</span>
+              <span class="text-xs text-emerald-500 font-mono font-bold">+${slide.data.changeObj.val.toFixed(2)}%</span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    const carouselContainer = document.getElementById("dashTopGainerCarousel");
+    carouselContainer.innerHTML = carouselHTML;
+
+    if (window.__gainerInterval) clearInterval(window.__gainerInterval);
+    let currentSlide = 0;
+    const slides = carouselContainer.querySelectorAll(".gainer-slide");
+    
+    if(slides.length > 1) {
+      window.__gainerInterval = setInterval(() => {
+        slides[currentSlide].classList.remove("opacity-100", "z-10");
+        slides[currentSlide].classList.add("opacity-0", "z-0");
+        
+        currentSlide = (currentSlide + 1) % slides.length;
+        
+        slides[currentSlide].classList.remove("opacity-0", "z-0");
+        slides[currentSlide].classList.add("opacity-100", "z-10");
+      }, 5000);
+    }
+
+    // Extremos Carrusel (Cerca ATH vs Cerca ATL)
+    const athItems = [...marketData].map(item => {
+      const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
+      const ath = Math.max(...history180d, item.currentPrice);
+      const ratio = ath > 0 ? (item.currentPrice / ath) * 100 : 0;
+      return { ...item, ratio, refPrice: ath };
+    }).sort((a, b) => b.ratio - a.ratio).slice(0, 7);
+
+    const atlItems = [...marketData].map(item => {
+      const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
+      const atl = Math.min(...history180d, item.currentPrice);
+      const ratio = item.currentPrice > 0 ? (atl / item.currentPrice) * 100 : 0;
+      return { ...item, ratio, refPrice: atl };
+    }).sort((a, b) => b.ratio - a.ratio).slice(0, 7);
+
+    const extremesSlides = [
+      {
+        title: "Cerca del ATH (180d)",
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
+        colorClass: "text-emerald-500",
+        borderClass: "border-emerald-500/30",
+        shadowClass: "shadow-[0_0_10px_rgba(16,185,129,0.15)]",
+        items: athItems,
+        tooltipSuffix: "del ATH"
+      },
+      {
+        title: "Cerca de Mínimos (180D)",
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>',
+        colorClass: "text-red-500",
+        borderClass: "border-red-500/30",
+        shadowClass: "shadow-[0_0_10px_rgba(239,68,68,0.15)]",
+        items: atlItems,
+        tooltipSuffix: "del ATL"
+      }
+    ];
+
+    let extremesHTML = '';
+    extremesSlides.forEach((slide, idx) => {
+      const isFirst = idx === 0;
+      const itemsHTML = slide.items.map(item => `
+        <div class="w-10 h-10 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1.5 relative group cursor-help ${slide.shadowClass}">
+          <img src="/img/sunflowerland/${item.name}.png" class="w-full h-full object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+          <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
+            ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
+          </div>
+        </div>
+      `).join('');
+
+      extremesHTML += `
+        <div class="extremes-slide absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 ${slide.colorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
+            ${slide.title}
+          </h3>
+          <div class="flex flex-wrap gap-2 h-auto min-h-12 items-center">
+            ${itemsHTML}
+          </div>
+        </div>
+      `;
+    });
+
+    const extremesContainer = document.getElementById("dashAthAtlCarousel");
+    extremesContainer.innerHTML = extremesHTML;
+
+    if (window.__extremesInterval) clearInterval(window.__extremesInterval);
+    let currentExtreme = 0;
+    const extremeNodes = extremesContainer.querySelectorAll(".extremes-slide");
+    
+    if(extremeNodes.length > 1) {
+      window.__extremesInterval = setInterval(() => {
+        extremeNodes[currentExtreme].classList.remove("opacity-100", "z-10");
+        extremeNodes[currentExtreme].classList.add("opacity-0", "z-0");
+        
+        currentExtreme = (currentExtreme + 1) % extremeNodes.length;
+        
+        extremeNodes[currentExtreme].classList.remove("opacity-0", "z-0");
+        extremeNodes[currentExtreme].classList.add("opacity-100", "z-10");
+      }, 15000);
+    }
   };
 
   const renderTable = (filterText = "") => {
@@ -341,6 +490,7 @@ const seo = {
       const totalVol = marketData.reduce((acc, curr) => acc + (curr.volume || 0), 0);
       totalVolumeEl.innerText = `Volumen Total: ${formatNumber(totalVol, 0)} FLOWER`;
 
+      renderDashboard();
       renderTable(searchInput.value);
       dataContainer.classList.remove("hidden");
 
