@@ -76,7 +76,13 @@ const seo = {
               </div>
             </div>
             
-            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] overflow-hidden">
+            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] overflow-hidden group/carousel cursor-pointer">
+              <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
+                  <circle class="text-white/10" stroke-width="3" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" />
+                  <circle id="gainerProgress" class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.83" stroke-dashoffset="62.83" />
+                </svg>
+              </div>
               <div id="dashTopGainerCarousel" class="w-full h-full absolute inset-0 p-5">
                 <div class="flex flex-col justify-center h-full">
                   <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -90,7 +96,13 @@ const seo = {
               </div>
             </div>
             
-            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] overflow-hidden">
+            <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] overflow-hidden group/carousel cursor-pointer">
+              <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
+                  <circle class="text-white/10" stroke-width="3" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" />
+                  <circle id="extremesProgress" class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.83" stroke-dashoffset="62.83" />
+                </svg>
+              </div>
               <div id="dashAthAtlCarousel" class="w-full h-full absolute inset-0 p-5">
                 <div class="flex flex-col justify-center h-full">
                   <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -132,6 +144,13 @@ const seo = {
     </div>
   </main>
 </Layout>
+
+<style is:global>
+  @keyframes fillCircle {
+    0% { stroke-dashoffset: 62.83; }
+    100% { stroke-dashoffset: 0; }
+  }
+</style>
 
 <script define:vars={{ sflIds }}>
   const searchInput = document.getElementById("searchInput");
@@ -287,7 +306,7 @@ const seo = {
       if(!slide.data) return;
       const isFirst = idx === 0;
       carouselHTML += `
-        <div class="gainer-slide absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+        <div class="gainer-slide slide-item absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
           <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
             <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
             ${slide.title}
@@ -308,23 +327,6 @@ const seo = {
     const carouselContainer = document.getElementById("dashTopGainerCarousel");
     carouselContainer.innerHTML = carouselHTML;
 
-    if (window.__gainerInterval) clearInterval(window.__gainerInterval);
-    let currentSlide = 0;
-    const slides = carouselContainer.querySelectorAll(".gainer-slide");
-    
-    if(slides.length > 1) {
-      window.__gainerInterval = setInterval(() => {
-        slides[currentSlide].classList.remove("opacity-100", "z-10");
-        slides[currentSlide].classList.add("opacity-0", "z-0");
-        
-        currentSlide = (currentSlide + 1) % slides.length;
-        
-        slides[currentSlide].classList.remove("opacity-0", "z-0");
-        slides[currentSlide].classList.add("opacity-100", "z-10");
-      }, 5000);
-    }
-
-    // Extremos Carrusel (Cerca ATH vs Cerca ATL)
     const athItems = [...marketData].map(item => {
       const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
       const ath = Math.max(...history180d, item.currentPrice);
@@ -373,7 +375,7 @@ const seo = {
       `).join('');
 
       extremesHTML += `
-        <div class="extremes-slide absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+        <div class="extremes-slide slide-item absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
           <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
             <svg class="w-4 h-4 ${slide.colorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
             ${slide.title}
@@ -388,21 +390,61 @@ const seo = {
     const extremesContainer = document.getElementById("dashAthAtlCarousel");
     extremesContainer.innerHTML = extremesHTML;
 
+    // Lógica Universal de Carrusel con Eventos
+    const setupCarousel = (containerId, circleId, durationSec, abortKey) => {
+      const container = document.getElementById(containerId);
+      let circle = document.getElementById(circleId);
+      if (!container || !circle) return;
+
+      const wrapper = container.parentElement;
+      const slides = container.querySelectorAll(".slide-item");
+      if (slides.length <= 1) return;
+
+      if (window[abortKey]) window[abortKey].abort();
+      window[abortKey] = new AbortController();
+      const signal = window[abortKey].signal;
+
+      let currentIdx = 0;
+
+      const nextSlide = () => {
+        slides[currentIdx].classList.remove("opacity-100", "z-10");
+        slides[currentIdx].classList.add("opacity-0", "z-0");
+        
+        currentIdx = (currentIdx + 1) % slides.length;
+        
+        slides[currentIdx].classList.remove("opacity-0", "z-0");
+        slides[currentIdx].classList.add("opacity-100", "z-10");
+
+        // Clonar para reiniciar animación SVG de forma confiable
+        const newCircle = circle.cloneNode(true);
+        circle.parentNode.replaceChild(newCircle, circle);
+        circle = newCircle;
+        
+        if (circleId === "extremesProgress") {
+          if (currentIdx === 0) {
+            circle.classList.remove("text-red-500");
+            circle.classList.add("text-emerald-500");
+          } else {
+            circle.classList.remove("text-emerald-500");
+            circle.classList.add("text-red-500");
+          }
+        }
+        
+        circle.style.animation = `fillCircle ${durationSec}s linear forwards`;
+        circle.addEventListener("animationend", nextSlide, { signal });
+      };
+
+      wrapper.addEventListener("click", nextSlide, { signal });
+      
+      circle.style.animation = `fillCircle ${durationSec}s linear forwards`;
+      circle.addEventListener("animationend", nextSlide, { signal });
+    };
+
+    if (window.__gainerInterval) clearInterval(window.__gainerInterval);
     if (window.__extremesInterval) clearInterval(window.__extremesInterval);
-    let currentExtreme = 0;
-    const extremeNodes = extremesContainer.querySelectorAll(".extremes-slide");
-    
-    if(extremeNodes.length > 1) {
-      window.__extremesInterval = setInterval(() => {
-        extremeNodes[currentExtreme].classList.remove("opacity-100", "z-10");
-        extremeNodes[currentExtreme].classList.add("opacity-0", "z-0");
-        
-        currentExtreme = (currentExtreme + 1) % extremeNodes.length;
-        
-        extremeNodes[currentExtreme].classList.remove("opacity-0", "z-0");
-        extremeNodes[currentExtreme].classList.add("opacity-100", "z-10");
-      }, 15000);
-    }
+
+    setupCarousel("dashTopGainerCarousel", "gainerProgress", 5, "__gainerAborter");
+    setupCarousel("dashAthAtlCarousel", "extremesProgress", 15, "__extremesAborter");
   };
 
   const renderTable = (filterText = "") => {
