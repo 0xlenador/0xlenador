@@ -190,7 +190,7 @@ const seo = {
     // Sparkline con gradiente estético debajo de la curva (Glassmorphism sutil)
     return `
       <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-md">
-        <path d="M ${points}" fill="none" stroke="${strokeColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M ${points}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     `;
   };
@@ -251,15 +251,13 @@ const seo = {
       tr.className = "hover:bg-white/[0.02] transition-colors group";
       
       tr.innerHTML = `
-        <td class="py-4 px-4">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-terminal-elevated border border-white/[0.05] flex items-center justify-center overflow-hidden shrink-0 group-hover:border-emerald-500/30 transition-colors">
-              <span class="text-[9px] uppercase font-bold text-white/40 group-hover:text-emerald-500/50">${item.key.split('-')[0].substring(0,3)}</span>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
-              <p class="text-[10px] font-mono text-terminal-muted/70">${item.key}</p>
-            </div>
+        <td class="py-4 px-4 font-medium text-white flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1">
+            <img src="/img/sunflowerland/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
+            <p class="text-[10px] font-mono text-terminal-muted/70">${item.key}</p>
           </div>
         </td>
         <td class="py-4 px-4 text-right">
@@ -302,11 +300,17 @@ const seo = {
         throw new Error(`El archivo de datos estáticos no contiene historial de items.`);
       }
 
-      // Mapear el nuevo formato histórico JSON
-      marketData = Object.values(json.items).map(data => ({
-        ...data,
-        name: getItemName(data.key)
-      })).sort((a, b) => b.volume - a.volume);
+      // Mapear el nuevo formato histórico JSON filtrando por sfl_ids.json
+      marketData = Object.values(json.items).reduce((acc, data) => {
+        const idMatch = data.key.match(/collectibles-(\d+)$/);
+        if (idMatch && sflIds[idMatch[1]]) {
+           acc.push({
+             ...data,
+             name: sflIds[idMatch[1]]
+           });
+        }
+        return acc;
+      }, []).sort((a, b) => b.volume - a.volume);
 
       // Usar un estimado total de volumen basado en las props
       const totalVol = marketData.reduce((acc, curr) => acc + (curr.volume || 0), 0);
