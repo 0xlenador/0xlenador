@@ -85,10 +85,11 @@ async function updateSFLData() {
     // Validar el día actual (o fallback)
     let baseItems = rawData["live"] || rawData[getDateString(0)];
     if (!baseItems) {
-      console.log(`Intentando fallback estático para 0d...`);
-      const fallback = await fetchSFLDate("2026-06-06");
+      console.log(`Intentando fallback dinámico para 0d usando datos de ayer...`);
+      // ¡Usamos los datos que ya están en la RAM en lugar de descargarlos de nuevo!
+      const fallback = rawData[getDateString(1)]; 
       if (fallback) baseItems = fallback;
-      else throw new Error("No se pudo obtener la data principal (offset 0).");
+      else throw new Error("No se pudo obtener la data principal (offset 0 y 1 fallaron).");
     }
 
     // Procesar la data para el formato súper eficiente del frontend
