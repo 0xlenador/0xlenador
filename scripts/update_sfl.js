@@ -24,17 +24,18 @@ async function fetchSFLDate(dateStr) {
     if (!res.ok) return null;
     const data = await res.json();
     if (data && data.data && data.data.reports) {
+      const flowerPrice = data.data.flowerPrice || null;
       if (isLive) {
         const keys = Object.keys(data.data.reports);
-        if (keys.length > 0) return data.data.reports[keys[0]].items;
+        if (keys.length > 0) return { items: data.data.reports[keys[0]].items, flowerPrice };
       } else if (data.data.reports[dateStr]) {
-        return data.data.reports[dateStr].items;
+        return { items: data.data.reports[dateStr].items, flowerPrice: null }; // El historial no guarda flowerPrice por ahora
       }
     }
   } catch (e) {
     console.log(`Error al consultar ${dateStr}: ${e.message}`);
   }
-  return null;
+  return { items: null, flowerPrice: null };
 }
 
 async function updateSFLData() {
@@ -51,19 +52,22 @@ async function updateSFLData() {
       console.log("Caché no encontrado, se descargará todo el historial inicial.");
     }
 
+    let currentFlowerPrice = null;
+
     const maxDays = 182;
     for (let offset = 0; offset <= maxDays; offset++) {
       const dateStr = getDateString(offset);
       if (!rawData[dateStr] || rawData[dateStr] === "error") {
-        const items = await fetchSFLDate(dateStr);
-        if (items) {
-          rawData[dateStr] = items;
+        const result = await fetchSFLDate(dateStr);
+        if (result && result.items) {
+          rawData[dateStr] = result.items;
+          if (offset === 0 && result.flowerPrice) {
+            currentFlowerPrice = result.flowerPrice;
+          }
+          await sleep(500); // 500ms entre llamadas exitosas
         } else {
-          // Guardamos "error" temporalmente en RAM para no reintentar en este mismo bucle
-          // pero no lo guardaremos en cache para que reintente mañana.
-          console.log(`⚠️ Datos no encontrados para ${dateStr}`);
+          rawData[dateStr] = "error";
         }
-        await sleep(300); // 300ms delay para respetar rate limits de la API
       }
     }
 
@@ -77,9 +81,12 @@ async function updateSFLData() {
     await fs.writeFile(cachePath, JSON.stringify(cacheToSave));
 
     // Obtener data en vivo (último reporte generado)
-    const liveItems = await fetchSFLDate("live");
-    if (liveItems) {
-      rawData["live"] = liveItems;
+    const liveResult = await fetchSFLDate("live");
+    if (liveResult && liveResult.items) {
+      rawData["live"] = liveResult.items;
+      if (liveResult.flowerPrice) {
+        currentFlowerPrice = liveResult.flowerPrice;
+      }
     }
 
     // Validar el día actual (o fallback)
@@ -130,6 +137,7 @@ async function updateSFLData() {
 
     const finalJSON = {
       lastUpdated: new Date().toISOString(),
+      flowerPrice: currentFlowerPrice,
       items: processedItems
     };
 
