@@ -1,5 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+// Solo los IDs que queremos mostrar en el frontend (reducirá el JSON de ~8MB a ~500KB)
+const sflIds = require('../src/data/sfl_ids.json');
+const ALLOWED_KEYS = new Set(Object.keys(sflIds).map(id => `collectibles-${id}`));
 
 // Helper para obtener YYYY-MM-DD a partir de hoy menos N días
 function getDateString(daysOffset) {
@@ -135,10 +141,20 @@ async function updateSFLData() {
       };
     }
 
+    // Filtrar para conservar SOLO los items que están en sfl_ids.json
+    const filteredItems = {};
+    for (const [key, val] of Object.entries(processedItems)) {
+      if (ALLOWED_KEYS.has(key)) {
+        filteredItems[key] = val;
+      }
+    }
+
+    console.log(`📦 Items en bruto: ${Object.keys(processedItems).length} → Items filtrados: ${Object.keys(filteredItems).length}`);
+
     const finalJSON = {
       lastUpdated: new Date().toISOString(),
       flowerPrice: currentFlowerPrice,
-      items: processedItems
+      items: filteredItems
     };
 
     const filePath = path.join(dirPath, 'sfl_data.json');

@@ -316,7 +316,6 @@ const seo = {
   const errorMsg = document.getElementById("errorMsg");
   const dataContainer = document.getElementById("dataContainer");
   const tableBody = document.getElementById("tableBody");
-  const totalVolumeEl = document.getElementById("totalVolume");
 
   let marketData = [];
 
@@ -364,7 +363,7 @@ const seo = {
     
     // Escapar comillas si el nombre tuviera
     const safeName = itemName.replace(/"/g, '\\"');
-    const row = document.querySelector(`tr[data-row-id="${safeName}"]`);
+    const row = document.querySelector(`div[data-row-id="${safeName}"]`);
     
     if (row) {
       row.scrollIntoView({ behavior: 'smooth', block: 'center' });
