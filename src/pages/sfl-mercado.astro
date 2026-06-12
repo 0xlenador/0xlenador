@@ -969,16 +969,17 @@ const seo = {
   // Mejora 11 — Pausar carruseles cuando el usuario cambia de pestaña.
   // Los navegadores acumulan eventos 'animationend' en segundo plano y los
   // disparan todos de golpe al volver, haciendo girar el carrusel como loco.
-  document.addEventListener("visibilitychange", () => {
-    const isHidden = document.visibilityState === "hidden";
-    // Pausa: abortar los controladores activos de animación
-    if (isHidden) {
-      if (window.__gainerAborter) window.__gainerAborter.abort();
-      if (window.__extremesAborter) window.__extremesAborter.abort();
-    } else {
-      // Reanuda: volver a configurar los carruseles desde el slide actual
-      // Re-llamar renderDashboard solo si ya hay datos cargados
-      if (marketData.length > 0) renderDashboard();
-    }
-  });
+  // Guardia para evitar duplicar el listener si Astro ViewTransitions recarga la página
+  if (!window.__sflVisibilityListenerRegistered) {
+    window.__sflVisibilityListenerRegistered = true;
+    document.addEventListener("visibilitychange", () => {
+      const isHidden = document.visibilityState === "hidden";
+      if (isHidden) {
+        if (window.__gainerAborter) window.__gainerAborter.abort();
+        if (window.__extremesAborter) window.__extremesAborter.abort();
+      } else {
+        if (marketData.length > 0) renderDashboard();
+      }
+    });
+  }
 </script>
