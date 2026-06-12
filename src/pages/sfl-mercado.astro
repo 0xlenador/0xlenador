@@ -76,10 +76,6 @@ const seo = {
               <div id="dashTopVolume" class="h-12 flex items-center">
                 <div class="h-8 bg-white/[0.05] rounded-lg w-3/4 animate-pulse"></div>
               </div>
-              <div class="mt-2 pt-2 border-t border-white/[0.05] flex justify-between items-center">
-                 <span class="text-[9px] text-terminal-muted uppercase tracking-widest">Volumen Total</span>
-                 <span id="totalVolume" class="text-[10px] font-bold text-emerald-400 font-mono">...</span>
-              </div>
             </div>
             
             <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] group/carousel cursor-pointer">
@@ -124,12 +120,16 @@ const seo = {
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
-          <h2 class="text-lg font-semibold text-white">Actividad del Mercado <span class="text-xs text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline">P2P History</span></h2>
-          <button id="fetchBtn" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto justify-center">
-            <svg class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Refrescar
-          </button>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-2">
+          <div class="flex items-center flex-wrap gap-3">
+            <h2 class="text-lg font-semibold text-white">Actividad del Mercado <span class="text-xs text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline">P2P History</span></h2>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button id="fetchBtn" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto justify-center">
+              <svg class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Refrescar
+            </button>
+          </div>
         </div>
 
         <!-- Filtros y Buscador -->
@@ -455,28 +455,62 @@ const seo = {
     };
   };
 
-  const getChangeHTML = (changeObj, sparklineData, showText = true) => {
+  const getBadgeHTML = (changeObj, isLarge = false) => {
     if (changeObj.isPositive === null) return '<span class="text-terminal-muted/50 font-mono text-xs">-</span>';
-    
     const colorClass = changeObj.isPositive ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20' : 'text-red-500 bg-red-500/10 border-red-500/20';
+    
+    const arrowClasses = isLarge ? 'w-3 h-3 inline mr-1' : 'w-2.5 h-2.5 inline mr-0.5';
+    const strokeW = isLarge ? '2.5' : '2.5';
     const arrow = changeObj.isPositive 
-      ? '<svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>' 
-      : '<svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>';
+      ? `<svg class="${arrowClasses}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeW}" d="M5 15l7-7 7 7"/></svg>` 
+      : `<svg class="${arrowClasses}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeW}" d="M19 9l-7 7-7-7"/></svg>`;
       
-    const sparklineHTML = sparklineData ? `<div class="h-6 w-full">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>` : '';
-      
-    const textHTML = showText ? `
-        <span class="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0">
-          ${arrow}${changeObj.text}
-        </span>
-    ` : '';
-
-    const layoutClass = sparklineData ? "justify-between gap-3" : "justify-center";
+    const containerClass = isLarge
+      ? `text-xs font-bold font-mono px-1.5 py-0.5 rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0`
+      : `text-[10px] font-bold font-mono px-0.5 py-[1px] lg:px-1.5 lg:py-0.5 rounded-sm lg:rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0 leading-none`;
 
     return `
-      <div class="flex flex-row items-center ${layoutClass} w-full">
-        ${textHTML}
-        ${sparklineHTML}
+        <span class="${containerClass}">
+          ${arrow}${changeObj.text}
+        </span>
+    `;
+  };
+
+  const getCardColumnHTML = (title, changeObj, sparklineData) => {
+    const isLarge = !sparklineData; // 24H no tiene gráfica
+    const badgeHTML = getBadgeHTML(changeObj, isLarge);
+    
+    if (isLarge) {
+      // Para 24 Horas (sin gráfica) - Elementos grandes
+      return `
+        <div class="lg:py-3 lg:px-4 flex flex-col justify-center items-center lg:items-end lg:block bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full">
+          <p class="text-xs lg:text-[10px] font-mono text-terminal-muted mb-3 lg:mb-2 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
+          <div class="flex justify-center lg:justify-start w-full">
+            ${badgeHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    // Para 7D, 30D, 180D (con gráfica)
+    const graphHTML = `<div class="h-6 w-full">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>`;
+    
+    return `
+      <div class="lg:py-3 lg:px-4 flex flex-col justify-between lg:block bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full">
+        <!-- Mobile Header: Titulo a la izq + Badge a la der -->
+        <div class="flex justify-between items-center mb-2 w-full lg:hidden">
+          <p class="text-[10px] font-mono text-terminal-muted uppercase font-semibold">${title}</p>
+          ${badgeHTML}
+        </div>
+        <!-- Mobile Graph (Full width abajo) -->
+        <div class="w-full lg:hidden flex-grow flex flex-col justify-end">
+          ${graphHTML}
+        </div>
+        <!-- Desktop Content (Badge + Graph inline) -->
+        <div class="hidden lg:flex flex-row items-center justify-between gap-3 w-full">
+          ${badgeHTML}
+          ${graphHTML}
+        </div>
       </div>
     `;
   };
@@ -525,7 +559,7 @@ const seo = {
           </h3>
           <div class="flex items-center gap-3 h-12 cursor-pointer hover:scale-105 transition-transform origin-left" onclick="window.scrollToItem('${slide.data.name}', event)" title="Ver ${slide.data.name} en la tabla">
             <div class="w-10 h-10 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/${slide.data.name}.png" class="w-full h-full object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+              <img src="/img/sunflowerland/${slide.data.name}.png" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.style.display='none'" />
             </div>
             <div class="flex flex-col">
               <span class="text-white font-bold">${slide.data.name}</span>
@@ -578,8 +612,8 @@ const seo = {
     extremesSlides.forEach((slide, idx) => {
       const isFirst = idx === 0;
       const itemsHTML = slide.items.map(item => `
-        <div class="w-10 h-10 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1.5 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass}" onclick="window.scrollToItem('${item.name}', event)">
-          <img src="/img/sunflowerland/${item.name}.png" class="w-full h-full object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+        <div class="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 md:p-1.5 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
+          <img src="/img/sunflowerland/${item.name}.png" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.style.display='none'" />
           <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
             ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
           </div>
@@ -587,12 +621,12 @@ const seo = {
       `).join('');
 
       extremesHTML += `
-        <div class="extremes-slide slide-item absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
-          <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-            <svg class="w-4 h-4 ${slide.colorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
+        <div class="extremes-slide slide-item absolute inset-0 p-4 md:p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-[10px] md:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 md:mb-3 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 md:w-4 md:h-4 ${slide.colorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
             ${slide.title}
           </h3>
-          <div class="flex flex-wrap gap-2 h-auto min-h-12 items-center">
+          <div class="flex gap-1.5 sm:gap-2 h-auto min-h-12 items-center w-full">
             ${itemsHTML}
           </div>
         </div>
@@ -710,7 +744,7 @@ const seo = {
         <div class="py-2 lg:py-4 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="/img/sunflowerland/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+              <img src="/img/sunflowerland/${item.name}.png" alt="${item.name}" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
             </div>
             <div>
               <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
@@ -731,27 +765,10 @@ const seo = {
         
         <!-- Contenedor de gráficas (2x2 en móvil, horizontal en lg) -->
         <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
-          
-          <div class="lg:py-3 lg:px-4 text-center flex flex-col justify-center lg:block bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none">
-            <p class="text-[10px] font-mono text-terminal-muted mb-2 uppercase lg:hidden text-left font-semibold">24 Horas</p>
-            ${getChangeHTML(calculateChange(item.currentPrice, item.history["1d"]), null, true)}
-          </div>
-          
-          <div class="lg:py-3 lg:px-4 text-right lg:text-center flex flex-col justify-center lg:block bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none">
-            <p class="text-[10px] font-mono text-terminal-muted mb-2 uppercase lg:hidden text-left font-semibold">7 Días</p>
-            ${getChangeHTML(calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, true)}
-          </div>
-          
-          <div class="lg:py-3 lg:px-4 text-right lg:text-center flex flex-col justify-center lg:block bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none">
-            <p class="text-[10px] font-mono text-terminal-muted mb-2 uppercase lg:hidden text-left font-semibold">30 Días</p>
-            ${getChangeHTML(calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, true)}
-          </div>
-          
-          <div class="lg:py-3 lg:px-4 text-right lg:text-center flex flex-col justify-center lg:block bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none">
-            <p class="text-[10px] font-mono text-terminal-muted mb-2 uppercase lg:hidden text-left font-semibold">180 Días</p>
-            ${getChangeHTML(calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, true)}
-          </div>
-          
+          ${getCardColumnHTML("24 Horas", calculateChange(item.currentPrice, item.history["1d"]), null)}
+          ${getCardColumnHTML("7 Días", calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
+          ${getCardColumnHTML("30 Días", calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
+          ${getCardColumnHTML("180 Días", calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
         </div>
       `;
       tableBody.appendChild(row);
@@ -789,9 +806,7 @@ const seo = {
         return acc;
       }, []).sort((a, b) => b.volume - a.volume);
 
-      // Usar un estimado total de volumen basado en las props
-      const totalVol = marketData.reduce((acc, curr) => acc + (curr.volume || 0), 0);
-      totalVolumeEl.innerText = `Volumen Total: ${formatNumber(totalVol, 0)} FLOWER`;
+
 
       // Actualizar el widget de precio FLOWER con el dato inyectado desde sfl_data.json
       const priceEl = document.getElementById("sflPriceValue");
