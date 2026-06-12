@@ -7,17 +7,36 @@ const require = createRequire(import.meta.url);
 const sflIds = require('../src/data/sfl_ids.json');
 const ALLOWED_KEYS = new Set(Object.keys(sflIds).map(id => `collectibles-${id}`));
 
-// Helper para obtener YYYY-MM-DD a partir de hoy menos N días
+// Problema 5 — Forzar siempre UTC para que coincida con el servidor de GitHub Actions
+// y con el ciclo de reportes diarios de la API de Sunflower Land
 function getDateString(daysOffset) {
   const dateObj = new Date();
-  dateObj.setDate(dateObj.getDate() - daysOffset); // Empezamos desde hoy (offset 0)
-  const yyyy = dateObj.getFullYear();
-  const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const dd = String(dateObj.getDate()).padStart(2, '0');
+  dateObj.setUTCDate(dateObj.getUTCDate() - daysOffset);
+  const yyyy = dateObj.getUTCFullYear();
+  const mm = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(dateObj.getUTCDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
 }
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Problema 6 — Reintentos automáticos con backoff exponencial
+// Si la red falla un instante, espera 1s, 2s, 4s antes de rendirse
+async function fetchWithRetry(url, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res;
+      // Errores de servidor (5xx) → reintentamos; errores de cliente (4xx) → no
+      if (res.status < 500) return res;
+      console.log(`  ↩ Intento ${attempt}/${maxRetries} falló con status ${res.status}. Reintentando...`);
+    } catch (e) {
+      console.log(`  ↩ Intento ${attempt}/${maxRetries} falló (red): ${e.message}. Reintentando...`);
+    }
+    if (attempt < maxRetries) await sleep(1000 * Math.pow(2, attempt - 1)); // 1s, 2s, 4s
+  }
+  return null; // Todos los intentos fallaron
+}
 
 async function fetchSFLDate(dateStr) {
   const isLive = dateStr === "live";
@@ -26,8 +45,8 @@ async function fetchSFLDate(dateStr) {
     : `https://api.sunflower-land.com/data?type=marketplaceActivity&date=${dateStr}`;
   console.log(`⏳ Consultando: ${dateStr}`);
   try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
+    const res = await fetchWithRetry(url);
+    if (!res || !res.ok) return { items: null, flowerPrice: null };
     const data = await res.json();
     if (data && data.data && data.data.reports) {
       const flowerPrice = data.data.flowerPrice || null;

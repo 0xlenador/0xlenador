@@ -12,6 +12,7 @@ permissions:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v4

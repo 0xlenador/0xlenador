@@ -4,6 +4,13 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Problema 7 — Disparar el deploy automáticamente cuando el cron de SFL termina.
+  # Los commits del bot (GITHUB_TOKEN) no disparan workflows, así que usamos
+  # workflow_run que se activa cuando otro workflow completa exitosamente.
+  workflow_run:
+    workflows: ["SFL Mercado Updater"]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: read
@@ -17,6 +24,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Si fue disparado por workflow_run, solo continuar si el cron terminó con éxito
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
