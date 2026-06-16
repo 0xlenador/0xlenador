@@ -164,8 +164,8 @@ const seo = {
           
           <div class="w-full lg:w-auto flex flex-col gap-2">
             <div class="w-full flex overflow-x-auto no-scrollbar items-center lg:justify-end gap-2 pb-1 lg:pb-0">
-              <button class="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0">Resources</button>
-              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Power Ups</button>
+              <button class="category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="resources" onclick="window.handleCategory('resources')">Resources</button>
+              <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="powerups" onclick="window.handleCategory('powerups')">Power Ups</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Cosméticos</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
@@ -319,8 +319,25 @@ const seo = {
   const tableBody = document.getElementById("tableBody");
 
   let marketData = [];
+  let currentCategory = 'resources';
 
   window.currentSort = { column: null, direction: 'none' };
+
+  window.handleCategory = (category) => {
+    currentCategory = category;
+    
+    // Actualizar UI de los botones
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      if (btn.dataset.category === category) {
+        btn.className = "category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0";
+      } else {
+        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0";
+      }
+    });
+
+    const searchInput = document.getElementById("searchInput");
+    renderTable(searchInput ? searchInput.value : "");
+  };
 
   window.handleSort = (column) => {
     if (window.currentSort.column === column) {
@@ -701,11 +718,13 @@ const seo = {
   const renderTable = (filterText = "") => {
     if (!marketData.length) return;
 
-    const lowerFilter = filterText.toLowerCase();
-    const filtered = marketData.filter(item => 
-      item.name.toLowerCase().includes(lowerFilter) || 
-      item.key.toLowerCase().includes(lowerFilter)
-    );
+    const term = filterText;
+    const filtered = marketData.filter(item => {
+      const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
+                          item.key.toLowerCase().includes(term.toLowerCase());
+      const matchCategory = currentCategory === 'resources' ? !item.isPowerUp : item.isPowerUp;
+      return matchSearch && matchCategory;
+    });
 
     let sortedFiltered = [...filtered];
     
