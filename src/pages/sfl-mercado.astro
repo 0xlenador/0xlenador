@@ -69,50 +69,50 @@ const seo = {
         <!-- Dashboard Resumen -->
         <div class="relative mb-10">
           <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:grid md:grid-cols-3 md:gap-6 md:pb-0 no-scrollbar">
-            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 shadow-inner flex flex-col justify-center">
-              <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-4 lg:p-5 shadow-inner flex flex-col justify-start min-h-[160px] lg:min-h-[180px]">
+              <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                 Top Volume 24h
               </h3>
-              <div id="dashTopVolume" class="h-12 flex items-center">
+              <div id="dashTopVolume" class="h-auto flex-grow flex flex-col justify-center">
                 <div class="h-8 bg-white/[0.05] rounded-lg w-3/4 animate-pulse"></div>
               </div>
             </div>
             
-            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] group/carousel cursor-pointer">
+            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[160px] lg:min-h-[180px] group/carousel cursor-pointer">
               <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
                 <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
                   <circle class="text-white/10" stroke-width="3" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" />
                   <circle id="gainerProgress" class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.83" stroke-dashoffset="62.83" />
                 </svg>
               </div>
-              <div id="dashTopGainerCarousel" class="w-full h-full absolute inset-0 p-5">
-                <div class="flex flex-col justify-center h-full">
-                  <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+              <div id="dashTopGainerCarousel" class="w-full h-full absolute inset-0 p-4 lg:p-5">
+                <div class="flex flex-col justify-start h-full">
+                  <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                     Calculando...
                   </h3>
-                  <div class="h-12 flex items-center">
+                  <div class="h-auto flex-grow flex items-center">
                     <div class="h-8 bg-white/[0.05] rounded-lg w-2/3 animate-pulse"></div>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[116px] group/carousel cursor-pointer">
+            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[160px] lg:min-h-[180px] group/carousel cursor-pointer">
               <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
                 <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
                   <circle class="text-white/10" stroke-width="3" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" />
                   <circle id="extremesProgress" class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.83" stroke-dashoffset="62.83" />
                 </svg>
               </div>
-              <div id="dashAthAtlCarousel" class="w-full h-full absolute inset-0 p-5">
-                <div class="flex flex-col justify-center h-full">
-                  <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <div id="dashAthAtlCarousel" class="w-full h-full absolute inset-0 p-4 lg:p-5">
+                <div class="flex flex-col justify-start h-full">
+                  <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Calculando...
                   </h3>
-                  <div class="flex flex-wrap gap-2 h-auto min-h-12 items-center">
+                  <div class="flex flex-wrap gap-2 h-auto flex-grow items-center">
                     <div class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"></div>
                   </div>
                 </div>
@@ -373,6 +373,15 @@ const seo = {
       event.stopPropagation();
       event.preventDefault();
     }
+
+    const targetItem = marketData.find(item => item.name === itemName);
+    if (targetItem) {
+      const targetCategory = targetItem.isPowerUp ? 'powerups' : 'resources';
+      if (currentCategory !== targetCategory) {
+        window.handleCategory(targetCategory);
+      }
+    }
+
     const searchInput = document.getElementById("searchInput");
     if (searchInput && searchInput.value !== "") {
       searchInput.value = "";
@@ -538,24 +547,37 @@ const seo = {
   };
 
   const renderDashboard = () => {
-    const topVolItem = marketData[0];
-    if (topVolItem) {
-      document.getElementById("dashTopVolume").innerHTML = `
-        <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${topVolItem.name}', event)">
-          <div class="w-10 h-10 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1.5 shrink-0">
-            <img src="/img/sunflowerland/${topVolItem.name}.png" class="w-full h-full object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+    const topVolResource = marketData.find(item => !item.isPowerUp);
+    const topVolPowerUp = marketData.find(item => item.isPowerUp);
+
+    const renderDashItem = (item, subtitle, isPowerUp = false) => {
+      if (!item) return '';
+      const imgSrc = isPowerUp ? '/img/sunflowerland/powerups/' + (item.image || item.name + '.png') : '/img/sunflowerland/' + item.name + '.png';
+      const imgSize = isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
+      return `
+        <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${item.name}', event)" title="${item.name}">
+          <div class="w-8 h-8 lg:w-9 lg:h-9 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
+            <img src="${imgSrc}" class="${imgSize} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
           </div>
-          <div class="flex flex-col">
-            <span class="text-white font-bold">${topVolItem.name}</span>
-            <span class="text-xs text-emerald-400 font-mono">${formatNumber(topVolItem.volume, 0)} vol</span>
+          <div class="flex flex-col min-w-0">
+            <span class="text-white font-bold text-xs lg:text-sm leading-tight truncate">${item.name}</span>
+            <span class="text-[10px] text-emerald-400 font-mono">${subtitle}</span>
           </div>
         </div>
       `;
-    }
+    };
+
+    document.getElementById("dashTopVolume").innerHTML = `
+      <div class="flex flex-col h-full justify-center gap-1.5 lg:gap-2">
+        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + ' vol' : '', false)}
+        ${topVolPowerUp ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + ' vol' : '', true)}
+      </div>
+    `;
 
     // Mayor Ganador Carrusel (24h, 7d, 30d, 180d)
-    const getTopGainer = (periodKey) => {
-      const sorted = [...marketData].map(item => {
+    const getTopGainer = (periodKey, isPowerUp) => {
+      const sorted = [...marketData].filter(i => !!i.isPowerUp === isPowerUp).map(item => {
         const change = calculateChange(item.currentPrice, item.history[periodKey]);
         return { ...item, changeObj: change };
       }).sort((a, b) => b.changeObj.val - a.changeObj.val);
@@ -563,30 +585,25 @@ const seo = {
     };
 
     const slidesData = [
-      { title: "Mayor Ganador 24H", data: getTopGainer("1d") },
-      { title: "Mayor Ganador 7D", data: getTopGainer("7d") },
-      { title: "Mayor Ganador 30D", data: getTopGainer("30d") },
-      { title: "Mayor Ganador 180D", data: getTopGainer("180d") }
+      { title: "Mayor Ganador 24H", res: getTopGainer("1d", false), pwup: getTopGainer("1d", true) },
+      { title: "Mayor Ganador 7D", res: getTopGainer("7d", false), pwup: getTopGainer("7d", true) },
+      { title: "Mayor Ganador 30D", res: getTopGainer("30d", false), pwup: getTopGainer("30d", true) },
+      { title: "Mayor Ganador 180D", res: getTopGainer("180d", false), pwup: getTopGainer("180d", true) }
     ];
 
     let carouselHTML = '';
     slidesData.forEach((slide, idx) => {
-      if(!slide.data) return;
       const isFirst = idx === 0;
       carouselHTML += `
-        <div class="gainer-slide slide-item absolute inset-0 p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
-          <h3 class="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3 flex items-center gap-2">
-            <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-            ${slide.title}
+        <div class="gainer-slide slide-item absolute inset-0 p-4 lg:p-5 transition-opacity duration-500 flex flex-col justify-start ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+            <span class="truncate">${slide.title}</span>
           </h3>
-          <div class="flex items-center gap-3 h-12 cursor-pointer hover:scale-105 transition-transform origin-left" onclick="window.scrollToItem('${slide.data.name}', event)" title="Ver ${slide.data.name} en la tabla">
-            <div class="w-10 h-10 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/${slide.data.name}.png" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.style.display='none'" />
-            </div>
-            <div class="flex flex-col">
-              <span class="text-white font-bold">${slide.data.name}</span>
-              <span class="text-xs text-emerald-500 font-mono font-bold">+${slide.data.changeObj.val.toFixed(2)}%</span>
-            </div>
+          <div class="h-auto flex-grow flex flex-col justify-center gap-1.5 lg:gap-2">
+            ${renderDashItem(slide.res, slide.res ? `+${slide.res.changeObj.val.toFixed(2)}%` : '', false)}
+            ${slide.pwup ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+            ${renderDashItem(slide.pwup, slide.pwup ? `+${slide.pwup.changeObj.val.toFixed(2)}%` : '', true)}
           </div>
         </div>
       `;
@@ -595,19 +612,23 @@ const seo = {
     const carouselContainer = document.getElementById("dashTopGainerCarousel");
     carouselContainer.innerHTML = carouselHTML;
 
-    const athItems = [...marketData].map(item => {
-      const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
-      const ath = Math.max(...history180d, item.currentPrice);
-      const ratio = ath > 0 ? (item.currentPrice / ath) * 100 : 0;
-      return { ...item, ratio, refPrice: ath };
-    }).sort((a, b) => b.ratio - a.ratio).slice(0, 7);
+    const calculateRatio = (items, type) => {
+      return items.map(item => {
+        const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
+        if (type === 'ath') {
+          const ath = Math.max(...history180d, item.currentPrice);
+          const ratio = ath > 0 ? (item.currentPrice / ath) * 100 : 0;
+          return { ...item, ratio, refPrice: ath };
+        } else {
+          const atl = Math.min(...history180d, item.currentPrice);
+          const ratio = item.currentPrice > 0 ? (atl / item.currentPrice) * 100 : 0;
+          return { ...item, ratio, refPrice: atl };
+        }
+      }).sort((a, b) => b.ratio - a.ratio);
+    };
 
-    const atlItems = [...marketData].map(item => {
-      const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
-      const atl = Math.min(...history180d, item.currentPrice);
-      const ratio = item.currentPrice > 0 ? (atl / item.currentPrice) * 100 : 0;
-      return { ...item, ratio, refPrice: atl };
-    }).sort((a, b) => b.ratio - a.ratio).slice(0, 7);
+    const allAth = calculateRatio(marketData, 'ath');
+    const allAtl = calculateRatio(marketData, 'atl');
 
     const extremesSlides = [
       {
@@ -616,7 +637,8 @@ const seo = {
         colorClass: "text-emerald-500",
         borderClass: "border-emerald-500/30",
         shadowClass: "shadow-[0_0_10px_rgba(16,185,129,0.15)]",
-        items: athItems,
+        res: allAth.filter(i => !i.isPowerUp).slice(0, 4),
+        pwup: allAth.filter(i => i.isPowerUp).slice(0, 4),
         tooltipSuffix: "del ATH"
       },
       {
@@ -625,7 +647,8 @@ const seo = {
         colorClass: "text-red-500",
         borderClass: "border-red-500/30",
         shadowClass: "shadow-[0_0_10px_rgba(239,68,68,0.15)]",
-        items: atlItems,
+        res: allAtl.filter(i => !i.isPowerUp).slice(0, 4),
+        pwup: allAtl.filter(i => i.isPowerUp).slice(0, 4),
         tooltipSuffix: "del ATL"
       }
     ];
@@ -633,23 +656,32 @@ const seo = {
     let extremesHTML = '';
     extremesSlides.forEach((slide, idx) => {
       const isFirst = idx === 0;
-      const itemsHTML = slide.items.map(item => `
-        <div class="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 md:p-1.5 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
-          <img src="/img/sunflowerland/${item.name}.png" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.style.display='none'" />
-          <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
-            ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
+      
+      const renderMiniIcons = (items, isPowerUp) => {
+        return items.map(item => `
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
+            <img src="/img/sunflowerland/${isPowerUp ? 'powerups/' + (item.image || item.name + '.png') : item.name + '.png'}" class="${isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
+              ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
+            </div>
           </div>
-        </div>
-      `).join('');
+        `).join('');
+      };
 
       extremesHTML += `
-        <div class="extremes-slide slide-item absolute inset-0 p-4 md:p-5 transition-opacity duration-500 flex flex-col justify-center ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
-          <h3 class="text-[10px] md:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 md:mb-3 flex items-center gap-2">
-            <svg class="w-3.5 h-3.5 md:w-4 md:h-4 ${slide.colorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
-            ${slide.title}
+        <div class="extremes-slide slide-item absolute inset-0 p-4 lg:p-5 transition-opacity duration-500 flex flex-col justify-start ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 ${slide.colorClass} shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
+            <span class="truncate">${slide.title}</span>
           </h3>
-          <div class="flex gap-1.5 sm:gap-2 h-auto min-h-12 items-center w-full">
-            ${itemsHTML}
+          <div class="h-auto flex-grow flex flex-col justify-center gap-2">
+            <div class="flex gap-1.5 sm:gap-2 items-center w-full">
+              ${renderMiniIcons(slide.res, false)}
+            </div>
+            <div class="w-full border-t border-white/5 my-0.5"></div>
+            <div class="flex gap-1.5 sm:gap-2 items-center w-full">
+              ${renderMiniIcons(slide.pwup, true)}
+            </div>
           </div>
         </div>
       `;
