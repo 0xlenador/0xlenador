@@ -5,7 +5,11 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 // Solo los IDs que queremos mostrar en el frontend (reducirá el JSON de ~8MB a ~500KB)
 const sflIds = require('../src/data/sfl_ids.json');
-const ALLOWED_KEYS = new Set(Object.keys(sflIds).map(id => `collectibles-${id}`));
+const sflPowerUps = require('../src/data/sfl_powerups.json');
+const ALLOWED_KEYS = new Set([
+  ...Object.keys(sflIds).map(id => `collectibles-${id}`),
+  ...Object.keys(sflPowerUps.power_ups.collectibles).map(id => `collectibles-${id}`)
+]);
 
 // Problema 5 — Forzar siempre UTC para que coincida con el servidor de GitHub Actions
 // y con el ciclo de reportes diarios de la API de Sunflower Land

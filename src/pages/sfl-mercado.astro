@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import sflIds from "../data/sfl_ids.json"
+import sflPowerUps from "../data/sfl_powerups.json"
 
 const seo = {
   title: "Mercado SFL | 0xLeñador — Precios P2P de Sunflower Land",
@@ -306,7 +307,7 @@ const seo = {
   }
 </style>
 
-<script define:vars={{ sflIds }}>
+<script define:vars={{ sflIds, sflPowerUps }}>
   const searchInput = document.getElementById("searchInput");
   const searchIcon = document.getElementById("searchIcon");
   const clearSearchBtn = document.getElementById("clearSearchBtn");
@@ -748,11 +749,11 @@ const seo = {
         <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="/img/sunflowerland/${item.name}.png" alt="${item.name}" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+              <img src="/img/sunflowerland/${item.isPowerUp ? 'powerups/' + (item.image || (item.name + '.png')) : item.name + '.png'}" alt="${item.name}" class="w-[60%] h-[60%] object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
             </div>
             <div>
               <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
-              <p class="text-[10px] font-mono text-terminal-muted/70">${item.key}</p>
+              <p class="text-[10px] ${item.isPowerUp ? 'text-emerald-400/80 leading-tight lg:leading-none mt-0.5 max-w-[180px] lg:max-w-none' : 'font-mono text-terminal-muted/70'}">${item.isPowerUp ? item.boost : item.key}</p>
             </div>
           </div>
           <!-- Precio Móvil -->
@@ -798,14 +799,26 @@ const seo = {
         throw new Error(`El archivo de datos estáticos no contiene historial de items.`);
       }
 
-      // Mapear el nuevo formato histórico JSON filtrando por sfl_ids.json
+      // Mapear el nuevo formato histórico JSON filtrando por sfl_ids.json y sfl_powerups.json
       marketData = Object.values(json.items).reduce((acc, data) => {
         const idMatch = data.key.match(/collectibles-(\d+)$/);
-        if (idMatch && sflIds[idMatch[1]]) {
-           acc.push({
-             ...data,
-             name: sflIds[idMatch[1]]
-           });
+        if (idMatch) {
+          const id = idMatch[1];
+          if (sflIds[id]) {
+            acc.push({
+              ...data,
+              name: sflIds[id],
+              isPowerUp: false
+            });
+          } else if (sflPowerUps.power_ups.collectibles[id]) {
+            acc.push({
+              ...data,
+              name: sflPowerUps.power_ups.collectibles[id].name,
+              boost: sflPowerUps.power_ups.collectibles[id].boost,
+              image: sflPowerUps.power_ups.collectibles[id].image,
+              isPowerUp: true
+            });
+          }
         }
         return acc;
       }, []).sort((a, b) => b.volume - a.volume);
