@@ -58,6 +58,14 @@ const calculateRecipeCost = (ingredients, visited = new Set()) => {
   return { total, missing };
 };
 
+const foodCostsDict = {};
+for (const recipe of sflRecipes.recipes) {
+  const costObj = calculateRecipeCost(recipe.ingredients);
+  foodCostsDict[recipe.name] = costObj.missing ? null : costObj.total;
+}
+
+const calcResources = sflPets.resources.filter(r => r.name !== 'Acorn' && r.name !== 'Fossil Shell');
+
 const formatPrice = (num) => {
   if (num === 0) return '0';
   if (num < 0.01) return '< 0.01';
@@ -108,14 +116,138 @@ const getResourcePriceHtml = (resName) => {
           Herramientas / Mascotas
         </p>
       </div>
-      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Centro de <span class="text-emerald-500">Mascotas</span>
+      <div class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-4 tracking-tight drop-shadow-lg">
+        Calcula la rentabilidad de la comida de tus mascotas
       </h1>
-      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+      <p class="text-lg text-white/60 font-medium">Conoce las comidas y premios de tus mascotas</p>
+    </div>
+
+    <!-- CALCULATOR DASHBOARD -->
+    <div class="mb-12 bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl">
+      <h2 class="text-2xl font-black text-white mb-6 flex items-center gap-2">
+        <i class="bi bi-calculator text-emerald-400"></i> Calculadora de Rentabilidad - Comida / P2P
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Easy Selection -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div class="text-[11px] uppercase font-bold tracking-widest text-emerald-400 mb-3 text-center border-b border-emerald-500/20 pb-2">Petición Easy (20⚡)</div>
+          <div class="relative custom-dropdown select-none" data-id="calc-select-easy" data-value="">
+            <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
+              <span class="dropdown-selected-text flex items-center gap-2">
+                <span class="text-white/40">-- Seleccionar Comida --</span>
+              </span>
+              <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
+            </button>
+            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-lg shadow-2xl max-h-60 overflow-y-auto hidden dropdown-menu ring-1 ring-black/50">
+              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
+                -- Seleccionar Comida --
+              </li>
+              {sflPets.requests.Easy.map(food => (
+                <li class="p-2.5 text-sm text-white/80 hover:bg-emerald-500/20 hover:text-emerald-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food}>
+                  <div class="flex items-center gap-2">
+                    <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
+                    <span>{food}</span>
+                  </div>
+                  <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <!-- Medium Selection -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div class="text-[11px] uppercase font-bold tracking-widest text-yellow-400 mb-3 text-center border-b border-yellow-500/20 pb-2">Petición Medium (100⚡)</div>
+          <div class="relative custom-dropdown select-none" data-id="calc-select-medium" data-value="">
+            <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-yellow-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
+              <span class="dropdown-selected-text flex items-center gap-2">
+                <span class="text-white/40">-- Seleccionar Comida --</span>
+              </span>
+              <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
+            </button>
+            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-lg shadow-2xl max-h-60 overflow-y-auto hidden dropdown-menu ring-1 ring-black/50">
+              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
+                -- Seleccionar Comida --
+              </li>
+              {sflPets.requests.Medium.map(food => (
+                <li class="p-2.5 text-sm text-white/80 hover:bg-yellow-500/20 hover:text-yellow-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food}>
+                  <div class="flex items-center gap-2">
+                    <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
+                    <span>{food}</span>
+                  </div>
+                  <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <!-- Hard Selection -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div class="text-[11px] uppercase font-bold tracking-widest text-red-400 mb-3 text-center border-b border-red-500/20 pb-2">Petición Hard (300⚡)</div>
+          <div class="relative custom-dropdown select-none" data-id="calc-select-hard" data-value="">
+            <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-red-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
+              <span class="dropdown-selected-text flex items-center gap-2">
+                <span class="text-white/40">-- Seleccionar Comida --</span>
+              </span>
+              <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
+            </button>
+            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-lg shadow-2xl max-h-60 overflow-y-auto hidden dropdown-menu ring-1 ring-black/50">
+              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
+                -- Seleccionar Comida --
+              </li>
+              {sflPets.requests.Hard.map(food => (
+                <li class="p-2.5 text-sm text-white/80 hover:bg-red-500/20 hover:text-red-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food}>
+                  <div class="flex items-center gap-2">
+                    <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
+                    <span>{food}</span>
+                  </div>
+                  <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="overflow-x-auto no-scrollbar">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+          <thead>
+            <tr class="border-b border-white/10 text-[10px] uppercase tracking-widest text-white/40">
+              <th class="p-3 font-mono w-[15%]">Recurso</th>
+              <th class="p-3 font-mono w-[10%] text-right">Precio P2P</th>
+              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Easy Costo / Ganancia</th>
+              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Medium Costo / Ganancia</th>
+              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Hard Costo / Ganancia</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5" id="calc-results-body">
+            {calcResources.map(res => (
+              <tr class="hover:bg-white/[0.03] transition-colors group">
+                <td class="p-3">
+                  <div class="flex items-center gap-2">
+                    <img src={`/img/sunflowerland/${res.name}.png`} class="w-5 h-5 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                    <span class="text-xs font-medium text-white/90">{res.name}</span>
+                  </div>
+                </td>
+                <td class="p-3 text-right">
+                  <span class="text-xs font-mono text-emerald-400">{priceDict[res.name] ? formatPrice(priceDict[res.name]) : '-'}</span>
+                </td>
+                <!-- Placeholders for JS injection -->
+                <td class="p-3 align-middle border-l border-white/5"><div id={`calc-res-${res.name.replace(/\s+/g, '_')}-easy`} class="text-center text-[10px] text-white/20 italic">-</div></td>
+                <td class="p-3 align-middle border-l border-white/5"><div id={`calc-res-${res.name.replace(/\s+/g, '_')}-medium`} class="text-center text-[10px] text-white/20 italic">-</div></td>
+                <td class="p-3 align-middle border-l border-white/5"><div id={`calc-res-${res.name.replace(/\s+/g, '_')}-hard`} class="text-center text-[10px] text-white/20 italic">-</div></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="text-center mb-12">
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl mx-auto">
         Consulta todos los detalles, habilidades y requisitos de alimentación para las mascotas del ecosistema. Revisa los altares, los recursos energéticos y la comida que demanda cada rareza.
       </p>
-    </header>
-
+    </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       
       <!-- Mascotas Comunes -->
@@ -332,6 +464,128 @@ const getResourcePriceHtml = (resName) => {
 
   </main>
 </Layout>
+
+<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict }}>
+  const formatPriceNum = (num) => {
+    if (num === 0) return '0.00';
+    if (num < 0.01) return '< 0.01';
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+  };
+
+  const updateCalculator = () => {
+    const energies = { easy: 20, medium: 100, hard: 300 };
+    const selectedFoods = {
+      easy: document.querySelector('[data-id="calc-select-easy"]').getAttribute('data-value') || "",
+      medium: document.querySelector('[data-id="calc-select-medium"]').getAttribute('data-value') || "",
+      hard: document.querySelector('[data-id="calc-select-hard"]').getAttribute('data-value') || ""
+    };
+    
+    calcResources.forEach(res => {
+      const resPrice = priceDict[res.name] || 0;
+      const safeId = res.name.replace(/\s+/g, '_');
+      
+      ['easy', 'medium', 'hard'].forEach(diff => {
+        const cell = document.getElementById(`calc-res-${safeId}-${diff}`);
+        if (!cell) return;
+        
+        if (!selectedFoods[diff]) {
+          cell.innerHTML = '<span class="text-[10px] text-white/20 italic">-</span>';
+          return;
+        }
+        
+        const foodCost = foodCostsDict[selectedFoods[diff]];
+        if (foodCost === null || foodCost === undefined || resPrice === 0) {
+          cell.innerHTML = '<span class="text-[10px] text-yellow-500/50 italic">Falta info (N/A)</span>';
+          return;
+        }
+        
+        const cpe = foodCost / energies[diff];
+        const obtainCost = res.energy * cpe;
+        
+        const profitability = (resPrice / obtainCost) * 100;
+        const profitFormatted = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(profitability);
+        
+        const isProfitable = profitability >= 100;
+        const colorClass = isProfitable ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]' : 'bg-red-500/80';
+        const textClass = isProfitable ? 'text-emerald-400' : 'text-red-400';
+        
+        const barWidth = Math.min(profitability, 500);
+        
+        cell.innerHTML = `
+          <div class="w-full flex flex-col gap-1 px-4">
+            <div class="flex justify-between items-end">
+              <span class="text-[10px] text-white/50">Costo: <span class="text-white/80">${formatPriceNum(obtainCost)}</span></span>
+              <span class="text-[11px] font-mono font-bold ${textClass}">${profitFormatted}%</span>
+            </div>
+            <div class="w-full h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10 relative">
+              <!-- Punto de equilibrio al 100% (20% visual) -->
+              <div class="absolute top-0 bottom-0 left-[20%] w-[1px] bg-white/40 z-10"></div>
+              <div class="h-full ${colorClass} rounded-full transition-all duration-500 relative z-0" style="width: ${barWidth / 5}%;"></div>
+            </div>
+          </div>
+        `;
+      });
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar Custom Dropdowns
+    document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const menu = dropdown.querySelector('.dropdown-menu');
+      const selectedText = dropdown.querySelector('.dropdown-selected-text');
+      const options = dropdown.querySelectorAll('.dropdown-option');
+      const arrow = dropdown.querySelector('.dropdown-arrow');
+      
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Cerrar todos los demás menús primero
+        document.querySelectorAll('.dropdown-menu').forEach(m => {
+          if (m !== menu) {
+            m.classList.add('hidden');
+            m.parentElement.querySelector('.dropdown-arrow')?.classList.remove('rotate-180');
+          }
+        });
+        menu.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-180');
+      });
+      
+      options.forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const val = option.getAttribute('data-value');
+          dropdown.setAttribute('data-value', val);
+          
+          if (val === "") {
+            selectedText.innerHTML = '<span class="text-white/40">-- Seleccionar Comida --</span>';
+          } else {
+            // Copiar el html interno del div (imagen + texto)
+            const optionContent = option.querySelector('div').cloneNode(true);
+            selectedText.innerHTML = '';
+            selectedText.appendChild(optionContent);
+          }
+          
+          menu.classList.add('hidden');
+          arrow.classList.remove('rotate-180');
+          
+          // Refrescar cálculos
+          updateCalculator();
+        });
+      });
+    });
+    
+    // Cerrar menús si el usuario hace click afuera
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.classList.add('hidden');
+        menu.parentElement.querySelector('.dropdown-arrow')?.classList.remove('rotate-180');
+      });
+    });
+
+    // Calcular en la carga por si hay valores por defecto
+    updateCalculator();
+  });
+</script>
 
 <style is:global>
   .no-scrollbar::-webkit-scrollbar {
