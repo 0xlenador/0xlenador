@@ -64,12 +64,11 @@ for (const recipe of sflRecipes.recipes) {
   foodCostsDict[recipe.name] = costObj.missing ? null : costObj.total;
 }
 
-const calcResources = sflPets.resources.filter(r => r.name !== 'Acorn' && r.name !== 'Fossil Shell');
+const calcResources = sflPets.resources;
 
 const formatPrice = (num) => {
   if (num === 0) return '0';
-  if (num < 0.01) return '< 0.01';
-  return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+  return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
 };
 
 const getFoodCostHtml = (foodName) => {
@@ -140,7 +139,7 @@ const getResourcePriceHtml = (resName) => {
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
-            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-lg shadow-2xl max-h-60 overflow-y-auto hidden dropdown-menu ring-1 ring-black/50">
+            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
               <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
                 -- Seleccionar Comida --
               </li>
@@ -166,7 +165,7 @@ const getResourcePriceHtml = (resName) => {
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
-            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-lg shadow-2xl max-h-60 overflow-y-auto hidden dropdown-menu ring-1 ring-black/50">
+            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
               <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
                 -- Seleccionar Comida --
               </li>
@@ -192,7 +191,7 @@ const getResourcePriceHtml = (resName) => {
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
-            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-lg shadow-2xl max-h-60 overflow-y-auto hidden dropdown-menu ring-1 ring-black/50">
+            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
               <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
                 -- Seleccionar Comida --
               </li>
@@ -215,7 +214,7 @@ const getResourcePriceHtml = (resName) => {
           <thead>
             <tr class="border-b border-white/10 text-[10px] uppercase tracking-widest text-white/40">
               <th class="p-3 font-mono w-[15%]">Recurso</th>
-              <th class="p-3 font-mono w-[10%] text-right">Precio P2P</th>
+              <th class="p-3 font-mono w-[10%] text-right">Energía / Precio P2P</th>
               <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Easy Costo / Ganancia</th>
               <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Medium Costo / Ganancia</th>
               <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Hard Costo / Ganancia</th>
@@ -231,7 +230,19 @@ const getResourcePriceHtml = (resName) => {
                   </div>
                 </td>
                 <td class="p-3 text-right">
-                  <span class="text-xs font-mono text-emerald-400">{priceDict[res.name] ? formatPrice(priceDict[res.name]) : '-'}</span>
+                  <div class="flex items-center justify-end gap-3">
+                    <div class="inline-flex items-center text-[10px] text-yellow-500 font-mono font-bold opacity-80">
+                      <svg class="w-2.5 h-2.5 mr-0.5 opacity-90" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
+                      </svg>
+                      {res.energy}
+                    </div>
+                    {res.name === 'Acorn' || res.name === 'Fossil Shell' ? (
+                      <span class="text-[10px] font-sans text-white/40 italic min-w-[3rem] text-right">No P2P</span>
+                    ) : (
+                      <span class="text-xs font-mono text-emerald-400 min-w-[3rem] text-right">{priceDict[res.name] ? formatPrice(priceDict[res.name]) : '-'}</span>
+                    )}
+                  </div>
                 </td>
                 <!-- Placeholders for JS injection -->
                 <td class="p-3 align-middle border-l border-white/5"><div id={`calc-res-${res.name.replace(/\s+/g, '_')}-easy`} class="text-center text-[10px] text-white/20 italic">-</div></td>
@@ -468,8 +479,7 @@ const getResourcePriceHtml = (resName) => {
 <script is:inline define:vars={{ foodCostsDict, calcResources, priceDict }}>
   const formatPriceNum = (num) => {
     if (num === 0) return '0.00';
-    if (num < 0.01) return '< 0.01';
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
   };
 
   const updateCalculator = () => {
@@ -493,6 +503,16 @@ const getResourcePriceHtml = (resName) => {
           return;
         }
         
+        if (res.name === 'Acorn') {
+          cell.innerHTML = '<span class="text-[10px] text-emerald-500/70 italic block mt-1">Idea: Construye Altares</span>';
+          return;
+        }
+        
+        if (res.name === 'Fossil Shell') {
+          cell.innerHTML = '<span class="text-[10px] text-cyan-500/70 italic block mt-1">Idea: ¡Caja de sorpresas! Prueba suerte</span>';
+          return;
+        }
+        
         const foodCost = foodCostsDict[selectedFoods[diff]];
         if (foodCost === null || foodCost === undefined || resPrice === 0) {
           cell.innerHTML = '<span class="text-[10px] text-yellow-500/50 italic">Falta info (N/A)</span>';
@@ -502,23 +522,26 @@ const getResourcePriceHtml = (resName) => {
         const cpe = foodCost / energies[diff];
         const obtainCost = res.energy * cpe;
         
-        const profitability = (resPrice / obtainCost) * 100;
-        const profitFormatted = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(profitability);
+        const ratio = (resPrice / obtainCost) * 100;
+        const roi = ((resPrice - obtainCost) / obtainCost) * 100;
         
-        const isProfitable = profitability >= 100;
+        const isProfitable = roi >= 0;
+        const roiFormatted = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.abs(roi));
+        const sign = isProfitable ? '+' : '-';
+        
         const colorClass = isProfitable ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]' : 'bg-red-500/80';
         const textClass = isProfitable ? 'text-emerald-400' : 'text-red-400';
         
-        const barWidth = Math.min(profitability, 500);
+        const barWidth = Math.min(ratio, 500);
         
         cell.innerHTML = `
           <div class="w-full flex flex-col gap-1 px-4">
             <div class="flex justify-between items-end">
               <span class="text-[10px] text-white/50">Costo: <span class="text-white/80">${formatPriceNum(obtainCost)}</span></span>
-              <span class="text-[11px] font-mono font-bold ${textClass}">${profitFormatted}%</span>
+              <span class="text-[11px] font-mono font-bold ${textClass}">${sign}${roiFormatted}% ${!isProfitable ? '<span class="text-[9px] font-sans opacity-70 italic ml-0.5">(Pérdida)</span>' : ''}</span>
             </div>
             <div class="w-full h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10 relative">
-              <!-- Punto de equilibrio al 100% (20% visual) -->
+              <!-- Punto de equilibrio al 100% de ratio (20% visual) -->
               <div class="absolute top-0 bottom-0 left-[20%] w-[1px] bg-white/40 z-10"></div>
               <div class="h-full ${colorClass} rounded-full transition-all duration-500 relative z-0" style="width: ${barWidth / 5}%;"></div>
             </div>
@@ -559,10 +582,8 @@ const getResourcePriceHtml = (resName) => {
           if (val === "") {
             selectedText.innerHTML = '<span class="text-white/40">-- Seleccionar Comida --</span>';
           } else {
-            // Copiar el html interno del div (imagen + texto)
-            const optionContent = option.querySelector('div').cloneNode(true);
-            selectedText.innerHTML = '';
-            selectedText.appendChild(optionContent);
+            // Copiar todo el html interno de la opción (imagen + texto + precio)
+            selectedText.innerHTML = option.innerHTML;
           }
           
           menu.classList.add('hidden');
