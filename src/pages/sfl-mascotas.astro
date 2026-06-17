@@ -66,6 +66,23 @@ for (const recipe of sflRecipes.recipes) {
 
 const calcResources = sflPets.resources;
 
+let maxRPE = 0;
+for (const res of calcResources) {
+  if (res.name === 'Acorn' || res.name === 'Fossil Shell') continue;
+  if (priceDict[res.name]) {
+    const rpe = priceDict[res.name] / res.energy;
+    if (rpe > maxRPE) maxRPE = rpe;
+  }
+}
+
+const isFoodProfitable = (foodName, diff) => {
+  const energies = { 'Easy': 20, 'Medium': 100, 'Hard': 300 };
+  const cost = foodCostsDict[foodName];
+  if (!cost) return false;
+  const cpe = cost / energies[diff];
+  return cpe <= maxRPE;
+};
+
 const formatPrice = (num) => {
   if (num === 0) return '0';
   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
@@ -148,6 +165,11 @@ const getResourcePriceHtml = (resName) => {
                   <div class="flex items-center gap-2">
                     <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
                     <span>{food}</span>
+                    {isFoodProfitable(food, 'Easy') && (
+                      <svg class="w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                      </svg>
+                    )}
                   </div>
                   <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
                 </li>
@@ -174,6 +196,11 @@ const getResourcePriceHtml = (resName) => {
                   <div class="flex items-center gap-2">
                     <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
                     <span>{food}</span>
+                    {isFoodProfitable(food, 'Medium') && (
+                      <svg class="w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                      </svg>
+                    )}
                   </div>
                   <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
                 </li>
@@ -200,6 +227,11 @@ const getResourcePriceHtml = (resName) => {
                   <div class="flex items-center gap-2">
                     <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
                     <span>{food}</span>
+                    {isFoodProfitable(food, 'Hard') && (
+                      <svg class="w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                      </svg>
+                    )}
                   </div>
                   <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
                 </li>
