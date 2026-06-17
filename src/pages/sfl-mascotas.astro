@@ -88,14 +88,6 @@ const formatPrice = (num) => {
   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
 };
 
-const getFoodCostHtml = (foodName) => {
-  const recipe = sflRecipes.recipes.find(r => r.name === foodName);
-  if (!recipe) return `<span class="text-[10px] text-white/40 italic">N/A</span>`;
-  const costObj = calculateRecipeCost(recipe.ingredients);
-  if (costObj.missing) return `<span class="text-[10px] text-yellow-500/70 italic">*Inc</span>`;
-  return `<span class="text-[11px] font-mono text-white/90">${formatPrice(costObj.total)}</span>`;
-};
-
 const getShrineCostHtml = (shrine) => {
   let total = 0;
   let missing = false;
@@ -114,12 +106,6 @@ const getShrineCostHtml = (shrine) => {
   return html;
 };
 
-const getResourcePriceHtml = (resName) => {
-  if (resName === 'Acorn' || resName === 'Fossil Shell') return '';
-  const price = priceDict[resName];
-  if (!price) return `<span class="text-[10px] text-yellow-500/70 italic w-10 text-right inline-block">*Inc</span>`;
-  return `<span class="text-[11px] font-mono text-white/90 w-10 text-right inline-block">${formatPrice(price)}</span>`;
-};
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
@@ -369,89 +355,6 @@ const getResourcePriceHtml = (resName) => {
 
     </div>
 
-    <!-- Sección Recursos y Comidas -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-      
-      <!-- Resources -->
-      <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 shadow-2xl">
-        <h2 class="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <i class="bi bi-box-seam text-emerald-400"></i> Recursos
-        </h2>
-        <div class="flex flex-col gap-2">
-          {sflPets.resources.map(res => (
-            <div class="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg transition-colors border-b border-white/5 last:border-0">
-              <div class="flex items-center gap-2">
-                <img src={`/img/sunflowerland/${res.name}.png`} class="w-5 h-5 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
-                <span class="text-sm text-white/90">{res.name}</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="flex items-center" set:html={getResourcePriceHtml(res.name)}></div>
-                <div class="flex items-center gap-1.5 bg-yellow-500/10 px-2 py-1 rounded text-yellow-500 font-mono text-xs w-16 justify-center">
-                  <i class="bi bi-lightning-fill text-[10px]"></i> {res.energy}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Requests -->
-      <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 shadow-2xl lg:col-span-2">
-        <h2 class="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <i class="bi bi-basket2 text-orange-400"></i> Solicitudes de Comida
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
-          <div class="border border-emerald-500/20 bg-emerald-500/5 rounded-xl p-4">
-            <h3 class="text-sm font-bold text-emerald-400 mb-3 uppercase tracking-wider text-center border-b border-emerald-500/20 pb-2">Easy</h3>
-            <div class="flex flex-col gap-1.5">
-              {sflPets.requests.Easy.map(req => (
-                <div class="flex items-center justify-between p-1.5 hover:bg-white/5 rounded" data-food={req}>
-                  <div class="flex items-center gap-2">
-                    <img src={`/img/sunflowerland/food/${req}.png`} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
-                    <span class="text-[11px] text-white/80">{req}</span>
-                  </div>
-                  <div class="food-cost flex items-center gap-1" set:html={getFoodCostHtml(req)}></div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div class="border border-yellow-500/20 bg-yellow-500/5 rounded-xl p-4">
-            <h3 class="text-sm font-bold text-yellow-400 mb-3 uppercase tracking-wider text-center border-b border-yellow-500/20 pb-2">Medium</h3>
-            <div class="flex flex-col gap-1.5 pr-2">
-              {sflPets.requests.Medium.map(req => (
-                <div class="flex items-center justify-between p-1.5 hover:bg-white/5 rounded" data-food={req}>
-                  <div class="flex items-center gap-2">
-                    <img src={`/img/sunflowerland/food/${req}.png`} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
-                    <span class="text-[11px] text-white/80">{req}</span>
-                  </div>
-                  <div class="food-cost flex items-center gap-1" set:html={getFoodCostHtml(req)}></div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div class="border border-red-500/20 bg-red-500/5 rounded-xl p-4">
-            <h3 class="text-sm font-bold text-red-400 mb-3 uppercase tracking-wider text-center border-b border-red-500/20 pb-2">Hard</h3>
-            <div class="flex flex-col gap-1.5 pr-2">
-              {sflPets.requests.Hard.map(req => (
-                <div class="flex items-center justify-between p-1.5 hover:bg-white/5 rounded" data-food={req}>
-                  <div class="flex items-center gap-2">
-                    <img src={`/img/sunflowerland/food/${req}.png`} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
-                    <span class="text-[11px] text-white/80">{req}</span>
-                  </div>
-                  <div class="food-cost flex items-center gap-1" set:html={getFoodCostHtml(req)}></div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
 
     <!-- Shrines -->
     <div class="mt-8 max-w-4xl mx-auto bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl">
