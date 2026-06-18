@@ -1,0 +1,393 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import sflRecipes from '../../data/sfl_recipes.json';
+import sflIds from '../../data/sfl_ids.json';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const seo = {
+  title: t('sfl.cooking.seo.title'),
+  description: t('sfl.cooking.seo.description'),
+  image: "/img/cripto/sunflowerland.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <main class="max-w-7xl mx-auto px-6 pt-10 pb-20">
+    
+    <header class="mb-12">
+      <div class="flex items-center gap-4 mb-3">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
+        <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
+          {t('sfl.cooking.breadcrumb')}
+        </p>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        {t('sfl.cooking.heading')} <span class="text-emerald-500">{t('sfl.cooking.heading.accent')}</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        {t('sfl.cooking.intro')}
+      </p>
+    </header>
+
+    <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <!-- Controles y Filtros -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 relative z-10">
+        <div class="flex gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar">
+          <button class="category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="all">
+            {t('sfl.cooking.filter.all')}
+          </button>
+          <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fire Pit">
+            Fire Pit
+          </button>
+          <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Kitchen">
+            Kitchen
+          </button>
+          <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Deli">
+            Deli
+          </button>
+          <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Smoothie Shack">
+            Smoothie Shack
+          </button>
+          <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Bakery">
+            Bakery
+          </button>
+        </div>
+        
+        <div class="relative w-full sm:w-72 shrink-0">
+          <input type="text" id="searchInput" placeholder={t('sfl.cooking.search.placeholder')} class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all font-mono" />
+        </div>
+      </div>
+
+      <!-- Estado de Carga -->
+      <div id="loadingState" class="py-12 flex flex-col items-center justify-center gap-4 relative z-10">
+        <div class="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-terminal-muted font-mono text-xs animate-pulse">{t('sfl.cooking.loading')}</p>
+      </div>
+
+      <!-- Tabla de Recetas -->
+      <div id="dataContainer" class="hidden relative z-10">
+        
+        <!-- Header Tabla Desktop -->
+        <div class="hidden lg:grid grid-cols-[25%_10%_15%_15%_15%_20%] gap-4 px-6 py-4 bg-white/[0.02] border border-white/5 rounded-2xl mb-4">
+          <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('name')">
+            Name <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span>
+          </div>
+          <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('xp')">
+            XP <span class="sort-icon opacity-100 text-emerald-500 transition-opacity" data-col="xp">↓</span>
+          </div>
+          <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('cost')">
+            SFL Cost <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="cost">↕</span>
+          </div>
+          <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('xpsfl')">
+            XP/SFL <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="xpsfl">↕</span>
+          </div>
+          <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('xpday')">
+            XP/Day <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="xpday">↕</span>
+          </div>
+          <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
+            Ingredients
+          </div>
+        </div>
+
+        <!-- Body Tabla -->
+        <div id="tableBody" class="flex flex-col gap-4 lg:gap-0 lg:bg-white/[0.01] lg:border lg:border-white/5 lg:rounded-3xl lg:p-2 lg:overflow-hidden relative z-10">
+          <!-- JS inyectará filas aquí -->
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script define:vars={{ sflRecipes, sflIds, tLoading: t('sfl.cooking.loading'), tEmpty: t('sfl.cooking.empty'), tError: t('sfl.cooking.error'), tTime: t('sfl.cooking.col.time'), tInstant: t('sfl.cooking.col.instant') }}>
+  const searchInput = document.getElementById("searchInput");
+  const loadingState = document.getElementById("loadingState");
+  const dataContainer = document.getElementById("dataContainer");
+  const tableBody = document.getElementById("tableBody");
+  
+  let recipesData = sflRecipes.recipes;
+  let priceDict = {};
+  
+  window.currentSort = { column: 'xp', direction: 'desc' };
+  let currentCategory = 'all';
+
+  const parseTime = (timeStr) => {
+    if (!timeStr) return 0;
+    let days = 0;
+    let tStr = timeStr;
+    if (timeStr.includes('d ')) {
+      const parts = timeStr.split('d ');
+      days = parseInt(parts[0]);
+      tStr = parts[1];
+    }
+    const [h, m, s] = tStr.split(':').map(Number);
+    return (days * 86400) + (h * 3600) + (m * 60) + (s || 0);
+  };
+
+  window.handleCategory = (category) => {
+    currentCategory = category;
+    
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      if (btn.dataset.category === category) {
+        btn.className = "category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0";
+      } else {
+        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0";
+      }
+    });
+
+    renderTable(searchInput ? searchInput.value : "");
+  };
+
+  window.handleSort = (column) => {
+    if (window.currentSort.column === column) {
+      if (window.currentSort.direction === 'none') window.currentSort.direction = 'desc';
+      else if (window.currentSort.direction === 'desc') window.currentSort.direction = 'asc';
+      else window.currentSort.direction = 'none';
+    } else {
+      window.currentSort.column = column;
+      window.currentSort.direction = 'desc';
+    }
+    
+    document.querySelectorAll('.sort-icon').forEach(icon => {
+      icon.innerHTML = '↕';
+      icon.classList.remove('opacity-100', 'text-emerald-500');
+      icon.classList.add('opacity-0', 'group-hover:opacity-50');
+    });
+    
+    if (window.currentSort.direction !== 'none') {
+      const activeIcon = document.querySelector(`.sort-icon[data-col="\${column}"]`);
+      if (activeIcon) {
+        activeIcon.innerHTML = window.currentSort.direction === 'desc' ? '↓' : '↑';
+        activeIcon.classList.remove('opacity-0', 'group-hover:opacity-50');
+        activeIcon.classList.add('opacity-100', 'text-emerald-500');
+      }
+    }
+    
+    renderTable(searchInput ? searchInput.value : "");
+  };
+
+  const formatNumber = (num, decimals = 2) => {
+    if (num === undefined || num === null || isNaN(num)) return "0";
+    if (num > 0 && num < 0.0001) return num.toExponential(2);
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimals,
+    }).format(num);
+  };
+
+  const calculateRecipeCost = (ingredients, visited = new Set()) => {
+    let total = 0;
+    let missing = false;
+    for (const ing of ingredients) {
+      if (priceDict[ing.name]) {
+        total += priceDict[ing.name] * ing.amount;
+      } else {
+        // Buscar si el ingrediente es en realidad otra receta
+        const subRecipe = recipesData.find(r => r.name === ing.name);
+        if (subRecipe && !visited.has(ing.name)) {
+          visited.add(ing.name);
+          const subCost = calculateRecipeCost(subRecipe.ingredients, visited);
+          if (subCost.missing) missing = true;
+          total += subCost.total * ing.amount;
+        } else {
+          missing = true;
+        }
+      }
+    }
+    return { total, missing };
+  };
+
+  window.renderTable = (searchTerm = "") => {
+    let filtered = recipesData.filter(item => {
+      const nameMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const ingMatch = item.ingredients.some(ing => ing.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesSearch = nameMatch || ingMatch;
+      
+      const matchesCategory = currentCategory === 'all' || item.building === currentCategory;
+      return matchesSearch && matchesCategory;
+    });
+
+    if (window.currentSort && window.currentSort.column && window.currentSort.direction !== 'none') {
+      const { column, direction } = window.currentSort;
+      filtered.sort((a, b) => {
+        let valA, valB;
+        if (column === 'name') {
+          valA = a.name.toLowerCase();
+          valB = b.name.toLowerCase();
+        } else if (column === 'xp') {
+          valA = a.xp;
+          valB = b.xp;
+        } else if (column === 'cost') {
+          const costA = calculateRecipeCost(a.ingredients);
+          const costB = calculateRecipeCost(b.ingredients);
+          valA = costA.total;
+          valB = costB.total;
+        } else if (column === 'xpsfl') {
+          const costA = calculateRecipeCost(a.ingredients);
+          const costB = calculateRecipeCost(b.ingredients);
+          valA = costA.total > 0 ? (a.xp / costA.total) : 0;
+          valB = costB.total > 0 ? (b.xp / costB.total) : 0;
+        } else if (column === 'xpday') {
+          const timeA = parseTime(a.time);
+          const timeB = parseTime(b.time);
+          valA = timeA > 0 ? (86400 / timeA) * a.xp : 0;
+          valB = timeB > 0 ? (86400 / timeB) * b.xp : 0;
+        }
+        
+        if (valA < valB) return direction === 'asc' ? -1 : 1;
+        if (valA > valB) return direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    tableBody.innerHTML = "";
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmpty}</div>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const costObj = calculateRecipeCost(item.ingredients);
+      const timeSeconds = parseTime(item.time);
+      const xpPerSfl = costObj.total > 0 ? (item.xp / costObj.total) : 0;
+      const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * item.xp : 0;
+
+      const row = document.createElement("div");
+      row.className = "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_15%_15%_15%_20%] lg:items-center lg:py-3";
+      
+      const ingredientsHtml = item.ingredients.map(ing => {
+        const isFood = recipesData.some(r => r.name === ing.name);
+        const basePath = isFood ? '/img/sunflowerland/food' : '/img/sunflowerland';
+        const fallbackPath = isFood ? '/img/sunflowerland' : '/img/sunflowerland/food';
+        
+        return `
+          <div class="flex items-center gap-2">
+            <img src="${basePath}/${ing.name}.png" class="w-4 h-4 object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='${fallbackPath}/${ing.name}.png'; this.onerror=function(){this.src='/img/cripto/sunflowerland.webp'};" />
+            <span class="text-xs text-white/80">${ing.name} (${ing.amount})</span>
+          </div>
+        `;
+      }).join('');
+
+      row.innerHTML = `
+        <!-- Name Column -->
+        <div class="lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
+          <div class="flex items-center gap-4 lg:gap-3">
+            <div class="w-10 h-10 lg:w-8 lg:h-8 flex items-center justify-center shrink-0">
+              <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</span>
+              <span class="text-[11px] text-terminal-muted mt-0.5">${tTime} ${item.time}</span>
+              ${item.instant ? `
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span class="text-[11px] text-terminal-muted">${tInstant}</span>
+                  <span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1"><img src="/img/Gem.png" class="w-3 h-3" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+        
+        <!-- XP Column -->
+        <div class="mt-2 lg:mt-0 lg:px-4 flex items-center">
+          <span class="text-white text-sm">${formatNumber(item.xp, 0)}</span>
+        </div>
+
+        <!-- SFL Cost Column -->
+        <div class="mt-2 lg:mt-0 lg:px-4 flex flex-col">
+          <span class="text-white text-sm">${costObj.total > 0 ? formatNumber(costObj.total, 2) : '0'}</span>
+          ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70" title="Missing some P2P prices">*Incomplete</span>` : ''}
+        </div>
+        
+        <!-- XP / SFL Column -->
+        <div class="mt-2 lg:mt-0 lg:px-4 flex items-center">
+          <span class="text-white text-sm">${xpPerSfl > 0 ? formatNumber(xpPerSfl, 2) : '0.00'}</span>
+        </div>
+
+        <!-- XP / Day Column -->
+        <div class="mt-2 lg:mt-0 lg:px-4 flex items-center">
+          <span class="text-white text-sm font-bold">${formatNumber(xpPerDay, 0)}</span>
+        </div>
+
+        <!-- Ingredients Column -->
+        <div class="mt-3 lg:mt-0 lg:px-4 flex flex-col gap-1.5 justify-center">
+          ${ingredientsHtml}
+        </div>
+      `;
+      tableBody.appendChild(row);
+    });
+  };
+
+  const fetchPrices = async () => {
+    try {
+      loadingState.classList.remove("hidden");
+      dataContainer.classList.add("hidden");
+
+      const response = await fetch('/api/sfl_data.json');
+      if (!response.ok) throw new Error("Error loading data");
+      
+      const json = await response.json();
+      
+      Object.values(json.items).forEach(data => {
+        const idMatch = data.key.match(/collectibles-(\d+)$/);
+        if (idMatch) {
+          const id = idMatch[1];
+          if (sflIds[id]) {
+            priceDict[sflIds[id]] = data.currentPrice;
+          }
+        }
+      });
+      
+      Object.values(json.items).forEach(data => {
+        if (!data.key.startsWith('collectibles-')) {
+          const resMatch = data.key.match(/resources-(\d+)$/);
+          if (resMatch && sflIds[resMatch[1]]) {
+            priceDict[sflIds[resMatch[1]]] = data.currentPrice;
+          }
+        }
+      });
+
+      loadingState.classList.add("hidden");
+      dataContainer.classList.remove("hidden");
+      
+      renderTable();
+      
+    } catch (err) {
+      console.error(err);
+      loadingState.innerHTML = `<p class="text-red-500 text-sm">${tError}</p>`;
+    }
+  };
+
+  // Listeners
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      window.handleCategory(e.target.dataset.category);
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      renderTable(e.target.value);
+    });
+  }
+
+  // Init
+  fetchPrices();
+
+</script>

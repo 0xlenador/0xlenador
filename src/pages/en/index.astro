@@ -1,0 +1,328 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import FaqAccordion from "../../components/FaqAccordion.astro"
+import HeroSection from "../../components/home/HeroSection.astro"
+import TickerSection from "../../components/home/TickerSection.astro"
+import PremisaSection from "../../components/home/PremisaSection.astro"
+
+import { getCollection } from "astro:content"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// Metadatos de la página principal
+const seo = {
+  title: t("home.seo.title"),
+  description: t("home.seo.description"),
+  image: "/img/meta/home.webp",
+}
+
+// Schema Person actualizado
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "0x Leñador",
+  url: "https://0xlenador.xyz/",
+  image: "https://0xlenador.xyz/img/44.webp",
+  jobTitle: t("home.schema.jobTitle"),
+  description: t("home.schema.description"),
+  sameAs: [
+    "https://www.youtube.com/@0xlenadorgamefi",
+    "https://x.com/0xlenador",
+    "https://t.me/zero0xlenador",
+  ],
+}
+
+// Últimas 3 entradas del blog
+const posts = (await getCollection("blog"))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3)
+
+// Guías operativas activas
+const guiasActivas = (await getCollection("guias")).filter((g) => g.data.estado === "activa")
+
+// Los 4 módulos del Hub en la página principal
+const modules = [
+  {
+    id: "herramientas",
+    href: "/en/tools",
+    titulo: t("home.module.herramientas.title"),
+    descripcion: t("home.module.herramientas.desc"),
+    count: t("home.module.herramientas.count"),
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>`,
+    accentClass: "border-emerald-500/30 hover:border-emerald-500/60",
+    badgeClass: "text-emerald-400 bg-emerald-500/10",
+  },
+  {
+    id: "directorio",
+    href: "/en/directory",
+    titulo: t("home.module.directorio.title"),
+    descripcion: t("home.module.directorio.desc"),
+    count: t("home.module.directorio.count"),
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>`,
+    accentClass: "border-cyan-500/30 hover:border-cyan-500/60",
+    badgeClass: "text-cyan-400 bg-cyan-500/10",
+  },
+  {
+    id: "activos",
+    href: "/en/assets",
+    titulo: t("home.module.activos.title"),
+    descripcion: t("home.module.activos.desc"),
+    count: t("home.module.activos.count"),
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>`,
+    accentClass: "border-orange-500/30 hover:border-orange-500/60",
+    badgeClass: "text-orange-400 bg-orange-500/10",
+  },
+  {
+    id: "operaciones",
+    href: "/en/operations",
+    titulo: t("home.module.operaciones.title"),
+    descripcion: t("home.module.operaciones.desc"),
+    count: `${guiasActivas.length} ${guiasActivas.length === 1 ? t("home.module.operaciones.count.singular") : t("home.module.operaciones.count.plural")}`,
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>`,
+    accentClass: "border-violet-500/30 hover:border-violet-500/60",
+    badgeClass: "text-violet-400 bg-violet-500/10",
+  },
+]
+
+const faqItems = [
+  {
+    pregunta: t("home.faq.q1"),
+    respuesta: t("home.faq.a1"),
+  },
+  {
+    pregunta: t("home.faq.q2"),
+    respuesta: t("home.faq.a2"),
+  },
+  {
+    pregunta: t("home.faq.q3"),
+    respuesta: t("home.faq.a3"),
+  },
+  {
+    pregunta: t("home.faq.q4"),
+    respuesta: t("home.faq.a4"),
+  },
+  {
+    pregunta: t("home.faq.q5"),
+    respuesta: t("home.faq.a5"),
+  },
+]
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  schema={schema}
+  customSpacing
+>
+  <main class="max-w-6xl mx-auto px-6 pt-6 md:pt-10 pb-0">
+    <!-- ─── HERO ─── -->
+    <HeroSection
+      phrases={[
+        t("home.hero.phrase1"),
+        t("home.hero.phrase2"),
+        t("home.hero.phrase3"),
+        t("home.hero.phrase4"),
+        t("home.hero.phrase5"),
+      ]}
+      ctaPrimario={{ texto: t("home.hero.cta.primary"), href: "/directorio" }}
+      ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: "/operaciones" }}
+    />
+  </main>
+
+  <!-- ─── TICKER ─── -->
+  <TickerSection />
+
+  <main class="max-w-6xl mx-auto px-6 pb-20">
+    <!-- ─── PREMISA ─── -->
+    <PremisaSection />
+
+    <!-- ─── MÓDULOS DEL HUB ─── -->
+    <section class="mb-20">
+      <div class="flex items-center gap-4 mb-8">
+        <h2
+          class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]"
+        >
+          {t("home.section.command")}
+        </h2>
+        <div class="h-px flex-grow bg-terminal-border/50"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {
+          modules.map((mod) => (
+            <a
+              href={mod.href}
+              id={`hub-module-${mod.id}`}
+              class:list={["hub-card p-6 flex flex-col gap-4 group no-underline", mod.accentClass]}
+            >
+              {/* Icono */}
+              <div class="w-10 h-10 rounded-xl bg-terminal-elevated/60 border border-terminal-border flex items-center justify-center group-hover:border-current transition-colors">
+                <svg
+                  class="w-5 h-5 text-terminal-muted group-hover:text-current transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  set:html={mod.icon}
+                />
+              </div>
+
+              {/* Contenido */}
+              <div class="flex-1">
+                <h3 class="text-white font-bold text-sm mb-1.5 group-hover:text-current transition-colors">
+                  {mod.titulo}
+                </h3>
+                <p class="text-terminal-muted text-xs leading-relaxed">{mod.descripcion}</p>
+              </div>
+
+              {/* Badge de count */}
+              <div
+                class:list={[
+                  "self-start text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold",
+                  mod.badgeClass,
+                ]}
+              >
+                {mod.count}
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ─── STATUS: GUÍAS OPERATIVAS ACTIVAS ─── -->
+    {
+      guiasActivas.length > 0 && (
+        <section class="mb-20">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+              {t("home.section.guides")}
+            </h2>
+            <div class="h-px flex-grow bg-terminal-border/50" />
+            <a
+              href="/en/operations"
+              class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+            >
+              {t("home.section.guides.viewAll")}
+            </a>
+          </div>
+
+          <div class="hub-card divide-y divide-terminal-border/50">
+            {guiasActivas.map((guia) => (
+              <a
+                href={`/en/operations/${guia.id}`}
+                class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <div class="relative flex-shrink-0">
+                    {guia.data.imagen ? (
+                      <img
+                        src={guia.data.imagen}
+                        alt={guia.data.title}
+                        class="w-8 h-8 rounded-full object-cover border border-terminal-border bg-terminal-elevated"
+                      />
+                    ) : (
+                      <div class="w-8 h-8 rounded-full bg-terminal-elevated border border-terminal-border flex items-center justify-center">
+                        <span class="text-[10px] text-terminal-muted font-bold">
+                          {guia.data.title.charAt(0)}
+                        </span>
+                      </div>
+                    )}
+                    <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#0D0D0D] shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                  </div>
+                  <div>
+                    <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">
+                      {guia.data.title}
+                    </h3>
+                    <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">
+                      {guia.data.categoria} • {guia.data.dificultad}
+                    </p>
+                  </div>
+                </div>
+                {guia.data.fechaLimite && (
+                  <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
+                    ⏳{" "}
+              {new Date(guia.data.fechaLimite).toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </span>
+                )}
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- ─── ÚLTIMAS DEL BLOG ─── -->
+    {
+      posts.length > 0 && (
+        <section class="mb-20">
+          <div class="flex items-center gap-4 mb-6">
+            <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+              {t("home.section.blog")}
+            </h2>
+            <div class="h-px flex-grow bg-terminal-border/50" />
+            <a
+              href="/en/blog"
+              class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+            >
+              {t("home.section.blog.viewAll")}
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {posts.map((post) => (
+              <a
+                href={`/en/blog/${post.id}`}
+                class="hub-card p-5 flex flex-col gap-3 group no-underline"
+              >
+                {post.data.coverImage && (
+                  <img
+                    src={post.data.coverImage.src}
+                    alt={post.data.coverAlt ?? post.data.title}
+                    width={400}
+                    height={200}
+                    loading="lazy"
+                    class="w-full h-32 object-cover rounded-lg"
+                  />
+                )}
+                <div>
+                  <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-1.5">
+                    {post.data.category} · {new Date(post.data.date).getFullYear()}
+                  </p>
+                  <h3 class="text-white text-sm font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
+                    {post.data.title}
+                  </h3>
+                </div>
+                <p class="text-terminal-muted text-xs leading-relaxed flex-grow line-clamp-3">
+                  {post.data.description}
+                </p>
+                <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
+                  {t("home.blog.read")}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <FaqAccordion
+      titulo={t("home.faq.title")}
+      subtitulo={t("home.faq.subtitle")}
+      startId={101}
+      items={faqItems}
+    />
+
+    <div class="mt-20 text-center">
+      <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
+        {t("home.footer.tagline")}
+      </p>
+      <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+    </div>
+  </main>
+</Layout>

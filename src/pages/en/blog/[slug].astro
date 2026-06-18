@@ -1,0 +1,156 @@
+---
+import { getCollection, render } from "astro:content"
+import Layout from "../../../layouts/Layout.astro"
+import ArticleHeader from "../../../components/blog/ArticleHeader.astro"
+import ShareButtons from "../../../components/blog/ShareButtons.astro"
+import TableOfContents from "../../../components/blog/TableOfContents.astro"
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+
+// 1. Generar automáticamente las rutas basadas en los nombres de los archivos .md
+export async function getStaticPaths() {
+  const posts = await getCollection("blog")
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }))
+}
+
+// 2. Extraer los datos y compilar el cuerpo del Markdown a HTML nativo
+const { post } = Astro.props
+const { title, description, keywords, date, category, coverImage, coverAlt } = post.data
+const { Content, remarkPluginFrontmatter, headings } = await render(post)
+const readTime = post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// 3. Agrupar headings: cada H2 contiene sus H3 hijos
+type Heading = (typeof headings)[0]
+type TocGroup = { heading: Heading; children: Heading[] }
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3)
+const groupedToc: TocGroup[] = []
+for (const h of tocHeadings) {
+  if (h.depth === 2) {
+    groupedToc.push({ heading: h, children: [] })
+  } else if (h.depth === 3 && groupedToc.length > 0) {
+    groupedToc[groupedToc.length - 1].children.push(h)
+  }
+}
+
+// 4. Formatear fecha al estilo: Apr 22, 2026
+const formattedDate = new Date(date).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+})
+// coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
+const ogImage = coverImage?.src
+
+// Schema.org BlogPosting para SEO estructurado
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  datePublished: new Date(date).toISOString(),
+  author: {
+    "@type": "Person",
+    name: "0xLeñador",
+    url: "https://0xlenador.xyz",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "0xLeñador",
+    url: "https://0xlenador.xyz",
+  },
+  image: ogImage ? new URL(ogImage, "https://0xlenador.xyz").href : undefined,
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": new URL(Astro.url.pathname, Astro.site).href,
+  },
+}
+---
+
+<Layout
+  title={`${title} | 0xLeñador`}
+  description={description}
+  keywords={keywords}
+  ogType="article"
+  image={ogImage}
+  schema={blogSchema}
+  publishedTime={new Date(date).toISOString()}
+  author="0xLeñador"
+>
+  <!-- Barra de progreso de lectura (estilos en main.css → #reading-progress) -->
+  <div
+    id="reading-progress"
+    role="progressbar"
+    aria-label="Progreso de lectura"
+    aria-valuenow={0}
+    aria-valuemin={0}
+    aria-valuemax={100}
+  >
+  </div>
+
+  <main class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row gap-16">
+    <!-- ─── COLUMNA PRINCIPAL: ARTÍCULO ─── -->
+    <article class="w-full lg:w-[68%]">
+      <!-- Breadcrumb + título + meta + imagen de portada -->
+      <ArticleHeader
+        title={title}
+        category={category}
+        formattedDate={formattedDate}
+        readTime={readTime}
+        coverImage={coverImage}
+        coverAlt={coverAlt}
+      />
+
+      <!-- Cuerpo del artículo renderizado desde Markdown -->
+      <div class="content relative text-left md:text-justify" id="article-content">
+        <div class="p-4 mb-8 bg-blue-500/10 border-l-4 border-blue-500 text-blue-400 text-sm rounded-r-lg font-medium">
+          <p><strong>Note:</strong> This research is currently available only in Spanish. <a href={`/blog/${post.id}`} class="underline hover:text-blue-300 transition-colors">View original version here</a>.</p>
+        </div>
+        <Content />
+      </div>
+
+      <!-- Pie del artículo: autor -->
+      <footer
+        class="mt-20 pt-8 border-t border-terminal-border/60 flex flex-col sm:flex-row items-center justify-between gap-6"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center"
+          >
+            <span class="font-bold text-emerald-400 font-mono">0x</span>
+          </div>
+          <div>
+            <p class="text-white font-bold text-sm">{t('blog.article.writtenBy')}</p>
+            <p class="text-terminal-muted text-xs">{t('blog.article.role')}</p>
+          </div>
+        </div>
+      </footer>
+    </article>
+
+    <!-- ─── COLUMNA LATERAL: SIDEBAR ─── -->
+    <aside class="w-full lg:w-[32%] mt-12 lg:mt-0">
+      <div
+        id="sidebar-scroll-container"
+        class="sticky top-32 space-y-10 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8 pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <!-- Botones de compartir -->
+        <ShareButtons title={title} />
+
+        <!-- Tabla de contenidos (incluye drawer móvil y botón flotante) -->
+        <TableOfContents groupedToc={groupedToc} />
+      </div>
+    </aside>
+
+    <!-- Gradiente decorativo de fondo -->
+    <div
+      class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none z-0"
+    >
+    </div>
+  </main>
+</Layout>

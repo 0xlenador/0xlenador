@@ -234,27 +234,25 @@ export const ui = {
     "assets.table.category": "Categoría",
     "assets.table.thesis": "Tesis",
     "assets.table.detail": "Detalle",
-    "assets.table.view": "Ver →",
-    "assets.table.soon": "Pronto",
-    "assets.card.view": "Ver análisis →",
-    "assets.card.full": "Análisis completo →",
+    "assets.link.view": "Ver →",
+    "assets.link.soon": "Pronto",
+    "assets.link.analysis": "Ver análisis →",
+    "assets.link.full": "Análisis completo →",
     "assets.faq.title": "Sobre la Watchlist",
     "assets.faq.subtitle": "Seguimiento de activos",
     // Data de activos
-    "assets.item.btc.category": "Cripto L1",
-    "assets.item.btc.desc": "Reserva de valor digital. Núcleo de la descorrelación financiera.",
-    "assets.item.eth.category": "Cripto L1",
-    "assets.item.eth.desc": "Infraestructura de contratos inteligentes y economía DeFi.",
-    "assets.item.hype.category": "DEX / Perps",
-    "assets.item.hype.desc": "L1 optimizado para derivados on-chain. Asimetría de ecosistema emergente.",
-    "assets.item.spy.category": "Renta Variable",
-    "assets.item.spy.desc": "Benchmark del mercado tradicional. 60% del portafolio estructural.",
-    "assets.item.brk.category": "Renta Variable",
-    "assets.item.brk.desc": "Valor intrínseco y gestión patrimonial de largo plazo.",
-    "assets.item.rune.category": "Bitcoin Ordinals",
-    "assets.item.rune.desc": "Activo de la economía de Ordinals y Runes. Riesgo total y alta asimetría.",
-    "assets.item.sfl.category": "Web3 Game",
-    "assets.item.sfl.desc": "Economía experimental on-chain. Fase de garaje — riesgo total.",
+    "assets.cat.cryptoL1": "Cripto L1",
+    "assets.cat.dex": "DEX / Perps",
+    "assets.cat.renta": "Renta Variable",
+    "assets.cat.ordinals": "Bitcoin Ordinals",
+    "assets.cat.game": "Web3 Game",
+    "assets.btc.desc": "Reserva de valor digital. Núcleo de la descorrelación financiera.",
+    "assets.eth.desc": "Infraestructura de contratos inteligentes y economía DeFi.",
+    "assets.hype.desc": "L1 optimizado para derivados on-chain. Asimetría de ecosistema emergente.",
+    "assets.spy.desc": "Benchmark del mercado tradicional. 60% del portafolio estructural.",
+    "assets.brk.desc": "Valor intrínseco y gestión patrimonial de largo plazo.",
+    "assets.rune.desc": "Activo de la economía de Ordinals y Runes. Riesgo total y alta asimetría.",
+    "assets.sfl.desc": "Economía experimental on-chain. Fase de garaje — riesgo total.",
     "assets.faq.q1": "¿Estos activos son una recomendación de compra?",
     "assets.faq.a1": "No. La Watchlist refleja los activos que 0xLeñador sigue activamente en su propia tesis de inversión. No es una señal de compra ni una recomendación financiera personalizada. Cada inversor debe hacer su propia investigación.",
     "assets.faq.q2": "¿Qué significa 'Fase de Garaje' en la watchlist?",
@@ -351,46 +349,7 @@ export const ui = {
     "faucets.faq.q5": "¿Con qué frecuencia se actualiza este directorio?",
     "faucets.faq.a5": "El directorio se revisa mensualmente. Los ecosistemas de testnet cambian con frecuencia: algunas redes deprecan sus testnets (como Ethereum Goerli) y lanzan nuevas (Holesky, Hoodi). Si detectas un faucet caído o tienes una sugerencia, puedes reportarlo vía Telegram o X (@0xlenador).",
 
-    // ─── PÁGINA: INTRÍNSECO ───────────────────────────────────────────────
-    "intrinsic.seo.title": "Calculadora de Valor Intrínseco | Análisis Fundamental Graham y Buffett",
-    "intrinsic.seo.description": "Calcula el valor real de tus acciones con precisión. Herramienta avanzada basada en la fórmula de Graham y el modelo de flujos descontados de Warren Buffett.",
-    "intrinsic.heading": "Calculadora de",
-    "intrinsic.heading.accent": "Valor Intrínseco",
-    "intrinsic.breadcrumb": "Terminal de Análisis Fundamental",
-    "intrinsic.intro": "Calcula el valor real de tus activos con precisión algorítmica.",
-    "intrinsic.section.title": "Entiende la Valoración",
-    "intrinsic.box1.title": "¿Qué es el Valor Intrínseco?",
-    "intrinsic.box1.desc": "Es el valor real de un activo basado en sus fundamentos económicos, ignorando el ruido actual del precio de mercado.",
-    "intrinsic.box2.title": "¿Por qué usar Margen de Seguridad?",
-    "intrinsic.box2.desc": "Para protegernos de errores de cálculo o imprevistos del mercado. Comprar por debajo del valor intrínseco es la base del Value Investing.",
-    "intrinsic.faq.title": "Preguntas Frecuentes",
-    "intrinsic.faq.subtitle": "Todo lo que necesitas saber sobre el análisis",
-    "intrinsic.faq.q1": "¿Cuándo debo comprar una acción?",
-    "intrinsic.faq.a1": "Idealmente cuando el precio de mercado esté un 20-30% por debajo del valor calculado (Margen de Seguridad). Esto reduce el riesgo de pérdida y aumenta el potencial de beneficio.",
-    "intrinsic.faq.q2": "¿Qué EPS debo utilizar?",
-    "intrinsic.faq.a2": "El EPS TTM (Trailing Twelve Months) es el estándar, aunque el EPS normalizado evita distorsiones por eventos únicos. Asegúrate de verificar si hay dilución de acciones reciente.",
-    "intrinsic.faq.q3": "¿Qué tasa de descuento es recomendable?",
-    "intrinsic.faq.a3": "Generalmente entre el 8% y el 12%, dependiendo del riesgo del sector y los tipos de interés actuales. Una tasa más alta refleja una mayor incertidumbre sobre los flujos futuros.",
-    "intrinsic.footer": "Financial Intelligence Engine",
 
-    // ─── PÁGINA: RISKFOLIO ───────────────────────────────────────────────
-    "riskfolio.seo.title": "Riskfolio | 0xLeñador — Distribución de Capital por Perfil de Riesgo",
-    "riskfolio.seo.description": "Herramienta de asignación de capital basada en tu perfil de riesgo. Define cómo distribuir tu portafolio entre renta fija, cripto large-cap, altcoins y reserva de liquidez.",
-    "riskfolio.breadcrumb": "Herramientas / Riskfolio",
-    "riskfolio.heading": "folio",
-    "riskfolio.intro": "Modelo de distribución de capital basado en tu perfil de riesgo. Selecciona tu perfil, ingresa tu capital disponible y obtén la asignación sugerida para cada categoría de activos.",
-    "riskfolio.section.title": "Metodología del Modelo",
-    "riskfolio.section.desc": "Fundamentos conceptuales de Riskfolio y sus perfiles de distribución.",
-    "riskfolio.faq.title": "Preguntas sobre Riskfolio",
-    "riskfolio.faq.subtitle": "Dudas frecuentes del modelo",
-    "riskfolio.faq.q1": "¿Por qué estructurar el capital según un perfil de riesgo?",
-    "riskfolio.faq.a1": "Porque la diversificación no es simplemente comprar activos distintos, sino asignar capital de forma proporcional a tu tolerancia a la pérdida temporal y tu horizonte de inversión. Un perfil conservador prioriza la preservación del capital; uno agresivo acepta mayor volatilidad buscando retornos exponenciales a largo plazo.",
-    "riskfolio.faq.q2": "¿Qué activos incluye cada categoría?",
-    "riskfolio.faq.a2": "Renta Fija / ETFs incluye bonos del gobierno (US Treasuries, TES), ETFs indexados (SPY, QQQ) y depósitos a término. Cripto Large-Cap son Bitcoin (BTC) y Ethereum (ETH) por su mayor liquidez y madurez. Altcoins / DeFi comprende tokens de protocolos con alta volatilidad y asimetría (ej. SOL, LINK, tokens de gobernanza). Reserva es liquidez inmediata en stablecoins (USDC/USDT) o efectivo.",
-    "riskfolio.faq.q3": "¿Riskfolio me recomienda qué comprar?",
-    "riskfolio.faq.a3": "No. Es un modelo paramétrico de distribución macro. Te muestra los porcentajes de asignación por categoría de activo, no instrumentos específicos. Qué acciones, qué criptomonedas o qué bonos comprar dentro de cada categoría es tu responsabilidad tras hacer tu propia investigación (DYOR).",
-    "riskfolio.faq.q4": "¿Con qué frecuencia debería rebalancear mi portafolio?",
-    "riskfolio.faq.a4": "Depende del perfil. Como referencia general: el perfil conservador puede rebalancear anualmente. El moderado, cada 6 meses o cuando alguna categoría se desvíe más de un 5% de la asignación objetivo. El agresivo puede necesitar ajustes trimestrales dada la alta volatilidad de sus posiciones.",
 
     // ─── PÁGINA: DIRECTORIO ───────────────────────────────────────────────
     "directory.seo.title":
@@ -425,206 +384,6 @@ export const ui = {
     "directory.faq.a3":
       "Puedes contactar a 0xLeñador a través de Telegram o X (@0xlenador). Los recursos sugeridos pasan por evaluación de seguridad y utilidad antes de ser añadidos. Las solicitudes con mayor demanda de la comunidad se priorizan.",
 
-    // ─── PÁGINA: ACTIVOS ─────────────────────────────────────────────────
-    "assets.seo.title":
-      "Activos | 0xLeñador — Watchlist de Mercados Tradicionales y Web3",
-    "assets.seo.description":
-      "Watchlist de activos bajo seguimiento activo: Bitcoin, Ethereum, ETFs S&P 500, Berkshire Hathaway e Hyperliquid. Seguimiento de la tesis de inversión 60/40 de 0xLeñador.",
-    "assets.breadcrumb": "Hub / Activos",
-    "assets.heading": "Watchlist de",
-    "assets.heading.accent": "Activos",
-    "assets.intro":
-      "Los activos bajo seguimiento activo en la tesis de 0xLeñador. No son señales de compra, son posiciones documentadas con fundamento técnico y matemático.",
-    "assets.section.watching": "En seguimiento",
-    "assets.table.asset": "Activo",
-    "assets.table.ticker": "Ticker",
-    "assets.table.category": "Categoría",
-    "assets.table.thesis": "Tesis",
-    "assets.table.detail": "Detalle",
-    "assets.link.view": "Ver →",
-    "assets.link.soon": "Pronto",
-    "assets.link.analysis": "Ver análisis →",
-    "assets.link.full": "Análisis completo →",
-    // Watchlist data
-    "assets.btc.desc": "Reserva de valor digital. Núcleo de la descorrelación financiera.",
-    "assets.eth.desc": "Infraestructura de contratos inteligentes y economía DeFi.",
-    "assets.hype.desc": "L1 optimizado para derivados on-chain. Asimetría de ecosistema emergente.",
-    "assets.spy.desc": "Benchmark del mercado tradicional. 60% del portafolio estructural.",
-    "assets.brk.desc": "Valor intrínseco y gestión patrimonial de largo plazo.",
-    "assets.rune.desc": "Activo de la economía de Ordinals y Runes. Riesgo total y alta asimetría.",
-    "assets.sfl.desc": "Economía experimental on-chain. Fase de garaje — riesgo total.",
-    // FAQ Activos
-    "assets.faq.title": "Sobre la Watchlist",
-    "assets.faq.subtitle": "Seguimiento de activos",
-    "assets.faq.q1": "¿Estos activos son una recomendación de compra?",
-    "assets.faq.a1":
-      "No. La Watchlist refleja los activos que 0xLeñador sigue activamente en su propia tesis de inversión. No es una señal de compra ni una recomendación financiera personalizada. Cada inversor debe hacer su propia investigación.",
-    "assets.faq.q2": "¿Qué significa 'Fase de Garaje' en la watchlist?",
-    "assets.faq.a2":
-      "Son activos de alta especulación y asimetría total: o se van a cero o generan retornos masivos. El capital asignado a estos activos se considera completamente arriesgado y no debe ser más del que el inversor puede perder por completo.",
-    "assets.faq.q3": "¿Por qué Bitcoin y Ethereum tienen páginas dedicadas?",
-    "assets.faq.a3":
-      "Son los dos activos de mayor peso y convicción en la tesis. Tienen análisis técnico, recursos y contexto suficientes para justificar una página completa. Los demás activos se documenten a medida que el análisis madura.",
-    "assets.faq.q4": "¿Con qué frecuencia se actualiza la watchlist?",
-    "assets.faq.a4":
-      "La watchlist refleja posiciones activas, no precios en tiempo real. Se actualiza cuando hay cambios estructurales en la tesis (entrada, salida o reconfiguración de posición), no con la volatilidad diaria del mercado.",
-
-    // ─── PÁGINA: OPERACIONES ──────────────────────────────────────────────
-    "ops.seo.title":
-      "Operaciones | 0xLeñador — Guías Operativas DeFi, Airdrops y Web3",
-    "ops.seo.description":
-      "Guías paso a paso de las operaciones del día a día en Web3: farming de airdrops, gestión de posiciones DeFi, juegos on-chain y más. Documentadas con recursos y herramientas reales.",
-    "ops.breadcrumb": "Hub / Operaciones",
-    "ops.heading": "Guías",
-    "ops.heading.accent": "Operativas",
-    "ops.intro":
-      "Documentación paso a paso de las actividades del día a día en Web3: farming de airdrops, gestión de posiciones DeFi, juegos on-chain y más. Con recursos y herramientas reales.",
-    "ops.stat.active": "Guías activas",
-    "ops.stat.total": "Total guías",
-    "ops.stat.categories": "Categorías",
-    "ops.section.featured": "Guía prioritaria",
-    "ops.section.watching": "En seguimiento",
-    "ops.section.history": "Historial",
-    "ops.empty": "// Ninguna guía activa por el momento.",
-    "ops.empty.soon":
-      "Próximamente se agregarán guías de Soneium, Sunflower Land y otros protocolos.",
-    "ops.difficulty": "Dificultad {level}",
-    "ops.open": "Abrir guía →",
-    "ops.view": "Ver →",
-    "ops.back": "Volver a Operaciones",
-    "ops.updated": "Actualizado {date}",
-    "ops.reading": "{time} de lectura",
-    // Detail page
-    "ops.detail.reading": "{time} de lectura",
-    "ops.detail.deadline": "Deadline:",
-    "ops.detail.difficulty": "● Dificultad {level}",
-    "ops.detail.breadcrumb.home": "Inicio",
-    "ops.detail.breadcrumb.ops": "Operaciones",
-    // FAQ Operaciones
-    "ops.faq.title": "Sobre las Guías",
-    "ops.faq.subtitle": "Operaciones y actividades",
-    "ops.faq.q1": "¿Estas guías son recomendaciones de inversión?",
-    "ops.faq.a1":
-      "No. Las guías documentan las operaciones y actividades que 0xLeñador realiza en su propio portafolio. Son registros de actividad, no asesoría financiera. Cada usuario es responsable de su capital y decisiones.",
-    "ops.faq.q2": "¿Qué diferencia hay entre una operación 'Airdrop' y 'DeFi'?",
-    "ops.faq.a2":
-      "Las guías de 'Airdrop' documentan actividades cuyo objetivo principal es acumular puntos o tokens futuros de un protocolo (farming). Las de 'DeFi' se enfocan en la gestión activa de posiciones de liquidez, staking o yields. Una categoría 'Mixta' combina ambas —es común en protocolos que requieren LP + interacción social.",
-    "ops.faq.q3": "¿Con qué frecuencia se actualizan las guías?",
-    "ops.faq.a3":
-      "Las guías se actualizan cuando cambian las condiciones del protocolo (nuevas temporadas, cambios en quests, nuevas plataformas). El estado 'activa' indica que la guía corresponde a una oportunidad vigente. 'Completada' significa que la temporada o campaña ya cerró.",
-    "ops.faq.q4": "¿Por qué algunas guías incluyen botones de wallets o exchanges?",
-    "ops.faq.a4":
-      "Para cada guía se indican las herramientas necesarias directamente desde el Directorio de 0xLeñador. Si el enlace tiene un referido, se indica claramente con la etiqueta 'ref'. Nunca se fuerza el uso de ninguna plataforma específica.",
-    // Estados de guías
-    "ops.status.activa": "Activa",
-    "ops.status.completada": "Completada",
-    "ops.status.expirada": "Expirada",
-    // Dificultades
-    "ops.dificultad.baja": "Baja",
-    "ops.dificultad.media": "Media",
-    "ops.dificultad.alta": "Alta",
-
-    // ─── PÁGINA: BLOG ────────────────────────────────────────────────────
-    "blog.seo.title": "Artículos e Investigación de Capital | 0xLeñador",
-    "blog.seo.description":
-      "Espacio de divulgación educativa, tokenomía, análisis macroeconómico y tesis fundamentales de inversión en Web3.",
-    "blog.header.label": "Bitácora de Investigación",
-    "blog.header.h1": "Análisis",
-    "blog.header.h1.accent": "y Tesis de Capital",
-    "blog.header.intro":
-      "Perspectivas independientes sobre gestión patrimonial, análisis fundamental de activos Web3 y modelado económico de L1s.",
-    "blog.featured.badge": "Análisis Principal",
-    "blog.featured.reading": "{time} de lectura",
-    "blog.featured.cta": "Comenzar lectura",
-    "blog.section.previous": "Investigaciones Anteriores",
-    "blog.card.access": "Acceder →",
-    "blog.card.reading": "{time} lectura",
-    "blog.pipeline.label": "En Desarrollo",
-    "blog.pipeline.title": "Pipeline de Investigación",
-    "blog.pipeline.desc":
-      "Temas actualmente en fase de modelado financiero, auditoría de código o análisis fundamental macroeconómico.",
-    "blog.pipeline.planned": "Planificado",
-    "blog.monitor.label": "Monitor Dinámico",
-    "blog.monitor.title": "Activos Bajo Seguimiento",
-    "blog.monitor.desc":
-      "Una muestra aleatoria de activos dentro del radar de investigación de 0xLeñador para esta sesión.",
-    "blog.monitor.access": "ACCEDER ↗",
-    // Assets en blog (tesis)
-    "blog.btc.category": "Hard Money / Reserva",
-    "blog.btc.thesis":
-      "El activo base de escasez absoluta. Cobertura definitiva contra la degradación de monedas fiat tradicionales.",
-    "blog.eth.category": "L1 de Liquidación",
-    "blog.eth.thesis":
-      "La computadora descentralizada global. Captura valor real de comisiones mediante la quema de su propio suministro.",
-    // Próximos artículos
-    "blog.next1.title":
-      "Auditoría de Contratos Inteligentes: Filtros de Seguridad para Burner Wallets",
-    "blog.next1.category": "Seguridad",
-    "blog.next1.desc":
-      "Cómo leer trazas básicas en Etherscan y detectar funciones maliciosas de drenado antes de interactuar con un nuevo protocolo.",
-    "blog.next2.title":
-      "Flujo de Caja Descontado (DCF) Aplicado a Plataformas de Liquidación L1",
-    "blog.next2.category": "Modelado",
-    "blog.next2.desc":
-      "Adaptación de las métricas tradicionales de Benjamin Graham para valuar la captura de valor real por tarifas de gas on-chain.",
-    // FAQ Blog
-    "blog.faq.title": "Preguntas Frecuentes",
-    "blog.faq.subtitle": "Sobre la Bitácora de Investigación",
-    "blog.faq.q1": "¿Con qué frecuencia se publican artículos?",
-    "blog.faq.a1":
-      "No hay una frecuencia fija. Los artículos se publican cuando el análisis está lo suficientemente maduro para ser compartido. La calidad y el rigor técnico tienen prioridad sobre la frecuencia de publicación.",
-    "blog.faq.q2": "¿Los artículos son recomendaciones de inversión?",
-    "blog.faq.a2":
-      "No. Todo el contenido del blog tiene fines educativos e informativos. No constituye asesoría financiera, legal ni fiscal. Cada lector es responsable de sus propias decisiones de inversión.",
-    "blog.faq.q3": "¿Puedo sugerir un tema para investigar?",
-    "blog.faq.a3":
-      "Sí. Puedes enviar sugerencias de análisis a través de Telegram (@zero0xlenador) o X (@0xlenador). Los temas con mayor demanda e interés técnico se priorizan en el pipeline de investigación.",
-    "blog.faq.q4": "¿Qué formatos de contenido se publican?",
-    "blog.faq.a4":
-      "Principalmente análisis técnicos en profundidad, guías de herramientas y tesis de inversión documentadas. No se publican señales de compra/venta, resúmenes de noticias ni contenido de opinión superficial.",
-    // Artículo individual
-    "blog.article.writtenBy": "Escrito por 0xLeñador",
-    "blog.article.role": "Divulgador sobre la gestión de Capital",
-    "blog.article.progress.aria": "Progreso de lectura",
-    "blog.article.toc.title": "Tabla de Contenidos",
-    "blog.article.share.title": "Compartir",
-    "blog.article.only.es.banner": "Este artículo está disponible solo en Español.",
-    "blog.article.only.es.link": "Leer en Español →",
-
-    // ─── PÁGINA: FAUCETS ─────────────────────────────────────────────────
-    "faucets.seo.title":
-      "Faucets Cripto Mainnet & Testnet | 0xLeñador — Tokens Gratis",
-    "faucets.seo.description":
-      "Directorio completo de faucets de criptomonedas. Obtén tokens de prueba para Ethereum Sepolia, Monad, Base, Solana y más de 30 redes. Esencial para desarrollo Web3 y farming de airdrops.",
-    "faucets.breadcrumb": "Directorio / Faucets",
-    "faucets.heading": "Listado de Faucets",
-    "faucets.heading.accent": "Mainnet & Testnet",
-    "faucets.intro":
-      "Explora todos los sitios web de faucets de criptomonedas disponibles en el ecosistema blockchain, acumula criptomonedas gratis para farmear tus airdrops y/o desarrollar tus proyectos.",
-    "faucets.search.placeholder": "Buscar red... (Sepolia, Monad, Solana...)",
-    "faucets.filter.all": "Todos",
-    "faucets.filter.testnet": "Testnet",
-    "faucets.filter.mainnet": "Mainnet",
-    "faucets.faq.heading": "Sobre los Faucets",
-    "faucets.faq.subheading": "Guía de uso y buenas prácticas de seguridad.",
-    "faucets.faq.title": "Preguntas sobre Faucets",
-    "faucets.faq.subtitle": "Uso, seguridad y actualización",
-    "faucets.faq.q1": "¿Qué es un faucet de criptomonedas?",
-    "faucets.faq.a1":
-      "Es un servicio que distribuye pequeñas cantidades de tokens de forma gratuita. Los faucets de testnet son esenciales para desarrollo Web3: permiten pagar gas y probar contratos inteligentes sin arriesgar capital real. Los de mainnet distribuyen criptomonedas reales en cantidades muy pequeñas, generalmente a través de referidos o publicidad.",
-    "faucets.faq.q2": "¿Cuál es la diferencia entre faucets mainnet y testnet?",
-    "faucets.faq.a2":
-      "Los faucets testnet distribuyen tokens sin valor económico, esenciales para probar contratos inteligentes y dApps sin arriesgar capital real. Los faucets mainnet distribuyen criptomonedas reales (Satoshis, SOL, TRX) en cantidades pequeñas, generalmente como incentivo a través de links de referido.",
-    "faucets.faq.q3":
-      "¿Por qué algunos faucets de testnet me piden autenticar con mi wallet o cuenta?",
-    "faucets.faq.a3":
-      "Es una medida anti-bot. Muchos faucets ahora requieren que la wallet principal tenga un saldo mínimo en mainnet o que te autentiques vía GitHub, redes sociales o Gitcoin Passport. Esto no implica riesgo siempre y cuando el sitio solo lea tu dirección pública (read-only). Nunca firmes transacciones ni apruebes permisos en faucets.",
-    "faucets.faq.q4": "¿Es seguro usar estos faucets?",
-    "faucets.faq.a4":
-      "Los faucets de testnet listados aquí son de fuentes reconocidas (Alchemy, Google Cloud, Chainlink, etc.). Para interactuar con cualquier faucet, la mejor práctica es usar una 'burner wallet': una billetera secundaria vacía creada exclusivamente para ese propósito. Nunca uses tu wallet principal con fondos reales.",
-    "faucets.faq.q5": "¿Con qué frecuencia se actualiza este directorio?",
-    "faucets.faq.a5":
-      "El directorio se revisa mensualmente. Los ecosistemas de testnet cambian con frecuencia: algunas redes deprecan sus testnets (como Ethereum Goerli) y lanzan nuevas (Holesky, Hoodi). Si detectas un faucet caído o tienes una sugerencia, puedes reportarlo vía Telegram o X (@0xlenador).",
 
     // ─── PÁGINA: INTRÍNSECO ───────────────────────────────────────────────
     "intrinsic.seo.title":
@@ -634,16 +393,17 @@ export const ui = {
     "intrinsic.schema.name": "Calculadora de Valor Intrínseco 0xLeñador",
     "intrinsic.schema.desc":
       "Calculadora avanzada para determinar el valor real de acciones mediante el modelo de Graham y Buffett.",
-    "intrinsic.heading": "Calculadora de",
-    "intrinsic.heading.accent": "Valor Intrínseco",
-    "intrinsic.label": "Terminal de Análisis Fundamental",
-    "intrinsic.tagline": "Calcula el valor real de tus activos con precisión algorítmica.",
-    "intrinsic.section.understand": "Entiende la Valoración",
-    "intrinsic.card1.title": "¿Qué es el Valor Intrínseco?",
-    "intrinsic.card1.body":
+    // Nuevas llaves estructuradas (Intrínseco)
+    "intrinsic.hero.title": "Calculadora de",
+    "intrinsic.hero.accent": "Valor Intrínseco",
+    "intrinsic.hero.breadcrumb": "Terminal de Análisis Fundamental",
+    "intrinsic.desc": "Calcula el valor real de tus activos con precisión algorítmica.",
+    "intrinsic.cards.title": "Entiende la Valoración",
+    "intrinsic.cards.1.title": "¿Qué es el Valor Intrínseco?",
+    "intrinsic.cards.1.desc":
       "Es el valor real de un activo basado en sus fundamentos económicos, ignorando el ruido actual del precio de mercado.",
-    "intrinsic.card2.title": "¿Por qué usar Margen de Seguridad?",
-    "intrinsic.card2.body":
+    "intrinsic.cards.2.title": "¿Por qué usar Margen de Seguridad?",
+    "intrinsic.cards.2.desc":
       "Para protegernos de errores de cálculo o imprevistos del mercado. Comprar por debajo del valor intrínseco es la base del Value Investing.",
     "intrinsic.footer.tag": "Financial Intelligence Engine",
     "intrinsic.faq.title": "Preguntas Frecuentes",
@@ -663,9 +423,13 @@ export const ui = {
       "Riskfolio | 0xLeñador — Distribución de Capital por Perfil de Riesgo",
     "riskfolio.seo.description":
       "Herramienta de asignación de capital basada en tu perfil de riesgo. Define cómo distribuir tu portafolio entre renta fija, cripto large-cap, altcoins y reserva de liquidez.",
-    "riskfolio.breadcrumb": "Herramientas / Riskfolio",
-    "riskfolio.intro":
+    // Nuevas llaves estructuradas (Riskfolio)
+    "riskfolio.hero.breadcrumb": "Herramientas / Riskfolio",
+    "riskfolio.hero.title": "folio",
+    "riskfolio.desc":
       "Modelo de distribución de capital basado en tu perfil de riesgo. Selecciona tu perfil, ingresa tu capital disponible y obtén la asignación sugerida para cada categoría de activos.",
+    "riskfolio.cards.title": "Metodología del Modelo",
+    "riskfolio.cards.desc": "Fundamentos conceptuales de Riskfolio y sus perfiles de distribución.",
     "riskfolio.faq.heading": "Metodología del Modelo",
     "riskfolio.faq.subheading":
       "Fundamentos conceptuales de Riskfolio y sus perfiles de distribución.",
@@ -758,6 +522,12 @@ export const ui = {
     "component.premisa.terminal.step4": "> Ejecutar cada movimiento con convicción.",
     // Language switcher
     "component.langSwitch.aria": "Cambiar idioma",
+
+    // TickerSection
+    "ticker.title": "Watchlist de activos en observación",
+    "ticker.desc":
+      "Seguimiento algorítmico y en tiempo real. Entender la volatilidad del mercado es el primer paso para ejecutar operaciones con frialdad matemática.",
+    "ticker.cta": "> VER MÁS... →",
 
     // ─── PÁGINA: SFL COCINANDO ────────────────────────────────────────────
     "sfl.cooking.seo.title":
@@ -968,6 +738,16 @@ export const ui = {
     "tools.sfl.desc":
       "Check real-time P2P prices from the Sunflower Land ecosystem. Monitor items, wearables, and resources via its official API.",
     "tools.sfl.badge": "Live Dashboard",
+    // Tool: SFL Pets
+    "tools.sfl-mascotas.title": "SFL Pets Calculator",
+    "tools.sfl-mascotas.desc":
+      "Interactive P2P calculator and comprehensive guide to Sunflower Land pets. Evaluate whether to hold or sell based on market demand.",
+    "tools.sfl-mascotas.badge": "P2P Calculator",
+    // Tool: SFL Cooking
+    "tools.sfl-cocinando.title": "SFL Cooking & Recipes",
+    "tools.sfl-cocinando.desc":
+      "Interactive recipe terminal to optimize experience (XP) farming.",
+    "tools.sfl-cocinando.badge": "XP Dashboard",
     // FAQ Tools
     "tools.faq.title": "About the Tools",
     "tools.faq.subtitle": "Usage and availability",
@@ -1040,6 +820,11 @@ export const ui = {
     "assets.link.analysis": "View analysis →",
     "assets.link.full": "Full analysis →",
     // Watchlist data
+    "assets.cat.cryptoL1": "Crypto L1",
+    "assets.cat.dex": "DEX / Perps",
+    "assets.cat.renta": "Equities",
+    "assets.cat.ordinals": "Bitcoin Ordinals",
+    "assets.cat.game": "Web3 Game",
     "assets.btc.desc": "Digital store of value. Core of financial decorrelation.",
     "assets.eth.desc": "Smart contract infrastructure and DeFi economy.",
     "assets.hype.desc": "L1 optimized for on-chain derivatives. Emerging ecosystem asymmetry.",
@@ -1227,17 +1012,37 @@ export const ui = {
     "intrinsic.schema.name": "0xLeñador Intrinsic Value Calculator",
     "intrinsic.schema.desc":
       "Advanced calculator to determine the real value of stocks using the Graham & Buffett model.",
-    "intrinsic.heading": "Intrinsic Value",
-    "intrinsic.heading.accent": "Calculator",
-    "intrinsic.label": "Fundamental Analysis Terminal",
-    "intrinsic.tagline": "Calculate the real value of your assets with algorithmic precision.",
-    "intrinsic.section.understand": "Understand Valuation",
-    "intrinsic.card1.title": "What is Intrinsic Value?",
-    "intrinsic.card1.body":
+    // New structured keys (Intrinsic)
+    "intrinsic.hero.title": "Intrinsic Value",
+    "intrinsic.hero.accent": "Calculator",
+    "intrinsic.hero.breadcrumb": "Fundamental Analysis Terminal",
+    "intrinsic.desc": "Calculate the real value of your assets with algorithmic precision.",
+    "intrinsic.cards.title": "Understand Valuation",
+    "intrinsic.cards.1.title": "What is Intrinsic Value?",
+    "intrinsic.cards.1.desc":
       "It is the real value of an asset based on its economic fundamentals, ignoring the current noise of market price.",
-    "intrinsic.card2.title": "Why use a Margin of Safety?",
-    "intrinsic.card2.body":
+    "intrinsic.cards.2.title": "Why use a Margin of Safety?",
+    "intrinsic.cards.2.desc":
       "To protect ourselves from calculation errors or market surprises. Buying below intrinsic value is the foundation of Value Investing.",
+    // Calculator Translation Keys
+    "calculator.eps.label": "EPS (Earnings Per Share)",
+    "calculator.growth.label": "Growth (g %)",
+    "calculator.fcf.label": "Free Cash Flow",
+    "calculator.millions.label": "Millions",
+    "calculator.growth.adv.label": "Growth %",
+    "calculator.discount.label": "Discount Rate %",
+    "calculator.shares.label": "Total Shares",
+    "calculator.margin.label": "Margin of Safety",
+    "calculator.button.label": "Execute Algorithm",
+    "calculator.target.label": "Target Price",
+    "calculator.target.sublabel": "Target Price Multi-Asset",
+    "calculator.status.label": "Terminal Status",
+    "calculator.status.completed": "Analysis Completed",
+    "calculator.script.processing": "Processing...",
+    "calculator.script.graham.title": "Graham Target",
+    "calculator.script.graham.desc": "Quick fundamental estimation based on current net income.",
+    "calculator.script.buffett.title": "Buffett Target",
+    "calculator.script.buffett.desc": "Advanced DCF calculation with discounted cash flows and margin of safety.",
     "intrinsic.footer.tag": "Financial Intelligence Engine",
     "intrinsic.faq.title": "Frequently Asked Questions",
     "intrinsic.faq.subtitle": "Everything you need to know about the analysis",
@@ -1256,9 +1061,13 @@ export const ui = {
       "Riskfolio | 0xLeñador — Capital Distribution by Risk Profile",
     "riskfolio.seo.description":
       "Capital allocation tool based on your risk profile. Define how to distribute your portfolio across fixed income, large-cap crypto, altcoins, and liquidity reserve.",
-    "riskfolio.breadcrumb": "Tools / Riskfolio",
-    "riskfolio.intro":
+    // New structured keys (Riskfolio)
+    "riskfolio.hero.breadcrumb": "Tools / Riskfolio",
+    "riskfolio.hero.title": "folio",
+    "riskfolio.desc":
       "Capital distribution model based on your risk profile. Select your profile, enter your available capital, and get the suggested allocation for each asset category.",
+    "riskfolio.cards.title": "Model Methodology",
+    "riskfolio.cards.desc": "Conceptual foundations of Riskfolio and its distribution profiles.",
     "riskfolio.faq.heading": "Model Methodology",
     "riskfolio.faq.subheading":
       "Conceptual foundations of Riskfolio and its distribution profiles.",
@@ -1350,6 +1159,12 @@ export const ui = {
     "component.premisa.terminal.step4": "> Execute every move with conviction.",
     // Language switcher
     "component.langSwitch.aria": "Switch language",
+
+    // TickerSection
+    "ticker.title": "Assets Watchlist",
+    "ticker.desc":
+      "Algorithmic and real-time tracking. Understanding market volatility is the first step to executing operations with mathematical composure.",
+    "ticker.cta": "> VIEW MORE... →",
 
     // ─── PAGE: SFL COOKING ────────────────────────────────────────────────
     "sfl.cooking.seo.title":

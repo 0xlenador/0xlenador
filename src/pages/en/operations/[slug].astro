@@ -1,0 +1,449 @@
+---
+import { getCollection, render } from "astro:content"
+import Layout from "../../../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+
+// 1. Generar rutas estáticas desde la colección de guías
+export async function getStaticPaths() {
+  const guias = await getCollection("guias")
+  return guias.map((guia) => ({
+    params: { slug: guia.id },
+    props: { guia },
+  }))
+}
+
+// 2. Extraer datos y renderizar el MDX
+const { guia } = Astro.props
+const {
+  title,
+  description,
+  categoria,
+  estado,
+  temporada,
+  fechaLimite,
+  plataforma,
+  imagen,
+  tags,
+  dificultad,
+  tiempoEstimado,
+  date,
+  prioridad,
+} = guia.data
+const { Content, remarkPluginFrontmatter } = await render(guia)
+const readTime = guia.data.readTime || remarkPluginFrontmatter?.readTime || "5 min"
+
+// Formatear fecha
+const formattedDate = new Date(date).toLocaleDateString("en-US", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+})
+const formatDeadline = (fecha: string) =>
+  new Date(fecha).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+
+// Mapas de configuración visual
+const categoriaConfig: Record<string, { badge: string; icon: string }> = {
+  Airdrop: { badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", icon: "🎯" },
+  DeFi: { badge: "text-blue-400 bg-blue-500/10 border-blue-500/20", icon: "💧" },
+  Gaming: { badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20", icon: "🎮" },
+  Trading: { badge: "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20", icon: "📈" },
+  Mixta: { badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: "🔀" },
+}
+const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
+  activa: {
+    label: "Activa",
+    dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]",
+    text: "text-emerald-400",
+  },
+  completada: { label: "Completada", dot: "bg-blue-500", text: "text-blue-400" },
+  expirada: { label: "Expirada", dot: "bg-red-500", text: "text-red-400" },
+}
+const dificultadConfig: Record<string, { text: string; label: string }> = {
+  baja: { text: "text-emerald-400", label: "Baja" },
+  media: { text: "text-yellow-400", label: "Media" },
+  alta: { text: "text-red-400", label: "Alta" },
+}
+
+const cfgCat = categoriaConfig[categoria] ?? categoriaConfig["Airdrop"]
+const cfgEst = estadoConfig[estado]
+const cfgDif = dificultadConfig[dificultad]
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<Layout title={`${title} | 0xLeñador`} description={description}>
+  <!-- Barra de progreso de lectura -->
+  <div
+    id="reading-progress"
+    role="progressbar"
+    aria-label="Progreso de lectura"
+    aria-valuenow={0}
+    aria-valuemin={0}
+    aria-valuemax={100}
+  >
+  </div>
+
+  <style is:global slot="head">
+    @keyframes drawCheck {
+      0% {
+        stroke-dashoffset: 24;
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+    .animate-checkmark {
+      stroke-dasharray: 24;
+      stroke-dashoffset: 24;
+      animation: drawCheck 1.2s ease-in-out infinite alternate;
+    }
+
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #34d399, #06b6d4);
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ─── Estilos del contenido MDX ─── */
+    .guia-content h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      letter-spacing: -0.02em;
+    }
+    .guia-content h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #d1fae5;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .guia-content p {
+      color: #94a3b8;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    .guia-content ul,
+    .guia-content ol {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      line-height: 1.75;
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .guia-content ul {
+      list-style-type: disc;
+    }
+    .guia-content ol {
+      list-style-type: decimal;
+    }
+    .guia-content li {
+      margin-bottom: 0.25rem;
+    }
+    .guia-content strong {
+      color: #e2e8f0;
+      font-weight: 700;
+    }
+    .guia-content a {
+      color: #34d399;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(52, 211, 153, 0.3);
+      transition:
+        color 0.2s,
+        border-color 0.2s;
+    }
+    .guia-content a:hover {
+      color: #6ee7b7;
+      border-color: rgba(52, 211, 153, 0.7);
+    }
+    /* Tablas */
+    .guia-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.8125rem;
+    }
+    .guia-content th {
+      background: rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.6rem 0.875rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: ui-monospace, monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .guia-content td {
+      padding: 0.6rem 0.875rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+    }
+    .guia-content tr:last-child td {
+      border-bottom: none;
+    }
+    /* Blockquotes / alertas */
+    .guia-content blockquote {
+      margin: 1.5rem 0;
+      padding: 0.875rem 1.25rem;
+      border-left: 3px solid #34d399;
+      background: rgba(52, 211, 153, 0.05);
+      border-radius: 0 8px 8px 0;
+      color: #94a3b8;
+      font-size: 0.875rem;
+    }
+    .guia-content blockquote p {
+      margin-bottom: 0;
+    }
+    /* Code inline */
+    .guia-content code {
+      background: rgba(255, 255, 255, 0.06);
+      color: #34d399;
+      font-family: ui-monospace, monospace;
+      font-size: 0.8125rem;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    /* HR separadores */
+    .guia-content hr {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin: 2rem 0;
+    }
+  </style>
+
+  <main class="max-w-4xl mx-auto px-6 pt-8 pb-20">
+    <!-- Breadcrumb -->
+    <nav
+      class="flex text-[10px] font-mono text-terminal-muted mb-8 uppercase tracking-widest items-center gap-2"
+    >
+      <a href="/" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
+      <span>›</span>
+      <a href="/en/operations" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.ops')}</a>
+      <span>›</span>
+      <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs">{title}</span>
+    </nav>
+
+    <!-- Header de la guía -->
+    <header class="mb-10 pb-8 border-b border-terminal-border/60">
+      <!-- Título principal con logo -->
+      <div class="flex items-center gap-4 mb-5">
+        {
+          imagen && (
+            <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden bg-terminal-surface/80 border border-terminal-border flex items-center justify-center p-2 shadow-inner">
+              <img src={imagen} alt={title} class="w-full h-full object-contain" loading="eager" />
+            </div>
+          )
+        }
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+          {title}
+        </h1>
+      </div>
+
+      <!-- Badges de estado y categoría -->
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <span
+          class:list={[
+            "text-[10px] font-mono font-semibold uppercase tracking-wider px-2.5 py-1 rounded-lg border",
+            cfgCat.badge,
+          ]}
+        >
+          {cfgCat.icon}
+          {categoria}
+        </span>
+        <span
+          class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-terminal-surface border border-terminal-border text-[10px] font-mono"
+        >
+          <span class:list={["w-1.5 h-1.5 rounded-full flex-shrink-0", cfgEst.dot]}></span>
+          <span class:list={[cfgEst.text]}>{cfgEst.label}</span>
+        </span>
+        {
+          temporada && (
+            <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated border border-terminal-border px-2.5 py-1 rounded-lg">
+              {temporada}
+            </span>
+          )
+        }
+        <span
+          class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated border border-terminal-border px-2.5 py-1 rounded-lg ml-auto"
+        >
+          {plataforma}
+        </span>
+      </div>
+
+      <p class="text-terminal-secondary text-sm leading-relaxed">{description}</p>
+
+      <!-- Metadatos de la guía -->
+      <div
+        class="flex flex-wrap items-center gap-4 mt-5 text-[11px] font-mono text-terminal-subtle"
+      >
+        {
+          fechaLimite && (
+            <span class="flex items-center gap-1.5 text-yellow-400/80">
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
+                />
+              </svg>
+              {t('ops.detail.deadline')} {formatDeadline(fechaLimite)}
+            </span>
+          )
+        }
+        {
+          tiempoEstimado && (
+            <span class="flex items-center gap-1.5">
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {tiempoEstimado}
+            </span>
+          )
+        }
+        <span class:list={["flex items-center gap-1", cfgDif.text]}>
+          {t('ops.detail.difficulty').replace('{level}', cfgDif.label)}
+        </span>
+        <span class="text-terminal-muted">
+          {t('ops.detail.reading').replace('{time}', readTime)}
+        </span>
+        <span class="text-terminal-muted">
+          {t('ops.updated').replace('{date}', formattedDate)}
+        </span>
+      </div>
+
+      <!-- Tags -->
+      {
+        tags.length > 0 && (
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            {tags.map((tag) => (
+              <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated border border-terminal-border/50 px-2 py-0.5 rounded-full">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <!-- Contenido MDX renderizado -->
+    <article class="guia-content" id="guia-content">
+      <div class="p-4 mb-8 bg-blue-500/10 border-l-4 border-blue-500 text-blue-400 text-sm rounded-r-lg font-medium">
+        <p><strong>Note:</strong> This research is currently available only in Spanish. <a href={`/operaciones/${guia.id}`} class="underline hover:text-blue-300 transition-colors">View original version here</a>.</p>
+      </div>
+      <Content />
+    </article>
+
+    <!-- Footer de navegación -->
+    <footer
+      class="mt-16 pt-8 border-t border-terminal-border/60 flex items-center justify-between gap-4"
+    >
+      <a
+        href="/en/operations"
+        class="flex items-center gap-2 text-terminal-secondary hover:text-emerald-400 transition-colors text-xs font-mono font-medium"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+        </svg>
+        {t('ops.back')}
+      </a>
+      <div class="flex items-center gap-3">
+        <button
+          onclick={`window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=' + window.location.href, '_blank')`}
+          class="p-2.5 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
+          title="Compartir en X"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            ></path>
+          </svg>
+        </button>
+        <button
+          onclick="navigator.clipboard.writeText(window.location.href);"
+          class="p-2.5 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
+          title="Copiar enlace"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <script is:inline>
+    // Barra de progreso de lectura
+    document.addEventListener("DOMContentLoaded", () => {
+      const progressBar = document.getElementById("reading-progress")
+      const content = document.getElementById("guia-content")
+      if (!progressBar || !content) return
+
+      const update = () => {
+        const top = content.getBoundingClientRect().top + window.scrollY
+        const height = content.scrollHeight
+        const scrolled = window.scrollY - top
+        const pct = Math.min(100, Math.max(0, (scrolled / (height - window.innerHeight)) * 100))
+        progressBar.style.width = `${pct}%`
+        progressBar.setAttribute("aria-valuenow", Math.round(pct))
+      }
+      window.addEventListener("scroll", update, { passive: true })
+      update()
+    })
+  </script>
+</Layout>
