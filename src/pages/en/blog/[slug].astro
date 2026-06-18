@@ -110,7 +110,7 @@ const blogSchema = {
       <!-- Cuerpo del artículo renderizado desde Markdown -->
       <div class="content relative text-left md:text-justify" id="article-content">
         <div class="p-4 mb-8 bg-blue-500/10 border-l-4 border-blue-500 text-blue-400 text-sm rounded-r-lg font-medium">
-          <p><strong>Note:</strong> This research is currently available only in Spanish. <a href={`/blog/${post.id}`} class="underline hover:text-blue-300 transition-colors">View original version here</a>.</p>
+          <p>{t('blog.banner.text')}</p>
         </div>
         <Content />
       </div>
