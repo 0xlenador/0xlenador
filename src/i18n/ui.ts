@@ -509,6 +509,26 @@ export const ui = {
     "riskfolio.faq.a4":
       "Depende del perfil. Como referencia general: el perfil conservador puede rebalancear anualmente. El moderado, cada 6 meses o cuando alguna categoría se desvíe más de un 5% de la asignación objetivo. El agresivo puede necesitar ajustes trimestrales dada la alta volatilidad de sus posiciones.",
 
+    // Componente: Calculadora Riskfolio
+    "riskfolio.calc.step1": "Paso 1 — Selecciona tu perfil de riesgo",
+    "riskfolio.calc.step2": "Paso 2 — Capital total a distribuir (USD)",
+    "riskfolio.calc.cons": "Conservador",
+    "riskfolio.calc.cons.title": "Preservación de Capital",
+    "riskfolio.calc.cons.desc": "Prioriza la estabilidad con exposición mínima a la volatilidad del mercado.",
+    "riskfolio.calc.mod": "Moderado",
+    "riskfolio.calc.mod.title": "Equilibrio Óptimo",
+    "riskfolio.calc.mod.desc": "Balance entre preservación de riqueza y exposición a asimetrías de alto potencial.",
+    "riskfolio.calc.agr": "Agresivo",
+    "riskfolio.calc.agr.title": "Máxima Asimetría",
+    "riskfolio.calc.agr.desc": "Alta exposición a criptoactivos de convexidad positiva. Mayor riesgo, mayor potencial.",
+    "riskfolio.calc.allocation": "Asignación —",
+    "riskfolio.calc.total": "Total",
+    "riskfolio.calc.disclaimer": "Modelo paramétrico ilustrativo. No constituye asesoría financiera. DYOR.",
+    "riskfolio.calc.asset.fixed": "Renta Fija / ETFs Tradicionales",
+    "riskfolio.calc.asset.crypto": "Cripto Large-Cap (BTC, ETH)",
+    "riskfolio.calc.asset.reserve": "Reserva (Stablecoins / Efectivo)",
+    "riskfolio.calc.asset.alt": "Altcoins / DeFi / Asimetría",
+
     // ─── PÁGINA: PRIVACIDAD ───────────────────────────────────────────────
     "privacy.seo.title": "Privacidad y Cookies | 0xLeñador",
     "privacy.seo.description":
@@ -1200,6 +1220,26 @@ export const ui = {
     "riskfolio.faq.q4": "How often should I rebalance my portfolio?",
     "riskfolio.faq.a4":
       "It depends on the profile. As a general reference: the conservative profile can rebalance annually. The moderate one every 6 months or when a category deviates more than 5% from the target allocation. The aggressive one may need quarterly adjustments given the high volatility of its positions.",
+
+    // Component: Riskfolio Calculator
+    "riskfolio.calc.step1": "Step 1 — Select your risk profile",
+    "riskfolio.calc.step2": "Step 2 — Total capital to allocate (USD)",
+    "riskfolio.calc.cons": "Conservative",
+    "riskfolio.calc.cons.title": "Capital Preservation",
+    "riskfolio.calc.cons.desc": "Prioritizes stability with minimal exposure to market volatility.",
+    "riskfolio.calc.mod": "Moderate",
+    "riskfolio.calc.mod.title": "Optimal Balance",
+    "riskfolio.calc.mod.desc": "Balance between wealth preservation and exposure to high-potential asymmetries.",
+    "riskfolio.calc.agr": "Aggressive",
+    "riskfolio.calc.agr.title": "Maximum Asymmetry",
+    "riskfolio.calc.agr.desc": "High exposure to positive convexity crypto assets. Higher risk, higher potential.",
+    "riskfolio.calc.allocation": "Allocation —",
+    "riskfolio.calc.total": "Total",
+    "riskfolio.calc.disclaimer": "Illustrative parametric model. Does not constitute financial advice. DYOR.",
+    "riskfolio.calc.asset.fixed": "Fixed Income / Traditional ETFs",
+    "riskfolio.calc.asset.crypto": "Large-Cap Crypto (BTC, ETH)",
+    "riskfolio.calc.asset.reserve": "Reserves (Stablecoins / Cash)",
+    "riskfolio.calc.asset.alt": "Altcoins / DeFi / Asymmetric",
 
     // ─── PAGE: PRIVACY ────────────────────────────────────────────────────
     "privacy.seo.title": "Privacy & Cookies | 0xLeñador",

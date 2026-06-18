@@ -8,16 +8,62 @@
  * ya que Tailwind v4 no puede detectarlas en tiempo de compilación.
  * Los estilos de los perfiles se definen como data-attributes y CSS inline.
  */
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const PROFILES_DATA = {
+  conservador: {
+    label: t("riskfolio.calc.cons"),
+    accentColor: "rgba(34,211,238,1)",
+    activeBg: "rgba(6,182,212,0.08)",
+    activeBorder: "rgba(6,182,212,0.5)",
+    activeShadow: "0 0 20px rgba(6,182,212,0.08)",
+    allocations: [
+      { name: t("riskfolio.calc.asset.fixed"), pct: 70, color: "#06b6d4" },
+      { name: t("riskfolio.calc.asset.crypto"), pct: 15, color: "#22d3ee" },
+      { name: t("riskfolio.calc.asset.reserve"), pct: 10, color: "#94a3b8" },
+      { name: t("riskfolio.calc.asset.alt"), pct: 5, color: "#10b981" },
+    ],
+  },
+  moderado: {
+    label: t("riskfolio.calc.mod"),
+    accentColor: "rgba(52,211,153,1)",
+    activeBg: "rgba(16,185,129,0.08)",
+    activeBorder: "rgba(16,185,129,0.5)",
+    activeShadow: "0 0 20px rgba(16,185,129,0.08)",
+    allocations: [
+      { name: t("riskfolio.calc.asset.fixed"), pct: 45, color: "#06b6d4" },
+      { name: t("riskfolio.calc.asset.crypto"), pct: 30, color: "#22d3ee" },
+      { name: t("riskfolio.calc.asset.alt"), pct: 15, color: "#10b981" },
+      { name: t("riskfolio.calc.asset.reserve"), pct: 10, color: "#94a3b8" },
+    ],
+  },
+  agresivo: {
+    label: t("riskfolio.calc.agr"),
+    accentColor: "rgba(167,139,250,1)",
+    activeBg: "rgba(139,92,246,0.08)",
+    activeBorder: "rgba(139,92,246,0.5)",
+    activeShadow: "0 0 20px rgba(139,92,246,0.08)",
+    allocations: [
+      { name: t("riskfolio.calc.asset.crypto"), pct: 35, color: "#22d3ee" },
+      { name: t("riskfolio.calc.asset.alt"), pct: 35, color: "#10b981" },
+      { name: t("riskfolio.calc.asset.fixed"), pct: 20, color: "#06b6d4" },
+      { name: t("riskfolio.calc.asset.reserve"), pct: 10, color: "#94a3b8" },
+    ],
+  },
+}
 ---
 
-<section id="riskfolio-calculator" class="max-w-4xl mx-auto mb-12 scroll-mt-24">
+<section id="riskfolio-calculator" data-profiles={JSON.stringify(PROFILES_DATA)} class="max-w-4xl mx-auto mb-12 scroll-mt-24">
   <div
     class="bg-terminal-surface/40 border border-terminal-border rounded-3xl p-6 md:p-10 shadow-2xl"
   >
     <!-- Paso 1: Perfil de Riesgo -->
     <div class="mb-10">
       <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mb-4">
-        Paso 1 — Selecciona tu perfil de riesgo
+        {t("riskfolio.calc.step1")}
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="profile-grid">
         <!-- Tarjeta: Conservador -->
@@ -35,10 +81,10 @@
             >
           </div>
           <h3 class="text-base font-bold text-white mb-1.5 leading-tight">
-            Preservación de Capital
+            {t("riskfolio.calc.cons.title")}
           </h3>
           <p class="text-xs text-terminal-secondary leading-relaxed font-light">
-            Prioriza la estabilidad con exposición mínima a la volatilidad del mercado.
+            {t("riskfolio.calc.cons.desc")}
           </p>
         </button>
 
@@ -58,10 +104,10 @@
             >
           </div>
           <h3 class="text-base font-bold text-emerald-400 mb-1.5 leading-tight">
-            Equilibrio Óptimo
+            {t("riskfolio.calc.mod.title")}
           </h3>
           <p class="text-xs leading-relaxed font-light" style="color: rgba(167,243,208,0.7);">
-            Balance entre preservación de riqueza y exposición a asimetrías de alto potencial.
+            {t("riskfolio.calc.mod.desc")}
           </p>
         </button>
 
@@ -79,9 +125,9 @@
               >Agresivo</span
             >
           </div>
-          <h3 class="text-base font-bold text-white mb-1.5 leading-tight">Máxima Asimetría</h3>
+          <h3 class="text-base font-bold text-white mb-1.5 leading-tight">{t("riskfolio.calc.agr.title")}</h3>
           <p class="text-xs text-terminal-secondary leading-relaxed font-light">
-            Alta exposición a criptoactivos de convexidad positiva. Mayor riesgo, mayor potencial.
+            {t("riskfolio.calc.agr.desc")}
           </p>
         </button>
       </div>
@@ -90,7 +136,7 @@
     <!-- Paso 2: Capital -->
     <div class="mb-10">
       <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mb-3">
-        Paso 2 — Capital total a distribuir (USD)
+        {t("riskfolio.calc.step2")}
       </p>
       <div class="flex items-center gap-3">
         <span class="text-terminal-muted font-mono text-xl font-bold">$</span>
@@ -168,7 +214,7 @@
           class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"
           id="result-indicator"></span>
         <h3 class="text-sm font-mono text-terminal-muted uppercase tracking-widest">
-          Asignación — <span id="active-profile-label" class="text-white">Moderado</span>
+          {t("riskfolio.calc.allocation")} <span id="active-profile-label" class="text-white">{t("riskfolio.calc.mod")}</span>
         </h3>
       </div>
 
@@ -181,7 +227,7 @@
               class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
             >
               <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mb-1"
-                >Total</span
+                >{t("riskfolio.calc.total")}</span
               >
               <span id="chartCenterLabel" class="text-2xl font-black text-white font-mono"
                 >$10,000</span
@@ -199,7 +245,7 @@
 
     <!-- Disclaimer -->
     <p class="text-[10px] font-mono text-terminal-dim text-center mt-8 italic opacity-60">
-      Modelo paramétrico ilustrativo. No constituye asesoría financiera. DYOR.
+      {t("riskfolio.calc.disclaimer")}
     </p>
   </div>
 </section>
@@ -209,47 +255,9 @@
 
 <script is:inline>
   // ─── Datos de perfiles ────────────────────────────────────────────
-  const PROFILES = {
-    conservador: {
-      label: "Conservador",
-      accentColor: "rgba(34,211,238,1)",
-      activeBg: "rgba(6,182,212,0.08)",
-      activeBorder: "rgba(6,182,212,0.5)",
-      activeShadow: "0 0 20px rgba(6,182,212,0.08)",
-      allocations: [
-        { name: "Renta Fija / ETFs Tradicionales", pct: 70, color: "#06b6d4" },
-        { name: "Cripto Large-Cap (BTC, ETH)", pct: 15, color: "#22d3ee" },
-        { name: "Reserva (Stablecoins / Efectivo)", pct: 10, color: "#94a3b8" },
-        { name: "Altcoins / DeFi / Asimetría", pct: 5, color: "#10b981" },
-      ],
-    },
-    moderado: {
-      label: "Moderado",
-      accentColor: "rgba(52,211,153,1)",
-      activeBg: "rgba(16,185,129,0.08)",
-      activeBorder: "rgba(16,185,129,0.5)",
-      activeShadow: "0 0 20px rgba(16,185,129,0.08)",
-      allocations: [
-        { name: "Renta Fija / ETFs Tradicionales", pct: 45, color: "#06b6d4" },
-        { name: "Cripto Large-Cap (BTC, ETH)", pct: 30, color: "#22d3ee" },
-        { name: "Altcoins / DeFi / Asimetría", pct: 15, color: "#10b981" },
-        { name: "Reserva (Stablecoins / Efectivo)", pct: 10, color: "#94a3b8" },
-      ],
-    },
-    agresivo: {
-      label: "Agresivo",
-      accentColor: "rgba(167,139,250,1)",
-      activeBg: "rgba(139,92,246,0.08)",
-      activeBorder: "rgba(139,92,246,0.5)",
-      activeShadow: "0 0 20px rgba(139,92,246,0.08)",
-      allocations: [
-        { name: "Cripto Large-Cap (BTC, ETH)", pct: 35, color: "#22d3ee" },
-        { name: "Altcoins / DeFi / Asimetría", pct: 35, color: "#10b981" },
-        { name: "Renta Fija / ETFs Tradicionales", pct: 20, color: "#06b6d4" },
-        { name: "Reserva (Stablecoins / Efectivo)", pct: 10, color: "#94a3b8" },
-      ],
-    },
-  }
+  // Se leen los perfiles traducidos inyectados en el wrapper
+  const wrapper = document.getElementById("riskfolio-calculator");
+  const PROFILES = JSON.parse(wrapper.dataset.profiles || "{}");
 
   // ─── Estado global ────────────────────────────────────────────────
   let currentProfile = "moderado"
