@@ -13,6 +13,24 @@ export const defaultLang = "es" as const
 export type Lang = keyof typeof languages
 
 // ---------------------------------------------------------------------------
+// Diccionario de Rutas (Segmentos de URL)
+// ---------------------------------------------------------------------------
+export const routes = {
+  en: {
+    operaciones: "operations",
+    herramientas: "tools",
+    activos: "assets",
+    directorio: "directory",
+  },
+  es: {
+    operations: "operaciones",
+    tools: "herramientas",
+    assets: "activos",
+    directory: "directorio",
+  },
+}
+
+// ---------------------------------------------------------------------------
 // Tipos auxiliares
 // ---------------------------------------------------------------------------
 type NestedStringRecord = { [key: string]: string | NestedStringRecord }

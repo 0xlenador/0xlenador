@@ -4,7 +4,7 @@
 // Compatibles con Astro v6 static output + GitHub Pages
 // ============================================================
 
-import { ui, defaultLang, languages, type Lang, type UiKey } from "./ui"
+import { ui, defaultLang, languages, type Lang, type UiKey, routes } from "./ui"
 
 // ---------------------------------------------------------------------------
 // Detección de idioma desde la URL
@@ -84,9 +84,9 @@ export const routeMap: Record<string, Record<Lang, string>> = {
 export function getAlternateUrl(url: URL, targetLang: Lang): string {
   const { pathname } = url
 
-  // Normalizar: si viene de /en/..., extraer la ruta EN para buscar equivalente ES
+  // Normalizar: si viene de /en/..., extraer la ruta limpia sin prefijo
   const isEnPath = pathname.startsWith("/en/") || pathname === "/en"
-  const cleanPath = isEnPath ? pathname.replace(/^\/en/, "") || "/" : pathname
+  let cleanPath = isEnPath ? pathname.replace(/^\/en/, "") || "/" : pathname
 
   // Buscar en routeMap por la ruta ES o EN
   for (const [esPath, translations] of Object.entries(routeMap)) {
@@ -95,13 +95,19 @@ export function getAlternateUrl(url: URL, targetLang: Lang): string {
     }
   }
 
+  // Traducción por segmentos para rutas dinámicas (ej. /operations/slug -> /operaciones/slug)
+  const segments = cleanPath.split("/").filter(Boolean)
+  const translatedSegments = segments.map((segment) => {
+    // @ts-ignore - Indexing routes object dynamically
+    return routes[targetLang]?.[segment] || segment
+  })
+  cleanPath = "/" + translatedSegments.join("/")
+
   // Fallback: construir la ruta manualmente
   if (targetLang === defaultLang) {
-    // Quitar /en/ prefix si existe
-    return isEnPath ? cleanPath || "/" : pathname
+    return cleanPath || "/"
   } else {
-    // Agregar /en/ prefix
-    return isEnPath ? pathname : `/en${pathname === "/" ? "" : pathname}`
+    return `/en${cleanPath === "/" ? "" : cleanPath}`
   }
 }
 
@@ -124,6 +130,16 @@ export function getLocalizedPath(
     // Buscar en el routeMap si hay una traducción directa
     const mapping = routeMap[path]
     if (mapping) return mapping[lang]
+    
+    // Traducción por segmentos (rutas dinámicas como /operaciones/slug)
+    const segments = path.split("/").filter(Boolean)
+    const translatedSegments = segments.map((segment) => {
+      // @ts-ignore
+      return routes[lang]?.[segment] || segment
+    })
+    const translatedPath = "/" + translatedSegments.join("/")
+    
+    return `/en${translatedPath === "/" ? "" : translatedPath}`
   }
 
   // Fallback: solo agregar /en prefix
