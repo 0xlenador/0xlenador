@@ -559,6 +559,64 @@ export const ui = {
     "component.premisa.terminal.step4": "> Ejecutar cada movimiento con convicción.",
     // Language switcher
     "component.langSwitch.aria": "Cambiar idioma",
+
+    // ─── PÁGINA: SFL COCINANDO ────────────────────────────────────────────
+    "sfl.cooking.seo.title":
+      "Cocina SFL | 0xLeñador — Calculadora de Recetas de Sunflower Land",
+    "sfl.cooking.seo.description":
+      "Consulta las recetas de cocina, la experiencia (XP) otorgada y el costo dinámico en SFL de los ingredientes basándose en el mercado P2P.",
+    "sfl.cooking.breadcrumb": "Herramientas / Cocina",
+    "sfl.cooking.heading": "Calculadora de",
+    "sfl.cooking.heading.accent": "Recetas y Comida",
+    "sfl.cooking.intro":
+      "Calcula dinámicamente el costo en SFL de preparar alimentos dentro del juego basándote en el precio actual en vivo del mercado P2P. Descubre las recetas más rentables (XP/SFL) para subir de nivel a tus mascotas.",
+    "sfl.cooking.filter.all": "Todas",
+    "sfl.cooking.search.placeholder": "Buscar receta o ingrediente...",
+    "sfl.cooking.loading": "Consultando P2P para calcular costos...",
+    "sfl.cooking.empty": "No se encontraron recetas.",
+    "sfl.cooking.error": "Error cargando precios.",
+    "sfl.cooking.col.time": "Time:",
+    "sfl.cooking.col.instant": "Instant:",
+
+    // ─── PÁGINA: SFL MASCOTAS ─────────────────────────────────────────────
+    "sfl.pets.seo.title":
+      "Mascotas SFL | 0xLeñador — Guía de Mascotas de Sunflower Land",
+    "sfl.pets.seo.description":
+      "Descubre la lista completa de mascotas, sus requerimientos, recursos de energía y altares (Shrines) en Sunflower Land.",
+    "sfl.pets.breadcrumb": "Herramientas / Mascotas",
+    "sfl.pets.heading":
+      "Calcula la rentabilidad de la comida de tus mascotas",
+    "sfl.pets.subheading": "Conoce las comidas y premios de tus mascotas",
+    "sfl.pets.calc.title": "Calculadora de Rentabilidad - Comida / P2P",
+    "sfl.pets.calc.multipliers": "Multiplicadores",
+    "sfl.pets.calc.walrus.bonus": "+5⚡ por Comida",
+    "sfl.pets.calc.easy": "Petición Easy",
+    "sfl.pets.calc.medium": "Petición Medium",
+    "sfl.pets.calc.hard": "Petición Hard",
+    "sfl.pets.calc.select.placeholder": "-- Seleccionar Comida --",
+    "sfl.pets.calc.col.resource": "Recurso",
+    "sfl.pets.calc.col.energy": "Energía / Precio P2P",
+    "sfl.pets.calc.col.easy": "Easy Costo / Ganancia",
+    "sfl.pets.calc.col.medium": "Medium Costo / Ganancia",
+    "sfl.pets.calc.col.hard": "Hard Costo / Ganancia",
+    "sfl.pets.calc.no.p2p": "No P2P",
+    "sfl.pets.calc.na.info": "Falta info (N/A)",
+    "sfl.pets.calc.cost.label": "Costo:",
+    "sfl.pets.calc.loss": "(Pérdida)",
+    "sfl.pets.calc.acorn.tip": "Idea: Construye Altares",
+    "sfl.pets.calc.fossil.tip": "Idea: ¡Caja de sorpresas! Prueba suerte",
+    "sfl.pets.intro":
+      "Consulta todos los detalles, habilidades y requisitos de alimentación para las mascotas del ecosistema. Revisa los altares, los recursos energéticos y la comida que demanda cada rareza.",
+    "sfl.pets.common.title": "Mascotas Comunes",
+    "sfl.pets.common.variants": "Variantes",
+    "sfl.pets.common.fetches": "Búsquedas (Fetches)",
+    "sfl.pets.nft.title": "Mascotas NFT",
+    "sfl.pets.nft.fetches": "Búsquedas (Fetches)",
+    "sfl.pets.shrines.title": "Altares (Shrines)",
+    "sfl.pets.shrines.col.altar": "Altar (Shrine)",
+    "sfl.pets.shrines.col.resources": "Recursos",
+    "sfl.pets.shrines.col.cost": "Costo Total",
+    "sfl.pets.shrines.no.acorn": "El costo no incluye",
   },
 
   // ===========================================================================
@@ -1093,6 +1151,64 @@ export const ui = {
     "component.premisa.terminal.step4": "> Execute every move with conviction.",
     // Language switcher
     "component.langSwitch.aria": "Switch language",
+
+    // ─── PAGE: SFL COOKING ────────────────────────────────────────────────
+    "sfl.cooking.seo.title":
+      "SFL Cooking | 0xLeñador — Sunflower Land Recipe Calculator",
+    "sfl.cooking.seo.description":
+      "Look up cooking recipes, the XP granted, and the dynamic SFL cost of ingredients based on live P2P market prices.",
+    "sfl.cooking.breadcrumb": "Tools / Cooking",
+    "sfl.cooking.heading": "Recipe &",
+    "sfl.cooking.heading.accent": "Food Calculator",
+    "sfl.cooking.intro":
+      "Dynamically calculate the SFL cost of preparing food in-game based on the current live P2P market price. Discover the most profitable recipes (XP/SFL) for leveling up your pets.",
+    "sfl.cooking.filter.all": "All",
+    "sfl.cooking.search.placeholder": "Search recipe or ingredient...",
+    "sfl.cooking.loading": "Querying P2P to calculate costs...",
+    "sfl.cooking.empty": "No recipes found.",
+    "sfl.cooking.error": "Error loading prices.",
+    "sfl.cooking.col.time": "Time:",
+    "sfl.cooking.col.instant": "Instant:",
+
+    // ─── PAGE: SFL PETS ───────────────────────────────────────────────────
+    "sfl.pets.seo.title":
+      "SFL Pets | 0xLeñador — Sunflower Land Pet Guide",
+    "sfl.pets.seo.description":
+      "Discover the full list of pets, their requirements, energy resources, and Shrines in Sunflower Land.",
+    "sfl.pets.breadcrumb": "Tools / Pets",
+    "sfl.pets.heading":
+      "Calculate the profitability of food for your pets",
+    "sfl.pets.subheading": "Learn your pets' food rewards and bonuses",
+    "sfl.pets.calc.title": "Profitability Calculator - Food / P2P",
+    "sfl.pets.calc.multipliers": "Multipliers",
+    "sfl.pets.calc.walrus.bonus": "+5⚡ per Food",
+    "sfl.pets.calc.easy": "Easy Request",
+    "sfl.pets.calc.medium": "Medium Request",
+    "sfl.pets.calc.hard": "Hard Request",
+    "sfl.pets.calc.select.placeholder": "-- Select Food --",
+    "sfl.pets.calc.col.resource": "Resource",
+    "sfl.pets.calc.col.energy": "Energy / P2P Price",
+    "sfl.pets.calc.col.easy": "Easy Cost / Profit",
+    "sfl.pets.calc.col.medium": "Medium Cost / Profit",
+    "sfl.pets.calc.col.hard": "Hard Cost / Profit",
+    "sfl.pets.calc.no.p2p": "No P2P",
+    "sfl.pets.calc.na.info": "Missing info (N/A)",
+    "sfl.pets.calc.cost.label": "Cost:",
+    "sfl.pets.calc.loss": "(Loss)",
+    "sfl.pets.calc.acorn.tip": "Tip: Build Shrines",
+    "sfl.pets.calc.fossil.tip": "Tip: Mystery Box! Try your luck",
+    "sfl.pets.intro":
+      "Explore all the details, abilities, and feeding requirements for the ecosystem's pets. Review shrines, energy resources, and the food each rarity demands.",
+    "sfl.pets.common.title": "Common Pets",
+    "sfl.pets.common.variants": "Variants",
+    "sfl.pets.common.fetches": "Fetches",
+    "sfl.pets.nft.title": "NFT Pets",
+    "sfl.pets.nft.fetches": "Fetches",
+    "sfl.pets.shrines.title": "Shrines",
+    "sfl.pets.shrines.col.altar": "Shrine",
+    "sfl.pets.shrines.col.resources": "Resources",
+    "sfl.pets.shrines.col.cost": "Total Cost",
+    "sfl.pets.shrines.no.acorn": "Cost excludes",
   },
 } as const
 

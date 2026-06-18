@@ -67,6 +67,8 @@ export const routeMap: Record<string, Record<Lang, string>> = {
   "/intrinseco": { es: "/intrinseco", en: "/en/intrinsic" },
   "/riskfolio": { es: "/riskfolio", en: "/en/riskfolio" },
   "/sfl-mercado": { es: "/sfl-mercado", en: "/en/sfl-market" },
+  "/sfl-cocinando": { es: "/sfl-cocinando", en: "/en/sfl-cooking" },
+  "/sfl-mascotas": { es: "/sfl-mascotas", en: "/en/sfl-pets" },
   "/privacidad": { es: "/privacidad", en: "/en/privacy" },
   "/terminos": { es: "/terminos", en: "/en/terms" },
 }
