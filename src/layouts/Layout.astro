@@ -22,6 +22,8 @@ interface Props {
   publishedTime?: string
   /** Nombre del autor — solo para ogType="article" */
   author?: string
+  /** Ocultar de los motores de búsqueda (temporal para traducciones) */
+  noindex?: boolean
 }
 
 // 3. Extraemos los datos. Si la página no los envía, usamos los genéricos del diccionario (Fallback i18n)
@@ -35,6 +37,7 @@ const {
   customSpacing = false,
   publishedTime,
   author,
+  noindex = false,
 } = Astro.props
 
 // 4. Generación automática de la URL Canónica
@@ -61,6 +64,8 @@ const enUrl = new URL(getAlternateUrl(Astro.url, "en"), Astro.site)
 
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {noindex && <meta name="robots" content="noindex" />}
 
     <!-- hreflang alternates — SEO bilingüe -->
     <link rel="alternate" hreflang="es" href={esUrl} />

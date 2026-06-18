@@ -78,7 +78,7 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<Layout title={`${title} | 0xLeñador`} description={description}>
+<Layout title={`${title} | 0xLeñador`} description={description} noindex={true}>
   <!-- Barra de progreso de lectura -->
   <div
     id="reading-progress"
@@ -371,7 +371,7 @@ const t = useTranslations(lang)
     <!-- Contenido MDX renderizado -->
     <article class="guia-content" id="guia-content">
       <div class="p-4 mb-8 bg-blue-500/10 border-l-4 border-blue-500 text-blue-400 text-sm rounded-r-lg font-medium">
-        <p><strong>Note:</strong> This research is currently available only in Spanish. <a href={`/operaciones/${guia.id}`} class="underline hover:text-blue-300 transition-colors">View original version here</a>.</p>
+        <p>{t('ops.banner.text')}</p>
       </div>
       <Content />
     </article>
