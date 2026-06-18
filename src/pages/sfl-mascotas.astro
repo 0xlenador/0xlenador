@@ -136,10 +136,10 @@ const getShrineCostHtml = (shrine) => {
           <div class="flex-1 flex flex-col gap-3">
             <div class="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg border border-white/5 bg-black/20">
               <div class="flex items-center gap-2">
-                <img src="/img/sunflowerland/Walrus_Onesie.webp" class="w-6 h-6 object-contain" alt="Walrus Onesie" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                <img src="/img/sunflowerland/wearables/walrus_onesie.png" class="w-6 h-6 object-contain" alt="Walrus Onesie" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
                 <div class="flex flex-col">
                   <span class="text-[11px] text-white/90 leading-tight">Walrus Onesie</span>
-                  <span class="text-[9px] text-blue-400 font-mono">+5⚡ por Comida</span>
+                  <span class="text-[9px] text-blue-400 font-mono">{t("sfl.pets.calc.walrus.bonus")}</span>
                 </div>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
@@ -152,17 +152,17 @@ const getShrineCostHtml = (shrine) => {
 
         <!-- Easy Selection -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-emerald-400 mb-3 text-center border-b border-emerald-500/20 pb-2">Petición Easy (<span id="header-easy-energy">20⚡</span>)</div>
+          <div class="text-[11px] uppercase font-bold tracking-widest text-emerald-400 mb-3 text-center border-b border-emerald-500/20 pb-2">{t("sfl.pets.calc.easy")} (<span id="header-easy-energy">20⚡</span>)</div>
           <div class="relative custom-dropdown select-none" data-id="calc-select-easy" data-value="">
             <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
               <span class="dropdown-selected-text flex items-center gap-2">
-                <span class="text-white/40">-- Seleccionar Comida --</span>
+                <span class="text-white/40">{t("sfl.pets.calc.select.placeholder")}</span>
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
               <ul id="list-easy" class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
                 <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="" data-cost="none">
-                  -- Seleccionar Comida --
+                  {t("sfl.pets.calc.select.placeholder")}
                 </li>
                 {sflPets.requests.Easy.map(food => (
                   <li class="p-2.5 text-sm text-white/80 hover:bg-emerald-500/20 hover:text-emerald-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food} data-cost={foodCostsDict[food] !== null ? foodCostsDict[food] : 'inc'}>
@@ -181,17 +181,17 @@ const getShrineCostHtml = (shrine) => {
         </div>
         <!-- Medium Selection -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-yellow-400 mb-3 text-center border-b border-yellow-500/20 pb-2">Petición Medium (<span id="header-medium-energy">100⚡</span>)</div>
+          <div class="text-[11px] uppercase font-bold tracking-widest text-yellow-400 mb-3 text-center border-b border-yellow-500/20 pb-2">{t("sfl.pets.calc.medium")} (<span id="header-medium-energy">100⚡</span>)</div>
           <div class="relative custom-dropdown select-none" data-id="calc-select-medium" data-value="" data-cost="none">
             <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-yellow-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
               <span class="dropdown-selected-text flex items-center gap-2">
-                <span class="text-white/40">-- Seleccionar Comida --</span>
+                <span class="text-white/40">{t("sfl.pets.calc.select.placeholder")}</span>
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
             <ul id="list-medium" class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
               <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="" data-cost="none">
-                -- Seleccionar Comida --
+                {t("sfl.pets.calc.select.placeholder")}
               </li>
               {sflPets.requests.Medium.map(food => (
                 <li class="p-2.5 text-sm text-white/80 hover:bg-yellow-500/20 hover:text-yellow-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food} data-cost={foodCostsDict[food] !== null ? foodCostsDict[food] : 'inc'}>
@@ -209,17 +209,17 @@ const getShrineCostHtml = (shrine) => {
           </div>
         </div>
         <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-red-400 mb-3 text-center border-b border-red-500/20 pb-2">Petición Hard (<span id="header-hard-energy">300⚡</span>)</div>
+          <div class="text-[11px] uppercase font-bold tracking-widest text-red-400 mb-3 text-center border-b border-red-500/20 pb-2">{t("sfl.pets.calc.hard")} (<span id="header-hard-energy">300⚡</span>)</div>
           <div class="relative custom-dropdown select-none" data-id="calc-select-hard" data-value="" data-cost="none">
             <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-red-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
               <span class="dropdown-selected-text flex items-center gap-2">
-                <span class="text-white/40">-- Seleccionar Comida --</span>
+                <span class="text-white/40">{t("sfl.pets.calc.select.placeholder")}</span>
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
             <ul id="list-hard" class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
               <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="" data-cost="none">
-                -- Seleccionar Comida --
+                {t("sfl.pets.calc.select.placeholder")}
               </li>
               {sflPets.requests.Hard.map(food => (
                 <li class="p-2.5 text-sm text-white/80 hover:bg-red-500/20 hover:text-red-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food} data-cost={foodCostsDict[food] !== null ? foodCostsDict[food] : 'inc'}>
@@ -422,7 +422,7 @@ const getShrineCostHtml = (shrine) => {
   </main>
 </Layout>
 
-<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict, maxRPE, tAcornTip: t('sfl.pets.calc.acorn.tip'), tFossilTip: t('sfl.pets.calc.fossil.tip'), tNA: t('sfl.pets.calc.na.info'), tCost: t('sfl.pets.calc.cost.label'), tLoss: t('sfl.pets.calc.loss') }}>
+<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict, maxRPE, tAcornTip: t('sfl.pets.calc.acorn.tip'), tFossilTip: t('sfl.pets.calc.fossil.tip'), tNA: t('sfl.pets.calc.na.info'), tCost: t('sfl.pets.calc.cost.label'), tLoss: t('sfl.pets.calc.loss'), tPlaceholder: t('sfl.pets.calc.select.placeholder') }}>
   const formatPriceNum = (num) => {
     if (num === 0) return '0.00';
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
@@ -580,7 +580,7 @@ const getShrineCostHtml = (shrine) => {
           dropdown.setAttribute('data-value', val);
           
           if (val === "") {
-            selectedText.innerHTML = '<span class="text-white/40">-- Seleccionar Comida --</span>';
+            selectedText.innerHTML = `<span class="text-white/40">${tPlaceholder}</span>`;
             dropdown.removeAttribute('data-cost');
           } else {
             // Copiar todo el html interno de la opción (imagen + texto + precio)

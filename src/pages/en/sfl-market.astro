@@ -222,74 +222,73 @@ const seo = {
     <!-- FAQ Section SEO Optimized -->
     <section class="mt-16 mb-8 max-w-4xl mx-auto">
       <div class="text-center mb-10">
-        <h2 class="text-3xl font-black text-white tracking-tight mb-3">Preguntas Frecuentes sobre el Mercado P2P</h2>
-        <p class="text-terminal-secondary text-sm">Todo lo que necesitas saber sobre el comercio descentralizado de recursos en SFL.</p>
+        <h2 class="text-3xl font-black text-white tracking-tight mb-3">{t("sfl.faq.title")}</h2>
+        <p class="text-terminal-secondary text-sm">{t("sfl.faq.subtitle")}</p>
       </div>
 
       <div class="space-y-4">
         <!-- Pregunta 1 -->
         <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
           <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
-            <span>¿Qué es el Mercado P2P On-Chain de Sunflower Land?</span>
+            <span>{t("sfl.faq.q1")}</span>
             <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
               <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
           <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
-            El mercado P2P (Peer-to-Peer) de Sunflower Land es un sistema de comercio descentralizado donde los jugadores compran y venden recursos directamente entre ellos. Al ser "On-Chain", todas las transacciones quedan registradas de forma transparente en la blockchain de Polygon, lo que garantiza una economía libre dictada por la oferta y la demanda real de la comunidad.
+            <Fragment set:html={t("sfl.faq.a1")} />
           </div>
         </details>
 
         <!-- Pregunta 2 -->
         <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
           <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
-            <span>¿Cómo se calculan los precios y el volumen mostrados en 0xLeñador?</span>
+            <span>{t("sfl.faq.q2")}</span>
             <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
               <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
           <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
-            Utilizamos la API pública oficial de Sunflower Land para extraer los precios suelo (Floor Price) en tiempo real. Nuestro algoritmo procesa el historial matemático de las últimas transacciones para generar gráficos de velas y calcular variaciones porcentuales exactas a 24 horas, 7 días, 30 días y hasta 180 días de antigüedad.
+            <Fragment set:html={t("sfl.faq.a2")} />
           </div>
         </details>
 
         <!-- Pregunta 3 -->
         <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
           <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
-            <span>¿Qué significan las métricas ATH y ATL en los recursos agrícolas?</span>
+            <span>{t("sfl.faq.q3")}</span>
             <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
               <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
           <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
-            <strong>ATH (All-Time High):</strong> Representa el precio más alto que ha alcanzado un recurso. Si un ítem está "Cerca del ATH", significa que está en sobrecompra y podría ser un buen momento para vender. <br/><br/>
-            <strong>ATL (All-Time Low):</strong> Es el precio histórico más bajo. Los recursos "Cerca de Mínimos" están en el fondo de su curva de precio, representando excelentes oportunidades estratégicas de compra (fase de acumulación).
+            <Fragment set:html={t("sfl.faq.a3")} />
           </div>
         </details>
 
         <!-- Pregunta 4 -->
         <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
           <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
-            <span>¿Con qué frecuencia se actualiza la tabla de precios?</span>
+            <span>{t("sfl.faq.q4")}</span>
             <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
               <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
           <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
-            La tabla y los gráficos del dashboard obtienen los datos directamente desde tu navegador al momento de cargar la página. Puedes presionar el botón de "Refrescar" en cualquier momento para volver a solicitar la información más reciente de la blockchain sin necesidad de recargar la web.
+            <Fragment set:html={t("sfl.faq.a4")} />
           </div>
         </details>
 
         <!-- Pregunta 5 -->
         <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
           <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
-            <span>¿Es seguro usar este monitor como referencia de inversión?</span>
+            <span>{t("sfl.faq.q5")}</span>
             <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
               <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
           <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
-            Sí, esta herramienta está diseñada analíticamente para ayudarte a tomar mejores decisiones comerciales (trading) dentro de la economía de SFL. Sin embargo, el mercado de criptojuegos es altamente volátil. Usa esta información visualizada como apoyo estratégico antes de comerciar grandes volúmenes de SFL tokens.
+            <Fragment set:html={t("sfl.faq.a5")} />
           </div>
         </details>
       </div>
@@ -311,7 +310,19 @@ const seo = {
   }
 </style>
 
-<script define:vars={{ sflIds, sflPowerUps }}>
+<script define:vars={{ 
+  sflIds, 
+  sflPowerUps, 
+  tTopGainers: t('sfl.dashboard.topGainers'), 
+  tNearAth: t('sfl.dashboard.nearAth'),
+  tVol: t('sfl.slider.vol'),
+  tGainer24h: t('sfl.slider.topGainer.24h'),
+  tGainer30d: t('sfl.slider.topGainer.30d'),
+  tGainer180d: t('sfl.slider.topGainer.180d'),
+  tNearAtl: t('sfl.slider.nearAtl'),
+  tTooltipAth: t('sfl.slider.tooltip.ath'),
+  tTooltipAtl: t('sfl.slider.tooltip.atl')
+}}>
   const searchInput = document.getElementById("searchInput");
   const searchIcon = document.getElementById("searchIcon");
   const clearSearchBtn = document.getElementById("clearSearchBtn");
@@ -573,9 +584,9 @@ const seo = {
 
     document.getElementById("dashTopVolume").innerHTML = `
       <div class="flex flex-col h-full justify-center gap-1.5 lg:gap-2">
-        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + ' vol' : '', false)}
+        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + tVol : '', false)}
         ${topVolPowerUp ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
-        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + ' vol' : '', true)}
+        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + tVol : '', true)}
       </div>
     `;
 
@@ -589,10 +600,10 @@ const seo = {
     };
 
     const slidesData = [
-      { title: "Mayor Ganador 24H", res: getTopGainer("1d", false), pwup: getTopGainer("1d", true) },
-      { title: "Mayor Ganador 7D", res: getTopGainer("7d", false), pwup: getTopGainer("7d", true) },
-      { title: "Mayor Ganador 30D", res: getTopGainer("30d", false), pwup: getTopGainer("30d", true) },
-      { title: "Mayor Ganador 180D", res: getTopGainer("180d", false), pwup: getTopGainer("180d", true) }
+      { title: tGainer24h, res: getTopGainer("1d", false), pwup: getTopGainer("1d", true) },
+      { title: tTopGainers, res: getTopGainer("7d", false), pwup: getTopGainer("7d", true) },
+      { title: tGainer30d, res: getTopGainer("30d", false), pwup: getTopGainer("30d", true) },
+      { title: tGainer180d, res: getTopGainer("180d", false), pwup: getTopGainer("180d", true) }
     ];
 
     let carouselHTML = '';
@@ -636,24 +647,24 @@ const seo = {
 
     const extremesSlides = [
       {
-        title: "Cerca del ATH (180d)",
+        title: tNearAth,
         icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
         colorClass: "text-emerald-500",
         borderClass: "border-emerald-500/30",
         shadowClass: "shadow-[0_0_10px_rgba(16,185,129,0.15)]",
         res: allAth.filter(i => !i.isPowerUp).slice(0, 4),
         pwup: allAth.filter(i => i.isPowerUp).slice(0, 4),
-        tooltipSuffix: "del ATH"
+        tooltipSuffix: tTooltipAth
       },
       {
-        title: "Cerca de Mínimos (180D)",
+        title: tNearAtl,
         icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>',
         colorClass: "text-red-500",
         borderClass: "border-red-500/30",
         shadowClass: "shadow-[0_0_10px_rgba(239,68,68,0.15)]",
         res: allAtl.filter(i => !i.isPowerUp).slice(0, 4),
         pwup: allAtl.filter(i => i.isPowerUp).slice(0, 4),
-        tooltipSuffix: "del ATL"
+        tooltipSuffix: tTooltipAtl
       }
     ];
 
