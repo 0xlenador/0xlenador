@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content"
 import Layout from "../../layouts/Layout.astro"
 import FaqAccordion from "../../components/FaqAccordion.astro"
-import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -41,9 +41,8 @@ const assetsData = [
   {
     ticker: "BTC",
     name: "Bitcoin",
-    category: "Hard Money / Reserva",
-    thesis:
-      "El activo base de escasez absoluta. Cobertura definitiva contra la degradación de monedas fiat tradicionales.",
+    category: t("blog.assets.btc.cat"),
+    thesis: t("blog.assets.btc.thesis"),
     colorClass:
       "from-amber-500/5 to-terminal-surface/10 border-amber-500/10 hover:border-amber-500/30 text-amber-400",
     link: "/activos/bitcoin",
@@ -51,9 +50,8 @@ const assetsData = [
   {
     ticker: "ETH",
     name: "Ethereum",
-    category: "L1 de Liquidación",
-    thesis:
-      "La computadora descentralizada global. Captura valor real de comisiones mediante la quema de su propio suministro.",
+    category: t("blog.assets.eth.cat"),
+    thesis: t("blog.assets.eth.thesis"),
     colorClass:
       "from-indigo-500/5 to-terminal-surface/10 border-indigo-500/10 hover:border-indigo-500/30 text-indigo-400",
     link: "/activos/ethereum",
@@ -63,14 +61,14 @@ const assetsData = [
 // Listado de próximos análisis planificados (Estructura de Garaje/Próximamente)
 const proximosArticulos = [
   {
-    title: "Auditoría de Contratos Inteligentes: Filtros de Seguridad para Burner Wallets",
-    category: "Seguridad",
-    desc: "Cómo leer trazas básicas en Etherscan y detectar funciones maliciosas de drenado antes de interactuar con un nuevo protocolo.",
+    title: t("blog.pipeline.item1.title"),
+    category: t("blog.pipeline.item1.cat"),
+    desc: t("blog.pipeline.item1.desc"),
   },
   {
-    title: "Flujo de Caja Descontado (DCF) Aplicado a Plataformas de Liquidación L1",
-    category: "Modelado",
-    desc: "Adaptación de las métricas tradicionales de Benjamin Graham para valuar la captura de valor real por tarifas de gas on-chain.",
+    title: t("blog.pipeline.item2.title"),
+    category: t("blog.pipeline.item2.cat"),
+    desc: t("blog.pipeline.item2.desc"),
   },
 ]
 ---
@@ -86,23 +84,36 @@ const proximosArticulos = [
     <!-- Cabecera de la sección -->
     <header class="mb-16 md:mb-24">
       <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 mb-3 block"
-        >{t("blog.breadcrumb")}</span
+        >{t("blog.ui.eyebrow")}</span
       >
       <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-none">
-        {t("blog.heading")} <span class="text-terminal-secondary font-light font-serif italic"
-          >{t("blog.heading.accent")}</span
+        {t("blog.ui.title")} <span class="text-terminal-secondary font-light font-serif italic"
+          >{t("blog.ui.subtitle")}</span
         >
       </h1>
-      <p class="text-sm text-terminal-secondary max-w-xl mt-4 leading-relaxed font-light">
-        {t("blog.intro")}
+      <p class="text-sm text-terminal-secondary max-w-xl mt-4 leading-relaxed font-light mb-8">
+        {t("blog.ui.desc")}
       </p>
+      {lang === 'en' && (
+        <div class="bg-blue-900/20 border border-blue-500/30 text-blue-300 px-4 py-3 rounded mb-8 text-sm flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02] cursor-default">
+          <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+          <p>{t('blog.banner.text')}</p>
+        </div>
+      )}
     </header>
 
     <!-- Artículo Destacado -->
     {
       featuredPost && (
         <section class="mb-20 md:mb-28">
-          <a href={`/blog/${featuredPost.id}`} class="group block">
+          <a href={getLocalizedPath(`/blog/${featuredPost.id}`, lang)} class="group block relative overflow-hidden rounded-2xl">
+            {lang === 'en' && (
+              <div class="absolute inset-0 z-20 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl">
+                <p class="text-blue-300 font-semibold text-center px-6 text-sm">
+                  {t('blog.card.overlay')}
+                </p>
+              </div>
+            )}
             <div class="relative bg-terminal-surface/10 border border-terminal-border/80 rounded-2xl p-8 md:p-12 hover:border-emerald-500/30 transition-all duration-700 overflow-hidden shadow-2xl min-h-[420px] md:min-h-[480px] flex items-end">
               {featuredPost.data.coverImage ? (
                 <>
@@ -123,12 +134,12 @@ const proximosArticulos = [
               <div class="w-full max-w-4xl relative z-10 space-y-4">
                 <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono uppercase tracking-wider">
                   <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-md font-semibold">
-                    {t("blog.post.main")}
+                    {t("blog.ui.mainCard")}
                   </span>
                   <span class="text-terminal-border-subtle">•</span>
                   <span class="text-terminal-muted">{formatDate(featuredPost.data.date)}</span>
                   <span class="text-terminal-border-subtle">•</span>
-                  <span class="text-terminal-muted">{featuredPost.data.readTime} {t("blog.post.read")}</span>
+                  <span class="text-terminal-muted">{featuredPost.data.readTime} {t("blog.ui.read")}</span>
                 </div>
 
                 <h2 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors duration-300 leading-snug">
@@ -140,7 +151,7 @@ const proximosArticulos = [
                 </p>
 
                 <div class="pt-4 flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 group-hover:translate-x-1 transition-transform duration-300">
-                  {t("blog.post.start")}
+                  {t("blog.ui.cta")}
                 </div>
               </div>
             </div>
@@ -155,14 +166,21 @@ const proximosArticulos = [
         <section class="mb-24">
           <div class="flex items-center justify-between mb-8">
             <h2 class="text-xs font-mono text-terminal-muted uppercase tracking-[0.4em] font-semibold">
-              {t("blog.history.title")}
+              {t("blog.ui.past")}
             </h2>
             <div class="h-px flex-grow ml-6 bg-terminal-border/80" />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {regularPosts.map((post) => (
-              <a href={`/blog/${post.id}`} class="group block h-full">
+              <a href={getLocalizedPath(`/blog/${post.id}`, lang)} class="group block h-full relative overflow-hidden rounded-2xl">
+                {lang === 'en' && (
+                  <div class="absolute inset-0 z-20 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl">
+                    <p class="text-blue-300 font-semibold text-center px-6 text-sm">
+                      {t('blog.card.overlay')}
+                    </p>
+                  </div>
+                )}
                 <div class="bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl hover:border-emerald-500/20 hover:bg-terminal-surface/35 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden">
                   {post.data.coverImage && (
                     <div class="mb-5 -mx-6 -mt-6 aspect-video overflow-hidden border-b border-terminal-border/50">
@@ -191,9 +209,9 @@ const proximosArticulos = [
                     </div>
 
                     <div class="pt-4 mt-6 border-t border-terminal-border/50 flex items-center justify-between font-mono text-[9px] text-terminal-muted">
-                      <span class="uppercase tracking-wider">{post.data.readTime} {t("blog.post.read")}</span>
+                      <span class="uppercase tracking-wider">{post.data.readTime} {t("blog.ui.read")}</span>
                       <span class="font-bold uppercase tracking-widest text-emerald-400 group-hover:translate-x-0.5 transition-transform">
-                        {t("blog.history.access")}
+                        {t("blog.ui.cta")}
                       </span>
                     </div>
                   </div>
@@ -257,7 +275,7 @@ const proximosArticulos = [
       <div id="random-assets-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {
           assetsData.map((asset) => (
-            <a href={asset.link} class="group block h-full">
+            <a href={getLocalizedPath(asset.link, lang)} class="group block h-full">
               <div
                 class={`bg-gradient-to-br ${asset.colorClass} border p-6 rounded-2xl flex flex-col justify-between h-full hover:bg-terminal-surface/25 transition-all duration-300 relative overflow-hidden`}
               >
