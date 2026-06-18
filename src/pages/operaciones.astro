@@ -3,10 +3,14 @@ import Layout from "../layouts/Layout.astro"
 import FaqAccordion from "../components/FaqAccordion.astro"
 import { getCollection } from "astro:content"
 
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 const seo = {
-  title: "Operaciones | 0xLeñador — Guías Operativas DeFi, Airdrops y Web3",
-  description:
-    "Guías paso a paso de las operaciones del día a día en Web3: farming de airdrops, gestión de posiciones DeFi, juegos on-chain y más. Documentadas con recursos y herramientas reales.",
+  title: t("ops.seo.title"),
+  description: t("ops.seo.description"),
   image: "/img/meta/home.webp",
 }
 
@@ -47,12 +51,12 @@ const categoriaConfig: Record<string, { color: string; badge: string; icon: stri
 // Colores del estado
 const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
   activa: {
-    label: "Activa",
+    label: t("ops.state.active"),
     dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]",
     text: "text-emerald-400",
   },
-  completada: { label: "Completada", dot: "bg-blue-500", text: "text-blue-400" },
-  expirada: { label: "Expirada", dot: "bg-red-500", text: "text-red-400" },
+  completada: { label: t("ops.state.completed"), dot: "bg-blue-500", text: "text-blue-400" },
+  expirada: { label: t("ops.state.expired"), dot: "bg-red-500", text: "text-red-400" },
 }
 
 // Colores de dificultad
@@ -73,24 +77,20 @@ const formatDeadline = (fecha: string) =>
 
 const faqItems = [
   {
-    pregunta: "¿Estas guías son recomendaciones de inversión?",
-    respuesta:
-      "No. Las guías documentan las operaciones y actividades que 0xLeñador realiza en su propio portafolio. Son registros de actividad, no asesoría financiera. Cada usuario es responsable de su capital y decisiones.",
+    pregunta: t("ops.faq.q1"),
+    respuesta: t("ops.faq.a1"),
   },
   {
-    pregunta: "¿Qué diferencia hay entre una operación 'Airdrop' y 'DeFi'?",
-    respuesta:
-      "Las guías de 'Airdrop' documentan actividades cuyo objetivo principal es acumular puntos o tokens futuros de un protocolo (farming). Las de 'DeFi' se enfocan en la gestión activa de posiciones de liquidez, staking o yields. Una categoría 'Mixta' combina ambas —es común en protocolos que requieren LP + interacción social.",
+    pregunta: t("ops.faq.q2"),
+    respuesta: t("ops.faq.a2"),
   },
   {
-    pregunta: "¿Con qué frecuencia se actualizan las guías?",
-    respuesta:
-      "Las guías se actualizan cuando cambian las condiciones del protocolo (nuevas temporadas, cambios en quests, nuevas plataformas). El estado 'activa' indica que la guía corresponde a una oportunidad vigente. 'Completada' significa que la temporada o campaña ya cerró.",
+    pregunta: t("ops.faq.q3"),
+    respuesta: t("ops.faq.a3"),
   },
   {
-    pregunta: "¿Por qué algunas guías incluyen botones de wallets o exchanges?",
-    respuesta:
-      "Para cada guía se indican las herramientas necesarias directamente desde el Directorio de 0xLeñador. Si el enlace tiene un referido, se indica claramente con la etiqueta 'ref'. Nunca se fuerza el uso de ninguna plataforma específica.",
+    pregunta: t("ops.faq.q4"),
+    respuesta: t("ops.faq.a4"),
   },
 ]
 ---
@@ -100,14 +100,13 @@ const faqItems = [
     <!-- Header -->
     <header class="mb-14">
       <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
-        Hub / Operaciones
+        {t("ops.breadcrumb")}
       </p>
       <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Guías <span class="text-emerald-500">Operativas</span>
+        {t("ops.heading")} <span class="text-emerald-500">{t("ops.heading.accent")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Documentación paso a paso de las actividades del día a día en Web3: farming de airdrops,
-        gestión de posiciones DeFi, juegos on-chain y más. Con recursos y herramientas reales.
+        {t("ops.intro")}
       </p>
     </header>
 
@@ -115,10 +114,10 @@ const faqItems = [
     <div class="grid grid-cols-3 gap-4 mb-14">
       {
         [
-          { label: "Guías activas", value: guiasActivas.length, color: "text-emerald-400" },
-          { label: "Total guías", value: guias.length, color: "text-white" },
+          { label: t("ops.stat.active"), value: guiasActivas.length, color: "text-emerald-400" },
+          { label: t("ops.stat.total"), value: guias.length, color: "text-white" },
           {
-            label: "Categorías",
+            label: t("ops.stat.categories"),
             value: Object.keys(categoriaConfig).length,
             color: "text-terminal-secondary",
           },
@@ -145,7 +144,7 @@ const faqItems = [
             <section class="mb-14">
               <div class="flex items-center gap-4 mb-6">
                 <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-                  Guía prioritaria
+                  {t("ops.guide.priority")}
                 </h2>
                 <div class="h-px flex-grow bg-terminal-border/50" />
               </div>
@@ -210,7 +209,7 @@ const faqItems = [
                       ● Dificultad {guiaDestacada.data.dificultad}
                     </span>
                     <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
-                      Abrir guía →
+                      {t("ops.guide.open")}
                     </span>
                   </div>
                 </div>
@@ -226,11 +225,11 @@ const faqItems = [
         <section class="mb-14">
           <div class="flex items-center gap-4 mb-6">
             <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              En seguimiento
+              {t("ops.guide.tracking")}
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <span class="text-[10px] font-mono text-terminal-subtle">
-              {guiasActivas.length - 1} guías
+              {guiasActivas.length - 1} {t("ops.guide.count")}
             </span>
           </div>
 
@@ -270,7 +269,7 @@ const faqItems = [
                     )}
                     {guia.data.tiempoEstimado && <span>⏱ {guia.data.tiempoEstimado}</span>}
                     <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold">
-                      Ver →
+                      {t("ops.guide.view")}
                     </span>
                   </div>
                 </a>
@@ -287,11 +286,11 @@ const faqItems = [
         <section class="mb-14">
           <div class="flex items-center gap-4 mb-6">
             <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              Historial
+              {t("ops.guide.history")}
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <span class="text-[10px] font-mono text-terminal-subtle">
-              {guiasHistoricas.length} guías
+              {guiasHistoricas.length} {t("ops.guide.count")}
             </span>
           </div>
 
@@ -331,18 +330,18 @@ const faqItems = [
       guiasActivas.length === 0 && guiasHistoricas.length === 0 && (
         <div class="hub-card p-12 text-center">
           <p class="text-terminal-subtle text-sm font-mono">
-            // Ninguna guía activa por el momento.
+            {t("ops.empty.text")}
           </p>
           <p class="text-terminal-muted text-xs mt-2">
-            Próximamente se agregarán guías de Soneium, Sunflower Land y otros protocolos.
+            {t("ops.empty.subtext")}
           </p>
         </div>
       )
     }
 
     <FaqAccordion
-      titulo="Sobre las Guías"
-      subtitulo="Operaciones y actividades"
+      titulo={t("ops.faq.title")}
+      subtitulo={t("ops.faq.subtitle")}
       startId={600}
       items={faqItems}
     />

@@ -6,12 +6,15 @@ import TickerSection from "../components/home/TickerSection.astro"
 import PremisaSection from "../components/home/PremisaSection.astro"
 
 import { getCollection } from "astro:content"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 // Metadatos de la página principal
 const seo = {
-  title: "0xLeñador | Hub Operativo — Herramientas, Activos y Operaciones Web3",
-  description:
-    "Centro de comando técnico de 0xLeñador: herramientas de análisis, watchlist de activos, bitácora de operaciones y directorio de recursos Web3 y mercados tradicionales.",
+  title: t("home.seo.title"),
+  description: t("home.seo.description"),
   image: "/img/meta/home.webp",
 }
 
@@ -22,9 +25,8 @@ const schema = {
   name: "0x Leñador",
   url: "https://0xlenador.xyz/",
   image: "https://0xlenador.xyz/img/44.webp",
-  jobTitle: "Operador Web3 e Investigador de Mercados",
-  description:
-    "Hub Operativo de herramientas, directorio de recursos y seguimiento de operaciones en mercados Web3 y tradicionales.",
+  jobTitle: t("home.schema.jobTitle"),
+  description: t("home.schema.description"),
   sameAs: [
     "https://www.youtube.com/@0xlenadorgamefi",
     "https://x.com/0xlenador",
@@ -45,9 +47,9 @@ const modules = [
   {
     id: "herramientas",
     href: "/herramientas",
-    titulo: "Herramientas",
-    descripcion: "Riskfolio, Valor Intrínseco y Directorios.",
-    count: "3 utilidades",
+    titulo: t("home.module.herramientas.title"),
+    descripcion: t("home.module.herramientas.desc"),
+    count: t("home.module.herramientas.count"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>`,
     accentClass: "border-emerald-500/30 hover:border-emerald-500/60",
     badgeClass: "text-emerald-400 bg-emerald-500/10",
@@ -55,9 +57,9 @@ const modules = [
   {
     id: "directorio",
     href: "/directorio",
-    titulo: "Directorio",
-    descripcion: "Exchanges, wallets, exploradores y faucets curados.",
-    count: "50+ recursos",
+    titulo: t("home.module.directorio.title"),
+    descripcion: t("home.module.directorio.desc"),
+    count: t("home.module.directorio.count"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>`,
     accentClass: "border-cyan-500/30 hover:border-cyan-500/60",
     badgeClass: "text-cyan-400 bg-cyan-500/10",
@@ -65,9 +67,9 @@ const modules = [
   {
     id: "activos",
     href: "/activos",
-    titulo: "Activos",
-    descripcion: "Watchlist de mercados tradicionales y Web3 en seguimiento.",
-    count: "6 activos",
+    titulo: t("home.module.activos.title"),
+    descripcion: t("home.module.activos.desc"),
+    count: t("home.module.activos.count"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>`,
     accentClass: "border-orange-500/30 hover:border-orange-500/60",
     badgeClass: "text-orange-400 bg-orange-500/10",
@@ -75,9 +77,9 @@ const modules = [
   {
     id: "operaciones",
     href: "/operaciones",
-    titulo: "Operaciones",
-    descripcion: "Hub de guías operativas: airdrops, DeFi y gaming.",
-    count: `${guiasActivas.length} guías activas`,
+    titulo: t("home.module.operaciones.title"),
+    descripcion: t("home.module.operaciones.desc"),
+    count: `${guiasActivas.length} ${guiasActivas.length === 1 ? t("home.module.operaciones.count.singular") : t("home.module.operaciones.count.plural")}`,
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>`,
     accentClass: "border-violet-500/30 hover:border-violet-500/60",
     badgeClass: "text-violet-400 bg-violet-500/10",
@@ -86,29 +88,24 @@ const modules = [
 
 const faqItems = [
   {
-    pregunta: "¿Qué es 0xLeñador?",
-    respuesta:
-      "0xLeñador es un Hub Operativo personal: un centro de comando técnico para el seguimiento de activos, bitácora de operaciones y repositorio de herramientas de análisis en mercados Web3 y tradicionales. No es un servicio de asesoría ni una academia.",
+    pregunta: t("home.faq.q1"),
+    respuesta: t("home.faq.a1"),
   },
   {
-    pregunta: "¿Este sitio ofrece señales o consejos de compra?",
-    respuesta:
-      "No. Todo el contenido publicado tiene fines estrictamente educativos, informativos y de documentación personal. Las posiciones y guías mostradas en la bitácora son operaciones propias documentadas para transparencia, en ningún caso representan señales de compra o venta.",
+    pregunta: t("home.faq.q2"),
+    respuesta: t("home.faq.a2"),
   },
   {
-    pregunta: "¿Qué encontrarás en nuestro sitio?",
-    respuesta:
-      "Encontrarás una colección completa de utilidades Web3: herramientas para el cálculo y gestión de riesgo, un directorio curado de dApps, guías operativas paso a paso (airdrops, DeFi, gaming), faucets, calculadoras intrínsecas y la tesis de inversión que fundamenta el portafolio.",
+    pregunta: t("home.faq.q3"),
+    respuesta: t("home.faq.a3"),
   },
   {
-    pregunta: "¿Con qué frecuencia se actualizan las guías operativas?",
-    respuesta:
-      "El Hub se mantiene en constante evolución. Las guías de Airdrops, DeFi y Gaming se actualizan de forma regular o tan pronto como los protocolos anuncian nuevas misiones, fases de desarrollo o se acercan fechas límite (deadlines) importantes.",
+    pregunta: t("home.faq.q4"),
+    respuesta: t("home.faq.a4"),
   },
   {
-    pregunta: "¿Son seguros los enlaces y dApps listados?",
-    respuesta:
-      "Todo el directorio y los enlaces provistos en las guías son curados manualmente apuntando exclusivamente a las fuentes oficiales de los protocolos. Sin embargo, el ecosistema Web3 conlleva riesgos; se recomienda aplicar siempre buenas prácticas, como revocar permisos regularmente y usar 'burner wallets' para tareas de farming.",
+    pregunta: t("home.faq.q5"),
+    respuesta: t("home.faq.a5"),
   },
 ]
 ---
@@ -124,14 +121,14 @@ const faqItems = [
     <!-- ─── HERO ─── -->
     <HeroSection
       phrases={[
-        "Hub Operativo 0xLeñador",
-        "Herramientas de análisis",
-        "Directorio de recursos Web3",
-        "Watchlist de activos",
-        "Bitácora de operaciones",
+        t("home.hero.phrase1"),
+        t("home.hero.phrase2"),
+        t("home.hero.phrase3"),
+        t("home.hero.phrase4"),
+        t("home.hero.phrase5"),
       ]}
-      ctaPrimario={{ texto: "Ver directorio", href: "/directorio" }}
-      ctaSecundario={{ texto: "Bitácora de Ops", href: "/operaciones" }}
+      ctaPrimario={{ texto: t("home.hero.cta.primary"), href: "/directorio" }}
+      ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: "/operaciones" }}
     />
   </main>
 
@@ -148,7 +145,7 @@ const faqItems = [
         <h2
           class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]"
         >
-          Centro de Comando
+          {t("home.section.command")}
         </h2>
         <div class="h-px flex-grow bg-terminal-border/50"></div>
       </div>
@@ -201,14 +198,14 @@ const faqItems = [
         <section class="mb-20">
           <div class="flex items-center gap-4 mb-6">
             <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              Status: Guías Operativas
+              {t("home.section.guides")}
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <a
               href="/operaciones"
               class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
-              Ver todas →
+              {t("home.section.guides.viewAll")}
             </a>
           </div>
 
@@ -266,14 +263,14 @@ const faqItems = [
         <section class="mb-20">
           <div class="flex items-center gap-4 mb-6">
             <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              Últimas del Blog
+              {t("home.section.blog")}
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <a
               href="/blog"
               class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
-              Ver todos →
+              {t("home.section.blog.viewAll")}
             </a>
           </div>
 
@@ -305,7 +302,7 @@ const faqItems = [
                   {post.data.description}
                 </p>
                 <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
-                  Leer artículo →
+                  {t("home.blog.read")}
                 </span>
               </a>
             ))}
@@ -315,15 +312,15 @@ const faqItems = [
     }
 
     <FaqAccordion
-      titulo="Preguntas Frecuentes"
-      subtitulo="Sobre el Hub y la metodología"
+      titulo={t("home.faq.title")}
+      subtitulo={t("home.faq.subtitle")}
       startId={101}
       items={faqItems}
     />
 
     <div class="mt-20 text-center">
       <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
-        Hub Operativo · Build in Public
+        {t("home.footer.tagline")}
       </p>
       <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
     </div>

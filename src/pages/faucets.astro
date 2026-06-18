@@ -2,11 +2,14 @@
 import Layout from "../layouts/Layout.astro"
 import FaqAccordion from "../components/FaqAccordion.astro"
 import faucetsData from "../data/faucets.json"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seo = {
-  title: "Faucets Cripto Mainnet & Testnet | 0xLeñador — Tokens Gratis",
-  description:
-    "Directorio completo de faucets de criptomonedas. Obtén tokens de prueba para Ethereum Sepolia, Monad, Base, Solana y más de 30 redes. Esencial para desarrollo Web3 y farming de airdrops.",
+  title: t("faucets.seo.title"),
+  description: t("faucets.seo.description"),
   image: "/img/meta/faucets.webp",
 }
 
@@ -14,29 +17,24 @@ const seo = {
 
 const faqItems = [
   {
-    pregunta: "¿Qué es un faucet de criptomonedas?",
-    respuesta:
-      "Es un servicio que distribuye pequeñas cantidades de tokens de forma gratuita. Los faucets de testnet son esenciales para desarrollo Web3: permiten pagar gas y probar contratos inteligentes sin arriesgar capital real. Los de mainnet distribuyen criptomonedas reales en cantidades muy pequeñas, generalmente a través de referidos o publicidad.",
+    pregunta: t("faucets.faq.q1"),
+    respuesta: t("faucets.faq.a1"),
   },
   {
-    pregunta: "¿Cuál es la diferencia entre faucets mainnet y testnet?",
-    respuesta:
-      "Los faucets testnet distribuyen tokens sin valor económico, esenciales para probar contratos inteligentes y dApps sin arriesgar capital real. Los faucets mainnet distribuyen criptomonedas reales (Satoshis, SOL, TRX) en cantidades pequeñas, generalmente como incentivo a través de links de referido.",
+    pregunta: t("faucets.faq.q2"),
+    respuesta: t("faucets.faq.a2"),
   },
   {
-    pregunta: "¿Por qué algunos faucets de testnet me piden autenticar con mi wallet o cuenta?",
-    respuesta:
-      "Es una medida anti-bot. Muchos faucets ahora requieren que la wallet principal tenga un saldo mínimo en mainnet o que te autentiques vía GitHub, redes sociales o Gitcoin Passport. Esto no implica riesgo siempre y cuando el sitio solo lea tu dirección pública (read-only). Nunca firmes transacciones ni apruebes permisos en faucets.",
+    pregunta: t("faucets.faq.q3"),
+    respuesta: t("faucets.faq.a3"),
   },
   {
-    pregunta: "¿Es seguro usar estos faucets?",
-    respuesta:
-      "Los faucets de testnet listados aquí son de fuentes reconocidas (Alchemy, Google Cloud, Chainlink, etc.). Para interactuar con cualquier faucet, la mejor práctica es usar una 'burner wallet': una billetera secundaria vacía creada exclusivamente para ese propósito. Nunca uses tu wallet principal con fondos reales.",
+    pregunta: t("faucets.faq.q4"),
+    respuesta: t("faucets.faq.a4"),
   },
   {
-    pregunta: "¿Con qué frecuencia se actualiza este directorio?",
-    respuesta:
-      "El directorio se revisa mensualmente. Los ecosistemas de testnet cambian con frecuencia: algunas redes deprecan sus testnets (como Ethereum Goerli) y lanzan nuevas (Holesky, Hoodi). Si detectas un faucet caído o tienes una sugerencia, puedes reportarlo vía Telegram o X (@0xlenador).",
+    pregunta: t("faucets.faq.q5"),
+    respuesta: t("faucets.faq.a5"),
   },
 ]
 ---
@@ -45,18 +43,16 @@ const faqItems = [
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
     <!-- Breadcrumb -->
     <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
-      Directorio / Faucets
+      {t("faucets.breadcrumb")}
     </p>
 
     <!-- Header -->
     <header class="mb-10 border-b border-terminal-border/50 pb-8">
       <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
-        Listado de Faucets <span class="text-emerald-500"> Mainnet & Testnet</span>
+        {t("faucets.heading")} <span class="text-emerald-500"> {t("faucets.heading.accent")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light">
-        Explora todos los sitios web de faucets de criptomonedas disponibles en el ecosistema
-        blockchain, acumula criptomonedas gratis para farmear tus airdrops y/o desarrollar tus
-        proyectos.
+        {t("faucets.intro")}
       </p>
     </header>
 
@@ -79,14 +75,14 @@ const faqItems = [
           type="text"
           id="faucet-search"
           class="w-full bg-terminal-bg border border-terminal-border focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 outline-none rounded-xl pl-10 pr-4 py-3 text-white text-sm font-mono placeholder:text-terminal-muted transition-all"
-          placeholder="Buscar red... (Sepolia, Monad, Solana...)"
+          placeholder={t("faucets.search.placeholder")}
         />
       </div>
 
       <div class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border">
         <button
           class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold transition-all bg-emerald-600 text-white"
-          data-filter="all">Todos</button
+          data-filter="all">{t("faucets.filter.all")}</button
         >
         <button
           class="tab-btn px-5 py-2 rounded-lg text-sm font-mono font-bold text-terminal-muted hover:text-white transition-all"
@@ -187,11 +183,11 @@ const faqItems = [
 
     <!-- FAQ -->
     <div class="border-t border-terminal-border/60 pt-14">
-      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Sobre los Faucets</h2>
-      <p class="text-xs text-terminal-subtle mb-8">Guía de uso y buenas prácticas de seguridad.</p>
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">{t("faucets.faq.title")}</h2>
+      <p class="text-xs text-terminal-subtle mb-8">{t("faucets.faq.subtitle")}</p>
       <FaqAccordion
-        titulo="Preguntas sobre Faucets"
-        subtitulo="Uso, seguridad y actualización"
+        titulo={t("faucets.faq.acc.title")}
+        subtitulo={t("faucets.faq.acc.subtitle")}
         startId={600}
         items={faqItems}
       />

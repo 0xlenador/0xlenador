@@ -2,6 +2,10 @@
 import { getCollection } from "astro:content"
 import Layout from "../layouts/Layout.astro"
 import FaqAccordion from "../components/FaqAccordion.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 // Traemos todos los artículos en tiempo de compilación desde src/content/blog/
 const allPosts = await getCollection("blog")
@@ -16,9 +20,8 @@ const featuredPost = sortedPosts[0]
 const regularPosts = sortedPosts.slice(1)
 
 const seo = {
-  title: "Artículos e Investigación de Capital | 0xLeñador",
-  description:
-    "Espacio de divulgación educativa, tokenomía, análisis macroeconómico y tesis fundamentales de inversión en Web3.",
+  title: t("blog.seo.title"),
+  description: t("blog.seo.description"),
   url: "https://0xlenador.xyz/blog",
   image: "/img/meta/blog.webp",
 }
@@ -83,16 +86,15 @@ const proximosArticulos = [
     <!-- Cabecera de la sección -->
     <header class="mb-16 md:mb-24">
       <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 mb-3 block"
-        >Bitácora de Investigación</span
+        >{t("blog.breadcrumb")}</span
       >
       <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-none">
-        Análisis <span class="text-terminal-secondary font-light font-serif italic"
-          >y Tesis de Capital</span
+        {t("blog.heading")} <span class="text-terminal-secondary font-light font-serif italic"
+          >{t("blog.heading.accent")}</span
         >
       </h1>
       <p class="text-sm text-terminal-secondary max-w-xl mt-4 leading-relaxed font-light">
-        Perspectivas independientes sobre gestión patrimonial, análisis fundamental de activos Web3
-        y modelado económico de L1s.
+        {t("blog.intro")}
       </p>
     </header>
 
@@ -121,12 +123,12 @@ const proximosArticulos = [
               <div class="w-full max-w-4xl relative z-10 space-y-4">
                 <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono uppercase tracking-wider">
                   <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-md font-semibold">
-                    Análisis Principal
+                    {t("blog.post.main")}
                   </span>
                   <span class="text-terminal-border-subtle">•</span>
                   <span class="text-terminal-muted">{formatDate(featuredPost.data.date)}</span>
                   <span class="text-terminal-border-subtle">•</span>
-                  <span class="text-terminal-muted">{featuredPost.data.readTime} de lectura</span>
+                  <span class="text-terminal-muted">{featuredPost.data.readTime} {t("blog.post.read")}</span>
                 </div>
 
                 <h2 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors duration-300 leading-snug">
@@ -138,8 +140,7 @@ const proximosArticulos = [
                 </p>
 
                 <div class="pt-4 flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 group-hover:translate-x-1 transition-transform duration-300">
-                  Comenzar lectura
-                  <span>→</span>
+                  {t("blog.post.start")}
                 </div>
               </div>
             </div>
@@ -154,7 +155,7 @@ const proximosArticulos = [
         <section class="mb-24">
           <div class="flex items-center justify-between mb-8">
             <h2 class="text-xs font-mono text-terminal-muted uppercase tracking-[0.4em] font-semibold">
-              Investigaciones Anteriores
+              {t("blog.history.title")}
             </h2>
             <div class="h-px flex-grow ml-6 bg-terminal-border/80" />
           </div>
@@ -190,9 +191,9 @@ const proximosArticulos = [
                     </div>
 
                     <div class="pt-4 mt-6 border-t border-terminal-border/50 flex items-center justify-between font-mono text-[9px] text-terminal-muted">
-                      <span class="uppercase tracking-wider">{post.data.readTime} lectura</span>
+                      <span class="uppercase tracking-wider">{post.data.readTime} {t("blog.post.read")}</span>
                       <span class="font-bold uppercase tracking-widest text-emerald-400 group-hover:translate-x-0.5 transition-transform">
-                        Acceder →
+                        {t("blog.history.access")}
                       </span>
                     </div>
                   </div>
@@ -208,14 +209,13 @@ const proximosArticulos = [
     <section class="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-terminal-border pt-16">
       <div class="space-y-4">
         <span class="text-xs font-mono uppercase tracking-[0.4em] text-cyan-500 block"
-          >En Desarrollo</span
+          >{t("blog.pipeline.tag")}</span
         >
         <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">
-          Pipeline de Investigación
+          {t("blog.pipeline.title")}
         </h2>
         <p class="text-terminal-secondary text-sm leading-relaxed max-w-sm font-light">
-          Temas actualmente en fase de modelado financiero, auditoría de código o análisis
-          fundamental macroeconómico.
+          {t("blog.pipeline.desc")}
         </p>
       </div>
       <div class="space-y-6">
@@ -227,7 +227,7 @@ const proximosArticulos = [
                   {proximo.category}
                 </span>
                 <span class="text-terminal-subtle">•</span>
-                <span class="text-terminal-subtle">Planificado</span>
+                <span class="text-terminal-subtle">{t("blog.pipeline.planned")}</span>
               </div>
               <h3 class="text-base font-bold text-terminal-secondary leading-snug mb-2">
                 {proximo.title}
@@ -243,14 +243,13 @@ const proximosArticulos = [
     <section class="mt-20 border-t border-terminal-border pt-16">
       <div class="mb-8">
         <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 block mb-2"
-          >Monitor Dinámico</span
+          >{t("blog.monitor.tag")}</span
         >
         <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">
-          Activos Bajo Seguimiento
+          {t("blog.monitor.title")}
         </h2>
         <p class="text-terminal-secondary text-sm leading-relaxed max-w-xl mt-2 font-light">
-          Una muestra aleatoria de activos dentro del radar de investigación de 0xLeñador para esta
-          sesión.
+          {t("blog.monitor.desc")}
         </p>
       </div>
 
@@ -282,7 +281,7 @@ const proximosArticulos = [
                 </div>
                 <div class="pt-4 mt-6 border-t border-terminal-border/60 flex items-center justify-between text-[9px] font-mono text-terminal-muted">
                   <span class="font-bold tracking-wider text-emerald-400 group-hover:text-emerald-300">
-                    ACCEDER ↗
+                    {t("blog.monitor.access")}
                   </span>
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 </div>
@@ -294,29 +293,25 @@ const proximosArticulos = [
     </section>
 
     <FaqAccordion
-      titulo="Preguntas Frecuentes"
-      subtitulo="Sobre la Bitácora de Investigación"
+      titulo={t("blog.faq.title")}
+      subtitulo={t("blog.faq.subtitle")}
       startId={700}
       items={[
         {
-          pregunta: "¿Con qué frecuencia se publican artículos?",
-          respuesta:
-            "No hay una frecuencia fija. Los artículos se publican cuando el análisis está lo suficientemente maduro para ser compartido. La calidad y el rigor técnico tienen prioridad sobre la frecuencia de publicación.",
+          pregunta: t("blog.faq.q1"),
+          respuesta: t("blog.faq.a1"),
         },
         {
-          pregunta: "¿Los artículos son recomendaciones de inversión?",
-          respuesta:
-            "No. Todo el contenido del blog tiene fines educativos e informativos. No constituye asesoría financiera, legal ni fiscal. Cada lector es responsable de sus propias decisiones de inversión.",
+          pregunta: t("blog.faq.q2"),
+          respuesta: t("blog.faq.a2"),
         },
         {
-          pregunta: "¿Puedo sugerir un tema para investigar?",
-          respuesta:
-            "Sí. Puedes enviar sugerencias de análisis a través de Telegram (@zero0xlenador) o X (@0xlenador). Los temas con mayor demanda e interés técnico se priorizan en el pipeline de investigación.",
+          pregunta: t("blog.faq.q3"),
+          respuesta: t("blog.faq.a3"),
         },
         {
-          pregunta: "¿Qué formatos de contenido se publican?",
-          respuesta:
-            "Principalmente análisis técnicos en profundidad, guías de herramientas y tesis de inversión documentadas. No se publican señales de compra/venta, resúmenes de noticias ni contenido de opinión superficial.",
+          pregunta: t("blog.faq.q4"),
+          respuesta: t("blog.faq.a4"),
         },
       ]}
     />

@@ -2,10 +2,14 @@
 import Layout from "../layouts/Layout.astro"
 import FaqAccordion from "../components/FaqAccordion.astro"
 
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 const seo = {
-  title: "Herramientas | 0xLeñador — Utilidades para Web3 y Análisis de Capital",
-  description:
-    "Modelos de cálculo y software de análisis para Web3: Simulador de portafolio 60/40 y Calculadora de Valor Intrínseco (DCF). Herramientas 100% locales, sin registro.",
+  title: t("tools.seo.title"),
+  description: t("tools.seo.description"),
   image: "/img/meta/home.webp",
 }
 
@@ -13,75 +17,65 @@ const tools = [
   {
     id: "riskfolio",
     href: "/riskfolio",
-    titulo: "Riskfolio",
-    descripcion:
-      "Calcula la distribución matemática de tu portafolio de inversión dependiendo de tu perfil de riesgo: Conservador, Moderado o Agresivo.",
-    badge: "Modelo Paramétrico",
+    titulo: t("tools.riskfolio.title"),
+    descripcion: t("tools.riskfolio.desc"),
+    badge: t("tools.riskfolio.badge"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>`,
   },
   {
     id: "intrinseco",
     href: "/intrinseco",
-    titulo: "Valor Intrínseco",
-    descripcion:
-      "Terminal de cálculo de valor intrínseco basada en flujo de caja descontado (DCF). Evalúa si un activo cotiza por encima o por debajo de su valor real.",
-    badge: "Calculadora",
+    titulo: t("tools.intrinseco.title"),
+    descripcion: t("tools.intrinseco.desc"),
+    badge: t("tools.intrinseco.badge"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
   },
   {
     id: "sfl-mercado",
     href: "/sfl-mercado",
-    titulo: "Mercado SFL",
-    descripcion:
-      "Consulta los precios P2P en tiempo real del ecosistema de Sunflower Land. Monitorea items, wearables y recursos mediante su API oficial.",
-    badge: "Dashboard en Vivo",
+    titulo: t("tools.sfl.title"),
+    descripcion: t("tools.sfl.desc"),
+    badge: t("tools.sfl.badge"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>`,
   },
   {
     id: "sfl-mascotas",
     href: "/sfl-mascotas",
-    titulo: "Calculadora de Mascotas SFL",
-    descripcion:
-      "Calculadora interactiva P2P y guía completa de las mascotas de Sunflower Land. Evalúa la rentabilidad en vivo de las comidas, altares y recursos.",
-    badge: "Calculadora P2P",
+    titulo: t("tools.sfl-mascotas.title"),
+    descripcion: t("tools.sfl-mascotas.desc"),
+    badge: t("tools.sfl-mascotas.badge"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
   },
   {
     id: "sfl-cocinando",
     href: "/sfl-cocinando",
-    titulo: "Cocina y Recetas SFL",
-    descripcion:
-      "Terminal interactiva de recetas para optimizar el farmeo de experiencia (XP) en Sunflower Land. Consulta ingredientes, buffos y tiempos de forma estructurada.",
-    badge: "Dashboard de XP",
+    titulo: t("tools.sfl-cocinando.title"),
+    descripcion: t("tools.sfl-cocinando.desc"),
+    badge: t("tools.sfl-cocinando.badge"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>`,
   },
 ]
 
 const faqItems = [
   {
-    pregunta: "¿Cuál es la utilidad de nuestro centro de herramientas?",
-    respuesta:
-      "El objetivo de este centro es proporcionar modelos matemáticos y calculadoras estructuradas que eliminen la subjetividad y el ruido emocional al momento de evaluar activos. Estas herramientas están diseñadas para ayudarte a estructurar un portafolio equilibrado y determinar el valor real de tus inversiones mediante datos duros.",
+    pregunta: t("tools.faq.q1"),
+    respuesta: t("tools.faq.a1"),
   },
   {
-    pregunta: "¿Por qué seleccionamos estas herramientas?",
-    respuesta:
-      "Porque representan los dos pilares fundamentales de la gestión de capital profesional: la asignación de riesgo (Simulador 60/40) y la valoración fundamental (Valor Intrínseco). En lugar de abrumarte con cientos de indicadores inútiles, nos enfocamos estrictamente en lo que funciona en la práctica institucional diaria.",
+    pregunta: t("tools.faq.q2"),
+    respuesta: t("tools.faq.a2"),
   },
   {
-    pregunta: "¿Los cálculos que realizo son privados?",
-    respuesta:
-      "Sí, absolutamente. Todas las herramientas de 0xLeñador están construidas para operar de manera 100% local en tu dispositivo (Client-Side). No utilizamos bases de datos, no requerimos registro y no guardamos tu información. Una vez que cierras la pestaña, tus cálculos desaparecen.",
+    pregunta: t("tools.faq.q3"),
+    respuesta: t("tools.faq.a3"),
   },
   {
-    pregunta: "¿Son estas herramientas recomendaciones financieras?",
-    respuesta:
-      "No. Son utilidades matemáticas y analíticas. El Simulador y la Calculadora te darán resultados basados en los números que tú mismo ingreses. Es tu responsabilidad realizar tu propia investigación (DYOR) e interpretar los datos según tu perfil de riesgo.",
+    pregunta: t("tools.faq.q4"),
+    respuesta: t("tools.faq.a4"),
   },
   {
-    pregunta: "¿Puedo sugerir nuevas herramientas?",
-    respuesta:
-      "Sí. Si tienes una herramienta que consideres útil para la comunidad, puedes comunicarte a través de Telegram o X (@0xlenador). Las sugerencias con mayor demanda se priorizan en el roadmap.",
+    pregunta: t("tools.faq.q5"),
+    respuesta: t("tools.faq.a5"),
   },
 ]
 ---
@@ -91,15 +85,13 @@ const faqItems = [
     <!-- Header -->
     <header class="mb-16">
       <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
-        Hub / Herramientas
+        {t("tools.breadcrumb")}
       </p>
       <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Centro de <span class="text-emerald-500">Herramientas</span>
+        {t("tools.heading").replace(t("tools.subheading"), '').trim()} <span class="text-emerald-500">{t("tools.subheading")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Modelos de cálculo y software de análisis estructurado para evaluar activos y distribuir tu
-        portafolio. Herramientas diseñadas para aportar objetividad matemática a tus decisiones de
-        inversión, operando de forma local y privada en tu navegador.
+        {t("tools.intro")}
       </p>
     </header>
 
@@ -162,8 +154,8 @@ const faqItems = [
     </div>
 
     <FaqAccordion
-      titulo="Sobre las Herramientas"
-      subtitulo="Uso y disponibilidad"
+      titulo={t("tools.faq.title")}
+      subtitulo={t("tools.faq.subtitle")}
       startId={300}
       items={faqItems}
     />

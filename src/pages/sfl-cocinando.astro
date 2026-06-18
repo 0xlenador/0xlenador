@@ -2,11 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import sflRecipes from '../data/sfl_recipes.json';
 import sflIds from '../data/sfl_ids.json';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const seo = {
-  title: "Cocina SFL | 0xLeñador — Calculadora de Recetas de Sunflower Land",
-  description:
-    "Consulta las recetas de cocina, la experiencia (XP) otorgada y el costo dinámico en SFL de los ingredientes basándose en el mercado P2P.",
+  title: t('sfl.cooking.seo.title'),
+  description: t('sfl.cooking.seo.description'),
   image: "/img/cripto/sunflowerland.webp",
 }
 ---
@@ -18,14 +21,14 @@ const seo = {
       <div class="flex items-center gap-4 mb-3">
         <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
         <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
-          Herramientas / Cocina
+          {t('sfl.cooking.breadcrumb')}
         </p>
       </div>
       <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Calculadora de <span class="text-emerald-500">Recetas y Comida</span>
+        {t('sfl.cooking.heading')} <span class="text-emerald-500">{t('sfl.cooking.heading.accent')}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Calcula dinámicamente el costo en SFL de preparar alimentos dentro del juego basándote en el precio actual en vivo del mercado P2P. Descubre las recetas más rentables (XP/SFL) para subir de nivel a tus mascotas.
+        {t('sfl.cooking.intro')}
       </p>
     </header>
 
@@ -37,7 +40,7 @@ const seo = {
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 relative z-10">
         <div class="flex gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar">
           <button class="category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="all">
-            Todas
+            {t('sfl.cooking.filter.all')}
           </button>
           <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fire Pit">
             Fire Pit
@@ -57,14 +60,14 @@ const seo = {
         </div>
         
         <div class="relative w-full sm:w-72 shrink-0">
-          <input type="text" id="searchInput" placeholder="Buscar receta o ingrediente..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all font-mono" />
+          <input type="text" id="searchInput" placeholder={t('sfl.cooking.search.placeholder')} class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all font-mono" />
         </div>
       </div>
 
       <!-- Estado de Carga -->
       <div id="loadingState" class="py-12 flex flex-col items-center justify-center gap-4 relative z-10">
         <div class="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-terminal-muted font-mono text-xs animate-pulse">Consultando P2P para calcular costos...</p>
+        <p class="text-terminal-muted font-mono text-xs animate-pulse">{t('sfl.cooking.loading')}</p>
       </div>
 
       <!-- Tabla de Recetas -->
@@ -111,7 +114,7 @@ const seo = {
   }
 </style>
 
-<script define:vars={{ sflRecipes, sflIds }}>
+<script define:vars={{ sflRecipes, sflIds, tLoading: t('sfl.cooking.loading'), tEmpty: t('sfl.cooking.empty'), tError: t('sfl.cooking.error'), tTime: t('sfl.cooking.col.time'), tInstant: t('sfl.cooking.col.instant') }}>
   const searchInput = document.getElementById("searchInput");
   const loadingState = document.getElementById("loadingState");
   const dataContainer = document.getElementById("dataContainer");
@@ -255,7 +258,7 @@ const seo = {
     tableBody.innerHTML = "";
 
     if (filtered.length === 0) {
-      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">No se encontraron recetas.</div>`;
+      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmpty}</div>`;
       return;
     }
 
@@ -290,10 +293,10 @@ const seo = {
             </div>
             <div class="flex flex-col">
               <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</span>
-              <span class="text-[11px] text-terminal-muted mt-0.5">Time: ${item.time}</span>
+              <span class="text-[11px] text-terminal-muted mt-0.5">${tTime} ${item.time}</span>
               ${item.instant ? `
                 <div class="flex items-center gap-1 mt-0.5">
-                  <span class="text-[11px] text-terminal-muted">Instant:</span>
+                  <span class="text-[11px] text-terminal-muted">${tInstant}</span>
                   <span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1"><img src="/img/Gem.png" class="w-3 h-3" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>
                 </div>
               ` : ''}
@@ -367,7 +370,7 @@ const seo = {
       
     } catch (err) {
       console.error(err);
-      loadingState.innerHTML = `<p class="text-red-500 text-sm">Error cargando precios.</p>`;
+      loadingState.innerHTML = `<p class="text-red-500 text-sm">${tError}</p>`;
     }
   };
 

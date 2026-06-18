@@ -11,6 +11,8 @@
 import { Image } from "astro:assets"
 import type { ImageMetadata } from "astro"
 
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
 interface Props {
   title: string
   category: string
@@ -21,13 +23,16 @@ interface Props {
 }
 
 const { title, category, formattedDate, readTime, coverImage, coverAlt } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 ---
 
 <!-- Breadcrumb de navegación -->
 <nav class="flex text-xs text-terminal-muted mb-10 font-medium font-mono uppercase tracking-widest">
-  <a href="/" class="hover:text-emerald-400 transition-colors">Inicio</a>
+  <a href="/" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
   <span class="mx-3">›</span>
-  <a href="/blog" class="hover:text-emerald-400 transition-colors">Artículos</a>
+  <a href="/blog" class="hover:text-emerald-400 transition-colors">{t('nav.blog')}</a>
   <span class="mx-3">›</span>
   <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs">{title}</span>
 </nav>
@@ -54,7 +59,7 @@ const { title, category, formattedDate, readTime, coverImage, coverAlt } = Astro
 
     <!-- Fecha -->
     <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
-      <span class="text-terminal-muted">Actualizado</span>
+      <span class="text-terminal-muted">{t('ops.updated').replace('{date}', '')}</span>
       <span class="text-terminal-secondary">{formattedDate}</span>
     </div>
 
@@ -67,7 +72,7 @@ const { title, category, formattedDate, readTime, coverImage, coverAlt } = Astro
           stroke-width="2"
           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg
       >
-      <span class="text-terminal-secondary">{readTime} de lectura</span>
+      <span class="text-terminal-secondary">{t('ops.detail.reading').replace('{time}', readTime)}</span>
     </div>
   </div>
 </header>

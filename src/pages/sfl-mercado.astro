@@ -3,10 +3,14 @@ import Layout from "../layouts/Layout.astro"
 import sflIds from "../data/sfl_ids.json"
 import sflPowerUps from "../data/sfl_powerups.json"
 
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 const seo = {
-  title: "Mercado SFL | 0xLeñador — Precios P2P de Sunflower Land",
-  description:
-    "Consulta en tiempo real los precios del mercado P2P de Sunflower Land. Monitorea volumen, ventas recientes y floor prices de items y wearables.",
+  title: t("sfl.seo.title"),
+  description: t("sfl.seo.description"),
   image: "/img/cripto/sunflowerland.webp",
 }
 ---
@@ -17,14 +21,14 @@ const seo = {
       <div class="flex items-center gap-4 mb-3">
         <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
         <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
-          Herramientas / Mercado
+          {t("sfl.breadcrumb")}
         </p>
       </div>
       <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Mercado On-Chain P2P de <span class="text-emerald-500">Sunflower Land</span>
+        {t("sfl.heading")} <span class="text-emerald-500">{t("sfl.heading.accent")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Descubre las mejores oportunidades de comercio con nuestro monitor avanzado en tiempo real. Analiza el historial de precios, volúmenes de transacciones y detecta instantáneamente cuáles recursos están en sobrecompra (ATH) o en su mejor precio histórico (ATL) dentro del ecosistema descentralizado de SFL.
+        {t("sfl.intro")}
       </p>
     </header>
 
@@ -34,7 +38,7 @@ const seo = {
       
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 relative z-10">
         <div class="w-full md:w-2/3">
-          <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">Dashboard Económico del Mercado SFL</h2>
+          <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">{t("sfl.dashboard.title")}</h2>
         </div>
         <div class="w-full md:w-auto flex items-center justify-start md:justify-end mt-2 md:mt-0">
           <div class="bg-white/[0.02] border border-emerald-500/20 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(16,185,129,0.05)] cursor-help hover:border-emerald-500/40 transition-colors" title="Precio actual de Flower en tiempo real">
@@ -42,9 +46,9 @@ const seo = {
               <img src="/img/sunflowerland/flower.jpg" alt="Flower Token" class="w-full h-full object-contain animate-pulse drop-shadow-sm" id="sflTokenImg" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp'" />
             </div>
             <div class="flex flex-col">
-              <span class="text-[9px] text-terminal-muted font-mono leading-none uppercase tracking-widest mb-1">$FLOWER Price</span>
+              <span class="text-[9px] text-terminal-muted font-mono leading-none uppercase tracking-widest mb-1">{t("sfl.price.label")}</span>
               <div class="flex items-baseline gap-2">
-                <span id="sflPriceValue" class="text-base text-white font-black tracking-wider leading-none">Cargando...</span>
+                <span id="sflPriceValue" class="text-base text-white font-black tracking-wider leading-none">{t("sfl.loading.price")}</span>
                 <span id="sflPriceChange" class="text-[10px] font-bold"></span>
               </div>
             </div>
@@ -57,11 +61,11 @@ const seo = {
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <p class="text-terminal-muted font-mono text-xs animate-pulse">Consultando API de SFL...</p>
+        <p class="text-terminal-muted font-mono text-xs animate-pulse">{t("sfl.loading")}</p>
       </div>
 
       <div id="errorState" class="hidden py-12 px-6 bg-red-500/10 border border-red-500/20 rounded-xl relative z-10">
-        <p id="errorMsg" class="text-red-400 text-sm text-center">Error al cargar los datos.</p>
+        <p id="errorMsg" class="text-red-400 text-sm text-center">{t("sfl.error")}</p>
       </div>
 
       <div id="dataContainer" class="hidden relative z-10">
@@ -123,12 +127,12 @@ const seo = {
 
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-2">
           <div class="flex items-center flex-wrap gap-3">
-            <h2 class="text-lg font-semibold text-white">Actividad del Mercado <span class="text-xs text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline">P2P History</span></h2>
+            <h2 class="text-lg font-semibold text-white">{t("sfl.activity")} <span class="text-xs text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline">P2P History</span></h2>
           </div>
           <div class="flex items-center gap-2 w-full sm:w-auto">
             <button id="fetchBtn" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto justify-center">
               <svg class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-              Refrescar
+              {t("sfl.refresh")}
             </button>
           </div>
         </div>
@@ -138,12 +142,12 @@ const seo = {
           <div class="w-full lg:w-1/3">
             <div class="relative flex items-center w-full bg-terminal-bg/50 border border-white/[0.1] rounded-xl overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/50 transition-all">
               <div class="pl-4 pr-3 py-3 border-r border-white/10 bg-white/[0.02]">
-                <span class="text-xs font-mono text-terminal-muted uppercase tracking-widest whitespace-nowrap">Buscar Item</span>
+                <span class="text-xs font-mono text-terminal-muted uppercase tracking-widest whitespace-nowrap">{t("sfl.search.label")}</span>
               </div>
               <input 
                 type="text" 
                 id="searchInput" 
-                placeholder="Ej. Sunflower, Axe..." 
+                placeholder={t("sfl.search.placeholder")} 
                 autocomplete="off"
                 spellcheck="false"
                 style="outline: none !important; box-shadow: none !important; border: none !important; background-color: transparent !important;"

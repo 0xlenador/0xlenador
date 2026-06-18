@@ -5,10 +5,14 @@ import FaqAccordion from "../components/FaqAccordion.astro"
 import directoryData from "../data/directory.json"
 import faucetsData from "../data/faucets.json"
 
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 const seo = {
-  title: "Directorio Web3 | 0xLeñador — Exchanges, Wallets y Exploradores",
-  description:
-    "Directorio curado de plataformas y recursos Web3 en uso activo: exchanges, wallets, exploradores de bloques, herramientas de análisis y faucets.",
+  title: t("directory.seo.title"),
+  description: t("directory.seo.description"),
   image: "/img/meta/home.webp",
 }
 
@@ -33,19 +37,16 @@ const topNetworks = Object.entries(tagFrequency)
 
 const faqItems = [
   {
-    pregunta: "¿Qué criterios usa 0xLeñador para incluir un recurso en el directorio?",
-    respuesta:
-      "Cada recurso debe estar en uso activo por 0xLeñador o haber sido evaluado directamente. Se priorizan plataformas con reputación comprobada, historial de seguridad limpio y relevancia operativa para el ecosistema Web3. No se incluyen proyectos sin track record o con señales de riesgo.",
+    pregunta: t("directory.faq.q1"),
+    respuesta: t("directory.faq.a1"),
   },
   {
-    pregunta: "¿Qué significa el badge 'patrocinado'?",
-    respuesta:
-      "Indica que el enlace contiene un código de referido de 0xLeñador. Si te registras o compras a través de ese enlace, 0xLeñador puede recibir una comisión. Esto no afecta el precio que pagas ni implica un respaldo incondicional del servicio: la inclusión siempre está sujeta a los mismos criterios de calidad.",
+    pregunta: t("directory.faq.q2"),
+    respuesta: t("directory.faq.a2"),
   },
   {
-    pregunta: "¿Cómo puedo sugerir un recurso para el directorio?",
-    respuesta:
-      "Puedes contactar a 0xLeñador a través de Telegram o X (@0xlenador). Los recursos sugeridos pasan por evaluación de seguridad y utilidad antes de ser añadidos. Las solicitudes con mayor demanda de la comunidad se priorizan.",
+    pregunta: t("directory.faq.q3"),
+    respuesta: t("directory.faq.a3"),
   },
 ]
 ---
@@ -54,17 +55,16 @@ const faqItems = [
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
     <!-- Breadcrumb -->
     <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
-      Hub / Directorio
+      {t("directory.breadcrumb")}
     </p>
 
     <!-- Header -->
     <header class="mb-12 border-b border-terminal-border/50 pb-8">
       <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
-        Directorio <span class="text-emerald-500">Web3</span>
+        {t("directory.heading")} <span class="text-emerald-500">{t("directory.subheading")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light">
-        Plataformas y recursos curados en uso operativo activo. Exchanges, wallets de custodia
-        propia, exploradores de bloques, herramientas de análisis y acceso al directorio de faucets.
+        {t("directory.intro")}
       </p>
     </header>
 
@@ -74,7 +74,7 @@ const faqItems = [
         <h2
           class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap"
         >
-          Recursos y Plataformas
+          {t("directory.section.resources")}
         </h2>
         <div class="h-px flex-grow bg-terminal-border/40"></div>
         <span class="text-[10px] font-mono text-terminal-muted whitespace-nowrap">
@@ -85,7 +85,7 @@ const faqItems = [
       <!-- Filtros -->
       <div class="flex flex-wrap gap-2 mb-8" id="dir-filter-bar">
         <button class="badge badge-active filter-btn" data-filter="all" id="dir-filter-all">
-          Todos
+          {t("directory.filter.all")}
         </button>
         {
           tags.map((tag) => (
@@ -148,7 +148,7 @@ const faqItems = [
         <h2
           class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap"
         >
-          Faucets Directory
+          {t("directory.section.faucets")}
         </h2>
         <div class="h-px flex-grow bg-terminal-border/40"></div>
       </div>
@@ -159,21 +159,21 @@ const faqItems = [
           <div class="text-center md:text-left">
             <p class="text-3xl font-black text-white font-mono">{faucetsData.length}</p>
             <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">
-              Faucets indexados
+              {t("directory.faucets.total")}
             </p>
           </div>
           <!-- Stat: Testnet -->
           <div class="text-center md:text-left">
             <p class="text-3xl font-black text-yellow-400 font-mono">{testnetCount}</p>
             <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">
-              Testnet (tokens de prueba)
+              {t("directory.faucets.testnet")}
             </p>
           </div>
           <!-- Stat: Mainnet -->
           <div class="text-center md:text-left">
             <p class="text-3xl font-black text-amber-500 font-mono">{mainnetCount}</p>
             <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">
-              Mainnet (con referido)
+              {t("directory.faucets.mainnet")}
             </p>
           </div>
         </div>
@@ -181,7 +181,7 @@ const faqItems = [
         <!-- Redes más cubiertas -->
         <div class="border-t border-white/[0.05] pt-6 mb-8">
           <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mb-3">
-            Redes más cubiertas
+            {t("directory.faucets.networks")}
           </p>
           <div class="flex flex-wrap gap-2">
             {
@@ -204,7 +204,7 @@ const faqItems = [
           <span
             class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors"
           >
-            Ver directorio completo de Faucets
+            {t("directory.faucets.cta")}
           </span>
           <svg
             class="w-4 h-4 text-terminal-muted group-hover:text-emerald-400 transition-all duration-300 group-hover:translate-x-1"
@@ -224,11 +224,11 @@ const faqItems = [
 
     <!-- FAQ -->
     <div class="border-t border-terminal-border/60 pt-14">
-      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Sobre el Directorio</h2>
-      <p class="text-xs text-terminal-subtle mb-8">Criterios de curación y uso operativo.</p>
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">{t("directory.faq.heading")}</h2>
+      <p class="text-xs text-terminal-subtle mb-8">{t("directory.faq.subheading")}</p>
       <FaqAccordion
-        titulo="Preguntas del Directorio"
-        subtitulo="Criterios y recursos"
+        titulo={t("directory.faq.title")}
+        subtitulo={t("directory.faq.subtitle")}
         startId={500}
         items={faqItems}
       />

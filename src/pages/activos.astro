@@ -2,10 +2,14 @@
 import Layout from "../layouts/Layout.astro"
 import FaqAccordion from "../components/FaqAccordion.astro"
 
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 const seo = {
-  title: "Activos | 0xLeñador — Watchlist de Mercados Tradicionales y Web3",
-  description:
-    "Watchlist de activos bajo seguimiento activo: Bitcoin, Ethereum, ETFs S&P 500, Berkshire Hathaway e Hyperliquid. Seguimiento de la tesis de inversión 60/40 de 0xLeñador.",
+  title: t("assets.seo.title"),
+  description: t("assets.seo.description"),
   image: "/img/meta/tesis.webp",
 }
 
@@ -14,64 +18,64 @@ const watchlist = [
   {
     ticker: "BTC",
     nombre: "Bitcoin",
-    categoria: "Cripto L1",
+    categoria: t("assets.item.btc.category"),
     href: "/activos/bitcoin",
     imagen: "/img/cripto/bitcoin.webp",
-    descripcion: "Reserva de valor digital. Núcleo de la descorrelación financiera.",
+    descripcion: t("assets.item.btc.desc"),
     accentColor: "orange",
   },
   {
     ticker: "ETH",
     nombre: "Ethereum",
-    categoria: "Cripto L1",
+    categoria: t("assets.item.eth.category"),
     href: "/activos/ethereum",
     imagen: "/img/cripto/ethereum.webp",
-    descripcion: "Infraestructura de contratos inteligentes y economía DeFi.",
+    descripcion: t("assets.item.eth.desc"),
     accentColor: "blue",
   },
   {
     ticker: "HYPE",
     nombre: "Hyperliquid",
-    categoria: "DEX / Perps",
+    categoria: t("assets.item.hype.category"),
     href: null,
     imagen: "/img/cripto/hyperliquid.webp",
-    descripcion: "L1 optimizado para derivados on-chain. Asimetría de ecosistema emergente.",
+    descripcion: t("assets.item.hype.desc"),
     accentColor: "fuchsia",
   },
   {
     ticker: "SPY",
     nombre: "S&P 500 ETF",
-    categoria: "Renta Variable",
+    categoria: t("assets.item.spy.category"),
     href: null,
     imagen: "/img/cripto/syp500.webp",
-    descripcion: "Benchmark del mercado tradicional. 60% del portafolio estructural.",
+    descripcion: t("assets.item.spy.desc"),
     accentColor: "emerald",
   },
   {
     ticker: "BRK.B",
     nombre: "Berkshire Hathaway",
-    categoria: "Renta Variable",
+    categoria: t("assets.item.brk.category"),
     href: null,
     imagen: "/img/cripto/brk.webp",
-    descripcion: "Valor intrínseco y gestión patrimonial de largo plazo.",
+    descripcion: t("assets.item.brk.desc"),
     accentColor: "emerald",
   },
   {
     ticker: "RUNE",
     nombre: "Runestone",
-    categoria: "Bitcoin Ordinals",
+    categoria: t("assets.item.rune.category"),
     href: null,
     imagen: "/img/cripto/runestone.webp",
-    descripcion: "Activo de la economía de Ordinals y Runes. Riesgo total y alta asimetría.",
+    descripcion: t("assets.item.rune.desc"),
     accentColor: "orange",
   },
   {
     ticker: "SFL",
     nombre: "Sunflower Land",
-    categoria: "Web3 Game",
+    categoria: t("assets.item.sfl.category"),
     href: "/activos/sunflowerland",
     imagen: "/img/cripto/sunflowerland.webp",
-    descripcion: "Economía experimental on-chain. Fase de garaje — riesgo total.",
+    descripcion: t("assets.item.sfl.desc"),
     accentColor: "yellow",
   },
 ]
@@ -87,24 +91,20 @@ const accentMap: Record<string, string> = {
 
 const faqItems = [
   {
-    pregunta: "¿Estos activos son una recomendación de compra?",
-    respuesta:
-      "No. La Watchlist refleja los activos que 0xLeñador sigue activamente en su propia tesis de inversión. No es una señal de compra ni una recomendación financiera personalizada. Cada inversor debe hacer su propia investigación.",
+    pregunta: t("assets.faq.q1"),
+    respuesta: t("assets.faq.a1"),
   },
   {
-    pregunta: "¿Qué significa 'Fase de Garaje' en la watchlist?",
-    respuesta:
-      "Son activos de alta especulación y asimetría total: o se van a cero o generan retornos masivos. El capital asignado a estos activos se considera completamente arriesgado y no debe ser más del que el inversor puede perder por completo.",
+    pregunta: t("assets.faq.q2"),
+    respuesta: t("assets.faq.a2"),
   },
   {
-    pregunta: "¿Por qué Bitcoin y Ethereum tienen páginas dedicadas?",
-    respuesta:
-      "Son los dos activos de mayor peso y convicción en la tesis. Tienen análisis técnico, recursos y contexto suficientes para justificar una página completa. Los demás activos se documenten a medida que el análisis madura.",
+    pregunta: t("assets.faq.q3"),
+    respuesta: t("assets.faq.a3"),
   },
   {
-    pregunta: "¿Con qué frecuencia se actualiza la watchlist?",
-    respuesta:
-      "La watchlist refleja posiciones activas, no precios en tiempo real. Se actualiza cuando hay cambios estructurales en la tesis (entrada, salida o reconfiguración de posición), no con la volatilidad diaria del mercado.",
+    pregunta: t("assets.faq.q4"),
+    respuesta: t("assets.faq.a4"),
   },
 ]
 ---
@@ -114,24 +114,23 @@ const faqItems = [
     <!-- Header -->
     <header class="mb-16">
       <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
-        Hub / Activos
+        {t("assets.breadcrumb")}
       </p>
       <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        Watchlist de <span class="text-emerald-500">Activos</span>
+        {t("assets.heading")} <span class="text-emerald-500">{t("assets.heading.accent")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        Los activos bajo seguimiento activo en la tesis de 0xLeñador. No son señales de compra, son
-        posiciones documentadas con fundamento técnico y matemático.
+        {t("assets.intro")}
       </p>
     </header>
 
     <!-- Watchlist header de tabla -->
     <div class="flex items-center gap-4 mb-8">
       <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-        En seguimiento
+        {t("assets.section.title")}
       </h2>
       <div class="h-px flex-grow bg-terminal-border/50"></div>
-      <span class="text-[10px] font-mono text-terminal-subtle">{watchlist.length} activos</span>
+      <span class="text-[10px] font-mono text-terminal-subtle">{watchlist.length} {t("assets.count")}</span>
     </div>
 
     <!-- Tabla de activos (desktop) / Cards (móvil) -->
@@ -141,11 +140,11 @@ const faqItems = [
         <table class="ops-table">
           <thead>
             <tr>
-              <th>Activo</th>
-              <th>Ticker</th>
-              <th>Categoría</th>
-              <th>Tesis</th>
-              <th class="text-right">Detalle</th>
+              <th>{t("assets.table.asset")}</th>
+              <th>{t("assets.table.ticker")}</th>
+              <th>{t("assets.table.category")}</th>
+              <th>{t("assets.table.thesis")}</th>
+              <th class="text-right">{t("assets.table.detail")}</th>
             </tr>
           </thead>
           <tbody>
@@ -199,11 +198,11 @@ const faqItems = [
                         href={activo.href}
                         class="text-emerald-500/70 hover:text-emerald-400 font-mono text-xs uppercase tracking-widest transition-colors"
                       >
-                        Ver →
+                        {t("assets.table.view")}
                       </a>
                     ) : (
                       <span class="text-terminal-subtle/40 font-mono text-[10px] uppercase">
-                        Pronto
+                        {t("assets.table.soon")}
                       </span>
                     )}
                   </td>
@@ -267,7 +266,7 @@ const faqItems = [
                     href={activo.href}
                     class="text-emerald-500/70 text-xs font-mono mt-2 inline-block hover:text-emerald-400 transition-colors"
                   >
-                    Ver análisis →
+                    {t("assets.card.view")}
                   </a>
                 )}
               </div>
@@ -297,7 +296,7 @@ const faqItems = [
                   {activo.nombre}
                 </p>
                 <p class="text-terminal-subtle text-[10px] font-mono uppercase tracking-widest">
-                  Análisis completo →
+                  {t("assets.card.full")}
                 </p>
               </div>
             </a>
@@ -306,8 +305,8 @@ const faqItems = [
     </div>
 
     <FaqAccordion
-      titulo="Sobre la Watchlist"
-      subtitulo="Seguimiento de activos"
+      titulo={t("assets.faq.title")}
+      subtitulo={t("assets.faq.subtitle")}
       startId={500}
       items={faqItems}
     />

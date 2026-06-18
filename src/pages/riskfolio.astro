@@ -2,34 +2,33 @@
 import Layout from "../layouts/Layout.astro"
 import RiskfolioChart from "../components/home/RiskfolioChart.astro"
 import FaqAccordion from "../components/FaqAccordion.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seo = {
-  title: "Riskfolio | 0xLeñador — Distribución de Capital por Perfil de Riesgo",
-  description:
-    "Herramienta de asignación de capital basada en tu perfil de riesgo. Define cómo distribuir tu portafolio entre renta fija, cripto large-cap, altcoins y reserva de liquidez.",
+  title: t("riskfolio.seo.title"),
+  description: t("riskfolio.seo.description"),
   image: "/img/meta/home.webp",
 }
 
 const faqItems = [
   {
-    pregunta: "¿Por qué estructurar el capital según un perfil de riesgo?",
-    respuesta:
-      "Porque la diversificación no es simplemente comprar activos distintos, sino asignar capital de forma proporcional a tu tolerancia a la pérdida temporal y tu horizonte de inversión. Un perfil conservador prioriza la preservación del capital; uno agresivo acepta mayor volatilidad buscando retornos exponenciales a largo plazo.",
+    pregunta: t("riskfolio.faq.q1"),
+    respuesta: t("riskfolio.faq.a1"),
   },
   {
-    pregunta: "¿Qué activos incluye cada categoría?",
-    respuesta:
-      "Renta Fija / ETFs incluye bonos del gobierno (US Treasuries, TES), ETFs indexados (SPY, QQQ) y depósitos a término. Cripto Large-Cap son Bitcoin (BTC) y Ethereum (ETH) por su mayor liquidez y madurez. Altcoins / DeFi comprende tokens de protocolos con alta volatilidad y asimetría (ej. SOL, LINK, tokens de gobernanza). Reserva es liquidez inmediata en stablecoins (USDC/USDT) o efectivo.",
+    pregunta: t("riskfolio.faq.q2"),
+    respuesta: t("riskfolio.faq.a2"),
   },
   {
-    pregunta: "¿Riskfolio me recomienda qué comprar?",
-    respuesta:
-      "No. Es un modelo paramétrico de distribución macro. Te muestra los porcentajes de asignación por categoría de activo, no instrumentos específicos. Qué acciones, qué criptomonedas o qué bonos comprar dentro de cada categoría es tu responsabilidad tras hacer tu propia investigación (DYOR).",
+    pregunta: t("riskfolio.faq.q3"),
+    respuesta: t("riskfolio.faq.a3"),
   },
   {
-    pregunta: "¿Con qué frecuencia debería rebalancear mi portafolio?",
-    respuesta:
-      "Depende del perfil. Como referencia general: el perfil conservador puede rebalancear anualmente. El moderado, cada 6 meses o cuando alguna categoría se desvíe más de un 5% de la asignación objetivo. El agresivo puede necesitar ajustes trimestrales dada la alta volatilidad de sus posiciones.",
+    pregunta: t("riskfolio.faq.q4"),
+    respuesta: t("riskfolio.faq.a4"),
   },
 ]
 ---
@@ -38,7 +37,7 @@ const faqItems = [
   <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
     <!-- Breadcrumb -->
     <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
-      Herramientas / Riskfolio
+      {t("riskfolio.breadcrumb")}
     </p>
 
     <!-- Header -->
@@ -46,11 +45,10 @@ const faqItems = [
       <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
         <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
           >Risk</span
-        >folio
+        >{t("riskfolio.heading")}
       </h1>
       <p class="text-terminal-secondary text-sm md:text-base leading-relaxed max-w-2xl font-light">
-        Modelo de distribución de capital basado en tu perfil de riesgo. Selecciona tu perfil,
-        ingresa tu capital disponible y obtén la asignación sugerida para cada categoría de activos.
+        {t("riskfolio.intro")}
       </p>
     </header>
 
@@ -59,13 +57,13 @@ const faqItems = [
 
     <!-- Sección FAQ -->
     <div class="mt-16 border-t border-terminal-border/60 pt-14">
-      <h2 class="text-xl font-bold text-white tracking-tight mb-1">Metodología del Modelo</h2>
+      <h2 class="text-xl font-bold text-white tracking-tight mb-1">{t("riskfolio.section.title")}</h2>
       <p class="text-xs text-terminal-subtle mb-8">
-        Fundamentos conceptuales de Riskfolio y sus perfiles de distribución.
+        {t("riskfolio.section.desc")}
       </p>
       <FaqAccordion
-        titulo="Preguntas sobre Riskfolio"
-        subtitulo="Dudas frecuentes del modelo"
+        titulo={t("riskfolio.faq.title")}
+        subtitulo={t("riskfolio.faq.subtitle")}
         startId={400}
         items={faqItems}
       />

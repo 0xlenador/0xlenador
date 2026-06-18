@@ -21,7 +21,7 @@ import AssetHeader from "../../components/activo/AssetHeader.astro"
 import ToolingGrid from "../../components/activo/ToolingGrid.astro"
 import { colorMap } from "../../lib/colors"
 import type { AssetColor } from "../../lib/colors"
-import { getLangFromUrl, getBilingual } from "../../i18n/utils"
+import { getLangFromUrl, getBilingual, useTranslations } from "../../i18n/utils"
 
 export async function getStaticPaths() {
   return [
@@ -34,6 +34,7 @@ export async function getStaticPaths() {
 const { data } = Astro.props
 const c = colorMap[data.accentColor as AssetColor] ?? colorMap.emerald
 const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seoTitle = getBilingual(data.seo.title, lang)
 const seoDesc = getBilingual(data.seo.description, lang)
@@ -80,7 +81,7 @@ const schema = [
           <h3
             class={`${c.text500} font-bold text-xs uppercase tracking-widest mb-6 italic font-mono`}
           >
-            Definición
+            {t('asset.section.definition')}
           </h3>
           <p class="text-terminal-secondary text-sm leading-relaxed italic">
             {getBilingual(data.definicion, lang)}
@@ -98,26 +99,26 @@ const schema = [
           <h3
             class={`${c.text500} font-bold text-xs uppercase tracking-widest mb-6 italic font-mono`}
           >
-            Génesis e Identidad
+            {t('asset.section.genesis')}
           </h3>
           <div class="space-y-4 font-mono text-[11px]">
             <div class="flex justify-between border-b border-terminal-border/50 pb-2">
-              <span class="text-terminal-muted italic uppercase">Fecha de Inicio</span>
+              <span class="text-terminal-muted italic uppercase">{t('asset.genesis.start')}</span>
               <span class="text-white">{data.genesis.fechaInicio}</span>
             </div>
             <div class="flex justify-between border-b border-terminal-border/50 pb-2">
-              <span class="text-terminal-muted italic uppercase">Creador(es)</span>
+              <span class="text-terminal-muted italic uppercase">{t('asset.genesis.creator')}</span>
               <!-- c.decorationCreator reemplaza `decoration-${data.accentColor}-500/30 decoration-dashed` -->
               <span class={`text-white underline ${c.decorationCreator}`}
                 >{data.genesis.creador}
               </span>
             </div>
             <div class="flex justify-between border-b border-terminal-border/50 pb-2">
-              <span class="text-terminal-muted italic uppercase">Whitepaper</span>
+              <span class="text-terminal-muted italic uppercase">{t('asset.genesis.whitepaper')}</span>
               <a
                 href={data.genesis.whitepaperUrl}
                 target="_blank"
-                class={`${c.text500} hover:text-white transition-colors`}>VER PDF -&gt;</a
+                class={`${c.text500} hover:text-white transition-colors`}>{t('asset.genesis.whitepaper.link')}</a
               >
             </div>
           </div>
@@ -140,7 +141,7 @@ const schema = [
             id="dato-oculto-content"
           >
             <h4 class="font-black uppercase tracking-widest text-[10px] mb-4 italic">
-              Dato Oculto
+              {t('asset.hidden.title')}
             </h4>
             <p
               class="text-xs font-bold leading-relaxed italic border-l-2 border-terminal-bg/20 pl-3 line-clamp-2"
@@ -151,7 +152,7 @@ const schema = [
               id="btn-ver-mas-dato"
               class="mt-4 text-[9px] font-black uppercase tracking-widest text-terminal-bg/60 hover:text-terminal-bg transition-colors flex items-center gap-1 cursor-pointer relative z-20"
             >
-              Ver más <svg
+              {t('asset.hidden.more')} <svg
                 class="w-3 h-3"
                 fill="none"
                 stroke="currentColor"
@@ -258,7 +259,7 @@ const schema = [
             <h3
               class="text-center text-[10px] font-black text-terminal-subtle uppercase tracking-[0.4em] italic mb-2"
             >
-              Arquitectura Base del Protocolo
+              {t('asset.arch.title')}
             </h3>
             <div class="w-full flex flex-col items-center mt-2 mb-8 relative">
               <div class={`w-px h-10 bg-transparent border-l-2 border-dashed ${c.border40}`}></div>
@@ -324,12 +325,12 @@ const schema = [
           <h3
             class={`${c.text500} font-bold text-xs uppercase tracking-widest mb-6 italic font-mono`}
           >
-            Matemática del Activo
+            {t('asset.section.math')}
           </h3>
           <div class="space-y-4 font-mono text-[11px]">
             <div class="flex flex-col border-b border-terminal-border/50 pb-2">
               <span class="text-terminal-muted italic mb-1 uppercase text-[8px]"
-                >Suministro Total</span
+                >{t('asset.math.supply')}</span
               >
               <span class="text-white text-base font-bold">{data.matematica.suministroTotal} </span>
             </div>
@@ -343,7 +344,7 @@ const schema = [
               >
             </div>
             <div class="flex flex-col pb-2">
-              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]">Ciclo</span>
+              <span class="text-terminal-muted italic mb-1 uppercase text-[8px]">{t('asset.math.cycle')}</span>
               <span class="text-white italic">{getBilingual(data.matematica.cicloHalving, lang)} </span>
             </div>
           </div>
@@ -369,7 +370,7 @@ const schema = [
           </svg>
           <span
             class={`text-terminal-subtle font-black uppercase tracking-widest text-[9px] italic ${c.groupHoverText500} transition-colors`}
-            >Próximamente</span
+            >{t('asset.coming.soon')}</span
           >
         </a>
 
@@ -384,7 +385,7 @@ const schema = [
           </div>
           <div class="relative z-10">
             <h4 class="font-black uppercase tracking-widest text-[10px] mb-4 italic">
-              Análisis de Carácter
+              {t('asset.char.title')}
             </h4>
             <p
               class="text-xs font-bold leading-relaxed italic border-l-2 border-terminal-bg/20 pl-3"

@@ -5,10 +5,14 @@ import sflRecipes from '../data/sfl_recipes.json';
 import sflIds from '../data/sfl_ids.json';
 import fs from 'fs';
 import path from 'path';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const seo = {
-  title: "Mascotas SFL | 0xLeñador — Guía de Mascotas de Sunflower Land",
-  description: "Descubre la lista completa de mascotas, sus requerimientos, recursos de energía y altares (Shrines) en Sunflower Land.",
+  title: t('sfl.pets.seo.title'),
+  description: t('sfl.pets.seo.description'),
   image: "/img/cripto/sunflowerland.webp",
 }
 
@@ -109,26 +113,26 @@ const getShrineCostHtml = (shrine) => {
       <div class="flex items-center gap-4 mb-3">
         <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
         <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
-          Herramientas / Mascotas
+          {t('sfl.pets.breadcrumb')}
         </p>
       </div>
       <div class="mb-12">
       <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-4 tracking-tight drop-shadow-lg">
-        Calcula la rentabilidad de la comida de tus mascotas
+        {t('sfl.pets.heading')}
       </h1>
-      <p class="text-lg text-white/60 font-medium">Conoce las comidas y premios de tus mascotas</p>
+      <p class="text-lg text-white/60 font-medium">{t('sfl.pets.subheading')}</p>
     </div>
 
     <!-- CALCULATOR DASHBOARD -->
     <div class="mb-12 bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl">
       <h2 class="text-2xl font-black text-white mb-6 flex items-center gap-2">
-        <i class="bi bi-calculator text-emerald-400"></i> Calculadora de Rentabilidad - Comida / P2P
+        <i class="bi bi-calculator text-emerald-400"></i> {t('sfl.pets.calc.title')}
       </h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Multiplicadores Selection -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-blue-400 mb-3 text-center border-b border-blue-500/20 pb-2">Multiplicadores</div>
+          <div class="text-[11px] uppercase font-bold tracking-widest text-blue-400 mb-3 text-center border-b border-blue-500/20 pb-2">{t('sfl.pets.calc.multipliers')}</div>
           <div class="flex-1 flex flex-col gap-3">
             <div class="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg border border-white/5 bg-black/20">
               <div class="flex items-center gap-2">
@@ -238,11 +242,11 @@ const getShrineCostHtml = (shrine) => {
         <table class="w-full text-left border-collapse min-w-[800px]">
           <thead>
             <tr class="border-b border-white/10 text-[10px] uppercase tracking-widest text-white/40">
-              <th class="p-3 font-mono w-[15%]">Recurso</th>
-              <th class="p-3 font-mono w-[10%] text-right">Energía / Precio P2P</th>
-              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Easy Costo / Ganancia</th>
-              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Medium Costo / Ganancia</th>
-              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">Hard Costo / Ganancia</th>
+              <th class="p-3 font-mono w-[15%]">{t('sfl.pets.calc.col.resource')}</th>
+              <th class="p-3 font-mono w-[10%] text-right">{t('sfl.pets.calc.col.energy')}</th>
+              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">{t('sfl.pets.calc.col.easy')}</th>
+              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">{t('sfl.pets.calc.col.medium')}</th>
+              <th class="p-3 font-mono w-[25%] text-center border-l border-white/5">{t('sfl.pets.calc.col.hard')}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/5" id="calc-results-body">
@@ -281,7 +285,7 @@ const getShrineCostHtml = (shrine) => {
     </div>
     <div class="text-center mb-12">
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl mx-auto">
-        Consulta todos los detalles, habilidades y requisitos de alimentación para las mascotas del ecosistema. Revisa los altares, los recursos energéticos y la comida que demanda cada rareza.
+        {t('sfl.pets.intro')}
       </p>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -290,7 +294,7 @@ const getShrineCostHtml = (shrine) => {
       <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl relative overflow-hidden">
         <div class="absolute -top-40 -left-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <h2 class="text-2xl font-black text-white mb-6 relative z-10 flex items-center gap-2">
-          <i class="bi bi-heptagon-half text-emerald-500"></i> Mascotas Comunes
+          <i class="bi bi-heptagon-half text-emerald-500"></i> {t('sfl.pets.common.title')}
         </h2>
         
         <div class="flex flex-col gap-4 relative z-10">
@@ -367,10 +371,10 @@ const getShrineCostHtml = (shrine) => {
     <div class="mt-8 max-w-4xl mx-auto bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
         <h2 class="text-2xl font-black text-white flex items-center gap-2">
-          <i class="bi bi-bank text-cyan-400"></i> Altares (Shrines)
+          <i class="bi bi-bank text-cyan-400"></i> {t('sfl.pets.shrines.title')}
         </h2>
         <div class="text-[11px] text-white/40 italic sm:mb-1">
-          El costo no incluye <strong class="text-white/60">Acorn</strong>
+          {t('sfl.pets.shrines.no.acorn')} <strong class="text-white/60">Acorn</strong>
         </div>
       </div>
       
@@ -378,9 +382,9 @@ const getShrineCostHtml = (shrine) => {
         <table class="w-full text-left border-collapse min-w-[500px]">
           <thead>
             <tr class="border-b border-white/10 text-[10px] uppercase tracking-widest text-white/40">
-              <th class="p-4 font-mono w-2/5">Altar (Shrine)</th>
-              <th class="p-4 font-mono w-2/5">Recursos</th>
-              <th class="p-4 font-mono text-right w-1/5">Costo Total</th>
+              <th class="p-4 font-mono w-2/5">{t('sfl.pets.shrines.col.altar')}</th>
+              <th class="p-4 font-mono w-2/5">{t('sfl.pets.shrines.col.resources')}</th>
+              <th class="p-4 font-mono text-right w-1/5">{t('sfl.pets.shrines.col.cost')}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/5">
@@ -418,7 +422,7 @@ const getShrineCostHtml = (shrine) => {
   </main>
 </Layout>
 
-<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict, maxRPE }}>
+<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict, maxRPE, tAcornTip: t('sfl.pets.calc.acorn.tip'), tFossilTip: t('sfl.pets.calc.fossil.tip'), tNA: t('sfl.pets.calc.na.info'), tCost: t('sfl.pets.calc.cost.label'), tLoss: t('sfl.pets.calc.loss') }}>
   const formatPriceNum = (num) => {
     if (num === 0) return '0.00';
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
@@ -500,18 +504,18 @@ const getShrineCostHtml = (shrine) => {
         }
         
         if (res.name === 'Acorn') {
-          cell.innerHTML = '<span class="text-[10px] text-emerald-500/70 italic block mt-1">Idea: Construye Altares</span>';
+          cell.innerHTML = `<span class="text-[10px] text-emerald-500/70 italic block mt-1">${tAcornTip}</span>`;
           return;
         }
         
         if (res.name === 'Fossil Shell') {
-          cell.innerHTML = '<span class="text-[10px] text-cyan-500/70 italic block mt-1">Idea: ¡Caja de sorpresas! Prueba suerte</span>';
+          cell.innerHTML = `<span class="text-[10px] text-cyan-500/70 italic block mt-1">${tFossilTip}</span>`;
           return;
         }
         
         const foodCost = foodCostsDict[selectedFoods[diff]];
         if (foodCost === null || foodCost === undefined || resPrice === 0) {
-          cell.innerHTML = '<span class="text-[10px] text-yellow-500/50 italic">Falta info (N/A)</span>';
+          cell.innerHTML = `<span class="text-[10px] text-yellow-500/50 italic">${tNA}</span>`;
           return;
         }
         
@@ -533,8 +537,8 @@ const getShrineCostHtml = (shrine) => {
         cell.innerHTML = `
           <div class="w-full flex flex-col gap-1 px-4">
             <div class="flex justify-between items-end">
-              <span class="text-[10px] text-white/50">Costo: <span class="text-white/80">${formatPriceNum(obtainCost)}</span></span>
-              <span class="text-[11px] font-mono font-bold ${textClass}">${sign}${roiFormatted}% ${!isProfitable ? '<span class="text-[9px] font-sans opacity-70 italic ml-0.5">(Pérdida)</span>' : ''}</span>
+              <span class="text-[10px] text-white/50">${tCost} <span class="text-white/80">${formatPriceNum(obtainCost)}</span></span>
+              <span class="text-[11px] font-mono font-bold ${textClass}">${sign}${roiFormatted}% ${!isProfitable ? `<span class="text-[9px] font-sans opacity-70 italic ml-0.5">${tLoss}</span>` : ''}</span>
             </div>
             <div class="w-full h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10 relative">
               <!-- Punto de equilibrio al 100% de ratio (20% visual) -->

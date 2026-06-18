@@ -4,6 +4,19 @@
  * Incluye los modos Graham y Buffett con toda la lógica JS encapsulada.
  * Componente autocontenido.
  */
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const calcTranslations = {
+  processing: t("calculator.script.processing"),
+  grahamTitle: t("calculator.script.graham.title"),
+  grahamDesc: t("calculator.script.graham.desc"),
+  buffettTitle: t("calculator.script.buffett.title"),
+  buffettDesc: t("calculator.script.buffett.desc"),
+  buttonText: t("calculator.button.label")
+}
 ---
 
 <div
@@ -32,7 +45,7 @@
         <label
           for="basic-eps"
           class="text-[11px] font-bold text-terminal-muted uppercase tracking-widest px-1"
-          >EPS (Beneficio Acción)</label
+          >{t("calculator.eps.label")}</label
         >
         <div class="relative">
           <span class="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">$</span>
@@ -49,7 +62,7 @@
         <label
           for="basic-growth"
           class="text-[11px] font-bold text-terminal-muted uppercase tracking-widest px-1"
-          >Crecimiento (g %)</label
+          >{t("calculator.growth.label")}</label
         >
         <div class="relative">
           <span
@@ -75,11 +88,11 @@
             <label
               for="adv-fcf"
               class="text-[11px] font-bold text-terminal-muted uppercase tracking-widest block"
-              >Free Cash Flow</label
+              >{t("calculator.fcf.label")}</label
             >
             <label class="inline-flex items-center cursor-pointer gap-2">
               <span class="text-[9px] font-black text-terminal-subtle uppercase tracking-tighter"
-                >Millones</span
+                >{t("calculator.millions.label")}</span
               >
               <div class="relative">
                 <input type="checkbox" id="fcf-millions-toggle" class="sr-only peer" />
@@ -102,7 +115,7 @@
           <label
             for="adv-growth"
             class="text-[11px] font-bold text-terminal-muted uppercase tracking-widest px-1 block"
-            >Crecimiento %</label
+            >{t("calculator.growth.adv.label")}</label
           >
           <input
             type="number"
@@ -116,7 +129,7 @@
           <label
             for="adv-discount"
             class="text-[11px] font-bold text-terminal-muted uppercase tracking-widest px-1 block"
-            >Tasa Descuento %</label
+            >{t("calculator.discount.label")}</label
           >
           <input
             type="number"
@@ -131,11 +144,11 @@
             <label
               for="adv-shares"
               class="text-[11px] font-bold text-terminal-muted uppercase tracking-widest block"
-              >Acciones Totales</label
+              >{t("calculator.shares.label")}</label
             >
             <label class="inline-flex items-center cursor-pointer gap-2">
               <span class="text-[9px] font-black text-terminal-subtle uppercase tracking-tighter"
-                >Millones</span
+                >{t("calculator.millions.label")}</span
               >
               <div class="relative">
                 <input type="checkbox" id="shares-millions-toggle" class="sr-only peer" />
@@ -158,7 +171,7 @@
       <div class="pt-6 border-t border-terminal-border/40">
         <label for="adv-margin" class="flex justify-between items-center mb-6 cursor-pointer">
           <span class="text-[11px] font-bold text-terminal-secondary uppercase tracking-widest"
-            >Margen de Seguridad</span
+            >{t("calculator.margin.label")}</span
           >
           <span id="margin-label" class="text-3xl font-black text-emerald-400 italic">30%</span>
         </label>
@@ -180,7 +193,7 @@
       onclick="calculate()"
       class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-terminal-bg py-5 rounded-2xl font-black text-xs tracking-[0.4em] uppercase transition-all shadow-xl shadow-emerald-500/20 italic"
     >
-      Ejecutar Algoritmo
+      {t("calculator.button.label")}
     </button>
   </div>
 
@@ -192,7 +205,7 @@
       >
         <span
           class="text-[10px] font-bold text-terminal-muted uppercase tracking-[0.3em] mb-4 block"
-          >Precio Objetivo</span
+          >{t("calculator.target.label")}</span
         >
         <div
           id="final-price"
@@ -205,7 +218,7 @@
           class="text-[9px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-2"
         >
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          Target Price Multi-Asset
+          {t("calculator.target.sublabel")}
         </div>
       </div>
       <div
@@ -213,13 +226,13 @@
       >
         <span
           class="text-[10px] font-bold text-terminal-muted uppercase tracking-[0.3em] mb-4 block"
-          >Estatus Terminal</span
+          >{t("calculator.status.label")}</span
         >
         <div
           id="status-text"
           class="text-xl font-bold text-white mb-3 italic tracking-tight truncate overflow-hidden"
         >
-          Análisis Completado
+          {t("calculator.status.completed")}
         </div>
         <p
           id="final-desc"
@@ -231,7 +244,7 @@
   </div>
 </div>
 
-<script>
+<script define:vars={{ calcTranslations }}>
   // ============================================================
   // CalculatorForm — Lógica encapsulada sin variables globales
   // 5.2: Se elimina el uso de is:inline y las funciones globales.
@@ -313,7 +326,7 @@
       if (hasError) return
 
       calcButton.disabled = true
-      calcButton.innerText = "Procesando..."
+      calcButton.innerText = calcTranslations.processing
       resultArea.classList.add("hidden")
 
       setTimeout(() => {
@@ -327,12 +340,12 @@
 
           if (isNaN(eps) || isNaN(growth)) {
             calcButton.disabled = false
-            calcButton.innerText = "Ejecutar Algoritmo"
+            calcButton.innerText = calcTranslations.buttonText
             return
           }
           result = eps * (8.5 + 2 * growth)
-          statusText.innerText = "Target Graham"
-          finalDesc.innerText = "Estimación fundamental rápida basada en el beneficio neto actual."
+          statusText.innerText = calcTranslations.grahamTitle
+          finalDesc.innerText = calcTranslations.grahamDesc
         } else {
           let fcf = parseFloat((document.getElementById("adv-fcf") as HTMLInputElement).value)
           const growth =
@@ -345,7 +358,7 @@
 
           if (isNaN(fcf) || isNaN(growth) || isNaN(discount) || isNaN(shares)) {
             calcButton.disabled = false
-            calcButton.innerText = "Ejecutar Algoritmo"
+            calcButton.innerText = calcTranslations.buttonText
             return
           }
 
@@ -364,9 +377,8 @@
           const terminalPV = terminalVal / Math.pow(1 + discount, 5)
           result = ((totalPV + terminalPV) / shares) * (1 - margin)
 
-          statusText.innerText = "Target Buffett"
-          finalDesc.innerText =
-            "Cálculo DCF avanzado con descuento de flujos y margen de seguridad."
+          statusText.innerText = calcTranslations.buffettTitle
+          finalDesc.innerText = calcTranslations.buffettDesc
         }
 
         const formattedPrice = `$${result.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -375,7 +387,7 @@
 
         resultArea.classList.remove("hidden")
         calcButton.disabled = false
-        calcButton.innerText = "Ejecutar Algoritmo"
+        calcButton.innerText = calcTranslations.buttonText
 
         resultArea.scrollIntoView({ behavior: "smooth", block: "center" })
       }, 600)

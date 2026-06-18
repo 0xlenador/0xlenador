@@ -1,10 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seo = {
-  title: "404 — Ruta No Encontrada | 0xLeñador",
-  description:
-    "La página que buscas no existe o fue movida. Regresa al inicio para seguir navegando el ecosistema 0xLeñador.",
+  title: t("404.seo.title"),
+  description: t("404.seo.description"),
 }
 ---
 
@@ -27,7 +30,7 @@ const seo = {
       >
         <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
         <span class="text-[10px] font-mono text-rose-400 uppercase tracking-[0.3em] font-bold"
-          >Error de Protocolo</span
+          >{t("404.badge")}</span
         >
       </div>
 
@@ -51,13 +54,12 @@ const seo = {
 
       <!-- Mensaje principal -->
       <h2 class="text-xl md:text-2xl font-bold text-white mb-4 tracking-tight">
-        Ruta no encontrada en el protocolo
+        {t("404.heading")}
       </h2>
       <p
         class="text-terminal-secondary text-sm md:text-base leading-relaxed mb-10 max-w-md mx-auto"
       >
-        El recurso que buscas no existe, fue movido o nunca fue indexado en nuestro ecosistema.
-        Verifica la URL o regresa a una ruta segura.
+        {t("404.body")}
       </p>
 
       <!-- Terminal log simulado -->
@@ -69,21 +71,21 @@ const seo = {
           <div class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
           <span class="text-terminal-subtle text-[9px] ml-2 uppercase tracking-widest"
-            >0xLeñador Terminal</span
+            >{t("404.terminal.label")}</span
           >
         </div>
         <p class="text-terminal-muted log-line" style="--delay: 0.1s">
-          <span class="text-terminal-subtle">[SYS]</span> Iniciando búsqueda de ruta…
+          <span class="text-terminal-subtle">[SYS]</span> {t("404.terminal.sys")}
         </p>
         <p class="text-terminal-muted log-line" style="--delay: 0.4s">
           <span class="text-terminal-subtle">[GET]</span>
           <span class="text-cyan-400 break-all" id="current-path">/*</span>
         </p>
         <p class="text-rose-400/80 log-line" style="--delay: 0.7s">
-          <span class="text-terminal-subtle">[ERR]</span> HTTP 404 · Recurso no indexado
+          <span class="text-terminal-subtle">[ERR]</span> {t("404.terminal.err")}
         </p>
         <p class="text-emerald-400/70 log-line" style="--delay: 1.0s">
-          <span class="text-terminal-subtle">[FIX]</span> Redirigir a ruta raíz: <span
+          <span class="text-terminal-subtle">[FIX]</span> {t("404.terminal.fix")} <span
             class="text-white">/</span
           ><span class="terminal-cursor">▊</span>
         </p>
@@ -107,21 +109,21 @@ const seo = {
               d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
             ></path></svg
           >
-          Volver al Inicio
+          {t("404.btn.home")}
         </a>
         <button
           id="back-button"
           type="button"
           class="px-8 py-4 border border-terminal-border-subtle text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-terminal-surface hover:border-terminal-subtle transition-all cursor-pointer"
         >
-          ← Ruta Anterior
+          {t("404.btn.back")}
         </button>
       </div>
 
       <!-- Grid de atajos rápidos -->
       <div class="border-t border-terminal-border/60 pt-8">
         <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-[0.4em] mb-5">
-          Rutas Disponibles
+          {t("404.shortcuts.title")}
         </p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto">
           <a

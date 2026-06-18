@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content"
 import Layout from "../../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
 // 1. Generar rutas estáticas desde la colección de guías
 export async function getStaticPaths() {
@@ -72,6 +73,9 @@ const dificultadConfig: Record<string, { text: string; label: string }> = {
 const cfgCat = categoriaConfig[categoria] ?? categoriaConfig["Airdrop"]
 const cfgEst = estadoConfig[estado]
 const cfgDif = dificultadConfig[dificultad]
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 ---
 
 <Layout title={`${title} | 0xLeñador`} description={description}>
@@ -239,9 +243,9 @@ const cfgDif = dificultadConfig[dificultad]
     <nav
       class="flex text-[10px] font-mono text-terminal-muted mb-8 uppercase tracking-widest items-center gap-2"
     >
-      <a href="/" class="hover:text-emerald-400 transition-colors">Inicio</a>
+      <a href="/" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
       <span>›</span>
-      <a href="/operaciones" class="hover:text-emerald-400 transition-colors">Operaciones</a>
+      <a href="/operaciones" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.ops')}</a>
       <span>›</span>
       <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs">{title}</span>
     </nav>
@@ -315,7 +319,7 @@ const cfgDif = dificultadConfig[dificultad]
                   d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
                 />
               </svg>
-              Deadline: {formatDeadline(fechaLimite)}
+              {t('ops.detail.deadline')} {formatDeadline(fechaLimite)}
             </span>
           )
         }
@@ -340,13 +344,13 @@ const cfgDif = dificultadConfig[dificultad]
           )
         }
         <span class:list={["flex items-center gap-1", cfgDif.text]}>
-          ● Dificultad {cfgDif.label}
+          {t('ops.detail.difficulty').replace('{level}', cfgDif.label)}
         </span>
         <span class="text-terminal-muted">
-          {readTime} de lectura
+          {t('ops.detail.reading').replace('{time}', readTime)}
         </span>
         <span class="text-terminal-muted">
-          Actualizado {formattedDate}
+          {t('ops.updated').replace('{date}', formattedDate)}
         </span>
       </div>
 
@@ -383,7 +387,7 @@ const cfgDif = dificultadConfig[dificultad]
             stroke-linejoin="round"
             d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
         </svg>
-        Volver a Operaciones
+        {t('ops.back')}
       </a>
       <div class="flex items-center gap-3">
         <button
