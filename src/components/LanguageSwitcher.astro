@@ -1,0 +1,73 @@
+---
+/**
+ * LanguageSwitcher.astro
+ * Toggle visual "ES | EN" para el Navbar.
+ * Diseño terminal premium: minimalista, alto contraste, sin redirección automática.
+ * Calcula la URL alternativa en build-time y navega directamente al hacer clic.
+ * 100% estático — sin JS requerido.
+ */
+import { getLangFromUrl, getAlternateUrl } from "../i18n"
+
+const lang = getLangFromUrl(Astro.url)
+const esUrl = getAlternateUrl(Astro.url, "es")
+const enUrl = getAlternateUrl(Astro.url, "en")
+
+const isEs = lang === "es"
+---
+
+<div
+  class="flex items-center gap-0 rounded-lg border border-terminal-border bg-terminal-bg/60 p-0.5 font-mono text-[11px] font-bold uppercase tracking-wider select-none"
+  aria-label={isEs ? "Cambiar idioma" : "Switch language"}
+  role="group"
+>
+  <!-- ES pill -->
+  {
+    isEs ? (
+      <!-- Idioma activo: no navega, solo visual -->
+      <span
+        class="px-2.5 py-1 rounded-md bg-emerald-500 text-black shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+        aria-current="true"
+        title="Español (activo)"
+      >
+        ES
+      </span>
+    ) : (
+      <!-- Idioma inactivo: enlace a la versión ES -->
+      <a
+        href={esUrl}
+        class="px-2.5 py-1 rounded-md text-terminal-dim hover:text-white hover:bg-terminal-elevated/60 transition-all duration-200"
+        aria-label="Cambiar a Español"
+        data-astro-prefetch
+      >
+        ES
+      </a>
+    )
+  }
+
+  <!-- Separador decorativo -->
+  <span class="text-terminal-border/60 px-0.5 leading-none pointer-events-none select-none">|</span>
+
+  <!-- EN pill -->
+  {
+    !isEs ? (
+      <!-- Idioma activo: no navega, solo visual -->
+      <span
+        class="px-2.5 py-1 rounded-md bg-emerald-500 text-black shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+        aria-current="true"
+        title="English (active)"
+      >
+        EN
+      </span>
+    ) : (
+      <!-- Idioma inactivo: enlace a la versión EN -->
+      <a
+        href={enUrl}
+        class="px-2.5 py-1 rounded-md text-terminal-dim hover:text-white hover:bg-terminal-elevated/60 transition-all duration-200"
+        aria-label="Switch to English"
+        data-astro-prefetch
+      >
+        EN
+      </a>
+    )
+  }
+</div>

@@ -178,21 +178,25 @@ export function formatDateLong(dateInput: string | Date, lang: Lang): string {
 
 /**
  * Tipo para campos bilingües en los archivos JSON de activos.
- * Permite tanto string simple (legacy) como objeto bilingüe.
+ * Permite tanto un valor genérico (string, array) como un objeto bilingüe { es, en }.
  */
-export type BilingualField = string | { es: string; en: string }
+export type BilingualField<T = string> = T | { es: T; en: T }
 
 /**
  * Extrae el valor del idioma correcto de un campo bilingüe.
- * Compatible con campos string simples (backward-compat) y objetos { es, en }.
+ * Compatible con campos simples (backward-compat) y objetos { es, en }.
  *
  * @example
  * getBilingual({ es: "Definición", en: "Definition" }, "en") // → "Definition"
  * getBilingual("texto simple", "en") // → "texto simple"
+ * getBilingual({ es: ["A"], en: ["B"] }, "en") // → ["B"]
  */
-export function getBilingual(field: BilingualField, lang: Lang): string {
-  if (typeof field === "string") return field
-  return field[lang] ?? field[defaultLang] ?? ""
+export function getBilingual<T = string>(field: BilingualField<T>, lang: Lang): T {
+  if (field === null || field === undefined) return field as T;
+  if (typeof field === "object" && !Array.isArray(field) && "es" in field) {
+    return (field as any)[lang] ?? (field as any)[defaultLang];
+  }
+  return field as T;
 }
 
 // ---------------------------------------------------------------------------

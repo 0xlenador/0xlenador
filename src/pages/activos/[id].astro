@@ -21,6 +21,7 @@ import AssetHeader from "../../components/activo/AssetHeader.astro"
 import ToolingGrid from "../../components/activo/ToolingGrid.astro"
 import { colorMap } from "../../lib/colors"
 import type { AssetColor } from "../../lib/colors"
+import { getLangFromUrl, getBilingual } from "../../i18n/utils"
 
 export async function getStaticPaths() {
   return [
@@ -32,14 +33,18 @@ export async function getStaticPaths() {
 
 const { data } = Astro.props
 const c = colorMap[data.accentColor as AssetColor] ?? colorMap.emerald
+const lang = getLangFromUrl(Astro.url)
+
+const seoTitle = getBilingual(data.seo.title, lang)
+const seoDesc = getBilingual(data.seo.description, lang)
 
 // Estructura Schema.org para SEO
 const schema = [
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    headline: data.seo.title,
-    description: data.seo.description,
+    headline: seoTitle,
+    description: seoDesc,
     image: data.seo.ogImage,
     author: {
       "@type": "Person",
@@ -53,8 +58,8 @@ const schema = [
 ---
 
 <Layout
-  title={data.seo.title}
-  description={data.seo.description}
+  title={seoTitle}
+  description={seoDesc}
   image={data.seo.ogImage}
   schema={schema}
 >
@@ -78,7 +83,7 @@ const schema = [
             Definición
           </h3>
           <p class="text-terminal-secondary text-sm leading-relaxed italic">
-            {data.definicion}
+            {getBilingual(data.definicion, lang)}
           </p>
         </section>
 
@@ -140,7 +145,7 @@ const schema = [
             <p
               class="text-xs font-bold leading-relaxed italic border-l-2 border-terminal-bg/20 pl-3 line-clamp-2"
             >
-              {data.datoOculto.teaser}
+              {getBilingual(data.datoOculto.teaser, lang)}
             </p>
             <button
               id="btn-ver-mas-dato"
@@ -178,7 +183,7 @@ const schema = [
               class="custom-scrollbar overflow-y-auto flex-1 pr-3 space-y-4 font-mono text-[11px] leading-relaxed text-terminal-secondary pb-2"
             >
               {
-                data.datoOculto.contenido.map((p, i) => (
+                getBilingual(data.datoOculto.contenido, lang).map((p: string, i: number) => (
                   <p class={i === 0 ? `${c.text400} font-bold` : ""}>{p}</p>
                 ))
               }
@@ -212,7 +217,7 @@ const schema = [
             </a>
 
             {
-              data.floatingTags.map((tag, i) => {
+              getBilingual(data.floatingTags, lang).map((tag: string, i: number) => {
                 const animation = i % 2 === 0 ? "animate-bounce-slow" : "animate-bounce-slower"
                 const position =
                   i === 0
@@ -292,11 +297,11 @@ const schema = [
             </div>
             <div class="grid grid-cols-3 gap-4 w-full">
               {
-                data.arquitectura.map((item) => (
+                data.arquitectura.map((item: any) => (
                   <div class="text-center p-3 border border-terminal-border/50 rounded-2xl bg-terminal-bg/40">
-                    <p class="text-[8px] text-terminal-muted uppercase mb-1">{item.label}</p>
+                    <p class="text-[8px] text-terminal-muted uppercase mb-1">{getBilingual(item.label, lang)}</p>
                     <p class="text-white font-mono font-bold text-[10px] uppercase italic">
-                      {item.value}
+                      {getBilingual(item.value, lang)}
                     </p>
                   </div>
                 ))
@@ -339,7 +344,7 @@ const schema = [
             </div>
             <div class="flex flex-col pb-2">
               <span class="text-terminal-muted italic mb-1 uppercase text-[8px]">Ciclo</span>
-              <span class="text-white italic">{data.matematica.cicloHalving} </span>
+              <span class="text-white italic">{getBilingual(data.matematica.cicloHalving, lang)} </span>
             </div>
           </div>
         </section>
@@ -384,7 +389,7 @@ const schema = [
             <p
               class="text-xs font-bold leading-relaxed italic border-l-2 border-terminal-bg/20 pl-3"
             >
-              {data.analisisCaracter}
+              {getBilingual(data.analisisCaracter, lang)}
             </p>
           </div>
         </div>
@@ -397,16 +402,16 @@ const schema = [
     <section class="mt-12 w-full pt-20">
       <div class="mb-20 text-center">
         <h2 class="text-4xl font-black text-white tracking-tighter uppercase italic mb-4">
-          {data.investigacion.titulo}
+          {getBilingual(data.investigacion.titulo, lang)}
         </h2>
         <p class="text-terminal-muted font-mono text-[10px] uppercase tracking-[0.4em] italic">
-          {data.investigacion.subtitulo}
+          {getBilingual(data.investigacion.subtitulo, lang)}
         </p>
       </div>
 
       <div class="grid grid-cols-1 gap-8 lg:gap-12 items-start max-w-4xl mx-auto">
         {
-          data.investigacion.pilares.map((pilar) => (
+          data.investigacion.pilares.map((pilar: any) => (
             <article class="bg-terminal-surface/20 border border-terminal-border rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
               <div
                 class={`absolute top-0 right-0 w-64 h-64 ${c.bg5} blur-[80px] rounded-full pointer-events-none`}
@@ -414,18 +419,18 @@ const schema = [
               <h2
                 class={`text-xl md:text-2xl font-black text-white uppercase italic ${c.borderL} pl-4 mb-8`}
               >
-                {pilar.titulo}
+                {getBilingual(pilar.titulo, lang)}
               </h2>
               <div class="space-y-8 relative z-10">
-                {pilar.secciones.map((sec, index) => (
+                {pilar.secciones.map((sec: any, index: number) => (
                   <div class={index !== 0 ? "border-t border-terminal-border/50 pt-8" : ""}>
                     <h3
                       class={`${c.text400} font-bold uppercase tracking-widest text-xs font-mono mb-3`}
                     >
-                      {sec.subtitulo}
+                      {getBilingual(sec.subtitulo, lang)}
                     </h3>
                     <p class="text-terminal-secondary text-sm md:text-base leading-relaxed">
-                      {sec.contenido}
+                      {getBilingual(sec.contenido, lang)}
                     </p>
 
                     {sec.tabla && (
@@ -433,7 +438,7 @@ const schema = [
                         <table class="w-full text-left text-sm border-collapse min-w-[600px]">
                           <thead>
                             <tr class="border-b border-terminal-border text-terminal-muted uppercase font-mono text-[10px] tracking-widest bg-terminal-surface/50">
-                              {sec.tabla.headers.map((h, i) => (
+                              {getBilingual(sec.tabla.headers, lang).map((h: string, i: number) => (
                                 <th
                                   class={`py-4 px-5 ${
                                     i === sec.tabla.highlightCol ? c.text500 : ""
@@ -445,9 +450,9 @@ const schema = [
                             </tr>
                           </thead>
                           <tbody class="text-terminal-secondary">
-                            {sec.tabla.rows.map((row, i) => (
+                            {getBilingual(sec.tabla.rows, lang).map((row: string[], i: number) => (
                               <tr class="border-b border-terminal-border/50 hover:bg-terminal-surface/50 transition-colors">
-                                {row.map((cell, j) => {
+                                {row.map((cell: string, j: number) => {
                                   const colClass = sec.tabla.rowColors[i][j]
                                   const color =
                                     colClass === "emerald"
@@ -477,27 +482,27 @@ const schema = [
                     {sec.riskCards && (
                       <>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                          {sec.riskCards.map((cBox) => (
+                          {sec.riskCards.map((cBox: any) => (
                             <div class="bg-terminal-bg/50 p-4 rounded-xl border border-terminal-border">
                               <h4 class="text-terminal-text font-bold text-xs uppercase mb-2 flex items-center gap-2">
                                 <span class={`w-1.5 h-1.5 ${c.bgFull} rounded-full`} />{" "}
-                                {cBox.titulo}
+                                {getBilingual(cBox.titulo, lang)}
                               </h4>
-                              <p class="text-terminal-secondary text-xs">{cBox.texto}</p>
+                              <p class="text-terminal-secondary text-xs">{getBilingual(cBox.texto, lang)}</p>
                             </div>
                           ))}
                         </div>
                         {sec.riskNote && (
-                          <p class="text-terminal-muted text-xs mt-4 italic">{sec.riskNote}</p>
+                          <p class="text-terminal-muted text-xs mt-4 italic">{getBilingual(sec.riskNote, lang)}</p>
                         )}
                       </>
                     )}
 
                     {sec.correlationTags && (
                       <div class="flex flex-wrap gap-2 mt-4">
-                        {sec.correlationTags.map((t) => (
+                        {sec.correlationTags.map((t: any) => (
                           <span class="px-3 py-1 bg-terminal-surface/80 border border-terminal-border rounded-lg text-xs text-terminal-secondary font-mono">
-                            <span class={c.text400}>{t.label}:</span> {t.value}
+                            <span class={c.text400}>{getBilingual(t.label, lang)}:</span> {getBilingual(t.value, lang)}
                           </span>
                         ))}
                       </div>
@@ -512,9 +517,12 @@ const schema = [
     </section>
 
     <FaqAccordion
-      titulo={data.faq.titulo}
-      subtitulo={data.faq.subtitulo}
-      items={data.faq.items}
+      titulo={getBilingual(data.faq.titulo, lang)}
+      subtitulo={getBilingual(data.faq.subtitulo, lang)}
+      items={data.faq.items.map((item: any) => ({
+        pregunta: getBilingual(item.pregunta, lang),
+        respuesta: getBilingual(item.respuesta, lang)
+      }))}
       startId={data.faq.startId}
     />
   </main>

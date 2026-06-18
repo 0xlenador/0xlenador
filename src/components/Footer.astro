@@ -1,5 +1,14 @@
 ---
 import SocialLinks from "./SocialLinks.astro"
+import { useTranslations, getLocalizedPath, type Lang } from "../i18n"
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+const loc = (path: string) => getLocalizedPath(path, lang)
 ---
 
 <footer class="mt-16 border-t border-terminal-border-subtle bg-terminal-bg py-16 px-6">
@@ -9,9 +18,8 @@ import SocialLinks from "./SocialLinks.astro"
       <p
         class="text-[10px] font-mono text-terminal-subtle uppercase tracking-[0.2em] text-center md:text-left leading-relaxed"
       >
-        <b class="text-terminal-muted font-bold">Disclaimer:</b> Todo el contenido compartido en 0xLeñador
-        tiene fines estrictamente educativos e informativos. No constituye asesoría financiera, recomendación
-        de inversión ni consejo legal. Invierte con criterio propio y responsabilidad.
+        <b class="text-terminal-muted font-bold">Disclaimer:</b>
+        {t("footer.disclaimer")}
       </p>
     </div>
 
@@ -22,58 +30,54 @@ import SocialLinks from "./SocialLinks.astro"
           0x<span class="text-emerald-500">Leñador</span>
         </div>
         <p class="text-terminal-muted text-sm leading-relaxed max-w-xs">
-          Hub Operativo de herramientas, directorio de recursos y seguimiento de operaciones en
-          mercados Web3 y tradicionales.
+          {t("footer.brand.description")}
         </p>
       </div>
 
-      <!-- Mapa del sitio actualizado -->
+      <!-- Mapa del sitio -->
       <div class="flex flex-col gap-3">
-        <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Navegación</h4>
-        <a href="/" class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
-          >Inicio</a
-        >
-        <a
-          href="/herramientas"
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
-          >Herramientas</a
-        >
-        <a
-          href="/directorio"
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">Directorio</a
-        >
-        <a
-          href="/activos"
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">Activos</a
-        >
-        <a
-          href="/operaciones"
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">Operaciones</a
-        >
-        <a href="/blog" class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
-          >Blog</a
-        >
+        <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">
+          {t("footer.col.navegacion")}
+        </h4>
+        <a href={loc("/")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.inicio")}
+        </a>
+        <a href={loc("/herramientas")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.herramientas")}
+        </a>
+        <a href={loc("/directorio")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.directorio")}
+        </a>
+        <a href={loc("/activos")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.activos")}
+        </a>
+        <a href={loc("/operaciones")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.operaciones")}
+        </a>
+        <a href={loc("/blog")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.blog")}
+        </a>
       </div>
 
       <!-- Comunidad -->
       <div class="flex flex-col gap-3">
-        <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Comunidad</h4>
+        <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">
+          {t("footer.col.comunidad")}
+        </h4>
         <SocialLinks variant="with-label" size="sm" />
       </div>
 
       <!-- Legal -->
       <div class="flex flex-col gap-3">
-        <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">Legal</h4>
-        <a
-          href="/privacidad"
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
-          >Privacidad &amp; Cookies</a
-        >
-        <a
-          href="/terminos"
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
-          >Términos &amp; Aviso Legal</a
-        >
+        <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">
+          {t("footer.col.legal")}
+        </h4>
+        <a href={loc("/privacidad")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.privacidad")}
+        </a>
+        <a href={loc("/terminos")} class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit">
+          {t("footer.link.terminos")}
+        </a>
       </div>
     </div>
 
@@ -82,15 +86,15 @@ import SocialLinks from "./SocialLinks.astro"
       class="pt-8 border-t border-terminal-border-subtle flex flex-col md:flex-row justify-between items-center gap-4"
     >
       <p class="text-terminal-subtle text-[10px] uppercase tracking-widest font-mono">
-        &copy; 2026 0x Leñador &bull; Derechos Reservados &bull; Build in public
+        {t("footer.copyright")}
       </p>
       <div class="flex gap-6">
-        <span class="text-[10px] text-terminal-dim font-mono uppercase tracking-tighter"
-          >Status: System Operational</span
-        >
-        <span class="text-[10px] text-emerald-500/50 font-mono animate-pulse uppercase"
-          >&#9679; Live Data</span
-        >
+        <span class="text-[10px] text-terminal-dim font-mono uppercase tracking-tighter">
+          {t("footer.status")}
+        </span>
+        <span class="text-[10px] text-emerald-500/50 font-mono animate-pulse uppercase">
+          &#9679; {t("footer.live")}
+        </span>
       </div>
     </div>
   </div>

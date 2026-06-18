@@ -8,85 +8,138 @@
   "image": "/img/cripto/ethereum.webp",
   "imageAlt": "Core del Protocolo Ethereum",
   "officialUrl": "https://ethereum.org",
-
   "seo": {
-    "title": "¿Qué es Ethereum? Guía Técnica y Tesis de Inversión | 0xLeñador",
-    "description": "Análisis profundo de Ethereum (ETH). Explora la computadora del mundo, su ecosistema de Smart Contracts, finanzas descentralizadas (DeFi) y su evolución como Ultrasound Money.",
-    "keywords": "ethereum, eth, investigación cripto, smart contracts, proof of stake, defi, que es ethereum, tesis de inversion ethereum, 0xleñador",
+    "title": {
+      "es": "¿Qué es Ethereum? Guía Técnica y Tesis de Inversión | 0xLeñador",
+      "en": "What is Ethereum? Technical Guide & Investment Thesis | 0xLeñador"
+    },
+    "description": {
+      "es": "Análisis profundo de Ethereum (ETH). Explora la computadora del mundo, su ecosistema de Smart Contracts, finanzas descentralizadas (DeFi) y su evolución como Ultrasound Money.",
+      "en": "Deep analysis of Ethereum (ETH). Explore the world's computer, its Smart Contract ecosystem, decentralized finance (DeFi), and its evolution as Ultrasound Money."
+    },
+    "keywords": {
+      "es": "ethereum, eth, investigación cripto, smart contracts, proof of stake, defi, que es ethereum, tesis de inversion ethereum, 0xleñador",
+      "en": "ethereum, eth, crypto research, smart contracts, proof of stake, defi, what is ethereum, ethereum investment thesis, 0xleñador"
+    },
     "ogImage": "/img/meta/ethereum-og.webp"
   },
-
   "price": {
     "apiUrl": "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
     "apiPath": "ethereum.usd"
   },
-
-  "definicion": "Una computadora mundial descentralizada y programable que funciona como la capa de liquidación definitiva para el valor, los contratos inteligentes y la soberanía digital en internet.",
-
+  "definicion": {
+    "es": "Una computadora mundial descentralizada y programable que funciona como la capa de liquidación definitiva para el valor, los contratos inteligentes y la soberanía digital en internet.",
+    "en": "A decentralized, programmable world computer that serves as the definitive settlement layer for value, smart contracts, and digital sovereignty on the internet."
+  },
   "genesis": {
     "fechaInicio": "30/07/2015",
     "creador": "Vitalik Buterin",
     "whitepaperUrl": "https://ethereum.org/whitepaper/"
   },
-
   "matematica": {
     "suministroTotal": "120,686,000",
     "cicloHalving": "EIP-1559"
   },
-
   "arquitectura": [
     { "label": "Seguridad", "value": "BLS / Keccak-256" },
     { "label": "Consenso", "value": "PoS (Gasper)" },
     { "label": "Liquidación", "value": "Account Model" }
   ],
-
-  "floatingTags": [
-    "Smart Contracts L1",
-    "Ultrasound Money",
-    "Internet Bond",
-    "Resistente a Censura"
-  ],
-
-  "datoOculto": {
-    "teaser": "\"La Apatridia mediante Verkle Trees permitirá que cualquier smartphone valide la red, eliminando para siempre la barrera del hardware masivo.\"",
-    "contenido": [
-      "\"La Apatridia (Statelessness) mediante Verkle Trees permite que un nodo verifique la red sin necesidad de almacenar cientos de gigabytes de historial, utilizando pruebas criptográficas ultraligeras.\"",
-      "Al reducir drásticamente los requisitos técnicos, esta tecnología permite que cualquier dispositivo móvil funcione como un nodo verificador completo, blindando la red contra la censura de grandes centros de datos.",
-      "Esto soluciona el dilema de la escalabilidad a largo plazo: Ethereum se vuelve masivamente escalable a través de L2s, pero manteniendo una descentralización a nivel de usuario que ninguna otra red de alta velocidad puede igualar."
-    ]
+  "floatingTags": {
+    "es": ["Smart Contracts L1", "Ultrasound Money", "Internet Bond", "Resistente a Censura"],
+    "en": ["Smart Contracts L1", "Ultrasound Money", "Internet Bond", "Censorship Resistant"]
   },
-
-  "analisisCaracter": "\"El foso de Ethereum no es la velocidad, sino su densidad: un efecto de red masivo de desarrolladores y liquidez institucional que convierte a su seguridad en la gravedad absoluta sobre la que orbita todo el ecosistema Web3.\"",
-
+  "datoOculto": {
+    "teaser": {
+      "es": "\"La Apatridia mediante Verkle Trees permitirá que cualquier smartphone valide la red, eliminando para siempre la barrera del hardware masivo.\"",
+      "en": "\"Statelessness via Verkle Trees will allow any smartphone to validate the network, forever eliminating the barrier of massive hardware.\""
+    },
+    "contenido": {
+      "es": [
+        "\"La Apatridia (Statelessness) mediante Verkle Trees permite que un nodo verifique la red sin necesidad de almacenar cientos de gigabytes de historial, utilizando pruebas criptográficas ultraligeras.\"",
+        "Al reducir drásticamente los requisitos técnicos, esta tecnología permite que cualquier dispositivo móvil funcione como un nodo verificador completo, blindando la red contra la censura de grandes centros de datos.",
+        "Esto soluciona el dilema de la escalabilidad a largo plazo: Ethereum se vuelve masivamente escalable a través de L2s, pero manteniendo una descentralización a nivel de usuario que ninguna otra red de alta velocidad puede igualar."
+      ],
+      "en": [
+        "\"Statelessness via Verkle Trees allows a node to verify the network without storing hundreds of gigabytes of history, using ultra-lightweight cryptographic proofs.\"",
+        "By drastically reducing technical requirements, this technology allows any mobile device to function as a full verifier node, shielding the network from censorship by large data centers.",
+        "This solves the long-term scalability dilemma: Ethereum becomes massively scalable through L2s, while maintaining user-level decentralization that no other high-speed network can match."
+      ]
+    }
+  },
+  "analisisCaracter": {
+    "es": "\"El foso de Ethereum no es la velocidad, sino su densidad: un efecto de red masivo de desarrolladores y liquidez institucional que convierte a su seguridad en la gravedad absoluta sobre la que orbita todo el ecosistema Web3.\"",
+    "en": "\"Ethereum's moat is not speed, but its density: a massive developer network effect and institutional liquidity that turns its security into the absolute gravity around which the entire Web3 ecosystem orbits.\""
+  },
   "tooling": {
     "mercados": ["binance", "bybit", "hyperliquid"],
     "analisis": ["tradingview", "coingecko", "coinmarketcap"],
     "custodia": ["rabby", "ledger", "zerion"],
     "infraestructura": ["etherscan", "nansen"]
   },
-
   "investigacion": {
-    "titulo": "Investigación Profunda",
-    "subtitulo": "Protocolo de Entendimiento Ethereum / Nivel de Acceso: Beacon Node",
+    "titulo": {
+      "es": "Investigación Profunda",
+      "en": "Deep Research"
+    },
+    "subtitulo": {
+      "es": "Protocolo de Entendimiento Ethereum / Nivel de Acceso: Beacon Node",
+      "en": "Ethereum Understanding Protocol / Access Level: Beacon Node"
+    },
     "pilares": [
       {
-        "titulo": "1. Tesis de Inversión: La Computadora Mundial",
+        "titulo": {
+          "es": "1. Tesis de Inversión: La Computadora Mundial",
+          "en": "1. Investment Thesis: The World Computer"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Por qué Ethereum se considera la capa de liquidación global de internet y qué valor intrínseco genera su red?",
-            "contenido": "Ethereum es el suelo donde se asienta la nueva economía digital. Su valor intrínseco nace de ser la red con mayor liquidez y seguridad para ejecutar contratos inteligentes sin intermediarios. No es solo una moneda; es la infraestructura necesaria para que trillones de dólares en activos puedan moverse de forma programable y transparente."
+            "subtitulo": {
+              "es": "¿Por qué Ethereum se considera la capa de liquidación global de internet y qué valor intrínseco genera su red?",
+              "en": "Why is Ethereum considered the global settlement layer of the internet and what intrinsic value does its network generate?"
+            },
+            "contenido": {
+              "es": "Ethereum es el suelo donde se asienta la nueva economía digital. Su valor intrínseco nace de ser la red con mayor liquidez y seguridad para ejecutar contratos inteligentes sin intermediarios. No es solo una moneda; es la infraestructura necesaria para que trillones de dólares en activos puedan moverse de forma programable y transparente.",
+              "en": "Ethereum is the ground on which the new digital economy is built. Its intrinsic value comes from being the network with the greatest liquidity and security for executing smart contracts without intermediaries. It is not just a currency; it is the infrastructure needed for trillions of dollars in assets to move in a programmable and transparent way."
+            }
           },
           {
-            "subtitulo": "¿Qué ventaja estructural ofrece ETH como 'activo de triple orden' (capital, consumo y reserva) frente a otras criptomonedas?",
-            "contenido": "ETH es un activo único: funciona como capital (genera dividendos vía staking), como materia prima (gas necesario para la red) y como reserva de valor (escasez inducida). Esta triple naturaleza crea una presión de demanda que activos de un solo propósito no pueden replicar.",
+            "subtitulo": {
+              "es": "¿Qué ventaja estructural ofrece ETH como 'activo de triple orden' (capital, consumo y reserva) frente a otras criptomonedas?",
+              "en": "What structural advantage does ETH offer as a 'triple-order asset' (capital, consumption, and reserve) compared to other cryptocurrencies?"
+            },
+            "contenido": {
+              "es": "ETH es un activo único: funciona como capital (genera dividendos vía staking), como materia prima (gas necesario para la red) y como reserva de valor (escasez inducida). Esta triple naturaleza crea una presión de demanda que activos de un solo propósito no pueden replicar.",
+              "en": "ETH is a unique asset: it functions as capital (generates dividends via staking), as a commodity (gas required for the network), and as a store of value (induced scarcity). This triple nature creates demand pressure that single-purpose assets cannot replicate."
+            },
             "tabla": {
-              "headers": ["Propiedad", "ETH (Triple Orden)", "BTC (Oro Digital)", "Fiat"],
+              "headers": {
+                "es": ["Propiedad", "ETH (Triple Orden)", "BTC (Oro Digital)", "Fiat"],
+                "en": ["Property", "ETH (Triple Order)", "BTC (Digital Gold)", "Fiat"]
+              },
               "highlightCol": 1,
-              "rows": [
-                ["Rendimiento", "Staking Yield (~3-5%)", "Nulo (HODL)", "Nulo/Inflación"],
-                ["Uso Intrínseco", "Gas / Computación", "Transferencia Valor", "Pago Impuestos"],
-                ["Dinámica Oferta", "Deflacionaria (EIP-1559)", "Fija (21M)", "Inflación Ilimitada"]
-              ],
+              "rows": {
+                "es": [
+                  ["Rendimiento", "Staking Yield (~3-5%)", "Nulo (HODL)", "Nulo/Inflación"],
+                  ["Uso Intrínseco", "Gas / Computación", "Transferencia Valor", "Pago Impuestos"],
+                  [
+                    "Dinámica Oferta",
+                    "Deflacionaria (EIP-1559)",
+                    "Fija (21M)",
+                    "Inflación Ilimitada"
+                  ]
+                ],
+                "en": [
+                  ["Yield", "Staking Yield (~3-5%)", "None (HODL)", "None/Inflation"],
+                  ["Intrinsic Use", "Gas / Computation", "Value Transfer", "Tax Payment"],
+                  [
+                    "Supply Dynamics",
+                    "Deflationary (EIP-1559)",
+                    "Fixed (21M)",
+                    "Unlimited Inflation"
+                  ]
+                ]
+              },
               "rowColors": [
                 ["", "emerald", "emerald-dim", "red"],
                 ["", "emerald", "slate", "slate"],
@@ -97,171 +150,394 @@
         ]
       },
       {
-        "titulo": "2. Seguridad y Resistencia de la Red PoS",
+        "titulo": {
+          "es": "2. Seguridad y Resistencia de la Red PoS",
+          "en": "2. PoS Network Security and Resilience"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cuál es el nivel real de descentralización de Ethereum tras su transición a Proof-of-Stake y qué tan resistente es a la censura estatal?",
-            "contenido": "Con millones de ETH bloqueados por una red global de validadores, Ethereum es hoy la infraestructura PoS más robusta. Aunque la concentración en grandes pools es un punto a vigilar, la diversidad de clientes y la capacidad de los nodos para ignorar transacciones censuradas protegen la neutralidad de la red frente a presiones regulatorias externas."
+            "subtitulo": {
+              "es": "¿Cuál es el nivel real de descentralización de Ethereum tras su transición a Proof-of-Stake y qué tan resistente es a la censura estatal?",
+              "en": "What is the actual level of decentralization of Ethereum after its transition to Proof-of-Stake and how resistant is it to state censorship?"
+            },
+            "contenido": {
+              "es": "Con millones de ETH bloqueados por una red global de validadores, Ethereum es hoy la infraestructura PoS más robusta. Aunque la concentración en grandes pools es un punto a vigilar, la diversidad de clientes y la capacidad de los nodos para ignorar transacciones censuradas protegen la neutralidad de la red frente a presiones regulatorias externas.",
+              "en": "With millions of ETH locked by a global network of validators, Ethereum is today the most robust PoS infrastructure. Although concentration in large pools is a point to watch, client diversity and nodes' ability to ignore censored transactions protect network neutrality against external regulatory pressures."
+            }
           },
           {
-            "subtitulo": "¿Cómo garantiza el staking masivo la inmutabilidad de la red y qué riesgos de centralización existen en los principales pools de validadores?",
-            "contenido": "El staking crea un muro de seguridad económica: atacar la red requeriría comprar y quemar miles de millones de dólares en ETH, lo que lo hace inviable. El riesgo reside en la gobernanza de los protocolos de liquid staking, pero soluciones como DVT (Distributed Validator Technology) fragmentan ese poder."
+            "subtitulo": {
+              "es": "¿Cómo garantiza el staking masivo la inmutabilidad de la red y qué riesgos de centralización existen en los principales pools de validadores?",
+              "en": "How does massive staking guarantee network immutability and what centralization risks exist in major validator pools?"
+            },
+            "contenido": {
+              "es": "El staking crea un muro de seguridad económica: atacar la red requeriría comprar y quemar miles de millones de dólares en ETH, lo que lo hace inviable. El riesgo reside en la gobernanza de los protocolos de liquid staking, pero soluciones como DVT (Distributed Validator Technology) fragmentan ese poder.",
+              "en": "Staking creates an economic security wall: attacking the network would require buying and burning billions of dollars in ETH, making it unfeasible. The risk lies in the governance of liquid staking protocols, but solutions like DVT (Distributed Validator Technology) fragment that power."
+            }
           }
         ]
       },
       {
-        "titulo": "3. Política Monetaria: Ultrasound Money",
+        "titulo": {
+          "es": "3. Política Monetaria: Ultrasound Money",
+          "en": "3. Monetary Policy: Ultrasound Money"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cómo funciona el mecanismo de quema de comisiones (EIP-1559) y por qué Ethereum tiende a ser un activo deflacionario en periodos de alta actividad?",
-            "contenido": "Gracias al EIP-1559, una parte de cada transacción se elimina para siempre. Si hay mucho uso (DeFi, L2s), se quema más ETH del que se crea. En 2026, esto ha consolidado a ETH como 'dinero ultrasonido', donde la oferta total disminuye orgánicamente con el éxito de la red."
+            "subtitulo": {
+              "es": "¿Cómo funciona el mecanismo de quema de comisiones (EIP-1559) y por qué Ethereum tiende a ser un activo deflacionario en periodos de alta actividad?",
+              "en": "How does the fee burn mechanism (EIP-1559) work and why does Ethereum tend to be a deflationary asset in high-activity periods?"
+            },
+            "contenido": {
+              "es": "Gracias al EIP-1559, una parte de cada transacción se elimina para siempre. Si hay mucho uso (DeFi, L2s), se quema más ETH del que se crea. En 2026, esto ha consolidado a ETH como 'dinero ultrasonido', donde la oferta total disminuye orgánicamente con el éxito de la red.",
+              "en": "Thanks to EIP-1559, a portion of every transaction is permanently destroyed. If there is heavy use (DeFi, L2s), more ETH is burned than created. In 2026, this has consolidated ETH as 'ultrasound money', where the total supply decreases organically with network success."
+            }
           },
           {
-            "subtitulo": "¿Cuál es la diferencia fundamental entre la emisión dinámica de ETH y el suministro fijo de Bitcoin en términos de sostenibilidad económica?",
-            "contenido": "Mientras BTC apuesta por escasez rígida, Ethereum apuesta por escasez dinámica. ETH recompensa la seguridad solo lo necesario, compensando la emisión con la quema por uso. Esto garantiza que la red sea sostenible a largo plazo sin depender exclusivamente de una apreciación infinita del precio."
+            "subtitulo": {
+              "es": "¿Cuál es la diferencia fundamental entre la emisión dinámica de ETH y el suministro fijo de Bitcoin en términos de sostenibilidad económica?",
+              "en": "What is the fundamental difference between ETH's dynamic issuance and Bitcoin's fixed supply in terms of economic sustainability?"
+            },
+            "contenido": {
+              "es": "Mientras BTC apuesta por escasez rígida, Ethereum apuesta por escasez dinámica. ETH recompensa la seguridad solo lo necesario, compensando la emisión con la quema por uso. Esto garantiza que la red sea sostenible a largo plazo sin depender exclusivamente de una apreciación infinita del precio.",
+              "en": "While BTC bets on rigid scarcity, Ethereum bets on dynamic scarcity. ETH rewards security only as much as needed, offsetting issuance with burn-by-use. This ensures long-term network sustainability without relying solely on infinite price appreciation."
+            }
           }
         ]
       },
       {
-        "titulo": "4. Ecosistema, Layer 2 y Escalabilidad",
+        "titulo": {
+          "es": "4. Ecosistema, Layer 2 y Escalabilidad",
+          "en": "4. Ecosystem, Layer 2 and Scalability"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cómo impactan las soluciones de Capa 2 (Arbitrum, Optimism, Base) en la acumulación de valor para el token ETH y en la experiencia del usuario?",
-            "contenido": "Las L2 son las autopistas que permiten que Ethereum sea rápido y barato. No le quitan valor a ETH; al contrario, lo aumentan, ya que todas estas capas deben pagar sus liquidaciones finales en la red principal, consolidando a ETH como el activo de reserva de todo el ecosistema modular."
+            "subtitulo": {
+              "es": "¿Cómo impactan las soluciones de Capa 2 (Arbitrum, Optimism, Base) en la acumulación de valor para el token ETH y en la experiencia del usuario?",
+              "en": "How do Layer 2 solutions (Arbitrum, Optimism, Base) impact value accrual for the ETH token and the user experience?"
+            },
+            "contenido": {
+              "es": "Las L2 son las autopistas que permiten que Ethereum sea rápido y barato. No le quitan valor a ETH; al contrario, lo aumentan, ya que todas estas capas deben pagar sus liquidaciones finales en la red principal, consolidando a ETH como el activo de reserva de todo el ecosistema modular.",
+              "en": "L2s are the highways that allow Ethereum to be fast and cheap. They don't take value away from ETH; on the contrary, they increase it, since all these layers must pay their final settlements on the mainnet, consolidating ETH as the reserve asset of the entire modular ecosystem."
+            }
           },
           {
-            "subtitulo": "¿Cuál es el estado actual de la adopción de DeFi, NFTs y activos del mundo real (RWA) en 2026?",
-            "contenido": "Ethereum es el hogar indiscutible de los RWA (Real World Assets). Desde bonos del tesoro hasta bienes raíces tokenizados, las grandes instituciones eligen Ethereum por su seguridad probada. En 2026, la mayoría del valor bloqueado en DeFi proviene de activos del mundo real."
+            "subtitulo": {
+              "es": "¿Cuál es el estado actual de la adopción de DeFi, NFTs y activos del mundo real (RWA) en 2026?",
+              "en": "What is the current state of DeFi, NFT, and real-world asset (RWA) adoption in 2026?"
+            },
+            "contenido": {
+              "es": "Ethereum es el hogar indiscutible de los RWA (Real World Assets). Desde bonos del tesoro hasta bienes raíces tokenizados, las grandes instituciones eligen Ethereum por su seguridad probada. En 2026, la mayoría del valor bloqueado en DeFi proviene de activos del mundo real.",
+              "en": "Ethereum is the undisputed home of RWAs (Real World Assets). From treasury bonds to tokenized real estate, major institutions choose Ethereum for its proven security. In 2026, most of the value locked in DeFi comes from real-world assets."
+            }
           }
         ]
       },
       {
-        "titulo": "5. Valoración Fundamental y Métricas On-chain",
+        "titulo": {
+          "es": "5. Valoración Fundamental y Métricas On-chain",
+          "en": "5. Fundamental Valuation and On-chain Metrics"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cómo se valora Ethereum fundamentalmente?",
-            "contenido": "ETH se valora como una mezcla entre una empresa de software y un bono. Analizamos los ingresos por comisiones que genera la red y el yield del staking. Siguiendo la Ley de Metcalfe, el valor de la red crece exponencialmente con cada nuevo usuario y protocolo conectado."
+            "subtitulo": {
+              "es": "¿Cómo se valora Ethereum fundamentalmente?",
+              "en": "How is Ethereum fundamentally valued?"
+            },
+            "contenido": {
+              "es": "ETH se valora como una mezcla entre una empresa de software y un bono. Analizamos los ingresos por comisiones que genera la red y el yield del staking. Siguiendo la Ley de Metcalfe, el valor de la red crece exponencialmente con cada nuevo usuario y protocolo conectado.",
+              "en": "ETH is valued as a mix between a software company and a bond. We analyze the fee revenue the network generates and the staking yield. Following Metcalfe's Law, network value grows exponentially with each new user and connected protocol."
+            }
           },
           {
-            "subtitulo": "¿Cuál es el rango de precios justificado en los próximos 3-5 años?",
-            "contenido": "Los escenarios base institucionales para finales de 2026-2027 oscilan entre $8,000 y $15,000, impulsados por el flujo de los ETFs spot y la reducción de oferta circulante debido al staking masivo y la quema de comisiones."
+            "subtitulo": {
+              "es": "¿Cuál es el rango de precios justificado en los próximos 3-5 años?",
+              "en": "What is the justified price range over the next 3-5 years?"
+            },
+            "contenido": {
+              "es": "Los escenarios base institucionales para finales de 2026-2027 oscilan entre $8,000 y $15,000, impulsados por el flujo de los ETFs spot y la reducción de oferta circulante debido al staking masivo y la quema de comisiones.",
+              "en": "Institutional base scenarios for end-2026 to 2027 range from $8,000 to $15,000, driven by spot ETF flows and reduced circulating supply due to massive staking and fee burning."
+            }
           }
         ]
       },
       {
-        "titulo": "6. Riesgos, Volatilidad y Competencia",
+        "titulo": {
+          "es": "6. Riesgos, Volatilidad y Competencia",
+          "en": "6. Risks, Volatility and Competition"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cuál es el perfil de volatilidad histórica y asimetría riesgo/recompensa?",
-            "contenido": "La volatilidad de ETH es el precio de su crecimiento asimétrico. Al ser el activo base de miles de protocolos, su riesgo está ligado a la ejecución técnica. En 2026, la asimetría es marcadamente positiva: el potencial de ser la capa base financiera compensa los episodios de volatilidad."
+            "subtitulo": {
+              "es": "¿Cuál es el perfil de volatilidad histórica y asimetría riesgo/recompensa?",
+              "en": "What is the historical volatility profile and risk/reward asymmetry?"
+            },
+            "contenido": {
+              "es": "La volatilidad de ETH es el precio de su crecimiento asimétrico. Al ser el activo base de miles de protocolos, su riesgo está ligado a la ejecución técnica. En 2026, la asimetría es marcadamente positiva: el potencial de ser la capa base financiera compensa los episodios de volatilidad.",
+              "en": "ETH's volatility is the price of its asymmetric growth. As the base asset of thousands of protocols, its risk is tied to technical execution. In 2026, the asymmetry is markedly positive: the potential to be the financial base layer more than compensates for volatility episodes."
+            }
           },
           {
-            "subtitulo": "¿Cuáles son los principales riesgos y su mitigación?",
-            "contenido": "",
+            "subtitulo": {
+              "es": "¿Cuáles son los principales riesgos y su mitigación?",
+              "en": "What are the main risks and their mitigation?"
+            },
+            "contenido": {
+              "es": "",
+              "en": ""
+            },
             "riskCards": [
               {
-                "titulo": "Smart Contracts",
-                "texto": "Vulnerabilidades en el código de protocolos DeFi (Mitigación: Auditorías y Seguros on-chain)."
+                "titulo": {
+                  "es": "Smart Contracts",
+                  "en": "Smart Contracts"
+                },
+                "texto": {
+                  "es": "Vulnerabilidades en el código de protocolos DeFi (Mitigación: Auditorías y Seguros on-chain).",
+                  "en": "Vulnerabilities in DeFi protocol code (Mitigation: Audits and on-chain insurance)."
+                }
               },
               {
-                "titulo": "Regulatorio",
-                "texto": "Estatus del Staking como valor mobiliario (Mitigación: ETFs aprobados y descentralización)."
+                "titulo": {
+                  "es": "Regulatorio",
+                  "en": "Regulatory"
+                },
+                "texto": {
+                  "es": "Estatus del Staking como valor mobiliario (Mitigación: ETFs aprobados y descentralización).",
+                  "en": "Staking status as a security (Mitigation: ETFs approved and decentralization)."
+                }
               },
               {
-                "titulo": "Competencia L1",
-                "texto": "Pérdida de mercado frente a redes de alta velocidad como Solana (Mitigación: Ecosistema L2 robusto)."
+                "titulo": {
+                  "es": "Competencia L1",
+                  "en": "L1 Competition"
+                },
+                "texto": {
+                  "es": "Pérdida de mercado frente a redes de alta velocidad como Solana (Mitigación: Ecosistema L2 robusto).",
+                  "en": "Market share loss to high-speed networks like Solana (Mitigation: Robust L2 ecosystem)."
+                }
               },
               {
-                "titulo": "Centralización",
-                "texto": "Dominio de proveedores de staking líquido (Mitigación: Implementación de tecnología DVT)."
+                "titulo": {
+                  "es": "Centralización",
+                  "en": "Centralization"
+                },
+                "texto": {
+                  "es": "Dominio de proveedores de staking líquido (Mitigación: Implementación de tecnología DVT).",
+                  "en": "Dominance of liquid staking providers (Mitigation: DVT technology implementation)."
+                }
               }
             ],
-            "riskNote": "Ethereum mitiga estos riesgos mediante el mayor ecosistema de desarrolladores y la liquidez más profunda del sector."
+            "riskNote": {
+              "es": "Ethereum mitiga estos riesgos mediante el mayor ecosistema de desarrolladores y la liquidez más profunda del sector.",
+              "en": "Ethereum mitigates these risks through the largest developer ecosystem and the deepest liquidity in the sector."
+            }
           }
         ]
       },
       {
-        "titulo": "7. Ajuste de Ethereum en Carteras Diversificadas",
+        "titulo": {
+          "es": "7. Ajuste de Ethereum en Carteras Diversificadas",
+          "en": "7. Ethereum's Fit in Diversified Portfolios"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cómo impacta Ethereum en el Sharpe ratio y diversificación?",
-            "contenido": "Añadir ETH a una cartera tradicional captura alfa que no existe en acciones. Su capacidad para generar rendimiento propio (staking) mientras mantiene potencial de revalorización mejora el Sharpe ratio, ofreciendo mejores retornos ajustados por riesgo."
+            "subtitulo": {
+              "es": "¿Cómo impacta Ethereum en el Sharpe ratio y diversificación?",
+              "en": "How does Ethereum impact the Sharpe ratio and diversification?"
+            },
+            "contenido": {
+              "es": "Añadir ETH a una cartera tradicional captura alfa que no existe en acciones. Su capacidad para generar rendimiento propio (staking) mientras mantiene potencial de revalorización mejora el Sharpe ratio, ofreciendo mejores retornos ajustados por riesgo.",
+              "en": "Adding ETH to a traditional portfolio captures alpha that doesn't exist in stocks. Its ability to generate its own yield (staking) while maintaining appreciation potential improves the Sharpe ratio, offering better risk-adjusted returns."
+            }
           },
           {
-            "subtitulo": "¿Qué correlación tiene con otras clases de activos?",
-            "contenido": "ETH muestra una alta correlación con el Nasdaq y el sector tech, funcionando como un 'barbell': solidez de infraestructura madura con explosividad de tecnología emergente. Es el hedge perfecto para el crecimiento digital.",
+            "subtitulo": {
+              "es": "¿Qué correlación tiene con otras clases de activos?",
+              "en": "What correlation does it have with other asset classes?"
+            },
+            "contenido": {
+              "es": "ETH muestra una alta correlación con el Nasdaq y el sector tech, funcionando como un 'barbell': solidez de infraestructura madura con explosividad de tecnología emergente. Es el hedge perfecto para el crecimiento digital.",
+              "en": "ETH shows high correlation with Nasdaq and the tech sector, functioning as a 'barbell': the solidity of mature infrastructure with the explosiveness of emerging technology. It is the perfect hedge for digital growth."
+            },
             "correlationTags": [
-              { "label": "Nasdaq", "value": "Alta" },
-              { "label": "Bitcoin", "value": "Media/Alta" },
-              { "label": "Bonos", "value": "Baja/Inversa" }
+              {
+                "label": {
+                  "es": "Nasdaq",
+                  "en": "Nasdaq"
+                },
+                "value": {
+                  "es": "Alta",
+                  "en": "High"
+                }
+              },
+              {
+                "label": {
+                  "es": "Bitcoin",
+                  "en": "Bitcoin"
+                },
+                "value": {
+                  "es": "Media/Alta",
+                  "en": "Medium/High"
+                }
+              },
+              {
+                "label": {
+                  "es": "Bonos",
+                  "en": "Bonds"
+                },
+                "value": {
+                  "es": "Baja/Inversa",
+                  "en": "Low/Inverse"
+                }
+              }
             ]
           }
         ]
       },
       {
-        "titulo": "8. Horizonte 2026-2030 y Catalizadores",
+        "titulo": {
+          "es": "8. Horizonte 2026-2030 y Catalizadores",
+          "en": "8. 2026-2030 Horizon and Catalysts"
+        },
         "secciones": [
           {
-            "subtitulo": "¿Cuáles son los catalizadores y escenarios base para los próximos 5-10 años?",
-            "contenido": "Catalizadores principales: Danksharding (reducción masiva de costes en L2), tokenización masiva de RWA y penetración de ETFs en wealth management. Escenario base: Ethereum consolida su rol como la capa de liquidación global para activos financieros."
+            "subtitulo": {
+              "es": "¿Cuáles son los catalizadores y escenarios base para los próximos 5-10 años?",
+              "en": "What are the catalysts and base scenarios for the next 5-10 years?"
+            },
+            "contenido": {
+              "es": "Catalizadores principales: Danksharding (reducción masiva de costes en L2), tokenización masiva de RWA y penetración de ETFs en wealth management. Escenario base: Ethereum consolida su rol como la capa de liquidación global para activos financieros.",
+              "en": "Main catalysts: Danksharding (massive L2 cost reduction), mass RWA tokenization, and ETF penetration in wealth management. Base scenario: Ethereum consolidates its role as the global settlement layer for financial assets."
+            }
           },
           {
-            "subtitulo": "¿Es Ethereum una asignación atractiva en la cartera actual?",
-            "contenido": "Sí. En 2026 representa una oportunidad asimétrica por su madurez institucional. Los comités de inversión recomiendan una asignación del 1-5% como generador de alfa y exposición directa a la innovación de los contratos inteligentes."
+            "subtitulo": {
+              "es": "¿Es Ethereum una asignación atractiva en la cartera actual?",
+              "en": "Is Ethereum an attractive allocation in the current portfolio?"
+            },
+            "contenido": {
+              "es": "Sí. En 2026 representa una oportunidad asimétrica por su madurez institucional. Los comités de inversión recomiendan una asignación del 1-5% como generador de alfa y exposición directa a la innovación de los contratos inteligentes.",
+              "en": "Yes. In 2026 it represents an asymmetric opportunity due to its institutional maturity. Investment committees recommend a 1-5% allocation as an alpha generator and direct exposure to smart contract innovation."
+            }
           }
         ]
       }
     ]
   },
-
   "faq": {
-    "titulo": "Preguntas Frecuentes",
-    "subtitulo": "Resolución de Dudas / Escenario Ethereum 2026",
+    "titulo": {
+      "es": "Preguntas Frecuentes",
+      "en": "Frequently Asked Questions"
+    },
+    "subtitulo": {
+      "es": "Resolución de Dudas / Escenario Ethereum 2026",
+      "en": "Q&A / Ethereum 2026 Scenario"
+    },
     "startId": 20,
     "items": [
       {
-        "pregunta": "¿Sigue teniendo sentido comprar ETH ahora que es un activo institucional?",
-        "respuesta": "Totalmente. Si Bitcoin es el oro, Ethereum es la red eléctrica de las finanzas. En 2026, ya no compramos ETH solo esperando que suba de precio, sino para poseer un pedazo de la infraestructura donde corre el valor del mundo. Con los ETFs asentados, ETH se ha convertido en el 'bono digital' por excelencia; es el activo que te da un rendimiento nativo por el simple hecho de ayudar a asegurar la red."
+        "pregunta": {
+          "es": "¿Sigue teniendo sentido comprar ETH ahora que es un activo institucional?",
+          "en": "Does it still make sense to buy ETH now that it is an institutional asset?"
+        },
+        "respuesta": {
+          "es": "Totalmente. Si Bitcoin es el oro, Ethereum es la red eléctrica de las finanzas. En 2026, ya no compramos ETH solo esperando que suba de precio, sino para poseer un pedazo de la infraestructura donde corre el valor del mundo. Con los ETFs asentados, ETH se ha convertido en el 'bono digital' por excelencia; es el activo que te da un rendimiento nativo por el simple hecho de ayudar a asegurar la red.",
+          "en": "Absolutely. If Bitcoin is gold, Ethereum is the electrical grid of finance. In 2026, we no longer buy ETH just waiting for it to go up in price, but to own a piece of the infrastructure where the world's value runs. With ETFs settled, ETH has become the 'digital bond' par excellence; it's the asset that gives you a native yield simply by helping to secure the network."
+        }
       },
       {
-        "pregunta": "¿Es realista pensar en un Ethereum por encima de los $10,000?",
-        "respuesta": "Más que realista, es una cuestión de métricas. A diferencia de otros ciclos, ahora tenemos un mecanismo de quema (EIP-1559) que devora el suministro cada vez que alguien usa la red. Si sumas la demanda de los ETFs a una oferta que se encoge orgánicamente, los $8,000 - $15,000 no son un sueño, sino el resultado de una red que genera ingresos reales y escasez programada."
+        "pregunta": {
+          "es": "¿Es realista pensar en un Ethereum por encima de los $10,000?",
+          "en": "Is it realistic to think of Ethereum above $10,000?"
+        },
+        "respuesta": {
+          "es": "Más que realista, es una cuestión de métricas. A diferencia de otros ciclos, ahora tenemos un mecanismo de quema (EIP-1559) que devora el suministro cada vez que alguien usa la red. Si sumas la demanda de los ETFs a una oferta que se encoge orgánicamente, los $8,000 - $15,000 no son un sueño, sino el resultado de una red que genera ingresos reales y escasez programada.",
+          "en": "More than realistic, it's a question of metrics. Unlike previous cycles, we now have a burn mechanism (EIP-1559) that devours supply every time someone uses the network. Adding ETF demand to a supply that organically shrinks, $8,000 - $15,000 is not a dream, but the result of a network generating real revenue and programmed scarcity."
+        }
       },
       {
-        "pregunta": "¿No es Solana o Layer 1 más rápidas una amenaza real para Ethereum?",
-        "respuesta": "La velocidad no lo es todo cuando hablas de mover trillones de dólares. Ethereum ha elegido el camino de la seguridad extrema y la descentralización, delegando la velocidad a las Capas 2 (L2). Mientras otras redes compiten por ser 'rápidas', Ethereum compite por ser la base más confiable. Al final, la liquidez es pegajosa: el dinero institucional prefiere dormir tranquilo en Ethereum que correr riesgos en redes menos probadas."
+        "pregunta": {
+          "es": "¿No es Solana o Layer 1 más rápidas una amenaza real para Ethereum?",
+          "en": "Isn't Solana or faster Layer 1s a real threat to Ethereum?"
+        },
+        "respuesta": {
+          "es": "La velocidad no lo es todo cuando hablas de mover trillones de dólares. Ethereum ha elegido el camino de la seguridad extrema y la descentralización, delegando la velocidad a las Capas 2 (L2). Mientras otras redes compiten por ser 'rápidas', Ethereum compite por ser la base más confiable. Al final, la liquidez es pegajosa: el dinero institucional prefiere dormir tranquilo en Ethereum que correr riesgos en redes menos probadas.",
+          "en": "Speed isn't everything when you're talking about moving trillions of dollars. Ethereum has chosen the path of extreme security and decentralization, delegating speed to Layer 2s. While other networks compete to be 'fast', Ethereum competes to be the most reliable base. In the end, liquidity is sticky: institutional money prefers to sleep soundly in Ethereum than take risks on less proven networks."
+        }
       },
       {
-        "pregunta": "¿Qué pasó con el tema del consumo energético tras el paso a PoS?",
-        "respuesta": "Ese debate murió en 2022. Hoy Ethereum consume un 99.9% menos de energía que en sus inicios; básicamente tiene el mismo impacto ambiental que una aplicación de software normal. Esto ha permitido que los grandes fondos de inversión (ESG) entren sin remordimientos, posicionando a ETH como la opción 'verde' y productiva dentro del ecosistema cripto."
+        "pregunta": {
+          "es": "¿Qué pasó con el tema del consumo energético tras el paso a PoS?",
+          "en": "What happened with the energy consumption issue after the switch to PoS?"
+        },
+        "respuesta": {
+          "es": "Ese debate murió en 2022. Hoy Ethereum consume un 99.9% menos de energía que en sus inicios; básicamente tiene el mismo impacto ambiental que una aplicación de software normal. Esto ha permitido que los grandes fondos de inversión (ESG) entren sin remordimientos, posicionando a ETH como la opción 'verde' y productiva dentro del ecosistema cripto.",
+          "en": "That debate died in 2022. Today Ethereum consumes 99.9% less energy than at its inception; it basically has the same environmental impact as a normal software application. This has allowed major investment funds (ESG) to enter without remorse, positioning ETH as the 'green' and productive option within the crypto ecosystem."
+        }
       },
       {
-        "pregunta": "¿El staking es 'dinero gratis' o hay algún truco?",
-        "respuesta": "Nada es gratis, es un pago por servicio. Al hacer staking, estás poniendo tu capital a trabajar para validar transacciones. Ese 3-5% anual que recibes es tu recompensa por mantener la red honesta. En 2026, el staking de ETH se entiende como el 'Internet Bond' (Bono de Internet): un rendimiento predecible y transparente que se ha vuelto el estándar para cualquier cartera diversificada."
+        "pregunta": {
+          "es": "¿El staking es 'dinero gratis' o hay algún truco?",
+          "en": "Is staking 'free money' or is there a catch?"
+        },
+        "respuesta": {
+          "es": "Nada es gratis, es un pago por servicio. Al hacer staking, estás poniendo tu capital a trabajar para validar transacciones. Ese 3-5% anual que recibes es tu recompensa por mantener la red honesta. En 2026, el staking de ETH se entiende como el 'Internet Bond' (Bono de Internet): un rendimiento predecible y transparente que se ha vuelto el estándar para cualquier cartera diversificada.",
+          "en": "Nothing is free; it's a payment for service. When staking, you're putting your capital to work to validate transactions. That 3-5% annual yield you receive is your reward for keeping the network honest. In 2026, ETH staking is understood as the 'Internet Bond': a predictable and transparent yield that has become the standard for any diversified portfolio."
+        }
       }
     ]
   },
-
   "schemaFaq": [
     {
-      "pregunta": "¿Es Ethereum una buena inversión estratégica en 2026?",
-      "respuesta": "En 2026, Ethereum se consolida como el activo de capital de la Web3. Su propuesta de valor combina la escasez deflacionaria con la generación de rendimientos mediante staking, ofreciendo una exposición única a la infraestructura financiera programable."
+      "pregunta": {
+        "es": "¿Es Ethereum una buena inversión estratégica en 2026?",
+        "en": "Is Ethereum a good strategic investment in 2026?"
+      },
+      "respuesta": {
+        "es": "En 2026, Ethereum se consolida como el activo de capital de la Web3. Su propuesta de valor combina la escasez deflacionaria con la generación de rendimientos mediante staking, ofreciendo una exposición única a la infraestructura financiera programable.",
+        "en": "In 2026, Ethereum solidifies its position as the capital asset of Web3. Its value proposition combines deflationary scarcity with yield generation through staking, offering unique exposure to programmable financial infrastructure."
+      }
     },
     {
-      "pregunta": "¿Cómo se justifica la valoración de Ethereum a largo plazo?",
-      "respuesta": "La valoración de ETH se basa en la Ley de Metcalfe y el flujo de caja generado por las comisiones de red. El mecanismo de quema EIP-1559 y el flujo constante hacia los ETFs spot crean una presión de oferta negativa que respalda objetivos de precio superiores a los $10,000 USD."
+      "pregunta": {
+        "es": "¿Cómo se justifica la valoración de Ethereum a largo plazo?",
+        "en": "How is Ethereum's long-term valuation justified?"
+      },
+      "respuesta": {
+        "es": "La valoración de ETH se basa en la Ley de Metcalfe y el flujo de caja generado por las comisiones de red. El mecanismo de quema EIP-1559 y el flujo constante hacia los ETFs spot crean una presión de oferta negativa que respalda objetivos de precio superiores a los $10,000 USD.",
+        "en": "ETH's valuation is based on Metcalfe's Law and the cash flow generated by network fees. The EIP-1559 burn mechanism and constant flow into spot ETFs create negative supply pressure that supports price targets above $10,000 USD."
+      }
     },
     {
-      "pregunta": "¿Cuál es la ventaja competitiva de Ethereum frente a otras redes Layer 1?",
-      "respuesta": "La principal ventaja es su foso defensivo de liquidez y seguridad. Ethereum actúa como la capa de liquidación definitiva para soluciones de Capa 2, manteniendo la descentralización necesaria para atraer el capital institucional y soberano."
+      "pregunta": {
+        "es": "¿Cuál es la ventaja competitiva de Ethereum frente a otras redes Layer 1?",
+        "en": "What is Ethereum's competitive advantage over other Layer 1 networks?"
+      },
+      "respuesta": {
+        "es": "La principal ventaja es su foso defensivo de liquidez y seguridad. Ethereum actúa como la capa de liquidación definitiva para soluciones de Capa 2, manteniendo la descentralización necesaria para atraer el capital institucional y soberano.",
+        "en": "The main advantage is its defensive moat of liquidity and security. Ethereum acts as the definitive settlement layer for Layer 2 solutions, maintaining the decentralization necessary to attract institutional and sovereign capital."
+      }
     },
     {
-      "pregunta": "¿Qué impacto ambiental tiene la red Ethereum actualmente?",
-      "respuesta": "Desde la implementación de Proof of Stake, Ethereum ha reducido su consumo energético en un 99.9%. Esto lo posiciona como un activo compatible con los estándares institucionales de sostenibilidad (ESG) a nivel global."
+      "pregunta": {
+        "es": "¿Qué impacto ambiental tiene la red Ethereum actualmente?",
+        "en": "What is the current environmental impact of the Ethereum network?"
+      },
+      "respuesta": {
+        "es": "Desde la implementación de Proof of Stake, Ethereum ha reducido su consumo energético en un 99.9%. Esto lo posiciona como un activo compatible con los estándares institucionales de sostenibilidad (ESG) a nivel global.",
+        "en": "Since the implementation of Proof of Stake, Ethereum has reduced its energy consumption by 99.9%. This positions it as an asset compliant with global institutional sustainability (ESG) standards."
+      }
     },
     {
-      "pregunta": "¿Cómo funciona el rendimiento del staking de Ethereum?",
-      "respuesta": "El staking es el proceso de bloquear ETH para asegurar la red a cambio de recompensas. En 2026, este rendimiento se considera el 'Internet Bond', proporcionando un retorno ajustado por riesgo basado en la actividad económica real de la red."
+      "pregunta": {
+        "es": "¿Cómo funciona el rendimiento del staking de Ethereum?",
+        "en": "How does Ethereum staking yield work?"
+      },
+      "respuesta": {
+        "es": "El staking es el proceso de bloquear ETH para asegurar la red a cambio de recompensas. En 2026, este rendimiento se considera el 'Internet Bond', proporcionando un retorno ajustado por riesgo basado en la actividad económica real de la red.",
+        "en": "Staking is the process of locking ETH to secure the network in exchange for rewards. In 2026, this yield is considered the 'Internet Bond', providing a risk-adjusted return based on the network's real economic activity."
+      }
     }
   ]
 }

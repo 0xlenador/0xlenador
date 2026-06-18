@@ -3,8 +3,13 @@ import Navbar from "../components/Navbar.astro"
 import Footer from "../components/Footer.astro"
 import BackToTop from "../components/BackToTop.astro"
 import "../styles/main.css"
+import { getLangFromUrl, useTranslations, getAlternateUrl } from "../i18n"
 
-// 1. Definimos qué datos PUEDE recibir este layout
+// 1. Idioma detectado automáticamente desde la URL
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// 2. Definimos qué datos PUEDE recibir este layout
 interface Props {
   title?: string
   description?: string
@@ -19,10 +24,10 @@ interface Props {
   author?: string
 }
 
-// 2. Extraemos los datos. Si la página no los envía, usamos los genéricos (Fallback)
+// 3. Extraemos los datos. Si la página no los envía, usamos los genéricos del diccionario (Fallback i18n)
 const {
-  title = "0xLeñador | Hub Operativo · Herramientas y Terminal Web3",
-  description = "Repositorio funcional de utilidades, directorio de recursos y seguimiento de operaciones en mercados Web3 y tradicionales.",
+  title = t("layout.title.default"),
+  description = t("layout.description.default"),
   image = "/img/44.webp",
   schema,
   keywords,
@@ -32,13 +37,16 @@ const {
   author,
 } = Astro.props
 
-// 3. Generación automática de la URL Canónica
-// Astro lee tu astro.config.mjs (https://0xlenador.xyz) y le suma la ruta actual (/blog/articulo-1)
+// 4. Generación automática de la URL Canónica
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+
+// 5. URLs alternativas para hreflang (SEO bilingüe)
+const esUrl = new URL(getAlternateUrl(Astro.url, "es"), Astro.site)
+const enUrl = new URL(getAlternateUrl(Astro.url, "en"), Astro.site)
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -53,6 +61,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- hreflang alternates — SEO bilingüe -->
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={esUrl} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
@@ -75,11 +88,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
     <slot name="head" />
   </head>
   <body class="bg-terminal-bg antialiased selection:bg-emerald-500/30 min-h-screen flex flex-col">
-    <Navbar />
+    <Navbar lang={lang} />
     <div class:list={["flex-1", !customSpacing && "pt-10 pb-4"]}>
       <slot />
     </div>
-    <Footer />
+    <Footer lang={lang} />
     <BackToTop />
   </body>
 </html>
