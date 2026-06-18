@@ -79,6 +79,8 @@ export const ui = {
     "nav.sub.bitcoin": "Bitcoin",
     "nav.sub.ethereum": "Ethereum",
     "nav.sub.sunflowerland": "Sunflower Land",
+    "nav.sub.pets": "SFL Mascotas",
+    "nav.sub.cooking": "SFL Cocinando",
     // Submenú: Operaciones
     "nav.sub.soneium": "Soneium",
     "nav.sub.polymarket": "Polymarket",
@@ -716,6 +718,8 @@ export const ui = {
     "nav.sub.bitcoin": "Bitcoin",
     "nav.sub.ethereum": "Ethereum",
     "nav.sub.sunflowerland": "Sunflower Land",
+    "nav.sub.pets": "SFL Pets",
+    "nav.sub.cooking": "SFL Cooking",
     "nav.sub.soneium": "Soneium",
     "nav.sub.polymarket": "Polymarket",
     // Mobile
