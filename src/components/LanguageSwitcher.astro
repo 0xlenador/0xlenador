@@ -37,6 +37,7 @@ const isEs = lang === "es"
         href={esUrl}
         class="px-2.5 py-1 rounded-md text-terminal-dim hover:text-white hover:bg-terminal-elevated/60 transition-all duration-200"
         aria-label="Cambiar a Español"
+        onclick="localStorage.setItem('lang_override', 'true')"
         data-astro-prefetch
       >
         ES
@@ -64,6 +65,7 @@ const isEs = lang === "es"
         href={enUrl}
         class="px-2.5 py-1 rounded-md text-terminal-dim hover:text-white hover:bg-terminal-elevated/60 transition-all duration-200"
         aria-label="Switch to English"
+        onclick="localStorage.setItem('lang_override', 'true')"
         data-astro-prefetch
       >
         EN
