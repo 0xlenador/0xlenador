@@ -23,6 +23,10 @@ export const routes = {
     directorio: "directory",
     privacidad: "privacy",
     terminos: "terms",
+    intrinseco: "intrinsic",
+    "sfl-mercado": "sfl-market",
+    "sfl-mascotas": "sfl-pets",
+    "sfl-cocinando": "sfl-cooking",
   },
   es: {
     operations: "operaciones",
@@ -31,6 +35,10 @@ export const routes = {
     directory: "directorio",
     privacy: "privacidad",
     terms: "terminos",
+    intrinsic: "intrinseco",
+    "sfl-market": "sfl-mercado",
+    "sfl-pets": "sfl-mascotas",
+    "sfl-cooking": "sfl-cocinando",
   },
 }
 
