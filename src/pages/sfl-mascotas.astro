@@ -75,13 +75,7 @@ for (const res of calcResources) {
   }
 }
 
-const isFoodProfitable = (foodName, diff) => {
-  const energies = { 'Easy': 20, 'Medium': 100, 'Hard': 300 };
-  const cost = foodCostsDict[foodName];
-  if (!cost) return false;
-  const cpe = cost / energies[diff];
-  return cpe <= maxRPE;
-};
+
 
 const formatPrice = (num) => {
   if (num === 0) return '0';
@@ -131,10 +125,30 @@ const getShrineCostHtml = (shrine) => {
         <i class="bi bi-calculator text-emerald-400"></i> Calculadora de Rentabilidad - Comida / P2P
       </h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Multiplicadores Selection -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col">
+          <div class="text-[11px] uppercase font-bold tracking-widest text-blue-400 mb-3 text-center border-b border-blue-500/20 pb-2">Multiplicadores</div>
+          <div class="flex-1 flex flex-col gap-3">
+            <div class="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg border border-white/5 bg-black/20">
+              <div class="flex items-center gap-2">
+                <img src="/img/sunflowerland/Walrus_Onesie.webp" class="w-6 h-6 object-contain" alt="Walrus Onesie" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                <div class="flex flex-col">
+                  <span class="text-[11px] text-white/90 leading-tight">Walrus Onesie</span>
+                  <span class="text-[9px] text-blue-400 font-mono">+5⚡ por Comida</span>
+                </div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-walrus" class="sr-only peer">
+                <div class="w-7 h-4 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-500"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <!-- Easy Selection -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-emerald-400 mb-3 text-center border-b border-emerald-500/20 pb-2">Petición Easy (20⚡)</div>
+          <div class="text-[11px] uppercase font-bold tracking-widest text-emerald-400 mb-3 text-center border-b border-emerald-500/20 pb-2">Petición Easy (<span id="header-easy-energy">20⚡</span>)</div>
           <div class="relative custom-dropdown select-none" data-id="calc-select-easy" data-value="">
             <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
               <span class="dropdown-selected-text flex items-center gap-2">
@@ -142,51 +156,47 @@ const getShrineCostHtml = (shrine) => {
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
-            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
-              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
-                -- Seleccionar Comida --
-              </li>
-              {sflPets.requests.Easy.map(food => (
-                <li class="p-2.5 text-sm text-white/80 hover:bg-emerald-500/20 hover:text-emerald-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food}>
-                  <div class="flex items-center gap-2">
-                    <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
-                    <span>{food}</span>
-                    {isFoodProfitable(food, 'Easy') && (
-                      <svg class="w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
+              <ul id="list-easy" class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
+                <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="" data-cost="none">
+                  -- Seleccionar Comida --
+                </li>
+                {sflPets.requests.Easy.map(food => (
+                  <li class="p-2.5 text-sm text-white/80 hover:bg-emerald-500/20 hover:text-emerald-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food} data-cost={foodCostsDict[food] !== null ? foodCostsDict[food] : 'inc'}>
+                    <div class="flex items-center gap-2">
+                      <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
+                      <span>{food}</span>
+                      <svg class="profitable-check hidden w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                       </svg>
-                    )}
-                  </div>
-                  <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
-                </li>
-              ))}
-            </ul>
+                    </div>
+                    <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
+                  </li>
+                ))}
+              </ul>
           </div>
         </div>
         <!-- Medium Selection -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-yellow-400 mb-3 text-center border-b border-yellow-500/20 pb-2">Petición Medium (100⚡)</div>
-          <div class="relative custom-dropdown select-none" data-id="calc-select-medium" data-value="">
+          <div class="text-[11px] uppercase font-bold tracking-widest text-yellow-400 mb-3 text-center border-b border-yellow-500/20 pb-2">Petición Medium (<span id="header-medium-energy">100⚡</span>)</div>
+          <div class="relative custom-dropdown select-none" data-id="calc-select-medium" data-value="" data-cost="none">
             <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-yellow-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
               <span class="dropdown-selected-text flex items-center gap-2">
                 <span class="text-white/40">-- Seleccionar Comida --</span>
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
-            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
-              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
+            <ul id="list-medium" class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
+              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="" data-cost="none">
                 -- Seleccionar Comida --
               </li>
               {sflPets.requests.Medium.map(food => (
-                <li class="p-2.5 text-sm text-white/80 hover:bg-yellow-500/20 hover:text-yellow-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food}>
+                <li class="p-2.5 text-sm text-white/80 hover:bg-yellow-500/20 hover:text-yellow-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food} data-cost={foodCostsDict[food] !== null ? foodCostsDict[food] : 'inc'}>
                   <div class="flex items-center gap-2">
                     <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
                     <span>{food}</span>
-                    {isFoodProfitable(food, 'Medium') && (
-                      <svg class="w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                      </svg>
-                    )}
+                    <svg class="profitable-check hidden w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
                   </div>
                   <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
                 </li>
@@ -194,30 +204,27 @@ const getShrineCostHtml = (shrine) => {
             </ul>
           </div>
         </div>
-        <!-- Hard Selection -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-          <div class="text-[11px] uppercase font-bold tracking-widest text-red-400 mb-3 text-center border-b border-red-500/20 pb-2">Petición Hard (300⚡)</div>
-          <div class="relative custom-dropdown select-none" data-id="calc-select-hard" data-value="">
+          <div class="text-[11px] uppercase font-bold tracking-widest text-red-400 mb-3 text-center border-b border-red-500/20 pb-2">Petición Hard (<span id="header-hard-energy">300⚡</span>)</div>
+          <div class="relative custom-dropdown select-none" data-id="calc-select-hard" data-value="" data-cost="none">
             <button class="w-full bg-black/50 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-red-500/50 flex items-center justify-between shadow-inner hover:bg-black/70 transition-colors dropdown-toggle">
               <span class="dropdown-selected-text flex items-center gap-2">
                 <span class="text-white/40">-- Seleccionar Comida --</span>
               </span>
               <i class="bi bi-chevron-down text-white/50 text-xs dropdown-arrow transition-transform"></i>
             </button>
-            <ul class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
-              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="">
+            <ul id="list-hard" class="absolute z-50 top-full mt-1 left-0 w-full bg-[#111827] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar hidden dropdown-menu ring-1 ring-black/50 overflow-hidden">
+              <li class="p-2.5 text-sm text-white/40 hover:bg-white/5 cursor-pointer flex items-center gap-2 transition-colors dropdown-option" data-value="" data-cost="none">
                 -- Seleccionar Comida --
               </li>
               {sflPets.requests.Hard.map(food => (
-                <li class="p-2.5 text-sm text-white/80 hover:bg-red-500/20 hover:text-red-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food}>
+                <li class="p-2.5 text-sm text-white/80 hover:bg-red-500/20 hover:text-red-300 cursor-pointer flex items-center justify-between transition-colors dropdown-option" data-value={food} data-cost={foodCostsDict[food] !== null ? foodCostsDict[food] : 'inc'}>
                   <div class="flex items-center gap-2">
                     <img src={`/img/sunflowerland/food/${food}.png`} class="w-5 h-5 object-contain" alt={food} onerror="this.style.display='none';" />
                     <span>{food}</span>
-                    {isFoodProfitable(food, 'Hard') && (
-                      <svg class="w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                      </svg>
-                    )}
+                    <svg class="profitable-check hidden w-3 h-3 text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.6)]" fill="currentColor" viewBox="0 0 16 16" title="Alimento Rentable">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
                   </div>
                   <span class="font-mono text-[10px] text-white/40">{foodCostsDict[food] ? `(${formatPrice(foodCostsDict[food])})` : `(*Inc)`}</span>
                 </li>
@@ -411,20 +418,74 @@ const getShrineCostHtml = (shrine) => {
   </main>
 </Layout>
 
-<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict }}>
+<script is:inline define:vars={{ foodCostsDict, calcResources, priceDict, maxRPE }}>
   const formatPriceNum = (num) => {
     if (num === 0) return '0.00';
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(num);
   };
 
   const updateCalculator = () => {
-    const energies = { easy: 20, medium: 100, hard: 300 };
+    // 1. Calcular multiplicadores
+    const walrusActive = document.getElementById('toggle-walrus')?.checked;
+    const extraEnergy = walrusActive ? 5 : 0;
+    
+    const energies = { easy: 20 + extraEnergy, medium: 100 + extraEnergy, hard: 300 + extraEnergy };
+    
+    // 2. Actualizar etiquetas visuales de energía
+    const headerEasy = document.getElementById('header-easy-energy');
+    if (headerEasy) headerEasy.innerText = `${energies.easy}⚡`;
+    const headerMedium = document.getElementById('header-medium-energy');
+    if (headerMedium) headerMedium.innerText = `${energies.medium}⚡`;
+    const headerHard = document.getElementById('header-hard-energy');
+    if (headerHard) headerHard.innerText = `${energies.hard}⚡`;
+
+    // 3. Re-calcular checks de rentabilidad (✓) en los menús desplegables
+    ['easy', 'medium', 'hard'].forEach(diff => {
+      const currentEnergy = energies[diff];
+      const list = document.getElementById(`list-${diff}`);
+      if (list) {
+        list.querySelectorAll('.dropdown-option').forEach(opt => {
+          const check = opt.querySelector('.profitable-check');
+          if (!check) return;
+          const cost = parseFloat(opt.getAttribute('data-cost'));
+          if (isNaN(cost)) {
+            check.classList.add('hidden');
+          } else {
+            const cpe = cost / currentEnergy;
+            if (cpe <= maxRPE) {
+              check.classList.remove('hidden');
+            } else {
+              check.classList.add('hidden');
+            }
+          }
+        });
+      }
+
+      // También actualizar el check del item actualmente seleccionado en el botón principal
+      const dropdown = document.querySelector(`[data-id="calc-select-${diff}"]`);
+      if (dropdown) {
+        const selectedCost = parseFloat(dropdown.getAttribute('data-cost'));
+        const check = dropdown.querySelector('.dropdown-selected-text .profitable-check');
+        if (check) {
+          if (isNaN(selectedCost)) {
+            check.classList.add('hidden');
+          } else {
+            const cpe = selectedCost / currentEnergy;
+            if (cpe <= maxRPE) check.classList.remove('hidden');
+            else check.classList.add('hidden');
+          }
+        }
+      }
+    });
+
+    // 4. Obtener las comidas seleccionadas
     const selectedFoods = {
       easy: document.querySelector('[data-id="calc-select-easy"]').getAttribute('data-value') || "",
       medium: document.querySelector('[data-id="calc-select-medium"]').getAttribute('data-value') || "",
       hard: document.querySelector('[data-id="calc-select-hard"]').getAttribute('data-value') || ""
     };
     
+    // 5. Recalcular las ganancias y ROI para cada recurso
     calcResources.forEach(res => {
       const resPrice = priceDict[res.name] || 0;
       const safeId = res.name.replace(/\s+/g, '_');
@@ -516,9 +577,12 @@ const getShrineCostHtml = (shrine) => {
           
           if (val === "") {
             selectedText.innerHTML = '<span class="text-white/40">-- Seleccionar Comida --</span>';
+            dropdown.removeAttribute('data-cost');
           } else {
             // Copiar todo el html interno de la opción (imagen + texto + precio)
             selectedText.innerHTML = option.innerHTML;
+            const cost = option.getAttribute('data-cost');
+            dropdown.setAttribute('data-cost', cost);
           }
           
           menu.classList.add('hidden');
@@ -537,6 +601,12 @@ const getShrineCostHtml = (shrine) => {
         menu.parentElement.querySelector('.dropdown-arrow')?.classList.remove('rotate-180');
       });
     });
+
+    // Escuchar cambios en los multiplicadores
+    const walrusToggle = document.getElementById('toggle-walrus');
+    if (walrusToggle) {
+      walrusToggle.addEventListener('change', updateCalculator);
+    }
 
     // Calcular en la carga por si hay valores por defecto
     updateCalculator();
