@@ -19,6 +19,7 @@ const calcTranslations = {
 }
 ---
 
+<div id="calculator-wrapper" data-i18n={JSON.stringify(calcTranslations)}>
 <div
   class="bg-terminal-surface/40 border border-terminal-border p-10 md:p-16 rounded-[3rem] shadow-2xl relative"
 >
@@ -190,7 +191,6 @@ const calcTranslations = {
     <!-- Botón de cálculo -->
     <button
       id="calc-button"
-      onclick="calculate()"
       class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-terminal-bg py-5 rounded-2xl font-black text-xs tracking-[0.4em] uppercase transition-all shadow-xl shadow-emerald-500/20 italic"
     >
       {t("calculator.button.label")}
@@ -243,14 +243,19 @@ const calcTranslations = {
     </div>
   </div>
 </div>
+</div>
 
-<script define:vars={{ calcTranslations }}>
+<script>
   // ============================================================
   // CalculatorForm — Lógica encapsulada sin variables globales
   // 5.2: Se elimina el uso de is:inline y las funciones globales.
   //       Todo queda en el scope de esta función, sin contaminar window.
   // ============================================================
   function setupCalculator() {
+    const wrapper = document.getElementById("calculator-wrapper")
+    if (!wrapper) return
+    
+    const calcTranslations = JSON.parse(wrapper.dataset.i18n || "{}")
     let currentMode = "basic"
 
     const btnBasic = document.getElementById("btn-basic") as HTMLButtonElement | null
