@@ -21,12 +21,16 @@ export const routes = {
     herramientas: "tools",
     activos: "assets",
     directorio: "directory",
+    privacidad: "privacy",
+    terminos: "terms",
   },
   es: {
     operations: "operaciones",
     tools: "herramientas",
     assets: "activos",
     directory: "directorio",
+    privacy: "privacidad",
+    terms: "terminos",
   },
 }
 
