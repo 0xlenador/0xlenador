@@ -232,7 +232,7 @@ export const ui = {
     "tools.faq.q5": "¿Puedo sugerir nuevas herramientas?",
     "tools.faq.a5":
       "Sí, esta herramienta está diseñada analíticamente para ayudarte a tomar mejores decisiones comerciales (trading) dentro de la economía de SFL. Sin embargo, el mercado de criptojuegos es altamente volátil. Usa esta información visualizada como apoyo estratégico antes de comerciar grandes volúmenes de SFL tokens.",
-    // Calculator
+    // Calculator Intrinsec
     "calculator.eps.label": "EPS (Beneficio Acción)",
     "calculator.growth.label": "Crecimiento (g %)",
     "calculator.fcf.label": "Free Cash Flow",
@@ -425,6 +425,7 @@ export const ui = {
     "directory.intro":
       "Plataformas y recursos curados en uso operativo activo. Exchanges, wallets de custodia propia, exploradores de bloques, herramientas de análisis y acceso al directorio de faucets.",
     "directory.section.resources": "Recursos y Plataformas",
+    "directory.section.subresources": "recursos",
     "directory.filter.all": "Todos",
     "directory.section.faucets": "Faucets Directory",
     "directory.faucets.total": "Faucets indexados",
@@ -884,6 +885,7 @@ export const ui = {
     "directory.intro":
       "Curated platforms and resources in active operational use. Exchanges, self-custody wallets, block explorers, analytics tools, and access to the faucets directory.",
     "directory.section.resources": "Resources & Platforms",
+    "directory.section.subresources": "resources",
     "directory.filter.all": "All",
     "directory.section.faucets": "Faucets Directory",
     "directory.faucets.total": "Indexed faucets",
@@ -915,7 +917,8 @@ export const ui = {
     "assets.heading.accent": "Watchlist",
     "assets.intro":
       "Assets actively tracked in 0xLeñador's investment thesis. These are not buy signals — they are documented positions with technical and mathematical foundation.",
-    "assets.section.watching": "Under tracking",
+    "assets.section.title": "Under tracking",
+    "assets.count": "assets",
     "assets.table.asset": "Asset",
     "assets.table.ticker": "Ticker",
     "assets.table.category": "Category",
