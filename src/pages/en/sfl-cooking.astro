@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import sflRecipes from '../../data/sfl_recipes.json';
 import sflIds from '../../data/sfl_ids.json';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import SflTabs from '../../components/SflTabs.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -30,6 +31,8 @@ const seo = {
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
         {t('sfl.cooking.intro')}
       </p>
+
+      <SflTabs activeTab="cocinando" />
     </header>
 
     <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative overflow-hidden">
