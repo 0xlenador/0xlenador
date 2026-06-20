@@ -10,6 +10,11 @@ import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
+const getResourceImg = (name) => {
+  if (name === 'Acorn' || name === 'Fossil Shell') return `/img/sunflowerland/123/${name}.webp`;
+  return `/img/sunflowerland/${name}.png`;
+};
+
 const seo = {
   title: t('sfl.pets.seo.title'),
   description: t('sfl.pets.seo.description'),
@@ -254,7 +259,7 @@ const getShrineCostHtml = (shrine) => {
               <tr class="hover:bg-white/[0.03] transition-colors group">
                 <td class="p-3">
                   <div class="flex items-center gap-2">
-                    <img src={`/img/sunflowerland/${res.name}.png`} class="w-5 h-5 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                    <img src={getResourceImg(res.name)} class="w-5 h-5 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
                     <span class="text-xs font-medium text-white/90">{res.name}</span>
                   </div>
                 </td>
@@ -318,7 +323,7 @@ const getShrineCostHtml = (shrine) => {
                   <div class="flex flex-col gap-2">
                     {petGroup.fetches.map(fetch => (
                       <div class="flex items-center gap-2">
-                        <img src={`/img/sunflowerland/${fetch.name}.png`} class="w-5 h-5 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                        <img src={getResourceImg(fetch.name)} class="w-5 h-5 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
                         <span class="text-xs text-white/80">{fetch.name}</span>
                         <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono ml-auto">Lvl {fetch.level}</span>
                       </div>
@@ -351,7 +356,7 @@ const getShrineCostHtml = (shrine) => {
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {pet.fetches.map(fetch => (
                       <div class="flex items-center gap-2 bg-black/20 px-2 py-1.5 rounded-lg border border-white/5">
-                        <img src={`/img/sunflowerland/${fetch.name}.png`} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                        <img src={getResourceImg(fetch.name)} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
                         <span class="text-[11px] text-white/80">{fetch.name}</span>
                         <span class="text-[9px] text-emerald-500/70 ml-auto font-mono">Lvl {fetch.level}</span>
                       </div>
@@ -403,7 +408,7 @@ const getShrineCostHtml = (shrine) => {
                   <div class="flex flex-col gap-2">
                     {shrine.resources.map(res => (
                       <div class="flex items-center gap-2">
-                        <img src={`/img/sunflowerland/${res.name}.png`} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+                        <img src={getResourceImg(res.name)} class="w-4 h-4 object-contain" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
                         <span class="text-xs text-white/80">{res.name} <span class="text-white/40 font-mono">({res.amount})</span></span>
                       </div>
                     ))}
