@@ -698,6 +698,71 @@ export const ui = {
     "sfl.pets.shrines.col.resources": "Recursos",
     "sfl.pets.shrines.col.cost": "Costo Total",
     "sfl.pets.shrines.no.acorn": "El costo no incluye",
+
+    // --- Sincronizados desde EN ---
+    "ops.section.featured": "Priority guide",
+    "ops.section.watching": "Under tracking",
+    "ops.section.history": "History",
+    "ops.empty": "// No active guides at the moment.",
+    "ops.empty.soon":
+      "Guides for Soneium, Sunflower Land, and other protocols will be added soon.",
+    "ops.difficulty": "Difficulty {level}",
+    "ops.open": "Open guide →",
+    "ops.view": "View →",
+    "ops.back": "Back to Operations",
+    "ops.status.activa": "Active",
+    "ops.status.completada": "Completed",
+    "ops.status.expirada": "Expired",
+    // Difficulty levels
+    "ops.dificultad.baja": "Low",
+    "ops.dificultad.media": "Medium",
+    "ops.dificultad.alta": "High",
+
+    // ─── PAGE: BLOG ───────────────────────────────────────────────────────
+    "blog.header.label": "Research Logbook",
+    "blog.header.h1": "Analysis",
+    "blog.header.h1.accent": "& Capital Theses",
+    "blog.header.intro":
+      "Independent perspectives on wealth management, fundamental analysis of Web3 assets, and L1 economic modeling.",
+    "blog.featured.badge": "Featured Analysis",
+    "blog.featured.reading": "{time} read",
+    "blog.featured.cta": "Start reading",
+    "blog.section.previous": "Previous Research",
+    "blog.card.access": "Access →",
+    "blog.card.reading": "{time} read",
+    "blog.pipeline.label": "In Development",
+    "blog.monitor.label": "Dynamic Monitor",
+    "blog.btc.category": "Hard Money / Reserve",
+    "blog.btc.thesis":
+      "The absolute scarcity base asset. The definitive hedge against the debasement of traditional fiat currencies.",
+    "blog.eth.category": "Settlement L1",
+    "blog.eth.thesis":
+      "The global decentralized computer. Captures real fee value by burning its own supply.",
+    // Upcoming articles
+    "blog.next1.title":
+      "Smart Contract Auditing: Security Filters for Burner Wallets",
+    "blog.next1.category": "Security",
+    "blog.next1.desc":
+      "How to read basic traces on Etherscan and detect malicious drain functions before interacting with a new protocol.",
+    "blog.next2.title":
+      "Discounted Cash Flow (DCF) Applied to L1 Settlement Platforms",
+    "blog.next2.category": "Modeling",
+    "blog.next2.desc":
+      "Adapting Benjamin Graham's traditional metrics to value real fee capture from on-chain gas fees.",
+    // FAQ Blog
+    "blog.article.writtenBy": "Written by 0xLeñador",
+    "blog.article.role": "Capital Management Educator",
+    "blog.article.progress.aria": "Reading progress",
+    "blog.article.toc.title": "Table of Contents",
+    "blog.article.share.title": "Share",
+    "blog.article.only.es.banner": "Note: This research is currently available only in Spanish.",
+    "blog.article.only.es.link": "Read in Spanish →",
+
+    // ─── PAGE: FAUCETS ────────────────────────────────────────────────────
+    "faucets.filter.testnet": "Testnet",
+    "faucets.filter.mainnet": "Mainnet",
+    "faucets.faq.heading": "About Faucets",
+    "faucets.faq.subheading": "Usage guide and security best practices.",
   },
 
   // ===========================================================================
@@ -1414,6 +1479,30 @@ export const ui = {
     "sfl.pets.shrines.col.cost": "Total Cost",
     "sfl.pets.shrines.no.acorn": "Cost excludes",
   },
+
+    // --- Sincronizados desde ES ---
+    "ops.state.active": "Activa",
+    "ops.state.completed": "Completada",
+    "ops.state.expired": "Expirada",
+    "ops.guide.priority": "Guía prioritaria",
+    "ops.guide.open": "Abrir guía →",
+    "ops.guide.view": "Ver →",
+    "ops.guide.count": "guías",
+    "ops.empty.text": "// Ninguna guía activa por el momento.",
+    "ops.empty.subtext": "Próximamente se agregarán guías de Soneium, Sunflower Land y otros protocolos.",
+    "blog.breadcrumb": "Bitácora de Investigación",
+    "blog.heading": "Análisis",
+    "blog.heading.accent": "y Tesis de Capital",
+    "blog.intro": "Perspectivas independientes sobre gestión patrimonial, análisis fundamental de activos Web3 y modelado económico de L1s.",
+    "blog.post.main": "Análisis Principal",
+    "blog.post.read": "de lectura",
+    "blog.post.start": "Comenzar lectura →",
+    "blog.history.title": "Investigaciones Anteriores",
+    "blog.history.access": "Acceder →",
+    "blog.pipeline.tag": "En Desarrollo",
+    "blog.monitor.tag": "Monitor Dinámico",
+    "faucets.faq.acc.title": "Preguntas sobre Faucets",
+    "faucets.faq.acc.subtitle": "Uso, seguridad y actualización",
 } as const
 
 export type UiKey = keyof typeof ui[typeof defaultLang]

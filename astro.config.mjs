@@ -42,21 +42,21 @@ export default defineConfig({
     mdx(),
     sitemap({
       serialize(item) {
-        const urlObj = new URL(item.url);
-        
+        const urlObj = new URL(item.url)
+
         // Generar dinámicamente las rutas traducidas usando nuestra lógica maestra
-        const esUrl = getAlternateUrl(urlObj, "es");
-        const enUrl = getAlternateUrl(urlObj, "en");
+        const esUrl = getAlternateUrl(urlObj, "es")
+        const enUrl = getAlternateUrl(urlObj, "en")
 
         // Sobrescribir los hreflang asegurando que 'es' y 'en' genéricos coincidan con el HTML
         item.links = [
           { lang: "es", url: new URL(esUrl, urlObj.origin).href },
           { lang: "en", url: new URL(enUrl, urlObj.origin).href },
-          { lang: "x-default", url: new URL(esUrl, urlObj.origin).href }
-        ];
+          { lang: "x-default", url: new URL(esUrl, urlObj.origin).href },
+        ]
 
-        return item;
-      }
+        return item
+      },
     }),
   ],
   markdown: {
