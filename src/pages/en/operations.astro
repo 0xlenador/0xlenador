@@ -275,9 +275,19 @@ const faqItems = [
                     </span>
                   </div>
 
-                  <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors mb-2 leading-snug flex-1">
-                    {guia.data.title}
-                  </h3>
+                  <div class="flex items-start gap-3 mb-2 flex-1">
+                    {guia.data.imagen && (
+                      <img
+                        src={guia.data.imagen}
+                        alt=""
+                        class="w-6 h-6 rounded-md object-contain shrink-0 mt-0.5"
+                        loading="lazy"
+                      />
+                    )}
+                    <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors leading-snug m-0">
+                      {guia.data.title}
+                    </h3>
+                  </div>
 
                   <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-auto pt-3 border-t border-terminal-border/50">
                     {guia.data.fechaLimite && (
