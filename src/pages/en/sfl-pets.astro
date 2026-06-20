@@ -128,12 +128,11 @@ const getShrineCostHtml = (shrine) => {
       </h1>
       <p class="text-lg text-white/60 font-medium">{t('sfl.pets.subheading')}</p>
     </div>
-    
-    <SflTabs activeTab="mascotas" />
     </header>
 
     <!-- CALCULATOR DASHBOARD -->
     <div class="mb-12 bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl">
+      <SflTabs activeTab="mascotas" />
       <h2 class="text-2xl font-black text-white mb-6 flex items-center gap-2">
         <i class="bi bi-calculator text-emerald-400"></i> {t('sfl.pets.calc.title')}
       </h2>
