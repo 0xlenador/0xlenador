@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro"
-import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -137,7 +137,7 @@ const seo = {
             <span class="text-terminal-subtle text-[9px] font-mono">/tesis</span>
           </a>
           <a
-            href="/en/blog"
+            href={getLocalizedPath("/blog", lang)}
             class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span
@@ -147,7 +147,7 @@ const seo = {
             <span class="text-terminal-subtle text-[9px] font-mono">/en/blog</span>
           </a>
           <a
-            href="/en/faucets"
+            href={getLocalizedPath("/faucets", lang)}
             class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span
@@ -157,7 +157,7 @@ const seo = {
             <span class="text-terminal-subtle text-[9px] font-mono">/en/faucets</span>
           </a>
           <a
-            href="/en/intrinsic"
+            href={getLocalizedPath("/intrinseco", lang)}
             class="group p-3 bg-terminal-surface/30 border border-terminal-border/60 rounded-xl hover:border-emerald-500/30 hover:bg-terminal-surface/60 transition-all"
           >
             <span

@@ -6,7 +6,7 @@ import TickerSection from "../../components/home/TickerSection.astro"
 import PremisaSection from "../../components/home/PremisaSection.astro"
 
 import { getCollection } from "astro:content"
-import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -46,7 +46,7 @@ const guiasActivas = (await getCollection("guias")).filter((g) => g.data.estado 
 const modules = [
   {
     id: "herramientas",
-    href: "/en/tools",
+    href: getLocalizedPath("/herramientas", lang),
     titulo: t("home.module.herramientas.title"),
     descripcion: t("home.module.herramientas.desc"),
     count: t("home.module.herramientas.count"),
@@ -56,7 +56,7 @@ const modules = [
   },
   {
     id: "directorio",
-    href: "/en/directory",
+    href: getLocalizedPath("/directorio", lang),
     titulo: t("home.module.directorio.title"),
     descripcion: t("home.module.directorio.desc"),
     count: t("home.module.directorio.count"),
@@ -66,7 +66,7 @@ const modules = [
   },
   {
     id: "activos",
-    href: "/en/watchlist",
+    href: getLocalizedPath("/activos", lang),
     titulo: t("home.module.activos.title"),
     descripcion: t("home.module.activos.desc"),
     count: t("home.module.activos.count"),
@@ -76,7 +76,7 @@ const modules = [
   },
   {
     id: "operaciones",
-    href: "/en/operations",
+    href: getLocalizedPath("/operaciones", lang),
     titulo: t("home.module.operaciones.title"),
     descripcion: t("home.module.operaciones.desc"),
     count: `${guiasActivas.length} ${guiasActivas.length === 1 ? t("home.module.operaciones.count.singular") : t("home.module.operaciones.count.plural")}`,
@@ -202,7 +202,7 @@ const faqItems = [
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <a
-              href="/en/operations"
+              href={getLocalizedPath("/operaciones", lang)}
               class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
               {t("home.section.guides.viewAll")}
@@ -267,7 +267,7 @@ const faqItems = [
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <a
-              href="/en/blog"
+              href={getLocalizedPath("/blog", lang)}
               class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
               {t("home.section.blog.viewAll")}

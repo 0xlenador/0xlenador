@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content"
 import Layout from "../../../layouts/Layout.astro"
-import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../../i18n/utils"
 
 // 1. Generar rutas estáticas desde la colección de guías
 export async function getStaticPaths() {
@@ -245,7 +245,7 @@ const t = useTranslations(lang)
     >
       <a href="/" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
       <span>›</span>
-      <a href="/en/operations" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.ops')}</a>
+      <a href={getLocalizedPath("/operaciones", lang)} class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.ops')}</a>
       <span>›</span>
       <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs">{title}</span>
     </nav>
@@ -381,7 +381,7 @@ const t = useTranslations(lang)
       class="mt-16 pt-8 border-t border-terminal-border/60 flex items-center justify-between gap-4"
     >
       <a
-        href="/en/operations"
+        href={getLocalizedPath("/operaciones", lang)}
         class="flex items-center gap-2 text-terminal-secondary hover:text-emerald-400 transition-colors text-xs font-mono font-medium"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
