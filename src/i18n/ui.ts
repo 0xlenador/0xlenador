@@ -84,6 +84,7 @@ export const ui = {
     // Submenú: Operaciones
     "nav.sub.soneium": "Soneium",
     "nav.sub.polymarket": "Polymarket",
+    "nav.sub.arc": "Arc (Circle)",
     // Mobile
     "nav.mobile.goTo": "Ir a {label} principal",
     "nav.mobile.aria.button": "Abrir menú",
@@ -796,6 +797,7 @@ export const ui = {
     "nav.sub.cooking": "SFL Cooking",
     "nav.sub.soneium": "Soneium",
     "nav.sub.polymarket": "Polymarket",
+    "nav.sub.arc": "Arc (Circle)",
     // Mobile
     "nav.mobile.goTo": "Go to {label}",
     "nav.mobile.aria.button": "Open menu",
