@@ -13,7 +13,7 @@ const seo = {
   image: "/img/meta/home.webp",
 }
 
-const tools = [
+const generalTools = [
   {
     id: "riskfolio",
     href: "/riskfolio",
@@ -30,13 +30,16 @@ const tools = [
     badge: t("tools.intrinseco.badge"),
     icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
   },
+]
+
+const sflTools = [
   {
     id: "sfl-mercado",
     href: "/sfl-mercado",
     titulo: t("tools.sfl.title"),
     descripcion: t("tools.sfl.desc"),
     badge: t("tools.sfl.badge"),
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>`,
+    logo: "/img/sunflowerland/123/exchange.png",
   },
   {
     id: "sfl-mascotas",
@@ -44,7 +47,7 @@ const tools = [
     titulo: t("tools.sfl-mascotas.title"),
     descripcion: t("tools.sfl-mascotas.desc"),
     badge: t("tools.sfl-mascotas.badge"),
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
+    logo: "/img/sunflowerland/123/ramsey.webp",
   },
   {
     id: "sfl-cocinando",
@@ -52,7 +55,7 @@ const tools = [
     titulo: t("tools.sfl-cocinando.title"),
     descripcion: t("tools.sfl-cocinando.desc"),
     badge: t("tools.sfl-cocinando.badge"),
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>`,
+    logo: "/img/sunflowerland/food/Pizza Margherita.png",
   },
 ]
 
@@ -95,10 +98,10 @@ const faqItems = [
       </p>
     </header>
 
-    <!-- Grid de herramientas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+    <!-- Grid de herramientas generales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
       {
-        tools.map((tool) => (
+        generalTools.map((tool) => (
           <a
             href={getLocalizedPath(tool.href, lang)}
             id={`tool-card-${tool.id}`}
@@ -151,6 +154,59 @@ const faqItems = [
           </a>
         ))
       }
+    </div>
+
+    <!-- Sunflower Land Ecosystem Wrapper -->
+    <div class="mb-20 bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl relative overflow-hidden group">
+      <!-- Glow effect -->
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-700 group-hover:bg-emerald-500/20"></div>
+
+      <div class="flex items-center gap-3 mb-8 relative z-10">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1] drop-shadow-md" />
+        <div>
+          <h2 class="text-2xl font-black text-white tracking-tight">Sunflower Land</h2>
+          <p class="text-[11px] font-mono text-emerald-500 uppercase tracking-widest">Ecosystem</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+        {
+          sflTools.map((tool) => (
+            <a
+              href={getLocalizedPath(tool.href, lang)}
+              id={`tool-card-${tool.id}`}
+              class="flex flex-col bg-white/[0.02] border border-white/[0.05] hover:border-emerald-500/30 hover:bg-white/[0.04] rounded-[24px] p-6 transition-all duration-500 no-underline group/card"
+            >
+              <div class="flex items-start justify-between mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center transition-colors duration-300 shadow-inner">
+                  <img src={tool.logo} alt={tool.titulo} class="w-7 h-7 object-contain drop-shadow-lg group-hover/card:scale-110 transition-transform duration-300" />
+                </div>
+                <svg
+                  class="w-5 h-5 text-white/[0.3] group-hover/card:text-emerald-400 transition-all duration-300 transform group-hover/card:translate-x-1 group-hover/card:-translate-y-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+
+              <div class="flex flex-col flex-grow">
+                <h3 class="text-white font-semibold text-lg tracking-tight mb-2 group-hover/card:text-emerald-300 transition-colors">{tool.titulo}</h3>
+                <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6">
+                  {tool.descripcion}
+                </p>
+              </div>
+
+              <div class="mt-auto">
+                <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide">
+                  {tool.badge}
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
     </div>
 
     <FaqAccordion
