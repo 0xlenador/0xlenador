@@ -6,7 +6,7 @@ import TickerSection from "../components/home/TickerSection.astro"
 import PremisaSection from "../components/home/PremisaSection.astro"
 
 import { getCollection } from "astro:content"
-import { getLangFromUrl, useTranslations } from "../i18n/utils"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -41,6 +41,55 @@ const posts = (await getCollection("blog"))
 
 // Guías operativas activas
 const guiasActivas = (await getCollection("guias")).filter((g) => g.data.estado === "activa")
+
+// Herramientas activas
+const toolsList = [
+  {
+    id: "riskfolio",
+    href: "/riskfolio",
+    titulo: t("tools.riskfolio.title"),
+    descripcion: t("tools.riskfolio.desc"),
+    badge: t("tools.riskfolio.badge"),
+    isSvg: true,
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>`,
+  },
+  {
+    id: "intrinseco",
+    href: "/intrinseco",
+    titulo: t("tools.intrinseco.title"),
+    descripcion: t("tools.intrinseco.desc"),
+    badge: t("tools.intrinseco.badge"),
+    isSvg: true,
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
+  },
+  {
+    id: "sfl-mercado",
+    href: "/sfl-mercado",
+    titulo: t("tools.sfl.title"),
+    descripcion: t("tools.sfl.desc"),
+    badge: t("tools.sfl.badge"),
+    isSvg: false,
+    logo: "/img/sunflowerland/123/exchange.png",
+  },
+  {
+    id: "sfl-mascotas",
+    href: "/sfl-mascotas",
+    titulo: t("tools.sfl-mascotas.title"),
+    descripcion: t("tools.sfl-mascotas.desc"),
+    badge: t("tools.sfl-mascotas.badge"),
+    isSvg: false,
+    logo: "/img/sunflowerland/123/ramsey.webp",
+  },
+  {
+    id: "sfl-cocinando",
+    href: "/sfl-cocinando",
+    titulo: t("tools.sfl-cocinando.title"),
+    descripcion: t("tools.sfl-cocinando.desc"),
+    badge: t("tools.sfl-cocinando.badge"),
+    isSvg: false,
+    logo: "/img/sunflowerland/food/Pizza Margherita.png",
+  },
+]
 
 // Los 4 módulos del Hub en la página principal
 const modules = [
@@ -256,6 +305,148 @@ const faqItems = [
         </section>
       )
     }
+
+    <!-- ─── HERRAMIENTAS ACTIVAS (SLIDER) ─── -->
+    <section class="mb-20">
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+          {t("home.section.tools")}
+        </h2>
+        <div class="h-px flex-grow bg-terminal-border/50" />
+        <a
+          href="/herramientas"
+          class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+        >
+          {t("home.section.tools.viewAll")}
+        </a>
+      </div>
+      <style>
+        .hide-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scroll {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      </style>
+
+      <div class="relative w-full [mask-image:_linear-gradient(to_right,transparent_0,_black_40px,_black_calc(100%-40px),transparent_100%)]">
+        <div id="tools-slider" class="flex overflow-x-auto gap-5 pb-4 hide-scroll cursor-grab select-none snap-x snap-mandatory">
+          {[...toolsList, ...toolsList].map((tool, index) => (
+            <a
+              href={getLocalizedPath(tool.href, lang)}
+              draggable="false"
+              class="flex-shrink-0 w-[280px] sm:w-[320px] snap-center flex flex-col bg-white/[0.02] border border-white/[0.05] hover:border-emerald-500/30 hover:bg-white/[0.04] rounded-[24px] p-6 transition-all duration-500 no-underline group/card"
+            >
+              <div class="flex items-start justify-between mb-5 pointer-events-none">
+                <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center transition-colors duration-300 shadow-inner">
+                  {tool.isSvg ? (
+                    <svg class="w-6 h-6 text-white/[0.7] group-hover/card:text-emerald-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={tool.icon} />
+                  ) : (
+                    <img src={tool.logo} alt={tool.titulo} class="w-7 h-7 object-contain drop-shadow-lg group-hover/card:scale-110 transition-transform duration-300" />
+                  )}
+                </div>
+                <svg class="w-5 h-5 text-white/[0.3] group-hover/card:text-emerald-400 transition-all duration-300 transform group-hover/card:translate-x-1 group-hover/card:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+              
+              <div class="flex flex-col flex-grow pointer-events-none">
+                <h3 class="text-white font-semibold text-lg tracking-tight mb-2 group-hover/card:text-emerald-300 transition-colors">{tool.titulo}</h3>
+                <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6 line-clamp-3">
+                  {tool.descripcion}
+                </p>
+              </div>
+              
+              <div class="mt-auto pointer-events-none">
+                <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide group-hover/card:border-emerald-500/20 group-hover/card:text-emerald-400 group-hover/card:bg-emerald-500/10 transition-all">
+                  {tool.badge}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const slider = document.getElementById('tools-slider');
+        if (!slider) return;
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        let isHovered = false;
+
+        // Prevent dragging links
+        const links = slider.querySelectorAll('a');
+        links.forEach(link => {
+          link.addEventListener('click', (e) => {
+            // Prevent navigating if it was a drag
+            if (slider.classList.contains('dragging')) {
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Mouse events for dragging
+        slider.addEventListener('mousedown', (e) => {
+          isDown = true;
+          slider.classList.add('cursor-grabbing');
+          slider.classList.remove('cursor-grab');
+          slider.classList.remove('snap-x', 'snap-mandatory'); // Disable snapping during drag
+          startX = e.pageX - slider.offsetLeft;
+          scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => {
+          isDown = false;
+          slider.classList.remove('cursor-grabbing');
+          slider.classList.add('cursor-grab');
+          slider.classList.add('snap-x', 'snap-mandatory');
+          slider.classList.remove('dragging');
+          isHovered = false;
+        });
+
+        slider.addEventListener('mouseup', () => {
+          isDown = false;
+          slider.classList.remove('cursor-grabbing');
+          slider.classList.add('cursor-grab');
+          slider.classList.add('snap-x', 'snap-mandatory');
+          // Small timeout to allow click event to fire before removing dragging state
+          setTimeout(() => slider.classList.remove('dragging'), 50);
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          slider.classList.add('dragging');
+          const x = e.pageX - slider.offsetLeft;
+          const walk = (x - startX) * 2; 
+          slider.scrollLeft = scrollLeft - walk;
+        });
+
+        // Hover events for pause auto-scroll
+        slider.addEventListener('mouseenter', () => {
+          isHovered = true;
+        });
+
+        // Auto-scroll loop
+        const autoScroll = () => {
+          if (!isHovered && !isDown) {
+            slider.scrollLeft += 1;
+            // Seamless loop: reset when passing the first half
+            if (slider.scrollLeft >= (slider.scrollWidth / 2)) {
+              slider.scrollLeft = 0;
+            }
+          }
+          requestAnimationFrame(autoScroll);
+        };
+        
+        requestAnimationFrame(autoScroll);
+      });
+    </script>
 
     <!-- ─── ÚLTIMAS DEL BLOG ─── -->
     {
