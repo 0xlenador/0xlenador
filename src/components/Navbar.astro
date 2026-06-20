@@ -43,22 +43,28 @@ const navLinks = [
           "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z",
       },
       {
-        href: loc("/sfl-mercado"),
-        label: t("nav.sub.sfl"),
-        iconType: "img",
-        src: "/img/sunflowerland/123/exchange.png",
-      },
-      {
-        href: loc("/sfl-mascotas"),
-        label: t("nav.sub.pets"),
-        iconType: "img",
-        src: "/img/sunflowerland/123/ramsey.webp",
-      },
-      {
-        href: loc("/sfl-cocinando"),
-        label: t("nav.sub.cooking"),
-        iconType: "img",
-        src: "/img/sunflowerland/food/Pizza Margherita.png",
+        type: "group",
+        label: "SunflowerLand",
+        items: [
+          {
+            href: loc("/sfl-mercado"),
+            label: t("nav.sub.sfl"),
+            iconType: "img",
+            src: "/img/sunflowerland/123/exchange.png",
+          },
+          {
+            href: loc("/sfl-mascotas"),
+            label: t("nav.sub.pets"),
+            iconType: "img",
+            src: "/img/sunflowerland/123/ramsey.webp",
+          },
+          {
+            href: loc("/sfl-cocinando"),
+            label: t("nav.sub.cooking"),
+            iconType: "img",
+            src: "/img/sunflowerland/food/Pizza Margherita.png",
+          },
+        ]
       },
     ],
   },
@@ -167,35 +173,51 @@ const navLinks = [
               <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div class="bg-terminal-bg/95 backdrop-blur-xl border border-terminal-border rounded-xl p-2 w-48 shadow-xl flex flex-col gap-1">
                   {dropdown.map((subItem) => (
-                    <a
-                      href={subItem.href}
-                      data-astro-prefetch
-                      class="px-3 py-2 text-sm text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 rounded-lg transition-colors flex items-center gap-3"
-                    >
-                      {subItem.iconType === "img" ? (
-                        <img
-                          src={subItem.src}
-                          alt={subItem.label}
-                          class="w-5 h-5 object-contain rounded-full"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <svg
-                          class="w-5 h-5 text-emerald-500/70"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d={subItem.svgPath}
+                    subItem.type === "group" ? (
+                      <div class="mt-1 bg-white/[0.02] border border-white/[0.05] rounded-lg p-1.5 flex flex-col gap-0.5 shadow-inner">
+                        <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-500/70 px-2 py-1 mb-0.5">{subItem.label}</span>
+                        {subItem.items.map(item => (
+                          <a
+                            href={item.href}
+                            data-astro-prefetch
+                            class="px-3 py-2 text-sm text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 rounded-lg transition-colors flex items-center gap-3"
+                          >
+                            <img src={item.src} alt={item.label} class="w-5 h-5 object-contain rounded-full" loading="lazy" />
+                            {item.label}
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <a
+                        href={subItem.href}
+                        data-astro-prefetch
+                        class="px-3 py-2 text-sm text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 rounded-lg transition-colors flex items-center gap-3"
+                      >
+                        {subItem.iconType === "img" ? (
+                          <img
+                            src={subItem.src}
+                            alt={subItem.label}
+                            class="w-5 h-5 object-contain rounded-full"
+                            loading="lazy"
                           />
-                        </svg>
-                      )}
-                      {subItem.label}
-                    </a>
+                        ) : (
+                          <svg
+                            class="w-5 h-5 text-emerald-500/70"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="1.5"
+                              d={subItem.svgPath}
+                            />
+                          </svg>
+                        )}
+                        {subItem.label}
+                      </a>
+                    )
                   ))}
                 </div>
               </div>
@@ -327,35 +349,51 @@ const navLinks = [
                 {t("nav.mobile.goTo").replace("{label}", label)}
               </a>
               {dropdown.map((subItem) => (
-                <a
-                  href={subItem.href}
-                  data-astro-prefetch
-                  class="py-2 text-sm text-terminal-muted hover:text-white transition-colors flex items-center gap-3"
-                >
-                  {subItem.iconType === "img" ? (
-                    <img
-                      src={subItem.src}
-                      alt={subItem.label}
-                      class="w-5 h-5 object-contain rounded-full ml-1"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <svg
-                      class="w-5 h-5 text-emerald-500/70 ml-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        d={subItem.svgPath}
+                subItem.type === "group" ? (
+                  <div class="mt-2 mb-1 bg-white/[0.02] border border-white/[0.05] rounded-xl p-2 flex flex-col gap-1 shadow-inner">
+                    <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-500/70 px-2 py-1">{subItem.label}</span>
+                    {subItem.items.map(item => (
+                      <a
+                        href={item.href}
+                        data-astro-prefetch
+                        class="py-2 px-2 text-sm text-terminal-muted hover:text-white transition-colors flex items-center gap-3 rounded-lg hover:bg-terminal-elevated/30"
+                      >
+                        <img src={item.src} alt={item.label} class="w-5 h-5 object-contain rounded-full ml-1" loading="lazy" />
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <a
+                    href={subItem.href}
+                    data-astro-prefetch
+                    class="py-2 text-sm text-terminal-muted hover:text-white transition-colors flex items-center gap-3"
+                  >
+                    {subItem.iconType === "img" ? (
+                      <img
+                        src={subItem.src}
+                        alt={subItem.label}
+                        class="w-5 h-5 object-contain rounded-full ml-1"
+                        loading="lazy"
                       />
-                    </svg>
-                  )}
-                  {subItem.label}
-                </a>
+                    ) : (
+                      <svg
+                        class="w-5 h-5 text-emerald-500/70 ml-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d={subItem.svgPath}
+                        />
+                      </svg>
+                    )}
+                    {subItem.label}
+                  </a>
+                )
               ))}
             </div>
           </div>
