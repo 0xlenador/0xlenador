@@ -25,11 +25,10 @@ if (!resources || resources.length === 0) {
 }
 ---
 
-<div class="relative w-full h-[92px] rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-500" id="related-resources-container">
+<related-resources class="relative w-full h-[92px] rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-500 block">
   <!-- Contenedor Grid para solapar -->
   <div
-    class={`grid h-full border border-terminal-border/50 rounded-[2rem] bg-gradient-to-br from-terminal-surface/40 to-terminal-surface/10 transition-all duration-500 hover:bg-terminal-surface/60 ${c.hoverBorder30} overflow-hidden`}
-    id="related-resources-slider"
+    class={`slider-container grid h-full border border-terminal-border/50 rounded-[2rem] bg-gradient-to-br from-terminal-surface/40 to-terminal-surface/10 transition-all duration-500 hover:bg-terminal-surface/60 ${c.hoverBorder30} overflow-hidden`}
     data-total={resources.length}
   >
     <!-- Efecto de Brillo/Destello que cruza la tarjeta en Hover -->
@@ -111,7 +110,7 @@ if (!resources || resources.length === 0) {
       ))}
     </div>
   )}
-</div>
+</related-resources>
 
 <style>
   .slider-dot.is-active .dot-active {
@@ -125,72 +124,72 @@ if (!resources || resources.length === 0) {
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("related-resources-container");
-    const slider = document.getElementById("related-resources-slider");
-    if (!slider || !container) return;
+  class RelatedResourcesSlider extends HTMLElement {
+    connectedCallback() {
+      const container = this;
+      const slider = this.querySelector(".slider-container");
+      if (!slider) return;
 
-    const slides = Array.from(slider.querySelectorAll(".resource-slide")) as HTMLElement[];
-    const dots = Array.from(container.querySelectorAll(".slider-dot")) as HTMLElement[];
-    const total = parseInt(slider.getAttribute("data-total") || "0");
-    
-    if (total <= 1) return; // No hay necesidad de rotar si solo hay 1
+      const slides = Array.from(slider.querySelectorAll(".resource-slide")) as HTMLElement[];
+      const dots = Array.from(this.querySelectorAll(".slider-dot")) as HTMLElement[];
+      const total = parseInt(slider.getAttribute("data-total") || "0");
+      
+      if (total <= 1) return;
 
-    let currentIndex = 0;
-    let interval: ReturnType<typeof setInterval>;
+      let currentIndex = 0;
+      let interval: ReturnType<typeof setInterval>;
 
-    const updateSlider = (index: number) => {
-      slides.forEach((slide, i) => {
-        if (i === index) {
-          slide.classList.remove("opacity-0", "pointer-events-none", "z-0");
-          slide.classList.add("opacity-100", "pointer-events-auto", "z-10");
-        } else {
-          slide.classList.add("opacity-0", "pointer-events-none", "z-0");
-          slide.classList.remove("opacity-100", "pointer-events-auto", "z-10");
-        }
-      });
+      const updateSlider = (index: number) => {
+        slides.forEach((slide, i) => {
+          if (i === index) {
+            slide.classList.remove("opacity-0", "pointer-events-none", "z-0");
+            slide.classList.add("opacity-100", "pointer-events-auto", "z-10");
+          } else {
+            slide.classList.add("opacity-0", "pointer-events-none", "z-0");
+            slide.classList.remove("opacity-100", "pointer-events-auto", "z-10");
+          }
+        });
+
+        dots.forEach((dot, i) => {
+          if (i === index) {
+            dot.classList.add('is-active');
+          } else {
+            dot.classList.remove('is-active');
+          }
+        });
+      };
+
+      const nextSlide = () => {
+        currentIndex = (currentIndex + 1) % total;
+        updateSlider(currentIndex);
+      };
+
+      const startInterval = () => {
+        interval = setInterval(nextSlide, 5000);
+      };
+
+      const stopInterval = () => {
+        clearInterval(interval);
+      };
 
       dots.forEach((dot, i) => {
-        if (i === index) {
-          dot.classList.add('is-active');
-        } else {
-          dot.classList.remove('is-active');
-        }
+        dot.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          currentIndex = i;
+          updateSlider(currentIndex);
+          stopInterval();
+          startInterval();
+        });
       });
-    };
 
-    const nextSlide = () => {
-      currentIndex = (currentIndex + 1) % total;
+      slider.addEventListener("mouseenter", stopInterval);
+      slider.addEventListener("mouseleave", startInterval);
+
       updateSlider(currentIndex);
-    };
+      startInterval();
+    }
+  }
 
-    const startInterval = () => {
-      interval = setInterval(nextSlide, 5000); // Rota cada 5 segundos
-    };
-
-    const stopInterval = () => {
-      clearInterval(interval);
-    };
-
-    // Listeners para los puntos
-    dots.forEach((dot, i) => {
-      dot.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        currentIndex = i;
-        updateSlider(currentIndex);
-        // Reiniciar el contador
-        stopInterval();
-        startInterval();
-      });
-    });
-
-    // Pausar al pasar el ratón
-    slider.addEventListener("mouseenter", stopInterval);
-    slider.addEventListener("mouseleave", startInterval);
-
-    // Inicializar
-    updateSlider(currentIndex);
-    startInterval();
-  });
+  customElements.define("related-resources", RelatedResourcesSlider);
 </script>
