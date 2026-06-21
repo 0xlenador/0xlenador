@@ -19,6 +19,7 @@ import Layout from "../../../layouts/Layout.astro"
 import FaqAccordion from "../../../components/FaqAccordion.astro"
 import AssetHeader from "../../../components/activo/AssetHeader.astro"
 import ToolingGrid from "../../../components/activo/ToolingGrid.astro"
+import RelatedResources from "../../../components/activo/RelatedResources.astro"
 import { colorMap } from "../../../lib/colors"
 import type { AssetColor } from "../../../lib/colors"
 import { getLangFromUrl, getBilingual, useTranslations } from "../../../i18n/utils"
@@ -350,29 +351,34 @@ const schema = [
           </div>
         </section>
 
-        <!-- Tarjeta: Próximamente -->
-        <!-- c.hoverBorder30 reemplaza `hover:${c.border30}` -->
-        <!-- c.groupHoverText500 reemplaza `group-hover:${c.text500}` -->
-        <a
-          href="#"
-          class={`p-6 border-2 border-dashed border-terminal-border rounded-[2rem] bg-terminal-surface/10 flex flex-col items-center justify-center text-center group ${c.hoverBorder30} hover:bg-terminal-surface/30 transition-all`}
-        >
-          <svg
-            class="w-5 h-5 text-terminal-border-subtle mb-2 group-hover:text-emerald-500/50 transition-colors"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          <span
-            class={`text-terminal-subtle font-black uppercase tracking-widest text-[9px] italic ${c.groupHoverText500} transition-colors`}
-            >{t('asset.coming.soon')}</span
+        <!-- Tarjeta: Recursos Relacionados (Anuncios) -->
+        {data.recursosRelacionados && data.recursosRelacionados.length > 0 ? (
+          <RelatedResources resources={data.recursosRelacionados} colors={c} />
+        ) : (
+          <!-- Fallback: Próximamente -->
+          <!-- c.hoverBorder30 reemplaza `hover:${c.border30}` -->
+          <!-- c.groupHoverText500 reemplaza `group-hover:${c.text500}` -->
+          <a
+            href="#"
+            class={`p-6 border-2 border-dashed border-terminal-border rounded-[2rem] bg-terminal-surface/10 flex flex-col items-center justify-center text-center group ${c.hoverBorder30} hover:bg-terminal-surface/30 transition-all`}
           >
-        </a>
+            <svg
+              class="w-5 h-5 text-terminal-border-subtle mb-2 group-hover:text-emerald-500/50 transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span
+              class={`text-terminal-subtle font-black uppercase tracking-widest text-[9px] italic ${c.groupHoverText500} transition-colors`}
+              >{t('asset.coming.soon')}</span
+            >
+          </a>
+        )}
 
         <!-- Tarjeta: Análisis de Carácter -->
         <div

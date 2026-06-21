@@ -1,0 +1,196 @@
+---
+import type { AssetColorMap } from "../../lib/colors";
+import { getLangFromUrl, getBilingual, getLocalizedPath } from "../../i18n/utils";
+
+interface Resource {
+  type: string;
+  titulo: { es: string; en: string };
+  descripcion: { es: string; en: string };
+  url: string;
+  badge: string;
+  icon?: string;
+}
+
+interface Props {
+  resources: Resource[];
+  colors: AssetColorMap;
+}
+
+const { resources, colors: c } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+
+// Si no hay recursos, no renderizar nada (fallback manejado en el parent si se requiere)
+if (!resources || resources.length === 0) {
+  return null;
+}
+---
+
+<div class="relative w-full h-[92px] rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-500" id="related-resources-container">
+  <!-- Contenedor Grid para solapar -->
+  <div
+    class={`grid h-full border border-terminal-border/50 rounded-[2rem] bg-gradient-to-br from-terminal-surface/40 to-terminal-surface/10 transition-all duration-500 hover:bg-terminal-surface/60 ${c.hoverBorder30} overflow-hidden`}
+    id="related-resources-slider"
+    data-total={resources.length}
+  >
+    <!-- Efecto de Brillo/Destello que cruza la tarjeta en Hover -->
+    <div class="absolute top-0 -left-[150%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[30deg] group-hover:left-[200%] transition-all duration-1000 ease-in-out z-0 pointer-events-none"></div>
+
+    {
+      resources.map((res, i) => {
+        const localizedUrl = getLocalizedPath(res.url, lang);
+
+        return (
+          <a
+            href={localizedUrl}
+            class={`resource-slide px-5 py-3 flex flex-col justify-center w-full h-full transition-all duration-700 ease-in-out ${
+              i === 0 ? "opacity-100 pointer-events-auto z-10" : "opacity-0 pointer-events-none z-0"
+            }`}
+            style="grid-area: 1 / 1;"
+            data-index={i}
+          >
+            <!-- Layout en dos columnas: Izquierda (Textos) y Derecha (Badge) -->
+            <div class="flex flex-row justify-between items-center w-full h-full relative z-10">
+              
+              <!-- Columna Izquierda: Logo, Título y Descripción -->
+              <div class="flex flex-col justify-center gap-0.5 w-full max-w-[75%]">
+                
+                <!-- Logo y Título -->
+                <div class="flex items-center gap-2.5 relative">
+                  <!-- Orbe de luz brillante detrás del logo -->
+                  <div class={`absolute w-6 h-6 rounded-full ${c.bgFull} blur-xl opacity-20 group-hover:opacity-50 transition-opacity duration-500 -left-1 top-0 pointer-events-none`}></div>
+
+                  {res.icon && (
+                    <img
+                      src={res.icon}
+                      alt={getBilingual(res.titulo, lang)}
+                      class={`w-5 h-5 sm:w-6 sm:h-6 object-contain opacity-90 drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] group-hover:opacity-100 transition-all duration-500 relative z-10`}
+                      loading="lazy"
+                    />
+                  )}
+                  <span class={`text-white font-black uppercase tracking-widest text-[10px] sm:text-[11px] italic drop-shadow-md group-hover:${c.text500} transition-colors duration-300 relative z-10`}>
+                    {getBilingual(res.titulo, lang)}
+                  </span>
+                </div>
+
+                <!-- Descripción -->
+                <p class="text-white/60 group-hover:text-white/90 text-[10px] sm:text-[11px] leading-tight text-left ml-8 sm:ml-[2.125rem] transition-colors duration-300 relative z-10">
+                  {getBilingual(res.descripcion, lang)}
+                </p>
+              </div>
+
+              <!-- Columna Derecha: Badge Tintado Premium -->
+              <div class="flex flex-col items-end justify-center h-full">
+                <span class={`px-2.5 py-1 flex items-center gap-1.5 rounded-full text-[8px] font-black uppercase tracking-widest ${c.bg10} border ${c.border20} ${c.text400} shadow-sm backdrop-blur-md transition-all duration-300 relative z-10 group-hover:brightness-125 group-hover:shadow-md`}>
+                  <div class={`w-1 h-1 rounded-full ${c.bgFull} animate-pulse shadow-[0_0_5px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_8px_rgba(255,255,255,0.6)]`}></div>
+                  {res.badge}
+                </span>
+              </div>
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <!-- Puntos de Navegación (Indicators) -->
+  {resources.length > 1 && (
+    <div class="absolute -bottom-2 left-0 right-0 flex justify-center gap-0 z-30 pointer-events-none">
+      {resources.map((_, i) => (
+        <button
+          class={`slider-dot flex items-center justify-center w-5 h-8 pointer-events-auto cursor-pointer ${i === 0 ? 'is-active' : ''}`}
+          data-index={i}
+          aria-label={`Ir a la herramienta ${i + 1}`}
+        >
+          <div class="relative w-1.5 h-1.5">
+            <!-- Punto Activo (Color dinámico) -->
+            <span class={`dot-active absolute inset-0 rounded-full ${c.bgFull} shadow-[0_0_5px_rgba(0,0,0,0.5)] transition-all duration-300 scale-50 opacity-0`}></span>
+            <!-- Punto Inactivo (Blanco) -->
+            <span class={`dot-inactive absolute inset-0 rounded-full bg-white shadow-[0_0_5px_rgba(0,0,0,0.5)] transition-all duration-300 opacity-25 hover:opacity-60`}></span>
+          </div>
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .slider-dot.is-active .dot-active {
+    opacity: 1 !important;
+    transform: scale(1.5) !important;
+  }
+  .slider-dot.is-active .dot-inactive {
+    opacity: 0 !important;
+    transform: scale(0.5) !important;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("related-resources-container");
+    const slider = document.getElementById("related-resources-slider");
+    if (!slider || !container) return;
+
+    const slides = Array.from(slider.querySelectorAll(".resource-slide")) as HTMLElement[];
+    const dots = Array.from(container.querySelectorAll(".slider-dot")) as HTMLElement[];
+    const total = parseInt(slider.getAttribute("data-total") || "0");
+    
+    if (total <= 1) return; // No hay necesidad de rotar si solo hay 1
+
+    let currentIndex = 0;
+    let interval: ReturnType<typeof setInterval>;
+
+    const updateSlider = (index: number) => {
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.classList.remove("opacity-0", "pointer-events-none", "z-0");
+          slide.classList.add("opacity-100", "pointer-events-auto", "z-10");
+        } else {
+          slide.classList.add("opacity-0", "pointer-events-none", "z-0");
+          slide.classList.remove("opacity-100", "pointer-events-auto", "z-10");
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('is-active');
+        } else {
+          dot.classList.remove('is-active');
+        }
+      });
+    };
+
+    const nextSlide = () => {
+      currentIndex = (currentIndex + 1) % total;
+      updateSlider(currentIndex);
+    };
+
+    const startInterval = () => {
+      interval = setInterval(nextSlide, 5000); // Rota cada 5 segundos
+    };
+
+    const stopInterval = () => {
+      clearInterval(interval);
+    };
+
+    // Listeners para los puntos
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        currentIndex = i;
+        updateSlider(currentIndex);
+        // Reiniciar el contador
+        stopInterval();
+        startInterval();
+      });
+    });
+
+    // Pausar al pasar el ratón
+    slider.addEventListener("mouseenter", stopInterval);
+    slider.addEventListener("mouseleave", startInterval);
+
+    // Inicializar
+    updateSlider(currentIndex);
+    startInterval();
+  });
+</script>
