@@ -50,4 +50,28 @@ const guias = defineCollection({
   }),
 })
 
-export const collections = { blog, guias }
+
+// ---------------------------------------------------------------------------
+// Data Collections — Watchlist de Activos
+// Loader: JSON directo. Schema: gradual (se refinará en Fase 5 con tipos strict).
+// ---------------------------------------------------------------------------
+const watchlist = defineCollection({
+  loader: glob({ pattern: "*.json", base: "./src/content/data/watchlist" }),
+  // Schema permisivo: los JSON tienen estructura bilingüe compleja.
+  // Se tipará de forma estricta en la Fase 5 de la refactorización.
+  schema: z.record(z.any()),
+})
+
+// ---------------------------------------------------------------------------
+// Data Collections — SFL (Sunflower Land)
+// Archivos: pets.json, recipes.json, resources.json, powerups.json
+// Sin i18n por ahora — datos en español, se internacionalizarán en el futuro.
+// ---------------------------------------------------------------------------
+const sfl = defineCollection({
+  loader: glob({ pattern: "*.json", base: "./src/content/data/sfl" }),
+  // Schema permisivo: los JSON tienen arrays de objetos con forma heterogénea.
+  // Se tipará de forma estricta cuando se defina el contrato de datos SFL.
+  schema: z.record(z.any()),
+})
+
+export const collections = { blog, guias, watchlist, sfl }

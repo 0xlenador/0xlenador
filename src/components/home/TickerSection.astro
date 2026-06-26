@@ -5,7 +5,7 @@
  */
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n";
 
-const dataFiles = import.meta.glob("../../data/*.json", { eager: true });
+const dataFiles = import.meta.glob("../../content/data/watchlist/*.json", { eager: true });
 const assets = Object.values(dataFiles)
   .filter((file: any) => file.default && file.default.price && file.default.price.apiUrl)
   .map((file: any) => {
