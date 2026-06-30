@@ -8,7 +8,7 @@ import { render } from "astro:content"
 import ArticleHeader from "../blog/ArticleHeader.astro"
 import ShareButtons from "../blog/ShareButtons.astro"
 import TableOfContents from "../blog/TableOfContents.astro"
-import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { getLangFromUrl, useTranslations, formatDate } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -32,13 +32,8 @@ for (const h of tocHeadings) {
   }
 }
 
-// 4. Formatear fecha al estilo: Apr 22, 2026
-const formattedDate = new Date(date).toLocaleDateString("en-US", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-})
+// 4. Formatear fecha al estilo: Apr 22, 2026 (EN) o 22 abr. 2026 (ES)
+const formattedDate = formatDate(date, lang)
 // coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
 const ogImage = coverImage?.src
 ---

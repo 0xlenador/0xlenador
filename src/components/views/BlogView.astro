@@ -5,22 +5,12 @@
 // ==========================================
 
 import FaqAccordion from "../FaqAccordion.astro"
-import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { getLangFromUrl, useTranslations, formatDate } from "../../i18n/utils"
 
 const { featuredPost, regularPosts } = Astro.props
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
-
-// Formateador de fecha reutilizable estilo: Apr 22, 2026
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
-  })
-}
 
 const assetsData = [
   {
@@ -108,7 +98,7 @@ const proximosArticulos = [
                     {t("blog.post.main")}
                   </span>
                   <span class="text-terminal-border-subtle">•</span>
-                  <span class="text-terminal-muted">{formatDate(featuredPost.data.date)}</span>
+                  <span class="text-terminal-muted">{formatDate(featuredPost.data.date, lang)}</span>
                   <span class="text-terminal-border-subtle">•</span>
                   <span class="text-terminal-muted">{featuredPost.data.readTime} {t("blog.post.read")}</span>
                 </div>
@@ -162,7 +152,7 @@ const proximosArticulos = [
                         <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-2 py-0.5 rounded-md font-semibold">
                           {post.data.category}
                         </span>
-                        <span class="text-terminal-muted">{formatDate(post.data.date)}</span>
+                        <span class="text-terminal-muted">{formatDate(post.data.date, lang)}</span>
                       </div>
                       <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight leading-snug mb-3">
                         {post.data.title}

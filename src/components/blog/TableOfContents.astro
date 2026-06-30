@@ -47,7 +47,7 @@ const t = useTranslations(lang)
                 d="M4 6h16M4 12h16M4 18h7"
               />
             </svg>
-            {t('blog.article.toc')}
+            {t('blog.article.toc.title')}
           </h3>
           <button
             id="hide-toc-btn"
@@ -171,14 +171,11 @@ const t = useTranslations(lang)
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h7"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
               </svg>
-              {t('blog.article.toc')}
+              <span class="text-xs uppercase font-mono tracking-widest font-bold">
+                {t('blog.article.toc.title')}
+              </span>
             </h3>
             <button
               id="close-mobile-toc"

@@ -3,7 +3,7 @@ layout: post
 title: "0xLeñador Investment Thesis: 60/40 Strategy in Web3 and Traditional Markets"
 description: "Investment thesis based on strategic understanding and active involvement. Traditional assets, crypto, and the garage phase: the 0xLeñador capital allocation protocol."
 category: "Investment Thesis"
-date: 2026-01-01
+date: 2026-05-27
 author: "0xLeñador"
 coverImage: "./tesis.webp"
 coverAlt: "Hybrid 60/40 portfolio diagram combining traditional investment and Web3 digital assets."
