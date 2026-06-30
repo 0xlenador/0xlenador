@@ -253,14 +253,14 @@ const faqItems = [
                       {guia.data.title}
                     </h3>
                     <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">
-                      {guia.data.categoria} • {guia.data.dificultad}
+                      {t(`ops.cat.${guia.data.categoria.toLowerCase()}` as any)} • {t(`ops.diff.${guia.data.dificultad.toLowerCase()}` as any)}
                     </p>
                   </div>
                 </div>
                 {guia.data.fechaLimite && (
                   <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
                     ⏳{" "}
-                    {new Date(guia.data.fechaLimite).toLocaleDateString("es-CO", {
+                    {guia.data.fechaLimite === "TBD" ? "TBD" : new Date(guia.data.fechaLimite).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
                       day: "numeric",
                       month: "short",
                     })}

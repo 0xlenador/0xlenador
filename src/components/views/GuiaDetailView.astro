@@ -9,6 +9,9 @@ import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
 const { guia } = Astro.props
 
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 // 2. Extraer datos y renderizar el MDX
 const {
   title,
@@ -29,19 +32,21 @@ const { Content, remarkPluginFrontmatter } = await render(guia)
 const readTime = guia.data.readTime || remarkPluginFrontmatter?.readTime || "5 min"
 
 // Formatear fecha
-const formattedDate = new Date(date).toLocaleDateString("es-CO", {
+const formattedDate = new Date(date).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
   day: "numeric",
   month: "long",
   year: "numeric",
   timeZone: "UTC",
 })
-const formatDeadline = (fecha: string) =>
-  new Date(fecha).toLocaleDateString("es-CO", {
+const formatDeadline = (fecha: string) => {
+  if (fecha === "TBD") return "TBD"
+  return new Date(fecha).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
     day: "numeric",
     month: "short",
     year: "numeric",
     timeZone: "UTC",
   })
+}
 
 // Mapas de configuración visual
 const categoriaConfig: Record<string, { badge: string; icon: string }> = {
@@ -53,25 +58,22 @@ const categoriaConfig: Record<string, { badge: string; icon: string }> = {
 }
 const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
   activa: {
-    label: "Activa",
+    label: t("ops.state.active"),
     dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]",
     text: "text-emerald-400",
   },
-  completada: { label: "Completada", dot: "bg-blue-500", text: "text-blue-400" },
-  expirada: { label: "Expirada", dot: "bg-red-500", text: "text-red-400" },
+  completada: { label: t("ops.state.completed"), dot: "bg-blue-500", text: "text-blue-400" },
+  expirada: { label: t("ops.state.expired"), dot: "bg-red-500", text: "text-red-400" },
 }
 const dificultadConfig: Record<string, { text: string; label: string }> = {
-  baja: { text: "text-emerald-400", label: "Baja" },
-  media: { text: "text-yellow-400", label: "Media" },
-  alta: { text: "text-red-400", label: "Alta" },
+  baja: { text: "text-emerald-400", label: t("ops.diff.baja") },
+  media: { text: "text-yellow-400", label: t("ops.diff.media") },
+  alta: { text: "text-red-400", label: t("ops.diff.alta") },
 }
 
 const cfgCat = categoriaConfig[categoria] ?? categoriaConfig["Airdrop"]
 const cfgEst = estadoConfig[estado]
 const cfgDif = dificultadConfig[dificultad]
-
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
 ---
 
   <!-- Barra de progreso de lectura -->
@@ -270,7 +272,7 @@ const t = useTranslations(lang)
           ]}
         >
           {cfgCat.icon}
-          {categoria}
+          {t(`ops.cat.${categoria.toLowerCase()}` as any)}
         </span>
         <span
           class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-terminal-surface border border-terminal-border text-[10px] font-mono"

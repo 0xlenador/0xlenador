@@ -56,13 +56,17 @@ const dificultadConfig: Record<string, string> = {
 }
 
 // Formatear fecha de deadline
-const formatDeadline = (fecha: string) =>
-  new Date(fecha).toLocaleDateString("es-CO", {
+const formatDeadline = (fecha: string) => {
+  if (fecha === "TBD") return "TBD"
+  return new Date(fecha).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
     day: "numeric",
     month: "short",
     year: "numeric",
     timeZone: "UTC",
   })
+}
+
+
 
 const faqItems = [
   {
@@ -138,7 +142,7 @@ const faqItems = [
               </div>
 
               <a
-                href={`/operaciones/${guiaDestacada.slug}`}
+                href={lang === "en" ? `/en/operations/${guiaDestacada.slug}` : `/operaciones/${guiaDestacada.slug}`}
                 class="hub-card p-6 md:p-8 flex flex-col md:flex-row gap-6 group no-underline block"
               >
                 {guiaDestacada.data.imagen && (
@@ -159,7 +163,7 @@ const faqItems = [
                         cfg.badge,
                       ]}
                     >
-                      {cfg.icon} {guiaDestacada.data.categoria}
+                      {cfg.icon} {t(`ops.cat.${guiaDestacada.data.categoria.toLowerCase()}` as any)}
                     </span>
                     <span class="flex items-center gap-1.5 text-[10px] font-mono">
                       <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
@@ -194,7 +198,7 @@ const faqItems = [
                         dificultadConfig[guiaDestacada.data.dificultad],
                       ]}
                     >
-                      ● Dificultad {guiaDestacada.data.dificultad}
+                      ● {t("ops.difficulty").replace("{level}", t(`ops.diff.${guiaDestacada.data.dificultad.toLowerCase()}` as any))}
                     </span>
                     <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
                       {t("ops.guide.open")}
@@ -227,7 +231,7 @@ const faqItems = [
               const est = estadoConfig[guia.data.estado]
               return (
                 <a
-                  href={`/operaciones/${guia.slug}`}
+                  href={lang === "en" ? `/en/operations/${guia.slug}` : `/operaciones/${guia.slug}`}
                   class="hub-card p-5 flex flex-col group no-underline"
                 >
                   <div class="flex items-start justify-between gap-2 mb-3">
@@ -237,7 +241,7 @@ const faqItems = [
                         cfg.badge,
                       ]}
                     >
-                      {cfg.icon} {guia.data.categoria}
+                      {cfg.icon} {t(`ops.cat.${guia.data.categoria.toLowerCase()}` as any)}
                     </span>
                     <span class="flex items-center gap-1.5 text-[10px] font-mono">
                       <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
@@ -298,8 +302,8 @@ const faqItems = [
               const est = estadoConfig[guia.data.estado]
               return (
                 <a
-                  href={`/operaciones/${guia.slug}`}
-                  class="flex items-center gap-4 p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
+                  href={lang === "en" ? `/en/operations/${guia.slug}` : `/operaciones/${guia.slug}`}
+                  class="flex items-center gap-4 p-3 rounded-lg hover:bg-terminal-elevated transition-colors border border-transparent hover:border-terminal-border group no-underline"
                 >
                   <span
                     class:list={[
