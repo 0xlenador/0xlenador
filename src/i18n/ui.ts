@@ -4,6 +4,21 @@
 // Reemplaza el monolito anterior de ~1517 líneas
 // ============================================================
 
+import type _404 from "./locales/es/404.json"
+import type assets from "./locales/es/assets.json"
+import type blog from "./locales/es/blog.json"
+import type common from "./locales/es/common.json"
+import type directory from "./locales/es/directory.json"
+import type faucets from "./locales/es/faucets.json"
+import type home from "./locales/es/home.json"
+import type intrinsic from "./locales/es/intrinsic.json"
+import type ops from "./locales/es/ops.json"
+import type privacy from "./locales/es/privacy.json"
+import type riskfolio from "./locales/es/riskfolio.json"
+import type sfl from "./locales/es/sfl.json"
+import type terms from "./locales/es/terms.json"
+import type tools from "./locales/es/tools.json"
+
 export const languages = {
   es: "Español",
   en: "English",
@@ -73,7 +88,21 @@ export const ui: Record<Lang, Record<string, string>> = {
   en: buildDictionary("en"),
 }
 
-// El tipo UiKey queda relajado a string para compatibilidad
-// con las claves dinámicas de los micro-diccionarios.
-// La seguridad de tipos queda garantizada por los JSON individuales.
-export type UiKey = string
+// El tipo UiKey se deriva estrictamente de la intersección de todos los JSON
+// para proveer autocompletado y validación de tipos al usar t().
+type AllTranslations = typeof _404 &
+  typeof assets &
+  typeof blog &
+  typeof common &
+  typeof directory &
+  typeof faucets &
+  typeof home &
+  typeof intrinsic &
+  typeof ops &
+  typeof privacy &
+  typeof riskfolio &
+  typeof sfl &
+  typeof terms &
+  typeof tools
+
+export type UiKey = keyof AllTranslations
