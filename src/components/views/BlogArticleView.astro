@@ -8,6 +8,10 @@ import { render } from "astro:content"
 import ArticleHeader from "../blog/ArticleHeader.astro"
 import ShareButtons from "../blog/ShareButtons.astro"
 import TableOfContents from "../blog/TableOfContents.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const { post } = Astro.props
 const { title, description, keywords, date, category, coverImage, coverAlt } = post.data
@@ -78,8 +82,8 @@ const ogImage = coverImage?.src
             <span class="font-bold text-emerald-400 font-mono">0x</span>
           </div>
           <div>
-            <p class="text-white font-bold text-sm">Escrito por 0xLeñador</p>
-            <p class="text-terminal-muted text-xs">Divulgador sobre la gestión de Capital</p>
+            <p class="text-white font-bold text-sm">{t('blog.article.writtenBy')}</p>
+            <p class="text-terminal-muted text-xs">{t('blog.article.role')}</p>
           </div>
         </div>
       </footer>

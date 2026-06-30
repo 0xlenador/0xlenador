@@ -24,6 +24,10 @@ interface Props {
   author?: string
   /** Ocultar de los motores de búsqueda (temporal para traducciones) */
   noindex?: boolean
+  /** URL alternativa manual para ES (útil si hay translationSlug) */
+  esUrl?: string
+  /** URL alternativa manual para EN (útil si hay translationSlug) */
+  enUrl?: string
 }
 
 // 3. Extraemos los datos. Si la página no los envía, usamos los genéricos del diccionario (Fallback i18n)
@@ -38,14 +42,19 @@ const {
   publishedTime,
   author,
   noindex = false,
+  esUrl: customEsUrl,
+  enUrl: customEnUrl,
 } = Astro.props
 
 // 4. Generación automática de la URL Canónica
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 // 5. URLs alternativas para hreflang (SEO bilingüe)
-const esUrl = new URL(getAlternateUrl(Astro.url, "es"), Astro.site)
-const enUrl = new URL(getAlternateUrl(Astro.url, "en"), Astro.site)
+const esUrlStr = customEsUrl || getAlternateUrl(Astro.url, "es")
+const enUrlStr = customEnUrl || getAlternateUrl(Astro.url, "en")
+
+const esUrl = new URL(esUrlStr, Astro.site)
+const enUrl = new URL(enUrlStr, Astro.site)
 ---
 
 <!doctype html>
@@ -117,7 +126,7 @@ const enUrl = new URL(getAlternateUrl(Astro.url, "en"), Astro.site)
     <slot name="head" />
   </head>
   <body class="bg-terminal-bg antialiased selection:bg-emerald-500/30 min-h-screen flex flex-col">
-    <Navbar lang={lang} />
+    <Navbar lang={lang} esUrl={esUrlStr} enUrl={enUrlStr} />
     <div class:list={["flex-1", !customSpacing && "pt-10 pb-4"]}>
       <slot />
     </div>

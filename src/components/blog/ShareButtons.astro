@@ -66,6 +66,7 @@ const t = useTranslations(lang)
     <button
       id="share-copy"
       aria-label="Copiar enlace al portapapeles"
+      data-copied-text={t('blog.article.share.copied') as any || "Copiado / Copied"}
       class="flex-1 flex justify-center p-3 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
     >
       <svg
@@ -146,7 +147,7 @@ const t = useTranslations(lang)
           }, 2000)
         } catch {
           // Fallback para contextos sin acceso al portapapeles
-          alert(t('blog.article.share.copied'))
+          alert(copy.dataset.copiedText || "Copiado al portapapeles")
         }
       })
     }

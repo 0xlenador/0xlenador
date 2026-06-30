@@ -8,9 +8,14 @@
  */
 import { getLangFromUrl, getAlternateUrl } from "../i18n"
 
+interface Props {
+  esUrl?: string
+  enUrl?: string
+}
+
 const lang = getLangFromUrl(Astro.url)
-const esUrl = getAlternateUrl(Astro.url, "es")
-const enUrl = getAlternateUrl(Astro.url, "en")
+const esUrl = Astro.props.esUrl || getAlternateUrl(Astro.url, "es")
+const enUrl = Astro.props.enUrl || getAlternateUrl(Astro.url, "en")
 
 const isEs = lang === "es"
 ---

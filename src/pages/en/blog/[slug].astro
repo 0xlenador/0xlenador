@@ -40,6 +40,10 @@ const blogSchema = {
     "@id": new URL(Astro.url.pathname, Astro.site).href,
   },
 }
+
+const translationSlug = post.data.translationSlug
+const enUrl = `/en/blog/${post.slug}`
+const esUrl = translationSlug ? `/blog/${translationSlug}` : `/en/blog/${post.slug}`
 ---
 
 <Layout
@@ -51,6 +55,8 @@ const blogSchema = {
   schema={blogSchema}
   publishedTime={new Date(date).toISOString()}
   author="0xLeñador"
+  esUrl={esUrl}
+  enUrl={enUrl}
 >
   <BlogArticleView post={post} />
 </Layout>

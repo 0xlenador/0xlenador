@@ -30,9 +30,9 @@ const t = useTranslations(lang)
 
 <!-- Breadcrumb de navegación -->
 <nav class="flex text-xs text-terminal-muted mb-10 font-medium font-mono uppercase tracking-widest">
-  <a href="/" class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
+  <a href={lang === "en" ? "/en" : "/"} class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
   <span class="mx-3">›</span>
-  <a href="/blog" class="hover:text-emerald-400 transition-colors">{t('nav.blog')}</a>
+  <a href={lang === "en" ? "/en/blog" : "/blog"} class="hover:text-emerald-400 transition-colors">{t('nav.blog')}</a>
   <span class="mx-3">›</span>
   <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs">{title}</span>
 </nav>

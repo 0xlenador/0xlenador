@@ -6,9 +6,11 @@ import { useTranslations, getLocalizedPath, type Lang } from "../i18n"
 
 interface Props {
   lang: Lang
+  esUrl?: string
+  enUrl?: string
 }
 
-const { lang } = Astro.props
+const { lang, esUrl, enUrl } = Astro.props
 const t = useTranslations(lang)
 
 const { pathname } = Astro.url
@@ -262,7 +264,7 @@ const navLinks = [
       <div class="w-px h-5 bg-terminal-border mx-2"></div>
 
       <!-- Language Switcher -->
-      <LanguageSwitcher />
+      <LanguageSwitcher esUrl={esUrl} enUrl={enUrl} />
 
       <div class="w-px h-5 bg-terminal-border mx-2"></div>
       <a
@@ -402,7 +404,7 @@ const navLinks = [
 
       <div class="mt-auto pt-8 pb-12 flex flex-col items-center gap-6 w-full">
         <!-- Language switcher móvil -->
-        <LanguageSwitcher />
+        <LanguageSwitcher esUrl={esUrl} enUrl={enUrl} />
 
         <div class="flex items-center justify-center gap-6 w-full">
           <a

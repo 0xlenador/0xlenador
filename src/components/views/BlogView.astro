@@ -22,41 +22,38 @@ const formatDate = (dateString: string) => {
   })
 }
 
-// Activos bajo seguimiento — renderizados server-side (ver nota 1.4)
 const assetsData = [
   {
     ticker: "BTC",
     name: "Bitcoin",
-    category: "Hard Money / Reserva",
-    thesis:
-      "El activo base de escasez absoluta. Cobertura definitiva contra la degradación de monedas fiat tradicionales.",
+    category: t("blog.btc.category") as any || "Hard Money / Reserva",
+    thesis: t("blog.btc.thesis") as any,
     colorClass:
       "from-amber-500/5 to-terminal-surface/10 border-amber-500/10 hover:border-amber-500/30 text-amber-400",
-    link: "/activos/bitcoin",
+    link: lang === "en" ? "/en/watchlist/bitcoin" : "/activos/bitcoin",
   },
   {
     ticker: "ETH",
     name: "Ethereum",
-    category: "L1 de Liquidación",
-    thesis:
-      "La computadora descentralizada global. Captura valor real de comisiones mediante la quema de su propio suministro.",
+    category: t("blog.eth.category") as any || "L1 de Liquidación",
+    thesis: t("blog.eth.thesis") as any,
     colorClass:
       "from-indigo-500/5 to-terminal-surface/10 border-indigo-500/10 hover:border-indigo-500/30 text-indigo-400",
-    link: "/activos/ethereum",
+    link: lang === "en" ? "/en/watchlist/ethereum" : "/activos/ethereum",
   },
 ]
 
 // Listado de próximos análisis planificados (Estructura de Garaje/Próximamente)
 const proximosArticulos = [
   {
-    title: "Auditoría de Contratos Inteligentes: Filtros de Seguridad para Burner Wallets",
-    category: "Seguridad",
-    desc: "Cómo leer trazas básicas en Etherscan y detectar funciones maliciosas de drenado antes de interactuar con un nuevo protocolo.",
+    title: t("blog.next1.title") as any,
+    category: t("blog.next1.category") as any,
+    desc: t("blog.next1.desc") as any,
   },
   {
-    title: "Flujo de Caja Descontado (DCF) Aplicado a Plataformas de Liquidación L1",
-    category: "Modelado",
-    desc: "Adaptación de las métricas tradicionales de Benjamin Graham para valuar la captura de valor real por tarifas de gas on-chain.",
+    title: t("blog.next2.title") as any,
+    category: t("blog.next2.category") as any,
+    desc: t("blog.next2.desc") as any,
   },
 ]
 ---
@@ -87,7 +84,7 @@ const proximosArticulos = [
     {
       featuredPost && (
         <section class="mb-20 md:mb-28">
-          <a href={`/blog/${featuredPost.slug}`} class="group block">
+          <a href={lang === "en" ? `/en/blog/${featuredPost.slug}` : `/blog/${featuredPost.slug}`} class="group block">
             <div class="relative bg-terminal-surface/10 border border-terminal-border/80 rounded-2xl p-8 md:p-12 hover:border-emerald-500/30 transition-all duration-700 overflow-hidden shadow-2xl min-h-[420px] md:min-h-[480px] flex items-end">
               {featuredPost.data.coverImage ? (
                 <>
@@ -146,8 +143,8 @@ const proximosArticulos = [
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regularPosts.map((post) => (
-              <a href={`/blog/${post.slug}`} class="group block h-full">
+            {regularPosts.map((post: any) => (
+              <a href={lang === "en" ? `/en/blog/${post.slug}` : `/blog/${post.slug}`} class="group block h-full">
                 <div class="bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl hover:border-emerald-500/20 hover:bg-terminal-surface/35 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden">
                   {post.data.coverImage && (
                     <div class="mb-5 -mx-6 -mt-6 aspect-video overflow-hidden border-b border-terminal-border/50">
