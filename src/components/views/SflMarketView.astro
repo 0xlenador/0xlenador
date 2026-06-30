@@ -1,0 +1,1067 @@
+---
+// ============================================================
+// src/components/views/SflMarketView.astro
+// View puro para la herramienta de mercado SFL.
+// ============================================================
+import { getEntry } from "astro:content"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import SflTabs from "../SflTabs.astro"
+
+const sflIdsEntry = await getEntry("sfl", "resources")
+const sflPowerUpsEntry = await getEntry("sfl", "powerups")
+const sflIds = sflIdsEntry.data
+const sflPowerUps = sflPowerUpsEntry.data
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<main class="max-w-7xl mx-auto px-6 pt-10 pb-20">
+    <div class="mb-6">
+      <div class="flex items-center gap-4">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
+        <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
+          {t("sfl.breadcrumb")}
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative overflow-hidden">
+      <SflTabs activeTab="mercado" />
+      
+      <div class="mb-10 relative z-10 text-center sm:text-left">
+        <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
+          {t("sfl.heading")} <span class="text-emerald-500">{t("sfl.heading.accent")}</span>
+        </h1>
+        <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+          {t("sfl.intro")}
+        </p>
+      </div>
+      <!-- Glow effect -->
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 relative z-10">
+        <div class="w-full md:w-2/3">
+          <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">{t("sfl.dashboard.title")}</h2>
+        </div>
+        <div class="w-full md:w-auto flex items-center justify-start md:justify-end mt-2 md:mt-0">
+          <div class="bg-white/[0.02] border border-emerald-500/20 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(16,185,129,0.05)] cursor-help hover:border-emerald-500/40 transition-colors" title="Precio actual de Flower en tiempo real">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1.5 shrink-0">
+              <img src="/img/sunflowerland/flower.jpg" alt="Flower Token" class="w-full h-full object-contain animate-pulse drop-shadow-sm" id="sflTokenImg" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp'" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[9px] text-terminal-muted font-mono leading-none uppercase tracking-widest mb-1">{t("sfl.price.label")}</span>
+              <div class="flex items-baseline gap-2">
+                <span id="sflPriceValue" class="text-base text-white font-black tracking-wider leading-none">{t("sfl.loading.price")}</span>
+                <span id="sflPriceChange" class="text-[10px] font-bold"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="loadingState" class="hidden py-20 flex flex-col items-center justify-center relative z-10">
+        <svg class="animate-spin h-8 w-8 text-emerald-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-terminal-muted font-mono text-xs animate-pulse">{t("sfl.loading")}</p>
+      </div>
+
+      <div id="errorState" class="hidden py-12 px-6 bg-red-500/10 border border-red-500/20 rounded-xl relative z-10">
+        <p id="errorMsg" class="text-red-400 text-sm text-center">{t("sfl.error")}</p>
+      </div>
+
+      <div id="dataContainer" class="hidden relative z-10">
+        
+        <!-- Dashboard Resumen -->
+        <div class="relative mb-10">
+          <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:grid md:grid-cols-3 md:gap-6 md:pb-0 no-scrollbar">
+            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-4 lg:p-5 shadow-inner flex flex-col justify-start min-h-[160px] lg:min-h-[180px]">
+              <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                Top Volume 24h
+              </h3>
+              <div id="dashTopVolume" class="h-auto flex-grow flex flex-col justify-center">
+                <div class="h-8 bg-white/[0.05] rounded-lg w-3/4 animate-pulse"></div>
+              </div>
+            </div>
+            
+            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[160px] lg:min-h-[180px] group/carousel cursor-pointer">
+              <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
+                  <circle class="text-white/10" stroke-width="3" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" />
+                  <circle id="gainerProgress" class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.83" stroke-dashoffset="62.83" />
+                </svg>
+              </div>
+              <div id="dashTopGainerCarousel" class="w-full h-full absolute inset-0 p-4 lg:p-5">
+                <div class="flex flex-col justify-start h-full">
+                  <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                    Calculando...
+                  </h3>
+                  <div class="h-auto flex-grow flex items-center">
+                    <div class="h-8 bg-white/[0.05] rounded-lg w-2/3 animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[160px] lg:min-h-[180px] group/carousel cursor-pointer">
+              <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
+                  <circle class="text-white/10" stroke-width="3" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" />
+                  <circle id="extremesProgress" class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.83" stroke-dashoffset="62.83" />
+                </svg>
+              </div>
+              <div id="dashAthAtlCarousel" class="w-full h-full absolute inset-0 p-4 lg:p-5">
+                <div class="flex flex-col justify-start h-full">
+                  <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Calculando...
+                  </h3>
+                  <div class="flex flex-wrap gap-2 h-auto flex-grow items-center">
+                    <div class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-2">
+          <div class="flex items-center flex-wrap gap-3">
+            <h2 class="text-lg font-semibold text-white">{t("sfl.activity")} <span class="text-xs text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline">P2P History</span></h2>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button id="fetchBtn" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto justify-center">
+              <svg class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              {t("sfl.refresh")}
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtros y Buscador -->
+        <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 mb-6 shadow-inner flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div class="w-full lg:w-1/3">
+            <div class="relative flex items-center w-full bg-terminal-bg/50 border border-white/[0.1] rounded-xl overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/50 transition-all">
+              <div class="pl-4 pr-3 py-3 border-r border-white/10 bg-white/[0.02]">
+                <span class="text-xs font-mono text-terminal-muted uppercase tracking-widest whitespace-nowrap">{t("sfl.search.label")}</span>
+              </div>
+              <input 
+                type="text" 
+                id="searchInput" 
+                placeholder={t("sfl.search.placeholder")} 
+                autocomplete="off"
+                spellcheck="false"
+                style="outline: none !important; box-shadow: none !important; border: none !important; background-color: transparent !important;"
+                class="w-full px-4 py-3 text-white placeholder-white/[0.3] text-sm"
+              />
+              <div class="pr-4 pl-2 flex items-center justify-center">
+                <svg id="searchIcon" class="w-4 h-4 text-terminal-muted transition-opacity duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <button id="clearSearchBtn" class="hidden focus:outline-none group">
+                  <svg class="w-4 h-4 text-terminal-muted group-hover:text-emerald-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="w-full lg:w-auto flex flex-col gap-2">
+            <div class="w-full flex overflow-x-auto no-scrollbar items-center lg:justify-end gap-2 pb-1 lg:pb-0">
+              <button class="category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="resources" onclick="window.handleCategory('resources')">Resources</button>
+              <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="powerups" onclick="window.handleCategory('powerups')">Power Ups</button>
+              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Cosméticos</button>
+              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
+              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
+            </div>
+
+            <!-- Ordenamiento Móvil -->
+            <div class="w-full lg:hidden flex overflow-x-auto no-scrollbar items-center gap-1.5 pb-1">
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mr-0.5 shrink-0">Ordenar:</span>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('name')">Name A>z <span class="sort-icon opacity-0 scale-75" data-col="name">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('price')">Price <span class="sort-icon opacity-0 scale-75" data-col="price">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('1d')">24H <span class="sort-icon opacity-0 scale-75" data-col="1d">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('7d')">7D <span class="sort-icon opacity-0 scale-75" data-col="7d">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('30d')">30D <span class="sort-icon opacity-0 scale-75" data-col="30d">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('180d')">180D <span class="sort-icon opacity-0 scale-75" data-col="180d">↕</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full">
+          <!-- Desktop Header -->
+          <div class="hidden lg:grid grid-cols-[25%_10%_11%_18%_18%_18%] border-b border-white/[0.05] items-center">
+            <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('name')">
+              <div class="flex items-center gap-2">Name <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span></div>
+            </div>
+            <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-right cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('price')">
+              <div class="flex items-center justify-end gap-2"><span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="price">↕</span> Price</div>
+            </div>
+            <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('1d')">
+              <div class="flex items-center justify-center gap-2">Last 24h <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="1d">↕</span></div>
+            </div>
+            <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('7d')">
+              <div class="flex items-center justify-center gap-2">Last 7d <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="7d">↕</span></div>
+            </div>
+            <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('30d')">
+              <div class="flex items-center justify-center gap-2">Last 30d <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="30d">↕</span></div>
+            </div>
+            <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('180d')">
+              <div class="flex items-center justify-center gap-2">Last 180d <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="180d">↕</span></div>
+            </div>
+          </div>
+
+          <!-- Contenedor Dinámico -->
+          <div id="tableBody" class="flex flex-col gap-4 lg:gap-0 lg:block lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0">
+            <!-- Filas/Cards dinámicas JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section SEO Optimized -->
+    <section class="mt-16 mb-8 max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-black text-white tracking-tight mb-3">{t("sfl.faq.title")}</h2>
+        <p class="text-terminal-secondary text-sm">{t("sfl.faq.subtitle")}</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Pregunta 1 -->
+        <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
+          <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
+            <span>{t("sfl.faq.q1")}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
+              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
+            <Fragment set:html={t("sfl.faq.a1")} />
+          </div>
+        </details>
+
+        <!-- Pregunta 2 -->
+        <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
+          <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
+            <span>{t("sfl.faq.q2")}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
+              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
+            <Fragment set:html={t("sfl.faq.a2")} />
+          </div>
+        </details>
+
+        <!-- Pregunta 3 -->
+        <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
+          <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
+            <span>{t("sfl.faq.q3")}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
+              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
+            <Fragment set:html={t("sfl.faq.a3")} />
+          </div>
+        </details>
+
+        <!-- Pregunta 4 -->
+        <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
+          <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
+            <span>{t("sfl.faq.q4")}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
+              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
+            <Fragment set:html={t("sfl.faq.a4")} />
+          </div>
+        </details>
+
+        <!-- Pregunta 5 -->
+        <details class="group border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-300">
+          <summary class="flex justify-between items-center font-semibold cursor-pointer list-none text-white p-6">
+            <span>{t("sfl.faq.q5")}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 text-emerald-500">
+              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="text-terminal-muted px-6 pb-6 text-sm leading-relaxed border-t border-white/5 pt-4 mt-2">
+            <Fragment set:html={t("sfl.faq.a5")} />
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+<style is:global>
+  @keyframes fillCircle {
+    0% { stroke-dashoffset: 62.83; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script define:vars={{ 
+  sflIds, 
+  sflPowerUps, 
+  tTopGainers: t('sfl.dashboard.topGainers'), 
+  tNearAth: t('sfl.dashboard.nearAth'),
+  tVol: t('sfl.slider.vol'),
+  tGainer24h: t('sfl.slider.topGainer.24h'),
+  tGainer30d: t('sfl.slider.topGainer.30d'),
+  tGainer180d: t('sfl.slider.topGainer.180d'),
+  tNearAtl: t('sfl.slider.nearAtl'),
+  tTooltipAth: t('sfl.slider.tooltip.ath'),
+  tTooltipAtl: t('sfl.slider.tooltip.atl')
+}}>
+  const searchInput = document.getElementById("searchInput");
+  const searchIcon = document.getElementById("searchIcon");
+  const clearSearchBtn = document.getElementById("clearSearchBtn");
+  const fetchBtn = document.getElementById("fetchBtn");
+  const loadingState = document.getElementById("loadingState");
+  const errorState = document.getElementById("errorState");
+  const errorMsg = document.getElementById("errorMsg");
+  const dataContainer = document.getElementById("dataContainer");
+  const tableBody = document.getElementById("tableBody");
+
+  let marketData = [];
+  let currentCategory = 'resources';
+
+  window.currentSort = { column: null, direction: 'none' };
+
+  window.handleCategory = (category) => {
+    currentCategory = category;
+    
+    // Actualizar UI de los botones
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      if (btn.dataset.category === category) {
+        btn.className = "category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0";
+      } else {
+        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0";
+      }
+    });
+
+    const searchInput = document.getElementById("searchInput");
+    renderTable(searchInput ? searchInput.value : "");
+  };
+
+  window.handleSort = (column) => {
+    if (window.currentSort.column === column) {
+      if (window.currentSort.direction === 'none') window.currentSort.direction = 'desc';
+      else if (window.currentSort.direction === 'desc') window.currentSort.direction = 'asc';
+      else window.currentSort.direction = 'none';
+    } else {
+      window.currentSort.column = column;
+      window.currentSort.direction = 'desc';
+    }
+    
+    document.querySelectorAll('.sort-icon').forEach(icon => {
+      icon.innerHTML = '↕';
+      icon.classList.remove('opacity-100', 'text-emerald-500');
+      icon.classList.add('opacity-0', 'group-hover:opacity-50');
+    });
+    
+    if (window.currentSort.direction !== 'none') {
+      const activeIcon = document.querySelector(`.sort-icon[data-col="\${column}"]`);
+      if (activeIcon) {
+        activeIcon.innerHTML = window.currentSort.direction === 'desc' ? '↓' : '↑';
+        activeIcon.classList.remove('opacity-0', 'group-hover:opacity-50');
+        activeIcon.classList.add('opacity-100', 'text-emerald-500');
+      }
+    }
+    
+    const searchInput = document.getElementById("searchInput");
+    renderTable(searchInput ? searchInput.value : "");
+  };
+
+  window.scrollToItem = (itemName, event) => {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
+    const targetItem = marketData.find(item => item.name === itemName);
+    if (targetItem) {
+      const targetCategory = targetItem.isPowerUp ? 'powerups' : 'resources';
+      if (currentCategory !== targetCategory) {
+        window.handleCategory(targetCategory);
+      }
+    }
+
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput && searchInput.value !== "") {
+      searchInput.value = "";
+      renderTable();
+    }
+    
+    // Escapar comillas si el nombre tuviera
+    const safeName = itemName.replace(/"/g, '\\"');
+    const row = document.querySelector(`div[data-row-id="${safeName}"]`);
+    
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Efecto de parpadeo temporal (forzando background y bordes en desktop)
+      row.classList.add("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
+      setTimeout(() => {
+        row.classList.remove("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
+      }, 1500);
+    }
+  };
+
+  // Formatear números
+  const formatNumber = (num, decimals = 2) => {
+    if (num === undefined || num === null) return "0";
+    if (num < 0.0001) return num.toExponential(2);
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimals,
+    }).format(num);
+  };
+
+  // Extraer el nombre del ID
+  const getItemName = (key) => {
+    const idMatch = key.match(/-(\d+)$/);
+    if (idMatch && idMatch[1]) {
+      const id = idMatch[1];
+      if (sflIds[id]) return sflIds[id];
+    }
+    return key;
+  };
+
+  // Helper para SVG Sparkline Nativo
+  const createSparklineSVG = (dataArray, isPositive) => {
+    if (!dataArray) return '';
+    const validData = dataArray.filter(v => v !== null && v !== undefined);
+    if (validData.length < 2) return ''; 
+
+    const width = 100;
+    const height = 30;
+    const max = Math.max(...validData);
+    const min = Math.min(...validData);
+    const range = max - min || 1; 
+    
+    const getX = (i) => (i / (validData.length - 1)) * width;
+    const getY = (val) => height - ((val - min) / range) * height;
+
+    const points = validData.map((val, i) => `${getX(i)},${getY(val)}`).join(' L ');
+
+    const maxIndex = validData.indexOf(max);
+    const minIndex = validData.indexOf(min);
+    const finalIndex = validData.length - 1;
+
+    const strokeColor = isPositive ? '#10b981' : '#ef4444'; 
+    const dotColor = '#f59e0b';
+    
+    return `
+      <div class="relative w-full h-full sparkline-container cursor-crosshair group/spark" 
+           data-points='${JSON.stringify(validData)}' 
+           data-min="${min}" 
+           data-range="${range}">
+        <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0">
+          <path d="M ${points}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+          
+          <circle cx="${getX(maxIndex)}" cy="${getY(max)}" r="1.5" fill="${dotColor}" />
+          <circle cx="${getX(minIndex)}" cy="${getY(min)}" r="1.5" fill="${dotColor}" />
+          <circle cx="${getX(finalIndex)}" cy="${getY(validData[finalIndex])}" r="1.5" fill="${dotColor}" />
+          
+          <line class="hover-line hidden pointer-events-none" y1="-2" y2="34" stroke="rgba(255,255,255,0.4)" stroke-width="0.5" />
+          <circle class="hover-dot hidden pointer-events-none" r="2" fill="${strokeColor}" stroke="#1e1e1e" stroke-width="1" />
+        </svg>
+        
+        <div class="hover-tooltip hidden absolute bg-terminal-dark border border-white/20 text-white text-[9px] font-mono px-1.5 py-0.5 rounded shadow-xl pointer-events-none z-10 transition-all duration-75 whitespace-nowrap" 
+             style="transform: translateX(-50%) translateY(-100%); margin-top: -6px;">
+        </div>
+      </div>
+    `;
+  };
+
+  const calculateChange = (current, past) => {
+    if (!past || past === 0 || !current) return { val: 0, text: '-', isPositive: null, pastPrice: null };
+    const change = ((current - past) / past) * 100;
+    const isPositive = change >= 0;
+    // Mejora 9 — Protección visual: si el cambio es absurdo (bug de API o especulación extrema),
+    // lo mostramos como '>9999%' para no romper el diseño móvil con números gigantes
+    const displayText = Math.abs(change) > 9999
+      ? (isPositive ? '>9999%' : '<-9999%')
+      : `${isPositive ? '+' : ''}${change.toFixed(2)}%`;
+    return {
+      val: Math.min(Math.max(change, -9999), 9999), // val también acotado para ordenamiento seguro
+      text: displayText,
+      isPositive,
+      pastPrice: past
+    };
+  };
+
+  const getBadgeHTML = (changeObj, isLarge = false) => {
+    if (changeObj.isPositive === null) return '<span class="text-terminal-muted/50 font-mono text-xs">-</span>';
+    const colorClass = changeObj.isPositive ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20' : 'text-red-500 bg-red-500/10 border-red-500/20';
+    
+    const arrowClasses = isLarge ? 'w-2.5 h-2.5 inline mr-1' : 'w-2 h-2 lg:w-2.5 lg:h-2.5 inline mr-0.5';
+    const strokeW = isLarge ? '2.5' : '2.5';
+    const arrow = changeObj.isPositive 
+      ? `<svg class="${arrowClasses}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeW}" d="M5 15l7-7 7 7"/></svg>` 
+      : `<svg class="${arrowClasses}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeW}" d="M19 9l-7 7-7-7"/></svg>`;
+      
+    const containerClass = isLarge
+      ? `text-[11px] font-bold font-mono px-1.5 py-[2px] rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0 leading-none`
+      : `text-[10px] lg:text-[11px] font-bold font-mono px-0.5 py-[1px] lg:px-1 lg:py-[2px] rounded-sm lg:rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0 leading-none`;
+
+    return `
+        <span class="${containerClass}">
+          ${arrow}${changeObj.text}
+        </span>
+    `;
+  };
+
+  const getCardColumnHTML = (title, changeObj, sparklineData) => {
+    const isLarge = !sparklineData; // 24H no tiene gráfica
+    const badgeHTML = getBadgeHTML(changeObj, isLarge);
+    
+    if (isLarge) {
+      // Para 24 Horas (sin gráfica) - Elementos grandes
+      return `
+        <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-center lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full">
+          <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
+          <div class="flex justify-center lg:justify-center w-full">
+            ${badgeHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    // Para 7D, 30D, 180D (con gráfica)
+    const graphHTML = `<div class="h-6 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>`;
+    
+    return `
+      <div class="flex flex-col justify-between lg:flex-row lg:items-center bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full lg:h-auto">
+        <!-- Mobile Header: Titulo a la izq + Badge a la der -->
+        <div class="flex justify-between items-center mb-2 w-full lg:hidden">
+          <p class="text-[10px] font-mono text-terminal-muted uppercase font-semibold">${title}</p>
+          ${badgeHTML}
+        </div>
+        <!-- Mobile Graph (Full width abajo) -->
+        <div class="w-full lg:hidden flex-grow flex flex-col justify-end">
+          ${graphHTML}
+        </div>
+        <!-- Desktop Content (Badge + Graph inline) -->
+        <div class="hidden lg:flex flex-row items-center justify-between gap-3 w-full lg:px-4">
+          ${badgeHTML}
+          ${graphHTML}
+        </div>
+      </div>
+    `;
+  };
+
+  const renderDashboard = () => {
+    const topVolResource = marketData.find(item => !item.isPowerUp);
+    const topVolPowerUp = marketData.find(item => item.isPowerUp);
+
+    const renderDashItem = (item, subtitle, isPowerUp = false) => {
+      if (!item) return '';
+      const imgSrc = isPowerUp ? '/img/sunflowerland/powerups/' + (item.image || item.name + '.png') : '/img/sunflowerland/' + item.name + '.png';
+      const imgSize = isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
+      return `
+        <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${item.name}', event)" title="${item.name}">
+          <div class="w-8 h-8 lg:w-9 lg:h-9 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
+            <img src="${imgSrc}" class="${imgSize} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-white font-bold text-xs lg:text-sm leading-tight truncate">${item.name}</span>
+            <span class="text-[10px] text-emerald-400 font-mono">${subtitle}</span>
+          </div>
+        </div>
+      `;
+    };
+
+    document.getElementById("dashTopVolume").innerHTML = `
+      <div class="flex flex-col h-full justify-center gap-1.5 lg:gap-2">
+        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + tVol : '', false)}
+        ${topVolPowerUp ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + tVol : '', true)}
+      </div>
+    `;
+
+    // Mayor Ganador Carrusel (24h, 7d, 30d, 180d)
+    const getTopGainer = (periodKey, isPowerUp) => {
+      const sorted = [...marketData].filter(i => !!i.isPowerUp === isPowerUp).map(item => {
+        const change = calculateChange(item.currentPrice, item.history[periodKey]);
+        return { ...item, changeObj: change };
+      }).sort((a, b) => b.changeObj.val - a.changeObj.val);
+      return sorted[0];
+    };
+
+    const slidesData = [
+      { title: tGainer24h, res: getTopGainer("1d", false), pwup: getTopGainer("1d", true) },
+      { title: tTopGainers, res: getTopGainer("7d", false), pwup: getTopGainer("7d", true) },
+      { title: tGainer30d, res: getTopGainer("30d", false), pwup: getTopGainer("30d", true) },
+      { title: tGainer180d, res: getTopGainer("180d", false), pwup: getTopGainer("180d", true) }
+    ];
+
+    let carouselHTML = '';
+    slidesData.forEach((slide, idx) => {
+      const isFirst = idx === 0;
+      carouselHTML += `
+        <div class="gainer-slide slide-item absolute inset-0 p-4 lg:p-5 transition-opacity duration-500 flex flex-col justify-start ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+            <span class="truncate">${slide.title}</span>
+          </h3>
+          <div class="h-auto flex-grow flex flex-col justify-center gap-1.5 lg:gap-2">
+            ${renderDashItem(slide.res, slide.res ? `+${slide.res.changeObj.val.toFixed(2)}%` : '', false)}
+            ${slide.pwup ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+            ${renderDashItem(slide.pwup, slide.pwup ? `+${slide.pwup.changeObj.val.toFixed(2)}%` : '', true)}
+          </div>
+        </div>
+      `;
+    });
+
+    const carouselContainer = document.getElementById("dashTopGainerCarousel");
+    carouselContainer.innerHTML = carouselHTML;
+
+    const calculateRatio = (items, type) => {
+      return items.map(item => {
+        const history180d = item.history.sparkline180d ? item.history.sparkline180d.filter(v => v !== null && v !== undefined) : [];
+        if (type === 'ath') {
+          const ath = Math.max(...history180d, item.currentPrice);
+          const ratio = ath > 0 ? (item.currentPrice / ath) * 100 : 0;
+          return { ...item, ratio, refPrice: ath };
+        } else {
+          const atl = Math.min(...history180d, item.currentPrice);
+          const ratio = item.currentPrice > 0 ? (atl / item.currentPrice) * 100 : 0;
+          return { ...item, ratio, refPrice: atl };
+        }
+      }).sort((a, b) => b.ratio - a.ratio);
+    };
+
+    const allAth = calculateRatio(marketData, 'ath');
+    const allAtl = calculateRatio(marketData, 'atl');
+
+    const extremesSlides = [
+      {
+        title: tNearAth,
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
+        colorClass: "text-emerald-500",
+        borderClass: "border-emerald-500/30",
+        shadowClass: "shadow-[0_0_10px_rgba(16,185,129,0.15)]",
+        res: allAth.filter(i => !i.isPowerUp).slice(0, 4),
+        pwup: allAth.filter(i => i.isPowerUp).slice(0, 4),
+        tooltipSuffix: tTooltipAth
+      },
+      {
+        title: tNearAtl,
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>',
+        colorClass: "text-red-500",
+        borderClass: "border-red-500/30",
+        shadowClass: "shadow-[0_0_10px_rgba(239,68,68,0.15)]",
+        res: allAtl.filter(i => !i.isPowerUp).slice(0, 4),
+        pwup: allAtl.filter(i => i.isPowerUp).slice(0, 4),
+        tooltipSuffix: tTooltipAtl
+      }
+    ];
+
+    let extremesHTML = '';
+    extremesSlides.forEach((slide, idx) => {
+      const isFirst = idx === 0;
+      
+      const renderMiniIcons = (items, isPowerUp) => {
+        return items.map(item => `
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
+            <img src="/img/sunflowerland/${isPowerUp ? 'powerups/' + (item.image || item.name + '.png') : item.name + '.png'}" class="${isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
+              ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
+            </div>
+          </div>
+        `).join('');
+      };
+
+      extremesHTML += `
+        <div class="extremes-slide slide-item absolute inset-0 p-4 lg:p-5 transition-opacity duration-500 flex flex-col justify-start ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <h3 class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 ${slide.colorClass} shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
+            <span class="truncate">${slide.title}</span>
+          </h3>
+          <div class="h-auto flex-grow flex flex-col justify-center gap-2">
+            <div class="flex gap-1.5 sm:gap-2 items-center w-full">
+              ${renderMiniIcons(slide.res, false)}
+            </div>
+            <div class="w-full border-t border-white/5 my-0.5"></div>
+            <div class="flex gap-1.5 sm:gap-2 items-center w-full">
+              ${renderMiniIcons(slide.pwup, true)}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    const extremesContainer = document.getElementById("dashAthAtlCarousel");
+    extremesContainer.innerHTML = extremesHTML;
+
+    // Lógica Universal de Carrusel con Eventos
+    const setupCarousel = (containerId, circleId, durationSec, abortKey) => {
+      const container = document.getElementById(containerId);
+      let circle = document.getElementById(circleId);
+      if (!container || !circle) return;
+
+      const wrapper = container.parentElement;
+      const slides = container.querySelectorAll(".slide-item");
+      if (slides.length <= 1) return;
+
+      if (window[abortKey]) window[abortKey].abort();
+      window[abortKey] = new AbortController();
+      const signal = window[abortKey].signal;
+
+      let currentIdx = 0;
+
+      const nextSlide = () => {
+        slides[currentIdx].classList.remove("opacity-100", "z-10");
+        slides[currentIdx].classList.add("opacity-0", "z-0");
+        
+        currentIdx = (currentIdx + 1) % slides.length;
+        
+        slides[currentIdx].classList.remove("opacity-0", "z-0");
+        slides[currentIdx].classList.add("opacity-100", "z-10");
+
+        // Clonar para reiniciar animación SVG de forma confiable
+        const newCircle = circle.cloneNode(true);
+        circle.parentNode.replaceChild(newCircle, circle);
+        circle = newCircle;
+        
+        if (circleId === "extremesProgress") {
+          if (currentIdx === 0) {
+            circle.classList.remove("text-red-500");
+            circle.classList.add("text-emerald-500");
+          } else {
+            circle.classList.remove("text-emerald-500");
+            circle.classList.add("text-red-500");
+          }
+        }
+        
+        circle.style.animation = `fillCircle ${durationSec}s linear forwards`;
+        circle.addEventListener("animationend", nextSlide, { signal });
+      };
+
+      wrapper.addEventListener("click", nextSlide, { signal });
+      
+      circle.style.animation = `fillCircle ${durationSec}s linear forwards`;
+      circle.addEventListener("animationend", nextSlide, { signal });
+    };
+
+    if (window.__gainerInterval) clearInterval(window.__gainerInterval);
+    if (window.__extremesInterval) clearInterval(window.__extremesInterval);
+
+    setupCarousel("dashTopGainerCarousel", "gainerProgress", 5, "__gainerAborter");
+    setupCarousel("dashAthAtlCarousel", "extremesProgress", 15, "__extremesAborter");
+  };
+
+  const renderTable = (filterText = "") => {
+    if (!marketData.length) return;
+
+    const term = filterText;
+    const filtered = marketData.filter(item => {
+      const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
+                          item.key.toLowerCase().includes(term.toLowerCase());
+      const matchCategory = currentCategory === 'resources' ? !item.isPowerUp : item.isPowerUp;
+      return matchSearch && matchCategory;
+    });
+
+    let sortedFiltered = [...filtered];
+    
+    if (window.currentSort && window.currentSort.column && window.currentSort.direction !== 'none') {
+      const { column, direction } = window.currentSort;
+      sortedFiltered.sort((a, b) => {
+        let valA, valB;
+        if (column === 'name') {
+          valA = a.name.toLowerCase();
+          valB = b.name.toLowerCase();
+        } else if (column === 'price') {
+          valA = a.currentPrice;
+          valB = b.currentPrice;
+        } else {
+          const changeA = calculateChange(a.currentPrice, a.history[column]);
+          const changeB = calculateChange(b.currentPrice, b.history[column]);
+          valA = (changeA.sign === '-' ? -1 : 1) * changeA.val;
+          valB = (changeB.sign === '-' ? -1 : 1) * changeB.val;
+        }
+        
+        if (valA < valB) return direction === 'asc' ? -1 : 1;
+        if (valA > valB) return direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    tableBody.innerHTML = "";
+
+    if (sortedFiltered.length === 0) {
+      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">No se encontraron items que coincidan con la búsqueda.</div>`;
+      return;
+    }
+
+    sortedFiltered.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_11%_18%_18%_18%] lg:items-center lg:py-3";
+      row.setAttribute("data-row-id", item.name);
+      
+      row.innerHTML = `
+        <!-- Card Header (Móvil) / Columna 1 (Desktop) -->
+        <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
+          <div class="flex items-center gap-4 lg:gap-3">
+            <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
+              <img src="/img/sunflowerland/${item.isPowerUp ? 'powerups/' + (item.image || (item.name + '.png')) : item.name + '.png'}" alt="${item.name}" class="${item.isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+            </div>
+            <div>
+              <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
+              <p class="text-[10px] ${item.isPowerUp ? 'text-emerald-400/80 leading-tight lg:leading-none mt-0.5 max-w-[180px] lg:max-w-none' : 'font-mono text-terminal-muted/70'}">${item.isPowerUp ? item.boost : item.key}</p>
+            </div>
+          </div>
+          <!-- Precio Móvil -->
+          <div class="lg:hidden text-right flex flex-col justify-center">
+             <span class="text-xs font-mono text-terminal-muted mb-0.5">Precio</span>
+             <span class="text-lg font-bold text-white leading-none">${formatNumber(item.currentPrice, 4)}</span>
+          </div>
+        </div>
+        
+        <!-- Precio Desktop -->
+        <div class="hidden lg:flex lg:py-0 px-4 items-center justify-end h-full">
+          <span class="text-sm font-medium text-white">${formatNumber(item.currentPrice, 4)}</span>
+        </div>
+        
+        <!-- Contenedor de gráficas (2x2 en móvil, horizontal en lg) -->
+        <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
+          ${getCardColumnHTML("24 Horas", calculateChange(item.currentPrice, item.history["1d"]), null)}
+          ${getCardColumnHTML("7 Días", calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
+          ${getCardColumnHTML("30 Días", calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
+          ${getCardColumnHTML("180 Días", calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+        </div>
+      `;
+      tableBody.appendChild(row);
+    });
+  };
+
+  const fetchData = async () => {
+    try {
+      loadingState.classList.remove("hidden");
+      errorState.classList.add("hidden");
+      dataContainer.classList.add("hidden");
+
+      // Consultar el asset estático que actualiza el cron job
+      const response = await fetch('/api/sfl_data.json');
+      
+      if (!response.ok) {
+        throw new Error(`No se pudo cargar el archivo local: ${response.status}`);
+      }
+
+      const json = await response.json();
+      
+      if (!json.items) {
+        throw new Error(`El archivo de datos estáticos no contiene historial de items.`);
+      }
+
+      // Mapear el nuevo formato histórico JSON filtrando por sfl_ids.json y sfl_powerups.json
+      marketData = Object.values(json.items).reduce((acc, data) => {
+        const idMatch = data.key.match(/collectibles-(\d+)$/);
+        if (idMatch) {
+          const id = idMatch[1];
+          if (sflIds[id]) {
+            acc.push({
+              ...data,
+              name: sflIds[id],
+              isPowerUp: false
+            });
+          } else if (sflPowerUps.power_ups.collectibles[id]) {
+            acc.push({
+              ...data,
+              name: sflPowerUps.power_ups.collectibles[id].name,
+              boost: sflPowerUps.power_ups.collectibles[id].boost,
+              image: sflPowerUps.power_ups.collectibles[id].image,
+              isPowerUp: true
+            });
+          }
+        }
+        return acc;
+      }, []).sort((a, b) => b.volume - a.volume);
+
+
+
+      // Actualizar el widget de precio FLOWER con el dato inyectado desde sfl_data.json
+      const priceEl = document.getElementById("sflPriceValue");
+      const changeEl = document.getElementById("sflPriceChange");
+      const imgEl = document.getElementById("sflTokenImg");
+      
+      if (json.flowerPrice) {
+        if(priceEl) priceEl.innerText = "$" + parseFloat(json.flowerPrice).toFixed(4);
+        if(changeEl) changeEl.innerText = "";
+        if(imgEl) imgEl.classList.remove("animate-pulse");
+      } else {
+        if(priceEl) priceEl.innerText = "N/A";
+        if(imgEl) imgEl.classList.remove("animate-pulse");
+      }
+
+      renderDashboard();
+      renderTable(searchInput.value);
+      dataContainer.classList.remove("hidden");
+
+    } catch (err) {
+      console.error(err);
+      errorMsg.innerText = err.message || "Error desconocido al consultar la API.";
+      errorState.classList.remove("hidden");
+      
+      const priceEl = document.getElementById("sflPriceValue");
+      const imgEl = document.getElementById("sflTokenImg");
+      if(priceEl) priceEl.innerText = "Error";
+      if(imgEl) imgEl.classList.remove("animate-pulse");
+    } finally {
+      loadingState.classList.add("hidden");
+    }
+  };
+
+  // Prevenir inicializaciones dobles en Astro
+  const init = () => {
+    // Si ya inicializamos, salimos
+    if (window.__sflMarketInitialized) return;
+    window.__sflMarketInitialized = true;
+
+    if(fetchBtn) {
+      fetchBtn.addEventListener("click", () => {
+        fetchData();
+      });
+    }
+
+    if(searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        const val = e.target.value;
+        renderTable(val);
+        
+        if (searchIcon && clearSearchBtn) {
+          if (val.length > 0) {
+            searchIcon.classList.add("hidden");
+            clearSearchBtn.classList.remove("hidden");
+          } else {
+            searchIcon.classList.remove("hidden");
+            clearSearchBtn.classList.add("hidden");
+          }
+        }
+      });
+    }
+
+    if(clearSearchBtn) {
+      clearSearchBtn.addEventListener("click", () => {
+        if(searchInput) {
+          searchInput.value = "";
+          renderTable("");
+          searchInput.focus();
+          
+          if (searchIcon) searchIcon.classList.remove("hidden");
+          clearSearchBtn.classList.add("hidden");
+        }
+      });
+    }
+
+    // Primer fetch automático
+    fetchData();
+
+    // Lógica para interactividad de las gráficas
+    tableBody.addEventListener("mousemove", (e) => {
+      const container = e.target.closest(".sparkline-container");
+      
+      // Ocultar elementos de todos los demás gráficos
+      document.querySelectorAll(".sparkline-container .hover-line:not(.hidden)").forEach(el => {
+        if (!container || !container.contains(el)) el.classList.add("hidden");
+      });
+      document.querySelectorAll(".sparkline-container .hover-dot:not(.hidden)").forEach(el => {
+        if (!container || !container.contains(el)) el.classList.add("hidden");
+      });
+      document.querySelectorAll(".sparkline-container .hover-tooltip:not(.hidden)").forEach(el => {
+        if (!container || !container.contains(el)) el.classList.add("hidden");
+      });
+
+      if (!container) return;
+      
+      const rect = container.getBoundingClientRect();
+      const xPos = e.clientX - rect.left;
+      const width = rect.width;
+      
+      const dataPoints = JSON.parse(container.dataset.points);
+      const numPoints = dataPoints.length;
+      let index = Math.round((xPos / width) * (numPoints - 1));
+      if (index < 0) index = 0;
+      if (index >= numPoints) index = numPoints - 1;
+      
+      const val = dataPoints[index];
+      const min = parseFloat(container.dataset.min);
+      const range = parseFloat(container.dataset.range);
+      
+      const svgWidth = 100;
+      const svgHeight = 30;
+      const mappedX = (index / (numPoints - 1)) * svgWidth;
+      const mappedY = svgHeight - ((val - min) / range) * svgHeight;
+      
+      const line = container.querySelector(".hover-line");
+      const dot = container.querySelector(".hover-dot");
+      const tooltip = container.querySelector(".hover-tooltip");
+      
+      if(line && dot && tooltip) {
+        line.classList.remove("hidden");
+        line.setAttribute("x1", mappedX);
+        line.setAttribute("x2", mappedX);
+        
+        dot.classList.remove("hidden");
+        dot.setAttribute("cx", mappedX);
+        dot.setAttribute("cy", mappedY);
+        
+        tooltip.classList.remove("hidden");
+        tooltip.innerText = formatNumber(val, 4);
+        
+        tooltip.style.left = `${(mappedX / svgWidth) * 100}%`;
+        tooltip.style.top = `${(mappedY / svgHeight) * 100}%`;
+      }
+    });
+
+    tableBody.addEventListener("mouseleave", () => {
+      document.querySelectorAll(".sparkline-container .hover-line:not(.hidden)").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".sparkline-container .hover-dot:not(.hidden)").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".sparkline-container .hover-tooltip:not(.hidden)").forEach(el => el.classList.add("hidden"));
+    });
+  };
+
+  // Manejar el ciclo de vida de Astro ViewTransitions
+  document.addEventListener("astro:page-load", () => {
+    window.__sflMarketInitialized = false; // Reset en navegacion
+    init();
+  });
+  
+  // Por si ViewTransitions no está activo
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(init, 1);
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
+
+  // Mejora 11 — Pausar carruseles cuando el usuario cambia de pestaña.
+  // Los navegadores acumulan eventos 'animationend' en segundo plano y los
+  // disparan todos de golpe al volver, haciendo girar el carrusel como loco.
+  // Guardia para evitar duplicar el listener si Astro ViewTransitions recarga la página
+  if (!window.__sflVisibilityListenerRegistered) {
+    window.__sflVisibilityListenerRegistered = true;
+    document.addEventListener("visibilitychange", () => {
+      const isHidden = document.visibilityState === "hidden";
+      if (isHidden) {
+        if (window.__gainerAborter) window.__gainerAborter.abort();
+        if (window.__extremesAborter) window.__extremesAborter.abort();
+      } else {
+        if (marketData.length > 0) renderDashboard();
+      }
+    });
+  }
+</script>

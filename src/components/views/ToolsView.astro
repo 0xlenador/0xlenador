@@ -1,0 +1,214 @@
+---
+// ==========================================
+// src/components/views/ToolsView.astro
+// View puro para la página de listado de herramientas
+// ==========================================
+
+import FaqAccordion from "../FaqAccordion.astro"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const generalTools = [
+  {
+    id: "riskfolio",
+    href: "/riskfolio",
+    titulo: t("tools.riskfolio.title"),
+    descripcion: t("tools.riskfolio.desc"),
+    badge: t("tools.riskfolio.badge"),
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>`,
+  },
+  {
+    id: "intrinseco",
+    href: "/intrinseco",
+    titulo: t("tools.intrinseco.title"),
+    descripcion: t("tools.intrinseco.desc"),
+    badge: t("tools.intrinseco.badge"),
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>`,
+  },
+]
+
+const sflTools = [
+  {
+    id: "sfl-mercado",
+    href: "/sfl-mercado",
+    titulo: t("tools.sfl.title"),
+    descripcion: t("tools.sfl.desc"),
+    badge: t("tools.sfl.badge"),
+    logo: "/img/sunflowerland/123/exchange.png",
+  },
+  {
+    id: "sfl-mascotas",
+    href: "/sfl-mascotas",
+    titulo: t("tools.sfl-mascotas.title"),
+    descripcion: t("tools.sfl-mascotas.desc"),
+    badge: t("tools.sfl-mascotas.badge"),
+    logo: "/img/sunflowerland/123/ramsey.webp",
+  },
+  {
+    id: "sfl-cocinando",
+    href: "/sfl-cocinando",
+    titulo: t("tools.sfl-cocinando.title"),
+    descripcion: t("tools.sfl-cocinando.desc"),
+    badge: t("tools.sfl-cocinando.badge"),
+    logo: "/img/sunflowerland/food/Pizza Margherita.png",
+  },
+]
+
+const faqItems = [
+  {
+    pregunta: t("tools.faq.q1"),
+    respuesta: t("tools.faq.a1"),
+  },
+  {
+    pregunta: t("tools.faq.q2"),
+    respuesta: t("tools.faq.a2"),
+  },
+  {
+    pregunta: t("tools.faq.q3"),
+    respuesta: t("tools.faq.a3"),
+  },
+  {
+    pregunta: t("tools.faq.q4"),
+    respuesta: t("tools.faq.a4"),
+  },
+  {
+    pregunta: t("tools.faq.q5"),
+    respuesta: t("tools.faq.a5"),
+  },
+]
+---
+
+<main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <!-- Header -->
+    <header class="mb-16">
+      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+        {t("tools.breadcrumb")}
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        {t("tools.heading").replace(t("tools.subheading"), '').trim()} <span class="text-emerald-500">{t("tools.subheading")}</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+        {t("tools.intro")}
+      </p>
+    </header>
+
+    <!-- Grid de herramientas generales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+      {
+        generalTools.map((tool) => (
+          <a
+            href={getLocalizedPath(tool.href, lang)}
+            id={`tool-card-${tool.id}`}
+            class="flex flex-col relative bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] backdrop-blur-2xl rounded-[24px] p-6 transition-all duration-500 no-underline overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
+          >
+            {/* Efecto de brillo superior (Apple style) */}
+            <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Header de la tarjeta (Icono + Arrow) */}
+            <div class="flex items-start justify-between mb-6">
+              <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center text-white/[0.7] group-hover:text-white transition-colors duration-300 shadow-inner">
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  set:html={tool.icon}
+                />
+              </div>
+
+              <svg
+                class="w-5 h-5 text-white/[0.3] group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </div>
+
+            {/* Contenido */}
+            <div class="flex flex-col flex-grow">
+              <h2 class="text-white font-semibold text-lg tracking-tight mb-2">{tool.titulo}</h2>
+              <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6">
+                {tool.descripcion}
+              </p>
+            </div>
+
+            {/* Badge minimalista abajo */}
+            <div class="mt-auto">
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide">
+                {tool.badge}
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <!-- Sunflower Land Ecosystem Wrapper -->
+    <div class="mb-20 bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl relative overflow-hidden group">
+      <!-- Glow effect -->
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-700 group-hover:bg-emerald-500/20"></div>
+
+      <div class="flex items-center gap-3 mb-8 relative z-10">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1] drop-shadow-md" />
+        <div>
+          <h2 class="text-2xl font-black text-white tracking-tight">Sunflower Land</h2>
+          <p class="text-[11px] font-mono text-emerald-500 uppercase tracking-widest">Ecosystem</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+        {
+          sflTools.map((tool) => (
+            <a
+              href={getLocalizedPath(tool.href, lang)}
+              id={`tool-card-${tool.id}`}
+              class="flex flex-col bg-white/[0.02] border border-white/[0.05] hover:border-emerald-500/30 hover:bg-white/[0.04] rounded-[24px] p-6 transition-all duration-500 no-underline group/card"
+            >
+              <div class="flex items-start justify-between mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center transition-colors duration-300 shadow-inner">
+                  <img src={tool.logo} alt={tool.titulo} class="w-7 h-7 object-contain drop-shadow-lg group-hover/card:scale-110 transition-transform duration-300" />
+                </div>
+                <svg
+                  class="w-5 h-5 text-white/[0.3] group-hover/card:text-emerald-400 transition-all duration-300 transform group-hover/card:translate-x-1 group-hover/card:-translate-y-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+
+              <div class="flex flex-col flex-grow">
+                <h3 class="text-white font-semibold text-lg tracking-tight mb-2 group-hover/card:text-emerald-300 transition-colors">{tool.titulo}</h3>
+                <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6">
+                  {tool.descripcion}
+                </p>
+              </div>
+
+              <div class="mt-auto">
+                <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide">
+                  {tool.badge}
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <FaqAccordion
+      titulo={t("tools.faq.title")}
+      subtitulo={t("tools.faq.subtitle")}
+      startId={300}
+      items={faqItems}
+    />
+  </main>

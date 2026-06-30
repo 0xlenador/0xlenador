@@ -1,0 +1,314 @@
+---
+// ==========================================
+// src/components/views/BlogView.astro
+// View puro para la página de listado de blog
+// ==========================================
+
+import FaqAccordion from "../FaqAccordion.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const { featuredPost, regularPosts } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// Formateador de fecha reutilizable estilo: Apr 22, 2026
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  })
+}
+
+// Activos bajo seguimiento — renderizados server-side (ver nota 1.4)
+const assetsData = [
+  {
+    ticker: "BTC",
+    name: "Bitcoin",
+    category: "Hard Money / Reserva",
+    thesis:
+      "El activo base de escasez absoluta. Cobertura definitiva contra la degradación de monedas fiat tradicionales.",
+    colorClass:
+      "from-amber-500/5 to-terminal-surface/10 border-amber-500/10 hover:border-amber-500/30 text-amber-400",
+    link: "/activos/bitcoin",
+  },
+  {
+    ticker: "ETH",
+    name: "Ethereum",
+    category: "L1 de Liquidación",
+    thesis:
+      "La computadora descentralizada global. Captura valor real de comisiones mediante la quema de su propio suministro.",
+    colorClass:
+      "from-indigo-500/5 to-terminal-surface/10 border-indigo-500/10 hover:border-indigo-500/30 text-indigo-400",
+    link: "/activos/ethereum",
+  },
+]
+
+// Listado de próximos análisis planificados (Estructura de Garaje/Próximamente)
+const proximosArticulos = [
+  {
+    title: "Auditoría de Contratos Inteligentes: Filtros de Seguridad para Burner Wallets",
+    category: "Seguridad",
+    desc: "Cómo leer trazas básicas en Etherscan y detectar funciones maliciosas de drenado antes de interactuar con un nuevo protocolo.",
+  },
+  {
+    title: "Flujo de Caja Descontado (DCF) Aplicado a Plataformas de Liquidación L1",
+    category: "Modelado",
+    desc: "Adaptación de las métricas tradicionales de Benjamin Graham para valuar la captura de valor real por tarifas de gas on-chain.",
+  },
+]
+---
+
+<main class="max-w-6xl mx-auto px-6 pt-12 pb-24 relative z-10">
+    <!-- Gradiente decorativo superior sutil -->
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/[0.03] blur-[130px] rounded-full pointer-events-none -z-10"
+    >
+    </div>
+
+    <!-- Cabecera de la sección -->
+    <header class="mb-16 md:mb-24">
+      <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 mb-3 block"
+        >{t("blog.breadcrumb")}</span
+      >
+      <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-none">
+        {t("blog.heading")} <span class="text-terminal-secondary font-light font-serif italic"
+          >{t("blog.heading.accent")}</span
+        >
+      </h1>
+      <p class="text-sm text-terminal-secondary max-w-xl mt-4 leading-relaxed font-light">
+        {t("blog.intro")}
+      </p>
+    </header>
+
+    <!-- Artículo Destacado -->
+    {
+      featuredPost && (
+        <section class="mb-20 md:mb-28">
+          <a href={`/blog/${featuredPost.slug}`} class="group block">
+            <div class="relative bg-terminal-surface/10 border border-terminal-border/80 rounded-2xl p-8 md:p-12 hover:border-emerald-500/30 transition-all duration-700 overflow-hidden shadow-2xl min-h-[420px] md:min-h-[480px] flex items-end">
+              {featuredPost.data.coverImage ? (
+                <>
+                  <img
+                    src={featuredPost.data.coverImage.src}
+                    alt={featuredPost.data.coverAlt || featuredPost.data.title}
+                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-all duration-1000 ease-out z-0 opacity-30 group-hover:opacity-40"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-0 pointer-events-none" />
+                </>
+              ) : (
+                <>
+                  {/* Gradiente de fondo alternativo si no hay imagen */}
+                  <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-emerald-500/[0.015] blur-[120px] rounded-full pointer-events-none z-0" />
+                </>
+              )}
+
+              <div class="w-full max-w-4xl relative z-10 space-y-4">
+                <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono uppercase tracking-wider">
+                  <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-md font-semibold">
+                    {t("blog.post.main")}
+                  </span>
+                  <span class="text-terminal-border-subtle">•</span>
+                  <span class="text-terminal-muted">{formatDate(featuredPost.data.date)}</span>
+                  <span class="text-terminal-border-subtle">•</span>
+                  <span class="text-terminal-muted">{featuredPost.data.readTime} {t("blog.post.read")}</span>
+                </div>
+
+                <h2 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors duration-300 leading-snug">
+                  {featuredPost.data.title}
+                </h2>
+
+                <p class="text-terminal-secondary text-sm md:text-base leading-relaxed text-left max-w-2xl font-light">
+                  {featuredPost.data.description}
+                </p>
+
+                <div class="pt-4 flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 group-hover:translate-x-1 transition-transform duration-300">
+                  {t("blog.post.start")}
+                </div>
+              </div>
+            </div>
+          </a>
+        </section>
+      )
+    }
+
+    <!-- Sección de Artículos Recientes (solo si existen artículos adicionales) -->
+    {
+      regularPosts.length > 0 && (
+        <section class="mb-24">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-xs font-mono text-terminal-muted uppercase tracking-[0.4em] font-semibold">
+              {t("blog.history.title")}
+            </h2>
+            <div class="h-px flex-grow ml-6 bg-terminal-border/80" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {regularPosts.map((post) => (
+              <a href={`/blog/${post.slug}`} class="group block h-full">
+                <div class="bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl hover:border-emerald-500/20 hover:bg-terminal-surface/35 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden">
+                  {post.data.coverImage && (
+                    <div class="mb-5 -mx-6 -mt-6 aspect-video overflow-hidden border-b border-terminal-border/50">
+                      <img
+                        src={post.data.coverImage.src}
+                        alt={post.data.coverAlt || post.data.title}
+                        class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="flex flex-col flex-grow justify-between">
+                    <div>
+                      <div class="flex justify-between items-center mb-4 font-mono text-[9px] uppercase tracking-wider">
+                        <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-2 py-0.5 rounded-md font-semibold">
+                          {post.data.category}
+                        </span>
+                        <span class="text-terminal-muted">{formatDate(post.data.date)}</span>
+                      </div>
+                      <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight leading-snug mb-3">
+                        {post.data.title}
+                      </h3>
+                      <p class="text-xs text-terminal-secondary leading-relaxed font-light line-clamp-3">
+                        {post.data.description}
+                      </p>
+                    </div>
+
+                    <div class="pt-4 mt-6 border-t border-terminal-border/50 flex items-center justify-between font-mono text-[9px] text-terminal-muted">
+                      <span class="uppercase tracking-wider">{post.data.readTime} {t("blog.post.read")}</span>
+                      <span class="font-bold uppercase tracking-widest text-emerald-400 group-hover:translate-x-0.5 transition-transform">
+                        {t("blog.history.access")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Sección de Próximos Análisis -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-terminal-border pt-16">
+      <div class="space-y-4">
+        <span class="text-xs font-mono uppercase tracking-[0.4em] text-cyan-500 block"
+          >{t("blog.pipeline.tag")}</span
+        >
+        <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">
+          {t("blog.pipeline.title")}
+        </h2>
+        <p class="text-terminal-secondary text-sm leading-relaxed max-w-sm font-light">
+          {t("blog.pipeline.desc")}
+        </p>
+      </div>
+      <div class="space-y-6">
+        {
+          proximosArticulos.map((proximo) => (
+            <div class="p-6 rounded-xl border border-terminal-border bg-terminal-bg hover:border-terminal-border/80 transition-all duration-300">
+              <div class="flex items-center gap-3 text-[9px] font-mono uppercase tracking-wider mb-3">
+                <span class="text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-md font-semibold">
+                  {proximo.category}
+                </span>
+                <span class="text-terminal-subtle">•</span>
+                <span class="text-terminal-subtle">{t("blog.pipeline.planned")}</span>
+              </div>
+              <h3 class="text-base font-bold text-terminal-secondary leading-snug mb-2">
+                {proximo.title}
+              </h3>
+              <p class="text-xs text-terminal-muted leading-relaxed font-light">{proximo.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Tarjeta Dinámica de Activos bajo Observación -->
+    <section class="mt-20 border-t border-terminal-border pt-16">
+      <div class="mb-8">
+        <span class="text-xs font-mono uppercase tracking-[0.4em] text-emerald-500 block mb-2"
+          >{t("blog.monitor.tag")}</span
+        >
+        <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">
+          {t("blog.monitor.title")}
+        </h2>
+        <p class="text-terminal-secondary text-sm leading-relaxed max-w-xl mt-2 font-light">
+          {t("blog.monitor.desc")}
+        </p>
+      </div>
+
+      <!-- Las tarjetas se pre-renderizan en el servidor; el script las baraja aleatoriamente -->
+      <div id="random-assets-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          assetsData.map((asset) => (
+            <a href={asset.link} class="group block h-full">
+              <div
+                class={`bg-gradient-to-br ${asset.colorClass} border p-6 rounded-2xl flex flex-col justify-between h-full hover:bg-terminal-surface/25 transition-all duration-300 relative overflow-hidden`}
+              >
+                <div>
+                  <div class="flex justify-between items-center mb-4">
+                    <span
+                      class={`text-xs font-mono font-bold uppercase tracking-wider ${asset.colorClass.split(" ").find((c) => c.startsWith("text-"))}`}
+                    >
+                      {asset.ticker}
+                    </span>
+                    <span class="text-[9px] font-mono uppercase tracking-wider text-terminal-muted">
+                      {asset.category}
+                    </span>
+                  </div>
+                  <h3 class="text-base font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors duration-300">
+                    {asset.name}
+                  </h3>
+                  <p class="text-xs text-terminal-secondary leading-relaxed font-light">
+                    {asset.thesis}
+                  </p>
+                </div>
+                <div class="pt-4 mt-6 border-t border-terminal-border/60 flex items-center justify-between text-[9px] font-mono text-terminal-muted">
+                  <span class="font-bold tracking-wider text-emerald-400 group-hover:text-emerald-300">
+                    {t("blog.monitor.access")}
+                  </span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <FaqAccordion
+      titulo={t("blog.faq.title")}
+      subtitulo={t("blog.faq.subtitle")}
+      startId={700}
+      items={[
+        {
+          pregunta: t("blog.faq.q1"),
+          respuesta: t("blog.faq.a1"),
+        },
+        {
+          pregunta: t("blog.faq.q2"),
+          respuesta: t("blog.faq.a2"),
+        },
+        {
+          pregunta: t("blog.faq.q3"),
+          respuesta: t("blog.faq.a3"),
+        },
+        {
+          pregunta: t("blog.faq.q4"),
+          respuesta: t("blog.faq.a4"),
+        },
+      ]}
+    />
+  </main>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const grid = document.getElementById("random-assets-grid")
+    if (!grid) return
+    // Barajar las tarjetas pre-renderizadas aleatoriamente en el cliente
+    const cards = [...grid.children]
+    cards.sort(() => 0.5 - Math.random())
+    cards.forEach((card) => grid.appendChild(card))
+  })
+</script>
