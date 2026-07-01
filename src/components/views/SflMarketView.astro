@@ -570,7 +570,7 @@ const t = useTranslations(lang)
 
     const renderDashItem = (item, subtitle, isPowerUp = false) => {
       if (!item) return '';
-      const imgSrc = isPowerUp ? '/img/sunflowerland/powerups/' + (item.image || item.name + '.png') : '/img/sunflowerland/' + item.name + '.png';
+      const imgSrc = encodeURI(isPowerUp ? '/img/sunflowerland/powerups/' + (item.image || item.name + '.png') : '/img/sunflowerland/' + item.name + '.png');
       const imgSize = isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
       return `
         <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${item.name}', event)" title="${item.name}">
@@ -678,7 +678,7 @@ const t = useTranslations(lang)
       const renderMiniIcons = (items, isPowerUp) => {
         return items.map(item => `
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
-            <img src="/img/sunflowerland/${isPowerUp ? 'powerups/' + (item.image || item.name + '.png') : item.name + '.png'}" class="${isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            <img src="${encodeURI('/img/sunflowerland/' + (isPowerUp ? 'powerups/' + (item.image || item.name + '.png') : item.name + '.png'))}" class="${isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
             <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
               ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
             </div>
@@ -818,7 +818,7 @@ const t = useTranslations(lang)
         <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="/img/sunflowerland/${item.isPowerUp ? 'powerups/' + (item.image || (item.name + '.png')) : item.name + '.png'}" alt="${item.name}" class="${item.isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+              <img src="${encodeURI('/img/sunflowerland/' + (item.isPowerUp ? 'powerups/' + (item.image || (item.name + '.png')) : item.name + '.png'))}" alt="${item.name}" class="${item.isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
             </div>
             <div>
               <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
