@@ -218,7 +218,7 @@ const faqItems = [
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <a
-              href="/operaciones"
+              href={getLocalizedPath("/operaciones", lang)}
               class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
               {t("home.section.guides.viewAll")}
@@ -228,7 +228,7 @@ const faqItems = [
           <div class="hub-card divide-y divide-terminal-border/50">
             {guiasActivas.map((guia) => (
               <a
-                href={`/operaciones/${guia.slug}`}
+                href={getLocalizedPath(`/operaciones/${guia.slug}`, lang)}
                 class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
               >
                 <div class="flex items-center gap-3">
@@ -425,7 +425,7 @@ const faqItems = [
             </h2>
             <div class="h-px flex-grow bg-terminal-border/50" />
             <a
-              href="/blog"
+              href={getLocalizedPath("/blog", lang)}
               class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
             >
               {t("home.section.blog.viewAll")}
@@ -435,7 +435,7 @@ const faqItems = [
           <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             {posts.map((post) => (
               <a
-                href={`/blog/${post.slug}`}
+                href={getLocalizedPath(`/blog/${post.slug}`, lang)}
                 class="hub-card p-5 flex flex-col gap-3 group no-underline"
               >
                 {post.data.coverImage && (
