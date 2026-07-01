@@ -4,8 +4,8 @@ import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 // Solo los IDs que queremos mostrar en el frontend (reducirá el JSON de ~8MB a ~500KB)
-const sflIds = require('../src/data/sfl_ids.json');
-const sflPowerUps = require('../src/data/sfl_powerups.json');
+const sflIds = require('../src/content/data/sfl/resources.json');
+const sflPowerUps = require('../src/content/data/sfl/powerups.json');
 const ALLOWED_KEYS = new Set([
   ...Object.keys(sflIds).map(id => `collectibles-${id}`),
   ...Object.keys(sflPowerUps.power_ups.collectibles).map(id => `collectibles-${id}`)
