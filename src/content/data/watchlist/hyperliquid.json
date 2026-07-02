@@ -1,0 +1,557 @@
+{
+  "id": "hyperliquid",
+  "ticker": "HYPE",
+  "name": "Hyperliquid",
+  "type": "DeFi",
+  "accentColor": "emerald",
+  "pageUrl": "https://0xlenador.xyz/hyperliquid",
+  "image": "/img/cripto/hype_blob.gif",
+  "imageAlt": "Logo de Hyperliquid",
+  "officialUrl": "https://app.hyperliquid.xyz/join/ELLENAADOR",
+
+  "seo": {
+    "title": {
+      "es": "¿Qué es Hyperliquid? Análisis y Guía del L1 y DEX de Perps | 0xLeñador",
+      "en": "What is Hyperliquid? Analysis & Guide of the L1 & Perps DEX | 0xLeñador"
+    },
+    "description": {
+      "es": "Análisis profundo de Hyperliquid (HYPE). Explora su arquitectura como Appchain L1, su motor de emparejamiento on-chain y por qué lidera el volumen de DEX de perpetuos.",
+      "en": "Deep analysis of Hyperliquid (HYPE). Explore its architecture as an L1 Appchain, its on-chain matching engine, and why it leads perpetual DEX volume."
+    },
+    "keywords": {
+      "es": "hyperliquid, hype, dex, perpetuos, l1, appchain, trading descentralizado, criptomonedas, 0xleñador",
+      "en": "hyperliquid, hype, dex, perpetuals, l1, appchain, decentralized trading, cryptocurrency, 0xleñador"
+    },
+    "ogImage": "/img/meta/hyperliquid-og.webp"
+  },
+
+  "price": {
+    "apiUrl": "https://api.coingecko.com/api/v3/simple/price?ids=hyperliquid&vs_currencies=usd",
+    "apiPath": "hyperliquid.usd"
+  },
+
+  "definicion": {
+    "es": "Una blockchain de Capa 1 optimizada para operar el exchange descentralizado de derivados con una experiencia de usuario idéntica a un exchange centralizado (CEX).",
+    "en": "A Layer 1 blockchain optimized to run the decentralized derivatives exchange with a user experience identical to a centralized exchange (CEX)."
+  },
+
+  "genesis": {
+    "fechaInicio": "06/2023",
+    "creador": "Chameleon y Jeff",
+    "whitepaperUrl": "https://hyperliquid.gitbook.io/hyperliquid-docs"
+  },
+
+  "matematica": {
+    "suministroTotal": "1,000,000,000",
+    "cicloHalving": "N/A"
+  },
+
+  "arquitectura": [
+    { "label": "Consenso", "value": "HyperBFT" },
+    { "label": "Rendimiento", "value": "100k+ TPS" },
+    { "label": "Liquidación", "value": "On-chain (L1)" }
+  ],
+
+  "floatingTags": {
+    "es": ["Appchain L1", "Perps DEX", "HyperBFT", "Sin Gas Fees"],
+    "en": ["L1 Appchain", "Perps DEX", "HyperBFT", "Gasless"]
+  },
+
+  "datoOculto": {
+    "teaser": {
+      "es": "\"El equipo de Hyperliquid no usó ningún framework de blockchain existente; escribieron todo su stack (desde el consenso hasta la base de datos) a medida en Rust.\"",
+      "en": "\"The Hyperliquid team didn't use any existing blockchain framework; they wrote their entire stack (from consensus to database) from scratch in Rust.\""
+    },
+    "contenido": {
+      "es": [
+        "\"El equipo de Hyperliquid no usó ningún framework de blockchain existente; escribieron todo su stack (desde el consenso hasta la base de datos) a medida en Rust.\"",
+        "Para lograr un motor de emparejamiento de órdenes on-chain que no tenga retrasos ni requiera pagos de gas por transacción, los fundadores determinaron que herramientas como Cosmos SDK eran insuficientes.",
+        "Esta arquitectura monolítica y especializada le permite manejar picos de más de 100,000 transacciones por segundo (TPS), superando la velocidad de la mayoría de L1s y L2s del mercado."
+      ],
+      "en": [
+        "\"The Hyperliquid team didn't use any existing blockchain framework; they wrote their entire stack (from consensus to database) from scratch in Rust.\"",
+        "To achieve an on-chain order matching engine with no delays and no transaction gas fees, the founders determined that tools like Cosmos SDK were insufficient.",
+        "This monolithic and specialized architecture allows it to handle peaks of over 100,000 transactions per second (TPS), beating the speed of most L1s and L2s on the market."
+      ]
+    }
+  },
+
+  "analisisCaracter": {
+    "es": "\"Hyperliquid representa la evolución máxima de las DeFi al romper el trilema del trading descentralizado: logra transparencia on-chain y custodia propia sin sacrificar la velocidad, la liquidez y la usabilidad de los exchanges centralizados tradicionales.\"",
+    "en": "\"Hyperliquid represents the ultimate evolution of DeFi by breaking the decentralized trading trilemma: it achieves on-chain transparency and self-custody without sacrificing the speed, liquidity, and usability of traditional centralized exchanges.\""
+  },
+
+  "tooling": {
+    "mercados": ["binance", "bybit", "hyperliquid"],
+    "analisis": ["tradingview", "coingecko"],
+    "custodia": ["metamask", "ledger", "rabby"],
+    "infraestructura": ["hypeexplorer", "hypurrscan"]
+  },
+
+  "investigacion": {
+    "titulo": {
+      "es": "Investigación Profunda",
+      "en": "Deep Research"
+    },
+    "subtitulo": {
+      "es": "Protocolo de Entendimiento Hyperliquid / Nivel de Acceso: Full Node",
+      "en": "Hyperliquid Understanding Protocol / Access Level: Full Node"
+    },
+    "pilares": [
+      {
+        "titulo": {
+          "es": "1. Tesis de Inversión: El Motor de Trading On-Chain de Alta Performance",
+          "en": "1. Investment Thesis: The High-Performance On-Chain Trading Engine"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Por qué Hyperliquid se considera la capa de trading y liquidación de alta velocidad en DeFi y qué valor intrínseco genera su red?",
+              "en": "Why is Hyperliquid considered the high-speed trading and settlement layer in DeFi, and what intrinsic value does its network generate?"
+            },
+            "contenido": {
+              "es": "Hyperliquid es un **Layer 1 purpose-built** diseñado específicamente para trading de derivados y spot con alto rendimiento. A diferencia de la mayoría de blockchains que dependen de smart contracts genéricos, Hyperliquid controla todo el stack técnico: consenso (HyperBFT), orderbook completamente on-chain (HyperCore) y ejecución con latencia sub-segundo y alto throughput.\n\nSu valor intrínseco proviene de generar **revenue real** a través de las comisiones de trading. El protocolo redirige aproximadamente el 99% de estas fees al **Assistance Fund**, que compra HYPE de forma automática y transparente en el mercado abierto. Esto crea un mecanismo donde mayor actividad de trading se traduce directamente en mayor demanda de compra del token.",
+              "en": "Hyperliquid is a **purpose-built Layer 1** designed specifically for high-performance spot and derivatives trading. Unlike most blockchains that rely on generic smart contracts, Hyperliquid controls the entire technical stack: consensus (HyperBFT), a fully on-chain orderbook (HyperCore), and sub-second latency execution with high throughput.\n\nIts intrinsic value comes from generating **real revenue** through trading fees. The protocol redirects approximately 99% of these fees to the **Assistance Fund**, which automatically and transparently buys HYPE on the open market. This creates a mechanism where higher trading activity translates directly into higher buying demand for the token."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Qué ventaja estructural ofrece HYPE como 'activo de revenue accrual' frente a otras criptomonedas?",
+              "en": "What structural advantage does HYPE offer as a 'revenue accrual asset' compared to other cryptocurrencies?"
+            },
+            "contenido": {
+              "es": "HYPE combina utilidad práctica en trading con un mecanismo directo de acumulación de valor a partir de las fees reales del exchange. No depende únicamente de staking o de narrativa especulativa.\n\nLa diferencia clave es que **HYPE captura valor directamente de la actividad económica del exchange**, el producto más utilizado en derivados on-chain.",
+              "en": "HYPE combines practical trading utility with a direct value accrual mechanism from real exchange fees. It doesn't rely solely on staking or speculative narrative.\n\nThe key difference is that **HYPE captures value directly from the economic activity of the exchange**, the most used product in on-chain derivatives."
+            },
+            "tabla": {
+              "headers": {
+                "es": [
+                  "Propiedad",
+                  "HYPE (Hyperliquid)",
+                  "BTC (Oro Digital)",
+                  "ETH (Computadora Mundial)"
+                ],
+                "en": [
+                  "Property",
+                  "HYPE (Hyperliquid)",
+                  "BTC (Digital Gold)",
+                  "ETH (World Computer)"
+                ]
+              },
+              "highlightCol": 1,
+              "rows": {
+                "es": [
+                  [
+                    "Rendimiento",
+                    "Buybacks automáticos (~99% de fees) + Staking ~2.37% APY",
+                    "Nulo (solo HODL)",
+                    "Staking Yield (~3-5%)"
+                  ],
+                  [
+                    "Uso Intrínseco",
+                    "Descuentos en fees de trading + Gas en HyperEVM + Gobernanza + Seguridad de red",
+                    "Transferencia de valor",
+                    "Gas / Computación"
+                  ],
+                  [
+                    "Dinámica de Oferta",
+                    "Efectivamente deflacionaria vía buybacks que absorben supply",
+                    "Fija (21M)",
+                    "Deflacionaria (EIP-1559)"
+                  ],
+                  [
+                    "Fuente de Valor",
+                    "Revenue real de trading (ligado al uso del producto)",
+                    "Escasez + adopción",
+                    "Seguridad + ecosistema L2"
+                  ]
+                ],
+                "en": [
+                  [
+                    "Yield",
+                    "Automatic buybacks (~99% of fees) + Staking ~2.37% APY",
+                    "None (HODL only)",
+                    "Staking Yield (~3-5%)"
+                  ],
+                  [
+                    "Intrinsic Use",
+                    "Trading fee discounts + Gas in HyperEVM + Governance + Network Security",
+                    "Value transfer",
+                    "Gas / Computation"
+                  ],
+                  [
+                    "Supply Dynamics",
+                    "Effectively deflationary via buybacks absorbing supply",
+                    "Fixed (21M)",
+                    "Deflationary (EIP-1559)"
+                  ],
+                  [
+                    "Value Source",
+                    "Real trading revenue (tied to product usage)",
+                    "Scarcity + adoption",
+                    "Security + L2 ecosystem"
+                  ]
+                ]
+              },
+              "rowColors": [
+                ["", "cyan", "slate", "slate"],
+                ["", "cyan", "slate", "slate"],
+                ["", "cyan", "slate", "slate"],
+                ["", "cyan", "slate", "slate"]
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "2. Seguridad y Resistencia de la Red PoS",
+          "en": "2. Security and Resilience of the PoS Network"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cuál es el nivel real de descentralización de Hyperliquid y qué tan resistente es a la censura estatal?",
+              "en": "What is the actual level of decentralization of Hyperliquid and how resistant is it to state censorship?"
+            },
+            "contenido": {
+              "es": "Hyperliquid opera bajo un modelo de **delegated Proof-of-Stake** con consenso HyperBFT. Los validadores son seleccionados según el stake de HYPE delegado. El conjunto inicial de validadores era relativamente concentrado, pero la red ha estado expandiendo activamente el número de validadores y publica un directorio público.\n\nEn términos de resistencia a la censura, al tratarse de un Layer 1 independiente con orderbook y ejecución on-chain no custodial, resulta más difícil de censurar que un exchange centralizado tradicional. Como cualquier cadena PoS, existe el riesgo teórico de que un actor con control mayoritario del stake intente interferir en el consenso, aunque esto resulta económicamente costoso.",
+              "en": "Hyperliquid operates under a **delegated Proof-of-Stake** model with HyperBFT consensus. Validators are selected based on the delegated HYPE stake. The initial validator set was relatively concentrated, but the network has been actively expanding the number of validators and publishes a public directory.\n\nIn terms of censorship resistance, being an independent Layer 1 with an on-chain orderbook and non-custodial execution makes it harder to censor than a traditional centralized exchange. Like any PoS chain, there is a theoretical risk of an actor with majority stake control attempting to interfere with consensus, though this is economically costly."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Cómo garantiza el staking masivo la inmutabilidad de la red y qué riesgos de centralización existen?",
+              "en": "How does massive staking guarantee network immutability and what centralization risks exist?"
+            },
+            "contenido": {
+              "es": "El staking asegura la red: los validadores deben auto-delegar un mínimo de 10.000 HYPE (bloqueado por un año) y los delegadores reciben recompensas (aproximadamente 2,37% APY cuando el stake total ronda los 400 millones de HYPE). Las recompensas provienen de emisiones futuras y se ajustan de forma inversamente proporcional a la raíz cuadrada del stake total.\n\nEl principal riesgo de centralización ha sido la concentración inicial del set de validadores. La mitigación en curso es la expansión continua del número de validadores y el modelo delegated, que permite a cualquier usuario participar sin necesidad de operar un nodo propio.",
+              "en": "Staking secures the network: validators must self-delegate a minimum of 10,000 HYPE (locked for one year) and delegators receive rewards (approximately 2.37% APY when total stake is around 400 million HYPE). Rewards come from future emissions and adjust inversely proportional to the square root of total stake.\n\nThe main centralization risk has been the initial concentration of the validator set. The ongoing mitigation is the continuous expansion of the validator count and the delegated model, which allows any user to participate without needing to run their own node."
+            }
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "3. Política Monetaria: Ultrasound Money vía Buybacks",
+          "en": "3. Monetary Policy: Ultrasound Money via Buybacks"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cómo funciona el mecanismo de buybacks (Assistance Fund) y por qué Hyperliquid genera presión deflacionaria en periodos de alta actividad?",
+              "en": "How does the buyback mechanism (Assistance Fund) work and why does Hyperliquid generate deflationary pressure during high activity periods?"
+            },
+            "contenido": {
+              "es": "El **Assistance Fund** recibe cerca del 97-99% de las comisiones de trading del exchange (tanto perpetuals como spot). Estos fondos se utilizan automáticamente para comprar HYPE en el mercado abierto de forma continua y transparente.\n\nEn periodos de alto volumen de trading, las fees aumentan y los buybacks se intensifican, generando una presión de compra estructural que ayuda a absorber nueva oferta (incluyendo unlocks programados).",
+              "en": "The **Assistance Fund** receives about 97-99% of the exchange's trading fees (both perpetuals and spot). These funds are automatically used to buy HYPE on the open market continuously and transparently.\n\nIn periods of high trading volume, fees increase and buybacks intensify, generating structural buying pressure that helps absorb new supply (including scheduled unlocks)."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Cuál es la diferencia fundamental entre la emisión dinámica de HYPE y el suministro fijo de Bitcoin en términos de sostenibilidad económica?",
+              "en": "What is the fundamental difference between HYPE's dynamic issuance and Bitcoin's fixed supply in terms of economic sustainability?"
+            },
+            "contenido": {
+              "es": "Bitcoin tiene un suministro máximo fijo de 21 millones de unidades. Su valor descansa principalmente en la escasez programada.\n\nHyperliquid tiene un suministro máximo de 1.000 millones de HYPE, pero incorpora un mecanismo donde **la demanda generada por las fees reales** produce compras constantes del token. La emisión (recompensas de staking) es dinámica y se ajusta según el stake total, mientras que los buybacks crean una presión deflacionaria efectiva directamente ligada al uso real del producto.\n\nLa sostenibilidad de este modelo depende de que el exchange mantenga un volumen de trading significativo y consistente a lo largo del tiempo.",
+              "en": "Bitcoin has a fixed maximum supply of 21 million units. Its value rests mainly on programmed scarcity.\n\nHyperliquid has a maximum supply of 1 billion HYPE, but incorporates a mechanism where **demand generated by real fees** produces constant token purchases. Issuance (staking rewards) is dynamic and adjusts based on total stake, while buybacks create an effective deflationary pressure directly tied to actual product usage.\n\nThe sustainability of this model depends on the exchange maintaining a significant and consistent trading volume over time."
+            }
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "4. Ecosistema, HyperEVM y Escalabilidad",
+          "en": "4. Ecosystem, HyperEVM, and Scalability"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cómo impactan el ecosistema y HyperEVM en la acumulación de valor para el token HYPE?",
+              "en": "How do the ecosystem and HyperEVM impact value accrual for the HYPE token?"
+            },
+            "contenido": {
+              "es": "Hyperliquid es su propio Layer 1 y no depende de soluciones de Capa 2 como Ethereum. El valor principal se acumula a través del **volumen de trading** en HyperCore.\n\nEl **HyperEVM** permite que desarrolladores construyan aplicaciones sobre la misma liquidez del exchange (lending, RWAs, outcome markets, copy-trading, etc.). Cuanta más actividad se genera en el ecosistema, mayor es el volumen de transacciones y, por tanto, mayores son las fees que alimentan los buybacks de HYPE.",
+              "en": "Hyperliquid is its own Layer 1 and does not rely on Layer 2 solutions like Ethereum. Primary value accrues through **trading volume** on HyperCore.\n\nThe **HyperEVM** allows developers to build applications on top of the exchange's liquidity (lending, RWAs, outcome markets, copy-trading, etc.). The more activity generated in the ecosystem, the higher the transaction volume, and therefore, the higher the fees that feed HYPE buybacks."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Cuál es el estado actual de la adopción de DeFi, RWAs y nuevos mercados en Hyperliquid?",
+              "en": "What is the current state of DeFi, RWAs, and new markets adoption on Hyperliquid?"
+            },
+            "contenido": {
+              "es": "Hyperliquid mantiene una posición dominante en el segmento de **perpetual futures on-chain**. Además, ha expandido su oferta hacia outcome markets (mercados de predicción), trading on-chain de equities y pre-IPO, y activos del mundo real (RWAs) a través del HyperEVM.\n\nEl crecimiento de proyectos y builders en la cadena está añadiendo nuevas fuentes de actividad y fees, aunque el foco principal sigue siendo el trading de derivados de alto rendimiento.",
+              "en": "Hyperliquid maintains a dominant position in the **on-chain perpetual futures** segment. Additionally, it has expanded its offering to outcome markets (prediction markets), on-chain trading of equities and pre-IPOs, and real-world assets (RWAs) through the HyperEVM.\n\nThe growth of projects and builders on the chain is adding new sources of activity and fees, although the main focus remains high-performance derivatives trading."
+            }
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "5. Valoración Fundamental y Métricas On-chain",
+          "en": "5. Fundamental Valuation and On-chain Metrics"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cómo se valora Hyperliquid fundamentalmente?",
+              "en": "How is Hyperliquid fundamentally valued?"
+            },
+            "contenido": {
+              "es": "La valoración se centra principalmente en **múltiplos de revenue** (fees generados) y en el flujo de caja real que producen los buybacks automáticos.\n\nLas métricas clave incluyen:\n- Fees anualizados en el rango de los cientos de millones de dólares\n- Revenue anualizado significativo\n- TVL superior a los 5.000 millones de dólares\n- Open Interest elevado (por encima de los 9.000 millones)\n- Volumen diario de perpetuals de varios miles de millones de dólares\n\nLa relación Precio/Fees suele situarse en múltiplos de un dígito alto a dos dígitos bajos, dependiendo del momento del ciclo.",
+              "en": "Valuation focuses primarily on **revenue multiples** (fees generated) and the actual cash flow produced by automatic buybacks.\n\nKey metrics include:\n- Annualized fees in the hundreds of millions of dollars\n- Significant annualized revenue\n- TVL exceeding $5 billion\n- High Open Interest (above $9 billion)\n- Daily perpetuals volume in the billions of dollars\n\nThe Price/Fees ratio is typically in the high single to low double digits, depending on the cycle stage."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Cuál es el rango de precios justificado a medio y largo plazo?",
+              "en": "What is the justified price range in the medium and long term?"
+            },
+            "contenido": {
+              "es": "No existe un precio “justo” fijo. Depende del crecimiento sostenido del volumen de trading y de las fees. Si Hyperliquid mantiene su dominancia en derivados on-chain y logra expandirse exitosamente a nuevos mercados (equities sintéticos, RWAs, outcome markets), el revenue puede seguir creciendo y soportar valoraciones más elevadas.\n\nSe trata de un activo de alta beta: puede alcanzar múltiplos agresivos en ciclos alcistas gracias al flywheel de buybacks, pero también corrige con fuerza cuando el volumen de trading disminuye.",
+              "en": "There is no fixed “fair” price. It depends on the sustained growth of trading volume and fees. If Hyperliquid maintains its dominance in on-chain derivatives and successfully expands into new markets (synthetic equities, RWAs, outcome markets), revenue can continue to grow and support higher valuations.\n\nIt is a high-beta asset: it can reach aggressive multiples in bull cycles thanks to the buyback flywheel, but also corrects sharply when trading volume decreases."
+            }
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "6. Riesgos, Volatilidad y Competencia",
+          "en": "6. Risks, Volatility and Competition"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cuáles son los principales riesgos y su mitigación?",
+              "en": "What are the main risks and their mitigation?"
+            },
+            "contenido": {
+              "es": "Hyperliquid mitiga estos riesgos principalmente a través de **revenue real y el mecanismo de buybacks**, que alinea los incentivos incluso en entornos de mercado adversos.",
+              "en": "Hyperliquid mitigates these risks primarily through **real revenue and the buyback mechanism**, which aligns incentives even in adverse market environments."
+            },
+            "riskCards": [
+              {
+                "titulo": { "es": "Smart Contracts", "en": "Smart Contracts" },
+                "texto": {
+                  "es": "Transparencia total on-chain + auditorías en nuevos contratos. El motor de trading principal tiene historial sin exploits mayores.",
+                  "en": "Full on-chain transparency + audits on new contracts. The main trading engine has a track record with no major exploits."
+                }
+              },
+              {
+                "titulo": { "es": "Regulatorio", "en": "Regulatory" },
+                "texto": {
+                  "es": "Naturaleza permissionless y on-chain que dificulta la censura completa. Existencia de ETFs spot de HYPE.",
+                  "en": "Permissionless and on-chain nature that makes complete censorship difficult. Existence of spot HYPE ETFs."
+                }
+              },
+              {
+                "titulo": { "es": "Competencia", "en": "Competition" },
+                "texto": {
+                  "es": "Dominio actual en volumen on-chain, rendimiento técnico superior y expansión hacia nuevos mercados (equities on-chain y outcome markets).",
+                  "en": "Current dominance in on-chain volume, superior technical performance, and expansion into new markets (on-chain equities and outcome markets)."
+                }
+              },
+              {
+                "titulo": { "es": "Centralización", "en": "Centralization" },
+                "texto": {
+                  "es": "Expansión activa del conjunto de validadores. Los buybacks ayudan a absorber nueva oferta de unlocks.",
+                  "en": "Active expansion of the validator set. Buybacks help absorb new supply from unlocks."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "7. Ajuste de Hyperliquid en Carteras Diversificadas",
+          "en": "7. Hyperliquid's Fit in Diversified Portfolios"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cómo impacta Hyperliquid (HYPE) en el Sharpe ratio y diversificación de una cartera?",
+              "en": "How does Hyperliquid (HYPE) impact the Sharpe ratio and diversification of a portfolio?"
+            },
+            "contenido": {
+              "es": "HYPE presenta una **beta alta** respecto al mercado de criptomonedas en general, ya que su valor está directamente ligado al volumen de trading (que tiende a aumentar en mercados alcistas y disminuir en mercados bajistas). Puede mejorar el perfil riesgo-retorno de una cartera crypto si se combina con activos de menor correlación, gracias al componente de yield variable proveniente de buybacks y staking.",
+              "en": "HYPE has a **high beta** relative to the broader crypto market, as its value is directly tied to trading volume (which tends to increase in bull markets and decrease in bear markets). It can improve the risk-return profile of a crypto portfolio when combined with lower-correlation assets, thanks to the variable yield component from buybacks and staking."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Qué correlación tiene con otras clases de activos?",
+              "en": "What correlation does it have with other asset classes?"
+            },
+            "contenido": {
+              "es": "Funciona como un activo de **crecimiento con yield variable** dentro del sector de infraestructura DeFi. Es útil para diversificar dentro del universo crypto, pero no actúa como cobertura contra riesgos macroeconómicos generales.",
+              "en": "It functions as a **growth asset with variable yield** within the DeFi infrastructure sector. It is useful for diversification within the crypto universe, but does not act as a hedge against broad macroeconomic risks."
+            },
+            "correlationTags": [
+              {
+                "label": { "es": "Bitcoin", "en": "Bitcoin" },
+                "value": { "es": "Media-Alta", "en": "Medium-High" }
+              },
+              {
+                "label": { "es": "Nasdaq", "en": "Nasdaq" },
+                "value": { "es": "Media-Alta", "en": "Medium-High" }
+              },
+              {
+                "label": { "es": "Bonos", "en": "Bonds" },
+                "value": { "es": "Baja/Inversa", "en": "Low/Inverse" }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "titulo": {
+          "es": "8. Horizonte Futuro y Decisión de Inversión",
+          "en": "8. Future Horizon and Investment Decision"
+        },
+        "secciones": [
+          {
+            "subtitulo": {
+              "es": "¿Cuáles son los catalizadores y escenarios base para los próximos 5-10 años?",
+              "en": "What are the catalysts and base scenarios for the next 5-10 years?"
+            },
+            "contenido": {
+              "es": "Los principales catalizadores incluyen:\n- Crecimiento sostenido de la adopción institucional a través de productos ETF relacionados con HYPE.\n- Expansión de los mercados permissionless y outcome markets, que generan nuevas fuentes de fees.\n- Mayor adopción de trading on-chain de activos tradicionales (equities, commodities sintéticos y RWAs).\n- Claridad regulatoria o mayor aceptación de plataformas descentralizadas de derivados.\n- Crecimiento del ecosistema de builders sobre HyperEVM.\n\n**Escenario base**: Hyperliquid se consolida como la infraestructura líder de trading de derivados on-chain y evoluciona hacia un sistema financiero más amplio completamente on-chain. El flywheel de revenue → buybacks se mantiene mientras el producto conserve su ventaja de rendimiento y liquidez.",
+              "en": "The main catalysts include:\n- Sustained growth of institutional adoption through HYPE-related ETF products.\n- Expansion of permissionless markets and outcome markets, generating new fee sources.\n- Greater adoption of on-chain trading of traditional assets (equities, synthetic commodities, and RWAs).\n- Regulatory clarity or broader acceptance of decentralized derivatives platforms.\n- Growth of the builder ecosystem on HyperEVM.\n\n**Base scenario**: Hyperliquid consolidates itself as the leading on-chain derivatives trading infrastructure and evolves into a broader, fully on-chain financial system. The revenue → buybacks flywheel holds up as long as the product maintains its performance and liquidity edge."
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "¿Es Hyperliquid una asignación atractiva en la cartera actual?",
+              "en": "Is Hyperliquid an attractive allocation in the current portfolio?"
+            },
+            "contenido": {
+              "es": "Depende del perfil del inversor. Para aquellos que creen en la **infraestructura de trading on-chain con revenue real** y están cómodos con una beta elevada y riesgos regulatorios/competitivos, puede representar una asignación con tesis clara de acumulación de valor.\n\nNo es un activo de “comprar y olvidar” como Bitcoin. Requiere seguimiento de métricas de volumen, fees y ejecución de producto. Su atractivo radica en la combinación de dominancia técnica actual y un mecanismo de value accrual directamente ligado al uso real del exchange.",
+              "en": "It depends on the investor's profile. For those who believe in **on-chain trading infrastructure with real revenue** and are comfortable with a high beta and regulatory/competitive risks, it can represent an allocation with a clear value accrual thesis.\n\nIt is not a “buy and forget” asset like Bitcoin. It requires monitoring volume, fees, and product execution metrics. Its appeal lies in the combination of current technical dominance and a value accrual mechanism directly tied to the exchange's actual usage."
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "faq": {
+    "titulo": {
+      "es": "Preguntas Frecuentes",
+      "en": "Frequently Asked Questions"
+    },
+    "subtitulo": {
+      "es": "Resolución de Dudas / Ecosistema",
+      "en": "Q&A / Ecosystem"
+    },
+    "startId": 10,
+    "items": [
+      {
+        "pregunta": {
+          "es": "¿Por qué HYPE se considera un activo de revenue real?",
+          "en": "Why is HYPE considered a real revenue asset?"
+        },
+        "respuesta": {
+          "es": "Porque el protocolo redirecciona aproximadamente el 99% de las comisiones generadas por el exchange hacia un Assistance Fund, el cual compra HYPE de forma continua en el mercado abierto. Su valor está atado al uso real, no solo a narrativas especulativas.",
+          "en": "Because the protocol redirects approximately 99% of exchange-generated fees to an Assistance Fund, which continuously buys HYPE on the open market. Its value is tied to actual usage, not just speculative narratives."
+        }
+      },
+      {
+        "pregunta": {
+          "es": "¿Es seguro y rápido operar en Hyperliquid frente a un CEX?",
+          "en": "Is trading on Hyperliquid secure and fast compared to a CEX?"
+        },
+        "respuesta": {
+          "es": "Sí, al ser una Capa 1 construida a medida con su propio consenso (HyperBFT) y orderbook completamente on-chain, proporciona latencias sub-segundo similares a un CEX, pero permitiéndote mantener la auto-custodia de tus fondos.",
+          "en": "Yes, being a custom-built Layer 1 with its own consensus (HyperBFT) and a fully on-chain orderbook, it provides CEX-like sub-second latencies while allowing you to maintain self-custody of your funds."
+        }
+      },
+      {
+        "pregunta": {
+          "es": "¿Cómo afecta el mecanismo de buybacks al precio del token HYPE?",
+          "en": "How does the buyback mechanism affect the HYPE token price?"
+        },
+        "respuesta": {
+          "es": "Actúa como una presión compradora estructural que ayuda a absorber liquidez del mercado. A medida que aumenta el volumen de trading, mayores son los ingresos y los buybacks, creando un efecto deflacionario efectivo que beneficia a los holders.",
+          "en": "It acts as a structural buying pressure that helps absorb market liquidity. As trading volume increases, revenues and buybacks grow, creating an effective deflationary effect that benefits holders."
+        }
+      },
+      {
+        "pregunta": {
+          "es": "¿Qué es el HyperEVM y por qué es importante para el futuro de la red?",
+          "en": "What is the HyperEVM and why is it important for the network's future?"
+        },
+        "respuesta": {
+          "es": "El HyperEVM es un entorno compatible con Ethereum integrado en la L1. Permite a los desarrolladores crear nuevas aplicaciones (lending, mercados de predicción, RWAs) aprovechando la enorme liquidez nativa del exchange, lo que atrae más usuarios y comisiones.",
+          "en": "The HyperEVM is an Ethereum-compatible environment integrated into the L1. It allows developers to build new applications (lending, prediction markets, RWAs) leveraging the massive native liquidity of the exchange, attracting more users and fees."
+        }
+      },
+      {
+        "pregunta": {
+          "es": "¿Debería considerar a HYPE como una inversión pasiva a largo plazo?",
+          "en": "Should I consider HYPE as a passive long-term investment?"
+        },
+        "respuesta": {
+          "es": "No es un activo de \"comprar y olvidar\" como Bitcoin. Al ser un token de infraestructura DeFi con alta beta, requiere un seguimiento regular de sus métricas clave como el volumen de trading, la ejecución técnica y los ingresos generados para evaluar su sostenibilidad.",
+          "en": "It is not a 'buy and forget' asset like Bitcoin. Being a high-beta DeFi infrastructure token, it requires regular monitoring of key metrics such as trading volume, technical execution, and generated revenues to assess its sustainability."
+        }
+      }
+    ]
+  },
+
+  "recursosRelacionados": [],
+
+  "schemaFaq": [
+    {
+      "pregunta": {
+        "es": "¿Por qué HYPE se considera un activo de revenue real?",
+        "en": "Why is HYPE considered a real revenue asset?"
+      },
+      "respuesta": {
+        "es": "El protocolo redirecciona aproximadamente el 99% de las comisiones del exchange hacia la compra constante del token en el mercado, atando su valor al uso real del producto.",
+        "en": "The protocol redirects approximately 99% of exchange fees towards constant token purchases on the market, tying its value to the actual usage of the product."
+      }
+    },
+    {
+      "pregunta": {
+        "es": "¿Es rápido operar en Hyperliquid frente a un CEX?",
+        "en": "Is trading on Hyperliquid fast compared to a CEX?"
+      },
+      "respuesta": {
+        "es": "Sí, gracias a su arquitectura a medida y su consenso HyperBFT, permite ejecuciones on-chain con latencias de menos de un segundo, sin sacrificar la auto-custodia.",
+        "en": "Yes, thanks to its custom architecture and HyperBFT consensus, it enables on-chain executions with sub-second latencies without sacrificing self-custody."
+      }
+    },
+    {
+      "pregunta": {
+        "es": "¿Cómo funcionan los buybacks automáticos de HYPE?",
+        "en": "How do HYPE's automatic buybacks work?"
+      },
+      "respuesta": {
+        "es": "Las comisiones (fees) de trading del exchange alimentan un fondo que realiza compras automáticas del token, creando presión de compra y un efecto deflacionario que aumenta en periodos de alto volumen.",
+        "en": "The exchange's trading fees feed a fund that automatically buys the token, creating buying pressure and a deflationary effect that increases during high-volume periods."
+      }
+    },
+    {
+      "pregunta": {
+        "es": "¿Qué ventajas aporta el HyperEVM al ecosistema?",
+        "en": "What advantages does the HyperEVM bring to the ecosystem?"
+      },
+      "respuesta": {
+        "es": "Permite el desarrollo de DApps, mercados de predicción y tokenización de activos aprovechando la gran liquidez base de Hyperliquid, lo cual genera nuevas vías de ingresos (fees).",
+        "en": "It allows the development of DApps, prediction markets, and asset tokenization leveraging Hyperliquid's large base liquidity, which generates new revenue (fee) streams."
+      }
+    },
+    {
+      "pregunta": {
+        "es": "¿Cuáles son los riesgos al invertir en Hyperliquid?",
+        "en": "What are the risks of investing in Hyperliquid?"
+      },
+      "respuesta": {
+        "es": "Los principales riesgos son la posible competencia de exchanges centralizados, la presión regulatoria a futuro y el requerimiento de que el volumen de trading se mantenga alto para sostener la demanda del token.",
+        "en": "The main risks include potential competition from centralized exchanges, future regulatory pressure, and the requirement that trading volume remains high to sustain token demand."
+      }
+    }
+  ]
+}
