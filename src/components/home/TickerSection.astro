@@ -196,7 +196,7 @@ const t = useTranslations(lang);
 </style>
 
 <script>
-  const CACHE_KEY = "ticker_prices"
+  const CACHE_KEY = "ticker_prices_v2"
   const CACHE_TTL = 5 * 60 * 1000 // 5 minutos en ms
 
   function getCached(): Record<string, number> | null {

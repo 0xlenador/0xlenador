@@ -3,7 +3,7 @@
   "ticker": "RUNESTONE",
   "name": "Runestone",
   "type": "Ordinals",
-  "accentColor": "orange",
+  "accentColor": "emerald",
   "pageUrl": "https://0xlenador.xyz/runestone",
   "image": "/img/cripto/runestone_2.webp",
   "imageAlt": "Inscripción Runestone",
@@ -26,8 +26,8 @@
   },
 
   "price": {
-    "apiUrl": "https://api.coingecko.com/api/v3/simple/price?ids=runestone&vs_currencies=usd",
-    "apiPath": "runestone.usd"
+    "apiUrl": "https://api.coingecko.com/api/v3/nfts/runestone",
+    "apiPath": "floor_price.usd"
   },
 
   "definicion": {
@@ -83,9 +83,9 @@
 
   "tooling": {
     "mercados": ["satflow"],
-    "analisis": [],
-    "custodia": [],
-    "infraestructura": []
+    "analisis": ["coingecko"],
+    "custodia": ["sparrow", "ledger", "bitpay"],
+    "infraestructura": ["mempool-space"]
   },
 
   "investigacion": {
@@ -277,12 +277,12 @@
             },
             "lista": {
               "es": [
-                "~63.743 holders únicos (56.7% del supply total).",
+                "63.743 holders únicos (56.7% del supply total).",
                 "Distribución amplia gracias al airdrop original.",
                 "Baja concentración en ballenas respecto a otros NFTs."
               ],
               "en": [
-                "~63,743 unique holders (56.7% of total supply).",
+                "63,743 unique holders (56.7% of total supply).",
                 "Wide distribution thanks to the original airdrop.",
                 "Low whale concentration compared to other NFTs."
               ]
@@ -299,12 +299,12 @@
             },
             "lista": {
               "es": [
-                "Trading concentrado principalmente en Magic Eden.",
+                "Trading concentrado principalmente en satflow.",
                 "Liquidez baja que puede generar alto slippage.",
                 "Dependencia en la comunidad y figuras públicas para futuros airdrops."
               ],
               "en": [
-                "Trading concentrated mainly on Magic Eden.",
+                "Trading concentrated mainly on Satflow.",
                 "Low liquidity that can cause high slippage.",
                 "Dependence on the community and public figures for future airdrops."
               ]
@@ -414,39 +414,91 @@
               "en": "What are the main risks of Runestone and how are they mitigated?"
             },
             "contenido": {
-              "es": "",
-              "en": ""
+              "es": "Runestone mitiga riesgos principalmente por:",
+              "en": "Runestone primarily mitigates risks by:"
             },
-            "riskCards": [
-              {
-                "titulo": { "es": "Liquidez Baja", "en": "Low Liquidity" },
-                "texto": {
-                  "es": "Muy pocas ventas diarias. Mitigación: Mantener posiciones pequeñas o usar OTC para ventas grandes.",
-                  "en": "Very few daily sales. Mitigation: Keep small positions or use OTC for large sales."
-                }
+            "lista": {
+              "es": [
+                "Heredar la seguridad y descentralización de Bitcoin.",
+                "Tener una base de holders amplia y comprometida.",
+                "Estar ligado al protocolo Runes (que mostró revival de actividad en 2026)."
+              ],
+              "en": [
+                "Inheriting the security and decentralization of Bitcoin.",
+                "Having a large and committed holder base.",
+                "Being tied to the Runes protocol (which showed an activity revival in 2026)."
+              ]
+            },
+            "tabla": {
+              "headers": {
+                "es": ["Riesgo", "Descripción", "Mitigación"],
+                "en": ["Risk", "Description", "Mitigation"]
               },
-              {
-                "titulo": { "es": "Narrativa de Airdrops", "en": "Airdrops Narrative" },
-                "texto": {
-                  "es": "Valor dependiente de airdrops no garantizados. Mitigación: Diversificar con tokens Runes reales y BTC.",
-                  "en": "Value dependent on un-guaranteed airdrops. Mitigation: Diversify with actual Runes tokens and BTC."
-                }
+              "highlightCol": 0,
+              "rows": {
+                "es": [
+                  [
+                    "Liquidez Baja",
+                    "Muy pocas ventas diarias y slippage alto en posiciones grandes",
+                    "Mantener posiciones pequeñas o usar OTC para ventas grandes"
+                  ],
+                  [
+                    "Narrativa de Airdrops",
+                    "El valor depende en parte de expectativas de futuros airdrops (no garantizados)",
+                    "Diversificar con Runes tokens reales + BTC"
+                  ],
+                  [
+                    "Competencia de Runes",
+                    "Muchos proyectos Runes nuevos compiten por atención y capital",
+                    "Runestone ya tiene ventaja de first-mover y distribución masiva"
+                  ],
+                  [
+                    "Mercado Ordinals Frío",
+                    "El segmento NFT Ordinals ha perdido interés especulativo desde 2024",
+                    "Su valor está más ligado a Runes que a Ordinals puros"
+                  ],
+                  [
+                    "Centralización de Mercado",
+                    "Trading concentrado en pocos marketplaces (Magic Eden)",
+                    "La inscripción vive en Bitcoin (puedes moverla a cualquier wallet)"
+                  ]
+                ],
+                "en": [
+                  [
+                    "Low Liquidity",
+                    "Very few daily sales and high slippage on large positions",
+                    "Keep small positions or use OTC for large sales"
+                  ],
+                  [
+                    "Airdrops Narrative",
+                    "Value depends partly on expectations of future airdrops (not guaranteed)",
+                    "Diversify with actual Runes tokens + BTC"
+                  ],
+                  [
+                    "Runes Competition",
+                    "Many new Runes projects compete for attention and capital",
+                    "Runestone already has first-mover advantage and massive distribution"
+                  ],
+                  [
+                    "Cold Ordinals Market",
+                    "The Ordinals NFT segment has lost speculative interest since 2024",
+                    "Its value is tied more to Runes than pure Ordinals"
+                  ],
+                  [
+                    "Market Centralization",
+                    "Trading concentrated on a few marketplaces (Magic Eden)",
+                    "The inscription lives on Bitcoin (you can move it to any wallet)"
+                  ]
+                ]
               },
-              {
-                "titulo": { "es": "Competencia de Runes", "en": "Runes Competition" },
-                "texto": {
-                  "es": "Nuevos proyectos compiten por capital. Mitigación: Runestone ya tiene la ventaja first-mover.",
-                  "en": "New projects compete for capital. Mitigation: Runestone already has the first-mover advantage."
-                }
-              },
-              {
-                "titulo": { "es": "Centralización Mercado", "en": "Market Centralization" },
-                "texto": {
-                  "es": "Trading concentrado en Magic Eden. Mitigación: Las inscripciones siempre viven seguras en Bitcoin.",
-                  "en": "Trading concentrated on Magic Eden. Mitigation: Inscriptions always live safely on Bitcoin."
-                }
-              }
-            ]
+              "rowColors": [
+                ["red", "slate", "emerald"],
+                ["red", "slate", "emerald"],
+                ["red", "slate", "emerald"],
+                ["red", "slate", "emerald"],
+                ["red", "slate", "emerald"]
+              ]
+            }
           }
         ]
       },
@@ -458,35 +510,79 @@
         "secciones": [
           {
             "subtitulo": {
-              "es": "¿Cómo impacta Runestone en el Sharpe ratio y diversificación?",
-              "en": "How does Runestone impact the Sharpe ratio and diversification?"
+              "es": "¿Cómo impacta Runestone en el Sharpe ratio y diversificación de una cartera?",
+              "en": "How does Runestone impact the Sharpe ratio and diversification of a portfolio?"
             },
             "contenido": {
-              "es": "En una cartera diversificada, Runestone funciona como un activo satélite (5-15% del total crypto) de alta convicción. Mejora la diversificación narrativa al dar exposición pura al segmento cultural de Bitcoin.",
-              "en": "In a diversified portfolio, Runestone acts as a high-conviction satellite asset (5-15% of total crypto). It improves narrative diversification by giving pure exposure to Bitcoin's cultural segment."
+              "es": "Runestone tiene una correlación alta con Bitcoin y con el sentimiento general del ecosistema Ordinals/Runes.",
+              "en": "Runestone has a high correlation with Bitcoin and with the general sentiment of the Ordinals/Runes ecosystem."
             },
-            "correlationTags": [
-              {
-                "label": { "es": "Bitcoin (precio)", "en": "Bitcoin (price)" },
-                "value": { "es": "Alta", "en": "High" }
+            "tabla": {
+              "headers": {
+                "es": ["Activo", "Correlación con Runestone", "Comentario"],
+                "en": ["Asset", "Correlation with Runestone", "Comment"]
               },
-              {
-                "label": { "es": "Otros Ordinals", "en": "Other Ordinals" },
-                "value": { "es": "Media/Alta", "en": "Medium/High" }
+              "highlightCol": 1,
+              "rows": {
+                "es": [
+                  [
+                    "Bitcoin",
+                    "Alta",
+                    "Se mueve con el precio de BTC y el interés en el ecosistema"
+                  ],
+                  ["Otros Ordinals", "Media-Alta", "Sigue el ciclo de hype de NFTs en Bitcoin"],
+                  [
+                    "Runes Memecoins",
+                    "Media",
+                    "Se beneficia cuando hay actividad en Runes (ej. junio 2026)"
+                  ],
+                  ["Ethereum", "Baja-Media", "Menos correlacionado que con BTC"],
+                  ["Bonos / Oro", "Baja", "Activo de riesgo cripto"]
+                ],
+                "en": [
+                  ["Bitcoin", "High", "Moves with BTC price and ecosystem interest"],
+                  ["Other Ordinals", "Medium-High", "Follows the Bitcoin NFT hype cycle"],
+                  [
+                    "Runes Memecoins",
+                    "Medium",
+                    "Benefits when there is activity in Runes (e.g. June 2026)"
+                  ],
+                  ["Ethereum", "Low-Medium", "Less correlated than with BTC"],
+                  ["Bonds / Gold", "Low", "Crypto risk asset"]
+                ]
               },
-              {
-                "label": { "es": "Runes Memecoins", "en": "Runes Memecoins" },
-                "value": { "es": "Media", "en": "Medium" }
-              },
-              {
-                "label": { "es": "Ethereum", "en": "Ethereum" },
-                "value": { "es": "Baja/Media", "en": "Low/Medium" }
-              },
-              {
-                "label": { "es": "Bonos / Oro", "en": "Bonds / Gold" },
-                "value": { "es": "Baja", "en": "Low" }
-              }
-            ]
+              "rowColors": [
+                ["slate", "slate", "slate"],
+                ["slate", "slate", "slate"],
+                ["slate", "slate", "slate"],
+                ["slate", "slate", "slate"],
+                ["slate", "slate", "slate"]
+              ]
+            }
+          },
+          {
+            "subtitulo": {
+              "es": "En una cartera diversificada:",
+              "en": "In a diversified portfolio:"
+            },
+            "contenido": {
+              "es": "",
+              "en": ""
+            },
+            "lista": {
+              "es": [
+                "Runestone funciona como exposición de alta convicción al ecosistema Bitcoin cultural y Runes.",
+                "Su baja liquidez lo hace menos adecuado para rebalanceos frecuentes.",
+                "Es más un activo de satélite (5-15% de la porción crypto) que un core holding.",
+                "Mejora diversificación narrativa frente a solo holding BTC o memecoins de Solana/Ethereum."
+              ],
+              "en": [
+                "Runestone acts as a high-conviction exposure to the cultural Bitcoin and Runes ecosystem.",
+                "Its low liquidity makes it less suitable for frequent rebalancing.",
+                "It is more of a satellite asset (5-15% of the crypto portion) than a core holding.",
+                "Improves narrative diversification compared to just holding BTC or Solana/Ethereum memecoins."
+              ]
+            }
           }
         ]
       },
