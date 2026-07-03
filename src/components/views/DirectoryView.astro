@@ -9,7 +9,7 @@ import FaqAccordion from "../FaqAccordion.astro"
 import directoryData from "../../content/data/directory.json"
 import faucetsData from "../../content/data/faucets.json"
 
-import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -194,7 +194,7 @@ const faqItems = [
 
         <!-- CTA -->
         <a
-          href="/faucets"
+          href={getLocalizedPath("/faucets", lang)}
           id="faucets-cta-link"
           class="group inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-terminal-surface/60 border border-terminal-border hover:border-emerald-500/50 hover:bg-terminal-surface transition-all duration-300 no-underline"
         >
