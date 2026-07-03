@@ -118,6 +118,11 @@ const watchlist = defineCollection({
         secciones: z.array(z.object({
           subtitulo: i18nString,
           contenido: i18nString,
+          lista: i18nStringArray.optional(),
+          listaDetallada: z.array(z.object({
+            titulo: i18nString,
+            texto: i18nString,
+          })).optional(),
           tabla: z.object({
             headers: i18nStringArray,
             highlightCol: z.number().optional(),

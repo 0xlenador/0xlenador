@@ -404,6 +404,20 @@ const t = useTranslations(lang)
                       </ul>
                     )}
 
+                    {sec.listaDetallada && (
+                      <ul class="mt-4 space-y-4">
+                        {sec.listaDetallada.map((item: any) => (
+                          <li class="flex items-start gap-3">
+                            <span class={`mt-1.5 w-1.5 h-1.5 rounded-full ${c.bgFull} shrink-0`} />
+                            <div>
+                              <strong class="text-terminal-text block text-sm font-bold mb-1">{getBilingual(item.titulo, lang)}</strong>
+                              <span class="text-sm text-terminal-secondary leading-relaxed">{getBilingual(item.texto, lang)}</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
                     {sec.tabla && (
                       <div class="overflow-x-auto rounded-xl border border-terminal-border bg-terminal-bg/50 mt-6">
                         <table class="w-full text-left text-sm border-collapse min-w-[600px]">
