@@ -393,6 +393,17 @@ const t = useTranslations(lang)
                       {getBilingual(sec.contenido, lang)}
                     </p>
 
+                    {sec.lista && (
+                      <ul class="mt-4 space-y-2">
+                        {getBilingual(sec.lista, lang).map((item: string) => (
+                          <li class="flex items-start gap-2.5 text-sm text-terminal-secondary leading-relaxed">
+                            <span class={`mt-1.5 w-1.5 h-1.5 rounded-full ${c.bgFull} shrink-0`} />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
                     {sec.tabla && (
                       <div class="overflow-x-auto rounded-xl border border-terminal-border bg-terminal-bg/50 mt-6">
                         <table class="w-full text-left text-sm border-collapse min-w-[600px]">
