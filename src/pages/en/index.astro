@@ -19,7 +19,7 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "0x Leñador",
-  url: "https://0xlenador.xyz/",
+  url: new URL(Astro.url.pathname, Astro.site).href,
   image: "https://0xlenador.xyz/img/44.webp",
   jobTitle: t("home.schema.jobTitle"),
   description: t("home.schema.description"),
