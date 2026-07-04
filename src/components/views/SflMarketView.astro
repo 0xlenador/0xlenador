@@ -174,20 +174,20 @@ const t = useTranslations(lang)
             <div class="w-full flex overflow-x-auto no-scrollbar items-center lg:justify-end gap-2 pb-1 lg:pb-0">
               <button class="category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="resources" onclick="window.handleCategory('resources')">Resources</button>
               <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="powerups" onclick="window.handleCategory('powerups')">Power Ups</button>
-              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Cosméticos</button>
+              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Cosmetics</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
             </div>
 
             <!-- Ordenamiento Móvil -->
             <div class="w-full lg:hidden flex overflow-x-auto no-scrollbar items-center gap-1.5 pb-1">
-              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mr-0.5 shrink-0">Ordenar:</span>
-              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('name')">Name A>z <span class="sort-icon opacity-0 scale-75" data-col="name">↕</span></button>
-              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('price')">Price <span class="sort-icon opacity-0 scale-75" data-col="price">↕</span></button>
-              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('1d')">24H <span class="sort-icon opacity-0 scale-75" data-col="1d">↕</span></button>
-              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('7d')">7D <span class="sort-icon opacity-0 scale-75" data-col="7d">↕</span></button>
-              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('30d')">30D <span class="sort-icon opacity-0 scale-75" data-col="30d">↕</span></button>
-              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('180d')">180D <span class="sort-icon opacity-0 scale-75" data-col="180d">↕</span></button>
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mr-0.5 shrink-0">{t("sfl.market.sortby")}</span>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('name')">{t("sfl.market.sort.name")} <span class="sort-icon opacity-0 scale-75" data-col="name">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('price')">{t("sfl.market.sort.price")} <span class="sort-icon opacity-0 scale-75" data-col="price">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('1d')">{t("sfl.market.sort.24h")} <span class="sort-icon opacity-0 scale-75" data-col="1d">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('7d')">{t("sfl.market.sort.7d")} <span class="sort-icon opacity-0 scale-75" data-col="7d">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('30d')">{t("sfl.market.sort.30d")} <span class="sort-icon opacity-0 scale-75" data-col="30d">↕</span></button>
+              <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('180d')">{t("sfl.market.sort.180d")} <span class="sort-icon opacity-0 scale-75" data-col="180d">↕</span></button>
             </div>
           </div>
         </div>
@@ -196,22 +196,22 @@ const t = useTranslations(lang)
           <!-- Desktop Header -->
           <div class="hidden lg:grid grid-cols-[25%_10%_11%_18%_18%_18%] border-b border-white/[0.05] items-center">
             <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('name')">
-              <div class="flex items-center gap-2">Name <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span></div>
+              <div class="flex items-center gap-2">{t("sfl.market.col.name")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span></div>
             </div>
             <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-right cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('price')">
-              <div class="flex items-center justify-end gap-2"><span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="price">↕</span> Price</div>
+              <div class="flex items-center justify-end gap-2"><span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="price">↕</span> {t("sfl.market.col.price")}</div>
             </div>
             <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('1d')">
-              <div class="flex items-center justify-center gap-2">Last 24h <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="1d">↕</span></div>
+              <div class="flex items-center justify-center gap-2">{t("sfl.market.col.last24h")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="1d">↕</span></div>
             </div>
             <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('7d')">
-              <div class="flex items-center justify-center gap-2">Last 7d <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="7d">↕</span></div>
+              <div class="flex items-center justify-center gap-2">{t("sfl.market.col.last7d")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="7d">↕</span></div>
             </div>
             <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('30d')">
-              <div class="flex items-center justify-center gap-2">Last 30d <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="30d">↕</span></div>
+              <div class="flex items-center justify-center gap-2">{t("sfl.market.col.last30d")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="30d">↕</span></div>
             </div>
             <div class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none" onclick="window.handleSort('180d')">
-              <div class="flex items-center justify-center gap-2">Last 180d <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="180d">↕</span></div>
+              <div class="flex items-center justify-center gap-2">{t("sfl.market.col.last180d")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="180d">↕</span></div>
             </div>
           </div>
 
@@ -324,7 +324,13 @@ const t = useTranslations(lang)
   tGainer180d: t('sfl.slider.topGainer.180d'),
   tNearAtl: t('sfl.slider.nearAtl'),
   tTooltipAth: t('sfl.slider.tooltip.ath'),
-  tTooltipAtl: t('sfl.slider.tooltip.atl')
+  tTooltipAtl: t('sfl.slider.tooltip.atl'),
+  tEmptySearch: t('sfl.market.emptySearch'),
+  tColPrice: t('sfl.market.col.price'),
+  tCol24h: t('sfl.market.col.24h'),
+  tCol7d: t('sfl.market.col.7d'),
+  tCol30d: t('sfl.market.col.30d'),
+  tCol180d: t('sfl.market.col.180d')
 }}>
   const searchInput = document.getElementById("searchInput");
   const searchIcon = document.getElementById("searchIcon");
@@ -804,7 +810,7 @@ const t = useTranslations(lang)
     tableBody.innerHTML = "";
 
     if (sortedFiltered.length === 0) {
-      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">No se encontraron items que coincidan con la búsqueda.</div>`;
+      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmptySearch}</div>`;
       return;
     }
 
@@ -827,7 +833,7 @@ const t = useTranslations(lang)
           </div>
           <!-- Precio Móvil -->
           <div class="lg:hidden text-right flex flex-col justify-center">
-             <span class="text-xs font-mono text-terminal-muted mb-0.5">Precio</span>
+             <span class="text-xs font-mono text-terminal-muted mb-0.5">${tColPrice}</span>
              <span class="text-lg font-bold text-white leading-none">${formatNumber(item.currentPrice, 4)}</span>
           </div>
         </div>
@@ -839,10 +845,10 @@ const t = useTranslations(lang)
         
         <!-- Contenedor de gráficas (2x2 en móvil, horizontal en lg) -->
         <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
-          ${getCardColumnHTML("24 Horas", calculateChange(item.currentPrice, item.history["1d"]), null)}
-          ${getCardColumnHTML("7 Días", calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
-          ${getCardColumnHTML("30 Días", calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
-          ${getCardColumnHTML("180 Días", calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+          ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
+          ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
+          ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
+          ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
         </div>
       `;
       tableBody.appendChild(row);
