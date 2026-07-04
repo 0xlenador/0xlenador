@@ -9,8 +9,10 @@ import SflTabs from "../SflTabs.astro"
 
 const sflIdsEntry = await getEntry("sfl", "resources")
 const sflPowerUpsEntry = await getEntry("sfl", "powerups")
+const sflCosmeticsEntry = await getEntry("sfl", "cosmetics")
 const sflIds = sflIdsEntry.data
 const sflPowerUps = sflPowerUpsEntry.data
+const sflCosmetics = sflCosmeticsEntry.data
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -174,7 +176,7 @@ const t = useTranslations(lang)
             <div class="w-full flex overflow-x-auto no-scrollbar items-center lg:justify-end gap-2 pb-1 lg:pb-0">
               <button class="category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="resources" onclick="window.handleCategory('resources')">Resources</button>
               <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="powerups" onclick="window.handleCategory('powerups')">Power Ups</button>
-              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Cosmetics</button>
+              <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="cosmetics" onclick="window.handleCategory('cosmetics')">Cosmetics</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
               <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
             </div>
@@ -316,6 +318,7 @@ const t = useTranslations(lang)
 <script define:vars={{ 
   sflIds, 
   sflPowerUps, 
+  sflCosmetics,
   tTopGainers: t('sfl.dashboard.topGainers'), 
   tNearAth: t('sfl.dashboard.nearAth'),
   tVol: t('sfl.slider.vol'),
@@ -400,7 +403,7 @@ const t = useTranslations(lang)
 
     const targetItem = marketData.find(item => item.name === itemName);
     if (targetItem) {
-      const targetCategory = targetItem.isPowerUp ? 'powerups' : 'resources';
+      const targetCategory = targetItem.category;
       if (currentCategory !== targetCategory) {
         window.handleCategory(targetCategory);
       }
@@ -571,13 +574,20 @@ const t = useTranslations(lang)
   };
 
   const renderDashboard = () => {
-    const topVolResource = marketData.find(item => !item.isPowerUp);
-    const topVolPowerUp = marketData.find(item => item.isPowerUp);
+    const topVolResource = marketData.find(item => item.category === 'resources');
+    const topVolPowerUp = marketData.find(item => item.category === 'powerups');
+    const topVolCosmetic = marketData.find(item => item.category === 'cosmetics');
 
-    const renderDashItem = (item, subtitle, isPowerUp = false) => {
+    const renderDashItem = (item, subtitle) => {
       if (!item) return '';
-      const imgSrc = encodeURI(isPowerUp ? '/img/sunflowerland/powerups/' + (item.image || item.name + '.png') : '/img/sunflowerland/' + item.name + '.png');
-      const imgSize = isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
+      let basePath = '/img/sunflowerland/';
+      if (item.category === 'powerups') {
+        basePath += 'powerups/' + (item.isWearable ? 'wearables/' : '');
+      } else if (item.category === 'cosmetics') {
+        basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : '');
+      }
+      const imgSrc = encodeURI(basePath + (item.image || item.name + '.png'));
+      const imgSize = item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
       return `
         <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${item.name}', event)" title="${item.name}">
           <div class="w-8 h-8 lg:w-9 lg:h-9 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
@@ -593,15 +603,17 @@ const t = useTranslations(lang)
 
     document.getElementById("dashTopVolume").innerHTML = `
       <div class="flex flex-col h-full justify-center gap-1.5 lg:gap-2">
-        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + tVol : '', false)}
+        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + tVol : '')}
         ${topVolPowerUp ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
-        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + tVol : '', true)}
+        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + tVol : '')}
+        ${topVolCosmetic ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+        ${renderDashItem(topVolCosmetic, topVolCosmetic ? formatNumber(topVolCosmetic.volume, 0) + tVol : '')}
       </div>
     `;
 
     // Mayor Ganador Carrusel (24h, 7d, 30d, 180d)
-    const getTopGainer = (periodKey, isPowerUp) => {
-      const sorted = [...marketData].filter(i => !!i.isPowerUp === isPowerUp).map(item => {
+    const getTopGainer = (periodKey, categoryFilter) => {
+      const sorted = [...marketData].filter(i => i.category === categoryFilter).map(item => {
         const change = calculateChange(item.currentPrice, item.history[periodKey]);
         return { ...item, changeObj: change };
       }).sort((a, b) => b.changeObj.val - a.changeObj.val);
@@ -609,10 +621,10 @@ const t = useTranslations(lang)
     };
 
     const slidesData = [
-      { title: tGainer24h, res: getTopGainer("1d", false), pwup: getTopGainer("1d", true) },
-      { title: tTopGainers, res: getTopGainer("7d", false), pwup: getTopGainer("7d", true) },
-      { title: tGainer30d, res: getTopGainer("30d", false), pwup: getTopGainer("30d", true) },
-      { title: tGainer180d, res: getTopGainer("180d", false), pwup: getTopGainer("180d", true) }
+      { title: tGainer24h, res: getTopGainer("1d", 'resources'), pwup: getTopGainer("1d", 'powerups'), cosm: getTopGainer("1d", 'cosmetics') },
+      { title: tTopGainers, res: getTopGainer("7d", 'resources'), pwup: getTopGainer("7d", 'powerups'), cosm: getTopGainer("7d", 'cosmetics') },
+      { title: tGainer30d, res: getTopGainer("30d", 'resources'), pwup: getTopGainer("30d", 'powerups'), cosm: getTopGainer("30d", 'cosmetics') },
+      { title: tGainer180d, res: getTopGainer("180d", 'resources'), pwup: getTopGainer("180d", 'powerups'), cosm: getTopGainer("180d", 'cosmetics') }
     ];
 
     let carouselHTML = '';
@@ -625,9 +637,11 @@ const t = useTranslations(lang)
             <span class="truncate">${slide.title}</span>
           </h3>
           <div class="h-auto flex-grow flex flex-col justify-center gap-1.5 lg:gap-2">
-            ${renderDashItem(slide.res, slide.res ? `+${slide.res.changeObj.val.toFixed(2)}%` : '', false)}
+            ${renderDashItem(slide.res, slide.res ? `+${slide.res.changeObj.val.toFixed(2)}%` : '')}
             ${slide.pwup ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
-            ${renderDashItem(slide.pwup, slide.pwup ? `+${slide.pwup.changeObj.val.toFixed(2)}%` : '', true)}
+            ${renderDashItem(slide.pwup, slide.pwup ? `+${slide.pwup.changeObj.val.toFixed(2)}%` : '')}
+            ${slide.cosm ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+            ${renderDashItem(slide.cosm, slide.cosm ? `+${slide.cosm.changeObj.val.toFixed(2)}%` : '')}
           </div>
         </div>
       `;
@@ -661,8 +675,9 @@ const t = useTranslations(lang)
         colorClass: "text-emerald-500",
         borderClass: "border-emerald-500/30",
         shadowClass: "shadow-[0_0_10px_rgba(16,185,129,0.15)]",
-        res: allAth.filter(i => !i.isPowerUp).slice(0, 4),
-        pwup: allAth.filter(i => i.isPowerUp).slice(0, 4),
+        res: allAth.filter(i => i.category === 'resources').slice(0, 4),
+        pwup: allAth.filter(i => i.category === 'powerups').slice(0, 4),
+        cosm: allAth.filter(i => i.category === 'cosmetics').slice(0, 4),
         tooltipSuffix: tTooltipAth
       },
       {
@@ -671,8 +686,9 @@ const t = useTranslations(lang)
         colorClass: "text-red-500",
         borderClass: "border-red-500/30",
         shadowClass: "shadow-[0_0_10px_rgba(239,68,68,0.15)]",
-        res: allAtl.filter(i => !i.isPowerUp).slice(0, 4),
-        pwup: allAtl.filter(i => i.isPowerUp).slice(0, 4),
+        res: allAtl.filter(i => i.category === 'resources').slice(0, 4),
+        pwup: allAtl.filter(i => i.category === 'powerups').slice(0, 4),
+        cosm: allAtl.filter(i => i.category === 'cosmetics').slice(0, 4),
         tooltipSuffix: tTooltipAtl
       }
     ];
@@ -681,15 +697,20 @@ const t = useTranslations(lang)
     extremesSlides.forEach((slide, idx) => {
       const isFirst = idx === 0;
       
-      const renderMiniIcons = (items, isPowerUp) => {
-        return items.map(item => `
+      const renderMiniIcons = (items, isNotRes) => {
+        return items.map(item => {
+          let basePath = '/img/sunflowerland/';
+          if (item.category === 'powerups') basePath += 'powerups/' + (item.isWearable ? 'wearables/' : '');
+          else if (item.category === 'cosmetics') basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : '');
+          const imgSrc = encodeURI(basePath + (item.image || item.name + '.png'));
+          return `
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
-            <img src="${encodeURI('/img/sunflowerland/' + (isPowerUp ? 'powerups/' + (item.image || item.name + '.png') : item.name + '.png'))}" class="${isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            <img src="${imgSrc}" class="${isNotRes ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
             <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
               ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
             </div>
           </div>
-        `).join('');
+        `}).join('');
       };
 
       extremesHTML += `
@@ -698,13 +719,17 @@ const t = useTranslations(lang)
             <svg class="w-3.5 h-3.5 lg:w-4 lg:h-4 ${slide.colorClass} shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">${slide.icon}</svg>
             <span class="truncate">${slide.title}</span>
           </h3>
-          <div class="h-auto flex-grow flex flex-col justify-center gap-2">
+          <div class="h-auto flex-grow flex flex-col justify-center gap-1.5">
             <div class="flex gap-1.5 sm:gap-2 items-center w-full">
               ${renderMiniIcons(slide.res, false)}
             </div>
-            <div class="w-full border-t border-white/5 my-0.5"></div>
+            ${slide.pwup.length > 0 ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
             <div class="flex gap-1.5 sm:gap-2 items-center w-full">
               ${renderMiniIcons(slide.pwup, true)}
+            </div>
+            ${slide.cosm.length > 0 ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ''}
+            <div class="flex gap-1.5 sm:gap-2 items-center w-full">
+              ${renderMiniIcons(slide.cosm, true)}
             </div>
           </div>
         </div>
@@ -778,7 +803,7 @@ const t = useTranslations(lang)
     const filtered = marketData.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
                           item.key.toLowerCase().includes(term.toLowerCase());
-      const matchCategory = currentCategory === 'resources' ? !item.isPowerUp : item.isPowerUp;
+      const matchCategory = item.category === currentCategory;
       return matchSearch && matchCategory;
     });
 
@@ -824,11 +849,11 @@ const t = useTranslations(lang)
         <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="${encodeURI('/img/sunflowerland/' + (item.isPowerUp ? 'powerups/' + (item.image || (item.name + '.png')) : item.name + '.png'))}" alt="${item.name}" class="${item.isPowerUp ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+              <img src="${encodeURI('/img/sunflowerland/' + (item.category === 'resources' ? item.name + '.png' : (item.category === 'cosmetics' ? 'cosmetics/' + (item.isWearable ? 'wearables/' : '') + (item.image || item.name + '.png') : 'powerups/' + (item.isWearable ? 'wearables/' : '') + (item.image || item.name + '.png'))))}" alt="${item.name}" class="${item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
             </div>
             <div>
               <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
-              <p class="text-[10px] ${item.isPowerUp ? 'text-emerald-400/80 leading-tight lg:leading-none mt-0.5 max-w-[180px] lg:max-w-none' : 'font-mono text-terminal-muted/70'}">${item.isPowerUp ? item.boost : item.key}</p>
+              <p class="text-[10px] ${item.category !== 'resources' ? 'text-emerald-400/80 leading-tight lg:leading-none mt-0.5 max-w-[180px] lg:max-w-none' : 'font-mono text-terminal-muted/70'}">${item.category === 'resources' ? item.key : (item.boost || "Cosmetic")}</p>
             </div>
           </div>
           <!-- Precio Móvil -->
@@ -876,22 +901,51 @@ const t = useTranslations(lang)
 
       // Mapear el nuevo formato histórico JSON filtrando por sfl_ids.json y sfl_powerups.json
       marketData = Object.values(json.items).reduce((acc, data) => {
-        const idMatch = data.key.match(/collectibles-(\d+)$/);
-        if (idMatch) {
-          const id = idMatch[1];
-          if (sflIds[id]) {
+        const parts = data.key.split('-');
+        if (parts.length >= 2) {
+          const type = parts[0];
+          const id = parts[1];
+          if (type === 'collectibles' && sflIds[id]) {
             acc.push({
               ...data,
               name: sflIds[id],
-              isPowerUp: false
+              category: 'resources'
             });
-          } else if (sflPowerUps.power_ups.collectibles[id]) {
+          } else if (type === 'collectibles' && sflPowerUps.power_ups.collectibles[id]) {
             acc.push({
               ...data,
               name: sflPowerUps.power_ups.collectibles[id].name,
               boost: sflPowerUps.power_ups.collectibles[id].boost,
               image: sflPowerUps.power_ups.collectibles[id].image,
-              isPowerUp: true
+              category: 'powerups',
+              isWearable: false
+            });
+          } else if (type === 'collectibles' && sflCosmetics.cosmetics && sflCosmetics.cosmetics.collectibles && sflCosmetics.cosmetics.collectibles[id]) {
+            acc.push({
+              ...data,
+              name: sflCosmetics.cosmetics.collectibles[id].name,
+              boost: "",
+              image: sflCosmetics.cosmetics.collectibles[id].image,
+              category: 'cosmetics',
+              isWearable: false
+            });
+          } else if (type === 'wearables' && sflPowerUps.power_ups.wearables && sflPowerUps.power_ups.wearables[id]) {
+            acc.push({
+              ...data,
+              name: sflPowerUps.power_ups.wearables[id].name,
+              boost: sflPowerUps.power_ups.wearables[id].boost,
+              image: sflPowerUps.power_ups.wearables[id].image,
+              category: 'powerups',
+              isWearable: true
+            });
+          } else if (type === 'wearables' && sflCosmetics.cosmetics.wearables && sflCosmetics.cosmetics.wearables[id]) {
+            acc.push({
+              ...data,
+              name: sflCosmetics.cosmetics.wearables[id].name,
+              boost: "",
+              image: sflCosmetics.cosmetics.wearables[id].image,
+              category: 'cosmetics',
+              isWearable: true
             });
           }
         }

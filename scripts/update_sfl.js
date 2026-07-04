@@ -6,9 +6,13 @@ const require = createRequire(import.meta.url);
 // Solo los IDs que queremos mostrar en el frontend (reducirá el JSON de ~8MB a ~500KB)
 const sflIds = require('../src/content/data/sfl/resources.json');
 const sflPowerUps = require('../src/content/data/sfl/powerups.json');
+const sflCosmetics = require('../src/content/data/sfl/cosmetics.json');
 const ALLOWED_KEYS = new Set([
   ...Object.keys(sflIds).map(id => `collectibles-${id}`),
-  ...Object.keys(sflPowerUps.power_ups.collectibles).map(id => `collectibles-${id}`)
+  ...Object.keys(sflPowerUps.power_ups.collectibles).map(id => `collectibles-${id}`),
+  ...(sflPowerUps.power_ups.wearables ? Object.keys(sflPowerUps.power_ups.wearables).map(id => `wearables-${id}`) : []),
+  ...(sflCosmetics.cosmetics.wearables ? Object.keys(sflCosmetics.cosmetics.wearables).map(id => `wearables-${id}`) : []),
+  ...(sflCosmetics.cosmetics.collectibles ? Object.keys(sflCosmetics.cosmetics.collectibles).map(id => `collectibles-${id}`) : [])
 ]);
 
 // Problema 5 — Forzar siempre UTC para que coincida con el servidor de GitHub Actions
