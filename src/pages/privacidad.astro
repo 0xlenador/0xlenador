@@ -1,105 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import PrivacyView from "../components/views/PrivacyView.astro"
 import { getLangFromUrl, useTranslations } from "../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
-
-const seo = {
-  title: t('privacy.seo.title'),
-  description: t('privacy.seo.description'),
-}
 ---
 
-<Layout title={seo.title} description={seo.description}>
-  <main class="max-w-3xl mx-auto px-6">
-    <header class="mb-16">
-      <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter italic uppercase">
-        {t('privacy.heading')} <span class="text-emerald-500">{t('privacy.heading.accent')}</span> {t('privacy.heading.end')}
-      </h1>
-      <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.4em]">
-        {t('privacy.subtitle')}
-      </p>
-    </header>
-
-    <div class="space-y-12 leading-relaxed text-sm text-justify">
-      <section>
-        <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-          1. Responsable del Proyecto
-        </h2>
-        <p>
-          El sitio web <span class="text-terminal-text">0xlenador.xyz</span> es una plataforma de divulgación
-          educativa operada por <span class="text-terminal-text">0x Leñador</span>. Este proyecto
-          tiene como objetivo compartir estrategias de inversión y herramientas de análisis
-          fundamental sin recolectar información personal sensible de sus usuarios.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-          2. Procesamiento de Datos en Herramientas
-        </h2>
-        <p>
-          Nuestras herramientas, incluyendo el <span class="text-terminal-text">Riskfolio</span> y la
-          <span class="text-terminal-text">Calculadora de Valor Intrínseco</span>, están diseñadas
-          para ejecutarse íntegramente en el navegador del usuario (Client-Side).
-        </p>
-        <div
-          class="mt-4 p-4 bg-terminal-surface/40 border-l-2 border-emerald-500 rounded-r-xl italic text-terminal-secondary"
-        >
-          Los valores financieros que introduces en estos simuladores no se envían a nuestros
-          servidores ni son almacenados en ninguna base de datos externa.
-        </div>
-      </section>
-
-      <section>
-        <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-          3. Privacidad por Diseño y Cookies
-        </h2>
-        <p>
-          En 0xLeñador creemos en la privacidad como estándar. <strong>No utilizamos Google Analytics, ni rastreadores de terceros</strong> para monitorizar tu comportamiento. Este sitio web es estático y no usa cookies de rastreo ni publicidad.
-        </p>
-        <p class="mt-4">
-          Únicamente utilizamos el almacenamiento local funcional de tu navegador (<span class="text-terminal-text">LocalStorage / SessionStorage</span>) para guardar configuraciones estrictamente técnicas que tú solicitas de forma anónima, tales como:
-        </p>
-        <ul class="list-disc pl-5 mt-4 space-y-2 text-terminal-muted">
-          <li>Tu preferencia de idioma para futuras visitas.</li>
-          <li>Tus preferencias de visualización (ej. ocultar el índice del blog).</li>
-          <li>Un caché temporal para los datos del mercado para acelerar la carga web.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-          4. Transparencia en Afiliación (Referidos)
-        </h2>
-        <p>
-          En cumplimiento con las buenas prácticas de divulgación, te informamos que hacemos un uso activo de <strong>enlaces de referidos y afiliación</strong> en distintas secciones de la web, muy especialmente en nuestro <span class="text-terminal-text">Directorio de Análisis y Herramientas Web3</span>.
-        </p>
-        <p class="mt-4 text-terminal-muted">
-          Si haces clic en estos enlaces para registrarte o utilizar plataformas externas (exchanges, wallets, herramientas de trading), el proyecto podría recibir una comisión. Esto es lo que nos ayuda a mantener la plataforma de educación 100% gratuita y sin anuncios molestos. Ten en cuenta que, al hacer clic en ellos, abandonarás nuestra web y quedarás sujeto a las políticas de privacidad y cookies de esos sitios externos.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-          5. Tus Derechos
-        </h2>
-        <p>
-          Como usuario, tienes pleno derecho a navegar de forma anónima. Al ser un sitio estático privado, no recolectamos tu información, no requerimos creación de cuentas, ni mantenemos bases de datos con tus datos personales directos. Eres dueño total de tu navegación.
-        </p>
-      </section>
-    </div>
-
-    <div class="mt-20 pt-10 border-t border-terminal-border text-center">
-      <p class="text-[9px] font-mono text-terminal-subtle uppercase tracking-widest">
-        {t('privacy.updated')}
-      </p>
-    </div>
-  </main>
+<Layout title={t("privacy.seo.title")} description={t("privacy.seo.description")}>
+  <PrivacyView />
 </Layout>

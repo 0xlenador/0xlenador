@@ -1,0 +1,56 @@
+---
+// ==========================================
+// src/components/views/RiskfolioView.astro
+// View puro para la página de riskfolio
+// ==========================================
+
+import RiskfolioChart from "../home/RiskfolioChart.astro"
+import FaqAccordion from "../FaqAccordion.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const faqItems = [
+  { pregunta: t("riskfolio.faq.q1"), respuesta: t("riskfolio.faq.a1") },
+  { pregunta: t("riskfolio.faq.q2"), respuesta: t("riskfolio.faq.a2") },
+  { pregunta: t("riskfolio.faq.q3"), respuesta: t("riskfolio.faq.a3") },
+  { pregunta: t("riskfolio.faq.q4"), respuesta: t("riskfolio.faq.a4") },
+]
+---
+
+<main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+  <!-- Breadcrumb -->
+  <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
+    {t("riskfolio.hero.breadcrumb")}
+  </p>
+
+  <!-- Header -->
+  <header class="mb-12">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+      <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+        >Risk</span
+      >{t("riskfolio.hero.title")}
+    </h1>
+    <p class="text-terminal-secondary text-sm md:text-base leading-relaxed max-w-2xl font-light">
+      {t("riskfolio.desc")}
+    </p>
+  </header>
+
+  <!-- Componente interactivo -->
+  <RiskfolioChart />
+
+  <!-- Sección FAQ -->
+  <div class="mt-16 border-t border-terminal-border/60 pt-14">
+    <h2 class="text-xl font-bold text-white tracking-tight mb-1">{t("riskfolio.cards.title")}</h2>
+    <p class="text-xs text-terminal-subtle mb-8">
+      {t("riskfolio.cards.desc")}
+    </p>
+    <FaqAccordion
+      titulo={t("riskfolio.faq.title")}
+      subtitulo={t("riskfolio.faq.subtitle")}
+      startId={400}
+      items={faqItems}
+    />
+  </div>
+</main>

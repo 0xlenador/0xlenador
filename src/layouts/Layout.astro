@@ -88,7 +88,12 @@ const enUrl = new URL(enUrlStr, Astro.site)
           // 1. Si el usuario ya eligió manualmente, no intervenir
           if (localStorage.getItem('lang_override') === 'true') return;
           
-          // 2. Comprobar si es una página en español y si el navegador NO es hispano
+          // 2. Si es un bot de búsqueda/redes sociales, no intervenir
+          // Googlebot y crawlers deben poder ver ambas versiones para respetar hreflang
+          const isBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse|prerender|facebookexternalhit|twitterbot|discordbot/i.test(navigator.userAgent);
+          if (isBot) return;
+
+          // 3. Comprobar si es una página en español y si el navegador NO es hispano
           const isSpanishPage = document.documentElement.lang === 'es';
           const browserLang = navigator.language.toLowerCase();
           

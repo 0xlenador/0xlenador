@@ -6,8 +6,7 @@
 
 import FaqAccordion from "../FaqAccordion.astro"
 
-import directoryData from "../../content/data/directory.json"
-import faucetsData from "../../content/data/faucets.json"
+import { directoryData, faucetsData, getTopFaucetNetworks } from "../../lib/data"
 
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 

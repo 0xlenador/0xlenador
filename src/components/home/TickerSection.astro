@@ -4,20 +4,21 @@
  * Extrae datos en vivo de la API de CoinGecko
  */
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n";
+import { getCollection } from "astro:content";
 
-const dataFiles = import.meta.glob("../../content/data/watchlist/*.json", { eager: true });
-const assets = Object.values(dataFiles)
-  .filter((file: any) => file.default && file.default.price && file.default.price.apiUrl)
-  .map((file: any) => {
-    const data = file.default
-    const apiUrl = data.price.apiUrl || ""
+const watchlistEntries = await getCollection("watchlist");
+const assets = watchlistEntries
+  .filter((entry) => entry.data.price?.apiUrl)
+  .map((entry) => {
+    const data = entry.data
+    const apiUrl = data.price!.apiUrl || ""
 
     let coinId = ""
     if (apiUrl.includes("/simple/price")) {
       const match = apiUrl.match(/ids=([^&]+)/)
       if (match) coinId = match[1]
     } else if (apiUrl.includes("/nfts/")) {
-      coinId = apiUrl.split("/").pop()
+      coinId = apiUrl.split("/").pop() ?? ""
     }
 
     return {

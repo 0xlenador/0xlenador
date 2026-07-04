@@ -9,8 +9,7 @@
  *  - isFaucet?: boolean — si es true, busca en faucets.json en vez de directory.json
  *  - label?: string — texto del botón (por defecto usa el nombre del recurso)
  */
-import directoryData from "../../content/data/directory.json"
-import faucetsData from "../../content/data/faucets.json"
+import { directoryData, faucetsData } from "../../lib/data"
 
 interface Props {
   id: string

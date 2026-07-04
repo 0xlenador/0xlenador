@@ -1,0 +1,85 @@
+---
+// ==========================================
+// src/components/views/IntrinsicView.astro
+// View puro para la página de valor intrínseco
+// ==========================================
+
+import FaqAccordion from "../FaqAccordion.astro"
+import CalculatorForm from "../intrinseco/CalculatorForm.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<header class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
+  <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight leading-tight">
+    {t("intrinsic.hero.title")} <br />
+    <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+      {t("intrinsic.hero.accent")}
+    </span>
+  </h1>
+  <p class="text-terminal-muted text-xs md:text-sm font-bold uppercase tracking-[0.4em] mb-2">
+    {t("intrinsic.hero.breadcrumb")}
+  </p>
+  <p class="text-terminal-secondary text-lg md:text-xl font-light max-w-xl mx-auto">
+    {t("intrinsic.desc")}
+  </p>
+</header>
+
+<main class="max-w-3xl mx-auto px-6 pb-20">
+  <CalculatorForm />
+
+  <section class="mt-20 space-y-6">
+    <h2 class="text-2xl font-bold text-white tracking-tight text-center mb-10">
+      {t("intrinsic.cards.title")}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-8 bg-terminal-surface/20 border border-terminal-border rounded-3xl">
+        <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">
+          {t("intrinsic.cards.1.title")}
+        </h4>
+        <p class="text-xs text-terminal-secondary leading-relaxed">
+          {t("intrinsic.cards.1.desc")}
+        </p>
+      </div>
+      <div class="p-8 bg-terminal-surface/20 border border-terminal-border rounded-3xl">
+        <h4 class="text-emerald-500 font-bold mb-3 text-sm uppercase tracking-widest">
+          {t("intrinsic.cards.2.title")}
+        </h4>
+        <p class="text-xs text-terminal-secondary leading-relaxed">
+          {t("intrinsic.cards.2.desc")}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <FaqAccordion
+    titulo={t("intrinsic.faq.title")}
+    subtitulo={t("intrinsic.faq.subtitle")}
+    items={[
+      {
+        pregunta: t("intrinsic.faq.q1"),
+        preguntaId: "faq-buy-when",
+        respuesta: t("intrinsic.faq.a1"),
+      },
+      {
+        pregunta: t("intrinsic.faq.q2"),
+        preguntaId: "faq-eps-use",
+        respuesta: t("intrinsic.faq.a2"),
+      },
+      {
+        pregunta: t("intrinsic.faq.q3"),
+        preguntaId: "faq-discount-rate",
+        respuesta: t("intrinsic.faq.a3"),
+      },
+    ]}
+  />
+
+  <div class="mt-20 text-center">
+    <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
+      {t("intrinsic.footer.tag")}
+    </p>
+    <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+  </div>
+</main>

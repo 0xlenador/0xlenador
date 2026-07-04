@@ -116,7 +116,7 @@ async function updateSFLData() {
       if (liveResult.flowerPrice) {
         currentFlowerPrice = liveResult.flowerPrice;
       }
-      console.log('--- DEBUG flowerPrice ---', liveResult.flowerPrice, currentFlowerPrice);
+
     }
 
     // Validar el día actual (o fallback)

@@ -5,7 +5,7 @@
 // ==========================================
 
 import FaqAccordion from "../FaqAccordion.astro"
-import faucetsData from "../../content/data/faucets.json"
+import { faucetsData } from "../../lib/data"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
