@@ -2,6 +2,7 @@
 import Navbar from "../components/Navbar.astro"
 import Footer from "../components/Footer.astro"
 import BackToTop from "../components/BackToTop.astro"
+import LanguageSuggestionBanner from "../components/LanguageSuggestionBanner.astro"
 import "../styles/main.css"
 import { getLangFromUrl, useTranslations, getAlternateUrl } from "../i18n"
 
@@ -81,35 +82,6 @@ const enUrl = new URL(enUrlStr, Astro.site)
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={esUrl} />
 
-    <!-- Redirección internacional automática (Solo en cliente) -->
-    <script is:inline>
-      (function() {
-        try {
-          // 1. Si el usuario ya eligió manualmente, no intervenir
-          if (localStorage.getItem('lang_override') === 'true') return;
-          
-          // 2. Si es un bot de búsqueda/redes sociales, no intervenir
-          // Googlebot y crawlers deben poder ver ambas versiones para respetar hreflang
-          const isBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse|prerender|facebookexternalhit|twitterbot|discordbot/i.test(navigator.userAgent);
-          if (isBot) return;
-
-          // 3. Comprobar si es una página en español y si el navegador NO es hispano
-          const isSpanishPage = document.documentElement.lang === 'es';
-          const browserLang = navigator.language.toLowerCase();
-          
-          if (isSpanishPage && !browserLang.startsWith('es')) {
-            // 3. Buscar el alternate link y redirigir limpiamente
-            const enLink = document.querySelector('link[hreflang="en"]');
-            if (enLink && enLink.href) {
-              window.location.replace(enLink.href);
-            }
-          }
-        } catch (e) {
-          // Ignorar errores silenciosamente (ej. localStorage bloqueado)
-        }
-      })();
-    </script>
-
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -137,5 +109,6 @@ const enUrl = new URL(enUrlStr, Astro.site)
     </div>
     <Footer lang={lang} />
     <BackToTop />
+    <LanguageSuggestionBanner />
   </body>
 </html>

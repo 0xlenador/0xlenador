@@ -1,0 +1,251 @@
+---
+/**
+ * LanguageSuggestionBanner.astro
+ * Banner discreto de sugerencia de idioma (SEO-friendly).
+ *
+ * Comportamiento:
+ * - Se muestra cuando el idioma del navegador no coincide con la página actual.
+ * - Usa los <link hreflang="..."> existentes para obtener la URL alternativa.
+ * - No redirige jamás. Solo sugiere.
+ * - Guarda la decisión del usuario en localStorage.
+ * - No interfiere con el LanguageSwitcher manual del Navbar.
+ *
+ * Accesibilidad:
+ * - role="status" + aria-live="polite" para lectores de pantalla.
+ * - Botón de cierre con aria-label y navegación por teclado (Escape).
+ * - Contraste WCAG AA sobre fondo oscuro semi-transparente.
+ */
+---
+
+<!-- Banner container: oculto por defecto, mostrado por JS si aplica -->
+<div
+  id="lang-banner"
+  role="status"
+  aria-live="polite"
+  class="lang-banner"
+  hidden
+>
+  <div class="lang-banner__inner">
+    <!-- Icono bandera + mensaje -->
+    <p id="lang-banner-text" class="lang-banner__text"></p>
+
+    <!-- Acciones -->
+    <div class="lang-banner__actions">
+      <a
+        id="lang-banner-link"
+        href="#"
+        class="lang-banner__cta"
+        data-astro-prefetch
+      >
+        <!-- Texto set por JS -->
+      </a>
+      <button
+        id="lang-banner-close"
+        type="button"
+        class="lang-banner__close"
+        aria-label="Close"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lang-banner {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: calc(100% - 2rem);
+    max-width: 36rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .lang-banner[data-visible="true"] {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  .lang-banner__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem 0.625rem 1rem;
+    background: rgba(20, 20, 20, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(16, 185, 129, 0.06);
+  }
+
+  .lang-banner__text {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+    margin: 0;
+    flex: 1;
+  }
+
+  .lang-banner__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-shrink: 0;
+  }
+
+  .lang-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #000;
+    background: #10b981;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .lang-banner__cta:hover {
+    background: #34d399;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+  }
+
+  .lang-banner__cta:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+  }
+
+  .lang-banner__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+    padding: 0;
+  }
+
+  .lang-banner__close:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .lang-banner__close:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+  }
+
+  /* Móvil: stack vertical si es necesario */
+  @media (max-width: 480px) {
+    .lang-banner__inner {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .lang-banner__text {
+      font-size: 0.75rem;
+      width: 100%;
+    }
+    .lang-banner__actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    try {
+      var STORAGE_KEY = 'lang_banner_dismissed';
+
+      // 1. Si ya se descartó el banner, salir inmediatamente
+      if (localStorage.getItem(STORAGE_KEY) === 'true') return;
+
+      // 2. Si el idioma del navegador coincide con el de la página, salir
+      var pageLang = document.documentElement.lang;
+      var browserLang = navigator.language.toLowerCase();
+      var browserIsEs = browserLang.startsWith('es');
+      var pageIsEs = pageLang === 'es';
+
+      // Si coinciden, no mostrar nada
+      if ((pageIsEs && browserIsEs) || (!pageIsEs && !browserIsEs)) return;
+
+      // 3. Buscar la URL alternativa desde los hreflang existentes
+      var targetLang = pageIsEs ? 'en' : 'es';
+      var altLink = document.querySelector('link[hreflang="' + targetLang + '"]');
+      if (!altLink || !altLink.href) return;
+
+      // 4. Configurar textos según el caso
+      var banner = document.getElementById('lang-banner');
+      var text = document.getElementById('lang-banner-text');
+      var link = document.getElementById('lang-banner-link');
+      var closeBtn = document.getElementById('lang-banner-close');
+
+      if (!banner || !text || !link || !closeBtn) return;
+
+      if (pageIsEs) {
+        // Página en español, usuario en inglés
+        text.textContent = '🇬🇧 This page is also available in English.';
+        link.textContent = 'Read in English';
+        closeBtn.setAttribute('aria-label', 'Dismiss');
+      } else {
+        // Página en inglés, usuario en español
+        text.textContent = '🇪🇸 Esta página también está disponible en español.';
+        link.textContent = 'Leer en español';
+        closeBtn.setAttribute('aria-label', 'Cerrar');
+      }
+
+      link.href = altLink.href;
+
+      // 5. Mostrar el banner
+      banner.removeAttribute('hidden');
+      // Forzar reflow para que la transición funcione
+      banner.offsetHeight;
+      banner.setAttribute('data-visible', 'true');
+
+      // 6. Handlers
+      function dismiss() {
+        banner.setAttribute('data-visible', 'false');
+        setTimeout(function() { banner.setAttribute('hidden', ''); }, 300);
+        localStorage.setItem(STORAGE_KEY, 'true');
+      }
+
+      closeBtn.addEventListener('click', dismiss);
+
+      // Al hacer clic en el CTA, también guardar la preferencia
+      link.addEventListener('click', function() {
+        localStorage.setItem(STORAGE_KEY, 'true');
+        localStorage.setItem('lang_override', 'true');
+      });
+
+      // Cerrar con Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && banner.getAttribute('data-visible') === 'true') {
+          dismiss();
+        }
+      });
+
+    } catch (e) {
+      // Silenciar errores (ej. localStorage no disponible)
+    }
+  })();
+</script>
