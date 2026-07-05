@@ -144,8 +144,9 @@ const t = useTranslations(lang)
         </div>
 
         <!-- Filtros y Buscador -->
-        <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 mb-6 shadow-inner flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div class="w-full lg:w-1/3">
+        <div class="bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-5 mb-6 flex flex-col lg:flex-row lg:items-start justify-between gap-6 relative z-30">
+          
+          <div class="w-full lg:w-1/3 relative z-40">
             <div class="relative flex items-center w-full bg-terminal-bg/50 border border-white/[0.1] rounded-xl overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/50 transition-all">
               <div class="pl-4 pr-3 py-3 border-r border-white/10 bg-white/[0.02]">
                 <span class="text-xs font-mono text-terminal-muted uppercase tracking-widest whitespace-nowrap">{t("sfl.search.label")}</span>
@@ -172,17 +173,68 @@ const t = useTranslations(lang)
             </div>
           </div>
           
-          <div class="w-full lg:w-auto flex flex-col gap-2">
-            <div class="w-full flex overflow-x-auto no-scrollbar items-center lg:justify-end gap-2 pb-1 lg:pb-0">
-              <button class="category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="resources" onclick="window.handleCategory('resources')">Resources</button>
-              <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="powerups" onclick="window.handleCategory('powerups')">Power Ups</button>
-              <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="cosmetics" onclick="window.handleCategory('cosmetics')">Cosmetics</button>
-              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
-              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
+          <div class="w-full lg:w-auto flex flex-col items-start lg:items-end gap-1.5">
+            <!-- Botones Principales -->
+            <div class="w-full flex overflow-x-auto no-scrollbar items-start lg:justify-end gap-3 pb-2 lg:pb-0">
+              <button class="category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0 h-[38px] flex items-center gap-2" data-category="resources" onclick="window.handleCategory('resources')">
+                <img src="/img/sunflowerland/Eggplant.png" alt="Resources" class="w-4 h-4 object-contain" />
+                Resources
+              </button>
+              
+              <!-- Power Ups Group -->
+              <div class="flex flex-col items-center shrink-0">
+                <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap h-[38px] flex items-center gap-2" data-category="powerups" onclick="window.handleCategory('powerups')">
+                  <img src="/img/sunflowerland/123/energy.png" alt="Power Ups" class="w-4 h-4 object-contain" />
+                  Power Ups
+                </button>
+                
+                <div id="subCat_powerups" class="hidden w-0 flex-row justify-center z-50">
+                  <div class="flex items-center gap-4 w-max mt-2">
+                    <label class="flex items-center gap-1 cursor-pointer group whitespace-nowrap">
+                      <input type="checkbox" value="collectibles" checked onchange="window.toggleSubCategory('collectibles')" class="sub-checkbox-pwup w-2.5 h-2.5 accent-emerald-500 bg-white/5 border-white/20 rounded cursor-pointer">
+                      <img src="/img/sunflowerland/powerups/freya_fox.png" alt="Collectibles" class="w-3 h-3 object-contain" />
+                      <span class="text-[9px] font-semibold text-white/50 group-hover:text-white/80 uppercase tracking-widest transition-colors">Collectibles</span>
+                    </label>
+                    <div class="w-px h-3 bg-white/10"></div>
+                    <label class="flex items-center gap-1 cursor-pointer group whitespace-nowrap">
+                      <input type="checkbox" value="wearables" checked onchange="window.toggleSubCategory('wearables')" class="sub-checkbox-pwup w-2.5 h-2.5 accent-emerald-500 bg-white/5 border-white/20 rounded cursor-pointer">
+                      <img src="/img/sunflowerland/123/hat-wearables.webp" alt="Wearables" class="w-3 h-3 object-contain" />
+                      <span class="text-[9px] font-semibold text-white/50 group-hover:text-white/80 uppercase tracking-widest transition-colors">Wearables</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cosmetics Group -->
+              <div class="flex flex-col items-center shrink-0">
+                <button class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap h-[38px] flex items-center gap-2" data-category="cosmetics" onclick="window.handleCategory('cosmetics')">
+                  <img src="/img/sunflowerland/123/bear.png" alt="Cosmetics" class="w-4 h-4 object-contain" />
+                  Cosmetics
+                </button>
+                
+                <div id="subCat_cosmetics" class="hidden w-0 flex-row justify-center z-50">
+                  <div class="flex items-center gap-4 w-max mt-2">
+                    <label class="flex items-center gap-1 cursor-pointer group whitespace-nowrap">
+                      <input type="checkbox" value="collectibles" checked onchange="window.toggleSubCategory('collectibles')" class="sub-checkbox-cosm w-2.5 h-2.5 accent-emerald-500 bg-white/5 border-white/20 rounded cursor-pointer">
+                      <img src="/img/sunflowerland/powerups/freya_fox.png" alt="Collectibles" class="w-3 h-3 object-contain" />
+                      <span class="text-[9px] font-semibold text-white/50 group-hover:text-white/80 uppercase tracking-widest transition-colors">Collectibles</span>
+                    </label>
+                    <div class="w-px h-3 bg-white/10"></div>
+                    <label class="flex items-center gap-1 cursor-pointer group whitespace-nowrap">
+                      <input type="checkbox" value="wearables" checked onchange="window.toggleSubCategory('wearables')" class="sub-checkbox-cosm w-2.5 h-2.5 accent-emerald-500 bg-white/5 border-white/20 rounded cursor-pointer">
+                      <img src="/img/sunflowerland/123/hat-wearables.webp" alt="Wearables" class="w-3 h-3 object-contain" />
+                      <span class="text-[9px] font-semibold text-white/50 group-hover:text-white/80 uppercase tracking-widest transition-colors">Wearables</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0 h-[38px] flex items-center" disabled title="Próximamente">Buds</button>
+              <button class="px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider cursor-not-allowed opacity-50 whitespace-nowrap shrink-0 h-[38px] flex items-center" disabled title="Próximamente">Pets</button>
             </div>
 
             <!-- Ordenamiento Móvil -->
-            <div class="w-full lg:hidden flex overflow-x-auto no-scrollbar items-center gap-1.5 pb-1">
+            <div class="w-full lg:hidden flex overflow-x-auto no-scrollbar items-center gap-1.5 mt-2">
               <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-widest mr-0.5 shrink-0">{t("sfl.market.sortby")}</span>
               <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('name')">{t("sfl.market.sort.name")} <span class="sort-icon opacity-0 scale-75" data-col="name">↕</span></button>
               <button class="px-2 py-1 bg-terminal-bg/50 border border-white/10 rounded text-[9px] font-medium text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 group flex items-center gap-0.5" onclick="window.handleSort('price')">{t("sfl.market.sort.price")} <span class="sort-icon opacity-0 scale-75" data-col="price">↕</span></button>
@@ -347,22 +399,63 @@ const t = useTranslations(lang)
 
   let marketData = [];
   let currentCategory = 'resources';
+  let currentSubCategories = ['collectibles', 'wearables']; 
+  let searchQuery = '';
 
   window.currentSort = { column: null, direction: 'none' };
 
-  window.handleCategory = (category) => {
+  window.handleCategory = function(category) {
     currentCategory = category;
+    currentSubCategories = ['collectibles', 'wearables']; 
     
-    // Actualizar UI de los botones
+    const subCatPwup = document.getElementById('subCat_powerups');
+    const subCatCosm = document.getElementById('subCat_cosmetics');
+
+    if (category === 'powerups') {
+      subCatPwup.classList.remove('hidden');
+      subCatPwup.classList.add('flex');
+      document.querySelectorAll('.sub-checkbox-pwup').forEach(cb => cb.checked = true);
+    } else {
+      subCatPwup.classList.add('hidden');
+      subCatPwup.classList.remove('flex');
+    }
+
+    if (category === 'cosmetics') {
+      subCatCosm.classList.remove('hidden');
+      subCatCosm.classList.add('flex');
+      document.querySelectorAll('.sub-checkbox-cosm').forEach(cb => cb.checked = true);
+    } else {
+      subCatCosm.classList.add('hidden');
+      subCatCosm.classList.remove('flex');
+    }
+
     document.querySelectorAll('.category-btn').forEach(btn => {
       if (btn.dataset.category === category) {
-        btn.className = "category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0";
+        btn.className = "category-btn px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0 h-[38px] flex items-center gap-2";
       } else {
-        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0";
+        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0 h-[38px] flex items-center gap-2";
       }
     });
 
-    const searchInput = document.getElementById("searchInput");
+    renderTable(searchInput ? searchInput.value : "");
+  };
+
+  window.toggleSubCategory = function(subCategory) {
+    if (currentSubCategories.includes(subCategory)) {
+      if (currentSubCategories.length === 1) {
+        currentSubCategories = subCategory === 'collectibles' ? ['wearables'] : ['collectibles'];
+      } else {
+        currentSubCategories = currentSubCategories.filter(sc => sc !== subCategory);
+      }
+    } else {
+      currentSubCategories.push(subCategory);
+    }
+    
+    const currentCheckboxesClass = currentCategory === 'powerups' ? '.sub-checkbox-pwup' : '.sub-checkbox-cosm';
+    document.querySelectorAll(currentCheckboxesClass).forEach(cb => {
+      cb.checked = currentSubCategories.includes(cb.value);
+    });
+
     renderTable(searchInput ? searchInput.value : "");
   };
 
@@ -415,13 +508,11 @@ const t = useTranslations(lang)
       renderTable();
     }
     
-    // Escapar comillas si el nombre tuviera
     const safeName = itemName.replace(/"/g, '\\"');
     const row = document.querySelector(`div[data-row-id="${safeName}"]`);
     
     if (row) {
       row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Efecto de parpadeo temporal (forzando background y bordes en desktop)
       row.classList.add("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
       setTimeout(() => {
         row.classList.remove("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
@@ -429,7 +520,6 @@ const t = useTranslations(lang)
     }
   };
 
-  // Formatear números
   const formatNumber = (num, decimals = 2) => {
     if (num === undefined || num === null) return "0";
     if (num < 0.0001) return num.toExponential(2);
@@ -439,17 +529,6 @@ const t = useTranslations(lang)
     }).format(num);
   };
 
-  // Extraer el nombre del ID
-  const getItemName = (key) => {
-    const idMatch = key.match(/-(\d+)$/);
-    if (idMatch && idMatch[1]) {
-      const id = idMatch[1];
-      if (sflIds[id]) return sflIds[id];
-    }
-    return key;
-  };
-
-  // Helper para SVG Sparkline Nativo
   const createSparklineSVG = (dataArray, isPositive) => {
     if (!dataArray) return '';
     const validData = dataArray.filter(v => v !== null && v !== undefined);
@@ -500,13 +579,11 @@ const t = useTranslations(lang)
     if (!past || past === 0 || !current) return { val: 0, text: '-', isPositive: null, pastPrice: null };
     const change = ((current - past) / past) * 100;
     const isPositive = change >= 0;
-    // Mejora 9 — Protección visual: si el cambio es absurdo (bug de API o especulación extrema),
-    // lo mostramos como '>9999%' para no romper el diseño móvil con números gigantes
     const displayText = Math.abs(change) > 9999
       ? (isPositive ? '>9999%' : '<-9999%')
       : `${isPositive ? '+' : ''}${change.toFixed(2)}%`;
     return {
-      val: Math.min(Math.max(change, -9999), 9999), // val también acotado para ordenamiento seguro
+      val: Math.min(Math.max(change, -9999), 9999),
       text: displayText,
       isPositive,
       pastPrice: past
@@ -535,11 +612,10 @@ const t = useTranslations(lang)
   };
 
   const getCardColumnHTML = (title, changeObj, sparklineData) => {
-    const isLarge = !sparklineData; // 24H no tiene gráfica
+    const isLarge = !sparklineData; 
     const badgeHTML = getBadgeHTML(changeObj, isLarge);
     
     if (isLarge) {
-      // Para 24 Horas (sin gráfica) - Elementos grandes
       return `
         <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-center lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full">
           <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
@@ -550,21 +626,17 @@ const t = useTranslations(lang)
       `;
     }
 
-    // Para 7D, 30D, 180D (con gráfica)
     const graphHTML = `<div class="h-6 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>`;
     
     return `
       <div class="flex flex-col justify-between lg:flex-row lg:items-center bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full lg:h-auto">
-        <!-- Mobile Header: Titulo a la izq + Badge a la der -->
         <div class="flex justify-between items-center mb-2 w-full lg:hidden">
           <p class="text-[10px] font-mono text-terminal-muted uppercase font-semibold">${title}</p>
           ${badgeHTML}
         </div>
-        <!-- Mobile Graph (Full width abajo) -->
         <div class="w-full lg:hidden flex-grow flex flex-col justify-end">
           ${graphHTML}
         </div>
-        <!-- Desktop Content (Badge + Graph inline) -->
         <div class="hidden lg:flex flex-row items-center justify-between gap-3 w-full lg:px-4">
           ${badgeHTML}
           ${graphHTML}
@@ -584,7 +656,7 @@ const t = useTranslations(lang)
       if (item.category === 'powerups') {
         basePath += 'powerups/' + (item.isWearable ? 'wearables/' : '');
       } else if (item.category === 'cosmetics') {
-        basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : '');
+        basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : 'collectibles/');
       }
       const imgSrc = encodeURI(basePath + (item.image || item.name + '.png'));
       const imgSize = item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
@@ -611,7 +683,6 @@ const t = useTranslations(lang)
       </div>
     `;
 
-    // Mayor Ganador Carrusel (24h, 7d, 30d, 180d)
     const getTopGainer = (periodKey, categoryFilter) => {
       const sorted = [...marketData].filter(i => i.category === categoryFilter).map(item => {
         const change = calculateChange(item.currentPrice, item.history[periodKey]);
@@ -701,7 +772,7 @@ const t = useTranslations(lang)
         return items.map(item => {
           let basePath = '/img/sunflowerland/';
           if (item.category === 'powerups') basePath += 'powerups/' + (item.isWearable ? 'wearables/' : '');
-          else if (item.category === 'cosmetics') basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : '');
+          else if (item.category === 'cosmetics') basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : 'collectibles/');
           const imgSrc = encodeURI(basePath + (item.image || item.name + '.png'));
           return `
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
@@ -739,7 +810,6 @@ const t = useTranslations(lang)
     const extremesContainer = document.getElementById("dashAthAtlCarousel");
     extremesContainer.innerHTML = extremesHTML;
 
-    // Lógica Universal de Carrusel con Eventos
     const setupCarousel = (containerId, circleId, durationSec, abortKey) => {
       const container = document.getElementById(containerId);
       let circle = document.getElementById(circleId);
@@ -764,7 +834,6 @@ const t = useTranslations(lang)
         slides[currentIdx].classList.remove("opacity-0", "z-0");
         slides[currentIdx].classList.add("opacity-100", "z-10");
 
-        // Clonar para reiniciar animación SVG de forma confiable
         const newCircle = circle.cloneNode(true);
         circle.parentNode.replaceChild(newCircle, circle);
         circle = newCircle;
@@ -797,14 +866,22 @@ const t = useTranslations(lang)
   };
 
   const renderTable = (filterText = "") => {
-    if (!marketData.length) return;
-
     const term = filterText;
     const filtered = marketData.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
                           item.key.toLowerCase().includes(term.toLowerCase());
-      const matchCategory = item.category === currentCategory;
-      return matchSearch && matchCategory;
+      
+      let matchCategory = item.category === currentCategory;
+      
+      let matchSubCategory = true;
+      if (item.category === 'powerups' || item.category === 'cosmetics') {
+        const itemType = item.isWearable ? 'wearables' : 'collectibles';
+        if (!currentSubCategories.includes(itemType)) {
+          matchSubCategory = false;
+        }
+      }
+      
+      return matchSearch && matchCategory && matchSubCategory;
     });
 
     let sortedFiltered = [...filtered];
@@ -849,7 +926,7 @@ const t = useTranslations(lang)
         <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="${encodeURI('/img/sunflowerland/' + (item.category === 'resources' ? item.name + '.png' : (item.category === 'cosmetics' ? 'cosmetics/' + (item.isWearable ? 'wearables/' : '') + (item.image || item.name + '.png') : 'powerups/' + (item.isWearable ? 'wearables/' : '') + (item.image || item.name + '.png'))))}" alt="${item.name}" class="${item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+              <img src="${encodeURI('/img/sunflowerland/' + (item.category === 'resources' ? item.name + '.png' : (item.category === 'cosmetics' ? 'cosmetics/' + (item.isWearable ? 'wearables/' + (item.image || item.name + '.png') : 'collectibles/' + (item.image ? item.image.replace(/\.png$/i, '.webp') : item.name + '.webp')) : 'powerups/' + (item.isWearable ? 'wearables/' : '') + (item.image || item.name + '.png'))))}" alt="${item.name}" class="${item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
             </div>
             <div>
               <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
