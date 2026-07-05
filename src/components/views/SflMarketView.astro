@@ -144,10 +144,10 @@ const t = useTranslations(lang)
         </div>
 
         <!-- Filtros y Buscador -->
-        <div class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-30 shadow-2xl">
+        <div class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-4 lg:p-5 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-6 relative z-30 shadow-2xl">
           
           <!-- Buscador Pro -->
-          <div class="w-full lg:w-[40%] relative z-40 group">
+          <div class="w-full lg:w-1/3 relative z-40 group">
             <div class="relative flex items-center w-full bg-black/40 border border-white/10 rounded-xl overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/30 transition-all duration-300">
               <div class="pl-4 pr-2 flex items-center justify-center">
                 <svg id="searchIcon" class="w-4 h-4 text-white/40 group-focus-within:text-emerald-400 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -163,10 +163,7 @@ const t = useTranslations(lang)
                 style="outline: none !important; box-shadow: none !important; border: none !important; background-color: transparent !important;"
                 class="w-full px-2 py-3 text-white placeholder-white/30 text-sm"
               />
-              <div class="pr-3 hidden lg:flex items-center">
-                <kbd class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] font-mono text-white/40 select-none">⌘K</kbd>
-              </div>
-              <button id="clearSearchBtn" class="hidden absolute right-16 lg:right-16 focus:outline-none hover:bg-white/10 p-1 rounded-full transition-colors">
+              <button id="clearSearchBtn" class="hidden absolute right-3 focus:outline-none hover:bg-white/10 p-1 rounded-full transition-colors">
                 <svg class="w-4 h-4 text-white/50 hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -174,57 +171,55 @@ const t = useTranslations(lang)
             </div>
           </div>
           
-          <div class="w-full lg:w-auto flex flex-col gap-4">
-            <!-- Segmented Control para Categorías -->
-            <div class="w-full flex items-center justify-between lg:justify-end gap-2">
-              <div class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 overflow-x-auto no-scrollbar w-full lg:w-auto">
-                <button class="category-btn relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-sm whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="resources" onclick="window.handleCategory('resources')">
+          <div class="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-5">
+            <!-- Segmented Control para Categorías (Scroll horizontal en móvil con sangría) -->
+            <div class="w-[calc(100%+2rem)] -ml-4 px-4 lg:w-auto lg:ml-0 lg:px-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+              <div class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 w-max">
+                <button class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="resources" onclick="window.handleCategory('resources')">
                   <img src="/img/sunflowerland/Eggplant.png" alt="Resources" class="w-4 h-4 object-contain" />
                   Resources
                 </button>
-                <button class="category-btn relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="powerups" onclick="window.handleCategory('powerups')">
+                <button class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="powerups" onclick="window.handleCategory('powerups')">
                   <img src="/img/sunflowerland/123/energy.png" alt="Power Ups" class="w-4 h-4 object-contain" />
                   Power Ups
                 </button>
-                <button class="category-btn relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="cosmetics" onclick="window.handleCategory('cosmetics')">
+                <button class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="cosmetics" onclick="window.handleCategory('cosmetics')">
                   <img src="/img/sunflowerland/123/bear.png" alt="Cosmetics" class="w-4 h-4 object-contain" />
                   Cosmetics
                 </button>
-                <button class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
-                <button class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
-              </div>
-
-              <!-- Botón de Filtros Dropdown -->
-              <div class="relative hidden group" id="filterDropdownContainer">
-                <button class="h-[38px] px-3 bg-black/40 hover:bg-white/10 border border-white/10 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer text-white/70 hover:text-white">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-                </button>
-                <!-- Popover -->
-                <div class="absolute right-0 top-[110%] mt-2 w-48 bg-terminal-dark/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-2 transform origin-top-right scale-95 group-hover:scale-100">
-                  <div class="text-[10px] font-mono text-white/40 uppercase tracking-widest px-3 py-2 mb-1 border-b border-white/5">Filtros Activos</div>
-                  <label class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 rounded-lg cursor-pointer transition-colors group/label">
-                    <input type="checkbox" value="collectibles" checked onchange="window.toggleSubCategory('collectibles')" class="sub-checkbox-common w-3.5 h-3.5 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer">
-                    <img src="/img/sunflowerland/powerups/freya_fox.png" alt="Collectibles" class="w-4 h-4 object-contain" />
-                    <span class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors">Collectibles</span>
-                  </label>
-                  <label class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 rounded-lg cursor-pointer transition-colors group/label">
-                    <input type="checkbox" value="wearables" checked onchange="window.toggleSubCategory('wearables')" class="sub-checkbox-common w-3.5 h-3.5 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer">
-                    <img src="/img/sunflowerland/123/hat-wearables.webp" alt="Wearables" class="w-4 h-4 object-contain" />
-                    <span class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors">Wearables</span>
-                  </label>
-                </div>
+                <button class="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0" disabled title="Próximamente">Buds</button>
+                <button class="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0" disabled title="Próximamente">Pets</button>
               </div>
             </div>
 
-            <!-- Ordenamiento Compacto Móvil -->
-            <div class="w-full lg:hidden flex items-center justify-between gap-2 mt-1 px-1">
-              <span class="text-[10px] font-mono text-white/40 uppercase tracking-widest">{t("sfl.market.sortby")}</span>
-              <div class="flex overflow-x-auto no-scrollbar items-center gap-1.5 pb-1">
-                <button class="px-3 py-1.5 bg-black/40 border border-white/5 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap flex items-center gap-1" onclick="window.handleSort('name')">{t("sfl.market.sort.name")} <span class="sort-icon hidden" data-col="name">↓</span></button>
-                <button class="px-3 py-1.5 bg-black/40 border border-white/5 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap flex items-center gap-1" onclick="window.handleSort('price')">{t("sfl.market.sort.price")} <span class="sort-icon hidden" data-col="price">↓</span></button>
-                <button class="px-3 py-1.5 bg-black/40 border border-white/5 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap flex items-center gap-1" onclick="window.handleSort('1d')">{t("sfl.market.sort.24h")} <span class="sort-icon hidden" data-col="1d">↓</span></button>
-                <button class="px-3 py-1.5 bg-black/40 border border-white/5 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap flex items-center gap-1" onclick="window.handleSort('7d')">{t("sfl.market.sort.7d")} <span class="sort-icon hidden" data-col="7d">↓</span></button>
-              </div>
+            <div class="hidden lg:block w-px h-10 bg-white/10"></div> <!-- Separador vertical Desktop -->
+
+            <!-- Subfiltros Integrados (Efecto Placeholder Opaco sugerido por el usuario) -->
+            <div id="subfilters-container" class="flex items-center gap-5 opacity-30 grayscale pointer-events-none transition-all duration-300 w-max pl-1 lg:pl-0">
+              <label class="flex items-center gap-2 cursor-pointer group/label">
+                <input type="checkbox" value="collectibles" checked onchange="window.toggleSubCategory('collectibles')" class="sub-checkbox-common w-4 h-4 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer">
+                <img src="/img/sunflowerland/powerups/freya_fox.png" alt="Collectibles" class="w-4 h-4 object-contain" />
+                <span class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest">Collectibles</span>
+              </label>
+              <div class="w-px h-4 bg-white/10"></div>
+              <label class="flex items-center gap-2 cursor-pointer group/label">
+                <input type="checkbox" value="wearables" checked onchange="window.toggleSubCategory('wearables')" class="sub-checkbox-common w-4 h-4 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer">
+                <img src="/img/sunflowerland/123/hat-wearables.webp" alt="Wearables" class="w-4 h-4 object-contain" />
+                <span class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest">Wearables</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Ordenamiento Móvil Estilo App (Scroll horizontal fluido que se esconde al borde) -->
+          <div class="w-[calc(100%+2rem)] -ml-4 px-4 lg:hidden overflow-x-auto no-scrollbar border-t border-white/5 pt-4 mt-1">
+            <div class="flex items-center gap-2 w-max pr-6">
+              <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0">{t("sfl.market.sortby")}</span>
+              <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('name')">{t("sfl.market.sort.name")} <span class="sort-icon hidden" data-col="name">↓</span></button>
+              <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('price')">{t("sfl.market.sort.price")} <span class="sort-icon hidden" data-col="price">↓</span></button>
+              <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('1d')">{t("sfl.market.sort.24h")} <span class="sort-icon hidden" data-col="1d">↓</span></button>
+              <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('7d')">{t("sfl.market.sort.7d")} <span class="sort-icon hidden" data-col="7d">↓</span></button>
+              <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('30d')">{t("sfl.market.sort.30d")} <span class="sort-icon hidden" data-col="30d">↓</span></button>
+              <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('180d')">{t("sfl.market.sort.180d")} <span class="sort-icon hidden" data-col="180d">↓</span></button>
             </div>
           </div>
         </div>
@@ -391,20 +386,26 @@ const t = useTranslations(lang)
     currentCategory = category;
     currentSubCategories = ['collectibles', 'wearables']; 
     
-    const filterContainer = document.getElementById('filterDropdownContainer');
+    const filterContainer = document.getElementById('subfilters-container');
     
     if (category === 'powerups' || category === 'cosmetics') {
-      if(filterContainer) filterContainer.classList.remove('hidden');
+      if(filterContainer) {
+        filterContainer.classList.remove('opacity-30', 'grayscale', 'pointer-events-none');
+        filterContainer.classList.add('opacity-100');
+      }
       document.querySelectorAll('.sub-checkbox-common').forEach(cb => cb.checked = true);
     } else {
-      if(filterContainer) filterContainer.classList.add('hidden');
+      if(filterContainer) {
+        filterContainer.classList.add('opacity-30', 'grayscale', 'pointer-events-none');
+        filterContainer.classList.remove('opacity-100');
+      }
     }
 
     document.querySelectorAll('.category-btn').forEach(btn => {
       if (btn.dataset.category === category) {
-        btn.className = "category-btn relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-sm whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2";
+        btn.className = "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2";
       } else {
-        btn.className = "category-btn relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2";
+        btn.className = "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2";
       }
     });
 
@@ -856,7 +857,8 @@ const t = useTranslations(lang)
     const term = filterText;
     const filtered = marketData.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
-                          item.key.toLowerCase().includes(term.toLowerCase());
+                          item.key.toLowerCase().includes(term.toLowerCase()) ||
+                          (item.boost && item.boost.toLowerCase().includes(term.toLowerCase()));
       
       let matchCategory = item.category === currentCategory;
       
@@ -866,6 +868,10 @@ const t = useTranslations(lang)
         if (!currentSubCategories.includes(itemType)) {
           matchSubCategory = false;
         }
+      }
+      
+      if (term !== "") {
+        return matchSearch;
       }
       
       return matchSearch && matchCategory && matchSubCategory;
@@ -895,6 +901,15 @@ const t = useTranslations(lang)
         return 0;
       });
     }
+
+    if (term !== "" && (!window.currentSort || !window.currentSort.column || window.currentSort.direction === 'none')) {
+      sortedFiltered.sort((a, b) => {
+        const aIsCurrent = a.category === currentCategory ? 1 : 0;
+        const bIsCurrent = b.category === currentCategory ? 1 : 0;
+        return bIsCurrent - aIsCurrent;
+      });
+    }
+
 
     window.__currentFilteredData = sortedFiltered;
     currentPage = 1;
@@ -930,8 +945,16 @@ const t = useTranslations(lang)
               <img src="${encodeURI('/img/sunflowerland/' + (item.category === 'resources' ? item.name + '.png' : (item.category === 'cosmetics' ? 'cosmetics/' + (item.isWearable ? 'wearables/' + (item.image || item.name + '.png') : 'collectibles/' + (item.image ? item.image.replace(/\.png$/i, '.webp') : item.name + '.webp')) : 'powerups/' + (item.isWearable ? 'wearables/' : '') + (item.image || item.name + '.png'))))}" alt="${item.name}" class="${item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
             </div>
             <div>
-              <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
-              <p class="text-[10px] ${item.category !== 'resources' ? 'text-emerald-400/80 leading-tight lg:leading-none mt-0.5 max-w-[180px] lg:max-w-none' : 'font-mono text-terminal-muted/70'}">${item.category === 'resources' ? item.key : (item.boost || "Cosmetic")}</p>
+              <div class="flex items-center gap-2 flex-wrap">
+                <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
+                ${(item.category !== currentCategory && searchInput && searchInput.value !== "") ? 
+                  `<span class="px-1 py-[1px] rounded-[3px] text-[8px] uppercase tracking-wider font-semibold ${
+                    item.category === 'powerups' ? 'bg-amber-500/10 text-amber-500/80 border border-amber-500/20' : 
+                    item.category === 'cosmetics' ? 'bg-purple-500/10 text-purple-400/80 border border-purple-500/20' : 
+                    'bg-emerald-500/10 text-emerald-500/80 border border-emerald-500/20'
+                  }">${item.category === 'powerups' ? 'Power Up' : item.category === 'cosmetics' ? 'Cosmetic' : 'Resource'}</span>` : ''}
+              </div>
+              ${(item.category === 'powerups' && item.boost) ? `<p class="text-[9px] text-emerald-400/80 leading-tight lg:leading-none mt-1 max-w-[180px] lg:max-w-none">${item.boost}</p>` : ''}
             </div>
           </div>
           <!-- Precio Móvil -->
