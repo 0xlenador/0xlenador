@@ -865,6 +865,10 @@ const t = useTranslations(lang)
     setupCarousel("dashAthAtlCarousel", "extremesProgress", 15, "__extremesAborter");
   };
 
+  let currentPage = 1;
+  const ITEMS_PER_PAGE = 30;
+  let loadMoreObserver = null;
+
   const renderTable = (filterText = "") => {
     const term = filterText;
     const filtered = marketData.filter(item => {
@@ -909,14 +913,28 @@ const t = useTranslations(lang)
       });
     }
 
-    tableBody.innerHTML = "";
+    window.__currentFilteredData = sortedFiltered;
+    currentPage = 1;
+    renderPage(1);
+  };
 
-    if (sortedFiltered.length === 0) {
+  const renderPage = (page) => {
+    if (page === 1) tableBody.innerHTML = "";
+    
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    const items = window.__currentFilteredData.slice(start, end);
+
+    if (items.length === 0 && page === 1) {
       tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmptySearch}</div>`;
       return;
     }
 
-    sortedFiltered.forEach(item => {
+    if (items.length === 0) return;
+
+    const fragment = document.createDocumentFragment();
+
+    items.forEach(item => {
       const row = document.createElement("div");
       row.className = "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_11%_18%_18%_18%] lg:items-center lg:py-3";
       row.setAttribute("data-row-id", item.name);
@@ -953,8 +971,32 @@ const t = useTranslations(lang)
           ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
         </div>
       `;
-      tableBody.appendChild(row);
+      fragment.appendChild(row);
     });
+    
+    const oldTrigger = document.getElementById("loadMoreTrigger");
+    if (oldTrigger) oldTrigger.remove();
+
+    tableBody.appendChild(fragment);
+
+    if (end < window.__currentFilteredData.length) {
+      const trigger = document.createElement("div");
+      trigger.id = "loadMoreTrigger";
+      trigger.className = "h-4 w-full opacity-0 pointer-events-none -mt-4"; 
+      tableBody.appendChild(trigger);
+      
+      if (!loadMoreObserver) {
+        loadMoreObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            currentPage++;
+            renderPage(currentPage);
+          }
+        }, { rootMargin: "300px" });
+      }
+      
+      loadMoreObserver.disconnect();
+      loadMoreObserver.observe(trigger);
+    }
   };
 
   const fetchData = async () => {
@@ -1076,9 +1118,14 @@ const t = useTranslations(lang)
     }
 
     if(searchInput) {
+      let debounceTimeout;
       searchInput.addEventListener("input", (e) => {
         const val = e.target.value;
-        renderTable(val);
+        
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+          renderTable(val);
+        }, 150);
         
         if (searchIcon && clearSearchBtn) {
           if (val.length > 0) {
