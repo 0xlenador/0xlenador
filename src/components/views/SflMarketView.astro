@@ -1155,20 +1155,26 @@ const t = useTranslations(lang)
     // Primer fetch automático
     fetchData();
 
+    let activeSparkline = null;
+    
+    const hideSparklineElements = (container) => {
+      if (!container) return;
+      const line = container.querySelector(".hover-line");
+      const dot = container.querySelector(".hover-dot");
+      const tooltip = container.querySelector(".hover-tooltip");
+      if (line) line.classList.add("hidden");
+      if (dot) dot.classList.add("hidden");
+      if (tooltip) tooltip.classList.add("hidden");
+    };
+
     // Lógica para interactividad de las gráficas
     tableBody.addEventListener("mousemove", (e) => {
       const container = e.target.closest(".sparkline-container");
       
-      // Ocultar elementos de todos los demás gráficos
-      document.querySelectorAll(".sparkline-container .hover-line:not(.hidden)").forEach(el => {
-        if (!container || !container.contains(el)) el.classList.add("hidden");
-      });
-      document.querySelectorAll(".sparkline-container .hover-dot:not(.hidden)").forEach(el => {
-        if (!container || !container.contains(el)) el.classList.add("hidden");
-      });
-      document.querySelectorAll(".sparkline-container .hover-tooltip:not(.hidden)").forEach(el => {
-        if (!container || !container.contains(el)) el.classList.add("hidden");
-      });
+      if (container !== activeSparkline) {
+        if (activeSparkline) hideSparklineElements(activeSparkline);
+        activeSparkline = container;
+      }
 
       if (!container) return;
       
@@ -1213,9 +1219,10 @@ const t = useTranslations(lang)
     });
 
     tableBody.addEventListener("mouseleave", () => {
-      document.querySelectorAll(".sparkline-container .hover-line:not(.hidden)").forEach(el => el.classList.add("hidden"));
-      document.querySelectorAll(".sparkline-container .hover-dot:not(.hidden)").forEach(el => el.classList.add("hidden"));
-      document.querySelectorAll(".sparkline-container .hover-tooltip:not(.hidden)").forEach(el => el.classList.add("hidden"));
+      if (activeSparkline) {
+        hideSparklineElements(activeSparkline);
+        activeSparkline = null;
+      }
     });
   };
 
