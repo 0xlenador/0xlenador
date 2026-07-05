@@ -508,16 +508,29 @@ const t = useTranslations(lang)
       renderTable();
     }
     
-    const safeName = itemName.replace(/"/g, '\\"');
-    const row = document.querySelector(`div[data-row-id="${safeName}"]`);
-    
-    if (row) {
-      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      row.classList.add("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
-      setTimeout(() => {
-        row.classList.remove("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
-      }, 1500);
+    if (window.__currentFilteredData) {
+      const targetIndex = window.__currentFilteredData.findIndex(item => item.name === itemName);
+      if (targetIndex !== -1) {
+        const targetPage = Math.floor(targetIndex / ITEMS_PER_PAGE) + 1;
+        while (currentPage < targetPage) {
+          currentPage++;
+          renderPage(currentPage);
+        }
+      }
     }
+    
+    requestAnimationFrame(() => {
+      const safeName = itemName.replace(/"/g, '\\"');
+      const row = document.querySelector(`div[data-row-id="${safeName}"]`);
+      
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.add("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
+        setTimeout(() => {
+          row.classList.remove("!bg-emerald-500/20", "lg:rounded-xl", "transition-all", "duration-500");
+        }, 1500);
+      }
+    });
   };
 
   const formatNumber = (num, decimals = 2) => {
