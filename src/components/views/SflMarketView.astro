@@ -18,17 +18,19 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<main class="max-w-7xl mx-auto px-6 pt-10 pb-20">
-    <div class="mb-6">
-      <div class="flex items-center gap-4">
-        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
-        <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
+<main class="max-w-7xl mx-auto px-6">
+    <fieldset class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative block min-w-0">
+      <legend class="ml-6 lg:ml-8 px-3 flex items-center gap-2 float-none w-auto">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-5 h-5 rounded-full object-contain bg-white/[0.05] p-[2px] border border-white/[0.1]" />
+        <span class="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest font-semibold">
           {t("sfl.breadcrumb")}
-        </p>
-      </div>
-    </div>
+        </span>
+      </legend>
 
-    <div class="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative overflow-hidden">
+      <div class="absolute inset-0 rounded-[24px] overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      </div>
+
       <SflTabs activeTab="mercado" />
       
       <div class="mb-10 relative z-10 text-center sm:text-left">
@@ -39,8 +41,6 @@ const t = useTranslations(lang)
           {t("sfl.intro")}
         </p>
       </div>
-      <!-- Glow effect -->
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
       
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 relative z-10">
         <div class="w-full md:w-2/3">
@@ -252,8 +252,9 @@ const t = useTranslations(lang)
             <!-- Filas/Cards dinámicas JS -->
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </fieldset>
 
     <!-- FAQ Section SEO Optimized -->
     <section class="mt-16 mb-8 max-w-4xl mx-auto">

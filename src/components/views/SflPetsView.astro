@@ -115,19 +115,16 @@ const getShrineCostHtml = (shrine) => {
 
 ---
 
-<main class="max-w-7xl mx-auto px-6 pt-10 pb-20">
+<main class="max-w-7xl mx-auto px-6">
     
-    <div class="mb-6">
-      <div class="flex items-center gap-4">
-        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-10 h-10 rounded-full object-contain bg-white/[0.05] p-1 border border-white/[0.1]" />
-        <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em]">
-          {t('sfl.pets.breadcrumb')}
-        </p>
-      </div>
-    </div>
-
     <!-- CALCULATOR DASHBOARD -->
-    <div class="mb-12 bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-2xl">
+    <fieldset class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-12 shadow-2xl relative block min-w-0">
+      <legend class="ml-6 lg:ml-8 px-3 flex items-center gap-2 float-none w-auto">
+        <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-5 h-5 rounded-full object-contain bg-white/[0.05] p-[2px] border border-white/[0.1]" />
+        <span class="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest font-semibold">
+          {t('sfl.pets.breadcrumb')}
+        </span>
+      </legend>
       <SflTabs activeTab="mascotas" />
       
       <div class="mb-10 text-center sm:text-left">
@@ -293,7 +290,7 @@ const getShrineCostHtml = (shrine) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </fieldset>
     <div class="text-center mb-12">
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl mx-auto">
         {t('sfl.pets.intro')}
