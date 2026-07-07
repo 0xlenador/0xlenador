@@ -29,7 +29,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add public/api/sfl_data.json public/api/raw_sfl_history.json
+          git add public/api/sfl_data.json public/api/history/
           # Si no hay cambios git commit devuelve error, lo silenciamos y salimos amigablemente
           git commit -m "chore: actualización automática de datos de mercado SFL" || echo "Sin cambios para commitear"
           git push
