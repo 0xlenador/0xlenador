@@ -3,7 +3,6 @@ import path from 'path';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
-// Solo los IDs que queremos mostrar en el frontend (reducirá el JSON de ~8MB a ~500KB)
 const sflIds = require('../src/content/data/sfl/resources.json');
 const sflPowerUps = require('../src/content/data/sfl/powerups.json');
 const sflCosmetics = require('../src/content/data/sfl/cosmetics.json');
@@ -15,8 +14,6 @@ const ALLOWED_KEYS = new Set([
   ...(sflCosmetics.cosmetics.collectibles ? Object.keys(sflCosmetics.cosmetics.collectibles).map(id => `collectibles-${id}`) : [])
 ]);
 
-// Problema 5 — Forzar siempre UTC para que coincida con el servidor de GitHub Actions
-// y con el ciclo de reportes diarios de la API de Sunflower Land
 function getDateString(daysOffset) {
   const dateObj = new Date();
   dateObj.setUTCDate(dateObj.getUTCDate() - daysOffset);
@@ -26,24 +23,30 @@ function getDateString(daysOffset) {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+// Helpers para Semestres
+function getSemesterString(dateStr) {
+  if (dateStr === "live") return "live";
+  const [yyyy, mm] = dateStr.split('-');
+  const month = parseInt(mm, 10);
+  const half = month <= 6 ? 'H1' : 'H2';
+  return `${yyyy}-${half}`;
+}
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Problema 6 — Reintentos automáticos con backoff exponencial
-// Si la red falla un instante, espera 1s, 2s, 4s antes de rendirse
 async function fetchWithRetry(url, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const res = await fetch(url);
       if (res.ok) return res;
-      // Errores de servidor (5xx) → reintentamos; errores de cliente (4xx) → no
       if (res.status < 500) return res;
       console.log(`  ↩ Intento ${attempt}/${maxRetries} falló con status ${res.status}. Reintentando...`);
     } catch (e) {
       console.log(`  ↩ Intento ${attempt}/${maxRetries} falló (red): ${e.message}. Reintentando...`);
     }
-    if (attempt < maxRetries) await sleep(1000 * Math.pow(2, attempt - 1)); // 1s, 2s, 4s
+    if (attempt < maxRetries) await sleep(1000 * Math.pow(2, attempt - 1));
   }
-  return null; // Todos los intentos fallaron
+  return null;
 }
 
 async function fetchSFLDate(dateStr) {
@@ -62,7 +65,7 @@ async function fetchSFLDate(dateStr) {
         const keys = Object.keys(data.data.reports);
         if (keys.length > 0) return { items: data.data.reports[keys[0]].items, flowerPrice };
       } else if (data.data.reports[dateStr]) {
-        return { items: data.data.reports[dateStr].items, flowerPrice: null }; // El historial no guarda flowerPrice por ahora
+        return { items: data.data.reports[dateStr].items, flowerPrice: null };
       }
     }
   } catch (e) {
@@ -73,21 +76,63 @@ async function fetchSFLDate(dateStr) {
 
 async function updateSFLData() {
   try {
-    console.log("Iniciando motor de recolección de precios históricos SFL...");
+    console.log("Iniciando motor avanzado de recolección SFL (Semestral)...");
 
-    let rawData = {}; // key: dateStr, value: items obj
-    const cachePath = path.join(process.cwd(), 'public', 'api', 'raw_sfl_history.json');
+    const historyDir = path.join(process.cwd(), 'public', 'api', 'history');
+    await fs.mkdir(historyDir, { recursive: true });
+
+    let rawData = {}; 
+    let hasChanges = false;
+    let semestersLoaded = new Set();
+    let migratedDatesCount = 0;
+
+    // 1. MIGRACIÓN INICIAL (Si existe el archivo viejo, lo lee y lo inyecta a la memoria)
+    const oldCachePath = path.join(process.cwd(), 'public', 'api', 'raw_sfl_history.json');
     try {
-      const cached = await fs.readFile(cachePath, 'utf8');
-      rawData = JSON.parse(cached);
-      console.log(`Caché cargado con ${Object.keys(rawData).length} días.`);
-    } catch (e) {
-      console.log("Caché no encontrado, se descargará todo el historial inicial.");
+      const oldCached = await fs.readFile(oldCachePath, 'utf8');
+      const oldData = JSON.parse(oldCached);
+      for (const [dateStr, items] of Object.entries(oldData)) {
+        if (items !== "error") {
+          rawData[dateStr] = items;
+          semestersLoaded.add(getSemesterString(dateStr));
+          migratedDatesCount++;
+        }
+      }
+      if (migratedDatesCount > 0) {
+        console.log(`Migrando ${migratedDatesCount} días desde el archivo viejo a la nueva estructura semestral.`);
+        hasChanges = true; 
+      }
+    } catch(e) {
+      // No existe archivo viejo, omitimos migración
+    }
+
+    // 2. CARGA INTELIGENTE (Solo cargar archivos recientes necesarios)
+    const maxDays = 210; // 7 meses
+    const recentSemesters = new Set();
+    for (let offset = 0; offset <= maxDays; offset++) {
+      recentSemesters.add(getSemesterString(getDateString(offset)));
+    }
+
+    for (const sem of recentSemesters) {
+      if (!semestersLoaded.has(sem) && sem !== "live") {
+        const semPath = path.join(historyDir, `${sem}.json`);
+        try {
+          const semData = JSON.parse(await fs.readFile(semPath, 'utf8'));
+          for (const [dateStr, items] of Object.entries(semData)) {
+            rawData[dateStr] = items;
+          }
+          semestersLoaded.add(sem);
+          console.log(`Semestre ${sem} cargado de disco.`);
+        } catch(e) {
+          // Archivo no existe aún
+          semestersLoaded.add(sem);
+        }
+      }
     }
 
     let currentFlowerPrice = null;
 
-    const maxDays = 182;
+    // 3. DESCARGA DE DÍAS FALTANTES
     for (let offset = 0; offset <= maxDays; offset++) {
       const dateStr = getDateString(offset);
       if (!rawData[dateStr] || rawData[dateStr] === "error") {
@@ -97,55 +142,73 @@ async function updateSFLData() {
           if (offset === 0 && result.flowerPrice) {
             currentFlowerPrice = result.flowerPrice;
           }
-          await sleep(500); // 500ms entre llamadas exitosas
+          hasChanges = true;
+          await sleep(500); 
         } else {
           rawData[dateStr] = "error";
         }
       }
     }
 
-    // Limpiar errores antes de guardar el caché
-    const cacheToSave = {};
-    for (const [k, v] of Object.entries(rawData)) {
-      if (v !== "error") cacheToSave[k] = v;
-    }
-    const dirPath = path.join(process.cwd(), 'public', 'api');
-    await fs.mkdir(dirPath, { recursive: true });
-    await fs.writeFile(cachePath, JSON.stringify(cacheToSave));
-
-    // Obtener data en vivo (último reporte generado)
+    // 4. DATA EN VIVO
     const liveResult = await fetchSFLDate("live");
     if (liveResult && liveResult.items) {
       rawData["live"] = liveResult.items;
       if (liveResult.flowerPrice) {
         currentFlowerPrice = liveResult.flowerPrice;
       }
-
     }
 
-    // Validar el día actual (o fallback)
+    // 5. GUARDAR DATOS HISTÓRICOS (Solo si hubo cambios nuevos)
+    if (hasChanges) {
+      const semestersData = {};
+      for (const [dateStr, items] of Object.entries(rawData)) {
+        if (items === "error" || dateStr === "live") continue;
+        const sem = getSemesterString(dateStr);
+        if (!semestersData[sem]) semestersData[sem] = {};
+        semestersData[sem][dateStr] = items;
+      }
+      
+      for (const [sem, data] of Object.entries(semestersData)) {
+        const semPath = path.join(historyDir, `${sem}.json`);
+        await fs.writeFile(semPath, JSON.stringify(data));
+        console.log(`✅ Semestre ${sem} guardado (${Object.keys(data).length} días).`);
+      }
+      
+      // Borrar el archivo viejo tras migración exitosa
+      if (migratedDatesCount > 0) {
+         try {
+           await fs.unlink(oldCachePath);
+           console.log(`🗑️ Archivo viejo raw_sfl_history.json eliminado exitosamente.`);
+         } catch(e) {
+           console.log(`No se pudo borrar el archivo viejo.`);
+         }
+      }
+    } else {
+      console.log(`⚡ Sin cambios en historia (API al día). Omitiendo escritura semestral.`);
+    }
+
+    // 6. GENERAR sfl_data.json (Siempre se ejecuta para actualizar live)
+    const dirPath = path.join(process.cwd(), 'public', 'api');
+    
     let baseItems = rawData["live"] || rawData[getDateString(0)];
     if (!baseItems) {
       console.log(`Intentando fallback dinámico para 0d usando datos de ayer...`);
-      // ¡Usamos los datos que ya están en la RAM en lugar de descargarlos de nuevo!
       const fallback = rawData[getDateString(1)]; 
       if (fallback) baseItems = fallback;
-      else throw new Error("No se pudo obtener la data principal (offset 0 y 1 fallaron).");
+      else throw new Error("No se pudo obtener la data principal.");
     }
 
-    // Procesar la data para el formato súper eficiente del frontend
     const processedItems = {};
-
     for (const [itemKey, itemData] of Object.entries(baseItems)) {
-      // Helper para extraer precios seguros
-      const getPrice = (offset) => {
+      
+      const getItemPrice = (offset) => {
         if (offset === 0 && rawData["live"]) return rawData["live"][itemKey] ? rawData["live"][itemKey].latestSale : null;
-        
         const dStr = getDateString(offset);
-        return cacheToSave[dStr] && cacheToSave[dStr][itemKey] ? cacheToSave[dStr][itemKey].latestSale : null;
+        return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].latestSale : null;
       };
 
-      const p0 = getPrice(0) || itemData.latestSale;
+      const p0 = getItemPrice(0) || itemData.latestSale;
       if (!p0) continue;
 
       processedItems[itemKey] = {
@@ -155,29 +218,23 @@ async function updateSFLData() {
         volume: itemData.volume || 0,
         trades: itemData.trades || 0,
         history: {
-          // Fallbacks de porcentajes
-          "1d": getPrice(1) || getPrice(2) || getPrice(3),
-          "7d": getPrice(7) || getPrice(6) || getPrice(5) || getPrice(4),
-          "30d": getPrice(30) || getPrice(31) || getPrice(29) || getPrice(32) || getPrice(28),
-          "180d": getPrice(180) || getPrice(181) || getPrice(179) || getPrice(182) || getPrice(178),
-          
-          // Sparklines continuos (invierten el array para que el más antiguo esté a la izquierda)
-          "sparkline7d": Array.from({length: 8}, (_, i) => 7 - i).map(getPrice),
-          "sparkline30d": Array.from({length: 31}, (_, i) => 30 - i).map(getPrice),
-          "sparkline180d": Array.from({length: 181}, (_, i) => 180 - i).map(getPrice)
+          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3),
+          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4),
+          "30d": getItemPrice(30) || getItemPrice(31) || getItemPrice(29) || getItemPrice(32) || getItemPrice(28),
+          "180d": getItemPrice(180) || getItemPrice(181) || getItemPrice(179) || getItemPrice(182) || getItemPrice(178),
+          "sparkline7d": Array.from({length: 8}, (_, i) => 7 - i).map(getItemPrice),
+          "sparkline30d": Array.from({length: 31}, (_, i) => 30 - i).map(getItemPrice),
+          "sparkline180d": Array.from({length: 181}, (_, i) => 180 - i).map(getItemPrice)
         }
       };
     }
 
-    // Filtrar para conservar SOLO los items que están en sfl_ids.json
     const filteredItems = {};
     for (const [key, val] of Object.entries(processedItems)) {
       if (ALLOWED_KEYS.has(key)) {
         filteredItems[key] = val;
       }
     }
-
-    console.log(`📦 Items en bruto: ${Object.keys(processedItems).length} → Items filtrados: ${Object.keys(filteredItems).length}`);
 
     const finalJSON = {
       lastUpdated: new Date().toISOString(),
@@ -188,7 +245,7 @@ async function updateSFLData() {
     const filePath = path.join(dirPath, 'sfl_data.json');
     await fs.writeFile(filePath, JSON.stringify(finalJSON, null, 2));
     
-    console.log(`✅ Historial procesado y guardado en: ${filePath}`);
+    console.log(`🚀 API en vivo procesada y optimizada en: ${filePath}`);
 
   } catch (error) {
     console.error("Error crítico:", error);
