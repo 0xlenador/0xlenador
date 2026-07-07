@@ -635,12 +635,18 @@ const t = useTranslations(lang)
     const renderDashItem = (item, subtitle) => {
       if (!item) return '';
       let basePath = '/img/sunflowerland/';
+      let isCollectible = false;
       if (item.category === 'powerups') {
         basePath += 'powerups/' + (item.isWearable ? 'wearables/' : '');
       } else if (item.category === 'cosmetics') {
         basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : 'collectibles/');
+        if (!item.isWearable) isCollectible = true;
       }
-      const imgSrc = encodeURI(basePath + (item.image || item.name + '.png'));
+      let filename = item.image || item.name + '.png';
+      if (isCollectible) {
+        filename = filename.replace(/\.png$/i, '.webp');
+      }
+      const imgSrc = encodeURI(basePath + filename);
       const imgSize = item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]';
       return `
         <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${item.name}', event)" title="${item.name}">
@@ -753,9 +759,17 @@ const t = useTranslations(lang)
       const renderMiniIcons = (items, isNotRes) => {
         return items.map(item => {
           let basePath = '/img/sunflowerland/';
+          let isCollectible = false;
           if (item.category === 'powerups') basePath += 'powerups/' + (item.isWearable ? 'wearables/' : '');
-          else if (item.category === 'cosmetics') basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : 'collectibles/');
-          const imgSrc = encodeURI(basePath + (item.image || item.name + '.png'));
+          else if (item.category === 'cosmetics') {
+            basePath += 'cosmetics/' + (item.isWearable ? 'wearables/' : 'collectibles/');
+            if (!item.isWearable) isCollectible = true;
+          }
+          let filename = item.image || item.name + '.png';
+          if (isCollectible) {
+            filename = filename.replace(/\.png$/i, '.webp');
+          }
+          const imgSrc = encodeURI(basePath + filename);
           return `
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
             <img src="${imgSrc}" class="${isNotRes ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]'} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
@@ -851,7 +865,7 @@ const t = useTranslations(lang)
   const ITEMS_PER_PAGE = 30;
   let loadMoreObserver = null;
 
-  const renderTable = (filterText = "") => {
+  const renderTable = (filterText = "", retainPages = false) => {
     const term = filterText;
     const filtered = marketData.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
@@ -910,8 +924,16 @@ const t = useTranslations(lang)
 
 
     window.__currentFilteredData = sortedFiltered;
-    currentPage = 1;
-    renderPage(1);
+    
+    if (retainPages) {
+      const targetPage = currentPage;
+      for (let p = 1; p <= targetPage; p++) {
+        renderPage(p);
+      }
+    } else {
+      currentPage = 1;
+      renderPage(1);
+    }
   };
 
   const renderPage = (page) => {
@@ -1003,11 +1025,16 @@ const t = useTranslations(lang)
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (isInitialLoad = false) => {
     try {
-      loadingState.classList.remove("hidden");
-      errorState.classList.add("hidden");
-      dataContainer.classList.add("hidden");
+      if (isInitialLoad) {
+        if(loadingState) loadingState.classList.remove("hidden");
+        if(dataContainer) dataContainer.classList.add("hidden");
+      } else {
+        if(dataContainer) dataContainer.classList.add("opacity-50", "pointer-events-none");
+        if(fetchBtn) fetchBtn.classList.add("animate-pulse");
+      }
+      if(errorState) errorState.classList.add("hidden");
 
       // Consultar el asset estático que actualiza el cron job
       const response = await fetch('/api/sfl_data.json');
@@ -1092,8 +1119,14 @@ const t = useTranslations(lang)
       }
 
       renderDashboard();
-      renderTable(searchInput.value);
-      dataContainer.classList.remove("hidden");
+      renderTable(searchInput ? searchInput.value : "", !isInitialLoad);
+      
+      if (isInitialLoad) {
+        if(dataContainer) dataContainer.classList.remove("hidden");
+      } else {
+        if(dataContainer) dataContainer.classList.remove("opacity-50", "pointer-events-none");
+        if(fetchBtn) fetchBtn.classList.remove("animate-pulse");
+      }
 
     } catch (err) {
       console.error(err);
@@ -1105,7 +1138,9 @@ const t = useTranslations(lang)
       if(priceEl) priceEl.innerText = "Error";
       if(imgEl) imgEl.classList.remove("animate-pulse");
     } finally {
-      loadingState.classList.add("hidden");
+      if (isInitialLoad) {
+        if(loadingState) loadingState.classList.add("hidden");
+      }
     }
   };
 
@@ -1117,7 +1152,7 @@ const t = useTranslations(lang)
 
     if(fetchBtn) {
       fetchBtn.addEventListener("click", () => {
-        fetchData();
+        fetchData(false);
       });
     }
 
@@ -1157,7 +1192,7 @@ const t = useTranslations(lang)
     }
 
     // Primer fetch automático
-    fetchData();
+    fetchData(true);
 
     let activeSparkline = null;
     
