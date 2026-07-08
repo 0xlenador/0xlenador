@@ -252,7 +252,6 @@ const t = useTranslations(lang)
         </div>
       </div>
     </fieldset>
-
     <!-- FAQ Section SEO Optimized -->
     <section class="mt-16 mb-8 max-w-4xl mx-auto">
       <div class="text-center mb-10">
@@ -865,7 +864,7 @@ const t = useTranslations(lang)
   const ITEMS_PER_PAGE = 30;
   let loadMoreObserver = null;
 
-  const renderTable = (filterText = "", retainPages = false) => {
+  const renderTable = (filterText = "") => {
     const term = filterText;
     const filtered = marketData.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
@@ -924,16 +923,8 @@ const t = useTranslations(lang)
 
 
     window.__currentFilteredData = sortedFiltered;
-    
-    if (retainPages) {
-      const targetPage = currentPage;
-      for (let p = 1; p <= targetPage; p++) {
-        renderPage(p);
-      }
-    } else {
-      currentPage = 1;
-      renderPage(1);
-    }
+    currentPage = 1;
+    renderPage(1);
   };
 
   const renderPage = (page) => {
@@ -1025,16 +1016,11 @@ const t = useTranslations(lang)
     }
   };
 
-  const fetchData = async (isInitialLoad = false) => {
+  const fetchData = async () => {
     try {
-      if (isInitialLoad) {
-        if(loadingState) loadingState.classList.remove("hidden");
-        if(dataContainer) dataContainer.classList.add("hidden");
-      } else {
-        if(dataContainer) dataContainer.classList.add("opacity-50", "pointer-events-none");
-        if(fetchBtn) fetchBtn.classList.add("animate-pulse");
-      }
-      if(errorState) errorState.classList.add("hidden");
+      loadingState.classList.remove("hidden");
+      errorState.classList.add("hidden");
+      dataContainer.classList.add("hidden");
 
       // Consultar el asset estático que actualiza el cron job
       const response = await fetch('/api/sfl_data.json');
@@ -1109,46 +1095,18 @@ const t = useTranslations(lang)
       const changeEl = document.getElementById("sflPriceChange");
       const imgEl = document.getElementById("sflTokenImg");
       
-      const tabGemFlowerUsdEls = document.querySelectorAll(".tabGemFlowerUsd");
-      const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd");
-      
       if (json.flowerPrice) {
-        const flowerPriceNum = parseFloat(json.flowerPrice);
-        if(priceEl) priceEl.innerText = "$" + flowerPriceNum.toFixed(4);
+        if(priceEl) priceEl.innerText = "$" + parseFloat(json.flowerPrice).toFixed(4);
         if(changeEl) changeEl.innerText = "";
         if(imgEl) imgEl.classList.remove("animate-pulse");
-        
-        tabGemFlowerUsdEls.forEach(el => {
-          el.innerText = "$" + (1.97 * flowerPriceNum).toFixed(4);
-          el.classList.remove("animate-pulse");
-        });
-        tabFlowerUsdEls.forEach(el => {
-          el.innerText = "$" + flowerPriceNum.toFixed(4);
-          el.classList.remove("animate-pulse");
-        });
       } else {
         if(priceEl) priceEl.innerText = "N/A";
         if(imgEl) imgEl.classList.remove("animate-pulse");
-        
-        tabGemFlowerUsdEls.forEach(el => {
-          el.innerText = "N/A";
-          el.classList.remove("animate-pulse");
-        });
-        tabFlowerUsdEls.forEach(el => {
-          el.innerText = "N/A";
-          el.classList.remove("animate-pulse");
-        });
       }
 
       renderDashboard();
-      renderTable(searchInput ? searchInput.value : "", !isInitialLoad);
-      
-      if (isInitialLoad) {
-        if(dataContainer) dataContainer.classList.remove("hidden");
-      } else {
-        if(dataContainer) dataContainer.classList.remove("opacity-50", "pointer-events-none");
-        if(fetchBtn) fetchBtn.classList.remove("animate-pulse");
-      }
+      renderTable(searchInput ? searchInput.value : "");
+      dataContainer.classList.remove("hidden");
 
     } catch (err) {
       console.error(err);
@@ -1160,9 +1118,7 @@ const t = useTranslations(lang)
       if(priceEl) priceEl.innerText = "Error";
       if(imgEl) imgEl.classList.remove("animate-pulse");
     } finally {
-      if (isInitialLoad) {
-        if(loadingState) loadingState.classList.add("hidden");
-      }
+      loadingState.classList.add("hidden");
     }
   };
 
@@ -1174,7 +1130,7 @@ const t = useTranslations(lang)
 
     if(fetchBtn) {
       fetchBtn.addEventListener("click", () => {
-        fetchData(false);
+        fetchData();
       });
     }
 
@@ -1214,7 +1170,7 @@ const t = useTranslations(lang)
     }
 
     // Primer fetch automático
-    fetchData(true);
+    fetchData();
 
     let activeSparkline = null;
     
