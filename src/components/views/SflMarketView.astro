@@ -43,7 +43,7 @@ const t = useTranslations(lang)
           </p>
         </div>
         
-        <div class="w-full lg:w-auto flex justify-center sm:justify-start lg:justify-end shrink-0 lg:pt-1">
+        <div class="hidden sm:flex w-full lg:w-auto justify-center sm:justify-start lg:justify-end shrink-0 lg:pt-1">
           <div class="bg-white/[0.02] border border-emerald-500/20 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(16,185,129,0.05)] cursor-help hover:border-emerald-500/40 transition-colors" title="Precio actual de Flower en tiempo real">
             <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/flower.jpg" alt="Flower Token" class="w-full h-full object-contain animate-pulse drop-shadow-sm" id="sflTokenImg" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp'" />
@@ -1109,13 +1109,35 @@ const t = useTranslations(lang)
       const changeEl = document.getElementById("sflPriceChange");
       const imgEl = document.getElementById("sflTokenImg");
       
+      const tabGemFlowerUsdEls = document.querySelectorAll(".tabGemFlowerUsd");
+      const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd");
+      
       if (json.flowerPrice) {
-        if(priceEl) priceEl.innerText = "$" + parseFloat(json.flowerPrice).toFixed(4);
+        const flowerPriceNum = parseFloat(json.flowerPrice);
+        if(priceEl) priceEl.innerText = "$" + flowerPriceNum.toFixed(4);
         if(changeEl) changeEl.innerText = "";
         if(imgEl) imgEl.classList.remove("animate-pulse");
+        
+        tabGemFlowerUsdEls.forEach(el => {
+          el.innerText = "$" + (1.97 * flowerPriceNum).toFixed(4);
+          el.classList.remove("animate-pulse");
+        });
+        tabFlowerUsdEls.forEach(el => {
+          el.innerText = "$" + flowerPriceNum.toFixed(4);
+          el.classList.remove("animate-pulse");
+        });
       } else {
         if(priceEl) priceEl.innerText = "N/A";
         if(imgEl) imgEl.classList.remove("animate-pulse");
+        
+        tabGemFlowerUsdEls.forEach(el => {
+          el.innerText = "N/A";
+          el.classList.remove("animate-pulse");
+        });
+        tabFlowerUsdEls.forEach(el => {
+          el.innerText = "N/A";
+          el.classList.remove("animate-pulse");
+        });
       }
 
       renderDashboard();
