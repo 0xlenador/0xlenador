@@ -879,7 +879,7 @@ const t = useTranslations(lang)
   const ITEMS_PER_PAGE = 30;
   let loadMoreObserver = null;
 
-  const renderTable = (filterText = "") => {
+  const renderTable = (filterText = "", isInitialLoad = false) => {
     const term = filterText;
     const filtered = marketData.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(term.toLowerCase()) || 
@@ -936,10 +936,19 @@ const t = useTranslations(lang)
       });
     }
 
-
     window.__currentFilteredData = sortedFiltered;
-    currentPage = 1;
-    renderPage(1);
+    
+    if (isInitialLoad) {
+      const savedPage = parseInt(sessionStorage.getItem('sfl_market_page')) || 1;
+      for (let i = 1; i <= savedPage; i++) {
+        currentPage = i;
+        renderPage(i);
+      }
+    } else {
+      currentPage = 1;
+      sessionStorage.setItem('sfl_market_page', 1);
+      renderPage(1);
+    }
   };
 
   const renderPage = (page) => {
@@ -1021,6 +1030,7 @@ const t = useTranslations(lang)
         loadMoreObserver = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
             currentPage++;
+            sessionStorage.setItem('sfl_market_page', currentPage);
             renderPage(currentPage);
           }
         }, { rootMargin: "300px" });
@@ -1120,8 +1130,30 @@ const t = useTranslations(lang)
       }
 
       renderDashboard();
-      renderTable(searchInput ? searchInput.value : "");
-      dataContainer.classList.remove("hidden");
+      renderTable(searchInput ? searchInput.value : "", true);
+      
+      const savedScroll = sessionStorage.getItem('sfl_market_scroll');
+      if (savedScroll) {
+        // Ocultar temporalmente para evitar el "salto visual"
+        dataContainer.style.opacity = '0';
+        dataContainer.classList.remove("hidden");
+        
+        setTimeout(() => {
+          window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+          sessionStorage.removeItem('sfl_market_scroll');
+          
+          // Revelar suavemente
+          dataContainer.style.transition = 'opacity 0.2s ease-in-out';
+          dataContainer.style.opacity = '1';
+          
+          setTimeout(() => {
+            dataContainer.style.transition = '';
+            dataContainer.style.opacity = '';
+          }, 250);
+        }, 20); // Damos un margen mínimo al navegador para renderizar el alto de la página
+      } else {
+        dataContainer.classList.remove("hidden");
+      }
 
     } catch (err) {
       console.error(err);
@@ -1139,12 +1171,23 @@ const t = useTranslations(lang)
 
   // Prevenir inicializaciones dobles en Astro
   const init = () => {
+    // Evitar que el navegador salte al fondo durante las recargas asíncronas
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
     // Si ya inicializamos, salimos
     if (window.__sflMarketInitialized) return;
     window.__sflMarketInitialized = true;
 
+    // Guardar la posición de scroll exacta antes de recargar/salir
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('sfl_market_scroll', window.scrollY);
+    });
+
     if(fetchBtn) {
       fetchBtn.addEventListener("click", () => {
+        sessionStorage.setItem('sfl_market_scroll', window.scrollY);
         fetchData();
       });
     }
