@@ -33,7 +33,7 @@ const tabs = [
 ---
 
 <div class="relative z-20 w-full mb-1 lg:mb-2">
-  <div class="bg-black/20 border border-white/5 rounded-2xl p-1.5 flex items-center w-full">
+  <div class="bg-black/20 border border-white/5 rounded-xl p-1 flex items-center w-full">
     {tabs.map((tab) => {
       const isActive = tab.id === activeTab;
       return (
@@ -41,7 +41,7 @@ const tabs = [
           href={tab.href}
           data-astro-prefetch
           class:list={[
-            "flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-sm font-bold transition-all duration-300 group",
+            "flex-1 flex items-center justify-center gap-1.5 px-2 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300 group",
             isActive
               ? "bg-white/5 text-emerald-400 shadow-sm border border-white/5"
               : "text-white/40 hover:text-white/80 hover:bg-white/[0.02] border border-transparent"
@@ -51,7 +51,7 @@ const tabs = [
             src={tab.icon} 
             alt={tab.label} 
             class:list={[
-              "w-5 h-5 sm:w-6 sm:h-6 object-contain drop-shadow-md", 
+              "w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow-md", 
               isActive ? "opacity-100 scale-110" : "opacity-50 grayscale-[80%] transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100"
             ]} 
             loading="lazy" 
@@ -62,3 +62,150 @@ const tabs = [
     })}
   </div>
 </div>
+<style>
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+  .marquee-container {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+  .marquee-content {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    animation: marquee 12s linear infinite;
+    padding-right: 0.375rem; /* Equivalent to gap-1.5 */
+  }
+  @media (min-width: 640px) {
+    .marquee-container {
+      width: auto;
+      overflow: visible;
+      mask-image: none !important;
+      -webkit-mask-image: none !important;
+    }
+    .marquee-content {
+      animation: none !important;
+      padding-right: 0;
+    }
+    .marquee-duplicate {
+      display: none !important;
+    }
+  }
+</style>
+
+  <div class="mt-2.5 mb-6 lg:mb-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] font-mono text-white/50 w-full px-0 sm:px-2">
+    
+    <div class="marquee-container" style="-webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);">
+      
+      <div class="marquee-content gap-1.5 sm:gap-2">
+        <div class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0">
+          <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain drop-shadow-sm" loading="lazy" />
+          <span class="text-white/80 font-bold tracking-wide">1:1000</span>
+        </div>
+        
+        <div class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0">
+          <img src="/img/sunflowerland/123/Gem.png" alt="Gem" class="w-3.5 h-3.5 object-contain drop-shadow-sm" loading="lazy" />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            20:
+            <img src="/img/sunflowerland/flower.jpg" alt="logo de FLOWER" class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm" />
+            1.97 
+            <span class="text-white/30 mx-0.5">|</span>
+            <span class="tabGemFlowerUsd"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0">
+          <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm" />
+          <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+        </div>
+      </div>
+      
+      <!-- Duplicado solo visible en moviles -->
+      <div class="marquee-content marquee-duplicate gap-1.5" aria-hidden="true">
+        <div class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0">
+          <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain drop-shadow-sm" loading="lazy" />
+          <span class="text-white/80 font-bold tracking-wide">1:1000</span>
+        </div>
+        
+        <div class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0">
+          <img src="/img/sunflowerland/123/Gem.png" alt="Gem" class="w-3.5 h-3.5 object-contain drop-shadow-sm" loading="lazy" />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            20:
+            <img src="/img/sunflowerland/flower.jpg" alt="logo de FLOWER" class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm" />
+            1.97 
+            <span class="text-white/30 mx-0.5">|</span>
+            <span class="tabGemFlowerUsd"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0">
+          <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm" />
+          <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex flex-row items-center justify-center gap-1.5 sm:gap-2 w-full sm:w-auto mt-1 sm:mt-0">
+      <div class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 whitespace-nowrap">
+        <img src="/img/sunflowerland/123/0xlenador-bumpkin.webp" alt="Bumpkin" class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm" loading="lazy" />
+        <span>{t('sfl.tabs.visitLand')}</span>
+        <a href="https://sunflower-land.com/play/#/visit/105076" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-bold">
+          105076
+        </a>
+      </div>
+
+      <div class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-emerald-500/10 whitespace-nowrap">
+        <img src="/img/sunflowerland/cosmetics/collectibles/mini_floating_island.webp" alt="Island" class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm" loading="lazy" />
+        <span>
+          {t('sfl.tabs.noLand')}
+          <span class="hidden sm:inline"> {t('sfl.tabs.startHere')}</span>
+        </span>
+        <a href="https://sunflower-land.com/play/?ref=Oxlenador" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-bold">
+          {t('sfl.tabs.clickHere')}
+        </a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const updateTabPrices = async () => {
+    try {
+      const response = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`);
+      if (!response.ok) return;
+      const json = await response.json();
+      
+      if (json.flowerPrice) {
+        const flowerPriceNum = parseFloat(json.flowerPrice);
+        const tabGemFlowerUsdEls = document.querySelectorAll(".tabGemFlowerUsd");
+        const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd");
+        
+        if (tabGemFlowerUsdEls.length > 0) {
+          tabGemFlowerUsdEls.forEach(el => {
+            el.innerText = "$" + (1.97 * flowerPriceNum).toFixed(4);
+            el.classList.remove("animate-pulse");
+          });
+        }
+        if (tabFlowerUsdEls.length > 0) {
+          tabFlowerUsdEls.forEach(el => {
+            el.innerText = "$" + flowerPriceNum.toFixed(4);
+            el.classList.remove("animate-pulse");
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Error fetching SFL tab prices", e);
+    }
+  };
+
+  document.addEventListener("astro:page-load", updateTabPrices);
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(updateTabPrices, 1);
+  } else {
+    document.addEventListener("DOMContentLoaded", updateTabPrices);
+  }
+</script>
