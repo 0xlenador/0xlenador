@@ -18,8 +18,8 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<main class="max-w-7xl mx-auto px-6">
-    <fieldset class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 mb-10 shadow-2xl relative block min-w-0" style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);">
+<main class="max-w-7xl mx-auto sm:px-6">
+    <fieldset class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-[24px] p-2 lg:p-8 mb-10 shadow-2xl relative block min-w-0" style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);">
       <legend class="ml-6 lg:ml-8 px-3 flex items-center gap-2 float-none w-auto">
         <img src="/img/cripto/sunflowerland.webp" alt="Sunflower Land" class="w-5 h-5 rounded-full object-contain bg-white/[0.05] p-[2px] border border-white/[0.1]" />
         <span class="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest font-semibold">
@@ -38,8 +38,7 @@ const t = useTranslations(lang)
             {t("sfl.intro")}
           </p>
         </div>
-        
-        <div class="hidden sm:flex w-full lg:w-auto justify-center sm:justify-start lg:justify-end shrink-0 lg:pt-1">
+        <div class="hidden lg:flex w-full lg:w-auto justify-center lg:justify-end shrink-0 lg:pt-1">
           <div class="bg-white/[0.02] border border-emerald-500/20 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(16,185,129,0.05)] cursor-help hover:border-emerald-500/40 transition-colors" title="Precio actual de Flower en tiempo real">
             <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/flower.jpg" alt="Flower Token" class="w-full h-full object-contain animate-pulse drop-shadow-sm" id="sflTokenImg" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp'" />
