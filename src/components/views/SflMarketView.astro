@@ -136,7 +136,7 @@ const t = useTranslations(lang)
         </div>
 
         <!-- Filtros y Buscador -->
-        <div class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-4 lg:p-5 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-6 relative z-30 shadow-2xl">
+        <div class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-3 lg:p-5 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-6 relative z-30 shadow-2xl">
           
           <!-- Buscador Pro -->
           <div class="w-full lg:w-1/3 relative z-40 group">
@@ -163,9 +163,9 @@ const t = useTranslations(lang)
             </div>
           </div>
           
-          <div class="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-5">
+          <div class="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-5">
             <!-- Segmented Control para Categorías (Scroll horizontal en móvil con sangría) -->
-            <div class="w-[calc(100%+2rem)] -ml-4 px-4 lg:w-auto lg:ml-0 lg:px-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+            <div class="w-[calc(100%)] lg:w-auto lg:ml-0 lg:px-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
               <div class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 w-max">
                 <button class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2" data-category="resources" onclick="window.handleCategory('resources')">
                   <img src="/img/sunflowerland/Eggplant.png" alt="Resources" class="w-4 h-4 object-contain" />
@@ -203,8 +203,8 @@ const t = useTranslations(lang)
           </div>
 
           <!-- Ordenamiento Móvil Estilo App (Scroll horizontal fluido que se esconde al borde) -->
-          <div class="w-[calc(100%+2rem)] -ml-4 px-4 lg:hidden overflow-x-auto no-scrollbar border-t border-white/5 pt-4 mt-1">
-            <div class="flex items-center gap-2 w-max pr-6">
+          <div class="w-[calc(100%)] lg:hidden overflow-x-auto no-scrollbar border-t border-white/5 pt-3">
+            <div class="flex items-center gap-1 w-max pr-6">
               <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0">{t("sfl.market.sortby")}</span>
               <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('name')">{t("sfl.market.sort.name")} <span class="sort-icon hidden" data-col="name">↓</span></button>
               <button class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" onclick="window.handleSort('price')">{t("sfl.market.sort.price")} <span class="sort-icon hidden" data-col="price">↓</span></button>
@@ -940,7 +940,7 @@ const t = useTranslations(lang)
 
     items.forEach(item => {
       const row = document.createElement("div");
-      row.className = "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_11%_18%_18%_18%] lg:items-center lg:py-3";
+      row.className = "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_11%_18%_18%_18%] lg:items-center lg:py-3";
       row.setAttribute("data-row-id", item.name);
       
       row.innerHTML = `
@@ -976,7 +976,7 @@ const t = useTranslations(lang)
         </div>
         
         <!-- Contenedor de gráficas (2x2 en móvil, horizontal en lg) -->
-        <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
+        <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
           ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
           ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
           ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
