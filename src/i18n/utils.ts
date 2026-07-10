@@ -55,11 +55,9 @@ export const routeMap: Record<string, Record<Lang, string>> = {
   "/herramientas": { es: "/herramientas/", en: "/en/tools/" },
   "/directorio": { es: "/directorio/", en: "/en/directory/" },
   "/activos": { es: "/activos/", en: "/en/watchlist/" },
-  "/activos/bitcoin": { es: "/activos/bitcoin/", en: "/en/watchlist/bitcoin/" },
-  "/activos/ethereum": { es: "/activos/ethereum/", en: "/en/watchlist/ethereum/" },
-  "/activos/hyperliquid": { es: "/activos/hyperliquid/", en: "/en/watchlist/hyperliquid/" },
-  "/activos/runestone": { es: "/activos/runestone/", en: "/en/watchlist/runestone/" },
-  "/activos/sunflowerland": { es: "/activos/sunflowerland/", en: "/en/watchlist/sunflowerland/" },
+  // Los activos individuales (/activos/bitcoin/, etc.) NO necesitan entrada aquí.
+  // El fallback por segmentos traduce "activos"→"watchlist" automáticamente via `routes`.
+  // Al agregar un nuevo activo, solo crea el JSON en src/content/data/watchlist/.
   "/operaciones": { es: "/operaciones/", en: "/en/operations/" },
   "/blog": { es: "/blog/", en: "/en/blog/" },
   "/faucets": { es: "/faucets/", en: "/en/faucets/" },
