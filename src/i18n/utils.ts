@@ -37,7 +37,11 @@ export function getLangFromUrl(url: URL): Lang {
 export function useTranslations(lang: Lang) {
   return function t(key: UiKey): string {
     // Intentar en el idioma solicitado, caer al default si no existe
-    return (ui[lang] as Record<string, string>)[key] ?? (ui[defaultLang] as Record<string, string>)[key] ?? key
+    return (
+      (ui[lang] as Record<string, string>)[key] ??
+      (ui[defaultLang] as Record<string, string>)[key] ??
+      key
+    )
   }
 }
 
@@ -101,8 +105,12 @@ export function getAlternateUrl(url: URL, targetLang: Lang): string {
   // Buscar en routeMap por la ruta ES o EN (con o sin trailing slash)
   for (const [esPath, translations] of Object.entries(routeMap)) {
     const enPath = translations.en.replace(/\/$/, "")
-    if (cleanPathNorm === esPath || cleanPathNorm === esPath.replace(/\/$/, "") ||
-        pathname.replace(/\/$/, "") === enPath || cleanPathNorm === enPath.replace(/^\/en/, "")) {
+    if (
+      cleanPathNorm === esPath ||
+      cleanPathNorm === esPath.replace(/\/$/, "") ||
+      pathname.replace(/\/$/, "") === enPath ||
+      cleanPathNorm === enPath.replace(/^\/en/, "")
+    ) {
       return translations[targetLang]
     }
   }
@@ -131,18 +139,14 @@ export function getAlternateUrl(url: URL, targetLang: Lang): string {
  * getLocalizedPath("/blog", "en") // → "/en/blog/"
  * getLocalizedPath("/blog", "es") // → "/blog/"
  */
-export function getLocalizedPath(
-  path: string,
-  lang: Lang,
-  useTranslatedSlug = true
-): string {
+export function getLocalizedPath(path: string, lang: Lang, useTranslatedSlug = true): string {
   if (lang === defaultLang) return ensureTrailingSlash(path)
 
   if (useTranslatedSlug) {
     // Buscar en el routeMap si hay una traducción directa
     const mapping = routeMap[path] || routeMap[path.replace(/\/$/, "")]
     if (mapping) return mapping[lang]
-    
+
     // Traducción por segmentos (rutas dinámicas como /operaciones/slug)
     const segments = path.replace(/\/$/, "").split("/").filter(Boolean)
     const translatedSegments = segments.map((segment) => {
@@ -150,7 +154,7 @@ export function getLocalizedPath(
       return routes[lang]?.[segment] || segment
     })
     const translatedPath = "/" + translatedSegments.join("/")
-    
+
     return ensureTrailingSlash(`/en${translatedPath === "/" ? "" : translatedPath}`)
   }
 
@@ -171,7 +175,7 @@ export function getLocalizedPath(
 export function formatDate(
   dateInput: string | Date,
   lang: Lang,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ): string {
   const locale = lang === "en" ? "en-US" : "es-CO"
   const defaultOptions: Intl.DateTimeFormatOptions = {
@@ -220,11 +224,11 @@ export type BilingualField<T = string> = T | { es: T; en: T }
  * getBilingual({ es: ["A"], en: ["B"] }, "en") // → ["B"]
  */
 export function getBilingual<T = string>(field: BilingualField<T>, lang: Lang): T {
-  if (field === null || field === undefined) return field as T;
+  if (field === null || field === undefined) return field as T
   if (typeof field === "object" && !Array.isArray(field) && "es" in field) {
-    return (field as any)[lang] ?? (field as any)[defaultLang];
+    return (field as any)[lang] ?? (field as any)[defaultLang]
   }
-  return field as T;
+  return field as T
 }
 
 // ---------------------------------------------------------------------------

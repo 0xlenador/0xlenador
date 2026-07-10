@@ -2,8 +2,6 @@ import { defineConfig } from "astro/config"
 import tailwindcss from "@tailwindcss/vite"
 import sitemap from "@astrojs/sitemap"
 import mdx from "@astrojs/mdx"
-import { remarkReadingTime } from "./remark-reading-time.mjs"
-import { unified } from "@astrojs/markdown-remark"
 import { getAlternateUrl } from "./src/i18n/utils.ts"
 import { buildBlogSlugMap, buildGuiasSlugMap } from "./src/lib/sitemapHelpers.mjs"
 
@@ -156,9 +154,4 @@ export default defineConfig({
       },
     }),
   ],
-  markdown: {
-    processor: unified({
-      remarkPlugins: [remarkReadingTime],
-    }),
-  },
 })

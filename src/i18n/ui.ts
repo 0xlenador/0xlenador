@@ -61,10 +61,10 @@ export const routes = {
 // Carga eager de todos los micro-diccionarios vía import.meta.glob
 // Seguro para SSG (build-time): no hay I/O en runtime.
 // ---------------------------------------------------------------------------
-const localeModules = import.meta.glob<Record<string, string>>(
-  "./locales/**/*.json",
-  { eager: true, import: "default" }
-)
+const localeModules = import.meta.glob<Record<string, string>>("./locales/**/*.json", {
+  eager: true,
+  import: "default",
+})
 
 /**
  * Construye un diccionario plano fusionando todos los JSON de un idioma.

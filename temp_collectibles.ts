@@ -1,24 +1,18 @@
-import Decimal from "decimal.js-light";
-import type { Inventory, Keys } from "./game";
-import type { LevelRequirement } from "features/game/lib/level";
-import { translate } from "lib/i18n/translate";
-import { CHAPTERS } from "./chapters";
-import type { ExoticCropName } from "./beans";
+import Decimal from "decimal.js-light"
+import type { Inventory, Keys } from "./game"
+import type { LevelRequirement } from "features/game/lib/level"
+import { translate } from "lib/i18n/translate"
+import { CHAPTERS } from "./chapters"
+import type { ExoticCropName } from "./beans"
 
-export const PLACEABLE_LOCATIONS = [
-  "farm",
-  "home",
-  "petHouse",
-  "interior",
-  "level_one",
-] as const;
-export type PlaceableLocation = (typeof PLACEABLE_LOCATIONS)[number];
+export const PLACEABLE_LOCATIONS = ["farm", "home", "petHouse", "interior", "level_one"] as const
+export type PlaceableLocation = (typeof PLACEABLE_LOCATIONS)[number]
 
 export type SeasonPassName =
   | "Dawn Breaker Banner"
   | "Solar Flare Banner"
   | "Witches' Eve Banner"
-  | "Catch the Kraken Banner";
+  | "Catch the Kraken Banner"
 
 export type PurchasableItems =
   | "Dawn Breaker Banner"
@@ -30,7 +24,7 @@ export type PurchasableItems =
   | "Clash of Factions Banner"
   | "Lifetime Farmer Banner"
   | "Pharaoh's Treasure Banner"
-  | "Bull Run Banner";
+  | "Bull Run Banner"
 export type HeliosBlacksmithItem =
   | "Immortal Pear"
   | "Basic Scarecrow"
@@ -43,7 +37,7 @@ export type HeliosBlacksmithItem =
   | "Squirrel"
   | "Macaw"
   | "Butterfly"
-  | "Salt Sculpture";
+  | "Salt Sculpture"
 
 export type TreasureCollectibleItem =
   | "Treasure Map"
@@ -51,7 +45,7 @@ export type TreasureCollectibleItem =
   | "Castellan"
   | "Sunlit Citadel"
   | "Baobab Tree"
-  | "Camel";
+  | "Camel"
 
 export type SoldOutCollectibleName =
   | "Sir Goldensnout"
@@ -153,7 +147,7 @@ export type SoldOutCollectibleName =
   | "Dino Egg Trophy"
   | "Salt Lamp"
   | "World Map Rug"
-  | "Ripped Salt Bag";
+  | "Ripped Salt Bag"
 
 export type MegaStoreCollectibleName =
   | "Flower Cart"
@@ -196,13 +190,9 @@ export type MegaStoreCollectibleName =
   | "Cactus King"
   | "Lemon Frog"
   | "Scarab Beetle"
-  | "Tomato Bombard";
+  | "Tomato Bombard"
 
-export type GoblinBlacksmithItemName =
-  | "Purple Trail"
-  | "Obie"
-  | "Mushroom House"
-  | "Maximus";
+export type GoblinBlacksmithItemName = "Purple Trail" | "Obie" | "Mushroom House" | "Maximus"
 
 export type GoblinPirateItemName =
   | "Iron Idol"
@@ -211,25 +201,22 @@ export type GoblinPirateItemName =
   | "Emerald Turtle"
   | "Tin Turtle"
   | "Parasaur Skull"
-  | "Golden Bear Head";
+  | "Golden Bear Head"
 
-export type PotionHouseItemName =
-  | "Lab Grown Carrot"
-  | "Lab Grown Radish"
-  | "Lab Grown Pumpkin";
+export type PotionHouseItemName = "Lab Grown Carrot" | "Lab Grown Radish" | "Lab Grown Pumpkin"
 
 export type CraftableCollectible = {
-  ingredients: Inventory;
-  description: string;
-  boost?: string;
-  coins?: number;
-  from?: Date;
-  to?: Date;
-  level?: LevelRequirement;
-  limit?: number;
-  inventoryLimit?: number;
-  disabled?: boolean;
-};
+  ingredients: Inventory
+  description: string
+  boost?: string
+  coins?: number
+  from?: Date
+  to?: Date
+  level?: LevelRequirement
+  limit?: number
+  inventoryLimit?: number
+  disabled?: boolean
+}
 
 export const HELIOS_BLACKSMITH_ITEMS: Record<
   HeliosBlacksmithItem,
@@ -357,7 +344,7 @@ export const HELIOS_BLACKSMITH_ITEMS: Record<
     },
     inventoryLimit: 1,
   },
-};
+}
 
 export const ARTEFACT_SHOP_KEYS: Record<Keys, CraftableCollectible> = {
   "Treasure Key": {
@@ -381,7 +368,7 @@ export const ARTEFACT_SHOP_KEYS: Record<Keys, CraftableCollectible> = {
     },
     description: translate("description.luxury.key"),
   },
-};
+}
 
 export const TREASURE_COLLECTIBLE_ITEM: Record<
   TreasureCollectibleItem | Keys,
@@ -434,11 +421,11 @@ export const TREASURE_COLLECTIBLE_ITEM: Record<
     to: CHAPTERS["Pharaoh's Treasure"].endDate,
   },
   ...ARTEFACT_SHOP_KEYS,
-};
+}
 
 export type PotionHouseItem = CraftableCollectible & {
-  name: PotionHouseItemName | ExoticCropName;
-};
+  name: PotionHouseItemName | ExoticCropName
+}
 
 export const POTION_HOUSE_ITEMS: Record<
   PotionHouseItemName,
@@ -471,7 +458,7 @@ export const POTION_HOUSE_ITEMS: Record<
     },
     inventoryLimit: 1,
   },
-};
+}
 
 export const POTION_HOUSE_EXOTIC_CROPS: Record<
   Exclude<ExoticCropName, "Giant Orange" | "Giant Apple" | "Giant Banana">,
@@ -533,8 +520,8 @@ export const POTION_HOUSE_EXOTIC_CROPS: Record<
       "Potion Ticket": new Decimal(200),
     },
   },
-};
+}
 
 export type Purchasable = CraftableCollectible & {
-  usd: number;
-};
+  usd: number
+}

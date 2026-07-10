@@ -56,7 +56,11 @@ const PROFILES_DATA = {
 }
 ---
 
-<section id="riskfolio-calculator" data-profiles={JSON.stringify(PROFILES_DATA)} class="max-w-4xl mx-auto mb-12 scroll-mt-24">
+<section
+  id="riskfolio-calculator"
+  data-profiles={JSON.stringify(PROFILES_DATA)}
+  class="max-w-4xl mx-auto mb-12 scroll-mt-24"
+>
   <div
     class="bg-terminal-surface/40 border border-terminal-border rounded-3xl p-6 md:p-10 shadow-2xl"
   >
@@ -125,7 +129,9 @@ const PROFILES_DATA = {
               >{t("riskfolio.calc.agr")}</span
             >
           </div>
-          <h3 class="text-base font-bold text-white mb-1.5 leading-tight">{t("riskfolio.calc.agr.title")}</h3>
+          <h3 class="text-base font-bold text-white mb-1.5 leading-tight">
+            {t("riskfolio.calc.agr.title")}
+          </h3>
           <p class="text-xs text-terminal-secondary leading-relaxed font-light">
             {t("riskfolio.calc.agr.desc")}
           </p>
@@ -214,7 +220,8 @@ const PROFILES_DATA = {
           class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"
           id="result-indicator"></span>
         <h3 class="text-sm font-mono text-terminal-muted uppercase tracking-widest">
-          {t("riskfolio.calc.allocation")} <span id="active-profile-label" class="text-white">{t("riskfolio.calc.mod")}</span>
+          {t("riskfolio.calc.allocation")}
+          <span id="active-profile-label" class="text-white">{t("riskfolio.calc.mod")}</span>
         </h3>
       </div>
 
@@ -256,8 +263,8 @@ const PROFILES_DATA = {
 <script is:inline>
   // ─── Datos de perfiles ────────────────────────────────────────────
   // Se leen los perfiles traducidos inyectados en el wrapper
-  const wrapper = document.getElementById("riskfolio-calculator");
-  const PROFILES = JSON.parse(wrapper.dataset.profiles || "{}");
+  const wrapper = document.getElementById("riskfolio-calculator")
+  const PROFILES = JSON.parse(wrapper.dataset.profiles || "{}")
 
   // ─── Estado global ────────────────────────────────────────────────
   let currentProfile = "moderado"

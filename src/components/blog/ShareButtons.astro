@@ -19,7 +19,7 @@ const t = useTranslations(lang)
 ---
 
 <div class="bg-terminal-surface/40 p-6 rounded-2xl border border-terminal-border/60">
-  <h3 class="text-white font-bold text-base mb-4">{t('blog.article.share')}</h3>
+  <h3 class="text-white font-bold text-base mb-4">{t("blog.article.share")}</h3>
   <div class="flex items-center gap-3">
     <!-- X (Twitter) -->
     <button
@@ -66,7 +66,7 @@ const t = useTranslations(lang)
     <button
       id="share-copy"
       aria-label="Copiar enlace al portapapeles"
-      data-copied-text={t('blog.article.share.copied') as any || "Copiado / Copied"}
+      data-copied-text={(t("blog.article.share.copied") as any) || "Copiado / Copied"}
       class="flex-1 flex justify-center p-3 rounded-xl bg-terminal-surface border border-terminal-border text-terminal-secondary hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all cursor-pointer"
     >
       <svg

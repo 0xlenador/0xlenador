@@ -47,15 +47,15 @@ if (!resources || resources.length === 0) {
             style="grid-area: 1 / 1;"
             data-index={i}
           >
-            <!-- Layout en dos columnas: Izquierda (Textos) y Derecha (Badge) -->
+            {/* Layout en dos columnas: Izquierda (Textos) y Derecha (Badge) */}
             <div class="flex flex-row justify-between items-center w-full h-full relative z-10">
               
-              <!-- Columna Izquierda: Logo, Título y Descripción -->
+              {/* Columna Izquierda: Logo, Título y Descripción */}
               <div class="flex flex-col justify-center gap-0.5 w-full max-w-[75%]">
                 
-                <!-- Logo y Título -->
+                {/* Logo y Título */}
                 <div class="flex items-center gap-2.5 relative">
-                  <!-- Orbe de luz brillante detrás del logo -->
+                  {/* Orbe de luz brillante detrás del logo */}
                   <div class={`absolute w-6 h-6 rounded-full ${c.bgFull} blur-xl opacity-20 group-hover:opacity-50 transition-opacity duration-500 -left-1 top-0 pointer-events-none`}></div>
 
                   {res.icon && (
@@ -71,13 +71,13 @@ if (!resources || resources.length === 0) {
                   </span>
                 </div>
 
-                <!-- Descripción -->
+                {/* Descripción */}
                 <p class="text-white/60 group-hover:text-white/90 text-[10px] sm:text-[11px] leading-tight text-left ml-8 sm:ml-[2.125rem] transition-colors duration-300 relative z-10">
                   {getBilingual(res.descripcion, lang)}
                 </p>
               </div>
 
-              <!-- Columna Derecha: Badge Tintado Premium -->
+              {/* Columna Derecha: Badge Tintado Premium */}
               <div class="flex flex-col items-end justify-center h-full">
                 <span class={`px-2.5 py-1 flex items-center gap-1.5 rounded-full text-[8px] font-black uppercase tracking-widest ${c.bg10} border ${c.border20} ${c.text400} shadow-sm backdrop-blur-md transition-all duration-300 relative z-10 group-hover:brightness-125 group-hover:shadow-md`}>
                   <div class={`w-1 h-1 rounded-full ${c.bgFull} animate-pulse shadow-[0_0_5px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_8px_rgba(255,255,255,0.6)]`}></div>

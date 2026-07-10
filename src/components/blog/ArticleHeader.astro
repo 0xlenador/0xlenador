@@ -30,9 +30,13 @@ const t = useTranslations(lang)
 
 <!-- Breadcrumb de navegación -->
 <nav class="flex text-xs text-terminal-muted mb-10 font-medium font-mono uppercase tracking-widest">
-  <a href={lang === "en" ? "/en" : "/"} class="hover:text-emerald-400 transition-colors">{t('ops.detail.breadcrumb.home')}</a>
+  <a href={lang === "en" ? "/en" : "/"} class="hover:text-emerald-400 transition-colors"
+    >{t("ops.detail.breadcrumb.home")}</a
+  >
   <span class="mx-3">›</span>
-  <a href={lang === "en" ? "/en/blog" : "/blog"} class="hover:text-emerald-400 transition-colors">{t('nav.blog')}</a>
+  <a href={lang === "en" ? "/en/blog" : "/blog"} class="hover:text-emerald-400 transition-colors"
+    >{t("nav.blog")}</a
+  >
   <span class="mx-3">›</span>
   <span class="text-terminal-secondary truncate max-w-[200px] sm:max-w-xs">{title}</span>
 </nav>
@@ -59,7 +63,7 @@ const t = useTranslations(lang)
 
     <!-- Fecha -->
     <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
-      <span class="text-terminal-muted">{t('ops.updated').replace('{date}', '')}</span>
+      <span class="text-terminal-muted">{t("ops.updated").replace("{date}", "")}</span>
       <span class="text-terminal-secondary">{formattedDate}</span>
     </div>
 
@@ -72,7 +76,9 @@ const t = useTranslations(lang)
           stroke-width="2"
           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg
       >
-      <span class="text-terminal-secondary">{t('ops.detail.reading').replace('{time}', readTime)}</span>
+      <span class="text-terminal-secondary"
+        >{t("ops.detail.reading").replace("{time}", readTime)}</span
+      >
     </div>
   </div>
 </header>

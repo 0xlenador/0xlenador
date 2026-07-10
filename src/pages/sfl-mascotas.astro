@@ -1,14 +1,14 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import SflPetsView from '../components/views/SflPetsView.astro';
+import Layout from "../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+import SflPetsView from "../components/views/SflPetsView.astro"
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seo = {
-  title: t('sfl.pets.seo.title'),
-  description: t('sfl.pets.seo.description'),
+  title: t("sfl.pets.seo.title"),
+  description: t("sfl.pets.seo.description"),
   image: "/img/cripto/sunflowerland.webp",
 }
 ---

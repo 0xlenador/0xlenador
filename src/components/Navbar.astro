@@ -66,7 +66,7 @@ const navLinks = [
             iconType: "img",
             src: "/img/sunflowerland/food/Pizza Margherita.png",
           },
-        ]
+        ],
       },
     ],
   },
@@ -186,17 +186,24 @@ const navLinks = [
               {/* Dropdown Menu */}
               <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div class="bg-terminal-bg/95 backdrop-blur-xl border border-terminal-border rounded-xl p-2 w-48 shadow-xl flex flex-col gap-1">
-                  {dropdown.map((subItem) => (
+                  {dropdown.map((subItem) =>
                     subItem.type === "group" ? (
                       <div class="mt-1 bg-white/[0.02] border border-white/[0.05] rounded-lg p-1.5 flex flex-col gap-0.5 shadow-inner">
-                        <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-500/70 px-2 py-1 mb-0.5">{subItem.label}</span>
-                        {subItem.items.map(item => (
+                        <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-500/70 px-2 py-1 mb-0.5">
+                          {subItem.label}
+                        </span>
+                        {subItem.items.map((item) => (
                           <a
                             href={item.href}
                             data-astro-prefetch
                             class="px-3 py-2 text-sm text-terminal-muted hover:text-white hover:bg-terminal-elevated/50 rounded-lg transition-colors flex items-center gap-3"
                           >
-                            <img src={item.src} alt={item.label} class="w-5 h-5 object-contain rounded-full" loading="lazy" />
+                            <img
+                              src={item.src}
+                              alt={item.label}
+                              class="w-5 h-5 object-contain rounded-full"
+                              loading="lazy"
+                            />
                             {item.label}
                           </a>
                         ))}
@@ -231,8 +238,8 @@ const navLinks = [
                         )}
                         {subItem.label}
                       </a>
-                    )
-                  ))}
+                    ),
+                  )}
                 </div>
               </div>
             </div>
@@ -362,17 +369,24 @@ const navLinks = [
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 {t("nav.mobile.goTo").replace("{label}", label)}
               </a>
-              {dropdown.map((subItem) => (
+              {dropdown.map((subItem) =>
                 subItem.type === "group" ? (
                   <div class="mt-2 mb-1 bg-white/[0.02] border border-white/[0.05] rounded-xl p-2 flex flex-col gap-1 shadow-inner">
-                    <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-500/70 px-2 py-1">{subItem.label}</span>
-                    {subItem.items.map(item => (
+                    <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-500/70 px-2 py-1">
+                      {subItem.label}
+                    </span>
+                    {subItem.items.map((item) => (
                       <a
                         href={item.href}
                         data-astro-prefetch
                         class="py-2 px-2 text-sm text-terminal-muted hover:text-white transition-colors flex items-center gap-3 rounded-lg hover:bg-terminal-elevated/30"
                       >
-                        <img src={item.src} alt={item.label} class="w-5 h-5 object-contain rounded-full ml-1" loading="lazy" />
+                        <img
+                          src={item.src}
+                          alt={item.label}
+                          class="w-5 h-5 object-contain rounded-full ml-1"
+                          loading="lazy"
+                        />
                         {item.label}
                       </a>
                     ))}
@@ -407,8 +421,8 @@ const navLinks = [
                     )}
                     {subItem.label}
                   </a>
-                )
-              ))}
+                ),
+              )}
             </div>
           </div>
         ))

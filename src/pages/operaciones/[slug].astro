@@ -43,7 +43,9 @@ const guiaSchema = {
 
 const translationSlug = guia.data.translationSlug
 const esUrl = `/operaciones/${guia.slug}/`
-const enUrl = translationSlug ? `/en/operations/${translationSlug}/` : `/en/operations/${guia.slug}/`
+const enUrl = translationSlug
+  ? `/en/operations/${translationSlug}/`
+  : `/en/operations/${guia.slug}/`
 ---
 
 <Layout

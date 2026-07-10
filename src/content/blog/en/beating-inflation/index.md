@@ -42,11 +42,11 @@ The mistake is believing that all your money should be in cash. Having liquidity
 
 Nominal return is what an investment claims to have earned. Real return is what you earned after discounting inflation.
 
-| Concept                      | Example   |
-| ---------------------------- | --------: |
-| Investment Return            | 10% annual|
-| Period Inflation             | 7% annual |
-| Approximate Real Return      | 3% annual |
+| Concept                 |    Example |
+| ----------------------- | ---------: |
+| Investment Return       | 10% annual |
+| Period Inflation        |  7% annual |
+| Approximate Real Return |  3% annual |
 
 If an investment yields 6%, but inflation was 8%, you actually lost purchasing power. You didn't see a loss on the screen, but your money buys less.
 
@@ -224,11 +224,11 @@ A good strategy against inflation doesn't depend on a single asset. It depends o
 
 It is not about choosing between CDs or stocks, bonds or crypto, gold or real estate. It is about understanding what role each asset plays within your portfolio.
 
-| Block       | Objective                              | Examples                                          |
-| ----------- | -------------------------------------- | ------------------------------------------------- |
-| Stability   | Protect capital and reduce volatility  | CDs, bonds, fixed income, liquidity               |
-| Growth      | Increase wealth long term              | Stocks, ETFs, blue chips, real estate             |
-| High Risk   | Seek asymmetric returns                | Small caps, crypto, startups, emerging projects   |
+| Block     | Objective                             | Examples                                        |
+| --------- | ------------------------------------- | ----------------------------------------------- |
+| Stability | Protect capital and reduce volatility | CDs, bonds, fixed income, liquidity             |
+| Growth    | Increase wealth long term             | Stocks, ETFs, blue chips, real estate           |
+| High Risk | Seek asymmetric returns               | Small caps, crypto, startups, emerging projects |
 
 The proportion depends on your profile. There is no perfect formula. The best strategy is the one you can sustain without panicking or sleeping poorly.
 
@@ -244,20 +244,20 @@ These percentages are just educational examples. The key question is not "how mu
 
 ## Comparative table of assets against inflation
 
-| Asset                        | Risk                                       | Liquidity          | Utility against inflation               |
-| ---------------------------- | ------------------------------------------ | ------------------ | --------------------------------------- |
-| Cash                         | Low in short term, high in long term       | Very high          | Low                                     |
-| CDs / Term deposits          | Low-Medium                                 | Medium             | Medium if they beat inflation & taxes   |
-| Bonds / Fixed income         | Low-Medium                                 | Medium             | Medium, depending on rate, term, & curr.|
-| Blue chip stocks             | Medium                                     | High               | Medium-High in long term                |
-| Index ETFs                   | Medium                                     | High               | High in long term via diversification   |
-| Real estate                  | Medium                                     | Low                | High, but requires capital & management |
-| REITs                        | Medium                                     | High               | Medium-High                             |
-| Gold                         | Medium                                     | High dep. on type  | Medium as haven                         |
-| Commodities                  | High                                       | Medium-High        | Variable and volatile                   |
-| Small caps                   | High                                       | Medium             | Variable, with high potential & risk    |
-| Bitcoin / Ethereum           | Very High                                  | High               | Speculative, not guaranteed             |
-| Small altcoins               | Extreme                                    | Variable           | Very speculative                        |
+| Asset                | Risk                                 | Liquidity         | Utility against inflation                |
+| -------------------- | ------------------------------------ | ----------------- | ---------------------------------------- |
+| Cash                 | Low in short term, high in long term | Very high         | Low                                      |
+| CDs / Term deposits  | Low-Medium                           | Medium            | Medium if they beat inflation & taxes    |
+| Bonds / Fixed income | Low-Medium                           | Medium            | Medium, depending on rate, term, & curr. |
+| Blue chip stocks     | Medium                               | High              | Medium-High in long term                 |
+| Index ETFs           | Medium                               | High              | High in long term via diversification    |
+| Real estate          | Medium                               | Low               | High, but requires capital & management  |
+| REITs                | Medium                               | High              | Medium-High                              |
+| Gold                 | Medium                               | High dep. on type | Medium as haven                          |
+| Commodities          | High                                 | Medium-High       | Variable and volatile                    |
+| Small caps           | High                                 | Medium            | Variable, with high potential & risk     |
+| Bitcoin / Ethereum   | Very High                            | High              | Speculative, not guaranteed              |
+| Small altcoins       | Extreme                              | Variable          | Very speculative                         |
 
 ## Common mistakes when investing against inflation
 

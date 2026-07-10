@@ -1,5 +1,5 @@
-import type { InventoryItemName } from "./game";
-import type { LabelType } from "components/ui/Label";
+import type { InventoryItemName } from "./game"
+import type { LabelType } from "components/ui/Label"
 
 export enum LimitedItemType {
   BlacksmithItem = "BlacksmithItem",
@@ -15,11 +15,11 @@ export enum LimitedItemType {
 }
 
 export type BuffLabel = {
-  shortDescription: string;
-  labelType: LabelType;
-  boostTypeIcon?: string;
-  boostedItemIcon?: string;
-};
+  shortDescription: string
+  labelType: LabelType
+  boostTypeIcon?: string
+  boostedItemIcon?: string
+}
 
 export const KNOWN_IDS: Record<InventoryItemName, number> = {
   "Sunflower Seed": 101,
@@ -1545,12 +1545,12 @@ export const KNOWN_IDS: Record<InventoryItemName, number> = {
   Saltwort: 3027,
   "Saltwort Seed": 3028,
   Saltbite: 3029,
-};
+}
 
 // The reverse of above
 export const KNOWN_ITEMS: Record<string, InventoryItemName> = Object.assign(
   {},
   ...Object.entries(KNOWN_IDS).map(([a, b]) => ({ [b]: a })),
-);
+)
 
-export const IDS = Object.values(KNOWN_IDS);
+export const IDS = Object.values(KNOWN_IDS)

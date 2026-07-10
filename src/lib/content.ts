@@ -6,6 +6,21 @@
 
 import { getCollection } from "astro:content"
 import type { Lang } from "../i18n/utils"
+import getReadingTime from "reading-time"
+
+/**
+ * Calcula dinámicamente el tiempo de lectura usando el body del post/guía
+ * y lo inyecta en la propiedad data.readTime.
+ */
+function attachReadingTime(item: any) {
+  if (!item.data.readTime) {
+    const text = item.body || ""
+    const rt = getReadingTime(text)
+    const minutes = Math.max(1, Math.ceil(rt.minutes))
+    item.data.readTime = `${minutes} min`
+  }
+  return item
+}
 
 // ---------------------------------------------------------------------------
 // Blog
@@ -32,6 +47,7 @@ export async function getBlogPostsByLang(lang: Lang) {
       ...post,
       slug: post.id.replace(`${lang}/`, ""),
     }))
+    .map(attachReadingTime)
     .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
 }
 
@@ -68,6 +84,7 @@ export async function getGuiasByLang(lang: Lang) {
       ...guia,
       slug: guia.id.replace(`${lang}/`, ""),
     }))
+    .map(attachReadingTime)
     .sort((a, b) => (b.data.prioridad ?? 0) - (a.data.prioridad ?? 0))
 }
 

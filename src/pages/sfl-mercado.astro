@@ -1,10 +1,10 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import SflMarketView from '../components/views/SflMarketView.astro';
+import Layout from "../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+import SflMarketView from "../components/views/SflMarketView.astro"
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seo = {
   title: t("sfl.seo.title"),

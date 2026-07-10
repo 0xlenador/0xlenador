@@ -28,14 +28,14 @@
 
 <!-- TODO: Detallar versiones, por qué se eligió cada herramienta y trade-offs -->
 
-| Herramienta | Uso |
-|---|---|
-| Astro v6 | Framework SSG (static site generation) |
-| Tailwind CSS v4 | Estilos utility-first via `@tailwindcss/vite` |
-| MDX | Guías/operaciones con componentes interactivos |
-| Sharp | Optimización de imágenes en build-time |
-| TypeScript | Tipado en i18n, schemas de contenido y utilidades |
-| ESLint + Prettier | Linting y formato |
+| Herramienta       | Uso                                               |
+| ----------------- | ------------------------------------------------- |
+| Astro v6          | Framework SSG (static site generation)            |
+| Tailwind CSS v4   | Estilos utility-first via `@tailwindcss/vite`     |
+| MDX               | Guías/operaciones con componentes interactivos    |
+| Sharp             | Optimización de imágenes en build-time            |
+| TypeScript        | Tipado en i18n, schemas de contenido y utilidades |
+| ESLint + Prettier | Linting y formato                                 |
 
 ---
 
@@ -84,11 +84,11 @@ src/
 
 ### ¿Qué es automático?
 
-| Tipo de contenido | Solo necesitas… |
-|---|---|
-| **Blog post** | Crear `.md` en `src/content/blog/{es,en}/slug/index.md` con `translationSlug` en el frontmatter |
-| **Activo (watchlist)** | Crear `.json` en `src/content/data/watchlist/nombre.json` |
-| **Guía (operación)** | Crear `.mdx` en `src/content/guias/{es,en}/slug.mdx` con `translationSlug` si el slug difiere |
+| Tipo de contenido      | Solo necesitas…                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------- |
+| **Blog post**          | Crear `.md` en `src/content/blog/{es,en}/slug/index.md` con `translationSlug` en el frontmatter |
+| **Activo (watchlist)** | Crear `.json` en `src/content/data/watchlist/nombre.json`                                       |
+| **Guía (operación)**   | Crear `.mdx` en `src/content/guias/{es,en}/slug.mdx` con `translationSlug` si el slug difiere   |
 
 El canonical, hreflang (HTML + sitemap) y la indexación se resuelven solos al hacer build.
 
@@ -111,14 +111,14 @@ Solo cuando creas una **página estática nueva** donde el slug **cambia** entre
 
 ### Cómo funciona por debajo
 
-| Pieza | Archivo | Rol |
-|---|---|---|
-| `routeMap` | `src/i18n/utils.ts` | Mapa de rutas estáticas con slugs traducidos |
-| `routes` | `src/i18n/ui.ts` | Traducción de segmentos sueltos (activos→watchlist) |
-| `getAlternateUrl()` | `src/i18n/utils.ts` | Busca en routeMap → fallback por segmentos → trailing slash |
-| `sitemapHelpers.mjs` | `src/lib/sitemapHelpers.mjs` | Lee `translationSlug` del frontmatter para el sitemap |
-| `Layout.astro` | `src/layouts/Layout.astro` | Genera canonical + hreflang. Acepta `esUrl`/`enUrl` manuales |
-| `astro.config.mjs` | raíz | Sitemap: filtra 404/redirects, resuelve slugs traducidos |
+| Pieza                | Archivo                      | Rol                                                          |
+| -------------------- | ---------------------------- | ------------------------------------------------------------ |
+| `routeMap`           | `src/i18n/utils.ts`          | Mapa de rutas estáticas con slugs traducidos                 |
+| `routes`             | `src/i18n/ui.ts`             | Traducción de segmentos sueltos (activos→watchlist)          |
+| `getAlternateUrl()`  | `src/i18n/utils.ts`          | Busca en routeMap → fallback por segmentos → trailing slash  |
+| `sitemapHelpers.mjs` | `src/lib/sitemapHelpers.mjs` | Lee `translationSlug` del frontmatter para el sitemap        |
+| `Layout.astro`       | `src/layouts/Layout.astro`   | Genera canonical + hreflang. Acepta `esUrl`/`enUrl` manuales |
+| `astro.config.mjs`   | raíz                         | Sitemap: filtra 404/redirects, resuelve slugs traducidos     |
 
 ### Traducciones de UI
 
@@ -146,10 +146,10 @@ Los textos de interfaz viven en micro-diccionarios JSON en `src/i18n/locales/{es
 
 ## 9. Comandos Útiles
 
-| Comando | Descripción |
-|---|---|
-| `pnpm dev` | Servidor local en `localhost:4321` |
-| `pnpm build` | Build de producción en `./dist/` |
-| `pnpm preview` | Preview del build localmente |
-| `pnpm lint` | Ejecutar ESLint |
-| `pnpm format` | Formatear con Prettier |
+| Comando        | Descripción                        |
+| -------------- | ---------------------------------- |
+| `pnpm dev`     | Servidor local en `localhost:4321` |
+| `pnpm build`   | Build de producción en `./dist/`   |
+| `pnpm preview` | Preview del build localmente       |
+| `pnpm lint`    | Ejecutar ESLint                    |
+| `pnpm format`  | Formatear con Prettier             |

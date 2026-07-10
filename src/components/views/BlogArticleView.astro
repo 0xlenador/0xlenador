@@ -15,8 +15,8 @@ const t = useTranslations(lang)
 
 const { post } = Astro.props
 const { title, description, keywords, date, category, coverImage, coverAlt } = post.data
-const { Content, remarkPluginFrontmatter, headings } = await render(post)
-const readTime = post.data.readTime || remarkPluginFrontmatter?.readTime || "5 min"
+const { Content, headings } = await render(post)
+const readTime = post.data.readTime || "5 min"
 
 // 3. Agrupar headings: cada H2 contiene sus H3 hijos
 type Heading = (typeof headings)[0]
@@ -37,70 +37,71 @@ const formattedDate = formatDate(date, lang)
 // coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
 const ogImage = coverImage?.src
 ---
-  <!-- Barra de progreso de lectura (estilos en main.css → #reading-progress) -->
+
+<!-- Barra de progreso de lectura (estilos en main.css → #reading-progress) -->
+<div
+  id="reading-progress"
+  role="progressbar"
+  aria-label="Progreso de lectura"
+  aria-valuenow={0}
+  aria-valuemin={0}
+  aria-valuemax={100}
+>
+</div>
+
+<main class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row gap-16">
+  <!-- ─── COLUMNA PRINCIPAL: ARTÍCULO ─── -->
+  <article class="w-full lg:w-[68%]">
+    <!-- Breadcrumb + título + meta + imagen de portada -->
+    <ArticleHeader
+      title={title}
+      category={category}
+      formattedDate={formattedDate}
+      readTime={readTime}
+      coverImage={coverImage}
+      coverAlt={coverAlt}
+    />
+
+    <!-- Cuerpo del artículo renderizado desde Markdown -->
+    <div class="content relative text-left md:text-justify" id="article-content">
+      <Content />
+    </div>
+
+    <!-- Pie del artículo: autor -->
+    <footer
+      class="mt-20 pt-8 border-t border-terminal-border/60 flex flex-col sm:flex-row items-center justify-between gap-6"
+    >
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center"
+        >
+          <span class="font-bold text-emerald-400 font-mono">0x</span>
+        </div>
+        <div>
+          <p class="text-white font-bold text-sm">{t("blog.article.writtenBy")}</p>
+          <p class="text-terminal-muted text-xs">{t("blog.article.role")}</p>
+        </div>
+      </div>
+    </footer>
+  </article>
+
+  <!-- ─── COLUMNA LATERAL: SIDEBAR ─── -->
+  <aside class="w-full lg:w-[32%] mt-12 lg:mt-0">
+    <div
+      id="sidebar-scroll-container"
+      class="sticky top-32 space-y-10 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8 pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      <!-- Botones de compartir -->
+      <ShareButtons title={title} />
+
+      <!-- Tabla de contenidos (incluye drawer móvil y botón flotante) -->
+      <TableOfContents groupedToc={groupedToc} />
+    </div>
+  </aside>
+
+  <!-- Gradiente decorativo de fondo -->
   <div
-    id="reading-progress"
-    role="progressbar"
-    aria-label="Progreso de lectura"
-    aria-valuenow={0}
-    aria-valuemin={0}
-    aria-valuemax={100}
+    class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none z-0"
   >
   </div>
-
-  <main class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row gap-16">
-    <!-- ─── COLUMNA PRINCIPAL: ARTÍCULO ─── -->
-    <article class="w-full lg:w-[68%]">
-      <!-- Breadcrumb + título + meta + imagen de portada -->
-      <ArticleHeader
-        title={title}
-        category={category}
-        formattedDate={formattedDate}
-        readTime={readTime}
-        coverImage={coverImage}
-        coverAlt={coverAlt}
-      />
-
-      <!-- Cuerpo del artículo renderizado desde Markdown -->
-      <div class="content relative text-left md:text-justify" id="article-content">
-        <Content />
-      </div>
-
-      <!-- Pie del artículo: autor -->
-      <footer
-        class="mt-20 pt-8 border-t border-terminal-border/60 flex flex-col sm:flex-row items-center justify-between gap-6"
-      >
-        <div class="flex items-center gap-4">
-          <div
-            class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center"
-          >
-            <span class="font-bold text-emerald-400 font-mono">0x</span>
-          </div>
-          <div>
-            <p class="text-white font-bold text-sm">{t('blog.article.writtenBy')}</p>
-            <p class="text-terminal-muted text-xs">{t('blog.article.role')}</p>
-          </div>
-        </div>
-      </footer>
-    </article>
-
-    <!-- ─── COLUMNA LATERAL: SIDEBAR ─── -->
-    <aside class="w-full lg:w-[32%] mt-12 lg:mt-0">
-      <div
-        id="sidebar-scroll-container"
-        class="sticky top-32 space-y-10 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8 pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        <!-- Botones de compartir -->
-        <ShareButtons title={title} />
-
-        <!-- Tabla de contenidos (incluye drawer móvil y botón flotante) -->
-        <TableOfContents groupedToc={groupedToc} />
-      </div>
-    </aside>
-
-    <!-- Gradiente decorativo de fondo -->
-    <div
-      class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none z-0"
-    >
-    </div>
-  </main>
+</main>

@@ -14,7 +14,8 @@ const isEs = lang === "es"
 <main class="max-w-3xl mx-auto px-6">
   <header class="mb-16">
     <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter italic uppercase">
-      {t("privacy.heading")} <span class="text-emerald-500">{t("privacy.heading.accent")}</span>{" "}
+      {t("privacy.heading")}
+      <span class="text-emerald-500">{t("privacy.heading.accent")}</span>{" "}
       {t("privacy.heading.end")}
     </h1>
     <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.4em]">
@@ -33,10 +34,11 @@ const isEs = lang === "es"
         {
           isEs ? (
             <>
-              El sitio web <span class="text-terminal-text">0xlenador.xyz</span> es una plataforma de
-              divulgación educativa operada por <span class="text-terminal-text">0x Leñador</span>.
-              Este proyecto tiene como objetivo compartir estrategias de inversión y herramientas de
-              análisis fundamental sin recolectar información personal sensible de sus usuarios.
+              El sitio web <span class="text-terminal-text">0xlenador.xyz</span> es una plataforma
+              de divulgación educativa operada por{" "}
+              <span class="text-terminal-text">0x Leñador</span>. Este proyecto tiene como objetivo
+              compartir estrategias de inversión y herramientas de análisis fundamental sin
+              recolectar información personal sensible de sus usuarios.
             </>
           ) : (
             <>
@@ -67,13 +69,15 @@ const isEs = lang === "es"
           ) : (
             <>
               Our tools, including <span class="text-terminal-text">Riskfolio</span> and the{" "}
-              <span class="text-terminal-text">Intrinsic Value Calculator</span>, are designed to run
-              entirely in the user's browser (Client-Side).
+              <span class="text-terminal-text">Intrinsic Value Calculator</span>, are designed to
+              run entirely in the user's browser (Client-Side).
             </>
           )
         }
       </p>
-      <div class="mt-4 p-4 bg-terminal-surface/40 border-l-2 border-emerald-500 rounded-r-xl italic text-terminal-secondary">
+      <div
+        class="mt-4 p-4 bg-terminal-surface/40 border-l-2 border-emerald-500 rounded-r-xl italic text-terminal-secondary"
+      >
         {
           isEs
             ? "Los valores financieros que introduces en estos simuladores no se envían a nuestros servidores ni son almacenados en ninguna base de datos externa."
@@ -94,14 +98,14 @@ const isEs = lang === "es"
             <>
               En 0xLeñador creemos en la privacidad como estándar.{" "}
               <strong>No utilizamos Google Analytics, ni rastreadores de terceros</strong> para
-              monitorizar tu comportamiento. Este sitio web es estático y no usa cookies de rastreo ni
-              publicidad.
+              monitorizar tu comportamiento. Este sitio web es estático y no usa cookies de rastreo
+              ni publicidad.
             </>
           ) : (
             <>
               At 0xLeñador we believe in privacy by default.{" "}
-              <strong>We do not use Google Analytics or third-party trackers</strong> to monitor your
-              behavior. This is a static site and does not use invasive tracking or advertising
+              <strong>We do not use Google Analytics or third-party trackers</strong> to monitor
+              your behavior. This is a static site and does not use invasive tracking or advertising
               "cookies".
             </>
           )
@@ -118,8 +122,8 @@ const isEs = lang === "es"
           ) : (
             <>
               We only use your browser's functional local storage (
-              <span class="text-terminal-text">LocalStorage / SessionStorage</span>) to save strictly
-              technical configurations requested by you anonymously, such as:
+              <span class="text-terminal-text">LocalStorage / SessionStorage</span>) to save
+              strictly technical configurations requested by you anonymously, such as:
             </>
           )
         }
@@ -147,15 +151,19 @@ const isEs = lang === "es"
     <section>
       <h2 class="text-white font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
         <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-        {isEs ? "4. Transparencia en Afiliación (Referidos)" : "4. Affiliate Transparency (Referrals)"}
+        {
+          isEs
+            ? "4. Transparencia en Afiliación (Referidos)"
+            : "4. Affiliate Transparency (Referrals)"
+        }
       </h2>
       <p>
         {
           isEs ? (
             <>
               En cumplimiento con las buenas prácticas de divulgación, te informamos que hacemos un
-              uso activo de <strong>enlaces de referidos y afiliación</strong> en distintas secciones
-              de la web, muy especialmente en nuestro{" "}
+              uso activo de <strong>enlaces de referidos y afiliación</strong> en distintas
+              secciones de la web, muy especialmente en nuestro{" "}
               <span class="text-terminal-text">Directorio de Análisis y Herramientas Web3</span>.
             </>
           ) : (

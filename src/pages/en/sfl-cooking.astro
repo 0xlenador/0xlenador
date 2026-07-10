@@ -1,14 +1,14 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
-import SflCookingView from '../../components/views/SflCookingView.astro';
+import Layout from "../../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import SflCookingView from "../../components/views/SflCookingView.astro"
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const seo = {
-  title: t('sfl.cooking.seo.title'),
-  description: t('sfl.cooking.seo.description'),
+  title: t("sfl.cooking.seo.title"),
+  description: t("sfl.cooking.seo.description"),
   image: "/img/cripto/sunflowerland.webp",
 }
 ---

@@ -1,12 +1,12 @@
-import Decimal from "decimal.js-light";
-import type { Dimensions } from "./buildings";
-import { BB_TO_GEM_RATIO, type Inventory } from "./game";
-import type { BoostTreasure, DecorationTreasure } from "./treasure";
-import { translate } from "lib/i18n/translate";
-import type { Template } from "./templates";
-import type { BeanName, GiantFruit } from "./beans";
-import type { DollName } from "../lib/crafting";
-import { getKeys } from "lib/object";
+import Decimal from "decimal.js-light"
+import type { Dimensions } from "./buildings"
+import { BB_TO_GEM_RATIO, type Inventory } from "./game"
+import type { BoostTreasure, DecorationTreasure } from "./treasure"
+import { translate } from "lib/i18n/translate"
+import type { Template } from "./templates"
+import type { BeanName, GiantFruit } from "./beans"
+import type { DollName } from "../lib/crafting"
+import { getKeys } from "lib/object"
 
 export type AchievementDecorationName =
   | "Chef Bear"
@@ -20,7 +20,7 @@ export type AchievementDecorationName =
   | "Classy Bear"
   | "Rich Bear"
   | "Rainbow Artist Bear"
-  | "Devil Bear";
+  | "Devil Bear"
 
 export type LandscapingDecorationName =
   | "Dirt Path"
@@ -53,9 +53,9 @@ export type LandscapingDecorationName =
   | "Long Table"
   | "Royal Podium"
   | "Square Table"
-  | "Stool";
+  | "Stool"
 
-export type ShopDecorationName = LandscapingDecorationName;
+export type ShopDecorationName = LandscapingDecorationName
 
 export type ChapterDecorationName =
   | "Blossombeard"
@@ -92,7 +92,7 @@ export type ChapterDecorationName =
   | "Squeaky Chicken"
   | "Moon Fox Statue"
   | "Giant Acorn"
-  | "Diving Helmet";
+  | "Diving Helmet"
 
 export type EventDecorationName =
   | "Jelly Lamp"
@@ -206,7 +206,7 @@ export type EventDecorationName =
   | "Goblin Rug"
   | "Pet Rug"
   | "Jester in a box"
-  | "The Sunflower Man Statue";
+  | "The Sunflower Man Statue"
 
 export type TileName =
   | "Black Tile"
@@ -214,15 +214,15 @@ export type TileName =
   | "Green Tile"
   | "Purple Tile"
   | "Red Tile"
-  | "Yellow Tile";
+  | "Yellow Tile"
 
 export type PotionHouseDecorationName =
   | "Giant Potato"
   | "Giant Pumpkin"
   | "Giant Cabbage"
-  | BeanName;
+  | BeanName
 
-export type InteriorDecorationName = "Rug" | "Wardrobe";
+export type InteriorDecorationName = "Rug" | "Wardrobe"
 
 export type AnimalDecorationName =
   | "Wagon"
@@ -230,7 +230,7 @@ export type AnimalDecorationName =
   | "Summer Duckling"
   | "Autumn Duckling"
   | "Winter Duckling"
-  | "Wheat Whiskers";
+  | "Wheat Whiskers"
 
 export const DECORATION_TEMPLATES = {
   "Gold Cooking Trophy": {
@@ -640,9 +640,9 @@ export const DECORATION_TEMPLATES = {
     },
     isWithdrawable: () => false,
   },
-} satisfies Record<string, Template>;
+} satisfies Record<string, Template>
 
-export type TemplateDecorationName = keyof typeof DECORATION_TEMPLATES;
+export type TemplateDecorationName = keyof typeof DECORATION_TEMPLATES
 
 export type DecorationName =
   | DollName
@@ -657,7 +657,7 @@ export type DecorationName =
   | TemplateDecorationName
   | AnimalDecorationName
   | TileName
-  | GiantFruit;
+  | GiantFruit
 
 export const DECORATION_DIMENSIONS: Record<DecorationName, Dimensions> = {
   "Diving Helmet": {
@@ -1528,7 +1528,7 @@ export const DECORATION_DIMENSIONS: Record<DecorationName, Dimensions> = {
     width: 1,
     height: 1,
   },
-};
+}
 
 export const HOME_LANDSCAPING_DECORATIONS: LandscapingDecorationName[] = [
   "Big Table",
@@ -1540,19 +1540,16 @@ export const HOME_LANDSCAPING_DECORATIONS: LandscapingDecorationName[] = [
   "Royal Podium",
   "Square Table",
   "Stool",
-];
+]
 
 export type Decoration = {
-  name: DecorationName;
-  ingredients: Inventory;
-  description: string;
-  coins?: number;
-};
+  name: DecorationName
+  ingredients: Inventory
+  description: string
+  coins?: number
+}
 
-export const LANDSCAPING_DECORATIONS: Record<
-  LandscapingDecorationName,
-  Decoration
-> = {
+export const LANDSCAPING_DECORATIONS: Record<LandscapingDecorationName, Decoration> = {
   "Dirt Path": {
     name: "Dirt Path",
     description: translate("description.dirt.path"),
@@ -1829,12 +1826,9 @@ export const LANDSCAPING_DECORATIONS: Record<
     coins: 500,
     ingredients: {},
   },
-};
+}
 
-export const POTION_HOUSE_DECORATIONS: Record<
-  PotionHouseDecorationName,
-  Decoration
-> = {
+export const POTION_HOUSE_DECORATIONS: Record<PotionHouseDecorationName, Decoration> = {
   "Magic Bean": {
     name: "Magic Bean",
     description: translate("description.magic.bean"),
@@ -1867,12 +1861,9 @@ export const POTION_HOUSE_DECORATIONS: Record<
       "Potion Ticket": new Decimal(1000),
     },
   },
-};
+}
 
-export const DECORATIONS: Record<
-  ShopDecorationName | PotionHouseDecorationName,
-  Decoration
-> = {
+export const DECORATIONS: Record<ShopDecorationName | PotionHouseDecorationName, Decoration> = {
   ...LANDSCAPING_DECORATIONS,
   ...POTION_HOUSE_DECORATIONS,
-};
+}

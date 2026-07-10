@@ -66,8 +66,6 @@ const formatDeadline = (fecha: string) => {
   })
 }
 
-
-
 const faqItems = [
   {
     pregunta: t("ops.faq.q1"),
@@ -89,262 +87,264 @@ const faqItems = [
 ---
 
 <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
-    <!-- Header -->
-    <header class="mb-14">
-      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
-        {t("ops.breadcrumb")}
-      </p>
-      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-        {t("ops.heading")} <span class="text-emerald-500">{t("ops.heading.accent")}</span>
-      </h1>
-      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        {t("ops.intro")}
-      </p>
-    </header>
+  <!-- Header -->
+  <header class="mb-14">
+    <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+      {t("ops.breadcrumb")}
+    </p>
+    <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+      {t("ops.heading")}
+      <span class="text-emerald-500">{t("ops.heading.accent")}</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+      {t("ops.intro")}
+    </p>
+  </header>
 
-    <!-- Tarjetas de resumen -->
-    <div class="grid grid-cols-3 gap-4 mb-14">
-      {
-        [
-          { label: t("ops.stat.active"), value: guiasActivas.length, color: "text-emerald-400" },
-          { label: t("ops.stat.total"), value: guias.length, color: "text-white" },
-          {
-            label: t("ops.stat.categories"),
-            value: Object.keys(categoriaConfig).length,
-            color: "text-terminal-secondary",
-          },
-        ].map((stat) => (
-          <div class="hub-card p-5 text-center">
-            <p class="text-2xl font-black font-mono tracking-tight mb-1" class:list={[stat.color]}>
-              {stat.value}
-            </p>
-            <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest">
-              {stat.label}
-            </p>
-          </div>
-        ))
-      }
-    </div>
-
-    <!-- Guía destacada (la activa con mayor prioridad) -->
+  <!-- Tarjetas de resumen -->
+  <div class="grid grid-cols-3 gap-4 mb-14">
     {
-      guiaDestacada &&
-        (() => {
-          const cfg = categoriaConfig[guiaDestacada.data.categoria] ?? categoriaConfig["Airdrop"]
-          const est = estadoConfig[guiaDestacada.data.estado]
-          return (
-            <section class="mb-14">
-              <div class="flex items-center gap-4 mb-6">
-                <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-                  {t("ops.guide.priority")}
-                </h2>
-                <div class="h-px flex-grow bg-terminal-border/50" />
-              </div>
+      [
+        { label: t("ops.stat.active"), value: guiasActivas.length, color: "text-emerald-400" },
+        { label: t("ops.stat.total"), value: guias.length, color: "text-white" },
+        {
+          label: t("ops.stat.categories"),
+          value: Object.keys(categoriaConfig).length,
+          color: "text-terminal-secondary",
+        },
+      ].map((stat) => (
+        <div class="hub-card p-5 text-center">
+          <p class="text-2xl font-black font-mono tracking-tight mb-1" class:list={[stat.color]}>
+            {stat.value}
+          </p>
+          <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest">
+            {stat.label}
+          </p>
+        </div>
+      ))
+    }
+  </div>
 
-              <a
-                href={lang === "en" ? `/en/operations/${guiaDestacada.slug}` : `/operaciones/${guiaDestacada.slug}`}
-                class="hub-card p-6 md:p-8 flex flex-col md:flex-row gap-6 group no-underline block"
-              >
-                {guiaDestacada.data.imagen && (
-                  <div class="w-full md:w-40 h-32 md:h-auto rounded-xl overflow-hidden flex-shrink-0 bg-terminal-elevated">
-                    <img
-                      src={guiaDestacada.data.imagen}
-                      alt={guiaDestacada.data.title}
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                )}
-                <div class="flex-1 min-w-0">
-                  <div class="flex flex-wrap items-center gap-2 mb-3">
-                    <span
-                      class:list={[
-                        "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
-                        cfg.badge,
-                      ]}
-                    >
-                      {cfg.icon} {t(`ops.cat.${guiaDestacada.data.categoria.toLowerCase()}` as any)}
-                    </span>
-                    <span class="flex items-center gap-1.5 text-[10px] font-mono">
-                      <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
-                      <span class:list={[est.text]}>{est.label}</span>
-                    </span>
-                    {guiaDestacada.data.temporada && (
-                      <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated px-2 py-0.5 rounded-md">
-                        {guiaDestacada.data.temporada}
-                      </span>
-                    )}
-                  </div>
+  <!-- Guía destacada (la activa con mayor prioridad) -->
+  {
+    guiaDestacada &&
+      (() => {
+        const cfg = categoriaConfig[guiaDestacada.data.categoria] ?? categoriaConfig["Airdrop"]
+        const est = estadoConfig[guiaDestacada.data.estado]
+        return (
+          <section class="mb-14">
+            <div class="flex items-center gap-4 mb-6">
+              <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+                {t("ops.guide.priority")}
+              </h2>
+              <div class="h-px flex-grow bg-terminal-border/50" />
+            </div>
 
-                  <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
-                    {guiaDestacada.data.title}
-                  </h3>
-                  <p class="text-terminal-muted text-sm leading-relaxed mb-4">
-                    {guiaDestacada.data.description}
-                  </p>
-
-                  <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-terminal-subtle">
-                    {guiaDestacada.data.fechaLimite && (
-                      <span class="text-yellow-400/80">
-                        ⏳ Deadline: {formatDeadline(guiaDestacada.data.fechaLimite)}
-                      </span>
-                    )}
-                    {guiaDestacada.data.tiempoEstimado && (
-                      <span>⏱ {guiaDestacada.data.tiempoEstimado}</span>
-                    )}
-                    <span
-                      class:list={[
-                        "font-semibold",
-                        dificultadConfig[guiaDestacada.data.dificultad],
-                      ]}
-                    >
-                      ● {t("ops.difficulty").replace("{level}", t(`ops.diff.${guiaDestacada.data.dificultad.toLowerCase()}` as any))}
-                    </span>
-                    <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
-                      {t("ops.guide.open")}
-                    </span>
-                  </div>
+            <a
+              href={
+                lang === "en"
+                  ? `/en/operations/${guiaDestacada.slug}/`
+                  : `/operaciones/${guiaDestacada.slug}/`
+              }
+              class="hub-card p-6 md:p-8 flex flex-col md:flex-row gap-6 group no-underline block"
+            >
+              {guiaDestacada.data.imagen && (
+                <div class="w-full md:w-40 h-32 md:h-auto rounded-xl overflow-hidden flex-shrink-0 bg-terminal-elevated">
+                  <img
+                    src={guiaDestacada.data.imagen}
+                    alt={guiaDestacada.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
                 </div>
-              </a>
-            </section>
-          )
-        })()
-    }
-
-    <!-- Grid de guías activas (sin la destacada) -->
-    {
-      guiasActivas.length > 1 && (
-        <section class="mb-14">
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              {t("ops.guide.tracking")}
-            </h2>
-            <div class="h-px flex-grow bg-terminal-border/50" />
-            <span class="text-[10px] font-mono text-terminal-subtle">
-              {guiasActivas.length - 1} {t("ops.guide.count")}
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {guiasActivas.slice(1).map((guia) => {
-              const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"]
-              const est = estadoConfig[guia.data.estado]
-              return (
-                <a
-                  href={lang === "en" ? `/en/operations/${guia.slug}` : `/operaciones/${guia.slug}`}
-                  class="hub-card p-5 flex flex-col group no-underline"
-                >
-                  <div class="flex items-start justify-between gap-2 mb-3">
-                    <span
-                      class:list={[
-                        "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
-                        cfg.badge,
-                      ]}
-                    >
-                      {cfg.icon} {t(`ops.cat.${guia.data.categoria.toLowerCase()}` as any)}
-                    </span>
-                    <span class="flex items-center gap-1.5 text-[10px] font-mono">
-                      <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
-                      <span class:list={[est.text]}>{est.label}</span>
-                    </span>
-                  </div>
-
-                  <div class="flex items-start gap-3 mb-2 flex-1">
-                    {guia.data.imagen && (
-                      <img
-                        src={guia.data.imagen}
-                        alt=""
-                        class="w-6 h-6 rounded-md object-contain shrink-0 mt-0.5"
-                        loading="lazy"
-                      />
-                    )}
-                    <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors leading-snug m-0">
-                      {guia.data.title}
-                    </h3>
-                  </div>
-
-                  <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-auto pt-3 border-t border-terminal-border/50">
-                    {guia.data.fechaLimite && (
-                      <span class="text-yellow-400/70">
-                        ⏳ {formatDeadline(guia.data.fechaLimite)}
-                      </span>
-                    )}
-                    {guia.data.tiempoEstimado && <span>⏱ {guia.data.tiempoEstimado}</span>}
-                    <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold">
-                      {t("ops.guide.view")}
-                    </span>
-                  </div>
-                </a>
-              )
-            })}
-          </div>
-        </section>
-      )
-    }
-
-    <!-- Historial -->
-    {
-      guiasHistoricas.length > 0 && (
-        <section class="mb-14">
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              {t("ops.guide.history")}
-            </h2>
-            <div class="h-px flex-grow bg-terminal-border/50" />
-            <span class="text-[10px] font-mono text-terminal-subtle">
-              {guiasHistoricas.length} {t("ops.guide.count")}
-            </span>
-          </div>
-
-          <div class="hub-card divide-y divide-terminal-border/50">
-            {guiasHistoricas.map((guia) => {
-              const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"]
-              const est = estadoConfig[guia.data.estado]
-              return (
-                <a
-                  href={lang === "en" ? `/en/operations/${guia.slug}` : `/operaciones/${guia.slug}`}
-                  class="flex items-center gap-4 p-3 rounded-lg hover:bg-terminal-elevated transition-colors border border-transparent hover:border-terminal-border group no-underline"
-                >
+              )}
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
                   <span
                     class:list={[
-                      "text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border flex-shrink-0",
+                      "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
                       cfg.badge,
                     ]}
                   >
-                    {cfg.icon}
+                    {cfg.icon} {t(`ops.cat.${guiaDestacada.data.categoria.toLowerCase()}` as any)}
                   </span>
-                  <span class="text-terminal-secondary text-xs font-medium group-hover:text-white transition-colors flex-1 min-w-0 truncate">
-                    {guia.data.title}
+                  <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                    <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
+                    <span class:list={[est.text]}>{est.label}</span>
                   </span>
-                  <span class:list={["text-[10px] font-mono flex-shrink-0", est.text]}>
-                    {est.label}
-                  </span>
-                </a>
-              )
-            })}
-          </div>
-        </section>
-      )
-    }
+                  {guiaDestacada.data.temporada && (
+                    <span class="text-[10px] font-mono text-terminal-subtle bg-terminal-elevated px-2 py-0.5 rounded-md">
+                      {guiaDestacada.data.temporada}
+                    </span>
+                  )}
+                </div>
 
-    <!-- Estado vacío: sin guías activas -->
-    {
-      guiasActivas.length === 0 && guiasHistoricas.length === 0 && (
-        <div class="hub-card p-12 text-center">
-          <p class="text-terminal-subtle text-sm font-mono">
-            {t("ops.empty.text")}
-          </p>
-          <p class="text-terminal-muted text-xs mt-2">
-            {t("ops.empty.subtext")}
-          </p>
+                <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
+                  {guiaDestacada.data.title}
+                </h3>
+                <p class="text-terminal-muted text-sm leading-relaxed mb-4">
+                  {guiaDestacada.data.description}
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-terminal-subtle">
+                  {guiaDestacada.data.fechaLimite && (
+                    <span class="text-yellow-400/80">
+                      ⏳ Deadline: {formatDeadline(guiaDestacada.data.fechaLimite)}
+                    </span>
+                  )}
+                  {guiaDestacada.data.tiempoEstimado && (
+                    <span>⏱ {guiaDestacada.data.tiempoEstimado}</span>
+                  )}
+                  <span
+                    class:list={["font-semibold", dificultadConfig[guiaDestacada.data.dificultad]]}
+                  >
+                    ●{" "}
+                    {t("ops.difficulty").replace(
+                      "{level}",
+                      t(`ops.diff.${guiaDestacada.data.dificultad.toLowerCase()}` as any),
+                    )}
+                  </span>
+                  <span class="text-emerald-500/70 group-hover:text-emerald-400 ml-auto transition-colors font-bold">
+                    {t("ops.guide.open")}
+                  </span>
+                </div>
+              </div>
+            </a>
+          </section>
+        )
+      })()
+  }
+
+  <!-- Grid de guías activas (sin la destacada) -->
+  {
+    guiasActivas.length > 1 && (
+      <section class="mb-14">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+            {t("ops.guide.tracking")}
+          </h2>
+          <div class="h-px flex-grow bg-terminal-border/50" />
+          <span class="text-[10px] font-mono text-terminal-subtle">
+            {guiasActivas.length - 1} {t("ops.guide.count")}
+          </span>
         </div>
-      )
-    }
 
-    <FaqAccordion
-      titulo={t("ops.faq.title")}
-      subtitulo={t("ops.faq.subtitle")}
-      startId={600}
-      items={faqItems}
-    />
-  </main>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {guiasActivas.slice(1).map((guia) => {
+            const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"]
+            const est = estadoConfig[guia.data.estado]
+            return (
+              <a
+                href={lang === "en" ? `/en/operations/${guia.slug}/` : `/operaciones/${guia.slug}/`}
+                class="hub-card p-5 flex flex-col group no-underline"
+              >
+                <div class="flex items-start justify-between gap-2 mb-3">
+                  <span
+                    class:list={[
+                      "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
+                      cfg.badge,
+                    ]}
+                  >
+                    {cfg.icon} {t(`ops.cat.${guia.data.categoria.toLowerCase()}` as any)}
+                  </span>
+                  <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                    <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
+                    <span class:list={[est.text]}>{est.label}</span>
+                  </span>
+                </div>
+
+                <div class="flex items-start gap-3 mb-2 flex-1">
+                  {guia.data.imagen && (
+                    <img
+                      src={guia.data.imagen}
+                      alt=""
+                      class="w-6 h-6 rounded-md object-contain shrink-0 mt-0.5"
+                      loading="lazy"
+                    />
+                  )}
+                  <h3 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors leading-snug m-0">
+                    {guia.data.title}
+                  </h3>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-auto pt-3 border-t border-terminal-border/50">
+                  {guia.data.fechaLimite && (
+                    <span class="text-yellow-400/70">
+                      ⏳ {formatDeadline(guia.data.fechaLimite)}
+                    </span>
+                  )}
+                  {guia.data.tiempoEstimado && <span>⏱ {guia.data.tiempoEstimado}</span>}
+                  <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold">
+                    {t("ops.guide.view")}
+                  </span>
+                </div>
+              </a>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Historial -->
+  {
+    guiasHistoricas.length > 0 && (
+      <section class="mb-14">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+            {t("ops.guide.history")}
+          </h2>
+          <div class="h-px flex-grow bg-terminal-border/50" />
+          <span class="text-[10px] font-mono text-terminal-subtle">
+            {guiasHistoricas.length} {t("ops.guide.count")}
+          </span>
+        </div>
+
+        <div class="hub-card divide-y divide-terminal-border/50">
+          {guiasHistoricas.map((guia) => {
+            const cfg = categoriaConfig[guia.data.categoria] ?? categoriaConfig["Airdrop"]
+            const est = estadoConfig[guia.data.estado]
+            return (
+              <a
+                href={lang === "en" ? `/en/operations/${guia.slug}/` : `/operaciones/${guia.slug}/`}
+                class="flex items-center gap-4 p-3 rounded-lg hover:bg-terminal-elevated transition-colors border border-transparent hover:border-terminal-border group no-underline"
+              >
+                <span
+                  class:list={[
+                    "text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border flex-shrink-0",
+                    cfg.badge,
+                  ]}
+                >
+                  {cfg.icon}
+                </span>
+                <span class="text-terminal-secondary text-xs font-medium group-hover:text-white transition-colors flex-1 min-w-0 truncate">
+                  {guia.data.title}
+                </span>
+                <span class:list={["text-[10px] font-mono flex-shrink-0", est.text]}>
+                  {est.label}
+                </span>
+              </a>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Estado vacío: sin guías activas -->
+  {
+    guiasActivas.length === 0 && guiasHistoricas.length === 0 && (
+      <div class="hub-card p-12 text-center">
+        <p class="text-terminal-subtle text-sm font-mono">{t("ops.empty.text")}</p>
+        <p class="text-terminal-muted text-xs mt-2">{t("ops.empty.subtext")}</p>
+      </div>
+    )
+  }
+
+  <FaqAccordion
+    titulo={t("ops.faq.title")}
+    subtitulo={t("ops.faq.subtitle")}
+    startId={600}
+    items={faqItems}
+  />
+</main>

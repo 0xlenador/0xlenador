@@ -133,173 +133,183 @@ const faqItems = [
 ]
 ---
 
-  <main class="max-w-6xl mx-auto px-6 pt-6 md:pt-10 pb-0">
-    <!-- ─── HERO ─── -->
-    <HeroSection
-      phrases={[
-        t("home.hero.phrase1"),
-        t("home.hero.phrase2"),
-        t("home.hero.phrase3"),
-        t("home.hero.phrase4"),
-        t("home.hero.phrase5"),
-      ]}
-      ctaPrimario={{ texto: t("home.hero.cta.primary"), href: "/directorio" }}
-      ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: "/operaciones" }}
-    />
-  </main>
+<main class="max-w-6xl mx-auto px-6 pt-6 md:pt-10 pb-0">
+  <!-- ─── HERO ─── -->
+  <HeroSection
+    phrases={[
+      t("home.hero.phrase1"),
+      t("home.hero.phrase2"),
+      t("home.hero.phrase3"),
+      t("home.hero.phrase4"),
+      t("home.hero.phrase5"),
+    ]}
+    ctaPrimario={{ texto: t("home.hero.cta.primary"), href: "/directorio" }}
+    ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: "/operaciones" }}
+  />
+</main>
 
-  <!-- ─── TICKER ─── -->
-  <TickerSection />
+<!-- ─── TICKER ─── -->
+<TickerSection />
 
-  <main class="max-w-6xl mx-auto px-6 pb-20">
-    <!-- ─── PREMISA ─── -->
-    <PremisaSection />
+<main class="max-w-6xl mx-auto px-6 pb-20">
+  <!-- ─── PREMISA ─── -->
+  <PremisaSection />
 
-    <!-- ─── MÓDULOS DEL HUB ─── -->
-    <section class="mb-20">
-      <div class="flex items-center gap-4 mb-8">
-        <h2
-          class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]"
-        >
-          {t("home.section.command")}
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/50"></div>
-      </div>
+  <!-- ─── MÓDULOS DEL HUB ─── -->
+  <section class="mb-20">
+    <div class="flex items-center gap-4 mb-8">
+      <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+        {t("home.section.command")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/50"></div>
+    </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {
-          modules.map((mod) => (
-            <a
-              href={mod.href}
-              id={`hub-module-${mod.id}`}
-              class:list={["hub-card p-6 flex flex-col gap-4 group no-underline", mod.accentClass]}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {
+        modules.map((mod) => (
+          <a
+            href={getLocalizedPath(mod.href, lang)}
+            id={`hub-module-${mod.id}`}
+            class:list={["hub-card p-6 flex flex-col gap-4 group no-underline", mod.accentClass]}
+          >
+            {/* Icono */}
+            <div class="w-10 h-10 rounded-xl bg-terminal-elevated/60 border border-terminal-border flex items-center justify-center group-hover:border-current transition-colors">
+              <svg
+                class="w-5 h-5 text-terminal-muted group-hover:text-current transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                set:html={mod.icon}
+              />
+            </div>
+
+            {/* Contenido */}
+            <div class="flex-1">
+              <h3 class="text-white font-bold text-sm mb-1.5 group-hover:text-current transition-colors">
+                {mod.titulo}
+              </h3>
+              <p class="text-terminal-muted text-xs leading-relaxed">{mod.descripcion}</p>
+            </div>
+
+            {/* Badge de count */}
+            <div
+              class:list={[
+                "self-start text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold",
+                mod.badgeClass,
+              ]}
             >
-              {/* Icono */}
-              <div class="w-10 h-10 rounded-xl bg-terminal-elevated/60 border border-terminal-border flex items-center justify-center group-hover:border-current transition-colors">
-                <svg
-                  class="w-5 h-5 text-terminal-muted group-hover:text-current transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  set:html={mod.icon}
-                />
-              </div>
+              {mod.count}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
 
-              {/* Contenido */}
-              <div class="flex-1">
-                <h3 class="text-white font-bold text-sm mb-1.5 group-hover:text-current transition-colors">
-                  {mod.titulo}
-                </h3>
-                <p class="text-terminal-muted text-xs leading-relaxed">{mod.descripcion}</p>
-              </div>
+  <!-- ─── STATUS: GUÍAS OPERATIVAS ACTIVAS ─── -->
+  {
+    guiasActivas.length > 0 && (
+      <section class="mb-20">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+            {t("home.section.guides")}
+          </h2>
+          <div class="h-px flex-grow bg-terminal-border/50" />
+          <a
+            href={getLocalizedPath("/operaciones", lang)}
+            class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+          >
+            {t("home.section.guides.viewAll")}
+          </a>
+        </div>
 
-              {/* Badge de count */}
-              <div
-                class:list={[
-                  "self-start text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold",
-                  mod.badgeClass,
-                ]}
-              >
-                {mod.count}
-              </div>
-            </a>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- ─── STATUS: GUÍAS OPERATIVAS ACTIVAS ─── -->
-    {
-      guiasActivas.length > 0 && (
-        <section class="mb-20">
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              {t("home.section.guides")}
-            </h2>
-            <div class="h-px flex-grow bg-terminal-border/50" />
+        <div class="hub-card divide-y divide-terminal-border/50">
+          {guiasActivas.map((guia) => (
             <a
-              href={getLocalizedPath("/operaciones", lang)}
-              class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+              href={getLocalizedPath(`/operaciones/${guia.slug}`, lang)}
+              class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
             >
-              {t("home.section.guides.viewAll")}
-            </a>
-          </div>
-
-          <div class="hub-card divide-y divide-terminal-border/50">
-            {guiasActivas.map((guia) => (
-              <a
-                href={getLocalizedPath(`/operaciones/${guia.slug}`, lang)}
-                class="flex items-center justify-between p-4 group no-underline hover:bg-terminal-elevated/30 transition-colors"
-              >
-                <div class="flex items-center gap-3">
-                  <div class="relative flex-shrink-0">
-                    {guia.data.imagen ? (
-                      <img
-                        src={guia.data.imagen}
-                        alt={guia.data.title}
-                        class="w-8 h-8 rounded-full object-cover border border-terminal-border bg-terminal-elevated"
-                      />
-                    ) : (
-                      <div class="w-8 h-8 rounded-full bg-terminal-elevated border border-terminal-border flex items-center justify-center">
-                        <span class="text-[10px] text-terminal-muted font-bold">
-                          {guia.data.title.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                    <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#0D0D0D] shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
-                  </div>
-                  <div>
-                    <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">
-                      {guia.data.title}
-                    </h3>
-                    <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">
-                      {t(`ops.cat.${guia.data.categoria.toLowerCase()}` as any)} • {t(`ops.diff.${guia.data.dificultad.toLowerCase()}` as any)}
-                    </p>
-                  </div>
+              <div class="flex items-center gap-3">
+                <div class="relative flex-shrink-0">
+                  {guia.data.imagen ? (
+                    <img
+                      src={guia.data.imagen}
+                      alt={guia.data.title}
+                      class="w-8 h-8 rounded-full object-cover border border-terminal-border bg-terminal-elevated"
+                    />
+                  ) : (
+                    <div class="w-8 h-8 rounded-full bg-terminal-elevated border border-terminal-border flex items-center justify-center">
+                      <span class="text-[10px] text-terminal-muted font-bold">
+                        {guia.data.title.charAt(0)}
+                      </span>
+                    </div>
+                  )}
+                  <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#0D0D0D] shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 </div>
-                {guia.data.fechaLimite && (
-                  <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
-                    ⏳{" "}
-                    {guia.data.fechaLimite === "TBD" ? "TBD" : new Date(guia.data.fechaLimite).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </span>
-                )}
-              </a>
-            ))}
-          </div>
-        </section>
-      )
-    }
+                <div>
+                  <h3 class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors">
+                    {guia.data.title}
+                  </h3>
+                  <p class="text-[10px] font-mono text-terminal-subtle mt-0.5">
+                    {t(`ops.cat.${guia.data.categoria.toLowerCase()}` as any)} •{" "}
+                    {t(`ops.diff.${guia.data.dificultad.toLowerCase()}` as any)}
+                  </p>
+                </div>
+              </div>
+              {guia.data.fechaLimite && (
+                <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
+                  ⏳{" "}
+                  {guia.data.fechaLimite === "TBD"
+                    ? "TBD"
+                    : new Date(guia.data.fechaLimite).toLocaleDateString(
+                        lang === "en" ? "en-US" : "es-CO",
+                        {
+                          day: "numeric",
+                          month: "short",
+                        },
+                      )}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-    <!-- ─── HERRAMIENTAS ACTIVAS (SLIDER) ─── -->
-    <section class="mb-20">
-      <div class="flex items-center gap-4 mb-6">
-        <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-          {t("home.section.tools")}
-        </h2>
-        <div class="h-px flex-grow bg-terminal-border/50" />
-        <a
-          href="/herramientas"
-          class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
-        >
-          {t("home.section.tools.viewAll")}
-        </a>
-      </div>
-      <style>
-        .hide-scroll::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scroll {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      </style>
+  <!-- ─── HERRAMIENTAS ACTIVAS (SLIDER) ─── -->
+  <section class="mb-20">
+    <div class="flex items-center gap-4 mb-6">
+      <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+        {t("home.section.tools")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/50"></div>
+      <a
+        href="/herramientas"
+        class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+      >
+        {t("home.section.tools.viewAll")}
+      </a>
+    </div>
+    <style>
+      .hide-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scroll {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
 
-      <div class="relative w-full [mask-image:_linear-gradient(to_right,transparent_0,_black_40px,_black_calc(100%-40px),transparent_100%)]">
-        <div id="tools-slider" class="flex overflow-x-auto gap-5 pb-4 hide-scroll cursor-grab select-none snap-x snap-mandatory">
-          {[...toolsList, ...toolsList].map((tool, index) => (
+    <div
+      class="relative w-full [mask-image:_linear-gradient(to_right,transparent_0,_black_40px,_black_calc(100%-40px),transparent_100%)]"
+    >
+      <div
+        id="tools-slider"
+        class="flex overflow-x-auto gap-5 pb-4 hide-scroll cursor-grab select-none snap-x snap-mandatory"
+      >
+        {
+          [...toolsList, ...toolsList].map((tool, index) => (
             <a
               href={getLocalizedPath(tool.href, lang)}
               draggable="false"
@@ -308,178 +318,201 @@ const faqItems = [
               <div class="flex items-start justify-between mb-5 pointer-events-none">
                 <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center transition-colors duration-300 shadow-inner">
                   {tool.isSvg ? (
-                    <svg class="w-6 h-6 text-white/[0.7] group-hover/card:text-emerald-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={tool.icon} />
+                    <svg
+                      class="w-6 h-6 text-white/[0.7] group-hover/card:text-emerald-400 transition-colors duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      set:html={tool.icon}
+                    />
                   ) : (
-                    <img src={tool.logo} alt={tool.titulo} class="w-7 h-7 object-contain drop-shadow-lg group-hover/card:scale-110 transition-transform duration-300" />
+                    <img
+                      src={tool.logo}
+                      alt={tool.titulo}
+                      class="w-7 h-7 object-contain drop-shadow-lg group-hover/card:scale-110 transition-transform duration-300"
+                    />
                   )}
                 </div>
-                <svg class="w-5 h-5 text-white/[0.3] group-hover/card:text-emerald-400 transition-all duration-300 transform group-hover/card:translate-x-1 group-hover/card:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <svg
+                  class="w-5 h-5 text-white/[0.3] group-hover/card:text-emerald-400 transition-all duration-300 transform group-hover/card:translate-x-1 group-hover/card:-translate-y-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </div>
-              
+
               <div class="flex flex-col flex-grow pointer-events-none">
-                <h3 class="text-white font-semibold text-lg tracking-tight mb-2 group-hover/card:text-emerald-300 transition-colors">{tool.titulo}</h3>
+                <h3 class="text-white font-semibold text-lg tracking-tight mb-2 group-hover/card:text-emerald-300 transition-colors">
+                  {tool.titulo}
+                </h3>
                 <p class="text-white/[0.5] text-sm leading-relaxed font-light flex-grow mb-6 line-clamp-3">
                   {tool.descripcion}
                 </p>
               </div>
-              
+
               <div class="mt-auto pointer-events-none">
                 <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-white/[0.6] text-[11px] font-medium tracking-wide group-hover/card:border-emerald-500/20 group-hover/card:text-emerald-400 group-hover/card:bg-emerald-500/10 transition-all">
                   {tool.badge}
                 </span>
               </div>
             </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slider = document.getElementById("tools-slider")
+      if (!slider) return
+
+      let isDown = false
+      let startX = 0
+      let scrollLeft = 0
+      let isHovered = false
+
+      // Prevent dragging links
+      const links = slider.querySelectorAll("a")
+      links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          // Prevent navigating if it was a drag
+          if (slider.classList.contains("dragging")) {
+            e.preventDefault()
+          }
+        })
+      })
+
+      // Mouse events for dragging
+      slider.addEventListener("mousedown", (e) => {
+        isDown = true
+        slider.classList.add("cursor-grabbing")
+        slider.classList.remove("cursor-grab")
+        slider.classList.remove("snap-x", "snap-mandatory") // Disable snapping during drag
+        startX = e.pageX - slider.offsetLeft
+        scrollLeft = slider.scrollLeft
+      })
+
+      slider.addEventListener("mouseleave", () => {
+        isDown = false
+        slider.classList.remove("cursor-grabbing")
+        slider.classList.add("cursor-grab")
+        slider.classList.add("snap-x", "snap-mandatory")
+        slider.classList.remove("dragging")
+        isHovered = false
+      })
+
+      slider.addEventListener("mouseup", () => {
+        isDown = false
+        slider.classList.remove("cursor-grabbing")
+        slider.classList.add("cursor-grab")
+        slider.classList.add("snap-x", "snap-mandatory")
+        // Small timeout to allow click event to fire before removing dragging state
+        setTimeout(() => slider.classList.remove("dragging"), 50)
+      })
+
+      slider.addEventListener("mousemove", (e) => {
+        if (!isDown) return
+        e.preventDefault()
+        slider.classList.add("dragging")
+        const x = e.pageX - slider.offsetLeft
+        const walk = (x - startX) * 2
+        slider.scrollLeft = scrollLeft - walk
+      })
+
+      // Hover events for pause auto-scroll
+      slider.addEventListener("mouseenter", () => {
+        isHovered = true
+      })
+
+      // Auto-scroll loop
+      const autoScroll = () => {
+        if (!isHovered && !isDown) {
+          slider.scrollLeft += 1
+          // Seamless loop: reset when passing the first half
+          if (slider.scrollLeft >= slider.scrollWidth / 2) {
+            slider.scrollLeft = 0
+          }
+        }
+        requestAnimationFrame(autoScroll)
+      }
+
+      requestAnimationFrame(autoScroll)
+    })
+  </script>
+
+  <!-- ─── ÚLTIMAS DEL BLOG ─── -->
+  {
+    posts.length > 0 && (
+      <section class="mb-20">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+            {t("home.section.blog")}
+          </h2>
+          <div class="h-px flex-grow bg-terminal-border/50" />
+          <a
+            href={getLocalizedPath("/blog", lang)}
+            class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+          >
+            {t("home.section.blog.viewAll")}
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {posts.map((post) => (
+            <a
+              href={getLocalizedPath(`/blog/${post.slug}`, lang)}
+              class="hub-card p-5 flex flex-col gap-3 group no-underline"
+            >
+              {post.data.coverImage && (
+                <img
+                  src={post.data.coverImage.src}
+                  alt={post.data.coverAlt ?? post.data.title}
+                  width={400}
+                  height={200}
+                  loading="lazy"
+                  class="w-full h-32 object-cover rounded-lg"
+                />
+              )}
+              <div>
+                <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-1.5">
+                  {post.data.category} · {new Date(post.data.date).getFullYear()}
+                </p>
+                <h3 class="text-white text-sm font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
+                  {post.data.title}
+                </h3>
+              </div>
+              <p class="text-terminal-muted text-xs leading-relaxed flex-grow line-clamp-3">
+                {post.data.description}
+              </p>
+              <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
+                {t("home.blog.read")}
+              </span>
+            </a>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
+    )
+  }
 
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const slider = document.getElementById('tools-slider');
-        if (!slider) return;
+  <FaqAccordion
+    titulo={t("home.faq.title")}
+    subtitulo={t("home.faq.subtitle")}
+    startId={101}
+    items={faqItems}
+  />
 
-        let isDown = false;
-        let startX = 0;
-        let scrollLeft = 0;
-        let isHovered = false;
-
-        // Prevent dragging links
-        const links = slider.querySelectorAll('a');
-        links.forEach(link => {
-          link.addEventListener('click', (e) => {
-            // Prevent navigating if it was a drag
-            if (slider.classList.contains('dragging')) {
-              e.preventDefault();
-            }
-          });
-        });
-
-        // Mouse events for dragging
-        slider.addEventListener('mousedown', (e) => {
-          isDown = true;
-          slider.classList.add('cursor-grabbing');
-          slider.classList.remove('cursor-grab');
-          slider.classList.remove('snap-x', 'snap-mandatory'); // Disable snapping during drag
-          startX = e.pageX - slider.offsetLeft;
-          scrollLeft = slider.scrollLeft;
-        });
-
-        slider.addEventListener('mouseleave', () => {
-          isDown = false;
-          slider.classList.remove('cursor-grabbing');
-          slider.classList.add('cursor-grab');
-          slider.classList.add('snap-x', 'snap-mandatory');
-          slider.classList.remove('dragging');
-          isHovered = false;
-        });
-
-        slider.addEventListener('mouseup', () => {
-          isDown = false;
-          slider.classList.remove('cursor-grabbing');
-          slider.classList.add('cursor-grab');
-          slider.classList.add('snap-x', 'snap-mandatory');
-          // Small timeout to allow click event to fire before removing dragging state
-          setTimeout(() => slider.classList.remove('dragging'), 50);
-        });
-
-        slider.addEventListener('mousemove', (e) => {
-          if (!isDown) return;
-          e.preventDefault();
-          slider.classList.add('dragging');
-          const x = e.pageX - slider.offsetLeft;
-          const walk = (x - startX) * 2; 
-          slider.scrollLeft = scrollLeft - walk;
-        });
-
-        // Hover events for pause auto-scroll
-        slider.addEventListener('mouseenter', () => {
-          isHovered = true;
-        });
-
-        // Auto-scroll loop
-        const autoScroll = () => {
-          if (!isHovered && !isDown) {
-            slider.scrollLeft += 1;
-            // Seamless loop: reset when passing the first half
-            if (slider.scrollLeft >= (slider.scrollWidth / 2)) {
-              slider.scrollLeft = 0;
-            }
-          }
-          requestAnimationFrame(autoScroll);
-        };
-        
-        requestAnimationFrame(autoScroll);
-      });
-    </script>
-
-    <!-- ─── ÚLTIMAS DEL BLOG ─── -->
-    {
-      posts.length > 0 && (
-        <section class="mb-20">
-          <div class="flex items-center gap-4 mb-6">
-            <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
-              {t("home.section.blog")}
-            </h2>
-            <div class="h-px flex-grow bg-terminal-border/50" />
-            <a
-              href={getLocalizedPath("/blog", lang)}
-              class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
-            >
-              {t("home.section.blog.viewAll")}
-            </a>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {posts.map((post) => (
-              <a
-                href={getLocalizedPath(`/blog/${post.slug}`, lang)}
-                class="hub-card p-5 flex flex-col gap-3 group no-underline"
-              >
-                {post.data.coverImage && (
-                  <img
-                    src={post.data.coverImage.src}
-                    alt={post.data.coverAlt ?? post.data.title}
-                    width={400}
-                    height={200}
-                    loading="lazy"
-                    class="w-full h-32 object-cover rounded-lg"
-                  />
-                )}
-                <div>
-                  <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-1.5">
-                    {post.data.category} · {new Date(post.data.date).getFullYear()}
-                  </p>
-                  <h3 class="text-white text-sm font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2">
-                    {post.data.title}
-                  </h3>
-                </div>
-                <p class="text-terminal-muted text-xs leading-relaxed flex-grow line-clamp-3">
-                  {post.data.description}
-                </p>
-                <span class="text-emerald-500/70 text-[10px] font-mono uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto">
-                  {t("home.blog.read")}
-                </span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )
-    }
-
-    <FaqAccordion
-      titulo={t("home.faq.title")}
-      subtitulo={t("home.faq.subtitle")}
-      startId={101}
-      items={faqItems}
-    />
-
-    <div class="mt-20 text-center">
-      <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
-        {t("home.footer.tagline")}
-      </p>
-      <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
-    </div>
-  </main>
+  <div class="mt-20 text-center">
+    <p class="text-terminal-subtle text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
+      {t("home.footer.tagline")}
+    </p>
+    <div class="h-1 w-12 bg-emerald-500/20 mx-auto rounded-full"></div>
+  </div>
+</main>

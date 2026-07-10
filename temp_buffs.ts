@@ -1,21 +1,21 @@
-import { SUNNYSIDE } from "assets/sunnyside";
-import { CROP_LIFECYCLE } from "features/island/plots/lib/plant";
-import type { BumpkinItem } from "./bumpkin";
+import { SUNNYSIDE } from "assets/sunnyside"
+import { CROP_LIFECYCLE } from "features/island/plots/lib/plant"
+import type { BumpkinItem } from "./bumpkin"
 
-import powerup from "assets/icons/level_up.png";
-import lightning from "assets/icons/lightning.png";
-import bee from "assets/icons/bee.webp";
-import chefHat from "assets/icons/chef_hat.png";
-import baits from "assets/composters/baits.png";
-import { ITEM_DETAILS } from "./images";
-import { translate } from "lib/i18n/translate";
-import { getChapterTicket, CHAPTERS, getCurrentChapter } from "./chapters";
-import { SEASON_ICONS } from "features/island/buildings/components/building/market/SeasonalSeeds";
-import { isCollectible } from "../events/landExpansion/garbageSold";
-import type { TranslationKeys } from "lib/i18n/dictionaries/types";
-import { CHAPTER_TICKET_BOOST_ITEMS } from "../events/landExpansion/completeNPCChore";
-import { getObjectEntries } from "lib/object";
-import type { BuffLabel } from ".";
+import powerup from "assets/icons/level_up.png"
+import lightning from "assets/icons/lightning.png"
+import bee from "assets/icons/bee.webp"
+import chefHat from "assets/icons/chef_hat.png"
+import baits from "assets/composters/baits.png"
+import { ITEM_DETAILS } from "./images"
+import { translate } from "lib/i18n/translate"
+import { getChapterTicket, CHAPTERS, getCurrentChapter } from "./chapters"
+import { SEASON_ICONS } from "features/island/buildings/components/building/market/SeasonalSeeds"
+import { isCollectible } from "../events/landExpansion/garbageSold"
+import type { TranslationKeys } from "lib/i18n/dictionaries/types"
+import { CHAPTER_TICKET_BOOST_ITEMS } from "../events/landExpansion/completeNPCChore"
+import { getObjectEntries } from "lib/object"
+import type { BuffLabel } from "."
 
 export const SPECIAL_ITEM_LABELS: Partial<Record<BumpkinItem, BuffLabel[]>> = {
   Halo: [
@@ -39,11 +39,9 @@ export const SPECIAL_ITEM_LABELS: Partial<Record<BumpkinItem, BuffLabel[]>> = {
       boostTypeIcon: lightning,
     },
   ],
-};
+}
 
-export const BUMPKIN_ITEM_BUFF_LABELS: Partial<
-  Record<BumpkinItem, BuffLabel[]>
-> = {
+export const BUMPKIN_ITEM_BUFF_LABELS: Partial<Record<BumpkinItem, BuffLabel[]>> = {
   "Deep Sea Helm": [
     {
       shortDescription: translate("bumpkinItemBuff.deep.sea.helm"),
@@ -220,9 +218,7 @@ export const BUMPKIN_ITEM_BUFF_LABELS: Partial<
   ],
   "Luminous Anglerfish Topper": [
     {
-      shortDescription: translate(
-        "bumpkinItemBuff.luminous.anglerfish.topper.boost",
-      ),
+      shortDescription: translate("bumpkinItemBuff.luminous.anglerfish.topper.boost"),
       labelType: "success",
       boostTypeIcon: powerup,
       boostedItemIcon: SUNNYSIDE.icons.fish,
@@ -1089,9 +1085,7 @@ export const BUMPKIN_ITEM_BUFF_LABELS: Partial<
   ],
   "Deep Sea Salt Cave Background": [
     {
-      shortDescription: translate(
-        "description.deepSeaSaltCaveBackground.boost",
-      ),
+      shortDescription: translate("description.deepSeaSaltCaveBackground.boost"),
       labelType: "success",
       boostTypeIcon: powerup,
       boostedItemIcon: ITEM_DETAILS.Salt.image,
@@ -1104,10 +1098,10 @@ export const BUMPKIN_ITEM_BUFF_LABELS: Partial<
     getObjectEntries(CHAPTER_TICKET_BOOST_ITEMS)
       .filter(([chapter]) => getCurrentChapter(Date.now()) === chapter)
       .flatMap(([chapter, items]) => {
-        const chapterStart = CHAPTERS[chapter].startDate.getTime();
-        const ticket = getChapterTicket(chapterStart);
+        const chapterStart = CHAPTERS[chapter].startDate.getTime()
+        const ticket = getChapterTicket(chapterStart)
         const translationKey =
-          `description.bonus${ticket.replace(/\s+/g, "")}.boost` as TranslationKeys;
+          `description.bonus${ticket.replace(/\s+/g, "")}.boost` as TranslationKeys
 
         return Object.values(items)
           .filter((item) => !isCollectible(item))
@@ -1121,7 +1115,7 @@ export const BUMPKIN_ITEM_BUFF_LABELS: Partial<
                 boostedItemIcon: ITEM_DETAILS[ticket].image,
               },
             ],
-          ]);
+          ])
       }),
   ),
-};
+}

@@ -18,34 +18,28 @@
 ---
 
 <!-- Banner container: oculto por defecto, mostrado por JS si aplica -->
-<div
-  id="lang-banner"
-  role="status"
-  aria-live="polite"
-  class="lang-banner"
-  hidden
->
+<div id="lang-banner" role="status" aria-live="polite" class="lang-banner" hidden>
   <div class="lang-banner__inner">
     <!-- Icono bandera + mensaje -->
     <p id="lang-banner-text" class="lang-banner__text"></p>
 
     <!-- Acciones -->
     <div class="lang-banner__actions">
-      <a
-        id="lang-banner-link"
-        href="#"
-        class="lang-banner__cta"
-        data-astro-prefetch
-      >
+      <a id="lang-banner-link" href="#" class="lang-banner__cta" data-astro-prefetch>
         <!-- Texto set por JS -->
       </a>
-      <button
-        id="lang-banner-close"
-        type="button"
-        class="lang-banner__close"
-        aria-label="Close"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <button id="lang-banner-close" type="button" class="lang-banner__close" aria-label="Close">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
           <path d="M18 6L6 18M6 6l12 12"></path>
         </svg>
       </button>
@@ -64,7 +58,9 @@
     max-width: 36rem;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
   }
 
   .lang-banner[data-visible="true"] {
@@ -117,7 +113,9 @@
     border-radius: 0.5rem;
     text-decoration: none;
     white-space: nowrap;
-    transition: background 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      background 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .lang-banner__cta:hover {
@@ -141,7 +139,9 @@
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease;
     padding: 0;
   }
 
@@ -173,79 +173,80 @@
 </style>
 
 <script is:inline>
-  (function() {
+  ;(function () {
     try {
-      var STORAGE_KEY = 'lang_banner_dismissed';
+      var STORAGE_KEY = "lang_banner_dismissed"
 
       // 1. Si ya se descartó el banner, salir inmediatamente
-      if (localStorage.getItem(STORAGE_KEY) === 'true') return;
+      if (localStorage.getItem(STORAGE_KEY) === "true") return
 
       // 2. Si el idioma del navegador coincide con el de la página, salir
-      var pageLang = document.documentElement.lang;
-      var browserLang = navigator.language.toLowerCase();
-      var browserIsEs = browserLang.startsWith('es');
-      var pageIsEs = pageLang === 'es';
+      var pageLang = document.documentElement.lang
+      var browserLang = navigator.language.toLowerCase()
+      var browserIsEs = browserLang.startsWith("es")
+      var pageIsEs = pageLang === "es"
 
       // Si coinciden, no mostrar nada
-      if ((pageIsEs && browserIsEs) || (!pageIsEs && !browserIsEs)) return;
+      if ((pageIsEs && browserIsEs) || (!pageIsEs && !browserIsEs)) return
 
       // 3. Buscar la URL alternativa desde los hreflang existentes
-      var targetLang = pageIsEs ? 'en' : 'es';
-      var altLink = document.querySelector('link[hreflang="' + targetLang + '"]');
-      if (!altLink || !altLink.href) return;
+      var targetLang = pageIsEs ? "en" : "es"
+      var altLink = document.querySelector('link[hreflang="' + targetLang + '"]')
+      if (!altLink || !altLink.href) return
 
       // 4. Configurar textos según el caso
-      var banner = document.getElementById('lang-banner');
-      var text = document.getElementById('lang-banner-text');
-      var link = document.getElementById('lang-banner-link');
-      var closeBtn = document.getElementById('lang-banner-close');
+      var banner = document.getElementById("lang-banner")
+      var text = document.getElementById("lang-banner-text")
+      var link = document.getElementById("lang-banner-link")
+      var closeBtn = document.getElementById("lang-banner-close")
 
-      if (!banner || !text || !link || !closeBtn) return;
+      if (!banner || !text || !link || !closeBtn) return
 
       if (pageIsEs) {
         // Página en español, usuario en inglés
-        text.textContent = '🇬🇧 This page is also available in English.';
-        link.textContent = 'Read in English';
-        closeBtn.setAttribute('aria-label', 'Dismiss');
+        text.textContent = "🇬🇧 This page is also available in English."
+        link.textContent = "Read in English"
+        closeBtn.setAttribute("aria-label", "Dismiss")
       } else {
         // Página en inglés, usuario en español
-        text.textContent = '🇪🇸 Esta página también está disponible en español.';
-        link.textContent = 'Leer en español';
-        closeBtn.setAttribute('aria-label', 'Cerrar');
+        text.textContent = "🇪🇸 Esta página también está disponible en español."
+        link.textContent = "Leer en español"
+        closeBtn.setAttribute("aria-label", "Cerrar")
       }
 
-      link.href = altLink.href;
+      link.href = altLink.href
 
       // 5. Mostrar el banner
-      banner.removeAttribute('hidden');
+      banner.removeAttribute("hidden")
       // Forzar reflow para que la transición funcione
-      banner.offsetHeight;
-      banner.setAttribute('data-visible', 'true');
+      banner.offsetHeight
+      banner.setAttribute("data-visible", "true")
 
       // 6. Handlers
       function dismiss() {
-        banner.setAttribute('data-visible', 'false');
-        setTimeout(function() { banner.setAttribute('hidden', ''); }, 300);
-        localStorage.setItem(STORAGE_KEY, 'true');
+        banner.setAttribute("data-visible", "false")
+        setTimeout(function () {
+          banner.setAttribute("hidden", "")
+        }, 300)
+        localStorage.setItem(STORAGE_KEY, "true")
       }
 
-      closeBtn.addEventListener('click', dismiss);
+      closeBtn.addEventListener("click", dismiss)
 
       // Al hacer clic en el CTA, también guardar la preferencia
-      link.addEventListener('click', function() {
-        localStorage.setItem(STORAGE_KEY, 'true');
-        localStorage.setItem('lang_override', 'true');
-      });
+      link.addEventListener("click", function () {
+        localStorage.setItem(STORAGE_KEY, "true")
+        localStorage.setItem("lang_override", "true")
+      })
 
       // Cerrar con Escape
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && banner.getAttribute('data-visible') === 'true') {
-          dismiss();
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && banner.getAttribute("data-visible") === "true") {
+          dismiss()
         }
-      });
-
+      })
     } catch (e) {
       // Silenciar errores (ej. localStorage no disponible)
     }
-  })();
+  })()
 </script>
