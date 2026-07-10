@@ -42,8 +42,11 @@ const blogSchema = {
 }
 
 const translationSlug = post.data.translationSlug
-const enUrl = `/en/blog/${post.slug}`
-const esUrl = translationSlug ? `/blog/${translationSlug}` : `/en/blog/${post.slug}`
+// Trailing slash explícito y fallback correcto:
+// - enUrl: siempre la página EN actual
+// - esUrl: usa translationSlug si existe; si no, asume mismo slug en /blog/ (ES)
+const enUrl = `/en/blog/${post.slug}/`
+const esUrl = translationSlug ? `/blog/${translationSlug}/` : `/blog/${post.slug}/`
 ---
 
 <Layout

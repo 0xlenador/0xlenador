@@ -86,6 +86,7 @@ export default defineConfig({
   },
   site: "https://0xlenador.xyz",
   base: "/",
+  trailingSlash: "always",
 
   // ─── Internacionalización (i18n) ────────────────────────────────────────
   // Español = idioma default (sin prefijo de URL)
