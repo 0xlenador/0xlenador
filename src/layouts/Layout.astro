@@ -51,8 +51,15 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 // 5. URLs alternativas para hreflang (SEO bilingüe)
-const esUrlStr = customEsUrl || getAlternateUrl(Astro.url, "es")
-const enUrlStr = customEnUrl || getAlternateUrl(Astro.url, "en")
+// ensureTrailingSlash: los hreflang DEBEN coincidir exactamente con el canonical.
+// Astro genera canonical con trailing slash (carpeta/index.html → /ruta/),
+// así que normalizamos aquí para que coincidan en todo caso.
+function ensureTS(path: string): string {
+  return path === "/" || path.endsWith("/") ? path : path + "/"
+}
+
+const esUrlStr = ensureTS(customEsUrl || getAlternateUrl(Astro.url, "es"))
+const enUrlStr = ensureTS(customEnUrl || getAlternateUrl(Astro.url, "en"))
 
 const esUrl = new URL(esUrlStr, Astro.site)
 const enUrl = new URL(enUrlStr, Astro.site)

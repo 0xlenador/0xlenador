@@ -40,6 +40,10 @@ const guiaSchema = {
     "@id": new URL(Astro.url.pathname, Astro.site).href,
   },
 }
+
+const translationSlug = guia.data.translationSlug
+const enUrl = `/en/operations/${guia.slug}/`
+const esUrl = translationSlug ? `/operaciones/${translationSlug}/` : `/operaciones/${guia.slug}/`
 ---
 
 <Layout
@@ -51,6 +55,8 @@ const guiaSchema = {
   schema={guiaSchema}
   publishedTime={new Date(date).toISOString()}
   author="0xLeñador"
+  esUrl={esUrl}
+  enUrl={enUrl}
 >
   <GuiaDetailView guia={guia} />
 </Layout>

@@ -35,6 +35,10 @@ const schema = [
     mainEntityOfPage: { "@type": "WebPage", "@id": data.pageUrl },
   },
 ]
+
+// hreflang cruzado: /activos/{id}/ ↔ /en/watchlist/{id}/
+const esUrl = `/activos/${Astro.params.id}/`
+const enUrl = `/en/watchlist/${Astro.params.id}/`
 ---
 
 <Layout
@@ -42,6 +46,8 @@ const schema = [
   description={seoDesc}
   image={data.seo.ogImage}
   schema={schema}
+  esUrl={esUrl}
+  enUrl={enUrl}
 >
   <AssetDetailView data={data} />
 </Layout>
