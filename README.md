@@ -1,6 +1,9 @@
 # 🌲 0xLeñador
 
-Este es el repositorio oficial de **0xLeñador**, un hub de investigación y herramientas de Web3 enfocado en el ecosistema cripto. Construido con [Astro](https://astro.build/) y enfocado en el rendimiento y un SEO bilingüe (Español/Inglés).
+[![Sitio Web](https://img.shields.io/badge/Website-0xlenador.xyz-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://0xlenador.xyz)
+[![Twitter / X](https://img.shields.io/badge/Twitter-%400xlenador-black?style=for-the-badge&logo=x&logoColor=white)](https://twitter.com/0xlenador)
+
+**0xLeñador** es un hub integral de investigación y desarrollo de herramientas Web3, creado con el propósito de aportar valor y conocimiento al ecosistema cripto. Desarrollado sobre [Astro](https://astro.build/), el proyecto prioriza un rendimiento excepcional y cuenta con una arquitectura diseñada para un SEO bilingüe (Español e Inglés) eficiente.
 
 ---
 
