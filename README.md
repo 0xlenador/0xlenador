@@ -1,4 +1,4 @@
-# 0xLeñador
+# 0x Leñador
 
 [![Sitio Web](https://img.shields.io/badge/Website-0xlenador.xyz-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://0xlenador.xyz)&nbsp;&nbsp;&nbsp;&nbsp;[![Twitter / X](https://img.shields.io/badge/Twitter-%400xlenador-black?style=for-the-badge&logo=x&logoColor=white)](https://twitter.com/0xlenador)
 
