@@ -143,8 +143,8 @@ const faqItems = [
       t("home.hero.phrase4"),
       t("home.hero.phrase5"),
     ]}
-    ctaPrimario={{ texto: t("home.hero.cta.primary"), href: "/directorio" }}
-    ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: "/operaciones" }}
+    ctaPrimario={{ texto: t("home.hero.cta.primary"), href: getLocalizedPath("/directorio", lang) }}
+    ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: getLocalizedPath("/operaciones", lang) }}
   />
 </main>
 
@@ -285,7 +285,7 @@ const faqItems = [
       </h2>
       <div class="h-px flex-grow bg-terminal-border/50"></div>
       <a
-        href="/herramientas"
+        href={getLocalizedPath("/herramientas", lang)}
         class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
       >
         {t("home.section.tools.viewAll")}

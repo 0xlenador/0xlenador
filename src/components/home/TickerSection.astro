@@ -6,6 +6,9 @@
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n"
 import { getCollection } from "astro:content"
 
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 const watchlistEntries = await getCollection("watchlist")
 const assets = watchlistEntries
   .filter((entry) => entry.data.price?.apiUrl)
@@ -27,7 +30,7 @@ const assets = watchlistEntries
       nombre: data.name,
       imagen: data.image,
       isNft: apiUrl.includes("/nfts/"),
-      href: `/activos/${data.id}`,
+      href: getLocalizedPath(`/activos/${data.id}`, lang),
     }
   })
 
@@ -43,9 +46,6 @@ const animationClass = isMarqueeDesktop
   : isMarqueeMobile
     ? "animate-marquee-mobile"
     : "justify-center"
-
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
 ---
 
 <section
