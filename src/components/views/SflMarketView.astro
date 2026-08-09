@@ -1473,9 +1473,21 @@ const t = useTranslations(lang)
         "hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_11%_18%_18%_18%] lg:items-center lg:py-3"
       row.setAttribute("data-row-id", item.name)
 
+      // Calculate trend colors for mobile dots
+      const getTrendColor = (historyKey) => {
+        if (item.currentPrice === 0) return "bg-terminal-muted/30"
+        const change = calculateChange(item.currentPrice, item.history[historyKey])
+        if (change.val === 0) return "bg-terminal-muted/30"
+        return change.isPositive ? "bg-emerald-500" : "bg-red-500"
+      }
+      const color24h = getTrendColor("1d")
+      const color7d = getTrendColor("7d")
+      const color30d = getTrendColor("30d")
+      const color180d = getTrendColor("180d")
+
       row.innerHTML = `
         <!-- Card Header (Móvil) / Columna 1 (Desktop) -->
-        <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full">
+        <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full cursor-pointer lg:cursor-default mobile-row-toggle">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
               <img src="${encodeURI("/img/sunflowerland/" + (item.category === "resources" ? item.name + ".png" : item.category === "cosmetics" ? "cosmetics/" + (item.isWearable ? "wearables/" + (item.image || item.name + ".png") : "collectibles/" + (item.image ? item.image.replace(/\.png$/i, ".webp") : item.name + ".webp")) : "powerups/" + (item.isWearable ? "wearables/" : "") + (item.image || item.name + ".png")))}" alt="${item.name}" class="${item.category !== "resources" ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
@@ -1498,10 +1510,38 @@ const t = useTranslations(lang)
               ${item.category === "powerups" && item.boost ? `<p class="text-[9px] text-emerald-400/80 leading-tight lg:leading-none mt-1 max-w-[180px] lg:max-w-none">${item.boost}</p>` : ""}
             </div>
           </div>
-          <!-- Precio Móvil -->
-          <div class="lg:hidden text-right flex flex-col justify-center">
-             <span class="text-xs font-mono text-terminal-muted mb-0.5">${tColPrice}</span>
-             <span class="text-lg font-bold text-white leading-none">${formatNumber(item.currentPrice, 4)}</span>
+          <!-- Precio Móvil y 4 Círculos -->
+          <div class="lg:hidden flex items-center justify-end gap-3">
+             <!-- Indicadores de Tendencia -->
+             <div class="flex items-center gap-1.5 mt-0.5">
+                <div class="flex flex-col items-center gap-1.5">
+                   <span class="text-[8px] font-mono text-terminal-muted/70 leading-none">24H</span>
+                   <div class="w-1.5 h-1.5 rounded-full ${color24h}"></div>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                   <span class="text-[8px] font-mono text-terminal-muted/70 leading-none">7D</span>
+                   <div class="w-1.5 h-1.5 rounded-full ${color7d}"></div>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                   <span class="text-[8px] font-mono text-terminal-muted/70 leading-none">30D</span>
+                   <div class="w-1.5 h-1.5 rounded-full ${color30d}"></div>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                   <span class="text-[8px] font-mono text-terminal-muted/70 leading-none">180D</span>
+                   <div class="w-1.5 h-1.5 rounded-full ${color180d}"></div>
+                </div>
+             </div>
+             <!-- Precio -->
+             <div class="flex flex-col items-end justify-center border-l border-white/5 pl-2.5 min-w-[55px]">
+               <span class="text-[9px] font-mono text-terminal-muted mb-1">${tColPrice}</span>
+               <span class="text-sm font-bold text-white leading-none">${formatNumber(item.currentPrice, 4)}</span>
+             </div>
+             <!-- Expand Indicator -->
+             <div class="expand-indicator lg:hidden flex items-center pl-1 transition-opacity group-[.is-expanded]:hidden">
+               <svg class="w-3.5 h-3.5 text-terminal-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+               </svg>
+             </div>
           </div>
         </div>
         
@@ -1510,21 +1550,23 @@ const t = useTranslations(lang)
           <span class="text-sm font-medium text-white">${formatNumber(item.currentPrice, 4)}</span>
         </div>
         
-        <!-- Contenedor de gráficas (2x2 en móvil, horizontal en lg) -->
-        ${item.currentPrice === 0 ? `
-          <div class="mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:col-span-4 lg:h-full flex items-center justify-center lg:py-2">
-            <div class="w-full h-full min-h-[80px] lg:min-h-0 rounded-lg border border-dashed border-white/10 bg-white/[0.01] flex items-center justify-center">
-              <span class="text-[10px] font-mono text-terminal-muted/40 uppercase tracking-widest">No Sales Data</span>
+        <!-- Contenedor de gráficas (Oculto por defecto en móvil, Acordeón) -->
+        <div class="hidden lg:contents mobile-charts-container w-full">
+          ${item.currentPrice === 0 ? `
+            <div class="mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:col-span-4 lg:h-full flex items-center justify-center lg:py-2 w-full">
+              <div class="w-full h-full min-h-[80px] lg:min-h-0 rounded-lg border border-dashed border-white/10 bg-white/[0.01] flex items-center justify-center">
+                <span class="text-[10px] font-mono text-terminal-muted/40 uppercase tracking-widest">No Sales Data</span>
+              </div>
             </div>
-          </div>
-        ` : `
-          <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
-            ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
-            ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
-            ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
-            ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
-          </div>
-        `}
+          ` : `
+            <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents w-full">
+              ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
+              ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
+              ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
+              ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+            </div>
+          `}
+        </div>
       `
       fragment.appendChild(row)
     })
@@ -1718,6 +1760,28 @@ const t = useTranslations(lang)
       fetchBtn.addEventListener("click", () => {
         sessionStorage.setItem("sfl_market_scroll", window.scrollY)
         fetchData()
+      })
+    }
+
+    // Acordeón para dispositivos móviles
+    if (tableBody) {
+      tableBody.addEventListener("click", (e) => {
+        // Ignorar si estamos en escritorio (Tailwind lg: >= 1024px)
+        if (window.innerWidth >= 1024) return
+
+        const rowToggle = e.target.closest(".mobile-row-toggle")
+        if (!rowToggle) return
+        
+        // Encontrar la fila actual
+        const row = rowToggle.closest("[data-row-id]")
+        if (!row) return
+
+        // Alternar la visibilidad de la fila clickeada
+        const chartsContainer = row.querySelector(".mobile-charts-container")
+        if (chartsContainer) {
+          chartsContainer.classList.toggle("hidden")
+          row.classList.toggle("is-expanded")
+        }
       })
     }
 
