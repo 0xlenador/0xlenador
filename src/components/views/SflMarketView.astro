@@ -969,7 +969,7 @@ const t = useTranslations(lang)
   }
 
   const formatNumber = (num, decimals = 2) => {
-    if (num === undefined || num === null) return "0"
+    if (num === undefined || num === null || num === 0) return "0"
     if (num < 0.0001) return num.toExponential(2)
     return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 0,
@@ -1511,12 +1511,20 @@ const t = useTranslations(lang)
         </div>
         
         <!-- Contenedor de gráficas (2x2 en móvil, horizontal en lg) -->
-        <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
-          ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
-          ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
-          ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
-          ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
-        </div>
+        ${item.currentPrice === 0 ? `
+          <div class="mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:col-span-4 lg:h-full flex items-center justify-center lg:py-2">
+            <div class="w-full h-full min-h-[80px] lg:min-h-0 rounded-lg border border-dashed border-white/10 bg-white/[0.01] flex items-center justify-center">
+              <span class="text-[10px] font-mono text-terminal-muted/40 uppercase tracking-widest">No Sales Data</span>
+            </div>
+          </div>
+        ` : `
+          <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents">
+            ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
+            ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
+            ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
+            ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+          </div>
+        `}
       `
       fragment.appendChild(row)
     })

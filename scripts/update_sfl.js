@@ -209,8 +209,10 @@ async function updateSFLData() {
       else throw new Error("No se pudo obtener la data principal.")
     }
 
-    const processedItems = {}
-    for (const [itemKey, itemData] of Object.entries(baseItems)) {
+    const filteredItems = {}
+    for (const itemKey of ALLOWED_KEYS) {
+      const itemData = baseItems[itemKey] || {}
+      
       const getItemPrice = (offset) => {
         if (offset === 0 && rawData["live"])
           return rawData["live"][itemKey] ? rawData["live"][itemKey].latestSale : null
@@ -218,41 +220,33 @@ async function updateSFLData() {
         return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].latestSale : null
       }
 
-      const p0 = getItemPrice(0) || itemData.latestSale
-      if (!p0) continue
+      const p0 = getItemPrice(0) || itemData.latestSale || 0
 
-      processedItems[itemKey] = {
+      filteredItems[itemKey] = {
         key: itemKey,
         currentPrice: p0,
         low: itemData.low || p0,
         volume: itemData.volume || 0,
         trades: itemData.trades || 0,
         history: {
-          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3),
-          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4),
+          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || 0,
+          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || 0,
           "30d":
             getItemPrice(30) ||
             getItemPrice(31) ||
             getItemPrice(29) ||
             getItemPrice(32) ||
-            getItemPrice(28),
+            getItemPrice(28) || 0,
           "180d":
             getItemPrice(180) ||
             getItemPrice(181) ||
             getItemPrice(179) ||
             getItemPrice(182) ||
-            getItemPrice(178),
-          sparkline7d: Array.from({ length: 8 }, (_, i) => 7 - i).map(getItemPrice),
-          sparkline30d: Array.from({ length: 31 }, (_, i) => 30 - i).map(getItemPrice),
-          sparkline180d: Array.from({ length: 181 }, (_, i) => 180 - i).map(getItemPrice),
+            getItemPrice(178) || 0,
+          sparkline7d: Array.from({ length: 8 }, (_, i) => 7 - i).map(o => getItemPrice(o) || 0),
+          sparkline30d: Array.from({ length: 31 }, (_, i) => 30 - i).map(o => getItemPrice(o) || 0),
+          sparkline180d: Array.from({ length: 181 }, (_, i) => 180 - i).map(o => getItemPrice(o) || 0),
         },
-      }
-    }
-
-    const filteredItems = {}
-    for (const [key, val] of Object.entries(processedItems)) {
-      if (ALLOWED_KEYS.has(key)) {
-        filteredItems[key] = val
       }
     }
 
