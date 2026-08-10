@@ -50,7 +50,47 @@ const t = useTranslations(lang)
           {t("sfl.intro")}
         </p>
       </div>
-      <div class="hidden lg:flex w-full lg:w-auto justify-center lg:justify-end shrink-0 lg:pt-1">
+      <div class="hidden lg:flex w-full lg:w-auto justify-center lg:justify-end shrink-0 lg:pt-1 gap-4">
+        <!-- Tarjeta Yakkamon -->
+        <div
+          class="relative bg-white/[0.02] border border-amber-500/20 pr-4 rounded-2xl flex items-stretch shadow-[0_0_15px_rgba(245,158,11,0.05)] hover:border-amber-500/40 transition-colors group"
+        >
+          <!-- Badge Nuevo Juego sin fondo negro extra -->
+          <span class="absolute -top-[7px] left-1/2 -translate-x-1/2 bg-[#0c1015] text-amber-500/90 border border-amber-500/20 px-1.5 py-[1px] rounded-[3px] text-[7px] font-mono font-bold uppercase tracking-widest whitespace-nowrap">Nuevo juego</span>
+
+          <!-- Imagen alto completo al borde sin espacio -->
+          <a href="https://yakkamon.com/" target="_blank" rel="noopener noreferrer" class="w-12 shrink-0 overflow-hidden cursor-pointer flex items-center justify-center rounded-l-[15px] bg-amber-500/5">
+            <img
+              src="/img/cripto/yakkamon.webp"
+              alt="Yakkamon"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+            />
+          </a>
+          
+          <div class="flex flex-col text-left justify-center py-2 pl-3">
+            <a href="https://yakkamon.com/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-[15px] text-white font-black tracking-wider leading-none hover:text-amber-400 transition-colors mb-1">
+              Yakkamon
+              <svg class="w-3 h-3 text-amber-500/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <div class="flex items-center gap-1 group/code cursor-pointer" onclick="navigator.clipboard.writeText('YAKKA-VNTB4Y'); const i=this.querySelector('.copy-icon'); const c=this.querySelector('.check-icon'); i.classList.add('hidden'); c.classList.remove('hidden'); setTimeout(()=>{i.classList.remove('hidden'); c.classList.add('hidden');}, 2000)" title="Copiar código">
+              <span class="text-[7px] font-mono text-terminal-secondary group-hover/code:text-amber-400 transition-colors uppercase tracking-widest">Code: <span class="text-[9px] font-bold text-white group-hover/code:text-amber-400">YAKKA-VNTB4Y</span></span>
+              
+              <!-- Ícono de copiar normal -->
+              <svg class="w-2.5 h-2.5 text-terminal-muted/60 group-hover/code:text-amber-400/80 transition-colors copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+
+              <!-- Ícono de check verde (oculto por defecto) -->
+              <svg class="w-2.5 h-2.5 text-emerald-500 hidden check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta Flower Price -->
         <div
           class="bg-white/[0.02] border border-emerald-500/20 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(16,185,129,0.05)] cursor-help hover:border-emerald-500/40 transition-colors"
           title="Precio actual de Flower en tiempo real"
