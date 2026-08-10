@@ -43,6 +43,7 @@ const guias = defineCollection({
     fechaLimite: z.coerce.string().optional(),
     plataforma: z.string(),
     imagen: z.string().optional(),
+    ogImage: z.string().optional(),
     tags: z.array(z.string()).default([]),
     dificultad: z.enum(["baja", "media", "alta"]).default("media"),
     tiempoEstimado: z.string().optional(),

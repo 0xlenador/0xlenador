@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 const { guia } = Astro.props
 const { title, description, imagen, tags, date } = guia.data
 
-const ogImage = imagen
+const ogImage = guia.data.ogImage || imagen
 
 // Schema.org TechArticle para SEO estructurado
 const guiaSchema = {
