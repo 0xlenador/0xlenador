@@ -10,7 +10,7 @@
  */
 
 interface Props {
-  variant?: "icon-only" | "with-label"
+  variant?: "icon-only" | "with-label" | "responsive"
   size?: "sm" | "md" | "lg"
   class?: string
 }
@@ -45,9 +45,15 @@ const links = [
       "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z",
   },
 ]
+
+const getLayoutClass = () => {
+  if (variant === "icon-only") return "flex-row justify-center gap-4"
+  if (variant === "responsive") return "flex-row md:flex-col justify-center gap-4 md:gap-3"
+  return "flex-col gap-3"
+}
 ---
 
-<div class:list={["flex gap-4", variant === "icon-only" ? "flex-row justify-center" : "flex-col gap-3", className]}>
+<div class:list={["flex", getLayoutClass(), className]}>
   {
     links.map(({ label, href, svgPath }) => (
       <a
@@ -62,7 +68,8 @@ const links = [
             <path d={svgPath} />
           </svg>
         </span>
-        {variant === "with-label" && label}
+        {variant === "with-label" && <span>{label}</span>}
+        {variant === "responsive" && <span class="hidden md:inline">{label}</span>}
       </a>
     ))
   }

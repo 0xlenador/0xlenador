@@ -15,6 +15,8 @@ const authorSchema = {
   mainEntity: {
     "@type": "Person",
     name: "0x Leñador",
+    alternateName: "Manuel Felipe Vargas",
+    jobTitle: "Web3 Researcher",
     description: "Researcher and operator focused on DeFi, Airdrops, and Gaming in the Web3 ecosystem.",
     image: new URL("/img/44.webp", Astro.site).href,
     url: new URL(Astro.url.pathname, Astro.site).href,
@@ -45,12 +47,12 @@ const authorSchema = {
         <!-- Avatar Section -->
         <div class="flex-shrink-0 flex flex-col items-center">
           <div class="w-24 h-24 md:w-40 md:h-40 rounded-full border-4 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.3)] bg-gray-800">
-            <img src="/img/44.webp" alt="0x Leñador Avatar" class="w-full h-full object-cover" />
+            <img src="/img/44.webp" alt="0x Leñador - Web3 Researcher and Operator" class="w-full h-full object-cover" />
           </div>
           <h1 class="mt-4 md:mt-6 text-xl md:text-3xl font-bold text-white tracking-tight">0x<span class="ml-1.5 md:ml-2">Leñador</span></h1>
           <p class="text-green-400 font-medium text-xs md:text-sm mt-1 uppercase tracking-widest">Web3 Researcher</p>
           <div class="mt-6 flex justify-center w-full">
-            <SocialLinks variant="icon-only" />
+            <SocialLinks variant="responsive" />
           </div>
         </div>
 
@@ -76,14 +78,24 @@ const authorSchema = {
           <div class="space-y-4">
             <h2 class="text-2xl font-bold text-white mt-8 mb-4">My Approach</h2>
             <ul class="list-disc pl-5 space-y-2 text-gray-300">
-              <li><strong class="text-white">Zero Noise:</strong> I only share actionable information, without unnecessary hype.</li>
-              <li><strong class="text-white">Skin in the game:</strong> If I write a guide about a protocol, it's because I have my own funds operating there.</li>
-              <li><strong class="text-white">Automation:</strong> I seek to make time more efficient using tools, scripts, and structured processes.</li>
+              <li><strong class="text-white">Skin in the Game:</strong> Analyzing and testing projects is just the beginning; operating with your own capital is what truly conditions you and keeps you sharp. Here, we operate to win. If there's a setback, it's documented honestly, but the non-negotiable goal is long-term profitability.</li>
+              <li><strong class="text-white">Survival and Asymmetries:</strong> The market demands balance. I rely on solid, established investments (S&P 500, Berkshire Hathaway, RWAs, and Bitcoin's current solidity) to weather the storms. At the same time, I look for market anomalies: reserving a small portion for disruptive, garage-stage projects that can break out like dark horses.</li>
+              <li><strong class="text-white">Professional Transparency:</strong> I'm Manuel Felipe Vargas, the researcher and operator behind 0x Leñador. <a href="https://www.linkedin.com/in/felipevargasborja/" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-green-300 underline underline-offset-4 decoration-green-400/30 hover:decoration-green-400 transition-colors">LinkedIn</a></li>
             </ul>
           </div>
           
           <div class="mt-8 pt-8 border-t border-white/10 text-sm text-gray-400 italic">
-            <p><strong>Disclaimer:</strong> All content documented on this site and on my social networks is strictly for research and educational purposes. Nothing I share should be interpreted as financial or investment advice. Web3 markets are highly experimental and carry a substantial risk of loss.</p>
+            <p><strong>Disclaimer:</strong> All content documented on this site and my social networks is strictly for research and educational purposes. Nothing I share should be interpreted as financial or investment advice. Web3 markets are highly experimental and carry substantial risk of loss. Join my X account, where I share my analysis and current operations.</p>
+          </div>
+
+          <!-- Internal Linking SEO -->
+          <div class="mt-8 flex flex-col sm:flex-row gap-4">
+            <a href="/en/operations/" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-center py-3 px-4 rounded-xl font-medium transition-colors">
+              Explore my Operations
+            </a>
+            <a href="/en/blog/" class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-center py-3 px-4 rounded-xl font-medium transition-colors">
+              Read my Analysis
+            </a>
           </div>
 
         </div>

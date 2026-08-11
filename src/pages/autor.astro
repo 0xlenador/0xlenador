@@ -15,6 +15,8 @@ const authorSchema = {
   mainEntity: {
     "@type": "Person",
     name: "0x Leñador",
+    alternateName: "Manuel Felipe Vargas",
+    jobTitle: "Investigador Web3",
     description: "Investigador y operador enfocado en DeFi, Airdrops y Gaming en el ecosistema Web3.",
     image: new URL("/img/44.webp", Astro.site).href,
     url: new URL(Astro.url.pathname, Astro.site).href,
@@ -46,12 +48,12 @@ const authorSchema = {
         <div class="flex-shrink-0 flex flex-col items-center">
           <div class="w-24 h-24 md:w-40 md:h-40 rounded-full border-4 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.3)] bg-gray-800">
             <!-- Si deseas mostrar tu rostro real, puedes cambiar la ruta de esta imagen -->
-            <img src="/img/44.webp" alt="Avatar de 0x Leñador" class="w-full h-full object-cover" />
+            <img src="/img/44.webp" alt="0x Leñador - Investigador y Operador Web3" class="w-full h-full object-cover" />
           </div>
           <h1 class="mt-4 md:mt-6 text-xl md:text-3xl font-bold text-white tracking-tight">0x<span class="ml-1.5 md:ml-2">Leñador</span></h1>
           <p class="text-green-400 font-medium text-xs md:text-sm mt-1 uppercase tracking-widest">Investigador Web3</p>
           <div class="mt-6 flex justify-center w-full">
-            <SocialLinks variant="icon-only" />
+            <SocialLinks variant="responsive" />
           </div>
         </div>
 
@@ -79,12 +81,22 @@ const authorSchema = {
             <ul class="list-disc pl-5 space-y-2 text-gray-300">
               <li><strong class="text-white">La carne en el asador (Skin in the game):</strong> Analizar proyectos y probarlos es solo el principio; operar con capital propio es lo que te condiciona y te fortalece para estar atento. Aquí operamos para ganar. Si hay un revés, se documenta con sinceridad, pero el objetivo innegociable es la rentabilidad a largo plazo.</li>
               <li><strong class="text-white">Supervivencia y Asimetrías:</strong> El mercado exige equilibrio. Me apoyo en inversiones sólidas y establecidas (S&P 500, Berkshire Hathaway, RWA y la solidez actual de Bitcoin) para aguantar los malos momentos. A su vez, busco anomalías de mercado: reservo una pequeña parte para proyectos de garaje disruptivos que pueden romper como un caballo negro.</li>
-              <li><strong class="text-white">Transparencia Profesional:</strong> Soy Manuel Felipe Vargas, el investigador y operador detrás de 0x Leñador. Cero ruido, solo datos y ejecución. <a href="https://www.linkedin.com/in/felipevargasborja/" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-green-300 underline underline-offset-4 decoration-green-400/30 hover:decoration-green-400 transition-colors">LinkedIn</a></li>
+              <li><strong class="text-white">Transparencia Profesional:</strong> Soy Manuel Felipe Vargas, el investigador y operador detrás de 0x Leñador. <a href="https://www.linkedin.com/in/felipevargasborja/" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-green-300 underline underline-offset-4 decoration-green-400/30 hover:decoration-green-400 transition-colors">LinkedIn</a></li>
             </ul>
           </div>
           
           <div class="mt-8 pt-8 border-t border-white/10 text-sm text-gray-400 italic">
             <p><strong>Aviso:</strong> Todo el contenido documentado en este sitio y en mis redes sociales tiene un propósito estrictamente investigativo y educativo. Nada de lo que comparto debe ser interpretado como asesoría financiera o de inversión. Los mercados Web3 son altamente experimentales y conllevan un riesgo sustancial de pérdida. Únete a mi cuenta de X, donde comparto mis análisis y lo que opero en cada momento.</p>
+          </div>
+
+          <!-- Internal Linking SEO -->
+          <div class="mt-8 flex flex-col sm:flex-row gap-4">
+            <a href="/operaciones/" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-center py-3 px-4 rounded-xl font-medium transition-colors">
+              Explorar mis Operaciones
+            </a>
+            <a href="/blog/" class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-center py-3 px-4 rounded-xl font-medium transition-colors">
+              Leer mis Análisis
+            </a>
           </div>
 
         </div>
