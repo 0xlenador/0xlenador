@@ -47,7 +47,7 @@ const links = [
 ]
 ---
 
-<div class:list={["flex flex-col gap-3", className]}>
+<div class:list={["flex gap-4", variant === "icon-only" ? "flex-row justify-center" : "flex-col gap-3", className]}>
   {
     links.map(({ label, href, svgPath }) => (
       <a
