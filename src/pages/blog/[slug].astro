@@ -27,7 +27,7 @@ const blogSchema = {
   author: {
     "@type": "Person",
     name: "0xLeñador",
-    url: "https://0xlenador.xyz",
+    url: new URL("/autor", Astro.site).href,
   },
   publisher: {
     "@type": "Organization",

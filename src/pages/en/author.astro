@@ -1,0 +1,93 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SocialLinks from "../../components/SocialLinks.astro"
+import { useTranslations } from "../../i18n"
+
+const lang = "en"
+const t = useTranslations(lang)
+
+const title = "0xLeñador | Web3 Researcher & Operator"
+const description = "Discover the story behind the 0xLeñador Hub. From Excel spreadsheets to Web3 tools and on-chain strategies."
+
+const authorSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  mainEntity: {
+    "@type": "Person",
+    name: "0xLeñador",
+    description: "Researcher and operator focused on DeFi, Airdrops, and Gaming in the Web3 ecosystem.",
+    image: new URL("/img/44.webp", Astro.site).href,
+    url: new URL(Astro.url.pathname, Astro.site).href,
+    sameAs: [
+      "https://x.com/0xlenador",
+      "https://discord.gg/Yq95Uq48",
+      "https://github.com/0xlenador"
+    ]
+  }
+}
+---
+
+<Layout
+  title={title}
+  description={description}
+  schema={authorSchema}
+  ogType="profile"
+  image="/img/44.webp"
+  esUrl="/autor/"
+  enUrl="/en/author/"
+>
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-32 lg:pt-40">
+    <div class="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10 pointer-events-none"></div>
+      
+      <div class="relative px-6 py-12 sm:px-12 sm:py-16 flex flex-col md:flex-row items-center md:items-start gap-10">
+        
+        <!-- Avatar Section -->
+        <div class="flex-shrink-0 flex flex-col items-center">
+          <div class="w-40 h-40 rounded-full border-4 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.3)] bg-gray-800">
+            <img src="/img/44.webp" alt="0xLeñador Avatar" class="w-full h-full object-cover" />
+          </div>
+          <h1 class="mt-6 text-3xl font-bold text-white tracking-tight">0xLeñador</h1>
+          <p class="text-green-400 font-medium text-sm mt-1 uppercase tracking-widest">Web3 Researcher</p>
+          <div class="mt-6 flex justify-center w-full">
+            <SocialLinks class="justify-center" />
+          </div>
+        </div>
+
+        <!-- Bio Section -->
+        <div class="flex-1 space-y-6 text-gray-300 text-lg leading-relaxed">
+          <p class="text-xl text-white font-medium">
+            Welcome to my digital logbook. What you see here is exactly what I operate, research, and build on a daily basis.
+          </p>
+          
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">From Excel to Web3 Hub</h2>
+            <p>
+              For a long time, the only way to keep track of airdrops, DeFi strategies, and on-chain gaming mechanics was through endless notebooks and spreadsheets. The fragmentation of information in Web3 is overwhelming.
+            </p>
+            <p>
+              I initially created this Hub as a personal necessity: to centralize my links, standardize my research, and keep an orderly track of my operations.
+            </p>
+            <p>
+              Over time, I realized that sharing these structured records provided real value to the community. Thus, my personal logbook evolved into this Operational Hub.
+            </p>
+          </div>
+          
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-white mt-8 mb-4">My Approach</h2>
+            <ul class="list-disc pl-5 space-y-2 text-gray-300">
+              <li><strong class="text-white">Zero Noise:</strong> I only share actionable information, without unnecessary hype.</li>
+              <li><strong class="text-white">Skin in the game:</strong> If I write a guide about a protocol, it's because I have my own funds operating there.</li>
+              <li><strong class="text-white">Automation:</strong> I seek to make time more efficient using tools, scripts, and structured processes.</li>
+            </ul>
+          </div>
+          
+          <div class="mt-8 pt-8 border-t border-white/10 text-sm text-gray-400 italic">
+            <p><strong>Disclaimer:</strong> All content documented on this site and on my social networks is strictly for research and educational purposes. Nothing I share should be interpreted as financial or investment advice. Web3 markets are highly experimental and carry a substantial risk of loss.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
