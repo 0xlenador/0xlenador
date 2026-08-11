@@ -4,7 +4,7 @@ title: "Investment Strategies Against Inflation: How to Protect Your Capital"
 description: "Learn investment strategies to beat inflation and protect your capital: CDs, bonds, stocks, ETFs, real estate, gold, crypto, and risk management."
 category: "Investment Strategy"
 date: 2026-05-27
-author: "0xLeñador"
+author: "0x Leñador"
 coverImage: "./ganarle-a-la-inflacion.webp"
 coverAlt: "Abstract image about investment strategies against inflation, featuring a shield protecting capital, a rising price line, and financial growth charts."
 translationSlug: "ganarle-a-la-inflacion"

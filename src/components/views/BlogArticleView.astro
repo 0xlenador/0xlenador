@@ -78,7 +78,12 @@ const ogImage = coverImage?.src
           <span class="font-bold text-emerald-400 font-mono">0x</span>
         </div>
         <div>
-          <p class="text-white font-bold text-sm">{t("blog.article.writtenBy")}</p>
+          <p class="text-white font-bold text-sm">
+            {t("blog.article.writtenBy")}{" "}
+            <a href={lang === "en" ? "/en/author/" : "/autor/"} class="hover:text-emerald-400 hover:underline transition-colors decoration-emerald-400/30 underline-offset-4">
+              0x Leñador
+            </a>
+          </p>
           <p class="text-terminal-muted text-xs">{t("blog.article.role")}</p>
         </div>
       </div>

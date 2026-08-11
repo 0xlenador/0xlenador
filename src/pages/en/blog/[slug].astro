@@ -26,12 +26,12 @@ const blogSchema = {
   datePublished: new Date(date).toISOString(),
   author: {
     "@type": "Person",
-    name: "0xLeñador",
+    name: "0x Leñador",
     url: new URL("/en/author", Astro.site).href,
   },
   publisher: {
     "@type": "Organization",
-    name: "0xLeñador",
+    name: "0x Leñador",
     url: "https://0xlenador.xyz",
   },
   image: ogImage ? new URL(ogImage, "https://0xlenador.xyz").href : undefined,
@@ -50,14 +50,14 @@ const esUrl = translationSlug ? `/blog/${translationSlug}/` : `/blog/${post.slug
 ---
 
 <Layout
-  title={`${title} | 0xLeñador`}
+  title={`${title} | 0x Leñador`}
   description={description}
   keywords={keywords}
   ogType="article"
   image={ogImage}
   schema={blogSchema}
   publishedTime={new Date(date).toISOString()}
-  author="0xLeñador"
+  author="0x Leñador"
   esUrl={esUrl}
   enUrl={enUrl}
 >

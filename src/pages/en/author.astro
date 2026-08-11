@@ -6,15 +6,15 @@ import { useTranslations } from "../../i18n"
 const lang = "en"
 const t = useTranslations(lang)
 
-const title = "0xLeñador | Web3 Researcher & Operator"
-const description = "Discover the story behind the 0xLeñador Hub. From Excel spreadsheets to Web3 tools and on-chain strategies."
+const title = "0x Leñador | Web3 Researcher & Operator"
+const description = "Discover the story behind the 0x Leñador Hub. From Excel spreadsheets to Web3 tools and on-chain strategies."
 
 const authorSchema = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   mainEntity: {
     "@type": "Person",
-    name: "0xLeñador",
+    name: "0x Leñador",
     description: "Researcher and operator focused on DeFi, Airdrops, and Gaming in the Web3 ecosystem.",
     image: new URL("/img/44.webp", Astro.site).href,
     url: new URL(Astro.url.pathname, Astro.site).href,
@@ -36,7 +36,7 @@ const authorSchema = {
   esUrl="/autor/"
   enUrl="/en/author/"
 >
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-32 lg:pt-40">
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-12">
     <div class="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
       <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10 pointer-events-none"></div>
       
@@ -45,9 +45,9 @@ const authorSchema = {
         <!-- Avatar Section -->
         <div class="flex-shrink-0 flex flex-col items-center">
           <div class="w-40 h-40 rounded-full border-4 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.3)] bg-gray-800">
-            <img src="/img/44.webp" alt="0xLeñador Avatar" class="w-full h-full object-cover" />
+            <img src="/img/44.webp" alt="0x Leñador Avatar" class="w-full h-full object-cover" />
           </div>
-          <h1 class="mt-6 text-3xl font-bold text-white tracking-tight">0xLeñador</h1>
+          <h1 class="mt-6 text-3xl font-bold text-white tracking-tight">0x<span class="ml-1.5 md:ml-2">Leñador</span></h1>
           <p class="text-green-400 font-medium text-sm mt-1 uppercase tracking-widest">Web3 Researcher</p>
           <div class="mt-6 flex justify-center w-full">
             <SocialLinks class="justify-center" />

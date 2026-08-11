@@ -16,7 +16,7 @@ const blog = defineCollection({
       description: z.string(),
       category: z.string().default("Investigación"),
       date: z.coerce.string(),
-      author: z.string().default("0xLeñador"),
+      author: z.string().default("0x Leñador"),
       layout: z.string().optional(),
       keywords: z.string().optional(),
       readTime: z.string().optional(),
@@ -48,7 +48,7 @@ const guias = defineCollection({
     dificultad: z.enum(["baja", "media", "alta"]).default("media"),
     tiempoEstimado: z.string().optional(),
     date: z.coerce.string(),
-    author: z.string().default("0xLeñador"),
+    author: z.string().default("0x Leñador"),
     readTime: z.string().optional(),
     prioridad: z.number().default(0),
     // Slug de la guía hermana en el otro idioma para hreflang cruzado.

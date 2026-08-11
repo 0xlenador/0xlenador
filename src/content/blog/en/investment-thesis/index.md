@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "0xLeñador Investment Thesis: 60/40 Strategy in Web3 and Traditional Markets"
-description: "Investment thesis based on strategic understanding and active involvement. Traditional assets, crypto, and the garage phase: the 0xLeñador capital allocation protocol."
+title: "0x Leñador Investment Thesis: 60/40 Strategy in Web3 and Traditional Markets"
+description: "Investment thesis based on strategic understanding and active involvement. Traditional assets, crypto, and the garage phase: the 0x Leñador capital allocation protocol."
 category: "Investment Thesis"
 date: 2026-05-27
-author: "0xLeñador"
+author: "0x Leñador"
 coverImage: "./tesis.webp"
 coverAlt: "Hybrid 60/40 portfolio diagram combining traditional investment and Web3 digital assets."
 translationSlug: "tesis-de-inversion"
@@ -14,7 +14,7 @@ translationSlug: "tesis-de-inversion"
 
 What we understand about a project is worth more than the capital we deposit in it. Technical knowledge is the only factor that conditions us to operate with character in the face of volatility.
 
-This thesis is not financial advice. It is the public capital allocation protocol that governs 0xLeñador's operations: a set of rules, logic, and mathematical principles that eliminates the emotional component and allows making decisions based on solid fundamentals.
+This thesis is not financial advice. It is the public capital allocation protocol that governs 0x Leñador's operations: a set of rules, logic, and mathematical principles that eliminates the emotional component and allows making decisions based on solid fundamentals.
 
 ---
 
@@ -94,6 +94,6 @@ Experimental on-chain game economy with organic flow tokenomics. A case study at
 
 The difference between speculation and strategy is systematization. A written and public investment thesis acts as a contract with oneself: it prevents FOMO or market panic from redesigning the portfolio in the worst moments.
 
-The 0xLeñador protocol does not seek the maximum possible return. It seeks **sustainable return with total understanding** of what is being done and why.
+The 0x Leñador protocol does not seek the maximum possible return. It seeks **sustainable return with total understanding** of what is being done and why.
 
 > _"The ability to hold a position during volatility is not an emotional virtue. It is a direct consequence of having done the technical homework before entering."_

@@ -4,7 +4,7 @@ title: "Estrategias de inversión contra la inflación: cómo proteger tu capita
 description: "Aprende estrategias de inversión contra la inflación para proteger tu capital: CDTs, bonos, acciones, ETFs, bienes raíces, oro, cripto y gestión del riesgo."
 category: "Estrategia de Inversión"
 date: 2026-05-27
-author: "0xLeñador"
+author: "0x Leñador"
 coverImage: "./ganarle-a-la-inflacion.webp"
 coverAlt: "Imagen abstracta sobre estrategias de inversión contra la inflación, con un escudo protegiendo capital, una línea de precios en aumento y gráficos de crecimiento financiero."
 translationSlug: "beating-inflation"

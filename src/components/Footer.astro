@@ -1,6 +1,8 @@
 ---
 import SocialLinks from "./SocialLinks.astro"
 import { useTranslations, getLocalizedPath, type Lang } from "../i18n"
+import { Image } from "astro:assets"
+import logoImg from "../assets/img/logo.webp"
 
 interface Props {
   lang: Lang
@@ -26,12 +28,23 @@ const loc = (path: string) => getLocalizedPath(path, lang)
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
       <!-- Identidad de marca -->
       <div class="space-y-4">
-        <div class="text-2xl font-bold tracking-tighter text-white">
-          0x<span class="text-emerald-500">Leñador</span>
+        <div class="flex items-center gap-2.5 text-2xl font-bold tracking-tighter text-white">
+          <Image
+            src={logoImg}
+            alt="Logo 0x Leñador"
+            width={56}
+            height={56}
+            loading="lazy"
+            class="w-7 h-7 object-contain"
+          />
+          <span class="leading-none">0x<span class="ml-1 md:ml-1.5 text-emerald-500">Leñador</span></span>
         </div>
-        <p class="text-terminal-muted text-sm leading-relaxed max-w-xs">
-          {t("footer.brand.description")}
-        </p>
+        <div class="text-terminal-muted text-sm leading-relaxed max-w-xs">
+          <p>{t("footer.brand.description")}</p>
+          <a href={loc("/autor")} class="inline-block mt-2 text-emerald-500 hover:text-emerald-400 transition-colors font-medium">
+            {t("footer.link.autor")} →
+          </a>
+        </div>
       </div>
 
       <!-- Mapa del sitio -->
@@ -74,12 +87,6 @@ const loc = (path: string) => getLocalizedPath(path, lang)
           class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
         >
           {t("footer.link.blog")}
-        </a>
-        <a
-          href={loc("/autor")}
-          class="text-terminal-muted hover:text-emerald-400 text-sm transition w-fit"
-        >
-          {t("footer.link.autor")}
         </a>
       </div>
 

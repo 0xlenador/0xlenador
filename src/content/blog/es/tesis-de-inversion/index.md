@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Tesis de Inversión 0xLeñador: Estrategia 60/40 en Web3 y Mercados Tradicionales"
-description: "Tesis de inversión basada en entendimiento estratégico e involucramiento activo. Activos tradicionales, cripto y fase de garaje: el protocolo de asignación de capital de 0xLeñador."
+title: "Tesis de Inversión 0x Leñador: Estrategia 60/40 en Web3 y Mercados Tradicionales"
+description: "Tesis de inversión basada en entendimiento estratégico e involucramiento activo. Activos tradicionales, cripto y fase de garaje: el protocolo de asignación de capital de 0x Leñador."
 category: "Tesis de Inversión"
 date: 2026-05-27
-author: "0xLeñador"
+author: "0x Leñador"
 coverImage: "./tesis.webp"
 coverAlt: "Diagrama de portafolio híbrido 60/40 combinando inversión tradicional y activos digitales Web3."
 translationSlug: "investment-thesis"
@@ -14,7 +14,7 @@ translationSlug: "investment-thesis"
 
 Vale más lo que comprendemos de un proyecto que el capital que depositamos en él. El conocimiento técnico es el único factor que nos condiciona para operar con carácter frente a la volatilidad.
 
-Esta tesis no es una recomendación financiera. Es el protocolo público de asignación de capital que rige las operaciones de 0xLeñador: un conjunto de reglas, lógica y principios matemáticos que elimina el componente emocional y permite tomar decisiones basadas en fundamentos sólidos.
+Esta tesis no es una recomendación financiera. Es el protocolo público de asignación de capital que rige las operaciones de 0x Leñador: un conjunto de reglas, lógica y principios matemáticos que elimina el componente emocional y permite tomar decisiones basadas en fundamentos sólidos.
 
 ---
 
@@ -94,6 +94,6 @@ Economía experimental de juego on-chain con tokenomics de flujo orgánico. Un c
 
 La diferencia entre especulación y estrategia es la sistematización. Una tesis de inversión escrita y pública actúa como un contrato con uno mismo: impide que el FOMO o el pánico del mercado rediseñen el portafolio en los peores momentos.
 
-El protocolo de 0xLeñador no busca el máximo rendimiento posible. Busca el **rendimiento sostenible con comprensión total** de lo que se está haciendo y por qué.
+El protocolo de 0x Leñador no busca el máximo rendimiento posible. Busca el **rendimiento sostenible con comprensión total** de lo que se está haciendo y por qué.
 
 > _"La habilidad de mantener una posición durante la volatilidad no es una virtud emocional. Es una consecuencia directa de haber hecho la tarea técnica antes de entrar."_

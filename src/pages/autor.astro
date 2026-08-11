@@ -6,15 +6,15 @@ import { useTranslations } from "../i18n"
 const lang = "es"
 const t = useTranslations(lang)
 
-const title = "0xLeñador | Investigador y Operador Web3"
-const description = "Conoce la historia detrás del Hub de 0xLeñador. De cuadernos de Excel a herramientas Web3 y estrategias on-chain."
+const title = "0x Leñador | Investigador y Operador Web3"
+const description = "Conoce la historia detrás del Hub de 0x Leñador. De cuadernos de Excel a herramientas Web3 y estrategias on-chain."
 
 const authorSchema = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   mainEntity: {
     "@type": "Person",
-    name: "0xLeñador",
+    name: "0x Leñador",
     description: "Investigador y operador enfocado en DeFi, Airdrops y Gaming en el ecosistema Web3.",
     image: new URL("/img/44.webp", Astro.site).href,
     url: new URL(Astro.url.pathname, Astro.site).href,
@@ -36,7 +36,7 @@ const authorSchema = {
   esUrl="/autor/"
   enUrl="/en/author/"
 >
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-32 lg:pt-40">
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-12">
     <div class="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
       <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10 pointer-events-none"></div>
       
@@ -46,9 +46,9 @@ const authorSchema = {
         <div class="flex-shrink-0 flex flex-col items-center">
           <div class="w-40 h-40 rounded-full border-4 border-white/10 overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.3)] bg-gray-800">
             <!-- Si deseas mostrar tu rostro real, puedes cambiar la ruta de esta imagen -->
-            <img src="/img/44.webp" alt="Avatar de 0xLeñador" class="w-full h-full object-cover" />
+            <img src="/img/44.webp" alt="Avatar de 0x Leñador" class="w-full h-full object-cover" />
           </div>
-          <h1 class="mt-6 text-3xl font-bold text-white tracking-tight">0xLeñador</h1>
+          <h1 class="mt-6 text-3xl font-bold text-white tracking-tight">0x<span class="ml-1.5 md:ml-2">Leñador</span></h1>
           <p class="text-green-400 font-medium text-sm mt-1 uppercase tracking-widest">Investigador Web3</p>
           <div class="mt-6 flex justify-center w-full">
             <SocialLinks class="justify-center" />
@@ -67,24 +67,24 @@ const authorSchema = {
               Durante mucho tiempo, la única forma de llevar un control sobre airdrops, estrategias en DeFi y mecánicas de juegos on-chain era mediante innumerables libretas de notas y hojas de cálculo. La fragmentación de información en Web3 es abrumadora.
             </p>
             <p>
-              Creé este Hub inicialmente como una necesidad personal: centralizar mis enlaces, estandarizar mis investigaciones y hacer un seguimiento ordenado de mis operaciones. 
+              Creé este Hub inicialmente como una necesidad personal: centralizar mis enlaces, estandarizar mis investigaciones y hacer un seguimiento ordenado de mis operaciones. Todo lo que desarrollo y anoto en esta web es porque yo lo uso y me resulta útil.
             </p>
             <p>
-              Con el tiempo, me di cuenta de que compartir estos registros estructurados aportaba un valor real a la comunidad. Así, mi bitácora personal evolucionó hasta convertirse en este Hub Operativo.
+              Con el tiempo, me di cuenta de que compartir estos registros estructurados y hacerlos públicos aportaba un valor real a la comunidad. Así, mi bitácora personal evolucionó hasta convertirse en este Hub Operativo.
             </p>
           </div>
           
           <div class="space-y-4">
             <h2 class="text-2xl font-bold text-white mt-8 mb-4">Mi Enfoque</h2>
             <ul class="list-disc pl-5 space-y-2 text-gray-300">
-              <li><strong class="text-white">Cero Ruido:</strong> Solo comparto información accionable, sin hype innecesario.</li>
-              <li><strong class="text-white">Skin in the game:</strong> Si escribo una guía sobre un protocolo, es porque yo mismo tengo fondos operando allí.</li>
-              <li><strong class="text-white">Automatización:</strong> Busco eficientizar el tiempo usando herramientas, scripts y procesos estructurados.</li>
+              <li><strong class="text-white">La carne en el asador (Skin in the game):</strong> Analizar proyectos y probarlos es solo el principio; operar con capital propio es lo que te condiciona y te fortalece para estar atento. Aquí operamos para ganar. Si hay un revés, se documenta con sinceridad, pero el objetivo innegociable es la rentabilidad a largo plazo.</li>
+              <li><strong class="text-white">Supervivencia y Asimetrías:</strong> El mercado exige equilibrio. Me apoyo en inversiones sólidas y establecidas (S&P 500, Berkshire Hathaway, RWA y la solidez actual de Bitcoin) para aguantar los malos momentos. A su vez, busco anomalías de mercado: reservo una pequeña parte para proyectos de garaje disruptivos que pueden romper como un caballo negro.</li>
+              <li><strong class="text-white">Transparencia Profesional:</strong> Soy Manuel Felipe Vargas, el investigador y operador detrás de 0x Leñador. Cero ruido, solo datos y ejecución. <a href="https://www.linkedin.com/in/felipevargasborja/" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-green-300 underline underline-offset-4 decoration-green-400/30 hover:decoration-green-400 transition-colors">LinkedIn</a></li>
             </ul>
           </div>
           
           <div class="mt-8 pt-8 border-t border-white/10 text-sm text-gray-400 italic">
-            <p><strong>Aviso:</strong> Todo el contenido documentado en este sitio y en mis redes sociales tiene un propósito estrictamente investigativo y educativo. Nada de lo que comparto debe ser interpretado como asesoría financiera o de inversión. Los mercados Web3 son altamente experimentales y conllevan un riesgo sustancial de pérdida.</p>
+            <p><strong>Aviso:</strong> Todo el contenido documentado en este sitio y en mis redes sociales tiene un propósito estrictamente investigativo y educativo. Nada de lo que comparto debe ser interpretado como asesoría financiera o de inversión. Los mercados Web3 son altamente experimentales y conllevan un riesgo sustancial de pérdida. Únete a mi cuenta de X, donde comparto mis análisis y lo que opero en cada momento.</p>
           </div>
 
         </div>
