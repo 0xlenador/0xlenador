@@ -64,6 +64,7 @@ export const routeMap: Record<string, Record<Lang, string>> = {
   // Al agregar un nuevo activo, solo crea el JSON en src/content/data/watchlist/.
   "/operaciones": { es: "/operaciones/", en: "/en/operations/" },
   "/blog": { es: "/blog/", en: "/en/blog/" },
+  "/autor": { es: "/autor/", en: "/en/author/" },
   "/faucets": { es: "/faucets/", en: "/en/faucets/" },
   "/intrinseco": { es: "/intrinseco/", en: "/en/intrinsic/" },
   "/riskfolio": { es: "/riskfolio/", en: "/en/riskfolio/" },
