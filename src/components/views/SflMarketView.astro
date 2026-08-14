@@ -590,7 +590,8 @@ const t = useTranslations(lang)
       <div class="w-full">
         <!-- Desktop Header -->
         <div
-          class="hidden lg:grid grid-cols-[25%_10%_11%_18%_18%_18%] border-b border-white/[0.05] items-center"
+          id="desktopHeader"
+          class="hidden lg:grid grid-cols-[25%_10%_11%_18%_18%_18%] border-b border-white/[0.05] items-center transition-all duration-300"
         >
           <div
             class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider cursor-pointer hover:text-white transition-colors group select-none"
@@ -624,6 +625,18 @@ const t = useTranslations(lang)
               <span
                 class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
                 data-col="1d">↕</span>
+            </div>
+          </div>
+          <div
+            id="supplyHeader"
+            class="hidden py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
+            onclick="window.handleSort('supply')"
+          >
+            <div class="flex items-center justify-center gap-2">
+              Circ. Supply
+              <span
+                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+                data-col="supply">↕</span>
             </div>
           </div>
           <div
@@ -884,18 +897,30 @@ const t = useTranslations(lang)
     currentSubCategories = ["collectibles", "wearables"]
 
     const filterContainer = document.getElementById("subfilters-container")
+    const desktopHeader = document.getElementById("desktopHeader")
+    const supplyHeader = document.getElementById("supplyHeader")
 
     if (category === "powerups" || category === "cosmetics") {
       if (filterContainer) {
         filterContainer.classList.remove("opacity-30", "grayscale", "pointer-events-none")
         filterContainer.classList.add("opacity-100")
       }
+      if (desktopHeader) {
+        desktopHeader.classList.remove("grid-cols-[25%_10%_11%_18%_18%_18%]")
+        desktopHeader.classList.add("grid-cols-[22%_10%_10%_12%_16%_15%_15%]")
+      }
+      if (supplyHeader) supplyHeader.classList.remove("hidden")
       document.querySelectorAll(".sub-checkbox-common").forEach((cb) => (cb.checked = true))
     } else {
       if (filterContainer) {
         filterContainer.classList.add("opacity-30", "grayscale", "pointer-events-none")
         filterContainer.classList.remove("opacity-100")
       }
+      if (desktopHeader) {
+        desktopHeader.classList.remove("grid-cols-[22%_10%_10%_12%_16%_15%_15%]")
+        desktopHeader.classList.add("grid-cols-[25%_10%_11%_18%_18%_18%]")
+      }
+      if (supplyHeader) supplyHeader.classList.add("hidden")
     }
 
     document.querySelectorAll(".category-btn").forEach((btn) => {
@@ -1089,21 +1114,13 @@ const t = useTranslations(lang)
       ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
       : "text-red-500 bg-red-500/10 border-red-500/20"
 
-    const arrowClasses = isLarge
-      ? "w-2.5 h-2.5 inline mr-1"
-      : "w-2 h-2 lg:w-2.5 lg:h-2.5 inline mr-0.5"
-    const strokeW = isLarge ? "2.5" : "2.5"
-    const arrow = changeObj.isPositive
-      ? `<svg class="${arrowClasses}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeW}" d="M5 15l7-7 7 7"/></svg>`
-      : `<svg class="${arrowClasses}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeW}" d="M19 9l-7 7-7-7"/></svg>`
-
     const containerClass = isLarge
       ? `text-[11px] font-bold font-mono px-1.5 py-[2px] rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0 leading-none`
       : `text-[10px] lg:text-[11px] font-bold font-mono px-0.5 py-[1px] lg:px-1 lg:py-[2px] rounded-sm lg:rounded border ${colorClass} inline-flex items-center whitespace-nowrap shrink-0 leading-none`
 
     return `
         <span class="${containerClass}">
-          ${arrow}${changeObj.text}
+          ${changeObj.text}
         </span>
     `
   }
@@ -1139,6 +1156,47 @@ const t = useTranslations(lang)
           ${graphHTML}
         </div>
       </div>
+    `
+  }
+
+  const getTextColumnHTML = (title, changeObj) => {
+    let textHTML = ""
+    if (changeObj.isPositive === null) {
+      textHTML = '<span class="text-terminal-muted/50 font-mono text-[11px] font-bold">-</span>'
+    } else {
+      const colorClass = changeObj.isPositive ? "text-emerald-500" : "text-red-500"
+      textHTML = `
+        <span class="text-[11px] font-bold font-mono inline-flex items-center whitespace-nowrap shrink-0 leading-none ${colorClass}">
+          ${changeObj.text}
+        </span>
+      `
+    }
+    
+    return `
+        <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-center lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full">
+          <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
+          <div class="flex justify-center lg:justify-center w-full">
+            ${textHTML}
+          </div>
+        </div>
+    `
+  }
+
+  const getSupplyColumnHTML = (title, supply) => {
+    const text = supply !== undefined ? formatNumber(supply, 0) : "∞"
+    const containerClass = "text-[11px] font-bold font-mono px-1.5 py-[2px] rounded border border-white/10 bg-white/5 text-white/80 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
+    const badgeHTML = `
+        <span class="${containerClass}">
+          ${text}
+        </span>
+    `
+    return `
+        <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-center lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full">
+          <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
+          <div class="flex justify-center lg:justify-center w-full">
+            ${badgeHTML}
+          </div>
+        </div>
     `
   }
 
@@ -1452,6 +1510,9 @@ const t = useTranslations(lang)
         } else if (column === "price") {
           valA = a.currentPrice
           valB = b.currentPrice
+        } else if (column === "supply") {
+          valA = a.supply !== undefined ? a.supply : Infinity
+          valB = b.supply !== undefined ? b.supply : Infinity
         } else {
           const changeA = calculateChange(a.currentPrice, a.history[column])
           const changeB = calculateChange(b.currentPrice, b.history[column])
@@ -1508,9 +1569,10 @@ const t = useTranslations(lang)
     const fragment = document.createDocumentFragment()
 
     items.forEach((item) => {
+      const isResources = item.category === "resources"
       const row = document.createElement("div")
       row.className =
-        "hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_11%_18%_18%_18%] lg:items-center lg:py-3"
+        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid ${isResources ? 'lg:grid-cols-[25%_10%_11%_18%_18%_18%]' : 'lg:grid-cols-[22%_10%_10%_12%_16%_15%_15%]'} lg:items-center lg:py-3`
       row.setAttribute("data-row-id", item.name)
 
       // Calculate trend colors for mobile dots
@@ -1600,7 +1662,8 @@ const t = useTranslations(lang)
             </div>
           ` : `
             <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents w-full">
-              ${getCardColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]), null)}
+              ${getTextColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]))}
+              ${isResources ? '' : getSupplyColumnHTML("Circ. Supply", item.supply)}
               ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
               ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
               ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
@@ -1678,6 +1741,7 @@ const t = useTranslations(lang)
                 name: sflPowerUps.power_ups.collectibles[id].name,
                 boost: sflPowerUps.power_ups.collectibles[id].boost,
                 image: sflPowerUps.power_ups.collectibles[id].image,
+                supply: sflPowerUps.power_ups.collectibles[id].supply,
                 category: "powerups",
                 isWearable: false,
               })
@@ -1692,6 +1756,7 @@ const t = useTranslations(lang)
                 name: sflCosmetics.cosmetics.collectibles[id].name,
                 boost: "",
                 image: sflCosmetics.cosmetics.collectibles[id].image,
+                supply: sflCosmetics.cosmetics.collectibles[id].supply,
                 category: "cosmetics",
                 isWearable: false,
               })
@@ -1705,6 +1770,7 @@ const t = useTranslations(lang)
                 name: sflPowerUps.power_ups.wearables[id].name,
                 boost: sflPowerUps.power_ups.wearables[id].boost,
                 image: sflPowerUps.power_ups.wearables[id].image,
+                supply: sflPowerUps.power_ups.wearables[id].supply,
                 category: "powerups",
                 isWearable: true,
               })
@@ -1718,6 +1784,7 @@ const t = useTranslations(lang)
                 name: sflCosmetics.cosmetics.wearables[id].name,
                 boost: "",
                 image: sflCosmetics.cosmetics.wearables[id].image,
+                supply: sflCosmetics.cosmetics.wearables[id].supply,
                 category: "cosmetics",
                 isWearable: true,
               })
