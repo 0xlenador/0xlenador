@@ -220,32 +220,56 @@ async function updateSFLData() {
         return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].latestSale : null
       }
 
+      const getItemTrades = (offset) => {
+        if (offset === 0 && rawData["live"])
+          return rawData["live"][itemKey] ? rawData["live"][itemKey].trades : null
+        const dStr = getDateString(offset)
+        return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].trades : null
+      }
+
       const p0 = getItemPrice(0) || itemData.latestSale || 0
+      const t0 = getItemTrades(0) || itemData.trades || 0
+      const t1 = getItemTrades(1) || getItemTrades(2) || getItemTrades(3) || 0
+      const trades24h = t1 > 0 && t0 >= t1 ? t0 - t1 : 0
+
+      const getSparklinePrice = (offset) => {
+        if (offset === 0) return p0
+        let p = getItemPrice(offset)
+        if (p) return p
+        for (let i = 1; i <= 30; i++) {
+          p = getItemPrice(offset - i)
+          if (p) return p
+          p = getItemPrice(offset + i)
+          if (p) return p
+        }
+        return p0
+      }
 
       filteredItems[itemKey] = {
         key: itemKey,
         currentPrice: p0,
         low: itemData.low || p0,
         volume: itemData.volume || 0,
-        trades: itemData.trades || 0,
+        trades: t0,
+        trades24h: trades24h,
         history: {
-          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || 0,
-          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || 0,
+          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || p0,
+          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || p0,
           "30d":
             getItemPrice(30) ||
             getItemPrice(31) ||
             getItemPrice(29) ||
             getItemPrice(32) ||
-            getItemPrice(28) || 0,
+            getItemPrice(28) || p0,
           "180d":
             getItemPrice(180) ||
             getItemPrice(181) ||
             getItemPrice(179) ||
             getItemPrice(182) ||
-            getItemPrice(178) || 0,
-          sparkline7d: Array.from({ length: 8 }, (_, i) => 7 - i).map(o => getItemPrice(o) || 0),
-          sparkline30d: Array.from({ length: 31 }, (_, i) => 30 - i).map(o => getItemPrice(o) || 0),
-          sparkline180d: Array.from({ length: 181 }, (_, i) => 180 - i).map(o => getItemPrice(o) || 0),
+            getItemPrice(178) || p0,
+          sparkline7d: Array.from({ length: 8 }, (_, i) => 7 - i).map(o => getSparklinePrice(o)),
+          sparkline30d: Array.from({ length: 31 }, (_, i) => 30 - i).map(o => getSparklinePrice(o)),
+          sparkline180d: Array.from({ length: 181 }, (_, i) => 180 - i).map(o => getSparklinePrice(o)),
         },
       }
     }

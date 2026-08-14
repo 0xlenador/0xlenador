@@ -591,7 +591,7 @@ const t = useTranslations(lang)
         <!-- Desktop Header -->
         <div
           id="desktopHeader"
-          class="hidden lg:grid grid-cols-[25%_10%_11%_18%_18%_18%] border-b border-white/[0.05] items-center transition-all duration-300"
+          class="hidden lg:grid grid-cols-[25%_15%_15%_15%_30%] border-b border-white/[0.05] items-center transition-all duration-300"
         >
           <div
             class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider cursor-pointer hover:text-white transition-colors group select-none"
@@ -628,6 +628,30 @@ const t = useTranslations(lang)
             </div>
           </div>
           <div
+            id="marketcapHeader"
+            class="hidden py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
+            onclick="window.handleSort('marketcap')"
+          >
+            <div class="flex items-center justify-center gap-2">
+              {t("sfl.market.col.marketcap")}
+              <span
+                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+                data-col="marketcap">↕</span>
+            </div>
+          </div>
+          <div
+            id="vol24hHeader"
+            class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
+            onclick="window.handleSort('trades24h')"
+          >
+            <div class="flex items-center justify-center gap-2">
+              Vol. 24H
+              <span
+                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+                data-col="trades24h">↕</span>
+            </div>
+          </div>
+          <div
             id="supplyHeader"
             class="hidden py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('supply')"
@@ -640,36 +664,21 @@ const t = useTranslations(lang)
             </div>
           </div>
           <div
-            class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('7d')"
+            class="py-4 px-4 flex flex-row items-center justify-end gap-3 group select-none"
           >
-            <div class="flex items-center justify-center gap-2">
-              {t("sfl.market.col.last7d")}
+            <!-- Título y Filtro -->
+            <div class="text-[11px] font-mono text-terminal-muted font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 cursor-pointer hover:text-white transition-colors" id="graph-sort-btn" onclick="window.handleSort('7d')">
+              <span id="graph-col-title">{lang === 'en' ? 'Price Change' : 'Cambio de precio'} (7d)</span>
               <span
                 class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+                id="graph-sort-icon"
                 data-col="7d">↕</span>
             </div>
-          </div>
-          <div
-            class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('30d')"
-          >
-            <div class="flex items-center justify-center gap-2">
-              {t("sfl.market.col.last30d")}
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="30d">↕</span>
-            </div>
-          </div>
-          <div
-            class="py-4 px-4 text-xs font-mono text-terminal-muted font-medium uppercase tracking-wider text-center cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('180d')"
-          >
-            <div class="flex items-center justify-center gap-2">
-              {t("sfl.market.col.last180d")}
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="180d">↕</span>
+            <!-- Botones -->
+            <div class="bg-black/40 border border-white/5 rounded p-0.5 flex gap-0.5 cursor-default">
+              <button onclick="window.toggleGraph('7d')" id="btn-graph-7d" class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded bg-white/10 text-white font-bold transition-all">7D</button>
+              <button onclick="window.toggleGraph('30d')" id="btn-graph-30d" class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded text-terminal-muted hover:text-white font-bold transition-all">30D</button>
+              <button onclick="window.toggleGraph('180d')" id="btn-graph-180d" class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded text-terminal-muted hover:text-white font-bold transition-all">180D</button>
             </div>
           </div>
         </div>
@@ -873,9 +882,15 @@ const t = useTranslations(lang)
     tCol7d: t("sfl.market.col.7d"),
     tCol30d: t("sfl.market.col.30d"),
     tCol180d: t("sfl.market.col.180d"),
+    tColMarketcap: t("sfl.market.col.marketcap"),
   }}
 >
   const searchInput = document.getElementById("searchInput")
+  const tableBody = document.getElementById("tableBody")
+  const filterContainer = document.getElementById("filterContainer")
+  const desktopHeader = document.getElementById("desktopHeader")
+  const supplyHeader = document.getElementById("supplyHeader")
+  const marketcapHeader = document.getElementById("marketcapHeader")
   const searchIcon = document.getElementById("searchIcon")
   const clearSearchBtn = document.getElementById("clearSearchBtn")
   const fetchBtn = document.getElementById("fetchBtn")
@@ -883,12 +898,44 @@ const t = useTranslations(lang)
   const errorState = document.getElementById("errorState")
   const errorMsg = document.getElementById("errorMsg")
   const dataContainer = document.getElementById("dataContainer")
-  const tableBody = document.getElementById("tableBody")
 
   let marketData = []
   let currentCategory = "resources"
   let currentSubCategories = ["collectibles", "wearables"]
   let searchQuery = ""
+
+  window.toggleGraph = (period) => {
+    document.querySelectorAll('.desktop-graph-7d, .desktop-graph-30d, .desktop-graph-180d').forEach(el => {
+      el.classList.add('hidden')
+    })
+    
+    document.querySelectorAll(`.desktop-graph-${period}`).forEach(el => {
+      el.classList.remove('hidden')
+    })
+    
+    document.querySelectorAll('.graph-toggle-btn').forEach(btn => {
+      btn.classList.remove('bg-white/10', 'text-white')
+      btn.classList.add('text-terminal-muted')
+    })
+    
+    const activeBtn = document.getElementById(`btn-graph-${period}`)
+    if (activeBtn) {
+      activeBtn.classList.remove('text-terminal-muted')
+      activeBtn.classList.add('bg-white/10', 'text-white')
+    }
+
+    const titleEl = document.getElementById("graph-col-title")
+    const sortBtn = document.getElementById("graph-sort-btn")
+    const sortIcon = document.getElementById("graph-sort-icon")
+    
+    if (titleEl && sortBtn && sortIcon) {
+      const isEn = window.location.pathname.includes('/en/')
+      const prefix = isEn ? 'Price Change' : 'Cambio de precio'
+      titleEl.innerText = `${prefix} (${period})`
+      sortBtn.setAttribute("onclick", `window.handleSort('${period}')`)
+      sortIcon.setAttribute("data-col", period)
+    }
+  }
 
   window.currentSort = { column: null, direction: "none" }
 
@@ -899,6 +946,7 @@ const t = useTranslations(lang)
     const filterContainer = document.getElementById("subfilters-container")
     const desktopHeader = document.getElementById("desktopHeader")
     const supplyHeader = document.getElementById("supplyHeader")
+    const marketcapHeader = document.getElementById("marketcapHeader")
 
     if (category === "powerups" || category === "cosmetics") {
       if (filterContainer) {
@@ -906,21 +954,23 @@ const t = useTranslations(lang)
         filterContainer.classList.add("opacity-100")
       }
       if (desktopHeader) {
-        desktopHeader.classList.remove("grid-cols-[25%_10%_11%_18%_18%_18%]")
-        desktopHeader.classList.add("grid-cols-[22%_10%_10%_12%_16%_15%_15%]")
+        desktopHeader.classList.remove("grid-cols-[25%_15%_15%_15%_30%]")
+        desktopHeader.classList.add("grid-cols-[20%_10%_10%_10%_10%_10%_30%]")
       }
       if (supplyHeader) supplyHeader.classList.remove("hidden")
+      if (marketcapHeader) marketcapHeader.classList.remove("hidden")
       document.querySelectorAll(".sub-checkbox-common").forEach((cb) => (cb.checked = true))
     } else {
       if (filterContainer) {
-        filterContainer.classList.add("opacity-30", "grayscale", "pointer-events-none")
+        filterContainer.classList.add("pointer-events-none")
         filterContainer.classList.remove("opacity-100")
       }
       if (desktopHeader) {
-        desktopHeader.classList.remove("grid-cols-[22%_10%_10%_12%_16%_15%_15%]")
-        desktopHeader.classList.add("grid-cols-[25%_10%_11%_18%_18%_18%]")
+        desktopHeader.classList.remove("grid-cols-[20%_10%_10%_10%_10%_10%_30%]")
+        desktopHeader.classList.add("grid-cols-[25%_15%_15%_15%_30%]")
       }
       if (supplyHeader) supplyHeader.classList.add("hidden")
+      if (marketcapHeader) marketcapHeader.classList.add("hidden")
     }
 
     document.querySelectorAll(".category-btn").forEach((btn) => {
@@ -1056,7 +1106,29 @@ const t = useTranslations(lang)
     const getX = (i) => (i / (validData.length - 1)) * width
     const getY = (val) => height - ((val - min) / range) * height
 
-    const points = validData.map((val, i) => `${getX(i)},${getY(val)}`).join(" L ")
+    const pointsArray = validData.map((val, i) => [getX(i), getY(val)])
+
+    const getCurve = (pts) => {
+      if (pts.length === 2) return `L ${pts[1][0]},${pts[1][1]}`
+      let d = ""
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i === 0 ? 0 : i - 1]
+        const p1 = pts[i]
+        const p2 = pts[i + 1]
+        const p3 = pts[i + 2 === pts.length ? i + 1 : i + 2]
+        
+        const cp1x = p1[0] + (p2[0] - p0[0]) / 6
+        const cp1y = p1[1] + (p2[1] - p0[1]) / 6
+        const cp2x = p2[0] - (p3[0] - p1[0]) / 6
+        const cp2y = p2[1] - (p3[1] - p1[1]) / 6
+        
+        d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0]},${p2[1]}`
+      }
+      return d
+    }
+
+    const strokePath = `M ${pointsArray[0][0]},${pointsArray[0][1]} ${getCurve(pointsArray)}`
+    const fillPath = `${strokePath} L ${width},${height} L 0,${height} Z`
 
     const maxIndex = validData.indexOf(max)
     const minIndex = validData.indexOf(min)
@@ -1071,7 +1143,8 @@ const t = useTranslations(lang)
            data-min="${min}" 
            data-range="${range}">
         <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0">
-          <path d="M ${points}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="${fillPath}" fill="${strokeColor}" fill-opacity="0.6" style="-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); mask-image: linear-gradient(to bottom, black 0%, transparent 100%);" stroke="none" />
+          <path d="${strokePath}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
           
           <circle cx="${getX(maxIndex)}" cy="${getY(max)}" r="1.5" fill="${dotColor}" />
           <circle cx="${getX(minIndex)}" cy="${getY(min)}" r="1.5" fill="${dotColor}" />
@@ -1140,7 +1213,7 @@ const t = useTranslations(lang)
       `
     }
 
-    const graphHTML = `<div class="h-6 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>`
+    const graphHTML = `<div class="h-8 lg:h-10 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>`
 
     return `
       <div class="flex flex-col justify-between lg:flex-row lg:items-center bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full lg:h-auto">
@@ -1187,6 +1260,25 @@ const t = useTranslations(lang)
     const containerClass = "text-[11px] font-bold font-mono px-1.5 py-[2px] rounded border border-white/10 bg-white/5 text-white/80 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
     const badgeHTML = `
         <span class="${containerClass}">
+          ${text}
+        </span>
+    `
+    return `
+        <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-center lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full">
+          <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
+          <div class="flex justify-center lg:justify-center w-full">
+            ${badgeHTML}
+          </div>
+        </div>
+    `
+  }
+
+  const getMarketcapColumnHTML = (title, mcap) => {
+    const text = mcap !== undefined ? formatNumber(mcap, 0) : "-"
+    const containerClass = "text-[11px] font-bold font-mono px-1.5 py-[2px] rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
+    const badgeHTML = `
+        <span class="${containerClass}">
+          ${mcap !== undefined ? '<img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 mr-1" alt="SFL" />' : ''}
           ${text}
         </span>
     `
@@ -1513,6 +1605,12 @@ const t = useTranslations(lang)
         } else if (column === "supply") {
           valA = a.supply !== undefined ? a.supply : Infinity
           valB = b.supply !== undefined ? b.supply : Infinity
+        } else if (column === "trades24h") {
+          valA = a.trades24h || 0
+          valB = b.trades24h || 0
+        } else if (column === "marketcap") {
+          valA = (a.supply || 0) * a.currentPrice
+          valB = (b.supply || 0) * b.currentPrice
         } else {
           const changeA = calculateChange(a.currentPrice, a.history[column])
           const changeB = calculateChange(b.currentPrice, b.history[column])
@@ -1572,7 +1670,7 @@ const t = useTranslations(lang)
       const isResources = item.category === "resources"
       const row = document.createElement("div")
       row.className =
-        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid ${isResources ? 'lg:grid-cols-[25%_10%_11%_18%_18%_18%]' : 'lg:grid-cols-[22%_10%_10%_12%_16%_15%_15%]'} lg:items-center lg:py-3`
+        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid ${isResources ? 'lg:grid-cols-[25%_15%_15%_15%_30%]' : 'lg:grid-cols-[20%_10%_10%_10%_10%_10%_30%]'} lg:items-center lg:py-3`
       row.setAttribute("data-row-id", item.name)
 
       // Calculate trend colors for mobile dots
@@ -1663,10 +1761,21 @@ const t = useTranslations(lang)
           ` : `
             <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents w-full">
               ${getTextColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]))}
+              ${isResources ? '' : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
+              ${getSupplyColumnHTML("Vol. 24H", item.trades24h)}
               ${isResources ? '' : getSupplyColumnHTML("Circ. Supply", item.supply)}
-              ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
-              ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
-              ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+              
+              <div class="lg:hidden contents">
+                ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
+                ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
+                ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+              </div>
+              
+              <div class="hidden lg:block w-full h-full">
+                 <div class="desktop-graph-7d w-full h-full">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}</div>
+                 <div class="desktop-graph-30d w-full h-full hidden">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}</div>
+                 <div class="desktop-graph-180d w-full h-full hidden">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}</div>
+              </div>
             </div>
           `}
         </div>
@@ -1733,6 +1842,7 @@ const t = useTranslations(lang)
               acc.push({
                 ...data,
                 name: sflIds[id],
+                trades24h: data.trades24h,
                 category: "resources",
               })
             } else if (type === "collectibles" && sflPowerUps.power_ups.collectibles[id]) {
@@ -1742,6 +1852,7 @@ const t = useTranslations(lang)
                 boost: sflPowerUps.power_ups.collectibles[id].boost,
                 image: sflPowerUps.power_ups.collectibles[id].image,
                 supply: sflPowerUps.power_ups.collectibles[id].supply,
+                trades24h: data.trades24h,
                 category: "powerups",
                 isWearable: false,
               })
@@ -1757,6 +1868,7 @@ const t = useTranslations(lang)
                 boost: "",
                 image: sflCosmetics.cosmetics.collectibles[id].image,
                 supply: sflCosmetics.cosmetics.collectibles[id].supply,
+                trades24h: data.trades24h,
                 category: "cosmetics",
                 isWearable: false,
               })
@@ -1771,6 +1883,7 @@ const t = useTranslations(lang)
                 boost: sflPowerUps.power_ups.wearables[id].boost,
                 image: sflPowerUps.power_ups.wearables[id].image,
                 supply: sflPowerUps.power_ups.wearables[id].supply,
+                trades24h: data.trades24h,
                 category: "powerups",
                 isWearable: true,
               })
@@ -1785,6 +1898,7 @@ const t = useTranslations(lang)
                 boost: "",
                 image: sflCosmetics.cosmetics.wearables[id].image,
                 supply: sflCosmetics.cosmetics.wearables[id].supply,
+                trades24h: data.trades24h,
                 category: "cosmetics",
                 isWearable: true,
               })
