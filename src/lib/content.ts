@@ -42,7 +42,7 @@ function attachReadingTime(item: any) {
 export async function getBlogPostsByLang(lang: Lang) {
   const posts = await getCollection("blog")
   return posts
-    .filter((post) => post.id.startsWith(`${lang}/`))
+    .filter((post) => post.id.startsWith(`${lang}/`) && !post.data.draft)
     .map((post) => ({
       ...post,
       slug: post.id.replace(`${lang}/`, ""),

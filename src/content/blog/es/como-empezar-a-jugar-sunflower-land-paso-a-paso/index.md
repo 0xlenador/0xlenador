@@ -8,6 +8,7 @@ author: "0x Leñador"
 coverImage: "./image1.png"
 coverAlt: "Pantalla de inicio de Sunflower Land"
 translationSlug: "how-to-start-playing-sunflower-land"
+draft: true
 ---
 
 Sunflower Land es un juego de granja que combina eventos interactivos, una gran comunidad y mecánicas muy divertidas. Pero aquí viene lo interesante: te invita a "poner toda la carne en el asador", ya que está respaldado por una economía real y, sobre todo, mucho amor por el juego.

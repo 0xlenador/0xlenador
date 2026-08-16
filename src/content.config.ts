@@ -20,6 +20,7 @@ const blog = defineCollection({
       layout: z.string().optional(),
       keywords: z.string().optional(),
       readTime: z.string().optional(),
+      draft: z.boolean().optional().default(false),
       // image() activa el pipeline de optimización de Astro para imágenes locales.
       // Los paths en el frontmatter deben ser relativos al archivo .md.
       coverImage: img().optional(),
