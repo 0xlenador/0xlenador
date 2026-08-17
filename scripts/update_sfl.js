@@ -230,7 +230,10 @@ async function updateSFLData() {
       const p0 = getItemPrice(0) || itemData.latestSale || 0
       const t0 = getItemTrades(0) || itemData.trades || 0
       const t1 = getItemTrades(1) || getItemTrades(2) || getItemTrades(3) || 0
+      const t7 = getItemTrades(7) || getItemTrades(8) || getItemTrades(9) || getItemTrades(10) || 0
+      
       const trades24h = t1 > 0 && t0 >= t1 ? t0 - t1 : 0
+      const trades7d = t7 > 0 && t0 >= t7 ? t0 - t7 : 0
 
       const getSparklinePrice = (offset) => {
         if (offset === 0) return p0
@@ -250,6 +253,7 @@ async function updateSFLData() {
         volume: itemData.volume || 0,
         trades: t0,
         trades24h: trades24h,
+        trades7d: trades7d,
         history: {
           "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || null,
           "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || null,

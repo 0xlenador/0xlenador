@@ -617,14 +617,14 @@ const t = useTranslations(lang)
           <div
             id="vol24hHeader"
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('trades24h')"
-            title={lang === 'en' ? 'Traded volume in 24H' : 'Volumen de unidades comerciadas en 24H'}
+            onclick="window.handleSort('trades7d')"
+            title={lang === 'en' ? 'Traded volume in 7D' : 'Volumen de unidades comerciadas en 7D'}
           >
             <div class="flex items-center justify-end gap-2">
               <span
                 class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="trades24h">↕</span>
-              Vol. (24H)
+                data-col="trades7d">↕</span>
+              Vol. (7D)
             </div>
           </div>
           <div
@@ -935,7 +935,7 @@ const t = useTranslations(lang)
     }
   }
 
-  window.currentSort = { column: "trades24h", direction: "desc" }
+  window.currentSort = { column: "trades7d", direction: "desc" }
   window.isUserSorted = false
 
   window.handleCategory = function (category) {
@@ -1614,9 +1614,9 @@ const t = useTranslations(lang)
         } else if (column === "supply") {
           valA = a.supply !== undefined ? a.supply : Infinity
           valB = b.supply !== undefined ? b.supply : Infinity
-        } else if (column === "trades24h") {
-          valA = a.trades24h || 0
-          valB = b.trades24h || 0
+        } else if (column === "trades7d") {
+          valA = a.trades7d || 0
+          valB = b.trades7d || 0
         } else if (column === "marketcap") {
           valA = (a.supply || 0) * a.currentPrice
           valB = (b.supply || 0) * b.currentPrice
@@ -1779,7 +1779,7 @@ const t = useTranslations(lang)
             <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents w-full">
               ${getTextColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]))}
               ${isResources ? '' : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
-              ${getSupplyColumnHTML("Vol. 24H", item.trades24h)}
+              ${getSupplyColumnHTML("Vol. 7D", item.trades7d)}
               ${isResources ? '' : getSupplyColumnHTML("Circ. Supply", item.supply)}
               
               <div class="lg:hidden contents">
@@ -1859,7 +1859,7 @@ const t = useTranslations(lang)
               acc.push({
                 ...data,
                 name: sflIds[id],
-                trades24h: data.trades24h,
+                trades7d: data.trades7d,
                 category: "resources",
               })
             } else if (type === "collectibles" && sflPowerUps.power_ups.collectibles[id]) {
