@@ -1745,9 +1745,9 @@ const t = useTranslations(lang)
                <span class="text-[9px] font-mono text-terminal-muted mb-1">${tColPrice}</span>
                <span class="text-sm font-bold text-white leading-none inline-flex items-center">
                  <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 mr-1 rounded-full object-cover" alt="FLOWER" style="transform: translateY(-0.5px);" />
-                 ${formatNumber(item.currentPrice, 3)}
+                 ${formatNumber(item.currentPrice, 4)}
                </span>
-               ${window.sflUsdPrice && item.currentPrice > 0 ? `<span class="text-[8.5px] font-mono text-white/40 mt-1">~$${formatNumber(item.currentPrice * window.sflUsdPrice, 3)}</span>` : ''}
+               ${window.sflUsdPrice && item.currentPrice > 0 ? `<span class="text-[8.5px] font-mono text-white/40 mt-1">~$${formatNumber(item.currentPrice * window.sflUsdPrice, 4)}</span>` : ''}
              </div>
              <!-- Expand Indicator -->
              <div class="expand-indicator lg:hidden flex items-center pl-1 transition-opacity group-[.is-expanded]:hidden">
@@ -1762,9 +1762,9 @@ const t = useTranslations(lang)
         <div class="hidden lg:flex flex-col lg:py-0 pr-4 items-end justify-center h-full">
           <span class="text-[13px] font-sans font-medium text-white/90 inline-flex items-center">
             <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 mr-1.5 rounded-full object-cover" alt="FLOWER" style="transform: translateY(-0.5px);" />
-            ${formatNumber(item.currentPrice, 3)}
+            ${formatNumber(item.currentPrice, 4)}
           </span>
-          ${window.sflUsdPrice && item.currentPrice > 0 ? `<span class="text-[9.5px] font-mono text-white/40 mt-1">~$${formatNumber(item.currentPrice * window.sflUsdPrice, 3)}</span>` : ''}
+          ${window.sflUsdPrice && item.currentPrice > 0 ? `<span class="text-[9.5px] font-mono text-white/40 mt-1">~$${formatNumber(item.currentPrice * window.sflUsdPrice, 4)}</span>` : ''}
         </div>
         
         <!-- Contenedor de gráficas (Oculto por defecto en móvil, Acordeón) -->
