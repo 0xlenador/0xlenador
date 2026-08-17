@@ -558,10 +558,12 @@ const t = useTranslations(lang)
       </div>
 
       <div class="w-full">
+        <!-- Sentinel for Sticky Header -->
+        <div id="headerSentinel" class="w-full h-[1px]"></div>
         <!-- Desktop Header -->
         <div
           id="desktopHeader"
-          class="hidden lg:grid grid-cols-[25%_15%_17%_17%_26%] border-b border-white/[0.05] items-center transition-all duration-300"
+          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[25%_15%_17%_17%_26%] border-b border-white/[0.05] items-center transition-all duration-300"
         >
           <div
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none"
@@ -577,6 +579,7 @@ const t = useTranslations(lang)
           <div
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('price')"
+            title={lang === 'en' ? 'Individual item price' : 'Precio del item individual'}
           >
             <div class="flex items-center justify-end gap-2">
               <span
@@ -589,6 +592,7 @@ const t = useTranslations(lang)
           <div
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('1d')"
+            title={lang === 'en' ? 'Price change in the last 24 hours' : 'Cambio de precio en las últimas 24 horas'}
           >
             <div class="flex items-center justify-end gap-2">
               <span
@@ -601,6 +605,7 @@ const t = useTranslations(lang)
             id="marketcapHeader"
             class="hidden py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('marketcap')"
+            title={lang === 'en' ? 'Total market capitalization' : 'Capitalización de mercado total'}
           >
             <div class="flex items-center justify-end gap-2">
               <span
@@ -613,18 +618,20 @@ const t = useTranslations(lang)
             id="vol24hHeader"
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('trades24h')"
+            title={lang === 'en' ? 'Traded volume in 24H' : 'Volumen de unidades comerciadas en 24H'}
           >
             <div class="flex items-center justify-end gap-2">
               <span
                 class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
                 data-col="trades24h">↕</span>
-              Volume (24H)
+              Vol. (24H)
             </div>
           </div>
           <div
             id="supplyHeader"
             class="hidden py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('supply')"
+            title={lang === 'en' ? 'Total circulating supply' : 'Unidades totales en circulación'}
           >
             <div class="flex items-center justify-end gap-2">
               <span
@@ -635,6 +642,7 @@ const t = useTranslations(lang)
           </div>
           <div
             class="py-4 px-4 flex flex-row items-center justify-end gap-3 group select-none"
+            title={lang === 'en' ? 'Price evolution over time' : 'Evolución del precio en el tiempo'}
           >
             <!-- Título y Filtro -->
             <div class="text-[13px] font-sans text-white/50 font-medium capitalize flex items-center justify-end gap-1.5 cursor-pointer hover:text-white transition-colors" id="graph-sort-btn" onclick="window.handleSort('7d')">
@@ -830,6 +838,24 @@ const t = useTranslations(lang)
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  
+  #desktopHeader::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -32px;
+    right: -32px;
+    bottom: 0;
+    background: #141414; /* terminal-bg */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    pointer-events: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  #desktopHeader.is-sticky::before {
+    opacity: 1;
+  }
 </style>
 
 <script
@@ -873,8 +899,10 @@ const t = useTranslations(lang)
   let currentCategory = "resources"
   let currentSubCategories = ["collectibles", "wearables"]
   let searchQuery = ""
+  window.activeGraphPeriod = window.activeGraphPeriod || "7d"
 
   window.toggleGraph = (period) => {
+    window.activeGraphPeriod = period
     document.querySelectorAll('.desktop-graph-7d, .desktop-graph-30d, .desktop-graph-180d').forEach(el => {
       el.classList.add('hidden')
     })
@@ -900,14 +928,15 @@ const t = useTranslations(lang)
     
     if (titleEl && sortBtn && sortIcon) {
       const isEn = window.location.pathname.includes('/en/')
-      const prefix = isEn ? 'Price Change' : 'Cambio de precio'
-      titleEl.innerText = `${prefix} (${period})`
+      const prefix = isEn ? 'Price Graph' : 'Gráfica'
+      titleEl.innerText = `${prefix} (${period.toUpperCase()})`
       sortBtn.setAttribute("onclick", `window.handleSort('${period}')`)
       sortIcon.setAttribute("data-col", period)
     }
   }
 
   window.currentSort = { column: "trades24h", direction: "desc" }
+  window.isUserSorted = false
 
   window.handleCategory = function (category) {
     currentCategory = category
@@ -975,6 +1004,7 @@ const t = useTranslations(lang)
   }
 
   window.handleSort = (column) => {
+    window.isUserSorted = true
     if (window.currentSort.column === column) {
       if (window.currentSort.direction === "none") window.currentSort.direction = "desc"
       else if (window.currentSort.direction === "desc") window.currentSort.direction = "asc"
@@ -987,15 +1017,16 @@ const t = useTranslations(lang)
     document.querySelectorAll(".sort-icon").forEach((icon) => {
       icon.innerHTML = "↓"
       icon.classList.add("hidden")
-      icon.classList.remove("text-emerald-400")
+      icon.classList.remove("text-emerald-400", "opacity-100")
+      icon.classList.add("opacity-0")
     })
 
     if (window.currentSort.direction !== "none") {
       const activeIcons = document.querySelectorAll(`.sort-icon[data-col="${column}"]`)
       activeIcons.forEach((activeIcon) => {
         activeIcon.innerHTML = window.currentSort.direction === "desc" ? "↓" : "↑"
-        activeIcon.classList.remove("hidden")
-        activeIcon.classList.add("text-emerald-400")
+        activeIcon.classList.remove("hidden", "opacity-0")
+        activeIcon.classList.add("text-emerald-400", "opacity-100")
       })
     }
 
@@ -1249,12 +1280,16 @@ const t = useTranslations(lang)
 
   const getMarketcapColumnHTML = (title, mcap) => {
     const text = mcap !== undefined ? formatNumber(mcap, 0) : "-"
+    const usdValue = mcap !== undefined && window.sflUsdPrice ? formatNumber(mcap * window.sflUsdPrice, 0) : ""
     const containerClass = "text-[13px] font-medium font-sans text-white/90 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
     const badgeHTML = `
-        <span class="${containerClass}">
-          ${mcap !== undefined ? '<img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 mr-1" alt="SFL" />' : ''}
-          ${text}
-        </span>
+        <div class="flex flex-col items-end">
+          <span class="${containerClass}">
+            ${mcap !== undefined ? '<img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 mr-1.5 rounded-full object-cover" alt="FLOWER" style="transform: translateY(-0.5px);" />' : ''}
+            ${text}
+          </span>
+          ${usdValue ? `<span class="text-[9.5px] font-mono text-white/40 mt-1">~$${usdValue}</span>` : ''}
+        </div>
     `
     return `
         <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4">
@@ -1708,7 +1743,11 @@ const t = useTranslations(lang)
              <!-- Precio -->
              <div class="flex flex-col items-end justify-center border-l border-white/5 pl-2.5 min-w-[55px]">
                <span class="text-[9px] font-mono text-terminal-muted mb-1">${tColPrice}</span>
-               <span class="text-sm font-bold text-white leading-none">${formatNumber(item.currentPrice, 4)}</span>
+               <span class="text-sm font-bold text-white leading-none inline-flex items-center">
+                 <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 mr-1 rounded-full object-cover" alt="FLOWER" style="transform: translateY(-0.5px);" />
+                 ${formatNumber(item.currentPrice, 3)}
+               </span>
+               ${window.sflUsdPrice && item.currentPrice > 0 ? `<span class="text-[8.5px] font-mono text-white/40 mt-1">~$${formatNumber(item.currentPrice * window.sflUsdPrice, 3)}</span>` : ''}
              </div>
              <!-- Expand Indicator -->
              <div class="expand-indicator lg:hidden flex items-center pl-1 transition-opacity group-[.is-expanded]:hidden">
@@ -1720,8 +1759,12 @@ const t = useTranslations(lang)
         </div>
         
         <!-- Precio Desktop -->
-        <div class="hidden lg:flex lg:py-0 pr-4 items-center justify-end h-full">
-          <span class="text-[13px] font-sans font-medium text-white/90">${formatNumber(item.currentPrice, 4)}</span>
+        <div class="hidden lg:flex flex-col lg:py-0 pr-4 items-end justify-center h-full">
+          <span class="text-[13px] font-sans font-medium text-white/90 inline-flex items-center">
+            <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 mr-1.5 rounded-full object-cover" alt="FLOWER" style="transform: translateY(-0.5px);" />
+            ${formatNumber(item.currentPrice, 3)}
+          </span>
+          ${window.sflUsdPrice && item.currentPrice > 0 ? `<span class="text-[9.5px] font-mono text-white/40 mt-1">~$${formatNumber(item.currentPrice * window.sflUsdPrice, 3)}</span>` : ''}
         </div>
         
         <!-- Contenedor de gráficas (Oculto por defecto en móvil, Acordeón) -->
@@ -1746,9 +1789,9 @@ const t = useTranslations(lang)
               </div>
               
               <div class="hidden lg:block w-full max-w-[250px] ml-auto h-full">
-                 <div class="desktop-graph-7d w-full h-full">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}</div>
-                 <div class="desktop-graph-30d w-full h-full hidden">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31)}</div>
-                 <div class="desktop-graph-180d w-full h-full hidden">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181)}</div>
+                 <div class="desktop-graph-7d w-full h-full ${window.activeGraphPeriod === '7d' ? '' : 'hidden'}">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}</div>
+                 <div class="desktop-graph-30d w-full h-full ${window.activeGraphPeriod === '30d' ? '' : 'hidden'}">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31)}</div>
+                 <div class="desktop-graph-180d w-full h-full ${window.activeGraphPeriod === '180d' ? '' : 'hidden'}">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181)}</div>
               </div>
             </div>
           `}
@@ -1883,6 +1926,7 @@ const t = useTranslations(lang)
         .sort((a, b) => b.volume - a.volume)
 
       // Actualizar el widget de precio FLOWER con el dato inyectado desde sfl_data.json
+      window.sflUsdPrice = json.flowerPrice ? parseFloat(json.flowerPrice) : 0.0854 // Fallback temporal porque el JSON local tiene null
       const priceEl = document.getElementById("sflPriceValue")
       const changeEl = document.getElementById("sflPriceChange")
       const imgEl = document.getElementById("sflTokenImg")
@@ -2018,12 +2062,12 @@ const t = useTranslations(lang)
     // Primer fetch automático
     fetchData()
 
-    if (window.currentSort && window.currentSort.column) {
+    if (window.currentSort && window.currentSort.column && window.isUserSorted) {
       const activeIcons = document.querySelectorAll(`.sort-icon[data-col="${window.currentSort.column}"]`)
       activeIcons.forEach((activeIcon) => {
         activeIcon.innerHTML = window.currentSort.direction === "desc" ? "↓" : "↑"
-        activeIcon.classList.remove("hidden")
-        activeIcon.classList.add("text-emerald-400")
+        activeIcon.classList.remove("hidden", "opacity-0")
+        activeIcon.classList.add("text-emerald-400", "opacity-100")
       })
     }
 
@@ -2095,10 +2139,11 @@ const t = useTranslations(lang)
 
         tooltip.classList.remove("hidden")
         
-        const finalPrice = dataPoints[numPoints - 1]
+        const initialPrice = dataPoints[0]
         let tooltipHTML = `<div class="leading-none">${formatNumber(val, 4)}`
-        if (finalPrice && val > 0) {
-          const pct = ((finalPrice - val) / val) * 100
+
+        if (initialPrice && initialPrice > 0) {
+          const pct = ((val - initialPrice) / initialPrice) * 100
           if (Math.abs(pct) > 0) {
             const sign = pct > 0 ? "+" : ""
             const colorClass = pct > 0 ? "text-emerald-400" : "text-red-400"
@@ -2197,10 +2242,33 @@ const t = useTranslations(lang)
     })
   }
 
-  document.addEventListener("astro:page-load", initScrollHints)
+  const initStickyHeader = () => {
+    const sentinel = document.getElementById("headerSentinel")
+    const header = document.getElementById("desktopHeader")
+    if (sentinel && header) {
+      const observer = new IntersectionObserver(
+        ([e]) => {
+          header.classList.toggle("is-sticky", e.intersectionRatio < 1)
+        },
+        { threshold: [1] }
+      )
+      observer.observe(sentinel)
+    }
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initScrollHints()
+    initStickyHeader()
+  })
   if (document.readyState === "complete" || document.readyState === "interactive") {
-    setTimeout(initScrollHints, 1)
+    setTimeout(() => {
+      initScrollHints()
+      initStickyHeader()
+    }, 1)
   } else {
-    document.addEventListener("DOMContentLoaded", initScrollHints)
+    document.addEventListener("DOMContentLoaded", () => {
+      initScrollHints()
+      initStickyHeader()
+    })
   }
 </script>
