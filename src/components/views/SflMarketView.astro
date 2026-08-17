@@ -1062,18 +1062,23 @@ const t = useTranslations(lang)
     }).format(num)
   }
 
-  const createSparklineSVG = (dataArray, isPositive) => {
+  const createSparklineSVG = (dataArray, isPositive, expectedLength) => {
     if (!dataArray) return ""
     const validData = dataArray.filter((v) => v !== null && v !== undefined)
     if (validData.length < 2) return ""
 
+    expectedLength = expectedLength || validData.length
     const width = 100
     const height = 30
     const max = Math.max(...validData)
     const min = Math.min(...validData)
     const range = max - min || 1
 
-    const getX = (i) => (i / (validData.length - 1)) * width
+    const getX = (i) => {
+      const daysAgo = validData.length - 1 - i
+      const xProgress = 1 - (daysAgo / Math.max(1, expectedLength - 1))
+      return xProgress * width
+    }
     const getY = (val) => height - ((val - min) / range) * height
 
     const pointsArray = validData.map((val, i) => [getX(i), getY(val)])
@@ -1098,7 +1103,7 @@ const t = useTranslations(lang)
     }
 
     const strokePath = `M ${pointsArray[0][0]},${pointsArray[0][1]} ${getCurve(pointsArray)}`
-    const fillPath = `${strokePath} L ${width},${height} L 0,${height} Z`
+    const fillPath = `${strokePath} L ${width},${height} L ${pointsArray[0][0]},${height} Z`
 
     const maxIndex = validData.indexOf(max)
     const minIndex = validData.indexOf(min)
@@ -1111,7 +1116,8 @@ const t = useTranslations(lang)
       <div class="relative w-full h-full sparkline-container cursor-crosshair group/spark" 
            data-points='${JSON.stringify(validData)}' 
            data-min="${min}" 
-           data-range="${range}">
+           data-range="${range}"
+           data-expected-length="${expectedLength}">
         <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0">
           <path d="${fillPath}" fill="${strokeColor}" fill-opacity="0.6" style="-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); mask-image: linear-gradient(to bottom, black 0%, transparent 100%);" stroke="none" />
           <path d="${strokePath}" fill="none" stroke="${strokeColor}" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -1168,7 +1174,7 @@ const t = useTranslations(lang)
     `
   }
 
-  const getCardColumnHTML = (title, changeObj, sparklineData) => {
+  const getCardColumnHTML = (title, changeObj, sparklineData, expectedLength) => {
     const isLarge = !sparklineData
     const badgeHTML = getBadgeHTML(changeObj, isLarge)
 
@@ -1183,7 +1189,7 @@ const t = useTranslations(lang)
       `
     }
 
-    const graphHTML = `<div class="h-8 lg:h-10 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive)}</div>`
+    const graphHTML = `<div class="h-8 lg:h-10 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive, expectedLength)}</div>`
 
     return `
       <div class="flex flex-col justify-between lg:flex-row lg:items-center bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full lg:h-auto">
@@ -1734,15 +1740,15 @@ const t = useTranslations(lang)
               ${isResources ? '' : getSupplyColumnHTML("Circ. Supply", item.supply)}
               
               <div class="lg:hidden contents">
-                ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}
-                ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}
-                ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
+                ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}
+                ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31)}
+                ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181)}
               </div>
               
               <div class="hidden lg:block w-full max-w-[250px] ml-auto h-full">
-                 <div class="desktop-graph-7d w-full h-full">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}</div>
-                 <div class="desktop-graph-30d w-full h-full hidden">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}</div>
-                 <div class="desktop-graph-180d w-full h-full hidden">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}</div>
+                 <div class="desktop-graph-7d w-full h-full">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}</div>
+                 <div class="desktop-graph-30d w-full h-full hidden">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31)}</div>
+                 <div class="desktop-graph-180d w-full h-full hidden">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181)}</div>
               </div>
             </div>
           `}
@@ -1787,7 +1793,7 @@ const t = useTranslations(lang)
       dataContainer.classList.add("hidden")
 
       // Consultar el asset estático que actualiza el cron job
-      const response = await fetch("/api/sfl_data.json")
+      const response = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`)
 
       if (!response.ok) {
         throw new Error(`No se pudo cargar el archivo local: ${response.status}`)
@@ -2050,9 +2056,21 @@ const t = useTranslations(lang)
 
       const dataPoints = JSON.parse(container.dataset.points)
       const numPoints = dataPoints.length
-      let index = Math.round((xPos / width) * (numPoints - 1))
-      if (index < 0) index = 0
-      if (index >= numPoints) index = numPoints - 1
+      const expectedLength = parseInt(container.dataset.expectedLength) || numPoints
+      
+      const daysAgoHovered = Math.round((1 - (xPos / width)) * Math.max(1, expectedLength - 1))
+      let index = numPoints - 1 - daysAgoHovered
+
+      const line = container.querySelector(".hover-line")
+      const dot = container.querySelector(".hover-dot")
+      const tooltip = container.querySelector(".hover-tooltip")
+
+      if (index < 0 || index >= numPoints) {
+        if (line) line.classList.add("hidden")
+        if (dot) dot.classList.add("hidden")
+        if (tooltip) tooltip.classList.add("hidden")
+        return
+      }
 
       const val = dataPoints[index]
       const min = parseFloat(container.dataset.min)
@@ -2060,12 +2078,11 @@ const t = useTranslations(lang)
 
       const svgWidth = 100
       const svgHeight = 30
-      const mappedX = (index / (numPoints - 1)) * svgWidth
+      
+      const daysAgo = numPoints - 1 - index
+      const xProgress = 1 - (daysAgo / Math.max(1, expectedLength - 1))
+      const mappedX = xProgress * svgWidth
       const mappedY = svgHeight - ((val - min) / range) * svgHeight
-
-      const line = container.querySelector(".hover-line")
-      const dot = container.querySelector(".hover-dot")
-      const tooltip = container.querySelector(".hover-tooltip")
 
       if (line && dot && tooltip) {
         line.classList.remove("hidden")

@@ -237,12 +237,10 @@ async function updateSFLData() {
         let p = getItemPrice(offset)
         if (p) return p
         for (let i = 1; i <= 30; i++) {
-          p = getItemPrice(offset - i)
-          if (p) return p
           p = getItemPrice(offset + i)
           if (p) return p
         }
-        return p0
+        return null
       }
 
       filteredItems[itemKey] = {
@@ -253,20 +251,20 @@ async function updateSFLData() {
         trades: t0,
         trades24h: trades24h,
         history: {
-          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || p0,
-          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || p0,
+          "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || null,
+          "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || null,
           "30d":
             getItemPrice(30) ||
             getItemPrice(31) ||
             getItemPrice(29) ||
             getItemPrice(32) ||
-            getItemPrice(28) || p0,
+            getItemPrice(28) || null,
           "180d":
             getItemPrice(180) ||
             getItemPrice(181) ||
             getItemPrice(179) ||
             getItemPrice(182) ||
-            getItemPrice(178) || p0,
+            getItemPrice(178) || null,
           sparkline7d: Array.from({ length: 8 }, (_, i) => 7 - i).map(o => getSparklinePrice(o)),
           sparkline30d: Array.from({ length: 31 }, (_, i) => 30 - i).map(o => getSparklinePrice(o)),
           sparkline180d: Array.from({ length: 181 }, (_, i) => 180 - i).map(o => getSparklinePrice(o)),
