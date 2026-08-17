@@ -860,6 +860,7 @@ const t = useTranslations(lang)
 
 <script
   define:vars={{
+    clientLang: lang,
     sflIds,
     sflPowerUps,
     sflCosmetics,
@@ -1774,12 +1775,12 @@ const t = useTranslations(lang)
               ${isResources
                 ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4">
                     <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Market Cap</div>
-                    <span class="text-[13px] font-medium font-sans text-white/30 italic">N/A</span>
+                    <span class="text-[11px] font-medium font-sans text-white/30 italic">${clientLang === 'es' ? 'No cumple' : 'Uncapped'}</span>
                   </div>`
                 : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
               ${getSupplyColumnHTML("Vol. 7D", item.trades7d)}
               ${isResources
-                ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4" title="Recurso ilimitado, se genera y consume dentro del juego">
+                ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4" title="${clientLang === 'es' ? 'Recurso ilimitado, se genera y consume dentro del juego' : 'Unlimited resource, generated and consumed in-game'}">
                     <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Circ. Supply</div>
                     <span class="text-[15px] font-medium text-white/30">∞</span>
                   </div>`
