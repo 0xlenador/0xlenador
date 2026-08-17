@@ -563,7 +563,7 @@ const t = useTranslations(lang)
         <!-- Desktop Header -->
         <div
           id="desktopHeader"
-          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[25%_15%_17%_17%_26%] border-b border-white/[0.05] items-center transition-all duration-300"
+          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[20%_10%_12%_13%_10%_12%_23%] border-b border-white/[0.05] items-center transition-all duration-300"
         >
           <div
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none"
@@ -603,7 +603,7 @@ const t = useTranslations(lang)
           </div>
           <div
             id="marketcapHeader"
-            class="hidden py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+            class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('marketcap')"
             title={lang === 'en' ? 'Total market capitalization' : 'Capitalización de mercado total'}
           >
@@ -629,7 +629,7 @@ const t = useTranslations(lang)
           </div>
           <div
             id="supplyHeader"
-            class="hidden py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+            class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
             onclick="window.handleSort('supply')"
             title={lang === 'en' ? 'Total circulating supply' : 'Unidades totales en circulación'}
           >
@@ -952,25 +952,14 @@ const t = useTranslations(lang)
         filterContainer.classList.remove("opacity-30", "grayscale", "pointer-events-none")
         filterContainer.classList.add("opacity-100")
       }
-      if (desktopHeader) {
-        desktopHeader.classList.remove("grid-cols-[25%_15%_17%_17%_26%]")
-        desktopHeader.classList.add("grid-cols-[20%_10%_12%_13%_10%_12%_23%]")
-      }
-      if (supplyHeader) supplyHeader.classList.remove("hidden")
-      if (marketcapHeader) marketcapHeader.classList.remove("hidden")
       document.querySelectorAll(".sub-checkbox-common").forEach((cb) => (cb.checked = true))
     } else {
       if (filterContainer) {
         filterContainer.classList.add("pointer-events-none")
         filterContainer.classList.remove("opacity-100")
       }
-      if (desktopHeader) {
-        desktopHeader.classList.remove("grid-cols-[20%_10%_12%_13%_10%_12%_23%]")
-        desktopHeader.classList.add("grid-cols-[25%_15%_17%_17%_26%]")
-      }
-      if (supplyHeader) supplyHeader.classList.add("hidden")
-      if (marketcapHeader) marketcapHeader.classList.add("hidden")
     }
+
 
     document.querySelectorAll(".category-btn").forEach((btn) => {
       if (btn.dataset.category === category) {
@@ -1679,7 +1668,7 @@ const t = useTranslations(lang)
       const isResources = item.category === "resources"
       const row = document.createElement("div")
       row.className =
-        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid ${isResources ? 'lg:grid-cols-[25%_15%_17%_17%_26%]' : 'lg:grid-cols-[20%_10%_12%_13%_10%_12%_23%]'} lg:items-center lg:py-3`
+        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_10%_12%_23%] lg:items-center lg:py-3`
       row.setAttribute("data-row-id", item.name)
 
       // Calculate trend colors for mobile dots
@@ -1782,9 +1771,19 @@ const t = useTranslations(lang)
           ` : `
             <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents w-full">
               ${getTextColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]))}
-              ${isResources ? '' : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
+              ${isResources
+                ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4">
+                    <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Market Cap</div>
+                    <span class="text-[13px] font-medium font-sans text-white/30 italic">N/A</span>
+                  </div>`
+                : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
               ${getSupplyColumnHTML("Vol. 7D", item.trades7d)}
-              ${isResources ? '' : getSupplyColumnHTML("Circ. Supply", item.supply)}
+              ${isResources
+                ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4" title="Recurso ilimitado, se genera y consume dentro del juego">
+                    <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Circ. Supply</div>
+                    <span class="text-[15px] font-medium text-white/30">∞</span>
+                  </div>`
+                : getSupplyColumnHTML("Circ. Supply", item.supply)}
               
               <div class="lg:hidden contents">
                 ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}
@@ -1873,7 +1872,7 @@ const t = useTranslations(lang)
                 boost: sflPowerUps.power_ups.collectibles[id].boost,
                 image: sflPowerUps.power_ups.collectibles[id].image,
                 supply: sflPowerUps.power_ups.collectibles[id].supply,
-                trades24h: data.trades24h,
+                trades7d: data.trades7d,
                 category: "powerups",
                 isWearable: false,
               })
@@ -1889,7 +1888,7 @@ const t = useTranslations(lang)
                 boost: "",
                 image: sflCosmetics.cosmetics.collectibles[id].image,
                 supply: sflCosmetics.cosmetics.collectibles[id].supply,
-                trades24h: data.trades24h,
+                trades7d: data.trades7d,
                 category: "cosmetics",
                 isWearable: false,
               })
@@ -1904,7 +1903,7 @@ const t = useTranslations(lang)
                 boost: sflPowerUps.power_ups.wearables[id].boost,
                 image: sflPowerUps.power_ups.wearables[id].image,
                 supply: sflPowerUps.power_ups.wearables[id].supply,
-                trades24h: data.trades24h,
+                trades7d: data.trades7d,
                 category: "powerups",
                 isWearable: true,
               })
@@ -1919,7 +1918,7 @@ const t = useTranslations(lang)
                 boost: "",
                 image: sflCosmetics.cosmetics.wearables[id].image,
                 supply: sflCosmetics.cosmetics.wearables[id].supply,
-                trades24h: data.trades24h,
+                trades7d: data.trades7d,
                 category: "cosmetics",
                 isWearable: true,
               })
