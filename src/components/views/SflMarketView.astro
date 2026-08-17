@@ -1114,7 +1114,7 @@ const t = useTranslations(lang)
            data-range="${range}">
         <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0">
           <path d="${fillPath}" fill="${strokeColor}" fill-opacity="0.6" style="-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); mask-image: linear-gradient(to bottom, black 0%, transparent 100%);" stroke="none" />
-          <path d="${strokePath}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="${strokePath}" fill="none" stroke="${strokeColor}" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" />
           
           <circle cx="${getX(maxIndex)}" cy="${getY(max)}" r="1.5" fill="${dotColor}" />
           <circle cx="${getX(minIndex)}" cy="${getY(min)}" r="1.5" fill="${dotColor}" />
@@ -1124,7 +1124,7 @@ const t = useTranslations(lang)
           <circle class="hover-dot hidden pointer-events-none" r="2" fill="${strokeColor}" stroke="#1e1e1e" stroke-width="1" />
         </svg>
         
-        <div class="hover-tooltip hidden absolute bg-terminal-dark border border-white/20 text-white text-[9px] font-mono px-1.5 py-0.5 rounded shadow-xl pointer-events-none z-10 transition-all duration-75 whitespace-nowrap" 
+        <div class="hover-tooltip hidden absolute bg-terminal-dark border border-white/20 text-white text-[9px] font-mono px-2 py-1 rounded shadow-xl pointer-events-none z-10 transition-all duration-75 whitespace-nowrap flex flex-col items-center" 
              style="transform: translateX(-50%) translateY(-100%); margin-top: -6px;">
         </div>
       </div>
@@ -1739,7 +1739,7 @@ const t = useTranslations(lang)
                 ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}
               </div>
               
-              <div class="hidden lg:block w-full h-full">
+              <div class="hidden lg:block w-full max-w-[250px] ml-auto h-full">
                  <div class="desktop-graph-7d w-full h-full">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d)}</div>
                  <div class="desktop-graph-30d w-full h-full hidden">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d)}</div>
                  <div class="desktop-graph-180d w-full h-full hidden">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d)}</div>
@@ -2078,8 +2078,8 @@ const t = useTranslations(lang)
 
         tooltip.classList.remove("hidden")
         
-        const finalPrice = dataPoints[dataPoints.length - 1]
-        let tooltipHTML = formatNumber(val, 4)
+        const finalPrice = dataPoints[numPoints - 1]
+        let tooltipHTML = `<div class="leading-none">${formatNumber(val, 4)}`
         if (finalPrice && val > 0) {
           const pct = ((finalPrice - val) / val) * 100
           if (Math.abs(pct) > 0) {
@@ -2088,7 +2088,15 @@ const t = useTranslations(lang)
             tooltipHTML += ` <span class="${colorClass} text-[7.5px] tracking-tight opacity-90">${sign}${pct.toFixed(2)}%</span>`
           }
         }
-        tooltip.innerHTML = tooltipHTML
+        tooltipHTML += `</div>`
+
+        const daysAgo = numPoints - 1 - index
+        const d = new Date()
+        d.setDate(d.getDate() - daysAgo)
+        const isEn = window.location.pathname.includes('/en/')
+        const dateStr = d.toLocaleDateString(isEn ? 'en-US' : 'es-ES', { year: 'numeric', month: 'short', day: 'numeric' })
+
+        tooltip.innerHTML = `<div class="text-[7.5px] font-sans text-white/50 leading-none pb-1">${dateStr}</div>${tooltipHTML}`
 
         tooltip.style.left = `${(mappedX / svgWidth) * 100}%`
         tooltip.style.top = `${(mappedY / svgHeight) * 100}%`
