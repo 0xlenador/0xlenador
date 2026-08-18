@@ -20,7 +20,7 @@ const t = useTranslations(lang)
 
 <main class="max-w-7xl mx-auto sm:px-6">
   <fieldset
-    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] p-2 lg:p-8 mb-10 shadow-2xl relative block min-w-0"
+    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] p-2 lg:p-5 mb-10 shadow-2xl relative block min-w-0"
     style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);"
   >
     <legend class="ml-6 lg:ml-8 px-3 flex items-center gap-2 float-none w-auto">
@@ -39,14 +39,14 @@ const t = useTranslations(lang)
     <SflTabs activeTab="mercado" />
 
     <div
-      class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-6 mb-10 relative z-10 text-center sm:text-left"
+      class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-3 mb-4 relative z-10 text-center sm:text-left"
     >
       <div class="w-full lg:w-auto">
-        <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
+        <h1 class="text-xl md:text-2xl font-black text-white tracking-tighter mb-1">
           {t("sfl.heading")}
           <span class="text-emerald-500"> {t("sfl.heading.accent")}</span>
         </h1>
-        <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl mx-auto sm:mx-0">
+        <p class="text-terminal-secondary text-sm leading-snug max-w-2xl mx-auto sm:mx-0">
           {t("sfl.intro")}
         </p>
       </div>
@@ -124,12 +124,12 @@ const t = useTranslations(lang)
 
     <div id="dataContainer" class="hidden relative z-10">
       <!-- Dashboard Resumen -->
-      <div class="relative mb-10">
+      <div class="relative mb-4">
         <div
-          class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:grid md:grid-cols-3 md:gap-6 md:pb-0 no-scrollbar"
+          class="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-4 md:grid md:grid-cols-3 md:gap-3 md:pb-0 no-scrollbar"
         >
           <div
-            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-4 lg:p-5 shadow-inner flex flex-col justify-start min-h-[160px] lg:min-h-[180px]"
+            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-3 lg:p-4 shadow-inner flex flex-col justify-start min-h-[120px] lg:min-h-[130px]"
           >
             <h3
               class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2"
@@ -153,7 +153,7 @@ const t = useTranslations(lang)
           </div>
 
           <div
-            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[160px] lg:min-h-[180px] group/carousel cursor-pointer"
+            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[120px] lg:min-h-[130px] group/carousel cursor-pointer"
           >
             <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
               <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@ const t = useTranslations(lang)
           </div>
 
           <div
-            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[160px] lg:min-h-[180px] group/carousel cursor-pointer"
+            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[120px] lg:min-h-[130px] group/carousel cursor-pointer"
           >
             <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
               <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
@@ -262,7 +262,7 @@ const t = useTranslations(lang)
       </div>
 
       <div
-        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-2"
+        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3 sm:gap-2"
       >
         <div class="flex items-center flex-wrap gap-3">
           <h2 class="text-lg font-semibold text-white">
