@@ -1,0 +1,21 @@
+---
+interface Props {
+  coinId?: string | null;
+  isNft?: boolean;
+  class?: string;
+}
+
+const { coinId, isNft = false, class: className = "w-24 h-8" } = Astro.props;
+---
+
+<div
+  class:list={["cg-sparkline relative flex items-center justify-center", className]}
+  data-coin-id={coinId}
+  data-is-nft={isNft ? "true" : "false"}
+>
+  {coinId ? (
+    <div class="h-1.5 bg-white/5 rounded animate-pulse w-full"></div>
+  ) : (
+    <span class="font-mono text-[10px] text-terminal-subtle/30">N/A</span>
+  )}
+</div>

@@ -6,6 +6,7 @@
 
 import FaqAccordion from "../FaqAccordion.astro"
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
+import Sparkline from "../Sparkline.astro"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -137,6 +138,7 @@ const faqItems = [
           <tr>
             <th>{t("assets.table.asset")}</th>
             <th class="!text-right">{t("assets.table.price")}</th>
+            <th class="text-center">{t("assets.table.chart")}</th>
             <th>{t("assets.table.category")}</th>
             <th>{t("assets.table.thesis")}</th>
           </tr>
@@ -206,6 +208,9 @@ const faqItems = [
                   ) : (
                     <span class="font-mono text-xs text-terminal-subtle/50">N/A</span>
                   )}
+                </td>
+                <td class="text-center">
+                  <Sparkline coinId={activo.coinId} isNft={activo.isNft} />
                 </td>
                 <td class="text-terminal-subtle text-xs">{activo.categoria}</td>
                 <td class="text-terminal-muted text-xs max-w-xs">{activo.descripcion}</td>
