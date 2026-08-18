@@ -18,25 +18,17 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<main class="max-w-7xl mx-auto sm:px-6">
-  <fieldset
-    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] p-2 lg:p-5 mb-10 shadow-2xl relative block min-w-0"
+<main class="max-w-7xl mx-auto sm:px-6 pt-4 pb-4">
+  <div
+    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] mb-10 shadow-2xl relative block min-w-0 overflow-hidden"
     style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);"
   >
-    <legend class="ml-6 lg:ml-8 px-3 flex items-center gap-2 float-none w-auto">
-      <img
-        src="/img/cripto/sunflowerland.webp"
-        alt="Sunflower Land"
-        class="w-5 h-5 rounded-full object-contain bg-white/[0.05] p-[2px] border border-white/[0.1]"
-      />
-      <span
-        class="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest font-semibold"
-      >
-        {t("sfl.breadcrumb")}
-      </span>
-    </legend>
+    <!-- Tabs integrados como encabezado de la tarjeta -->
+    <div class="px-2 lg:px-5 pt-2 pb-0">
+      <SflTabs activeTab="mercado" />
+    </div>
 
-    <SflTabs activeTab="mercado" />
+    <div class="p-2 lg:p-5">
 
     <div
       class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-3 mb-4 relative z-10 text-center sm:text-left"
@@ -670,7 +662,8 @@ const t = useTranslations(lang)
         </div>
       </div>
     </div>
-  </fieldset>
+    </div>
+  </div>
   <!-- FAQ Section SEO Optimized -->
   <section class="mt-16 mb-8 max-w-4xl mx-auto px-2 sm:px-0">
     <div class="text-center mb-10">
