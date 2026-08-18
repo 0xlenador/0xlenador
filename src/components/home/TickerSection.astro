@@ -202,11 +202,11 @@ const animationClass = isMarqueeDesktop
 
   function getCached(): Record<string, number> | null {
     try {
-      const raw = sessionStorage.getItem(CACHE_KEY)
+      const raw = localStorage.getItem(CACHE_KEY)
       if (!raw) return null
       const { ts, data } = JSON.parse(raw) as { ts: number; data: Record<string, number> }
       if (Date.now() - ts > CACHE_TTL) {
-        sessionStorage.removeItem(CACHE_KEY)
+        localStorage.removeItem(CACHE_KEY)
         return null
       }
       return data
@@ -217,7 +217,7 @@ const animationClass = isMarqueeDesktop
 
   function setCache(data: Record<string, number>) {
     try {
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }))
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }))
     } catch {
       /* quota excedida */
     }
