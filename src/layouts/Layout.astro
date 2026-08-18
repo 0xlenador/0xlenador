@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar.astro"
 import Footer from "../components/Footer.astro"
 import BackToTop from "../components/BackToTop.astro"
 import LanguageSuggestionBanner from "../components/LanguageSuggestionBanner.astro"
+import CoinGeckoUpdater from "../components/CoinGeckoUpdater.astro"
 import "../styles/main.css"
 import { getLangFromUrl, useTranslations, getAlternateUrl } from "../i18n"
 
@@ -117,5 +118,6 @@ const enUrl = new URL(enUrlStr, Astro.site)
     <Footer lang={lang} />
     <BackToTop />
     <LanguageSuggestionBanner />
+    <CoinGeckoUpdater />
   </body>
 </html>

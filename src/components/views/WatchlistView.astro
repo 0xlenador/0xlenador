@@ -15,6 +15,7 @@ const watchlist = [
   {
     ticker: "BTC",
     nombre: "Bitcoin",
+    coinId: "bitcoin",
     categoria: t("assets.cat.cryptoL1"),
     href: getLocalizedPath("/activos/bitcoin", lang),
     imagen: "/img/cripto/bitcoin.webp",
@@ -24,6 +25,7 @@ const watchlist = [
   {
     ticker: "ETH",
     nombre: "Ethereum",
+    coinId: "ethereum",
     categoria: t("assets.cat.cryptoL1"),
     href: getLocalizedPath("/activos/ethereum", lang),
     imagen: "/img/cripto/ethereum.webp",
@@ -33,6 +35,7 @@ const watchlist = [
   {
     ticker: "HYPE",
     nombre: "Hyperliquid",
+    coinId: "hyperliquid",
     categoria: t("assets.cat.dex"),
     href: getLocalizedPath("/activos/hyperliquid", lang),
     imagen: "/img/cripto/hyperliquid.webp",
@@ -42,6 +45,7 @@ const watchlist = [
   {
     ticker: "SPY",
     nombre: "S&P 500 ETF",
+    coinId: "sp500-xstock",
     categoria: t("assets.cat.renta"),
     href: null,
     imagen: "/img/cripto/syp500.webp",
@@ -51,6 +55,7 @@ const watchlist = [
   {
     ticker: "BRK.B",
     nombre: "Berkshire Hathaway",
+    coinId: "berkshire-hathaway-xstock",
     categoria: t("assets.cat.renta"),
     href: null,
     imagen: "/img/cripto/brk.webp",
@@ -58,8 +63,10 @@ const watchlist = [
     accentColor: "emerald",
   },
   {
-    ticker: "RUNE",
+    ticker: "RUNESTONE",
     nombre: "Runestone",
+    coinId: "runestone",
+    isNft: true,
     categoria: t("assets.cat.ordinals"),
     href: getLocalizedPath("/activos/runestone", lang),
     imagen: "/img/cripto/runestone.webp",
@@ -67,8 +74,9 @@ const watchlist = [
     accentColor: "orange",
   },
   {
-    ticker: "SFL",
+    ticker: "FLOWER",
     nombre: "Sunflower Land",
+    coinId: "flower-2",
     categoria: t("assets.cat.game"),
     href: getLocalizedPath("/activos/sunflowerland", lang),
     imagen: "/img/cripto/sunflowerland.webp",
@@ -128,10 +136,9 @@ const faqItems = [
         <thead>
           <tr>
             <th>{t("assets.table.asset")}</th>
-            <th>{t("assets.table.ticker")}</th>
+            <th class="!text-right">{t("assets.table.price")}</th>
             <th>{t("assets.table.category")}</th>
             <th>{t("assets.table.thesis")}</th>
-            <th class="text-right">{t("assets.table.detail")}</th>
           </tr>
         </thead>
         <tbody>
@@ -149,9 +156,19 @@ const faqItems = [
                         loading="lazy"
                         class="w-7 h-7 rounded-full object-contain flex-shrink-0"
                       />
-                      <span class="text-white font-bold text-xs group-hover:text-emerald-400 transition-colors">
-                        {activo.nombre}
-                      </span>
+                      <div class="flex flex-col items-start gap-1">
+                        <span class="text-white font-bold text-xs group-hover:text-emerald-400 transition-colors">
+                          {activo.nombre}
+                        </span>
+                        <span
+                          class:list={[
+                            "font-mono text-[9px] px-1.5 py-0.5 rounded border leading-none",
+                            accentMap[activo.accentColor],
+                          ]}
+                        >
+                          {activo.ticker}
+                        </span>
+                      </div>
                     </a>
                   ) : (
                     <div class="flex items-center gap-3">
@@ -163,36 +180,35 @@ const faqItems = [
                         loading="lazy"
                         class="w-7 h-7 rounded-full object-contain flex-shrink-0"
                       />
-                      <span class="text-white font-bold text-xs">{activo.nombre}</span>
+                      <div class="flex flex-col items-start gap-1">
+                        <span class="text-white font-bold text-xs">{activo.nombre}</span>
+                        <span
+                          class:list={[
+                            "font-mono text-[9px] px-1.5 py-0.5 rounded border leading-none",
+                            accentMap[activo.accentColor],
+                          ]}
+                        >
+                          {activo.ticker}
+                        </span>
+                      </div>
                     </div>
                   )}
                 </td>
-                <td>
-                  <span
-                    class:list={[
-                      "font-mono text-xs px-2 py-0.5 rounded border",
-                      accentMap[activo.accentColor],
-                    ]}
-                  >
-                    {activo.ticker}
-                  </span>
+                <td class="!text-right">
+                  {activo.coinId ? (
+                    <span
+                      class="price-value font-mono text-xs font-bold text-white tracking-wide"
+                      data-coin-id={activo.coinId}
+                      data-is-nft={activo.isNft ? "true" : "false"}
+                    >
+                      $---
+                    </span>
+                  ) : (
+                    <span class="font-mono text-xs text-terminal-subtle/50">N/A</span>
+                  )}
                 </td>
                 <td class="text-terminal-subtle text-xs">{activo.categoria}</td>
                 <td class="text-terminal-muted text-xs max-w-xs">{activo.descripcion}</td>
-                <td class="text-right">
-                  {activo.href ? (
-                    <a
-                      href={activo.href}
-                      class="text-emerald-500/70 hover:text-emerald-400 font-mono text-xs uppercase tracking-widest transition-colors"
-                    >
-                      {t("assets.link.view")}
-                    </a>
-                  ) : (
-                    <span class="text-terminal-subtle/40 font-mono text-[10px] uppercase">
-                      {t("assets.link.soon")}
-                    </span>
-                  )}
-                </td>
               </tr>
             ))
           }
@@ -246,16 +262,17 @@ const faqItems = [
                 >
                   {activo.ticker}
                 </span>
+                {activo.coinId && (
+                  <span
+                    class="price-value ml-2 font-mono text-xs font-bold text-white tracking-wide"
+                    data-coin-id={activo.coinId}
+                    data-is-nft={activo.isNft ? "true" : "false"}
+                  >
+                    $---
+                  </span>
+                )}
               </div>
               <p class="text-terminal-muted text-xs leading-relaxed">{activo.descripcion}</p>
-              {activo.href && (
-                <a
-                  href={activo.href}
-                  class="text-emerald-500/70 text-xs font-mono mt-2 inline-block hover:text-emerald-400 transition-colors"
-                >
-                  {t("assets.link.analysis")}
-                </a>
-              )}
             </div>
           </div>
         ))

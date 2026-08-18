@@ -1,0 +1,142 @@
+---
+/**
+ * CoinGeckoUpdater.astro
+ * Componente centralizado para extraer precios en vivo de la API de CoinGecko.
+ * Funciona globalmente buscando elementos con la clase "price-value".
+ * Atributos requeridos en HTML: data-coin-id="..."
+ * Atributos opcionales en HTML: data-is-nft="true"
+ */
+---
+<script>
+  const CACHE_KEY = "ticker_prices_v2"
+  const CACHE_TTL = 5 * 60 * 1000 // 5 minutos en ms
+
+  function getCached(): Record<string, number> | null {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY)
+      if (!raw) return null
+      const { ts, data } = JSON.parse(raw) as { ts: number; data: Record<string, number> }
+      if (Date.now() - ts > CACHE_TTL) {
+        localStorage.removeItem(CACHE_KEY)
+        return null
+      }
+      return data
+    } catch {
+      return null
+    }
+  }
+
+  function setCache(data: Record<string, number>) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }))
+    } catch {
+      /* quota excedida */
+    }
+  }
+
+  function applyPrices(prices: Record<string, number>) {
+    document.querySelectorAll<HTMLElement>(".price-value").forEach((el) => {
+      const id = el.getAttribute("data-coin-id") ?? ""
+      const price = prices[id]
+      if (price == null) return
+
+      const fmt = (n: number) =>
+        n >= 100
+          ? n.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })
+          : n < 0.01
+            ? "$" + n.toPrecision(4)
+            : n.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4,
+              })
+
+      el.textContent = fmt(price)
+      el.classList.remove("animate-pulse")
+    })
+  }
+
+  async function fetchPrices() {
+    // 1. Intentar servir desde caché
+    const cached = getCached()
+    if (cached) {
+      applyPrices(cached)
+      return
+    }
+
+    const elements = document.querySelectorAll<HTMLElement>(".price-value")
+    const coinIds = new Set<string>()
+    const nftIds = new Set<string>()
+
+    elements.forEach((el) => {
+      const id = el.getAttribute("data-coin-id") ?? ""
+      if (el.getAttribute("data-is-nft") === "true") nftIds.add(id)
+      else coinIds.add(id)
+    })
+
+    if (coinIds.size === 0 && nftIds.size === 0) return
+
+    const prices: Record<string, number> = {}
+    let btcUsd = 0
+
+    // 2. Fetch de tokens normales (batch)
+    if (coinIds.size > 0) {
+      try {
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${[...coinIds].join(",")}&vs_currencies=usd`,
+        )
+        const data = (await res.json()) as Record<string, { usd: number }>
+        for (const [id, val] of Object.entries(data)) {
+          prices[id] = val.usd
+          if (id === "bitcoin") btcUsd = val.usd
+        }
+      } catch (err) {
+        console.error("CoinGecko tokens:", err)
+      }
+    }
+
+    // 3. Fetch de NFTs (secuencial — API no permite batch)
+    for (const nftId of nftIds) {
+      try {
+        const res = await fetch(`https://api.coingecko.com/api/v3/nfts/${nftId}`)
+        const data = (await res.json()) as {
+          floor_price?: { usd?: number; native_currency?: number }
+        }
+        const usd =
+          data.floor_price?.usd ??
+          (data.floor_price?.native_currency && btcUsd > 0
+            ? data.floor_price.native_currency * btcUsd
+            : 0)
+        if (usd > 0) prices[nftId] = usd
+      } catch (err) {
+        console.error(`CoinGecko NFT ${nftId}:`, err)
+      }
+    }
+
+    // 4. Aplicar precios y guardar en caché
+    applyPrices(prices)
+    if (Object.keys(prices).length > 0) setCache(prices)
+
+    // 5. Marcar como N/A los que fallaron
+    elements.forEach((el) => {
+      if (el.textContent === "$---") {
+        el.textContent = "N/A"
+        el.classList.remove("text-emerald-400")
+        el.classList.add("text-terminal-muted")
+      }
+    })
+  }
+
+  document.addEventListener("astro:page-load", fetchPrices)
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    fetchPrices()
+  } else {
+    document.addEventListener("DOMContentLoaded", fetchPrices)
+  }
+</script>
