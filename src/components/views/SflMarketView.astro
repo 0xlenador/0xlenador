@@ -1748,7 +1748,7 @@ const t = useTranslations(lang)
 
     const fragment = document.createDocumentFragment()
 
-    if (page === 1 && window.__showFlowerRow && window.__flowerData) {
+    if (page === 1 && window.__showFlowerRow && window.__flowerData && currentCategory === "resources") {
       const currentTerm = searchInput ? searchInput.value.toLowerCase() : ""
       if (currentTerm === "" || window.__flowerData.name.toLowerCase().includes(currentTerm)) {
         const flowerRow = createFlowerRow(window.__flowerData)
