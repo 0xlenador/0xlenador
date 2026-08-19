@@ -93,12 +93,6 @@
   }
 
   async function fetchPrices() {
-    const cached = getCached()
-    if (cached) {
-      publishData(cached)
-      return
-    }
-
     const elements = document.querySelectorAll<HTMLElement>(".price-value, .cg-sparkline")
     const coinIds = new Set<string>()
     const nftIds = new Set<string>()
@@ -115,13 +109,29 @@
 
     if (coinIds.size === 0 && nftIds.size === 0) return
 
-    const dataMap: Record<string, CoinData> = {}
-    let btcUsd = 0
+    const cached = getCached()
+    const dataMap: Record<string, CoinData> = cached || {}
+    
+    if (Object.keys(dataMap).length > 0) {
+      publishData(dataMap)
+    }
 
-    if (coinIds.size > 0) {
+    const missingCoinIds = new Set<string>([...coinIds].filter(id => !dataMap[id]))
+    const missingNftIds = new Set<string>([...nftIds].filter(id => !dataMap[id]))
+    const missingVol7dIds = new Set<string>([...vol7dIds].filter(id => !dataMap[id] || dataMap[id].totalVolume === undefined))
+
+    if (missingCoinIds.size === 0 && missingNftIds.size === 0 && missingVol7dIds.size === 0) {
+      finalizeNAs()
+      return
+    }
+
+    let btcUsd = 0
+    if (dataMap["bitcoin"]) btcUsd = dataMap["bitcoin"].usd
+
+    if (missingCoinIds.size > 0) {
       try {
         const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${[...coinIds].join(",")}&sparkline=true&price_change_percentage=24h,7d,30d`
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${[...missingCoinIds].join(",")}&sparkline=true&price_change_percentage=24h,7d,30d`
         )
         const data = await res.json()
         if (Array.isArray(data)) {
@@ -141,9 +151,10 @@
       } catch (err) {
         console.error("CoinGecko markets:", err)
       }
+    }
 
-      // Fetch 7D volume for requested coins
-      for (const vId of vol7dIds) {
+    if (missingVol7dIds.size > 0) {
+      for (const vId of missingVol7dIds) {
         let success = false
         try {
           const resVol = await fetch(`https://api.coingecko.com/api/v3/coins/${vId}/market_chart?vs_currency=usd&days=7`)
@@ -161,33 +172,37 @@
         } catch (err) {
           console.error(`CoinGecko Volume 7D ${vId}:`, err)
         }
-        // Si CoinGecko nos bloquea (Error 429), ponemos 0 para no mostrar datos falsos
         if (!success && dataMap[vId]) {
           dataMap[vId].totalVolume = 0
         }
       }
     }
 
-    for (const nftId of nftIds) {
-      try {
-        const res = await fetch(`https://api.coingecko.com/api/v3/nfts/${nftId}`)
-        const data = (await res.json()) as any
-        const usd =
-          data.floor_price?.usd ??
-          (data.floor_price?.native_currency && btcUsd > 0
-            ? data.floor_price.native_currency * btcUsd
-            : 0)
-        if (usd > 0) {
-          dataMap[nftId] = { usd }
+    if (missingNftIds.size > 0) {
+      for (const nftId of missingNftIds) {
+        try {
+          const res = await fetch(`https://api.coingecko.com/api/v3/nfts/${nftId}`)
+          const data = (await res.json()) as any
+          const usd =
+            data.floor_price?.usd ??
+            (data.floor_price?.native_currency && btcUsd > 0
+              ? data.floor_price.native_currency * btcUsd
+              : 0)
+          if (usd > 0) {
+            dataMap[nftId] = { usd }
+          }
+        } catch (err) {
+          console.error(`CoinGecko NFT ${nftId}:`, err)
         }
-      } catch (err) {
-        console.error(`CoinGecko NFT ${nftId}:`, err)
       }
     }
 
     publishData(dataMap)
     if (Object.keys(dataMap).length > 0) setCache(dataMap)
+    finalizeNAs()
+  }
 
+  function finalizeNAs() {
     document.querySelectorAll<HTMLElement>(".price-value").forEach((el) => {
       if (el.textContent === "$---") {
         el.textContent = "N/A"
