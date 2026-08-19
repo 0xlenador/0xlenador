@@ -564,7 +564,7 @@ const t = useTranslations(lang)
         <!-- Desktop Header -->
         <div
           id="desktopHeader"
-          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[20%_10%_12%_13%_10%_12%_23%] border-b border-white/[0.05] items-center transition-all duration-300"
+          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[20%_10%_12%_13%_12%_12%_21%] border-b border-white/[0.05] items-center transition-all duration-300"
         >
           <div
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none"
@@ -616,16 +616,25 @@ const t = useTranslations(lang)
             </div>
           </div>
           <div
-            id="vol24hHeader"
-            class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+            id="trades7dHeader"
+            class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none whitespace-nowrap flex justify-end"
             onclick="window.handleSort('trades7d')"
             title={lang === 'en' ? 'Traded volume in 7D' : 'Volumen de unidades comerciadas en 7D'}
           >
-            <div class="flex items-center justify-end gap-2">
+            <div class="flex items-center justify-end gap-1">
               <span
                 class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
                 data-col="trades7d">↕</span>
               Vol. (7D)
+              <button 
+                onclick="event.stopPropagation(); document.body.classList.toggle('show-vol-units'); if(window.currentSort && window.currentSort.column === 'trades7d' && window.reRenderTable) window.reRenderTable();" 
+                class="ml-0.5 text-white/30 hover:text-white transition-colors bg-transparent border-none p-0.5 rounded-full hover:bg-white/5"
+                title={lang === 'en' ? 'Units / FLOWER' : 'Unidades / FLOWER'}
+              >
+                <svg class="w-[10px] h-[10px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </button>
             </div>
           </div>
           <div
@@ -825,6 +834,10 @@ const t = useTranslations(lang)
 </main>
 
 <style is:global>
+  body:not(.show-vol-units) .vol-units { display: none !important; }
+  body.show-vol-units .vol-flower { display: none !important; }
+  body.show-vol-units #volToggleBtn { background-color: rgba(255, 255, 255, 0.1); }
+  
   @keyframes fillCircle {
     0% {
       stroke-dashoffset: 62.83;
@@ -1204,6 +1217,35 @@ const t = useTranslations(lang)
     `
   }
 
+  const getVolColumnHTML = (title, item) => {
+    const usdValue = item.volume7dUsd !== undefined ? formatNumber(item.volume7dUsd, 0) : ""
+    const flowerValue = item.volume7d !== undefined ? formatNumber(item.volume7d, 0) : "-"
+    const unitsValue = item.trades7d !== undefined ? formatNumber(item.trades7d, 0) : "-"
+    const containerClass = "text-[13px] font-medium font-sans text-white/90 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
+    const tUnits = clientLang === 'es' ? 'UND' : 'UN'
+    
+    const badgeHTML = `
+        <div class="flex flex-col items-end">
+          <span class="${containerClass}">
+            <span class="vol-flower flex items-center gap-1.5">
+              <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 rounded-full drop-shadow-sm border border-emerald-500/20" />
+              ${flowerValue}
+            </span>
+            <span class="vol-units flex items-center gap-1"><span class="text-[10px] text-white/30">${tUnits}</span> ${unitsValue}</span>
+          </span>
+          ${usdValue ? `<span class="text-[9.5px] font-mono text-white/40 mt-1">~$${usdValue}</span>` : ''}
+        </div>
+    `
+    return `
+        <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4">
+          <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${title}</p>
+          <div class="flex justify-center lg:justify-end w-full">
+            ${badgeHTML}
+          </div>
+        </div>
+    `
+  }
+
   const getMarketcapColumnHTML = (title, mcap) => {
     const text = mcap !== undefined ? formatNumber(mcap, 0) : "-"
     const usdValue = mcap !== undefined && window.sflUsdPrice ? formatNumber(mcap * window.sflUsdPrice, 0) : ""
@@ -1541,8 +1583,13 @@ const t = useTranslations(lang)
           valA = a.supply !== undefined ? a.supply : Infinity
           valB = b.supply !== undefined ? b.supply : Infinity
         } else if (column === "trades7d") {
-          valA = a.trades7d || 0
-          valB = b.trades7d || 0
+          if (document.body.classList.contains("show-vol-units")) {
+            valA = a.trades7d || 0
+            valB = b.trades7d || 0
+          } else {
+            valA = a.volume7d || 0
+            valB = b.volume7d || 0
+          }
         } else if (column === "marketcap") {
           valA = (a.supply || 0) * a.currentPrice
           valB = (b.supply || 0) * b.currentPrice
@@ -1588,7 +1635,7 @@ const t = useTranslations(lang)
   const createFlowerRow = (item) => {
     const row = document.createElement("div")
     row.className =
-      `hover:bg-emerald-500/10 transition-colors group flex flex-col justify-between border border-emerald-500/20 bg-emerald-500/5 rounded-[20px] p-3 lg:p-0 lg:border-emerald-500/20 lg:border-b last:lg:border-b-0 lg:bg-emerald-500/5 lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_10%_12%_23%] lg:items-center lg:py-3 relative`
+      `hover:bg-emerald-500/10 transition-colors group flex flex-col justify-between border border-emerald-500/20 bg-emerald-500/5 rounded-[20px] p-3 lg:p-0 lg:border-emerald-500/20 lg:border-b last:lg:border-b-0 lg:bg-emerald-500/5 lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_12%_12%_21%] lg:items-center lg:py-3 relative`
     row.setAttribute("data-row-id", item.name)
 
     const color24h = item.history["1d"] ? (item.currentPrice >= item.history["1d"] ? "bg-emerald-500" : "bg-red-500") : "bg-terminal-muted/30"
@@ -1654,7 +1701,7 @@ const t = useTranslations(lang)
               </span>
             </div>
           </div>
-          ${getSupplyColumnHTML("Vol. 7D", item.trades7d, item.volume7dUsd)}
+          ${getSupplyColumnHTML("Vol. 7D", item.trades7d, item.volume7d ? item.volume7d * window.sflUsdPrice : undefined)}
           ${getSupplyColumnHTML("Circ. Supply", 256000000)}
           
           <div class="hidden lg:block w-full max-w-[250px] ml-auto h-full relative">
@@ -1702,7 +1749,7 @@ const t = useTranslations(lang)
       const isResources = item.category === "resources"
       const row = document.createElement("div")
       row.className =
-        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_10%_12%_23%] lg:items-center lg:py-3`
+        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_12%_12%_21%] lg:items-center lg:py-3`
       row.setAttribute("data-row-id", item.name)
 
       // Calculate trend colors for mobile dots
@@ -1811,7 +1858,7 @@ const t = useTranslations(lang)
                     <span class="text-[11px] font-medium font-sans text-white/30 italic">${clientLang === 'es' ? 'No cumple' : 'Uncapped'}</span>
                   </div>`
                 : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
-              ${getSupplyColumnHTML("Vol. 7D", item.trades7d, item.volume7dUsd)}
+              ${getVolColumnHTML("Vol. 7D", item)}
               ${isResources
                 ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4" title="${clientLang === 'es' ? 'Recurso ilimitado, se genera y consume dentro del juego' : 'Unlimited resource, generated and consumed in-game'}">
                     <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Circ. Supply</div>
@@ -1864,6 +1911,11 @@ const t = useTranslations(lang)
       loadMoreObserver.disconnect()
       loadMoreObserver.observe(trigger)
     }
+  }
+  
+  window.reRenderTable = () => {
+    const searchInput = document.getElementById("sflSearchInput")
+    renderTable(searchInput ? searchInput.value : "")
   }
 
   document.addEventListener("coingecko-data-ready", (e) => {
