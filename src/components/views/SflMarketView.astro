@@ -253,6 +253,8 @@ const t = useTranslations(lang)
         </div>
       </div>
 
+      <!-- Ancla Oculta para el Motor Central -->
+      <span class="price-value hidden" data-coin-id="flower-2" data-needs-volume-7d="true"></span>
       <div
         class="flex flex-wrap items-center justify-between mb-3 gap-3 sm:gap-2"
       >
@@ -1858,58 +1860,40 @@ const t = useTranslations(lang)
     }
   }
 
-  const fetchFlowerData = async () => {
-    try {
-      const res = await fetch("https://api.coingecko.com/api/v3/coins/flower-2?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true")
-      const data = await res.json()
+  document.addEventListener("coingecko-data-ready", (e) => {
+    const dataMap = e.detail
+    const flowerData = dataMap["flower-2"]
+    if (flowerData && flowerData.usd) {
+      window.__flowerData = {
+        name: "FLOWER",
+        key: "flower",
+        currentPrice: flowerData.usd,
+        history: {
+          "1d": flowerData.usd / (1 + (flowerData.change24h || 0) / 100),
+          "7d": flowerData.usd / (1 + (flowerData.change7d || 0) / 100),
+          "30d": flowerData.usd / (1 + (flowerData.change30d || 0) / 100),
+          "sparkline7d": flowerData.sparkline ? (() => {
+            const raw = flowerData.sparkline;
+            const reduced = [];
+            for (let i = 0; i < raw.length; i += Math.ceil(raw.length / 7)) {
+              reduced.push(raw[i]);
+            }
+            if (reduced[reduced.length - 1] !== raw[raw.length - 1]) {
+              reduced.push(raw[raw.length - 1]);
+            }
+            return reduced.slice(-8);
+          })() : []
+        },
+        trades7d: flowerData.totalVolume || 0,
+        supply: 256000000,
+        category: "resources"
+      }
       
-      let sumVol7d = 0
-      try {
-        const resVol = await fetch("https://api.coingecko.com/api/v3/coins/flower-2/market_chart?vs_currency=usd&days=7")
-        const volData = await resVol.json()
-        if (volData && volData.total_volumes) {
-          for (let i = 0; i < volData.total_volumes.length; i += 24) {
-            sumVol7d += volData.total_volumes[i][1]
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching FLOWER 7D volume:", err)
+      if (typeof renderTable === "function") {
+        renderTable(searchInput ? searchInput.value : "")
       }
-
-      if (sumVol7d === 0 && data && data.market_data && data.market_data.total_volume) {
-        sumVol7d = data.market_data.total_volume.usd * 7 // Fallback aproximado
-      }
-      
-      if (data && data.market_data) {
-        window.__flowerData = {
-          name: "FLOWER",
-          key: "flower",
-          currentPrice: data.market_data.current_price.usd,
-          history: {
-            "1d": data.market_data.current_price.usd / (1 + data.market_data.price_change_percentage_24h / 100),
-            "7d": data.market_data.current_price.usd / (1 + data.market_data.price_change_percentage_7d / 100),
-            "30d": data.market_data.current_price.usd / (1 + data.market_data.price_change_percentage_30d / 100),
-            "sparkline7d": data.market_data.sparkline_7d && data.market_data.sparkline_7d.price ? (() => {
-              const raw = data.market_data.sparkline_7d.price;
-              const reduced = [];
-              for (let i = 0; i < raw.length; i += Math.ceil(raw.length / 7)) {
-                reduced.push(raw[i]);
-              }
-              if (reduced[reduced.length - 1] !== raw[raw.length - 1]) {
-                reduced.push(raw[raw.length - 1]);
-              }
-              return reduced.slice(-8); // Asegurarnos que sean máximo 8 puntos para igualar a los items
-            })() : []
-          },
-          trades7d: sumVol7d,
-          supply: 256000000,
-          category: "resources"
-        }
-      }
-    } catch (e) {
-      console.error("Error fetching FLOWER data:", e)
     }
-  }
+  })
 
   window.closeFlowerRow = () => {
     const flowerRowToggle = document.getElementById("flowerRowToggle")
@@ -2030,7 +2014,6 @@ const t = useTranslations(lang)
         if (imgEl) imgEl.classList.remove("animate-pulse")
       }
 
-      await fetchFlowerData()
 
       renderDashboard()
       renderTable(searchInput ? searchInput.value : "", true)

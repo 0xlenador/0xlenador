@@ -9,12 +9,16 @@
   import { createSparklineSVG, formatNumber, initSparklineHover } from "../utils/sparklines";
 
   const CACHE_KEY = "ticker_prices_v3"
-  const CACHE_TTL = 5 * 60 * 1000 // 5 minutos en ms
+  const CACHE_TTL = 15 * 60 * 1000 // 15 minutos en ms
 
   interface CoinData {
     usd: number;
     sparkline?: number[];
     isPositive?: boolean;
+    change24h?: number;
+    change7d?: number;
+    change30d?: number;
+    totalVolume?: number;
   }
 
   function getCached(): Record<string, CoinData> | null {
@@ -82,22 +86,31 @@
     })
   }
 
+  function publishData(dataMap: Record<string, CoinData>) {
+    (window as any).__CoinGeckoEngine = dataMap;
+    document.dispatchEvent(new CustomEvent("coingecko-data-ready", { detail: dataMap }));
+    applyPrices(dataMap);
+  }
+
   async function fetchPrices() {
     const cached = getCached()
     if (cached) {
-      applyPrices(cached)
+      publishData(cached)
       return
     }
 
     const elements = document.querySelectorAll<HTMLElement>(".price-value, .cg-sparkline")
     const coinIds = new Set<string>()
     const nftIds = new Set<string>()
+    const vol7dIds = new Set<string>()
 
     elements.forEach((el) => {
       const id = el.getAttribute("data-coin-id") ?? ""
       if (!id) return
       if (el.getAttribute("data-is-nft") === "true") nftIds.add(id)
       else coinIds.add(id)
+      
+      if (el.getAttribute("data-needs-volume-7d") === "true") vol7dIds.add(id)
     })
 
     if (coinIds.size === 0 && nftIds.size === 0) return
@@ -108,7 +121,7 @@
     if (coinIds.size > 0) {
       try {
         const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${[...coinIds].join(",")}&sparkline=true&price_change_percentage=7d`
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${[...coinIds].join(",")}&sparkline=true&price_change_percentage=24h,7d,30d`
         )
         const data = await res.json()
         if (Array.isArray(data)) {
@@ -116,13 +129,36 @@
             dataMap[coin.id] = {
               usd: coin.current_price,
               sparkline: coin.sparkline_in_7d?.price,
-              isPositive: coin.price_change_percentage_7d_in_currency >= 0 || coin.price_change_percentage_24h >= 0
+              isPositive: (coin.price_change_percentage_7d_in_currency || coin.price_change_percentage_7d) >= 0 || (coin.price_change_percentage_24h_in_currency || coin.price_change_percentage_24h) >= 0,
+              change24h: coin.price_change_percentage_24h_in_currency || coin.price_change_percentage_24h,
+              change7d: coin.price_change_percentage_7d_in_currency || coin.price_change_percentage_7d,
+              change30d: coin.price_change_percentage_30d_in_currency || coin.price_change_percentage_30d,
+              totalVolume: coin.total_volume
             }
             if (coin.id === "bitcoin") btcUsd = coin.current_price
           }
         }
       } catch (err) {
         console.error("CoinGecko markets:", err)
+      }
+
+      // Fetch 7D volume for requested coins
+      for (const vId of vol7dIds) {
+        try {
+          const resVol = await fetch(`https://api.coingecko.com/api/v3/coins/${vId}/market_chart?vs_currency=usd&days=7`)
+          const volData = await resVol.json()
+          if (volData && volData.total_volumes && dataMap[vId]) {
+            let sumVol7d = 0
+            for (let i = 0; i < volData.total_volumes.length; i += 24) {
+              sumVol7d += volData.total_volumes[i][1]
+            }
+            if (sumVol7d > 0) {
+              dataMap[vId].totalVolume = sumVol7d
+            }
+          }
+        } catch (err) {
+          console.error(`CoinGecko Volume 7D ${vId}:`, err)
+        }
       }
     }
 
@@ -143,7 +179,7 @@
       }
     }
 
-    applyPrices(dataMap)
+    publishData(dataMap)
     if (Object.keys(dataMap).length > 0) setCache(dataMap)
 
     document.querySelectorAll<HTMLElement>(".price-value").forEach((el) => {
