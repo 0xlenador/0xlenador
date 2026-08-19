@@ -20,7 +20,7 @@ const t = useTranslations(lang)
 
 <main class="max-w-7xl mx-auto sm:px-6 pt-4 pb-4">
   <div
-    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] mb-10 shadow-2xl relative block min-w-0 overflow-hidden"
+    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] mb-10 shadow-2xl relative block min-w-0 overflow-clip"
     style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);"
   >
     <!-- Tabs integrados como encabezado de la tarjeta -->
@@ -254,7 +254,7 @@ const t = useTranslations(lang)
       </div>
 
       <div
-        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3 sm:gap-2"
+        class="flex flex-wrap items-center justify-between mb-3 gap-3 sm:gap-2"
       >
         <div class="flex items-center flex-wrap gap-3">
           <h2 class="text-lg font-semibold text-white">
@@ -264,26 +264,33 @@ const t = useTranslations(lang)
               >P2P History</span>
           </h2>
         </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <button
-            id="fetchBtn"
-            class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto justify-center"
+        
+        <label class="flex items-center cursor-pointer gap-2 mr-1 sm:mr-3 group ml-auto" title="Mostrar fila de $FLOWER">
+          <span class="text-[10px] sm:text-xs font-bold text-terminal-muted group-hover:text-white transition-colors">$FLOWER</span>
+          <div class="relative flex items-center">
+            <input type="checkbox" id="flowerRowToggle" class="sr-only peer" checked>
+            <div class="w-8 h-4 bg-black/50 border border-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-terminal-muted peer-checked:after:bg-emerald-400 after:border-transparent after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500/20"></div>
+          </div>
+        </label>
+        
+        <button
+          id="fetchBtn"
+          class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto shrink-0 justify-center"
+        >
+          <svg
+            class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            ></path></svg
           >
-            <svg
-              class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              ></path></svg
-            >
-            {t("sfl.refresh")}
-          </button>
-        </div>
+          {t("sfl.refresh")}
+        </button>
       </div>
 
       <!-- Filtros y Buscador -->
@@ -1116,7 +1123,7 @@ const t = useTranslations(lang)
     `
   }
 
-  const getCardColumnHTML = (title, changeObj, sparklineData, expectedLength) => {
+  const getCardColumnHTML = (title, changeObj, sparklineData, expectedLength, isHourly = false) => {
     const isLarge = !sparklineData
     const badgeHTML = getBadgeHTML(changeObj, isLarge)
 
@@ -1131,7 +1138,7 @@ const t = useTranslations(lang)
       `
     }
 
-    const graphHTML = `<div class="h-8 lg:h-10 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive, expectedLength)}</div>`
+    const graphHTML = `<div class="h-8 lg:h-10 w-full flex items-center">${createSparklineSVG(sparklineData, changeObj.isPositive, expectedLength, isHourly)}</div>`
 
     return `
       <div class="flex flex-col justify-between lg:flex-row lg:items-center bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full lg:h-auto">
@@ -1570,6 +1577,95 @@ const t = useTranslations(lang)
     }
   }
 
+  const createFlowerRow = (item) => {
+    const row = document.createElement("div")
+    row.className =
+      `hover:bg-emerald-500/10 transition-colors group flex flex-col justify-between border border-emerald-500/20 bg-emerald-500/5 rounded-[20px] p-3 lg:p-0 lg:border-emerald-500/20 lg:border-b last:lg:border-b-0 lg:bg-emerald-500/5 lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_10%_12%_23%] lg:items-center lg:py-3 relative`
+    row.setAttribute("data-row-id", item.name)
+
+    const color24h = item.history["1d"] ? (item.currentPrice >= item.history["1d"] ? "bg-emerald-500" : "bg-red-500") : "bg-terminal-muted/30"
+    
+    row.innerHTML = `
+      <!-- Botón X Flotante -->
+      <button onclick="window.closeFlowerRow()" class="absolute top-2 right-2 lg:top-2 lg:right-2 w-5 h-5 flex items-center justify-center rounded-full bg-black/40 text-terminal-muted hover:text-white hover:bg-red-500/80 transition-colors z-30 pointer-events-auto" title="Ocultar fila de $FLOWER">
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <!-- Card Header (Móvil) / Columna 1 (Desktop) -->
+      <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full cursor-pointer lg:cursor-default mobile-row-toggle">
+        <div class="flex items-center gap-4 lg:gap-3">
+          <div class="relative w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-emerald-500/30 flex items-center justify-center p-2 lg:p-1 shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+            <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-[90%] h-[90%] object-contain rounded-full drop-shadow-sm" />
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <p class="text-base lg:text-sm font-semibold text-emerald-400 group-hover:text-emerald-300 transition-colors">${item.name}</p>
+              <span class="px-1 py-[1px] rounded-[3px] text-[8px] uppercase tracking-wider font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Token</span>
+            </div>
+            <p class="text-[9px] text-emerald-400/80 leading-tight lg:leading-none mt-1 max-w-[180px] lg:max-w-none">Sunflower Land Token</p>
+          </div>
+        </div>
+        <!-- Precio Móvil y Círculo -->
+        <div class="lg:hidden flex items-center justify-end gap-3">
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <div class="flex flex-col items-center gap-1.5">
+                  <span class="text-[8px] font-mono text-terminal-muted/70 leading-none">24H</span>
+                  <div class="w-1.5 h-1.5 rounded-full ${color24h}"></div>
+              </div>
+            </div>
+            <div class="flex flex-col items-end justify-center border-l border-white/5 pl-2.5 min-w-[55px]">
+              <span class="text-[9px] font-mono text-terminal-muted mb-1">${tColPrice}</span>
+              <span class="text-sm font-bold text-white leading-none inline-flex items-center">
+                $${formatNumber(item.currentPrice, 4)}
+              </span>
+            </div>
+            <div class="expand-indicator lg:hidden flex items-center pl-1 transition-opacity group-[.is-expanded]:hidden">
+              <svg class="w-3.5 h-3.5 text-terminal-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+        </div>
+      </div>
+      
+      <!-- Precio Desktop -->
+      <div class="hidden lg:flex flex-col lg:py-0 pr-4 items-end justify-center h-full">
+        <span class="text-[13px] font-sans font-medium text-white/90 inline-flex items-center">
+          $${formatNumber(item.currentPrice, 4)}
+        </span>
+      </div>
+      
+      <!-- Contenedor de gráficas (Oculto por defecto en móvil, Acordeón) -->
+      <div class="hidden lg:contents mobile-charts-container w-full">
+        <div class="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:contents w-full">
+          ${getTextColumnHTML(tCol24h, calculateChange(item.currentPrice, item.history["1d"]))}
+          <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4">
+            <p class="text-xs font-mono text-terminal-muted mb-3 uppercase lg:hidden font-semibold text-center w-full">${tColMarketcap}</p>
+            <div class="flex justify-center lg:justify-end w-full">
+              <span class="text-[13px] font-medium font-sans text-white/90 inline-flex items-center whitespace-nowrap shrink-0 leading-none">
+                $${formatNumber(256000000 * item.currentPrice, 0)}
+              </span>
+            </div>
+          </div>
+          ${getSupplyColumnHTML("Vol. 7D", item.trades7d)}
+          ${getSupplyColumnHTML("Circ. Supply", 256000000)}
+          
+          <div class="hidden lg:block w-full max-w-[250px] ml-auto h-full relative">
+            <!-- 7D Watermark Desktop -->
+            <div class="absolute -top-1 left-0 flex items-center pointer-events-none z-20">
+              <span class="text-[12px] font-bold text-white/20 select-none tracking-widest">7D</span>
+            </div>
+            <div class="w-full h-full relative z-10">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}</div>
+          </div>
+
+          <div class="lg:hidden contents">
+            ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}
+          </div>
+        </div>
+      </div>
+    `
+    return row
+  }
+
   const renderPage = (page) => {
     if (page === 1) tableBody.innerHTML = ""
 
@@ -1585,6 +1681,14 @@ const t = useTranslations(lang)
     if (items.length === 0) return
 
     const fragment = document.createDocumentFragment()
+
+    if (page === 1 && window.__showFlowerRow && window.__flowerData) {
+      const currentTerm = searchInput ? searchInput.value.toLowerCase() : ""
+      if (currentTerm === "" || window.__flowerData.name.toLowerCase().includes(currentTerm)) {
+        const flowerRow = createFlowerRow(window.__flowerData)
+        fragment.appendChild(flowerRow)
+      }
+    }
 
     items.forEach((item) => {
       const isResources = item.category === "resources"
@@ -1754,6 +1858,67 @@ const t = useTranslations(lang)
     }
   }
 
+  const fetchFlowerData = async () => {
+    try {
+      const res = await fetch("https://api.coingecko.com/api/v3/coins/flower-2?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true")
+      const data = await res.json()
+      
+      let sumVol7d = 0
+      try {
+        const resVol = await fetch("https://api.coingecko.com/api/v3/coins/flower-2/market_chart?vs_currency=usd&days=7")
+        const volData = await resVol.json()
+        if (volData && volData.total_volumes) {
+          for (let i = 0; i < volData.total_volumes.length; i += 24) {
+            sumVol7d += volData.total_volumes[i][1]
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching FLOWER 7D volume:", err)
+      }
+
+      if (sumVol7d === 0 && data && data.market_data && data.market_data.total_volume) {
+        sumVol7d = data.market_data.total_volume.usd * 7 // Fallback aproximado
+      }
+      
+      if (data && data.market_data) {
+        window.__flowerData = {
+          name: "FLOWER",
+          key: "flower",
+          currentPrice: data.market_data.current_price.usd,
+          history: {
+            "1d": data.market_data.current_price.usd / (1 + data.market_data.price_change_percentage_24h / 100),
+            "7d": data.market_data.current_price.usd / (1 + data.market_data.price_change_percentage_7d / 100),
+            "30d": data.market_data.current_price.usd / (1 + data.market_data.price_change_percentage_30d / 100),
+            "sparkline7d": data.market_data.sparkline_7d && data.market_data.sparkline_7d.price ? (() => {
+              const raw = data.market_data.sparkline_7d.price;
+              const reduced = [];
+              for (let i = 0; i < raw.length; i += Math.ceil(raw.length / 7)) {
+                reduced.push(raw[i]);
+              }
+              if (reduced[reduced.length - 1] !== raw[raw.length - 1]) {
+                reduced.push(raw[raw.length - 1]);
+              }
+              return reduced.slice(-8); // Asegurarnos que sean máximo 8 puntos para igualar a los items
+            })() : []
+          },
+          trades7d: sumVol7d,
+          supply: 256000000,
+          category: "resources"
+        }
+      }
+    } catch (e) {
+      console.error("Error fetching FLOWER data:", e)
+    }
+  }
+
+  window.closeFlowerRow = () => {
+    const flowerRowToggle = document.getElementById("flowerRowToggle")
+    if (flowerRowToggle) flowerRowToggle.checked = false
+    window.__showFlowerRow = false
+    localStorage.setItem("hide_flower_row", "true")
+    renderTable(searchInput ? searchInput.value : "")
+  }
+
   const fetchData = async () => {
     try {
       loadingState.classList.remove("hidden")
@@ -1865,6 +2030,8 @@ const t = useTranslations(lang)
         if (imgEl) imgEl.classList.remove("animate-pulse")
       }
 
+      await fetchFlowerData()
+
       renderDashboard()
       renderTable(searchInput ? searchInput.value : "", true)
 
@@ -1924,6 +2091,19 @@ const t = useTranslations(lang)
       fetchBtn.addEventListener("click", () => {
         sessionStorage.setItem("sfl_market_scroll", window.scrollY)
         fetchData()
+      })
+    }
+
+    const flowerRowToggle = document.getElementById("flowerRowToggle")
+    if (flowerRowToggle) {
+      const isHidden = localStorage.getItem("hide_flower_row") === "true"
+      flowerRowToggle.checked = !isHidden
+      window.__showFlowerRow = !isHidden
+      
+      flowerRowToggle.addEventListener("change", (e) => {
+        window.__showFlowerRow = e.target.checked
+        localStorage.setItem("hide_flower_row", !e.target.checked)
+        renderTable(searchInput ? searchInput.value : "")
       })
     }
 
