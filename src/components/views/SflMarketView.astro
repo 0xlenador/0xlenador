@@ -564,7 +564,7 @@ const t = useTranslations(lang)
         <!-- Desktop Header -->
         <div
           id="desktopHeader"
-          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[20%_10%_12%_13%_12%_12%_21%] border-b border-white/[0.05] items-center transition-all duration-300"
+          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[22%_10%_10%_13%_12%_12%_21%] border-b border-white/[0.05] items-center transition-all duration-300"
         >
           <div
             class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none"
@@ -1637,7 +1637,7 @@ const t = useTranslations(lang)
   const createFlowerRow = (item) => {
     const row = document.createElement("div")
     row.className =
-      `hover:bg-emerald-500/10 transition-colors group flex flex-col justify-between border border-emerald-500/20 bg-emerald-500/5 rounded-[20px] p-3 lg:p-0 lg:border-emerald-500/20 lg:border-b last:lg:border-b-0 lg:bg-emerald-500/5 lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_12%_12%_21%] lg:items-center lg:py-3 relative`
+      `hover:bg-emerald-500/10 transition-colors group flex flex-col justify-between border border-emerald-500/20 bg-emerald-500/5 rounded-[20px] p-3 lg:p-0 lg:border-emerald-500/20 lg:border-b last:lg:border-b-0 lg:bg-emerald-500/5 lg:rounded-none lg:grid lg:grid-cols-[22%_10%_10%_13%_12%_12%_21%] lg:items-center lg:py-3 relative`
     row.setAttribute("data-row-id", item.name)
 
     const color24h = item.history["1d"] ? (item.currentPrice >= item.history["1d"] ? "bg-emerald-500" : "bg-red-500") : "bg-terminal-muted/30"
@@ -1760,7 +1760,7 @@ const t = useTranslations(lang)
       const isResources = item.category === "resources"
       const row = document.createElement("div")
       row.className =
-        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[20%_10%_12%_13%_12%_12%_21%] lg:items-center lg:py-3`
+        `hover:bg-white/[0.02] transition-colors group flex flex-col justify-between border border-white/5 bg-white/[0.02] rounded-[20px] p-3 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[22%_10%_10%_13%_12%_12%_21%] lg:items-center lg:py-3`
       row.setAttribute("data-row-id", item.name)
 
       // Calculate trend colors for mobile dots
@@ -1925,7 +1925,7 @@ const t = useTranslations(lang)
   }
   
   window.reRenderTable = () => {
-    const searchInput = document.getElementById("sflSearchInput")
+    const searchInput = document.getElementById("searchInput")
     renderTable(searchInput ? searchInput.value : "")
   }
 
