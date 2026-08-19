@@ -1180,13 +1180,19 @@ const t = useTranslations(lang)
     `
   }
 
-  const getSupplyColumnHTML = (title, supply) => {
+  const getSupplyColumnHTML = (title, supply, exactUsdValue = undefined) => {
     const text = supply !== undefined ? formatNumber(supply, 0) : "-"
+    const usdValue = exactUsdValue !== undefined 
+      ? formatNumber(exactUsdValue, 0) 
+      : ""
     const containerClass = "text-[13px] font-medium font-sans text-white/90 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
     const badgeHTML = `
-        <span class="${containerClass}">
-          ${text}
-        </span>
+        <div class="flex flex-col items-end">
+          <span class="${containerClass}">
+            ${text}
+          </span>
+          ${usdValue ? `<span class="text-[9.5px] font-mono text-white/40 mt-1">~$${usdValue}</span>` : ''}
+        </div>
     `
     return `
         <div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4">
@@ -1648,7 +1654,7 @@ const t = useTranslations(lang)
               </span>
             </div>
           </div>
-          ${getSupplyColumnHTML("Vol. 7D", item.trades7d)}
+          ${getSupplyColumnHTML("Vol. 7D", item.trades7d, item.volume7d ? item.volume7d * window.sflUsdPrice : undefined)}
           ${getSupplyColumnHTML("Circ. Supply", 256000000)}
           
           <div class="hidden lg:block w-full max-w-[250px] ml-auto h-full relative">
@@ -1805,7 +1811,7 @@ const t = useTranslations(lang)
                     <span class="text-[11px] font-medium font-sans text-white/30 italic">${clientLang === 'es' ? 'No cumple' : 'Uncapped'}</span>
                   </div>`
                 : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
-              ${getSupplyColumnHTML("Vol. 7D", item.trades7d)}
+              ${getSupplyColumnHTML("Vol. 7D", item.trades7d, item.volume7d ? item.volume7d * window.sflUsdPrice : undefined)}
               ${isResources
                 ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-4" title="${clientLang === 'es' ? 'Recurso ilimitado, se genera y consume dentro del juego' : 'Unlimited resource, generated and consumed in-game'}">
                     <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Circ. Supply</div>

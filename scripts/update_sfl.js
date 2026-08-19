@@ -227,13 +227,27 @@ async function updateSFLData() {
         return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].trades : null
       }
 
+      const getItemVolume = (offset) => {
+        if (offset === 0 && rawData["live"])
+          return rawData["live"][itemKey] ? rawData["live"][itemKey].volume : null
+        const dStr = getDateString(offset)
+        return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].volume : null
+      }
+
       const p0 = getItemPrice(0) || itemData.latestSale || 0
       const t0 = getItemTrades(0) || itemData.trades || 0
       const t1 = getItemTrades(1) || getItemTrades(2) || getItemTrades(3) || 0
       const t7 = getItemTrades(7) || getItemTrades(8) || getItemTrades(9) || getItemTrades(10) || 0
       
+      const v0 = getItemVolume(0) || itemData.volume || 0
+      const v1 = getItemVolume(1) || getItemVolume(2) || getItemVolume(3) || 0
+      const v7 = getItemVolume(7) || getItemVolume(8) || getItemVolume(9) || getItemVolume(10) || 0
+
       const trades24h = t1 > 0 && t0 >= t1 ? t0 - t1 : 0
       const trades7d = t7 > 0 && t0 >= t7 ? t0 - t7 : 0
+      
+      const volume24h = v1 > 0 && v0 >= v1 ? v0 - v1 : 0
+      const volume7d = v7 > 0 && v0 >= v7 ? v0 - v7 : 0
 
       const getSparklinePrice = (offset) => {
         if (offset === 0) return p0
@@ -254,6 +268,8 @@ async function updateSFLData() {
         trades: t0,
         trades24h: trades24h,
         trades7d: trades7d,
+        volume24h: volume24h,
+        volume7d: volume7d,
         history: {
           "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || null,
           "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || null,
