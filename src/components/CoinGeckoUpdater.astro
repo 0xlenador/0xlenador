@@ -144,6 +144,7 @@
 
       // Fetch 7D volume for requested coins
       for (const vId of vol7dIds) {
+        let success = false
         try {
           const resVol = await fetch(`https://api.coingecko.com/api/v3/coins/${vId}/market_chart?vs_currency=usd&days=7`)
           const volData = await resVol.json()
@@ -154,10 +155,15 @@
             }
             if (sumVol7d > 0) {
               dataMap[vId].totalVolume = sumVol7d
+              success = true
             }
           }
         } catch (err) {
           console.error(`CoinGecko Volume 7D ${vId}:`, err)
+        }
+        // Si CoinGecko nos bloquea (Error 429), ponemos 0 para no mostrar datos falsos
+        if (!success && dataMap[vId]) {
+          dataMap[vId].totalVolume = 0
         }
       }
     }
