@@ -627,7 +627,7 @@ const t = useTranslations(lang)
                 data-col="trades7d">↕</span>
               Vol. (7D)
               <button 
-                onclick="event.stopPropagation(); document.body.classList.toggle('show-vol-units'); if(window.currentSort && window.currentSort.column === 'trades7d' && window.reRenderTable) window.reRenderTable();" 
+                onclick="event.stopPropagation(); document.body.classList.toggle('show-vol-units');" 
                 class="ml-0.5 text-white/30 hover:text-white transition-colors bg-transparent border-none p-0.5 rounded-full hover:bg-white/5"
                 title={t("sfl.market.toggleUnits")}
               >
