@@ -18,30 +18,22 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<main class="max-w-7xl mx-auto sm:px-6">
-  <fieldset
-    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] p-2 lg:p-8 mb-10 shadow-2xl relative block min-w-0"
+<main class="max-w-7xl mx-auto sm:px-6 pt-4 pb-4">
+  <div
+    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] mb-10 shadow-2xl relative block min-w-0 overflow-clip"
     style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);"
   >
-    <legend class="ml-6 lg:ml-8 px-3 flex items-center gap-2 float-none w-auto">
-      <img
-        src="/img/cripto/sunflowerland.webp"
-        alt="Sunflower Land"
-        class="w-5 h-5 rounded-full object-contain bg-white/[0.05] p-[2px] border border-white/[0.1]"
-      />
-      <span
-        class="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest font-semibold"
-      >
-        {t("sfl.cooking.breadcrumb")}
-      </span>
-    </legend>
+    <!-- Tabs integrados como encabezado de la tarjeta -->
+    <div class="px-2 lg:px-5 pt-2 pb-0">
+      <SflTabs activeTab="cocinando" />
+    </div>
 
-    <SflTabs activeTab="cocinando" />
+    <div class="p-2 lg:p-5">
 
     <div class="mb-10 relative z-10 text-center sm:text-left">
       <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
         {t("sfl.cooking.heading")}
-        <span class="text-emerald-500">{t("sfl.cooking.heading.accent")}</span>
+        <span class="text-emerald-500"> {t("sfl.cooking.heading.accent")}</span>
       </h1>
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
         {t("sfl.cooking.intro")}
@@ -176,7 +168,8 @@ const t = useTranslations(lang)
         <!-- JS inyectará filas aquí -->
       </div>
     </div>
-  </fieldset>
+    </div>
+  </div>
 </main>
 
 <style is:global>
