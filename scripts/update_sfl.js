@@ -198,6 +198,26 @@ async function updateSFLData() {
       console.log(`⚡ Sin cambios en historia (API al día). Omitiendo escritura semestral.`)
     }
 
+    // 5.5 Obtener historial de precios de FLOWER desde CoinGecko
+    let dailyUsdPrices = {}
+    try {
+      console.log("Obteniendo precios históricos de FLOWER en USD (CoinGecko)...")
+      const cgRes = await fetchWithRetry("https://api.coingecko.com/api/v3/coins/flower-2/market_chart?vs_currency=usd&days=10&interval=daily")
+      if (cgRes && cgRes.ok) {
+        const cgData = await cgRes.json()
+        for (const [ts, price] of cgData.prices) {
+          const dObj = new Date(ts)
+          const yyyy = dObj.getUTCFullYear()
+          const mm = String(dObj.getUTCMonth() + 1).padStart(2, "0")
+          const dd = String(dObj.getUTCDate()).padStart(2, "0")
+          dailyUsdPrices[`${yyyy}-${mm}-${dd}`] = price
+        }
+        console.log("✅ Historial de FLOWER cargado exitosamente.")
+      }
+    } catch(e) {
+      console.log("⚠️ Error obteniendo historial de CoinGecko:", e.message)
+    }
+
     // 6. GENERAR sfl_data.json (Siempre se ejecuta para actualizar live)
     const dirPath = path.join(process.cwd(), "public", "api")
 
@@ -249,6 +269,21 @@ async function updateSFLData() {
       const volume24h = v1 > 0 && v0 >= v1 ? v0 - v1 : 0
       const volume7d = v7 > 0 && v0 >= v7 ? v0 - v7 : 0
 
+      // CRUCE HISTÓRICO (Vector Match)
+      let exactVolume7dUsd = 0;
+      let lastValidVolume = v0;
+      
+      for (let i = 1; i <= 7; i++) {
+        const currentVol = getItemVolume(i);
+        if (currentVol !== null && currentVol > 0 && lastValidVolume >= currentVol) {
+          const volumeDiff = lastValidVolume - currentVol;
+          const price = dailyUsdPrices[getDateString(i-1)] || currentFlowerPrice || 0;
+          exactVolume7dUsd += volumeDiff * price;
+          
+          lastValidVolume = currentVol;
+        }
+      }
+
       const getSparklinePrice = (offset) => {
         if (offset === 0) return p0
         let p = getItemPrice(offset)
@@ -270,6 +305,7 @@ async function updateSFLData() {
         trades7d: trades7d,
         volume24h: volume24h,
         volume7d: volume7d,
+        volume7dUsd: exactVolume7dUsd,
         history: {
           "1d": getItemPrice(1) || getItemPrice(2) || getItemPrice(3) || null,
           "7d": getItemPrice(7) || getItemPrice(6) || getItemPrice(5) || getItemPrice(4) || null,
