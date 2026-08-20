@@ -1259,6 +1259,115 @@ const t = useTranslations(lang)
        box1.classList.remove("items-center", "justify-center")
     }
 
+    const box5 = document.getElementById("dashBox5")
+    if (box5) {
+      const catData = {
+        powerups: { vol: 0, sales: 0, label: "PWR", name: "Power Ups", icon: "/img/sunflowerland/123/energy.png" },
+        resources: { vol: 0, sales: 0, label: "RES", name: "Recursos", icon: "/img/sunflowerland/Eggplant.png" },
+        cosmetics: { vol: 0, sales: 0, label: "COSM", name: "Cosméticos", icon: "/img/sunflowerland/123/bear.png" },
+        buds: { vol: 0, sales: 0, label: "BUDS", name: "Buds" },
+        pets: { vol: 0, sales: 0, label: "PETS", name: "Pets" }
+      }
+
+      marketData.forEach(item => {
+        const volUsd = (item.volume7d || 0) * sflUsdPrice
+        const sales = item.trades7d || 0
+        
+        if (catData[item.category]) {
+           catData[item.category].vol += volUsd
+           catData[item.category].sales += sales
+        }
+      })
+
+      const maxVol = Math.max(catData.powerups.vol, catData.resources.vol, catData.cosmetics.vol, 1)
+      const maxSales = Math.max(catData.powerups.sales, catData.resources.sales, catData.cosmetics.sales, 1)
+      
+      const renderBar = (catKey, isVol, isMuted, alignClass) => {
+        const d = catData[catKey]
+        const val = isVol ? d.vol : d.sales
+        const max = isVol ? maxVol : maxSales
+        let height = 0
+        if (!isMuted && max > 0 && val > 0) {
+           // Escala de raíz cúbica (un balance perfecto entre lo lineal y lo logarítmico extremo)
+           const powVal = Math.pow(val, 1/3)
+           const powMax = Math.pow(max, 1/3)
+           height = Math.max(6, (powVal / powMax) * 100)
+        } else {
+           height = 8 // altura del "stub" (barra apagada)
+        }
+        
+        const color = isMuted ? "bg-white/5" : (isVol ? "bg-amber-500" : "bg-blue-500")
+        const valStr = isMuted ? "Pendiente" : (isVol ? "$" + formatLarge(val) : formatNumber(val, 0))
+        const typeStr = isVol ? "Vol:" : "Sales:"
+        
+        return `
+          <div class="w-[35%] sm:w-[40%] rounded-t-sm relative group/bar flex flex-col justify-end transition-all hover:brightness-125 ${color}" style="height: ${height}%; min-height: 4px;">
+            <div class="hidden group-hover/bar:flex absolute bottom-full mb-1 ${alignClass} bg-[#0c1015] border border-white/10 px-3 py-2 rounded shadow-2xl text-white z-50 whitespace-nowrap flex-col items-center gap-1">
+               <span class="text-white/90 font-bold tracking-tight text-xs leading-none">${d.name}</span>
+               <div class="flex items-center gap-1.5">
+                  <span class="text-white/50 text-[10px] font-sans uppercase">${typeStr}</span> <span class="font-bold tracking-tight text-xs">${valStr}</span>
+               </div>
+            </div>
+          </div>
+        `
+      }
+      
+      const renderGroup = (catKey, volMuted, mcMuted, index) => {
+         const cat = catData[catKey];
+         const iconHtml = cat.icon ? `<img src="${cat.icon}" class="w-[11px] h-[11px] object-contain opacity-80" />` : '';
+         const alignClass = index === 0 ? "left-[-8px]" : index === 4 ? "right-[-8px]" : "left-1/2 -translate-x-1/2"
+         
+         return `
+            <div class="flex flex-col items-center justify-end h-full w-[18%]">
+               <div class="flex items-end gap-1 w-full h-[65%] justify-center border-b border-white/10 pb-1.5 mb-1.5 relative">
+                  ${renderBar(catKey, true, volMuted, alignClass)}
+                  ${renderBar(catKey, false, mcMuted, alignClass)}
+               </div>
+               <div class="flex items-center gap-1">
+                  ${iconHtml}
+                  <span class="text-[9px] text-white/50 font-bold uppercase tracking-tight">${cat.label}</span>
+               </div>
+            </div>
+         `
+      }
+      
+      box5.innerHTML = `
+        <div class="absolute inset-0 w-full h-full pt-2.5 pb-2 px-4 flex flex-col justify-between group">
+           <div class="flex justify-between items-start mb-2 relative z-30 focus-within:z-[70] hover:z-[70]">
+              <div class="flex items-center">
+                 <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide">Category Distribution</h3>
+                 <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
+                    <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                       <circle cx="12" cy="12" r="10"></circle>
+                       <path d="M12 16v-4"></path>
+                       <path d="M12 8h.01"></path>
+                    </svg>
+                    <div class="absolute left-0 top-full mt-2 w-52 p-2.5 bg-[#0c1015] border border-white/10 rounded-lg shadow-2xl text-[9.5px] text-white/70 font-sans text-left leading-relaxed opacity-0 invisible group-focus:opacity-100 group-focus:visible transition-all z-[80] pointer-events-none">
+                       <span class="block text-white font-bold mb-1">Métricas 7D</span>
+                       Compara el <strong class="text-amber-500 font-normal">Volumen en dólares</strong> y las <strong class="text-blue-500 font-normal">Unidades vendidas</strong> de cada categoría durante los últimos 7 días.
+                    </div>
+                 </button>
+              </div>
+              <div class="flex items-center gap-3">
+                 <div class="flex gap-2 bg-black/20 px-2 py-1 rounded border border-white/5">
+                    <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-sm bg-amber-500"></div><span class="text-[8px] text-white/50 uppercase tracking-tight">Vol</span></div>
+                    <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-sm bg-blue-500"></div><span class="text-[8px] text-white/50 uppercase tracking-tight">Sales</span></div>
+                 </div>
+                 <span class="text-[10px] font-bold text-blue-500">7D</span>
+              </div>
+           </div>
+           <div class="flex-1 flex items-end justify-between w-full relative z-20 hover:z-[80]">
+              ${renderGroup('resources', false, false, 0)}
+              ${renderGroup('powerups', false, false, 1)}
+              ${renderGroup('cosmetics', false, false, 2)}
+              ${renderGroup('buds', true, true, 3)}
+              ${renderGroup('pets', true, true, 4)}
+           </div>
+        </div>
+      `
+      box5.classList.remove("items-center", "justify-center")
+    }
+
     const topVolResource = marketData.find((item) => item.category === "resources")
     const topVolPowerUp = marketData.find((item) => item.category === "powerups")
     const topVolCosmetic = marketData.find((item) => item.category === "cosmetics")
