@@ -5,7 +5,7 @@
 // ============================================================
 import { getEntry } from "astro:content"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
-import SflTabs from "../SflTabs.astro"
+import SflToolLayout from "../SflToolLayout.astro"
 
 const sflIdsEntry = await getEntry("sfl", "resources")
 const sflPowerUpsEntry = await getEntry("sfl", "powerups")
@@ -18,20 +18,9 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<main class="max-w-7xl mx-auto sm:px-6 pt-4 pb-4">
-  <div
-    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] mb-10 shadow-2xl relative block min-w-0 overflow-clip"
-    style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);"
-  >
-    <!-- Tabs integrados como encabezado de la tarjeta -->
-    <div class="px-2 lg:px-5 pt-2 pb-0">
-      <SflTabs activeTab="mercado" />
-    </div>
-
-    <div class="p-2 lg:p-5">
-
+<SflToolLayout activeTab="mercado">
     <div
-      class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-3 mb-4 relative z-10 text-center sm:text-left"
+      class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-3 mb-2 relative z-10 text-center sm:text-left"
     >
       <div class="w-full lg:w-auto">
         <h1 class="text-xl md:text-2xl font-black text-white tracking-tighter mb-1">
@@ -88,23 +77,19 @@ const t = useTranslations(lang)
 
     <div
       id="loadingState"
-      class="hidden py-20 flex flex-col items-center justify-center relative z-10"
+      class="hidden relative z-10 mb-2"
     >
-      <svg
-        class="animate-spin h-8 w-8 text-emerald-500 mb-4"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-      <p class="text-terminal-muted font-mono text-xs animate-pulse">{t("sfl.loading")}</p>
+      <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
+        <!-- Fila 1 -->
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[160px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[160px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[160px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="hidden lg:block h-[328px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2"></div>
+        <!-- Fila 2 -->
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[160px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[160px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[160px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+      </div>
     </div>
 
     <div
@@ -116,153 +101,31 @@ const t = useTranslations(lang)
 
     <div id="dataContainer" class="hidden relative z-10">
       <!-- Dashboard Resumen -->
-      <div class="relative mb-4">
-        <div
-          class="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-4 md:grid md:grid-cols-3 md:gap-3 md:pb-0 no-scrollbar"
-        >
-          <div
-            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] p-3 lg:p-4 shadow-inner flex flex-col justify-start min-h-[120px] lg:min-h-[130px]"
-          >
-            <h3
-              class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2"
-            >
-              <svg
-                class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg
-              >
-              Top Volume 24h
-            </h3>
-            <div id="dashTopVolume" class="h-auto flex-grow flex flex-col justify-center">
-              <div class="h-8 bg-white/[0.05] rounded-lg w-3/4 animate-pulse"></div>
-            </div>
-          </div>
-
-          <div
-            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[120px] lg:min-h-[130px] group/carousel cursor-pointer"
-          >
-            <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
-              <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
-                <circle
-                  class="text-white/10"
-                  stroke-width="3"
-                  stroke="currentColor"
-                  fill="transparent"
-                  r="10"
-                  cx="12"
-                  cy="12"></circle>
-                <circle
-                  id="gainerProgress"
-                  class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke="currentColor"
-                  fill="transparent"
-                  r="10"
-                  cx="12"
-                  cy="12"
-                  stroke-dasharray="62.83"
-                  stroke-dashoffset="62.83"></circle>
-              </svg>
-            </div>
-            <div id="dashTopGainerCarousel" class="w-full h-full absolute inset-0 p-4 lg:p-5">
-              <div class="flex flex-col justify-start h-full">
-                <h3
-                  class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2"
-                >
-                  <svg
-                    class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    ><path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg
-                  >
-                  Calculando...
-                </h3>
-                <div class="h-auto flex-grow flex items-center">
-                  <div class="h-8 bg-white/[0.05] rounded-lg w-2/3 animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 bg-white/[0.02] border border-white/[0.05] rounded-[20px] shadow-inner relative min-h-[120px] lg:min-h-[130px] group/carousel cursor-pointer"
-          >
-            <div class="absolute top-4 right-4 w-4 h-4 z-20 pointer-events-none">
-              <svg class="w-full h-full -rotate-90" viewBox="0 0 24 24">
-                <circle
-                  class="text-white/10"
-                  stroke-width="3"
-                  stroke="currentColor"
-                  fill="transparent"
-                  r="10"
-                  cx="12"
-                  cy="12"></circle>
-                <circle
-                  id="extremesProgress"
-                  class="text-emerald-500 transition-colors duration-500 group-hover/carousel:![animation-play-state:paused]"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke="currentColor"
-                  fill="transparent"
-                  r="10"
-                  cx="12"
-                  cy="12"
-                  stroke-dasharray="62.83"
-                  stroke-dashoffset="62.83"></circle>
-              </svg>
-            </div>
-            <div id="dashAthAtlCarousel" class="w-full h-full absolute inset-0 p-4 lg:p-5">
-              <div class="flex flex-col justify-start h-full">
-                <h3
-                  class="text-[10px] lg:text-xs font-mono text-terminal-muted uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-2"
-                >
-                  <svg
-                    class="w-3.5 h-3.5 lg:w-4 lg:h-4 text-emerald-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    ><path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
-                  >
-                  Calculando...
-                </h3>
-                <div class="flex flex-wrap gap-2 h-auto flex-grow items-center">
-                  <div
-                    class="h-10 w-10 bg-white/[0.05] rounded-lg animate-pulse border border-white/10"
-                  >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Nuevo Dashboard (Estructura de 7 Cajas) -->
+      <div class="relative mb-2">
+        <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
+          <!-- Fila 1 -->
+          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col justify-start min-h-[160px]"></div>
+          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col justify-start min-h-[160px]"></div>
+          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col justify-start min-h-[160px]"></div>
+          <div class="hidden lg:flex bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex-col justify-start min-h-[328px] row-span-2"></div>
+          <!-- Fila 2 -->
+          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col justify-start min-h-[160px]"></div>
+          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col justify-start min-h-[160px]"></div>
+          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col justify-start min-h-[160px]"></div>
         </div>
       </div>
 
       <!-- Ancla Oculta para el Motor Central -->
       <span class="price-value hidden" data-coin-id="flower-2" data-needs-volume-7d="true"></span>
       <div
-        class="flex flex-wrap items-center justify-between mb-3 gap-3 sm:gap-2"
+        class="flex flex-wrap items-center justify-between mb-2 gap-2"
       >
-        <div class="flex items-center flex-wrap gap-3">
-          <h2 class="text-lg font-semibold text-white">
+        <div class="flex items-center flex-wrap gap-2">
+          <h2 class="text-base font-semibold text-white">
             {t("sfl.activity")}
             <span
-              class="text-xs text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline"
+              class="text-[10px] text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline"
               >P2P History</span>
           </h2>
         </div>
@@ -297,14 +160,14 @@ const t = useTranslations(lang)
 
       <!-- Filtros y Buscador -->
       <div
-        class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-3 lg:p-5 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-6 relative z-30 shadow-2xl"
+        class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 relative z-30 shadow-2xl"
       >
         <!-- Buscador Pro -->
         <div class="w-full lg:w-1/3 relative z-40 group">
           <div
-            class="relative flex items-center w-full bg-black/40 border border-white/10 rounded-xl overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/30 transition-all duration-300"
+            class="relative flex items-center w-full bg-black/40 border border-white/10 rounded-lg overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/30 transition-all duration-300"
           >
-            <div class="pl-4 pr-2 flex items-center justify-center">
+            <div class="pl-3 pr-2 flex items-center justify-center">
               <svg
                 id="searchIcon"
                 class="w-4 h-4 text-white/40 group-focus-within:text-emerald-400 transition-colors duration-300"
@@ -680,10 +543,8 @@ const t = useTranslations(lang)
         </div>
       </div>
     </div>
-    </div>
-  </div>
   <!-- FAQ Section SEO Optimized -->
-  <section class="mt-16 mb-8 max-w-4xl mx-auto px-2 sm:px-0">
+  <section slot="footer" class="mt-16 mb-8 max-w-4xl mx-auto px-2 sm:px-0">
     <div class="text-center mb-10">
       <h2 class="text-3xl font-black text-white tracking-tight mb-3">{t("sfl.faq.title")}</h2>
       <p class="text-terminal-secondary text-sm">{t("sfl.faq.subtitle")}</p>
@@ -831,7 +692,7 @@ const t = useTranslations(lang)
       </details>
     </div>
   </section>
-</main>
+</SflToolLayout>
 
 <style is:global>
   body:not(.show-vol-units) .vol-units { display: none !important; }
@@ -991,10 +852,10 @@ const t = useTranslations(lang)
     document.querySelectorAll(".category-btn").forEach((btn) => {
       if (btn.dataset.category === category) {
         btn.className =
-          "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2"
+          "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
       } else {
         btn.className =
-          "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center gap-2"
+          "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
       }
     })
 
@@ -1305,15 +1166,18 @@ const t = useTranslations(lang)
       `
     }
 
-    document.getElementById("dashTopVolume").innerHTML = `
-      <div class="flex flex-col h-full justify-center gap-1.5 lg:gap-2">
-        ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + tVol : "")}
-        ${topVolPowerUp ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ""}
-        ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + tVol : "")}
-        ${topVolCosmetic ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ""}
-        ${renderDashItem(topVolCosmetic, topVolCosmetic ? formatNumber(topVolCosmetic.volume, 0) + tVol : "")}
-      </div>
-    `
+    const dashVolEl = document.getElementById("dashTopVolume")
+    if (dashVolEl) {
+      dashVolEl.innerHTML = `
+        <div class="flex flex-col h-full justify-center gap-1.5 lg:gap-2">
+          ${renderDashItem(topVolResource, topVolResource ? formatNumber(topVolResource.volume, 0) + tVol : "")}
+          ${topVolPowerUp ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ""}
+          ${renderDashItem(topVolPowerUp, topVolPowerUp ? formatNumber(topVolPowerUp.volume, 0) + tVol : "")}
+          ${topVolCosmetic ? '<div class="w-full border-t border-white/5 my-0.5"></div>' : ""}
+          ${renderDashItem(topVolCosmetic, topVolCosmetic ? formatNumber(topVolCosmetic.volume, 0) + tVol : "")}
+        </div>
+      `
+    }
 
     const getTopGainer = (periodKey, categoryFilter) => {
       const sorted = [...marketData]
@@ -1374,7 +1238,9 @@ const t = useTranslations(lang)
     })
 
     const carouselContainer = document.getElementById("dashTopGainerCarousel")
-    carouselContainer.innerHTML = carouselHTML
+    if (carouselContainer) {
+      carouselContainer.innerHTML = carouselHTML
+    }
 
     const calculateRatio = (items, type) => {
       return items
@@ -1479,7 +1345,9 @@ const t = useTranslations(lang)
     })
 
     const extremesContainer = document.getElementById("dashAthAtlCarousel")
-    extremesContainer.innerHTML = extremesHTML
+    if (extremesContainer) {
+      extremesContainer.innerHTML = extremesHTML
+    }
 
     const setupCarousel = (containerId, circleId, durationSec, abortKey) => {
       const container = document.getElementById(containerId)

@@ -7,7 +7,7 @@
 // ============================================================
 import { getEntry } from "astro:content"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
-import SflTabs from "../SflTabs.astro"
+import SflToolLayout from "../SflToolLayout.astro"
 
 const sflRecipesEntry = await getEntry("sfl", "recipes")
 const sflIdsEntry = await getEntry("sfl", "resources")
@@ -18,19 +18,9 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<main class="max-w-7xl mx-auto sm:px-6 pt-4 pb-4">
-  <div
-    class="border border-white/[0.05] bg-white/[0.02] backdrop-blur-2xl rounded-t-[24px] rounded-b-none sm:rounded-b-[24px] mb-10 shadow-2xl relative block min-w-0 overflow-clip"
-    style="background-image: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12) 0%, transparent 350px);"
-  >
-    <!-- Tabs integrados como encabezado de la tarjeta -->
-    <div class="px-2 lg:px-5 pt-2 pb-0">
-      <SflTabs activeTab="cocinando" />
-    </div>
+<SflToolLayout activeTab="cocinando">
 
-    <div class="p-2 lg:p-5">
-
-    <div class="mb-10 relative z-10 text-center sm:text-left">
+    <div class="mb-4 relative z-10 text-center sm:text-left">
       <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
         {t("sfl.cooking.heading")}
         <span class="text-emerald-500"> {t("sfl.cooking.heading.accent")}</span>
@@ -168,9 +158,7 @@ const t = useTranslations(lang)
         <!-- JS inyectará filas aquí -->
       </div>
     </div>
-    </div>
-  </div>
-</main>
+</SflToolLayout>
 
 <style is:global>
   .no-scrollbar::-webkit-scrollbar {

@@ -1,0 +1,24 @@
+---
+import SflTabs from './SflTabs.astro';
+
+interface Props {
+  activeTab: string;
+}
+
+const { activeTab } = Astro.props;
+---
+
+<main class="w-full max-w-full lg:max-w-[1400px] mx-auto px-2 sm:px-4 pt-2 pb-4 overflow-clip">
+  <!-- Tabs -->
+  <div class="mb-4">
+    <SflTabs activeTab={activeTab} />
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="mb-8">
+    <slot />
+  </div>
+
+  <!-- Contenido fuera de la tarjeta principal (FAQs, notas al pie, etc) -->
+  <slot name="footer" />
+</main>
