@@ -15,7 +15,8 @@ export const createSparklineSVG = (
   dataArray: (number | null | undefined)[],
   isPositive: boolean,
   expectedLengthParam?: number,
-  isHourly: boolean = false
+  isHourly: boolean = false,
+  formatType?: string
 ): string => {
   if (!dataArray) return ""
   const validData = dataArray.filter((v): v is number => v !== null && v !== undefined)
@@ -70,21 +71,22 @@ export const createSparklineSVG = (
          data-min="${min}" 
          data-range="${range}"
          data-expected-length="${expectedLength}"
+         data-format="${formatType || ''}"
          data-is-hourly="${isHourly ? 'true' : 'false'}">
-      <svg width="100%" height="100%" viewBox="-2 -2 104 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0">
+      <svg width="100%" height="100%" viewBox="0 -2 100 34" preserveAspectRatio="none" class="opacity-70 group-hover/spark:opacity-100 transition-opacity drop-shadow-md relative z-0 overflow-visible">
         <path d="${fillPath}" fill="${strokeColor}" fill-opacity="0.6" style="-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); mask-image: linear-gradient(to bottom, black 0%, transparent 100%);" stroke="none" />
-        <path d="${strokePath}" fill="none" stroke="${strokeColor}" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="${strokePath}" fill="none" stroke="${strokeColor}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
         
-        <circle cx="${getX(maxIndex)}" cy="${getY(max)}" r="1.5" fill="${dotColor}" />
-        <circle cx="${getX(minIndex)}" cy="${getY(min)}" r="1.5" fill="${dotColor}" />
-        <circle cx="${getX(finalIndex)}" cy="${getY(validData[finalIndex])}" r="1.5" fill="${dotColor}" />
+        <circle cx="${getX(maxIndex)}" cy="${getY(max)}" r="0.6" fill="${dotColor}" />
+        <circle cx="${getX(minIndex)}" cy="${getY(min)}" r="0.6" fill="${dotColor}" />
+        <circle cx="${getX(finalIndex)}" cy="${getY(validData[finalIndex])}" r="0.6" fill="${dotColor}" />
         
         <line class="hover-line hidden pointer-events-none" y1="-2" y2="34" stroke="rgba(255,255,255,0.4)" stroke-width="0.5" />
         <circle class="hover-dot hidden pointer-events-none" r="2" fill="${strokeColor}" stroke="#1e1e1e" stroke-width="1" />
       </svg>
       
-      <div class="hover-tooltip hidden absolute bg-terminal-dark border border-white/20 text-white text-[9px] font-mono px-2 py-1 rounded shadow-xl pointer-events-none z-10 transition-all duration-75 whitespace-nowrap flex flex-col items-center" 
-           style="transform: translateX(-50%) translateY(-100%); margin-top: -6px;">
+      <div class="hover-tooltip hidden absolute border border-white/10 px-3 py-2.5 rounded-xl pointer-events-none z-[100] whitespace-nowrap transition-none" 
+           style="background-color: #0c1015; box-shadow: 0 8px 30px rgba(0,0,0,0.8); transform: translateX(-50%) translateY(-100%); margin-top: -8px;">
       </div>
     </div>
   `
@@ -166,17 +168,28 @@ export const initSparklineHover = () => {
       tooltip.classList.remove("hidden")
       
       const initialPrice = dataPoints[0]
-      let tooltipHTML = `<div class="leading-none">${formatNumber(val, 4)}`
-
-      if (initialPrice && initialPrice > 0) {
-        const pct = ((val - initialPrice) / initialPrice) * 100
-        if (Math.abs(pct) > 0) {
-          const sign = pct > 0 ? "+" : ""
-          const colorClass = pct > 0 ? "text-emerald-400" : "text-red-400"
-          tooltipHTML += ` <span class="${colorClass} text-[7.5px] tracking-tight opacity-90">${sign}${pct.toFixed(2)}%</span>`
-        }
+      const formatType = container.dataset.format || ""
+      
+      let displayLabel = "Price:"
+      let displayValStr = formatNumber(val, 4)
+      let subtextHTML = ""
+      
+      if (formatType === "usd-large-sfl") {
+         displayLabel = "Market Cap:"
+         const sflUsdPrice = (window as any).sflUsdPrice || 0
+         const valUsd = val * sflUsdPrice
+         const formatLarge = (num: number) => {
+           if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T'
+           if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B'
+           if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M'
+           if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K'
+           return num.toFixed(2)
+         }
+         displayValStr = `$ ${formatLarge(valUsd)}`
+         subtextHTML = `<div class="text-[9px] text-white/40 font-mono tracking-tight mt-1">${formatLarge(val)} FLOWER</div>`
       }
-      tooltipHTML += `</div>`
+
+      let pctHTML = ""
 
       const d = new Date()
       if (isHourly) {
@@ -187,14 +200,31 @@ export const initSparklineHover = () => {
       
       const isEn = window.location.pathname.includes('/en/')
       const dateOptions: Intl.DateTimeFormatOptions = isHourly 
-        ? { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
-        : { year: 'numeric', month: 'short', day: 'numeric' }
+        ? { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }
+        : { month: 'short', day: 'numeric', year: 'numeric' }
       const dateStr = d.toLocaleDateString(isEn ? 'en-US' : 'es-ES', dateOptions)
 
-      tooltip.innerHTML = `<div class="text-[7.5px] font-sans text-white/50 leading-none pb-1">${dateStr}</div>${tooltipHTML}`
+      tooltip.innerHTML = `
+        <div class="flex flex-col gap-1.5 text-[10.5px] font-sans text-left leading-none">
+           <div class="flex items-center gap-1.5"><span class="text-white/50">Date:</span> <span class="text-white font-semibold tracking-wide">${dateStr}</span></div>
+           <div class="flex items-center"><span class="text-white/50 mr-1.5">${displayLabel}</span> <span class="text-white font-bold tracking-wide">${displayValStr}</span>${pctHTML}</div>
+           ${subtextHTML}
+        </div>
+      `
 
-      tooltip.style.left = `${(mappedX / svgWidth) * 100}%`
+      // Prevent tooltip from overflowing edges
+      let tooltipX = (mappedX / svgWidth) * 100;
+      let transformStr = "translateX(-50%) translateY(-100%)";
+      
+      if (tooltipX < 15) {
+         transformStr = "translateX(0%) translateY(-100%)";
+      } else if (tooltipX > 85) {
+         transformStr = "translateX(-100%) translateY(-100%)";
+      }
+
+      tooltip.style.left = `${tooltipX}%`
       tooltip.style.top = `${(mappedY / svgHeight) * 100}%`
+      tooltip.style.transform = transformStr;
     }
   })
 }

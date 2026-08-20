@@ -79,7 +79,7 @@ const t = useTranslations(lang)
       id="loadingState"
       class="hidden relative z-10 mb-2"
     >
-      <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
+      <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-6 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
         <!-- Fila 1 -->
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
           <span class="text-4xl font-bold text-white/20">1</span>
@@ -117,28 +117,28 @@ const t = useTranslations(lang)
       <!-- Dashboard Resumen -->
       <!-- Nuevo Dashboard (Estructura de 7 Cajas) -->
       <div class="relative mb-2">
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
+        <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-6 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
           <!-- Fila 1 -->
-          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox1" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">1</span>
           </div>
-          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox2" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">2</span>
           </div>
-          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox3" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">3</span>
           </div>
-          <div class="hidden lg:flex bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2">
+          <div id="dashBox4" class="relative hidden lg:flex bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2">
             <span class="text-6xl font-bold text-white/20">4</span>
           </div>
           <!-- Fila 2 -->
-          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox5" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">5</span>
           </div>
-          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox6" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">6</span>
           </div>
-          <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox7" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">7</span>
           </div>
         </div>
@@ -1161,6 +1161,104 @@ const t = useTranslations(lang)
   }
 
   const renderDashboard = () => {
+    // --- Lógica de Market Cap para dashBox1 ---
+    let currentTotalMC = 0
+    let historicalTotalMC = 0
+    let sparklineLength = 0
+    
+    marketData.forEach(item => {
+      if (item.supply > 0 && item.history && item.history.sparkline7d && item.history.sparkline7d.length > sparklineLength) {
+        sparklineLength = item.history.sparkline7d.length
+      }
+    })
+    
+    const totalSparkline7d = Array(sparklineLength > 0 ? sparklineLength : 1).fill(0)
+    
+    marketData.forEach(item => {
+      const supply = item.supply || 0
+      if (supply > 0 && item.currentPrice > 0) {
+        currentTotalMC += supply * item.currentPrice
+        
+        if (item.history && item.history["7d"]) {
+           historicalTotalMC += supply * item.history["7d"]
+        } else {
+           historicalTotalMC += supply * item.currentPrice
+        }
+
+        if (item.history && item.history.sparkline7d && item.history.sparkline7d.length > 0) {
+           item.history.sparkline7d.forEach((price, idx) => {
+              totalSparkline7d[idx] += supply * (price !== null && price !== undefined ? price : item.currentPrice)
+           })
+        } else if (sparklineLength > 0) {
+           for (let i = 0; i < sparklineLength; i++) {
+              totalSparkline7d[i] += supply * item.currentPrice
+           }
+        }
+      }
+    })
+    
+    const mcChangeValue = historicalTotalMC > 0 ? ((currentTotalMC - historicalTotalMC) / historicalTotalMC) * 100 : 0
+    const mcIsPositive = mcChangeValue >= 0
+    const sflUsdPrice = window.sflUsdPrice || 0
+    const mcInUsd = currentTotalMC * sflUsdPrice
+    
+    const formatLarge = (num) => {
+      if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T'
+      if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B'
+      if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M'
+      if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K'
+      return num.toFixed(2)
+    }
+
+    const box1 = document.getElementById("dashBox1")
+    if (box1 && totalSparkline7d.length > 0) {
+       const sparklineSVG = createSparklineSVG(totalSparkline7d, mcIsPositive, sparklineLength, false, "usd-large-sfl")
+       box1.innerHTML = `
+         <div class="absolute inset-0 w-full h-full flex flex-col group">
+            <!-- Textos superiores (50%) -->
+            <div class="h-[50%] w-full pt-2.5 px-4 flex justify-between items-start relative z-50">
+               <div class="flex flex-col justify-start">
+                  <div class="flex items-center mb-1 relative">
+                     <h3 class="text-xs font-sans font-bold text-white/90 tracking-wide">
+                        Market Cap
+                     </h3>
+                     <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
+                        <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                           <circle cx="12" cy="12" r="10"></circle>
+                           <path d="M12 16v-4"></path>
+                           <path d="M12 8h.01"></path>
+                        </svg>
+                        <div class="absolute left-0 top-full mt-2 w-52 p-2.5 bg-[#0c1015] border border-white/10 rounded-lg shadow-2xl text-[9.5px] text-white/70 font-sans text-left leading-relaxed opacity-0 invisible group-focus:opacity-100 group-focus:visible transition-all z-50 pointer-events-none">
+                           <span class="block text-white font-bold mb-1">Aviso importante</span>
+                           Este Market Cap es un aproximado. Se excluyen los recursos porque son infinitos y no los podemos medir de momento. Solo se incluyen Power Ups y Cosméticos por ahora (Buds y Pets vienen en camino).
+                        </div>
+                     </button>
+                  </div>
+                  <div class="flex items-baseline gap-2.5 flex-wrap">
+                     <span class="text-2xl font-sans font-bold text-white tracking-tight leading-none">$ ${formatLarge(mcInUsd)}</span>
+                     ${sflUsdPrice ? `<span class="text-[11px] text-white/40 font-mono leading-none">${formatLarge(currentTotalMC)} FLOWER</span>` : ''}
+                     <span class="text-xs font-sans font-bold tracking-wide ${mcIsPositive ? 'text-emerald-500' : 'text-red-500'}">
+                        ${mcIsPositive ? '↗' : '↘'} ${Math.abs(mcChangeValue).toFixed(2)}%
+                     </span>
+                  </div>
+               </div>
+               <span class="text-[10px] font-bold text-blue-500">7D</span>
+            </div>
+            
+            <!-- Espacio intermedio (8%) -->
+            <div class="h-[8%] w-full"></div>
+            
+            <!-- Gráfica (42%) -->
+            <div class="h-[42%] w-full px-4 pb-3 flex items-end opacity-90 group-hover:opacity-100 transition-opacity relative z-40 hover:z-[60]">
+               <div class="w-full h-full transform origin-bottom">
+                  ${sparklineSVG}
+               </div>
+            </div>
+         </div>
+       `
+       box1.classList.remove("items-center", "justify-center")
+    }
+
     const topVolResource = marketData.find((item) => item.category === "resources")
     const topVolPowerUp = marketData.find((item) => item.category === "powerups")
     const topVolCosmetic = marketData.find((item) => item.category === "cosmetics")
