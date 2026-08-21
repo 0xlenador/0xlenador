@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 
-const JWT_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHg2QWU3MzNDYTM3ZTcxODZFNkM0M0VENGQ0MDM5Mzk4MUYwMjVDM2Y2IiwiZmFybUlkIjoyNzQ5NjA4NzU3OTEzMjg1LCJ1c2VyQWNjZXNzIjp7InZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzg2NzYwMTg2LCJleHAiOjE3ODkzNTIxODZ9.4SkPl6dOBS7ptKaWF7PVJy4lYcPLubDqNWDCCLxfWpE"
+const JWT_TOKEN = process.env.SFL_TOKEN || "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHg2QWU3MzNDYTM3ZTcxODZFNkM0M0VENGQ0MDM5Mzk4MUYwMjVDM2Y2IiwiZmFybUlkIjoyNzQ5NjA4NzU3OTEzMjg1LCJ1c2VyQWNjZXNzIjp7InZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzg2NzYwMTg2LCJleHAiOjE3ODkzNTIxODZ9.4SkPl6dOBS7ptKaWF7PVJy4lYcPLubDqNWDCCLxfWpE"
 
 async function updateDashboardData() {
   console.log("Iniciando obtención de datos del Dashboard SFL (Trends)...")

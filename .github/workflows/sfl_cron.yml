@@ -25,11 +25,16 @@ jobs:
       - name: Obtener y actualizar los datos estáticos de SFL
         run: node scripts/update_sfl.js
 
+      - name: Obtener datos del Dashboard (Métricas)
+        env:
+          SFL_TOKEN: ${{ secrets.SFL_TOKEN }}
+        run: node scripts/update_dashboard.js
+
       - name: Commit y Push si hubo cambios
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add public/api/sfl_data.json public/api/history/
+          git add public/api/sfl_data.json public/api/sfl_dashboard.json public/api/history/
           # Si no hay cambios git commit devuelve error, lo silenciamos y salimos amigablemente
           git commit -m "chore: actualización automática de datos de mercado SFL" || echo "Sin cambios para commitear"
           git push
