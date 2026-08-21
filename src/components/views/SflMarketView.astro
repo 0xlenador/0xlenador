@@ -812,6 +812,7 @@ const t = useTranslations(lang)
   const dataContainer = document.getElementById("dataContainer")
 
   let marketData = []
+  let dashboardData = null
   let currentCategory = "resources"
   let currentSubCategories = ["collectibles", "wearables"]
   let searchQuery = ""
@@ -1366,6 +1367,132 @@ const t = useTranslations(lang)
         </div>
       `
       box5.classList.remove("items-center", "justify-center")
+    }
+
+    const box4 = document.getElementById("dashBox4")
+    if (box4 && dashboardData && dashboardData.topTrades) {
+      box4.innerHTML = `
+        <div class="absolute inset-0 w-full h-full p-4 flex flex-col group">
+           <div class="flex justify-between items-center mb-3 relative z-30">
+              <h3 class="text-xs font-sans font-bold text-white/80 tracking-wide flex items-center gap-1.5">
+                 <span class="text-amber-500">🐳</span> Whale Traders
+              </h3>
+              <span class="text-[10px] font-bold text-blue-500">7D</span>
+           </div>
+           
+           <div class="flex-1 overflow-y-auto pr-1 space-y-2 no-scrollbar">
+              ${dashboardData.topTrades.slice(0, 7).map((trade, i) => {
+                 let sflValue = trade.sfl || 0;
+                 let usdValue = sflValue * (window.sflUsdPrice || 0);
+                 let itemName = Object.keys(trade.items)[0] || "Unknown";
+                 
+                 // Get NFT image logic
+                 let itemImgSrc = '/img/sunflowerland/123/bear.png'; // default fallback
+                 let itemObj = marketData.find(m => m.name === itemName);
+                 if (itemObj) {
+                    let basePath = "/img/sunflowerland/";
+                    let isCollectible = false;
+                    if (itemObj.category === "powerups") {
+                       basePath += "powerups/" + (itemObj.isWearable ? "wearables/" : "");
+                    } else if (itemObj.category === "cosmetics") {
+                       basePath += "cosmetics/" + (itemObj.isWearable ? "wearables/" : "collectibles/");
+                       if (!itemObj.isWearable) isCollectible = true;
+                    }
+                    let filename = itemObj.image || itemObj.name + ".png";
+                    if (isCollectible) {
+                       filename = filename.replace(/\\.png$/i, ".webp");
+                    }
+                    itemImgSrc = encodeURI(basePath + filename);
+                 }
+                 
+                 let bumpkinImg = trade.buyer.bumpkinUri ? 'https://animations.sunflower-land.com/bumpkin_image/' + trade.buyer.bumpkinUri + '/100' : '/img/sunflowerland/123/bear.png';
+
+                 return '<div class="relative group/row flex items-center justify-between py-1 px-2 rounded-lg bg-white/[0.02] border border-white/[0.04] border-t-white/[0.1] shadow-sm backdrop-blur-md hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_0_15px_rgba(255,255,255,0.04)] hover:-translate-y-[1px] transition-all duration-300 cursor-default">' +
+                    '<div class="absolute inset-0 rounded-lg bg-gradient-to-r from-white/[0.0] via-white/[0.02] to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity duration-300 pointer-events-none"></div>' +
+                    '<div class="relative z-10 flex flex-col gap-0.5">' +
+                       '<!-- Fila NFT -->' +
+                       '<div class="flex items-center gap-1.5">' +
+                          '<div class="w-6 h-6 rounded bg-terminal-dark border border-white/5 flex items-center justify-center shrink-0 drop-shadow-md">' +
+                             '<img src="' + itemImgSrc + '" class="max-w-[80%] max-h-[80%] object-contain" onerror="this.src=\'/img/sunflowerland/123/bear.png\'" />' +
+                          '</div>' +
+                          '<span class="text-xs font-bold text-white/90 truncate max-w-[120px] sm:max-w-[150px] tracking-tight">' + itemName + '</span>' +
+                       '</div>' +
+                       '<!-- Fila Usuario -->' +
+                       '<div class="group/user flex items-center hover:z-30 relative origin-left transition-transform duration-300 hover:scale-[1.8] cursor-default">' +
+                          '<div class="flex items-center gap-1.5">' +
+                             '<div class="w-4 h-4 rounded-full bg-[#11131a] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 ml-1 relative shadow-sm group-hover/user:shadow-lg transition-shadow">' +
+                                '<img src="' + bumpkinImg + '" class="w-[120%] h-[120%] object-cover object-top" onerror="this.src=\'/img/sunflowerland/123/bear.png\'" />' +
+                                '<div class="absolute inset-0 bg-black/20 group-hover/user:bg-transparent transition-colors"></div>' +
+                             '</div>' +
+                             '<span class="text-[10px] text-white/50 group-hover/user:text-white/90 group-hover/user:font-semibold truncate max-w-[120px] sm:max-w-[150px] transition-all">' + (trade.buyer.username || "Unknown") + '</span>' +
+                          '</div>' +
+                       '</div>' +
+                    '</div>' +
+                    
+                    '<!-- Fila Precios -->' +
+                    '<div class="relative z-10 flex flex-col items-end justify-center">' +
+                       '<div class="flex items-center gap-1">' +
+                          '<img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" onerror="this.style.display=\'none\'" />' +
+                          '<span class="text-[13px] font-bold text-white tracking-tight">' + formatNumber(sflValue, 0) + '</span>' +
+                       '</div>' +
+                       '<span class="text-[9px] text-white/40 font-mono">$' + usdValue.toFixed(2) + '</span>' +
+                    '</div>' +
+                 '</div>'
+              }).join('')}
+           </div>
+        </div>
+      `
+      box4.classList.remove("items-center", "justify-center")
+    }
+
+    const box7 = document.getElementById("dashBox7")
+    if (box7 && dashboardData) {
+      const { volume, trades, owners } = dashboardData;
+      
+      box7.innerHTML = `
+        <div class="absolute inset-0 w-full h-full pt-2.5 pb-2 px-4 flex flex-col group">
+           <div class="flex justify-between items-start mb-2 relative z-10">
+              <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide flex items-center gap-1.5">
+                 <img src="/img/sunflowerland/123/graph.png" class="w-3 h-3 object-contain opacity-80" onerror="this.style.display='none'" />
+                 Market Overview
+              </h3>
+              <span class="text-[10px] font-bold text-blue-500">Full Time</span>
+           </div>
+           
+           <div class="flex-1 flex flex-col justify-around relative z-10 py-1">
+              <div class="flex items-center justify-between pb-1 border-b border-white/10">
+                 <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded bg-emerald-500/10 flex items-center justify-center shrink-0">
+                       <span class="text-emerald-500 text-[9px]">🌸</span>
+                    </div>
+                    <span class="text-[10px] text-white/60 font-medium tracking-wide">Volumen Total</span>
+                 </div>
+                 <span class="text-[11.5px] font-bold text-white tracking-tight font-mono">${formatLarge(volume)}</span>
+              </div>
+              
+              <div class="flex items-center justify-between pb-1 border-b border-white/10">
+                 <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded bg-terminal-dark border border-white/5 flex items-center justify-center shrink-0">
+                       <img src="/img/sunflowerland/123/exchange.png" class="w-3 h-3 object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+                    </div>
+                    <span class="text-[10px] text-white/60 font-medium tracking-wide">Trades Total</span>
+                 </div>
+                 <span class="text-[11.5px] font-bold text-white tracking-tight font-mono">${formatLarge(trades)}</span>
+              </div>
+              
+              <div class="flex items-center justify-between pb-0 border-b border-white/10">
+                 <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded bg-amber-500/10 flex items-center justify-center shrink-0">
+                       <svg class="w-2.5 h-2.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <span class="text-[10px] text-white/60 font-medium tracking-wide">Wallets (Holders)</span>
+                 </div>
+                 <span class="text-[11.5px] font-bold text-white tracking-tight font-mono">${formatLarge(owners)}</span>
+              </div>
+           </div>
+        </div>
+      `
+      box7.classList.remove("items-center", "justify-center")
     }
 
     const topVolResource = marketData.find((item) => item.category === "resources")
@@ -2086,6 +2213,15 @@ const t = useTranslations(lang)
 
       if (!response.ok) {
         throw new Error(`No se pudo cargar el archivo local: ${response.status}`)
+      }
+      
+      try {
+         const dashResponse = await fetch(`/api/sfl_dashboard.json?t=${new Date().getTime()}`)
+         if (dashResponse.ok) {
+            dashboardData = await dashResponse.json()
+         }
+      } catch (e) {
+         console.warn("No se pudo cargar sfl_dashboard.json", e)
       }
 
       const json = await response.json()
