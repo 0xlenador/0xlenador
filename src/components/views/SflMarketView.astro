@@ -77,7 +77,7 @@ const t = useTranslations(lang)
 
     <div
       id="loadingState"
-      class="hidden relative z-10 mb-2"
+      class="relative z-10 mb-2 min-h-[100vh]"
     >
       <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
         <!-- Fila 1 -->
@@ -225,6 +225,7 @@ const t = useTranslations(lang)
           class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto shrink-0 justify-center"
         >
           <svg
+            id="fetchBtnRefreshIcon"
             class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
@@ -236,7 +237,14 @@ const t = useTranslations(lang)
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             ></path></svg
           >
-          {t("sfl.refresh")}
+          <svg 
+            id="fetchBtnCheckIcon"
+            class="w-3.5 h-3.5 shrink-0 hidden" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+            ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <span id="fetchBtnText" data-original-text={t("sfl.refresh")}>{t("sfl.refresh")}</span>
         </button>
       </div>
 
@@ -2457,11 +2465,16 @@ const t = useTranslations(lang)
     renderTable(searchInput ? searchInput.value : "")
   }
 
-  const fetchData = async () => {
+  const fetchData = async (silent = false) => {
     try {
-      loadingState.classList.remove("hidden")
-      errorState.classList.add("hidden")
-      dataContainer.classList.add("hidden")
+      if (!silent) {
+        loadingState.classList.remove("hidden")
+        errorState.classList.add("hidden")
+        dataContainer.classList.add("hidden")
+      } else if (fetchBtn) {
+        const svg = fetchBtn.querySelector("#fetchBtnRefreshIcon")
+        if (svg) svg.classList.add("animate-spin")
+      }
 
       // Consultar el asset estático que actualiza el cron job
       const response = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`)
@@ -2581,39 +2594,71 @@ const t = useTranslations(lang)
       renderDashboard()
       renderTable(searchInput ? searchInput.value : "", true)
 
-      // Preparar transición suave siempre para evitar parpadeos y cortes bruscos
-      dataContainer.style.opacity = "0"
-      dataContainer.classList.remove("hidden")
+      if (!silent) {
+        // Preparar transición suave siempre para evitar parpadeos y cortes bruscos
+        dataContainer.style.opacity = "0"
+        dataContainer.classList.remove("hidden")
 
-      // Damos 1 frame para que el navegador construya el DOM renderizado
-      requestAnimationFrame(() => {
-        const savedScroll = sessionStorage.getItem("sfl_market_scroll")
-        if (savedScroll) {
-          window.scrollTo({ top: parseInt(savedScroll), behavior: "instant" })
-          sessionStorage.removeItem("sfl_market_scroll")
-        }
+        // Damos 1 frame para que el navegador construya el DOM renderizado
+        requestAnimationFrame(() => {
+          const savedScroll = sessionStorage.getItem("sfl_market_scroll")
+          if (savedScroll) {
+            window.scrollTo({ top: parseInt(savedScroll), behavior: "instant" })
+            sessionStorage.removeItem("sfl_market_scroll")
+          }
 
-        loadingState.classList.add("hidden") // Ocultamos skeleton
-        
-        // Iniciamos el fade in
-        dataContainer.style.transition = "opacity 0.2s ease-in-out"
-        dataContainer.style.opacity = "1"
+          loadingState.classList.add("hidden") // Ocultamos skeleton
+          
+          // Iniciamos el fade in
+          dataContainer.style.transition = "opacity 0.2s ease-in-out"
+          dataContainer.style.opacity = "1"
 
-        setTimeout(() => {
-          dataContainer.style.transition = ""
-          dataContainer.style.opacity = ""
-        }, 250)
-      })
+          setTimeout(() => {
+            dataContainer.style.transition = ""
+            dataContainer.style.opacity = ""
+          }, 250)
+        })
+      }
     } catch (err) {
       console.error(err)
       errorMsg.innerText = err.message || "Error desconocido al consultar la API."
-      errorState.classList.remove("hidden")
-      loadingState.classList.add("hidden")
+      
+      if (!silent) {
+        errorState.classList.remove("hidden")
+        loadingState.classList.add("hidden")
+      }
 
       const priceEl = document.getElementById("sflPriceValue")
       const imgEl = document.getElementById("sflTokenImg")
       if (priceEl) priceEl.innerText = "Error"
       if (imgEl) imgEl.classList.remove("animate-pulse")
+    } finally {
+      if (silent && fetchBtn) {
+        const refreshIcon = fetchBtn.querySelector("#fetchBtnRefreshIcon")
+        const checkIcon = fetchBtn.querySelector("#fetchBtnCheckIcon")
+        const textSpan = fetchBtn.querySelector("#fetchBtnText")
+        
+        if (refreshIcon) {
+            refreshIcon.classList.remove("animate-spin")
+            refreshIcon.classList.add("hidden")
+        }
+        if (checkIcon) checkIcon.classList.remove("hidden")
+        if (textSpan) textSpan.innerText = "Up to date"
+        
+        fetchBtn.disabled = true
+        fetchBtn.classList.remove("hover:bg-emerald-500/20")
+        fetchBtn.classList.add("opacity-50", "cursor-not-allowed", "bg-emerald-500/20")
+        
+        setTimeout(() => {
+          if (refreshIcon) refreshIcon.classList.remove("hidden")
+          if (checkIcon) checkIcon.classList.add("hidden")
+          if (textSpan) textSpan.innerText = textSpan.dataset.originalText || "Refresh"
+          
+          fetchBtn.disabled = false
+          fetchBtn.classList.add("hover:bg-emerald-500/20")
+          fetchBtn.classList.remove("opacity-50", "cursor-not-allowed", "bg-emerald-500/20")
+        }, 60000)
+      }
     }
   }
 
@@ -2635,8 +2680,9 @@ const t = useTranslations(lang)
 
     if (fetchBtn) {
       fetchBtn.addEventListener("click", () => {
+        if (fetchBtn.disabled) return
         sessionStorage.setItem("sfl_market_scroll", window.scrollY)
-        fetchData()
+        fetchData(true)
       })
     }
 
