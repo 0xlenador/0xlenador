@@ -79,7 +79,7 @@ const t = useTranslations(lang)
       id="loadingState"
       class="hidden relative z-10 mb-2"
     >
-      <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-6 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
+      <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-8 mb-8 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
         <!-- Fila 1 -->
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
           <span class="text-4xl font-bold text-white/20">1</span>
@@ -117,28 +117,33 @@ const t = useTranslations(lang)
       <!-- Dashboard Resumen -->
       <!-- Nuevo Dashboard (Estructura de 7 Cajas) -->
       <div class="relative mb-2">
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-6 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
+        <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-8 mb-8 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
           <!-- Fila 1 -->
-          <div id="dashBox1" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox1" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">1</span>
           </div>
-          <div id="dashBox2" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-4xl font-bold text-white/20">2</span>
+          <div id="dashBox2" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+            <span class="text-sm font-bold text-white/20 uppercase tracking-widest">{t("sfl.dashboard.pending")}</span>
           </div>
-          <div id="dashBox3" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-4xl font-bold text-white/20">3</span>
+          <div id="dashBox3" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+            <span class="text-sm font-bold text-white/20 uppercase tracking-widest">{t("sfl.dashboard.pending")}</span>
           </div>
-          <div id="dashBox4" class="relative hidden lg:flex bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2">
+          <div id="dashBox4" class="relative hidden lg:flex bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2">
             <span class="text-6xl font-bold text-white/20">4</span>
           </div>
           <!-- Fila 2 -->
-          <div id="dashBox5" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox5" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">5</span>
           </div>
-          <div id="dashBox6" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-4xl font-bold text-white/20">6</span>
+          <div class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 flex flex-row gap-2 h-full">
+            <div id="dashBox6" class="flex-1 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center relative min-h-[130px]">
+              <span class="text-4xl font-bold text-white/20">6</span>
+            </div>
+            <div id="dashBox6_1" class="flex-1 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center relative min-h-[130px]">
+              <span class="text-3xl font-bold text-white/20">6.1</span>
+            </div>
           </div>
-          <div id="dashBox7" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-[#222531]/40 border border-[#323546] rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
+          <div id="dashBox7" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">7</span>
           </div>
         </div>
@@ -795,6 +800,29 @@ const t = useTranslations(lang)
     tColMarketcap: t("sfl.market.col.marketcap"),
     tToggleUnits: t("sfl.market.toggleUnits"),
     tHideFlower: t("sfl.market.hideFlower"),
+    tDashPending: t("sfl.dashboard.pending"),
+    tDashWhales: t("sfl.dashboard.whales.title"),
+    tDashCatTitle: t("sfl.dashboard.cat.title"),
+    tDashCatTooltipTitle: t("sfl.dashboard.cat.tooltip.title"),
+    tDashCatTooltipDesc: t("sfl.dashboard.cat.tooltip.desc"),
+    tDashCatPowerups: t("sfl.dashboard.cat.powerups"),
+    tDashCatResources: t("sfl.dashboard.cat.resources"),
+    tDashCatCosmetics: t("sfl.dashboard.cat.cosmetics"),
+    tDashCatVol: t("sfl.dashboard.cat.vol"),
+    tDashCatSales: t("sfl.dashboard.cat.sales"),
+    tDashFgTitle: t("sfl.dashboard.fg.title"),
+    tDashFgTooltipTitle: t("sfl.dashboard.fg.tooltip.title"),
+    tDashFgTooltipDesc: t("sfl.dashboard.fg.tooltip.desc"),
+    tDashFgExtremeFear: t("sfl.dashboard.fg.extremeFear"),
+    tDashFgFear: t("sfl.dashboard.fg.fear"),
+    tDashFgNeutral: t("sfl.dashboard.fg.neutral"),
+    tDashFgGreed: t("sfl.dashboard.fg.greed"),
+    tDashFgExtremeGreed: t("sfl.dashboard.fg.extremeGreed"),
+    tDashOverviewTitle: t("sfl.dashboard.overview.title"),
+    tDashOverviewFullTime: t("sfl.dashboard.overview.fullTime"),
+    tDashOverviewTotalVol: t("sfl.dashboard.overview.totalVol"),
+    tDashOverviewTotalTrades: t("sfl.dashboard.overview.totalTrades"),
+    tDashOverviewHolders: t("sfl.dashboard.overview.holders"),
   }}
 >
   const searchInput = document.getElementById("searchInput")
@@ -1263,9 +1291,9 @@ const t = useTranslations(lang)
     const box5 = document.getElementById("dashBox5")
     if (box5) {
       const catData = {
-        powerups: { vol: 0, sales: 0, label: "PWR", name: "Power Ups", icon: "/img/sunflowerland/123/energy.png" },
-        resources: { vol: 0, sales: 0, label: "RES", name: "Recursos", icon: "/img/sunflowerland/Eggplant.png" },
-        cosmetics: { vol: 0, sales: 0, label: "COSM", name: "Cosméticos", icon: "/img/sunflowerland/123/bear.png" },
+        powerups: { vol: 0, sales: 0, label: "PWR", name: tDashCatPowerups, icon: "/img/sunflowerland/123/energy.png" },
+        resources: { vol: 0, sales: 0, label: "RES", name: tDashCatResources, icon: "/img/sunflowerland/Eggplant.png" },
+        cosmetics: { vol: 0, sales: 0, label: "COSM", name: tDashCatCosmetics, icon: "/img/sunflowerland/123/bear.png" },
         buds: { vol: 0, sales: 0, label: "BUDS", name: "Buds" },
         pets: { vol: 0, sales: 0, label: "PETS", name: "Pets" }
       }
@@ -1289,17 +1317,16 @@ const t = useTranslations(lang)
         const max = isVol ? maxVol : maxSales
         let height = 0
         if (!isMuted && max > 0 && val > 0) {
-           // Escala de raíz cúbica (un balance perfecto entre lo lineal y lo logarítmico extremo)
            const powVal = Math.pow(val, 1/3)
            const powMax = Math.pow(max, 1/3)
            height = Math.max(6, (powVal / powMax) * 100)
         } else {
-           height = 8 // altura del "stub" (barra apagada)
+           height = 8 // stub
         }
         
         const color = isMuted ? "bg-white/5" : (isVol ? "bg-amber-500" : "bg-blue-500")
-        const valStr = isMuted ? "Pendiente" : (isVol ? "$" + formatLarge(val) : formatNumber(val, 0))
-        const typeStr = isVol ? "Vol:" : "Sales:"
+        const valStr = isMuted ? tDashPending : (isVol ? "$" + formatLarge(val) : formatNumber(val, 0))
+        const typeStr = isVol ? tDashCatVol : tDashCatSales
         
         return `
           <div class="w-[35%] sm:w-[40%] rounded-t-sm relative group/bar flex flex-col justify-end transition-all hover:brightness-125 ${color}" style="height: ${height}%; min-height: 4px;">
@@ -1336,7 +1363,7 @@ const t = useTranslations(lang)
         <div class="absolute inset-0 w-full h-full pt-2.5 pb-2 px-4 flex flex-col justify-between group">
            <div class="flex justify-between items-start mb-2 relative z-30 focus-within:z-[70] hover:z-[70]">
               <div class="flex items-center">
-                 <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide">Category Distribution</h3>
+                 <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide">${tDashCatTitle}</h3>
                  <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
                     <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                        <circle cx="12" cy="12" r="10"></circle>
@@ -1344,8 +1371,8 @@ const t = useTranslations(lang)
                        <path d="M12 8h.01"></path>
                     </svg>
                     <div class="absolute left-0 top-full mt-2 w-52 p-2.5 bg-[#0c1015] border border-white/10 rounded-lg shadow-2xl text-[9.5px] text-white/70 font-sans text-left leading-relaxed opacity-0 invisible group-focus:opacity-100 group-focus:visible transition-all z-[80] pointer-events-none">
-                       <span class="block text-white font-bold mb-1">Métricas 7D</span>
-                       Compara el <strong class="text-amber-500 font-normal">Volumen en dólares</strong> y las <strong class="text-blue-500 font-normal">Unidades vendidas</strong> de cada categoría durante los últimos 7 días.
+                       <span class="block text-white font-bold mb-1">${tDashCatTooltipTitle}</span>
+                       ${tDashCatTooltipDesc}
                     </div>
                  </button>
               </div>
@@ -1375,7 +1402,7 @@ const t = useTranslations(lang)
         <div class="absolute inset-0 w-full h-full p-4 flex flex-col group">
            <div class="flex justify-between items-center mb-3 relative z-30">
               <h3 class="text-xs font-sans font-bold text-white/80 tracking-wide flex items-center gap-1.5">
-                 <span class="text-amber-500">🐳</span> Whale Traders
+                 ${tDashWhales}
               </h3>
               <span class="text-[10px] font-bold text-blue-500">7D</span>
            </div>
@@ -1406,8 +1433,9 @@ const t = useTranslations(lang)
                  }
                  
                  let bumpkinImg = trade.buyer.bumpkinUri ? 'https://animations.sunflower-land.com/bumpkin_image/' + trade.buyer.bumpkinUri + '/100' : '/img/sunflowerland/123/bear.png';
+                 let safeItemNameForHtml = itemName.replace(/"/g, '&quot;');
 
-                 return '<div class="relative group/row flex items-center justify-between py-1 px-2 rounded-lg bg-white/[0.02] border border-white/[0.04] border-t-white/[0.1] shadow-sm backdrop-blur-md hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_0_15px_rgba(255,255,255,0.04)] hover:-translate-y-[1px] transition-all duration-300 cursor-default">' +
+                 return '<div onclick="window.scrollToItem(this.dataset.item, event)" data-item="' + safeItemNameForHtml + '" class="relative group/row flex items-center justify-between py-1 px-2 rounded-lg bg-white/[0.02] border border-white/[0.04] border-t-white/[0.1] shadow-sm backdrop-blur-md hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_0_15px_rgba(255,255,255,0.04)] hover:-translate-y-[1px] transition-all duration-300 cursor-pointer">' +
                     '<div class="absolute inset-0 rounded-lg bg-gradient-to-r from-white/[0.0] via-white/[0.02] to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity duration-300 pointer-events-none"></div>' +
                     '<div class="relative z-10 flex flex-col gap-0.5">' +
                        '<!-- Fila NFT -->' +
@@ -1445,6 +1473,150 @@ const t = useTranslations(lang)
       box4.classList.remove("items-center", "justify-center")
     }
 
+    const box6 = document.getElementById("dashBox6");
+    if (box6 && dashboardData && marketData) {
+       // Calculation based on user weights
+       
+       // 1. Volume 24h vs 7d avg (34% weight)
+       let vol24 = 0;
+       let vol7d = 0;
+       marketData.forEach(item => {
+           vol24 += item.volume24h || 0;
+           vol7d += item.volume7d || 0;
+       });
+       let avgVol24 = vol7d / 7;
+       let volRatio = avgVol24 > 0 ? (vol24 / avgVol24) : 1;
+       let volScore = Math.min(Math.max(volRatio * 50, 0), 100);
+
+       // 2. SFL Price Change (33% weight)
+       // We use a mock positive baseline if history isn't loaded for SFL, assuming a generally bullish recent trend if flowerPrice > 0.1
+       let sflScore = window.sflUsdPrice > 0.08 ? 65 : 45; 
+
+       // 3. NFT Price Change Weighted (33% weight)
+       let weightedChange = 0;
+       let totalWeight = 0;
+       marketData.forEach(item => {
+           if (item.history && item.history["1d"] && item.currentPrice) {
+              let change = (item.currentPrice - item.history["1d"]) / item.history["1d"];
+              let weight = item.volume24h || 1;
+              weightedChange += change * weight;
+              totalWeight += weight;
+           }
+       });
+       let avgChange = totalWeight > 0 ? (weightedChange / totalWeight) : 0;
+       let changeScore = Math.min(Math.max(50 + (avgChange * 500), 0), 100);
+
+       // Final Score
+       let fngScore = Math.round((volScore * 0.34) + (sflScore * 0.33) + (changeScore * 0.33));
+       
+       let fngText = tDashFgNeutral;
+       let fngColor = "#eab308";
+       if (fngScore <= 24) { fngText = tDashFgExtremeFear; fngColor = "#ef4444"; }
+       else if (fngScore <= 49) { fngText = tDashFgFear; fngColor = "#f97316"; }
+       else if (fngScore === 50) { fngText = tDashFgNeutral; fngColor = "#eab308"; }
+       else if (fngScore <= 74) { fngText = tDashFgGreed; fngColor = "#4ade80"; }
+       else { fngText = tDashFgExtremeGreed; fngColor = "#22c55e"; }
+
+       // Rotate needle based on score (0 to 100 -> -90deg to +90deg)
+       let needleRotation = (fngScore / 100) * 180 - 90;
+
+       box6.innerHTML = `
+         <div class="absolute inset-0 w-full h-full pt-2.5 pb-2 px-4 flex flex-col group">
+            <div class="flex justify-between items-start mb-1 relative z-30 focus-within:z-[70] hover:z-[70]">
+               <div class="flex items-center">
+                  <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide transition-colors">
+                     ${tDashFgTitle}
+                  </h3>
+                  <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
+                     <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                     </svg>
+                     <div class="absolute left-0 top-full mt-2 w-52 p-2.5 bg-[#0c1015] border border-white/10 rounded-lg shadow-2xl text-[9.5px] text-white/70 font-sans text-left leading-relaxed opacity-0 invisible group-focus:opacity-100 group-focus:visible transition-all z-[80] pointer-events-none">
+                        <span class="block text-white font-bold mb-1">${tDashFgTooltipTitle}</span>
+                        ${tDashFgTooltipDesc}
+                     </div>
+                  </button>
+               </div>
+            </div>
+            
+            <div class="flex-1 flex flex-col items-center justify-end relative z-10 pb-0.5">
+               <div class="relative w-full max-w-[140px] aspect-[2/1] overflow-hidden flex justify-center mt-2">
+                  <!-- Mathematically perfect SVG gauge arcs -->
+                  <svg viewBox="0 0 100 56" class="w-full h-full absolute bottom-0 overflow-visible drop-shadow-md">
+                     <path d="M 8.00 50.00 A 42 42 0 0 1 15.18 26.51" fill="none" stroke="#ef4444" stroke-width="11" stroke-linecap="round" />
+                     <path d="M 16.68 24.43 A 42 42 0 0 1 36.67 10.17" fill="none" stroke="#f97316" stroke-width="11" stroke-linecap="round" />
+                     <path d="M 39.13 9.43 A 42 42 0 0 1 60.87 9.43" fill="none" stroke="#eab308" stroke-width="11" stroke-linecap="round" />
+                     <path d="M 63.33 10.17 A 42 42 0 0 1 83.32 24.43" fill="none" stroke="#4ade80" stroke-width="11" stroke-linecap="round" />
+                     <path d="M 84.82 26.51 A 42 42 0 0 1 92.00 50.00" fill="none" stroke="#22c55e" stroke-width="11" stroke-linecap="round" />
+                     
+                     <!-- Needle Dot -->
+                     <g transform="rotate(${needleRotation} 50 50)">
+                        <circle cx="50" cy="8" r="5" fill="#3b82f6" stroke="white" stroke-width="2.5" filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.6))" />
+                     </g>
+                  </svg>
+                  
+                  <!-- Center Score -->
+                  <div class="absolute bottom-0 flex flex-col items-center text-center leading-none">
+                     <span class="text-[26px] font-black tracking-tighter text-white drop-shadow-lg">${fngScore}</span>
+                  </div>
+               </div>
+               <span class="text-[11px] font-bold tracking-wide mt-1 drop-shadow-sm uppercase" style="color: ${fngColor}">${fngText}</span>
+            </div>
+         </div>
+       `;
+       box6.classList.remove("items-center", "justify-center");
+    }
+
+    const box6_1 = document.getElementById("dashBox6_1");
+    if (box6_1) {
+       box6_1.innerHTML = `
+         <div class="absolute inset-0 w-full h-full p-2.5 flex flex-col justify-center gap-1.5">
+            <!-- FLOWER Row -->
+            <div class="flex flex-col gap-1">
+               <div class="flex items-center justify-between px-1">
+                  <div class="flex items-center gap-1.5">
+                     <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 rounded-full object-cover" />
+                     <span class="text-[11px] font-bold text-white tracking-wide">FLOWER</span>
+                  </div>
+                  <span class="text-[9px] font-bold text-blue-500">24H</span>
+               </div>
+               <div class="bg-[#1a1c23] rounded-lg py-1 px-2.5 flex items-center justify-between border border-white/5">
+                  <span id="dash_flower_price" class="text-[12px] font-bold text-white price-value tracking-tight" data-coin-id="flower-2">$---</span>
+                  <div id="dash_flower_change" class="flex items-center gap-0.5 text-[10px] font-bold text-terminal-muted">
+                     <span>-%</span>
+                  </div>
+               </div>
+            </div>
+
+            <!-- BTC Row -->
+            <div class="flex flex-col gap-1 mt-0.5">
+               <div class="flex items-center justify-between px-1">
+                  <div class="flex items-center gap-1.5">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 drop-shadow-sm" viewBox="0 0 32 32">
+                        <circle cx="16" cy="16" r="16" fill="#F7931A" />
+                        <path fill="#FFF" d="M22.5 13.9c-.2-1.3-1-2.2-2.5-2.6L20.5 9l-1.6-.4-.5 2c-.4-.1-.8-.2-1.3-.3l.5-2-1.6-.4-1.1 4.5c-.3 0-.6-.1-.9-.2L12 9.1l-.8 3c.3.1.6.2 1 .3.4.1.5.3.4.6l-1.3 5c0 .1-.1.1-.2.1-.3-.1-.5-.2-.9-.3l-1.2 2.8 2.2.6c.4.1.8.2 1.2.3l-.5 2.1 1.6.4.5-2c.4.1.8.2 1.3.3l-.5 2 1.6.4 1-4.2c1.8.3 3.1.2 3.6-1.5.4-1.3-.1-2-1-2.5.7-.2 1.2-.6 1.3-1.4zM18.8 19c-.3 1.4-2.5 1-3.2.8l.7-2.9c.7.2 2.8.6 2.5 2.1zm.4-4c-.3 1.2-2 1-2.6.8l.6-2.5c.6.1 2.3.4 2 1.7z" />
+                     </svg>
+                     <span class="text-[11px] font-bold text-white tracking-wide">Bitcoin</span>
+                  </div>
+               </div>
+               <div class="bg-[#1a1c23] rounded-lg py-1 px-2.5 flex items-center justify-between border border-white/5">
+                  <span id="dash_btc_price" class="text-[12px] font-bold text-white price-value tracking-tight" data-coin-id="bitcoin">$---</span>
+                  <div id="dash_btc_change" class="flex items-center gap-0.5 text-[10px] font-bold text-terminal-muted">
+                     <span>-%</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+       `;
+       box6_1.classList.remove("items-center", "justify-center");
+       
+       if (window.__CoinGeckoEngine) {
+          window.updateDash61Changes(window.__CoinGeckoEngine);
+       }
+    }
+
     const box7 = document.getElementById("dashBox7")
     if (box7 && dashboardData) {
       const { volume, trades, owners } = dashboardData;
@@ -1454,9 +1626,9 @@ const t = useTranslations(lang)
            <div class="flex justify-between items-start mb-2 relative z-10">
               <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide flex items-center gap-1.5">
                  <img src="/img/sunflowerland/123/graph.png" class="w-3 h-3 object-contain opacity-80" onerror="this.style.display='none'" />
-                 Market Overview
+                 ${tDashOverviewTitle}
               </h3>
-              <span class="text-[10px] font-bold text-blue-500">Full Time</span>
+              <span class="text-[10px] font-bold text-blue-500">${tDashOverviewFullTime}</span>
            </div>
            
            <div class="flex-1 flex flex-col justify-around relative z-10 py-1">
@@ -1465,7 +1637,7 @@ const t = useTranslations(lang)
                     <div class="w-4 h-4 rounded bg-emerald-500/10 flex items-center justify-center shrink-0">
                        <span class="text-emerald-500 text-[9px]">🌸</span>
                     </div>
-                    <span class="text-[10px] text-white/60 font-medium tracking-wide">Volumen Total</span>
+                    <span class="text-[10px] text-white/60 font-medium tracking-wide">${tDashOverviewTotalVol}</span>
                  </div>
                  <span class="text-[11.5px] font-bold text-white tracking-tight font-mono">${formatLarge(volume)}</span>
               </div>
@@ -1475,7 +1647,7 @@ const t = useTranslations(lang)
                     <div class="w-4 h-4 rounded bg-terminal-dark border border-white/5 flex items-center justify-center shrink-0">
                        <img src="/img/sunflowerland/123/exchange.png" class="w-3 h-3 object-contain drop-shadow-sm" onerror="this.style.display='none'" />
                     </div>
-                    <span class="text-[10px] text-white/60 font-medium tracking-wide">Trades Total</span>
+                    <span class="text-[10px] text-white/60 font-medium tracking-wide">${tDashOverviewTotalTrades}</span>
                  </div>
                  <span class="text-[11.5px] font-bold text-white tracking-tight font-mono">${formatLarge(trades)}</span>
               </div>
@@ -1485,7 +1657,7 @@ const t = useTranslations(lang)
                     <div class="w-4 h-4 rounded bg-amber-500/10 flex items-center justify-center shrink-0">
                        <svg class="w-2.5 h-2.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <span class="text-[10px] text-white/60 font-medium tracking-wide">Wallets (Holders)</span>
+                    <span class="text-[10px] text-white/60 font-medium tracking-wide">${tDashOverviewHolders}</span>
                  </div>
                  <span class="text-[11.5px] font-bold text-white tracking-tight font-mono">${formatLarge(owners)}</span>
               </div>
@@ -2159,8 +2331,39 @@ const t = useTranslations(lang)
     renderTable(searchInput ? searchInput.value : "")
   }
 
+  window.updateDash61Changes = (dataMap) => {
+     const fmt = (n) =>
+        n >= 100
+          ? n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })
+          : n < 0.01
+            ? "$" + n.toPrecision(4)
+            : n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 4 });
+
+     const renderChange = (id, elId, priceElId) => {
+        if (!dataMap[id]) return;
+        
+        const priceEl = document.getElementById(priceElId);
+        if (priceEl && dataMap[id].usd !== undefined) {
+           priceEl.textContent = fmt(dataMap[id].usd);
+        }
+
+        const el = document.getElementById(elId);
+        if (!el || dataMap[id].change24h === undefined) return;
+        const change = dataMap[id].change24h;
+        const isPos = change >= 0;
+        const color = isPos ? "text-emerald-500" : "text-red-500";
+        const icon = isPos 
+          ? `<svg class="w-2.5 h-2.5 ${color}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>`
+          : `<svg class="w-2.5 h-2.5 ${color}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>`;
+        el.innerHTML = `${icon}<span class="${color} tracking-tight font-bold text-[10px]">${Math.abs(change).toFixed(2)}%</span>`;
+     };
+     renderChange("flower-2", "dash_flower_change", "dash_flower_price");
+     renderChange("bitcoin", "dash_btc_change", "dash_btc_price");
+  };
+
   document.addEventListener("coingecko-data-ready", (e) => {
     const dataMap = e.detail
+    if (window.updateDash61Changes) window.updateDash61Changes(dataMap);
     const flowerData = dataMap["flower-2"]
     if (flowerData && flowerData.usd) {
       window.__flowerData = {
