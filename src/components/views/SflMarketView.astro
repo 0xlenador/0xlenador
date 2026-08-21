@@ -81,21 +81,76 @@ const t = useTranslations(lang)
     >
       <div class="flex overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid lg:grid-cols-4 lg:gap-2 lg:pb-0 no-scrollbar">
         <!-- Fila 1 -->
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
-        </div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
-        </div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
-        </div>
-        <div class="hidden lg:flex h-[268px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2 items-center justify-center">
-        </div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="hidden lg:flex h-[268px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2"></div>
         <!-- Fila 2 -->
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
-        </div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
-        </div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 flex items-center justify-center">
-        </div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
+      </div>
+
+      <!-- Skeleton de Título y Botón Refresh -->
+      <div class="flex flex-wrap items-center justify-between mb-2 gap-2 mt-2">
+        <div class="h-7 w-48 bg-white/[0.03] rounded-lg animate-pulse border border-white/5"></div>
+        <div class="h-8 w-full sm:w-24 bg-white/[0.03] rounded-xl animate-pulse border border-white/5"></div>
+      </div>
+
+      <!-- Skeleton de Filtros y Buscador -->
+      <div class="bg-black/20 border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 shadow-2xl h-[100px] lg:h-[60px] animate-pulse">
+        <div class="h-10 w-full lg:w-1/3 bg-white/[0.03] rounded-lg border border-white/5"></div>
+        <div class="h-10 w-full lg:w-1/2 bg-white/[0.03] rounded-lg border border-white/5"></div>
+      </div>
+
+      <!-- Skeleton de Cabecera (solo desktop) -->
+      <div class="hidden lg:grid grid-cols-[22%_10%_10%_13%_12%_12%_21%] border-b border-white/[0.05] py-4">
+        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-4"></div>
+        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+        <div class="h-4 w-24 bg-white/[0.03] rounded border border-white/5 ml-auto mr-4"></div>
+      </div>
+
+      <!-- Skeleton de Filas de Tabla -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:block gap-4 lg:gap-0 lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0">
+        {[1, 2, 3, 4, 5, 6].map(() => (
+          <div class="bg-black/20 lg:bg-transparent rounded-xl lg:rounded-none p-4 lg:p-0 border border-white/5 lg:border-none">
+            <!-- Diseño móvil/tablet: skeleton de carta -->
+            <div class="lg:hidden flex flex-col gap-4 animate-pulse">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/5"></div>
+                  <div class="flex flex-col gap-2">
+                    <div class="w-24 h-4 rounded bg-white/[0.03] border border-white/5"></div>
+                    <div class="w-16 h-3 rounded bg-white/[0.03] border border-white/5"></div>
+                  </div>
+                </div>
+                <div class="w-20 h-8 rounded-lg bg-white/[0.03] border border-white/5"></div>
+              </div>
+              <div class="w-full h-10 rounded-lg bg-white/[0.03] border border-white/5"></div>
+            </div>
+            
+            <!-- Diseño desktop: skeleton de fila -->
+            <div class="hidden lg:grid grid-cols-[22%_10%_10%_13%_12%_12%_21%] items-center py-4 animate-pulse">
+              <div class="flex items-center gap-3 px-4">
+                <div class="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/5"></div>
+                <div class="flex flex-col gap-2">
+                  <div class="w-24 h-4 rounded bg-white/[0.03] border border-white/5"></div>
+                  <div class="w-16 h-3 rounded bg-white/[0.03] border border-white/5"></div>
+                </div>
+              </div>
+              <div class="flex justify-end px-4"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
+              <div class="flex justify-end px-4"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
+              <div class="flex justify-end px-4"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
+              <div class="flex justify-end px-4"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
+              <div class="flex justify-end px-4"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
+              <div class="flex justify-end px-4"><div class="w-32 h-10 rounded-lg bg-white/[0.03] border border-white/5"></div></div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
 
@@ -187,7 +242,7 @@ const t = useTranslations(lang)
 
       <!-- Filtros y Buscador -->
       <div
-        class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 relative z-30 shadow-2xl"
+        class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 relative z-30 shadow-2xl h-[100px] lg:h-[60px]"
       >
         <!-- Buscador Pro -->
         <div class="w-full lg:w-1/3 relative z-40 group">
@@ -2526,39 +2581,39 @@ const t = useTranslations(lang)
       renderDashboard()
       renderTable(searchInput ? searchInput.value : "", true)
 
-      const savedScroll = sessionStorage.getItem("sfl_market_scroll")
-      if (savedScroll) {
-        // Ocultar temporalmente para evitar el "salto visual"
-        dataContainer.style.opacity = "0"
-        dataContainer.classList.remove("hidden")
+      // Preparar transición suave siempre para evitar parpadeos y cortes bruscos
+      dataContainer.style.opacity = "0"
+      dataContainer.classList.remove("hidden")
 
-        setTimeout(() => {
+      // Damos 1 frame para que el navegador construya el DOM renderizado
+      requestAnimationFrame(() => {
+        const savedScroll = sessionStorage.getItem("sfl_market_scroll")
+        if (savedScroll) {
           window.scrollTo({ top: parseInt(savedScroll), behavior: "instant" })
           sessionStorage.removeItem("sfl_market_scroll")
+        }
 
-          // Revelar suavemente
-          dataContainer.style.transition = "opacity 0.2s ease-in-out"
-          dataContainer.style.opacity = "1"
+        loadingState.classList.add("hidden") // Ocultamos skeleton
+        
+        // Iniciamos el fade in
+        dataContainer.style.transition = "opacity 0.2s ease-in-out"
+        dataContainer.style.opacity = "1"
 
-          setTimeout(() => {
-            dataContainer.style.transition = ""
-            dataContainer.style.opacity = ""
-          }, 250)
-        }, 20) // Damos un margen mínimo al navegador para renderizar el alto de la página
-      } else {
-        dataContainer.classList.remove("hidden")
-      }
+        setTimeout(() => {
+          dataContainer.style.transition = ""
+          dataContainer.style.opacity = ""
+        }, 250)
+      })
     } catch (err) {
       console.error(err)
       errorMsg.innerText = err.message || "Error desconocido al consultar la API."
       errorState.classList.remove("hidden")
+      loadingState.classList.add("hidden")
 
       const priceEl = document.getElementById("sflPriceValue")
       const imgEl = document.getElementById("sflTokenImg")
       if (priceEl) priceEl.innerText = "Error"
       if (imgEl) imgEl.classList.remove("animate-pulse")
-    } finally {
-      loadingState.classList.add("hidden")
     }
   }
 
