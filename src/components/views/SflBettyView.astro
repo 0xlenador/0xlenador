@@ -9,8 +9,8 @@ const t = useTranslations(lang)
 ---
 
 <SflToolLayout activeTab="betty">
-  <div class="flex flex-col lg:flex-row items-start justify-between gap-6 mb-6 lg:mb-8 px-4">
-    <div class="max-w-2xl text-left">
+  <div class="flex flex-col lg:flex-row items-start justify-between gap-6 mb-6 lg:mb-8">
+    <div class="max-w-2xl text-center lg:text-left px-4 lg:px-0">
       <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
         {t("sfl.betty.heading")}
         <span class="text-emerald-500"> {t("sfl.betty.heading.accent")}</span>
@@ -71,30 +71,30 @@ const t = useTranslations(lang)
       </div>
       
       <!-- Filtros por Categoría -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0">
+      <div class="flex items-center w-full sm:w-auto gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0">
         <button
-          class="category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
+          class="category-btn active flex-1 flex justify-center px-2 sm:px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
           data-category="all"
           onclick="window.handleCategory('all')"
         >
           {t("sfl.cooking.filter.all")}
         </button>
         <button
-          class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          class="category-btn flex-1 flex justify-center px-2 sm:px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
           data-category="Crops"
           onclick="window.handleCategory('Crops')"
         >
           Crops
         </button>
         <button
-          class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          class="category-btn flex-1 flex justify-center px-2 sm:px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
           data-category="Fruits"
           onclick="window.handleCategory('Fruits')"
         >
           Fruits
         </button>
         <button
-          class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          class="category-btn flex-1 flex justify-center px-2 sm:px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
           data-category="Greenhouse"
           onclick="window.handleCategory('Greenhouse')"
         >
@@ -166,9 +166,9 @@ const t = useTranslations(lang)
 
     document.querySelectorAll(".category-btn").forEach((btn) => {
       if (btn.dataset.category === category) {
-        btn.className = "category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
+        btn.className = "category-btn active flex-1 flex justify-center px-2 sm:px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
       } else {
-        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+        btn.className = "category-btn flex-1 flex justify-center px-2 sm:px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
       }
     })
 

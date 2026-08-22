@@ -128,7 +128,9 @@ const tabs = [
           class="w-3.5 h-3.5 object-contain drop-shadow-sm"
           loading="lazy"
         />
-        <span class="text-white/80 font-bold tracking-wide">1:1000</span>
+        <span class="tabBettyBest text-white/80 font-bold tracking-wide">
+          <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
+        </span>
       </div>
 
       <div
@@ -182,7 +184,9 @@ const tabs = [
           class="w-3.5 h-3.5 object-contain drop-shadow-sm"
           loading="lazy"
         />
-        <span class="text-white/80 font-bold tracking-wide">1:1000</span>
+        <span class="tabBettyBest text-white/80 font-bold tracking-wide">
+          <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
+        </span>
       </div>
 
       <div
@@ -275,6 +279,9 @@ const tabs = [
 </div>
 
 <script>
+  import bettyPrices from "../content/data/sfl/betty_prices.json"
+  import sflIds from "../content/data/sfl/resources.json"
+
   const updateTabPrices = async () => {
     try {
       const response = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`)
@@ -295,6 +302,37 @@ const tabs = [
         if (tabFlowerUsdEls.length > 0) {
           tabFlowerUsdEls.forEach((el) => {
             el.innerText = "$" + flowerPriceNum.toFixed(4)
+            el.classList.remove("animate-pulse")
+          })
+        }
+      }
+
+      if (json.items) {
+        let bestCoinsPerFlower = 0
+        const marketData = json.items
+
+        Object.keys(bettyPrices).forEach(name => {
+          const itemConfig = bettyPrices[name]
+          const itemId = Object.keys(sflIds).find(key => sflIds[key] === name)
+          const internalKey = `collectibles-${itemId}`
+          const marketItem = marketData[internalKey]
+
+          const bettyPriceCoins = itemConfig.sellPrice
+          const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
+
+          if (p2pPriceFlower > 0) {
+            const coinsPerFlower = bettyPriceCoins / p2pPriceFlower
+            if (coinsPerFlower > bestCoinsPerFlower) {
+              bestCoinsPerFlower = coinsPerFlower
+            }
+          }
+        })
+
+        const tabBettyBestEls = document.querySelectorAll(".tabBettyBest")
+        if (tabBettyBestEls.length > 0 && bestCoinsPerFlower > 0) {
+          const displayValue = `1:${Math.round(bestCoinsPerFlower)}`
+          tabBettyBestEls.forEach((el) => {
+            el.innerText = displayValue
             el.classList.remove("animate-pulse")
           })
         }
