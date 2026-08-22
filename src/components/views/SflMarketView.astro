@@ -244,7 +244,7 @@ const t = useTranslations(lang)
             viewBox="0 0 24 24" 
             stroke="currentColor"
             ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span id="fetchBtnText" data-original-text={t("sfl.refresh")}>{t("sfl.refresh")}</span>
+          <span id="fetchBtnText" data-original-text={t("sfl.refresh")} data-updated-text={t("sfl.updated")}>{t("sfl.refresh")}</span>
         </button>
       </div>
 
@@ -2643,7 +2643,7 @@ const t = useTranslations(lang)
             refreshIcon.classList.add("hidden")
         }
         if (checkIcon) checkIcon.classList.remove("hidden")
-        if (textSpan) textSpan.innerText = "Up to date"
+        if (textSpan) textSpan.innerText = textSpan.dataset.updatedText || "Up to date"
         
         fetchBtn.disabled = true
         fetchBtn.classList.remove("hover:bg-emerald-500/20")

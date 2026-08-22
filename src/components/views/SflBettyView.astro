@@ -134,7 +134,7 @@ const t = useTranslations(lang)
             viewBox="0 0 24 24" 
             stroke="currentColor"
             ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span id="fetchBtnText" data-original-text={t("sfl.refresh")}>{t("sfl.refresh")}</span>
+          <span id="fetchBtnText" data-original-text={t("sfl.refresh")} data-updated-text={t("sfl.updated")}>{t("sfl.refresh")}</span>
         </button>
       </div>
     </div>
@@ -600,7 +600,7 @@ const t = useTranslations(lang)
         refreshIcon.classList.remove("animate-spin")
         refreshIcon.classList.add("hidden")
         checkIcon.classList.remove("hidden")
-        fetchBtnText.innerText = "Actualizado"
+        fetchBtnText.innerText = fetchBtnText.dataset.updatedText || "Actualizado"
         
         setTimeout(() => {
           checkIcon.classList.add("hidden")
