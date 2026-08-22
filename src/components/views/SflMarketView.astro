@@ -79,12 +79,12 @@ const t = useTranslations(lang)
       id="loadingState"
       class="relative z-10 mb-2 min-h-[100vh]"
     >
-      <div class="grid grid-cols-[max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar">
+      <div class="grid grid-cols-[max-content_max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar">
         <!-- Fila 1 -->
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-        <div class="hidden lg:flex h-[268px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2"></div>
+        <div class="flex h-[268px] min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2"></div>
         <!-- Fila 2 -->
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
         <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
@@ -165,7 +165,7 @@ const t = useTranslations(lang)
       <!-- Dashboard Resumen -->
       <!-- Nuevo Dashboard (Estructura de 7 Cajas) -->
       <div class="relative mb-2">
-        <div class="grid grid-cols-[max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar">
+        <div class="grid grid-cols-[max-content_max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar">
           <!-- Fila 1 -->
           <div id="dashBox1" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-4xl font-bold text-white/20">1</span>
@@ -176,7 +176,7 @@ const t = useTranslations(lang)
           <div id="dashBox3" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
             <span class="text-sm font-bold text-white/20 uppercase tracking-widest">{t("sfl.dashboard.pending")}</span>
           </div>
-          <div id="dashBox4" class="relative hidden lg:flex bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2">
+          <div id="dashBox4" class="relative flex bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2 min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0">
             <span class="text-6xl font-bold text-white/20">4</span>
           </div>
           <!-- Fila 2 -->
