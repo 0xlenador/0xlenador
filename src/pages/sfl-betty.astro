@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+import SflBettyView from "../components/views/SflBettyView.astro"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("sfl.betty.seo.title"),
+  description: t("sfl.betty.seo.description"),
+  image: "/img/meta/sunflowerland-og.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image} customSpacing>
+  <SflBettyView />
+</Layout>

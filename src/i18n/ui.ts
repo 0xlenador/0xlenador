@@ -42,6 +42,7 @@ export const routes = {
     "sfl-mercado": "sfl-market",
     "sfl-mascotas": "sfl-pets",
     "sfl-cocinando": "sfl-cooking",
+    "sfl-betty": "sfl-betty",
     autor: "author",
   },
   es: {
@@ -55,6 +56,7 @@ export const routes = {
     "sfl-market": "sfl-mercado",
     "sfl-pets": "sfl-mascotas",
     "sfl-cooking": "sfl-cocinando",
+    "sfl-betty": "sfl-betty",
     author: "autor",
   },
 }

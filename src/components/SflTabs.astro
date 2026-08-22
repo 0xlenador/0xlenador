@@ -2,7 +2,7 @@
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../i18n/utils"
 
 interface Props {
-  activeTab: "mercado" | "mascotas" | "cocinando"
+  activeTab: "mercado" | "mascotas" | "cocinando" | "betty"
 }
 
 const { activeTab } = Astro.props
@@ -28,6 +28,12 @@ const tabs = [
     href: loc("/sfl-cocinando"),
     label: t("nav.sub.cooking"),
     icon: "/img/sunflowerland/food/Pizza Margherita.png",
+  },
+  {
+    id: "betty",
+    href: loc("/sfl-betty"),
+    label: t("nav.sub.betty"),
+    icon: "/img/sunflowerland/123/coins.png",
   },
 ]
 ---

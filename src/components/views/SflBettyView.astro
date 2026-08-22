@@ -1,0 +1,362 @@
+---
+import SflToolLayout from "../SflToolLayout.astro"
+import bettyPrices from "../../content/data/sfl/betty_prices.json"
+import sflIds from "../../content/data/sfl/resources.json"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<SflToolLayout activeTab="betty">
+  <div class="mb-6 lg:mb-8 text-center max-w-3xl mx-auto px-4">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] sm:text-xs font-mono font-bold tracking-wider uppercase mb-4">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      {t("sfl.breadcrumb")}
+    </div>
+    <h1 class="text-2xl sm:text-3xl lg:text-5xl font-black text-white tracking-tight mb-3 sm:mb-4 drop-shadow-sm">
+      {t("sfl.betty.heading")}
+      <span class="text-emerald-400 inline-block relative">
+        {t("sfl.betty.heading.accent")}
+        <div class="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-1 sm:h-2 bg-emerald-500/20 blur-sm rounded-full"></div>
+      </span>
+    </h1>
+    <p class="text-sm sm:text-base text-terminal-muted leading-relaxed font-medium balance-text">
+      {t("sfl.betty.intro")}
+    </p>
+  </div>
+
+  <div class="w-full">
+    <!-- Controles -->
+    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div class="relative flex-1">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="w-4 h-4 text-terminal-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="searchInput"
+          class="w-full bg-white/[0.02] border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-emerald-500/50 focus:bg-white/[0.04] transition-all"
+          placeholder={t("sfl.betty.search.placeholder")}
+          autocomplete="off"
+        />
+      </div>
+      
+      <!-- Filtros por Categoría -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0">
+        <button
+          class="category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
+          data-category="all"
+          onclick="window.handleCategory('all')"
+        >
+          {t("sfl.cooking.filter.all")}
+        </button>
+        <button
+          class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          data-category="Crops"
+          onclick="window.handleCategory('Crops')"
+        >
+          Crops
+        </button>
+        <button
+          class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          data-category="Fruits"
+          onclick="window.handleCategory('Fruits')"
+        >
+          Fruits
+        </button>
+        <button
+          class="category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          data-category="Greenhouse"
+          onclick="window.handleCategory('Greenhouse')"
+        >
+          Greenhouse
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="py-12 flex flex-col items-center justify-center gap-4 border border-white/5 bg-white/[0.02] rounded-3xl">
+      <div class="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+      <p class="text-sm font-mono text-terminal-muted">{t("sfl.betty.loading")}</p>
+    </div>
+
+    <!-- Data Container -->
+    <div id="dataContainer" class="hidden">
+      <!-- Header Tabla Desktop -->
+      <div class="hidden lg:grid grid-cols-[20%_15%_15%_15%_15%_20%] gap-4 px-6 py-4 bg-white/[0.02] border border-white/5 rounded-2xl mb-4">
+        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('name')">
+          {t("sfl.betty.col.name")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span>
+        </div>
+        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2" onclick="window.handleSort('category')">
+          {t("sfl.betty.col.category")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="category">↕</span>
+        </div>
+        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2 justify-end" onclick="window.handleSort('bettyCoins')">
+          {t("sfl.betty.col.bettyCoins")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="bettyCoins">↕</span>
+        </div>
+        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2 justify-end" onclick="window.handleSort('p2pPrice')">
+          {t("sfl.betty.col.p2pPrice")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="p2pPrice">↕</span>
+        </div>
+        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2 justify-end" onclick="window.handleSort('coinsPerFlower')">
+          {t("sfl.betty.col.coinsPerFlower")} <span class="sort-icon opacity-100 text-emerald-500 transition-opacity" data-col="coinsPerFlower">↓</span>
+        </div>
+        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2 justify-end" onclick="window.handleSort('profit')">
+          {t("sfl.betty.col.best")} <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="profit">↕</span>
+        </div>
+      </div>
+
+      <!-- Body Tabla -->
+      <div id="tableBody" class="flex flex-col gap-4 lg:gap-0 lg:bg-white/[0.01] lg:border lg:border-white/5 lg:rounded-3xl lg:p-2 lg:overflow-hidden relative z-10">
+        <!-- JS inyectará filas aquí -->
+      </div>
+    </div>
+  </div>
+</SflToolLayout>
+
+<style is:global>
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script define:vars={{ bettyPrices, sflIds, tEmpty: t("sfl.betty.empty"), tBestBetty: t("sfl.betty.best.betty"), tBestP2p: t("sfl.betty.best.p2p"), tBettyCoins: t("sfl.betty.col.bettyCoins"), tP2pPrice: t("sfl.betty.col.p2pPrice"), tCoinsPerFlower: t("sfl.betty.col.coinsPerFlower") }}>
+  const searchInput = document.getElementById("searchInput")
+  const loadingState = document.getElementById("loadingState")
+  const dataContainer = document.getElementById("dataContainer")
+  const tableBody = document.getElementById("tableBody")
+
+  let marketData = {}
+  window.currentSort = { column: "coinsPerFlower", direction: "desc" }
+  let currentCategory = "all"
+
+  window.handleCategory = (category) => {
+    currentCategory = category
+
+    document.querySelectorAll(".category-btn").forEach((btn) => {
+      if (btn.dataset.category === category) {
+        btn.className = "category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
+      } else {
+        btn.className = "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+      }
+    })
+
+    renderTable(searchInput ? searchInput.value : "")
+  }
+
+  window.handleSort = (column) => {
+    if (window.currentSort.column === column) {
+      if (window.currentSort.direction === "none") window.currentSort.direction = "desc"
+      else if (window.currentSort.direction === "desc") window.currentSort.direction = "asc"
+      else window.currentSort.direction = "none"
+    } else {
+      window.currentSort.column = column
+      window.currentSort.direction = "desc"
+    }
+
+    document.querySelectorAll(".sort-icon").forEach((icon) => {
+      icon.innerHTML = "↕"
+      icon.classList.remove("opacity-100", "text-emerald-500")
+      icon.classList.add("opacity-0", "group-hover:opacity-50")
+    })
+
+    if (window.currentSort.direction !== "none") {
+      const activeIcon = document.querySelector(`.sort-icon[data-col="${column}"]`)
+      if (activeIcon) {
+        activeIcon.innerHTML = window.currentSort.direction === "desc" ? "↓" : "↑"
+        activeIcon.classList.remove("opacity-0", "group-hover:opacity-50")
+        activeIcon.classList.add("opacity-100", "text-emerald-500")
+      }
+    }
+
+    renderTable(searchInput ? searchInput.value : "")
+  }
+
+  const formatNumber = (num, decimals = 2) => {
+    if (num === undefined || num === null || isNaN(num)) return "0"
+    if (num > 0 && num < 0.0001) return num.toExponential(2)
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimals,
+    }).format(num)
+  }
+
+  window.renderTable = (searchTerm = "") => {
+    let items = []
+    
+    // Preparar lista de items con cálculos
+    Object.keys(bettyPrices).forEach(name => {
+      const itemConfig = bettyPrices[name]
+      const itemId = Object.keys(sflIds).find(key => sflIds[key] === name)
+      const internalKey = `collectibles-${itemId}`
+      const marketItem = marketData[internalKey]
+      
+      const bettyPriceCoins = itemConfig.sellPrice
+      const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
+      
+      let coinsPerFlower = 0
+      let profitVsDirect = 0
+      
+      if (p2pPriceFlower > 0) {
+        coinsPerFlower = bettyPriceCoins / p2pPriceFlower
+        profitVsDirect = ((coinsPerFlower / 320) - 1) * 100
+      }
+      
+      items.push({
+        name,
+        category: itemConfig.category,
+        bettyCoins: bettyPriceCoins,
+        p2pPrice: p2pPriceFlower,
+        coinsPerFlower,
+        profit: profitVsDirect
+      })
+    })
+
+    // Filtrar
+    let filtered = items.filter((item) => {
+      const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = currentCategory === "all" || item.category === currentCategory
+      return matchesSearch && matchesCategory
+    })
+
+    // Ordenar
+    if (window.currentSort && window.currentSort.column && window.currentSort.direction !== "none") {
+      const { column, direction } = window.currentSort
+      filtered.sort((a, b) => {
+        let valA = a[column]
+        let valB = b[column]
+        
+        if (column === "name" || column === "category") {
+          valA = valA.toLowerCase()
+          valB = valB.toLowerCase()
+        }
+
+        if (valA < valB) return direction === "asc" ? -1 : 1
+        if (valA > valB) return direction === "asc" ? 1 : -1
+        return 0
+      })
+    }
+
+    tableBody.innerHTML = ""
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmpty}</div>`
+      return
+    }
+
+    filtered.forEach((item) => {
+      const imgPath = `/img/sunflowerland/${item.name}.png`
+      
+      // Colores de profit
+      let profitColorClass = "text-terminal-muted"
+      let profitBgClass = "bg-white/5 border-white/10"
+      let isBettyBetter = item.coinsPerFlower > 320
+      
+      if (item.p2pPrice > 0) {
+        if (isBettyBetter) {
+          profitColorClass = "text-emerald-400"
+          profitBgClass = "bg-emerald-500/10 border-emerald-500/20"
+        } else {
+          profitColorClass = "text-red-400"
+          profitBgClass = "bg-red-500/10 border-red-500/20"
+        }
+      }
+
+      const row = document.createElement("div")
+      row.className = "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[20%_15%_15%_15%_15%_20%] lg:items-center lg:py-3"
+
+      row.innerHTML = `
+        <!-- Name -->
+        <div class="flex items-center gap-3 mb-4 lg:mb-0 lg:px-4">
+          <div class="w-10 h-10 lg:w-8 lg:h-8 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center p-1.5 shrink-0">
+            <img src="${imgPath}" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="this.src='/img/sunflowerland/123/empty.png'" loading="lazy" />
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors">${item.name}</p>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="hidden lg:block">
+          <span class="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-semibold bg-white/5 text-white/60 border border-white/10">${item.category}</span>
+        </div>
+
+        <!-- Betty Coins -->
+        <div class="flex justify-between lg:justify-end items-center mb-2 lg:mb-0 lg:pr-6">
+          <span class="text-xs text-terminal-muted lg:hidden">${tBettyCoins}</span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-bold text-yellow-400">${formatNumber(item.bettyCoins)}</span>
+            <img src="/img/sunflowerland/123/coins.png" class="w-3.5 h-3.5" alt="Coins" />
+          </div>
+        </div>
+
+        <!-- P2P Price -->
+        <div class="flex justify-between lg:justify-end items-center mb-2 lg:mb-0 lg:pr-6">
+          <span class="text-xs text-terminal-muted lg:hidden">${tP2pPrice}</span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-sans font-medium ${item.p2pPrice > 0 ? 'text-white/90' : 'text-white/30'}">${item.p2pPrice > 0 ? formatNumber(item.p2pPrice, 4) : 'N/A'}</span>
+            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full ${item.p2pPrice > 0 ? '' : 'opacity-30'}" alt="FLOWER" />
+          </div>
+        </div>
+
+        <!-- Coins / FLOWER -->
+        <div class="flex justify-between lg:justify-end items-center mb-4 lg:mb-0 lg:pr-6">
+          <span class="text-xs text-terminal-muted lg:hidden">${tCoinsPerFlower}</span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-bold ${profitColorClass}">${item.p2pPrice > 0 ? formatNumber(item.coinsPerFlower, 0) : 'N/A'}</span>
+            <span class="text-[10px] text-white/30">/</span>
+            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full ${item.p2pPrice > 0 ? '' : 'opacity-30'}" alt="FLOWER" />
+          </div>
+        </div>
+
+        <!-- Best Option & Profit -->
+        <div class="flex justify-between lg:justify-end items-center lg:pr-4 pt-4 lg:pt-0 border-t border-white/5 lg:border-none">
+          <div class="flex items-center gap-2">
+            ${item.p2pPrice > 0 ? `
+              <div class="px-2 py-1 rounded-lg border ${profitBgClass} flex items-center gap-1">
+                <span class="text-xs font-bold ${profitColorClass}">${isBettyBetter ? tBestBetty : tBestP2p}</span>
+              </div>
+              <span class="text-xs font-mono ${item.profit > 0 ? 'text-emerald-400' : 'text-red-400'}">${item.profit > 0 ? '+' : ''}${formatNumber(item.profit, 0)}%</span>
+            ` : `<span class="text-xs text-terminal-muted">No P2P data</span>`}
+          </div>
+        </div>
+      `
+      tableBody.appendChild(row)
+    })
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      renderTable(e.target.value)
+    })
+  }
+
+  const fetchMarketData = async () => {
+    try {
+      const res = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`)
+      if (!res.ok) throw new Error("API error")
+      const json = await res.json()
+      marketData = json.items || {}
+      
+      loadingState.classList.add("hidden")
+      dataContainer.classList.remove("hidden")
+      
+      renderTable()
+    } catch (e) {
+      console.error(e)
+      if(loadingState) loadingState.innerHTML = `<div class="text-red-400 text-sm">Error cargando datos del mercado.</div>`
+    }
+  }
+
+  document.addEventListener("astro:page-load", fetchMarketData)
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(fetchMarketData, 1)
+  } else {
+    document.addEventListener("DOMContentLoaded", fetchMarketData)
+  }
+</script>
