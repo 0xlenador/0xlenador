@@ -242,7 +242,8 @@ const tabs = [
         class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm"
         loading="lazy"
       />
-      <span>{t("sfl.tabs.visitLand")}</span>
+      <span class="hidden sm:inline">{t("sfl.tabs.visitLand")}</span>
+      <span class="inline sm:hidden">{t("sfl.tabs.visitLandMobile")}</span>
       <a
         href="https://sunflower-land.com/play/#/visit/2749608757913285"
         target="_blank"
@@ -274,6 +275,24 @@ const tabs = [
       >
         {t("sfl.tabs.clickHere")}
       </a>
+    </div>
+
+    <div
+      class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 whitespace-nowrap"
+    >
+      <span class="hidden sm:inline">{t("sfl.tabs.donations")}</span>
+      <span class="inline sm:hidden">{t("sfl.tabs.donateMobile")}</span>
+      <span class="text-white font-bold hidden sm:inline">0xef6EbD32d53285710345DF899B3A6758F037c313</span>
+      <span class="text-white font-bold sm:hidden">0xef...c313</span>
+      <button
+        type="button"
+        class="copy-donation-btn ml-0.5 text-white/40 hover:text-white transition-colors flex items-center justify-center"
+        data-address="0xef6EbD32d53285710345DF899B3A6758F037c313"
+        aria-label="Copiar"
+        title="Copiar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+      </button>
     </div>
   </div>
 </div>
@@ -342,10 +361,39 @@ const tabs = [
     }
   }
 
-  document.addEventListener("astro:page-load", updateTabPrices)
+  const setupCopyButtons = () => {
+    const copyBtns = document.querySelectorAll(".copy-donation-btn")
+    copyBtns.forEach((btn) => {
+      if (btn.hasAttribute("data-copy-init")) return
+      btn.setAttribute("data-copy-init", "true")
+      
+      btn.addEventListener("click", async () => {
+        const addr = btn.getAttribute("data-address")
+        if (addr) {
+          try {
+            await navigator.clipboard.writeText(addr)
+            const originalHTML = btn.innerHTML
+            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`
+            setTimeout(() => {
+              btn.innerHTML = originalHTML
+            }, 2000)
+          } catch (e) {
+            console.error("Failed to copy", e)
+          }
+        }
+      })
+    })
+  }
+
+  const initSflTabs = () => {
+    updateTabPrices()
+    setupCopyButtons()
+  }
+
+  document.addEventListener("astro:page-load", initSflTabs)
   if (document.readyState === "complete" || document.readyState === "interactive") {
-    setTimeout(updateTabPrices, 1)
+    setTimeout(initSflTabs, 1)
   } else {
-    document.addEventListener("DOMContentLoaded", updateTabPrices)
+    document.addEventListener("DOMContentLoaded", initSflTabs)
   }
 </script>
