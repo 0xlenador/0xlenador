@@ -188,10 +188,7 @@ const t = useTranslations(lang)
 </style>
 
 <script define:vars={{ bettyPrices, sflIds, tEmpty: t("sfl.betty.empty"), tBestBetty: t("sfl.betty.best.betty"), tBestP2p: t("sfl.betty.best.p2p"), tBettyCoins: t("sfl.betty.col.bettyCoins"), tP2pPrice: t("sfl.betty.col.p2pPrice"), tCoinsPerFlower: t("sfl.betty.col.coinsPerFlower"), tCalcNoData: t("sfl.betty.calculator.noData") }}>
-  const searchInput = document.getElementById("searchInput")
-  const loadingState = document.getElementById("loadingState")
-  const dataContainer = document.getElementById("dataContainer")
-  const tableBody = document.getElementById("tableBody")
+
 
   let marketData = {}
   window.currentSort = { column: "coinsPerFlower", direction: "desc" }
@@ -200,6 +197,12 @@ const t = useTranslations(lang)
   let manualSelectedItem = null;
   let isDropdownOpen = false;
   let allItemsData = [];
+  let isDropdownInitialized = false;
+
+  const getSearchVal = () => {
+    const el = document.getElementById("searchInput");
+    return el ? el.value : "";
+  }
 
   window.handleCategory = (category) => {
     currentCategory = category
@@ -212,7 +215,7 @@ const t = useTranslations(lang)
       }
     })
 
-    renderTable(searchInput ? searchInput.value : "")
+    renderTable(getSearchVal())
   }
 
   window.handleSort = (column) => {
@@ -240,7 +243,7 @@ const t = useTranslations(lang)
       }
     }
 
-    renderTable(searchInput ? searchInput.value : "")
+    renderTable(getSearchVal())
   }
 
   const formatNumber = (num, decimals = 2) => {
@@ -282,6 +285,11 @@ const t = useTranslations(lang)
 
       if (flowerInput && itemsInput && coinsInput) {
         const updateFromFlower = () => {
+          if (flowerInput.value === "") {
+            itemsInput.value = ""
+            coinsInput.value = ""
+            return
+          }
           const flowerVal = parseFloat(flowerInput.value) || 0
           const itemsVal = item.p2pPrice > 0 ? Math.floor(flowerVal / item.p2pPrice) : 0
           itemsInput.value = itemsVal.toString()
@@ -289,18 +297,28 @@ const t = useTranslations(lang)
         }
         
         const updateFromItems = () => {
+          if (itemsInput.value === "") {
+            flowerInput.value = ""
+            coinsInput.value = ""
+            return
+          }
           const itemsVal = Math.round(parseFloat(itemsInput.value) || 0)
-          itemsInput.value = itemsVal.toString()
-          flowerInput.value = (itemsVal * item.p2pPrice).toFixed(3)
+          const fv = itemsVal * item.p2pPrice
+          flowerInput.value = fv === 0 ? "0" : parseFloat(fv.toFixed(3)).toString()
           coinsInput.value = (itemsVal * item.bettyCoins).toFixed(0)
         }
         
         const updateFromCoins = () => {
+          if (coinsInput.value === "") {
+            itemsInput.value = ""
+            flowerInput.value = ""
+            return
+          }
           const coinsVal = parseFloat(coinsInput.value) || 0
           const itemsVal = Math.round(coinsVal / item.bettyCoins)
           itemsInput.value = itemsVal.toString()
-          flowerInput.value = (itemsVal * item.p2pPrice).toFixed(3)
-          coinsInput.value = (itemsVal * item.bettyCoins).toFixed(0)
+          const fv = itemsVal * item.p2pPrice
+          flowerInput.value = fv === 0 ? "0" : parseFloat(fv.toFixed(3)).toString()
         }
         
         flowerInput.oninput = updateFromFlower
@@ -359,6 +377,9 @@ const t = useTranslations(lang)
   }
 
   const initDropdown = () => {
+    if (isDropdownInitialized) return;
+    isDropdownInitialized = true;
+
     const btn = document.getElementById("itemSelectorBtn")
     const resetBtn = document.getElementById("resetBestBtn")
     
@@ -446,6 +467,9 @@ const t = useTranslations(lang)
       })
     }
 
+    const tableBody = document.getElementById("tableBody")
+    if (!tableBody) return;
+    
     tableBody.innerHTML = ""
 
     if (filtered.length === 0) {
@@ -534,10 +558,14 @@ const t = useTranslations(lang)
     })
   }
 
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      renderTable(e.target.value)
-    })
+  const setupSearchListener = () => {
+    const searchInputEl = document.getElementById("searchInput")
+    if (searchInputEl && !searchInputEl.dataset.listenerAttached) {
+      searchInputEl.addEventListener("input", (e) => {
+        renderTable(e.target.value)
+      })
+      searchInputEl.dataset.listenerAttached = "true"
+    }
   }
 
   const fetchMarketData = async (isManual = false) => {
@@ -560,11 +588,13 @@ const t = useTranslations(lang)
       const json = await res.json()
       marketData = json.items || {}
       
-      loadingState.classList.add("hidden")
-      dataContainer.classList.remove("hidden")
+      const loadingState = document.getElementById("loadingState")
+      const dataContainer = document.getElementById("dataContainer")
+      if (loadingState) loadingState.classList.add("hidden")
+      if (dataContainer) dataContainer.classList.remove("hidden")
       
       initDropdown()
-      renderTable()
+      renderTable(getSearchVal())
 
       if (isManual && fetchBtn && refreshIcon && checkIcon && fetchBtnText) {
         refreshIcon.classList.remove("animate-spin")
@@ -599,6 +629,7 @@ const t = useTranslations(lang)
   }
 
   const initApp = () => {
+    setupSearchListener()
     fetchMarketData()
     const fetchBtn = document.getElementById("fetchBtn")
     if (fetchBtn && !fetchBtn.dataset.listenerAttached) {
