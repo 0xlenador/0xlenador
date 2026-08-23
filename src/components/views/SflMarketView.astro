@@ -848,6 +848,9 @@ const t = useTranslations(lang)
     tGainer30d: t("sfl.slider.topGainer.30d"),
     tGainer180d: t("sfl.slider.topGainer.180d"),
     tNearAtl: t("sfl.slider.nearAtl"),
+    tSeasons: [t("sfl.season.winter"), t("sfl.season.spring"), t("sfl.season.summer"), t("sfl.season.autumn")],
+    tDays: [t("sfl.day.monday"), t("sfl.day.tuesday"), t("sfl.day.wednesday"), t("sfl.day.thursday"), t("sfl.day.friday"), t("sfl.day.saturday"), t("sfl.day.sunday")],
+    tOf: t("sfl.season.of"),
     tTooltipAth: t("sfl.slider.tooltip.ath"),
     tTooltipAtl: t("sfl.slider.tooltip.atl"),
     tEmptySearch: t("sfl.market.emptySearch"),
@@ -1463,18 +1466,25 @@ const t = useTranslations(lang)
        const updateSeasonStyle = () => {
           const now = Date.now();
           const epoch = Date.UTC(2026, 7, 17, 0, 0, 0); // Monday, Aug 17, 2026 00:00:00 UTC
-          const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+          const msPerDay = 24 * 60 * 60 * 1000;
+          const msPerWeek = 7 * msPerDay;
           let diff = now - epoch;
+          
+          let daysSinceEpoch = Math.floor(diff / msPerDay);
+          let dayOfWeekIndex = ((daysSinceEpoch % 7) + 7) % 7;
+          
           let weeksSinceEpoch = Math.floor(diff / msPerWeek);
           let seasonIndex = ((weeksSinceEpoch % 4) + 4) % 4; 
           
           const seasons = [
-             { name: "Winter", border: "border-blue-400/50", shadow: "shadow-[inset_0_0_15px_rgba(96,165,250,0.15)]" },
-             { name: "Spring", border: "border-emerald-400/50", shadow: "shadow-[inset_0_0_15px_rgba(52,211,153,0.15)]" },
-             { name: "Summer", border: "border-yellow-400/50", shadow: "shadow-[inset_0_0_15px_rgba(250,204,21,0.15)]" },
-             { name: "Autumn", border: "border-orange-500/50", shadow: "shadow-[inset_0_0_15px_rgba(249,115,22,0.15)]" }
+             { name: tSeasons[0], border: "border-blue-400/50", shadow: "shadow-[inset_0_0_15px_rgba(96,165,250,0.15)]", color: "text-blue-300", img: "/img/sunflowerland/123/invierno.webp" },
+             { name: tSeasons[1], border: "border-emerald-400/50", shadow: "shadow-[inset_0_0_15px_rgba(52,211,153,0.15)]", color: "text-emerald-300", img: "/img/sunflowerland/123/primavera.webp" },
+             { name: tSeasons[2], border: "border-yellow-400/50", shadow: "shadow-[inset_0_0_15px_rgba(250,204,21,0.15)]", color: "text-yellow-300", img: "/img/sunflowerland/123/verano.webp" },
+             { name: tSeasons[3], border: "border-orange-500/50", shadow: "shadow-[inset_0_0_15px_rgba(249,115,22,0.15)]", color: "text-orange-300", img: "/img/sunflowerland/123/otoño.webp" }
           ];
           
+          const dias = tDays;
+          const currentDayName = dias[dayOfWeekIndex];
           const currentSeason = seasons[seasonIndex];
           
           const seasonClasses = [
@@ -1483,24 +1493,34 @@ const t = useTranslations(lang)
              'border-yellow-400/50', 'shadow-[inset_0_0_15px_rgba(250,204,21,0.15)]',
              'border-orange-500/50', 'shadow-[inset_0_0_15px_rgba(249,115,22,0.15)]'
           ];
+          
           box2.classList.remove(...seasonClasses, 'border-white/5', 'shadow-inner');
           box2.classList.add(currentSeason.border, currentSeason.shadow, 'transition-all', 'duration-1000');
+          
+          const seasonImgEl = document.getElementById("seasonImg");
+          const seasonTextEl = document.getElementById("seasonText");
+          if (seasonImgEl && seasonTextEl) {
+             seasonImgEl.src = currentSeason.img;
+             seasonTextEl.textContent = currentDayName + " " + tOf + " " + currentSeason.name;
+             seasonTextEl.className = "text-[10px] font-bold uppercase tracking-wider mt-[1px] " + currentSeason.color;
+          }
        };
-       
-       updateSeasonStyle();
-       if (window.seasonInterval) clearInterval(window.seasonInterval);
-       window.seasonInterval = setInterval(updateSeasonStyle, 60000); 
 
        box2.innerHTML = `
-          <div class="absolute inset-0 w-full h-full p-2.5 flex gap-3 z-20">
-             <div class="w-[38%] flex flex-col h-full border-r border-white/5 pr-3 justify-center">
-                <input type="number" id="calcInput" value="1" step="any" class="w-full bg-[#0c1015] border border-white/10 rounded px-1.5 py-[3px] text-[11px] font-mono text-white outline-none focus:border-white/30 transition-colors shadow-inner mb-2" />
-                <div class="flex flex-col gap-[4px]" id="calcRadios">
-                   ${['FLOWER', 'COIN', 'USDT', 'Gema', 'Oil'].map((c, i) => {
+          <div class="absolute inset-0 w-full h-full p-2 flex gap-2 z-20">
+             <div class="w-[38%] flex flex-col h-full border-r border-white/5 pr-2">
+                <div class="relative w-full mb-1.5 shrink-0 h-[22px]">
+                   <input type="number" id="calcInput" value="1" step="any" class="block w-full h-[22px] bg-[#0c1015] border border-white/10 rounded pl-1.5 pr-6 text-[11px] font-mono text-white outline-none focus:border-white/30 transition-colors shadow-inner" />
+                   <button id="calcClearBtn" class="hidden absolute right-1 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/80 focus:outline-none transition-colors w-4 h-4 flex items-center justify-center rounded hover:bg-white/5" onclick="document.getElementById('calcInput').value='1'; window.updateCalc();" title="Resetear a 1">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                   </button>
+                </div>
+                <div class="flex flex-col gap-[3px] flex-1 min-h-0" id="calcRadios">
+                   ${['FLOWER', 'COIN', 'USD', 'Gema', 'Oil'].map((c, i) => {
                       const icons = {
                          FLOWER: '/img/sunflowerland/flower.jpg',
                          COIN: '/img/sunflowerland/123/coins.png',
-                         USDT: '/img/cripto/tether.webp',
+                         USD: '/img/cripto/tether.webp',
                          Gema: '/img/sunflowerland/123/Gem.png',
                          Oil: '/img/sunflowerland/123/Oil.png'
                       };
@@ -1520,7 +1540,7 @@ const t = useTranslations(lang)
                          ` : ''}
                          ${c === 'Gema' ? `
                            <div class="ml-auto flex items-center" onclick="event.stopPropagation()">
-                             <select id="gemBonusSelect" class="bg-[#0c1015] border border-white/10 rounded px-1 py-[1px] text-[8.5px] font-mono text-white/70 outline-none focus:border-white/30 transition-colors cursor-pointer" onchange="window.updateGemBonus(this.value)">
+                             <select id="gemBonusSelect" class="appearance-none w-10 text-center bg-[#0c1015] border border-white/10 rounded px-1 py-[1px] text-[8.5px] font-mono text-white/70 outline-none focus:border-white/30 transition-colors cursor-pointer" onchange="window.updateGemBonus(this.value)">
                                <option value="0">0%</option>
                                <option value="0.29" selected>+29%</option>
                                <option value="0.34">+34%</option>
@@ -1535,10 +1555,20 @@ const t = useTranslations(lang)
                 </div>
              </div>
              
-             <div class="w-[62%] grid grid-cols-2 grid-rows-2 gap-1.5 h-full" id="calcOutputs">
+             <div class="w-[62%] flex flex-col h-full pl-0.5">
+                <div class="w-full mb-1.5 h-[22px] bg-[#0c1015] border border-white/10 rounded px-2 shadow-inner flex items-center justify-center gap-1.5 shrink-0" id="seasonBar">
+                   <img id="seasonImg" src="" class="w-[14px] h-[14px] object-contain drop-shadow-sm" />
+                   <span id="seasonText" class="text-[10px] font-bold uppercase tracking-wider mt-[1px] leading-none"></span>
+                </div>
+                <div class="w-full flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-1" id="calcOutputs">
+                </div>
              </div>
           </div>
        `;
+       
+       updateSeasonStyle();
+       if (window.seasonInterval) clearInterval(window.seasonInterval);
+       window.seasonInterval = setInterval(updateSeasonStyle, 60000); 
        
        window.updateOilMultiplier = (val) => {
            let mult = parseFloat(val);
@@ -1558,11 +1588,20 @@ const t = useTranslations(lang)
        window.updateCalc = () => {
            const inputEl = document.getElementById('calcInput');
            if (!inputEl) return;
-           let amount = parseFloat(inputEl.value);
+           let rawValue = inputEl.value;
+           let amount = parseFloat(rawValue);
            if (isNaN(amount)) amount = 0;
+           
+           const clearBtn = document.getElementById('calcClearBtn');
+           if (clearBtn) {
+              if (rawValue !== '1') clearBtn.classList.remove('hidden');
+              else clearBtn.classList.add('hidden');
+           }
+           
            const selectedCurr = document.querySelector('input[name="calcCurr"]:checked').value;
            
-           const sflPrice = window.sflUsdPrice || 0.073;
+           // Usamos el precio interno del juego para la calculadora porque las Gemas y monedas se basan en este oráculo interno
+           const sflPrice = window.sflInternalPrice || window.sflUsdPrice || 0.073;
            
            const gemBaseUsd = 0.0103;
            const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29;
@@ -1572,19 +1611,19 @@ const t = useTranslations(lang)
            const rates = {
                FLOWER: 1,
                COIN: 1 / (window.sflBestCoinsPerFlower || 1330), 
-               USDT: 1 / sflPrice,
+               USD: 1 / sflPrice,
                Gema: gemCostFlower, 
                Oil: window.sflBestOilPriceFlower || 0.107 
            };
            
            const baseAmount = amount * rates[selectedCurr];
-           const currencies = ['FLOWER', 'COIN', 'USDT', 'Gema', 'Oil'];
+           const currencies = ['FLOWER', 'COIN', 'USD', 'Gema', 'Oil'];
            const targets = currencies.filter(c => c !== selectedCurr);
            
            const colors = {
                FLOWER: 'text-emerald-400',
                COIN: 'text-amber-400',
-               USDT: 'text-cyan-400',
+               USD: 'text-cyan-400',
                Gema: 'text-fuchsia-400',
                Oil: 'text-slate-300'
            };
@@ -1600,9 +1639,9 @@ const t = useTranslations(lang)
                else formatted = val.toLocaleString('en-US', { maximumFractionDigits: 0 });
                
                return `
-                  <div class="bg-black/30 rounded-lg border border-white/5 p-1.5 flex flex-col justify-center items-center relative overflow-hidden group">
-                     <span class="text-[8px] uppercase font-bold text-white/30 tracking-widest mb-0.5 z-10">${c}</span>
-                     <span class="text-[13px] font-mono font-bold ${colors[c]} z-10 drop-shadow-md truncate w-full text-center" title="${val}">${formatted}</span>
+                  <div class="bg-black/30 rounded-lg border border-white/5 p-1 flex flex-col justify-center items-center relative overflow-hidden group w-full h-full min-h-0">
+                     <span class="text-[8px] uppercase font-bold text-white/30 tracking-widest mb-0 z-10">${c}</span>
+                     <span class="text-[13px] font-mono font-bold ${colors[c]} z-10 drop-shadow-md truncate w-full text-center leading-none" title="${val}">${formatted}</span>
                      <div class="absolute inset-0 bg-gradient-to-t from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                `;
@@ -2961,7 +3000,16 @@ const t = useTranslations(lang)
         .sort((a, b) => b.volume - a.volume)
 
       // Actualizar el widget de precio FLOWER con el dato inyectado desde sfl_data.json
-      window.sflUsdPrice = json.flowerPrice ? parseFloat(json.flowerPrice) : 0.0854 // Fallback temporal porque el JSON local tiene null
+      // Guardamos el precio interno del juego intacto para la calculadora
+      let internalPrice = json.flowerPrice ? parseFloat(json.flowerPrice) : 0.0854;
+      window.sflInternalPrice = internalPrice;
+
+      // Actualizar el widget de precio FLOWER con el dato inyectado desde sfl_data.json
+      let fallbackPrice = internalPrice;
+      if (window.__CoinGeckoEngine && window.__CoinGeckoEngine["flower-2"] && window.__CoinGeckoEngine["flower-2"].usd) {
+          fallbackPrice = window.__CoinGeckoEngine["flower-2"].usd;
+      }
+      window.sflUsdPrice = fallbackPrice;
       const priceEl = document.getElementById("sflPriceValue")
       const changeEl = document.getElementById("sflPriceChange")
       const imgEl = document.getElementById("sflTokenImg")
@@ -3046,6 +3094,18 @@ const t = useTranslations(lang)
       }
     }
   }
+
+  document.addEventListener("coingecko-data-ready", (e) => {
+    const dataMap = e.detail;
+    if (dataMap && dataMap["flower-2"] && dataMap["flower-2"].usd) {
+      window.sflUsdPrice = dataMap["flower-2"].usd;
+      if (window.__sflMarketInitialized && typeof marketData !== 'undefined' && marketData.length > 0) {
+        renderDashboard();
+        const searchInput = document.getElementById("searchInput");
+        renderTable(searchInput ? searchInput.value : "", true);
+      }
+    }
+  });
 
   // Prevenir inicializaciones dobles en Astro
   const init = () => {
