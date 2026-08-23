@@ -10,6 +10,7 @@ import TickerSection from "../home/TickerSection.astro"
 import PremisaSection from "../home/PremisaSection.astro"
 
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
+import socialFeed from "../../content/data/social_feed.json"
 
 const { posts, guiasActivas } = Astro.props
 
@@ -447,6 +448,57 @@ const faqItems = [
       requestAnimationFrame(autoScroll)
     })
   </script>
+
+  <!-- ─── REDES SOCIALES / HILOS ─── -->
+  <section class="mb-20">
+    <div class="flex items-center gap-4 mb-6">
+      <h2 class="section-prompt text-xs font-mono text-terminal-subtle uppercase tracking-[0.5em]">
+        {t("home.section.social")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/50" />
+      <a
+        href="https://x.com/0xlenador"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-emerald-500/70 hover:text-emerald-400 text-[10px] font-mono uppercase tracking-widest transition-colors whitespace-nowrap"
+      >
+        {t("home.section.social.viewAll")}
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {socialFeed.slice(0, 2).map((post) => (
+        <a
+          href={post.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hub-card p-5 flex flex-col gap-3 group no-underline relative overflow-hidden hover:border-emerald-500/30 transition-all duration-300"
+        >
+          {/* Logo X de fondo decorativo */}
+          <svg class="absolute -bottom-4 -right-4 w-24 h-24 text-white/[0.02] group-hover:text-emerald-500/[0.05] group-hover:scale-110 transition-all duration-500" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+
+          <div>
+            <p class="text-[10px] font-mono text-terminal-subtle uppercase tracking-widest mb-2 flex items-center gap-2">
+              <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded font-bold">{post.type}</span>
+              <span>{new Date(post.date).toLocaleDateString(lang === 'en' ? 'en-US' : 'es-CO', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+            </p>
+            <h3 class="text-white text-base font-bold leading-snug group-hover:text-emerald-400 transition-colors line-clamp-2 relative z-10">
+              {post.title}
+            </h3>
+          </div>
+          <p class="text-terminal-muted text-sm leading-relaxed flex-grow line-clamp-3 relative z-10 font-light">
+            {post.description}
+          </p>
+          <span class="text-emerald-500/70 text-[10px] font-mono font-bold uppercase tracking-widest group-hover:text-emerald-400 transition-colors mt-auto relative z-10 flex items-center gap-2">
+            Leer hilo en X 
+            <svg class="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
 
   <!-- ─── ÚLTIMAS DEL BLOG ─── -->
   {
