@@ -1505,7 +1505,7 @@ const t = useTranslations(lang)
                          Oil: '/img/sunflowerland/123/Oil.png'
                       };
                       return `
-                      <label class="flex items-center gap-1.5 cursor-pointer group">
+                      <label class="flex items-center gap-1.5 cursor-pointer group h-[14px]">
                          <input type="radio" name="calcCurr" value="${c}" ${i===0?'checked':''} class="hidden peer" onchange="window.updateCalc()" />
                          <div class="w-2 h-2 rounded-full border border-white/20 peer-checked:border-white peer-checked:bg-white group-hover:border-white/50 transition-all shrink-0"></div>
                          <div class="w-[10px] h-[10px] flex items-center justify-center shrink-0">
@@ -1739,13 +1739,17 @@ const t = useTranslations(lang)
                }
            }
            
-           const circle = currentBox.querySelector('#sliderProgress3');
+           let circle = currentBox.querySelector('#sliderProgress3');
            if (circle) {
-               circle.style.transition = 'none';
-               circle.style.strokeDashoffset = '62.83';
-               void circle.offsetWidth;
-               circle.style.transition = 'stroke-dashoffset 10s linear';
-               circle.style.strokeDashoffset = '0';
+               const newCircle = circle.cloneNode(true);
+               circle.parentNode.replaceChild(newCircle, circle);
+               circle = newCircle;
+               
+               if (window.__box3Aborter) window.__box3Aborter.abort();
+               window.__box3Aborter = new AbortController();
+               
+               circle.style.animation = 'fillCircle 10s linear forwards';
+               circle.addEventListener('animationend', window.nextBox3Slide, { signal: window.__box3Aborter.signal });
            }
        }
        
@@ -1756,9 +1760,6 @@ const t = useTranslations(lang)
            }
            window.currentSlide3 = (window.currentSlide3 + 1) % 2;
            window.updateBox3Slider();
-           
-           if (window.box3Interval) clearInterval(window.box3Interval);
-           window.box3Interval = setInterval(window.nextBox3Slide, 10000);
        }
        
        box3.innerHTML = `
@@ -1800,9 +1801,6 @@ const t = useTranslations(lang)
        setTimeout(() => {
            window.updateBox3Slider();
        }, 50);
-
-       if (window.box3Interval) clearInterval(window.box3Interval);
-       window.box3Interval = setInterval(window.nextBox3Slide, 10000);
     }
 
     const box4 = document.getElementById("dashBox4")
@@ -3182,8 +3180,8 @@ const t = useTranslations(lang)
     document.addEventListener("visibilitychange", () => {
       const isHidden = document.visibilityState === "hidden"
       if (isHidden) {
-        if (window.__gainerAborter) window.__gainerAborter.abort()
-        if (window.__extremesAborter) window.__extremesAborter.abort()
+        // Los carruseles ahora usan CSS animationend secuencial sin setInterval,
+        // por lo que el navegador los pausa naturalmente en segundo plano sin acumular eventos.
       } else {
         if (marketData.length > 0 && window.__initSparklineHover) {
            window.__initSparklineHover();
