@@ -112,15 +112,16 @@ const tabs = [
 </style>
 
 <div
-  class="mt-1.5 mb-2 flex flex-col sm:flex-row flex-wrap items-center justify-center sm:gap-2 text-[9px] sm:text-[10px] font-mono text-white/50 w-full px-0 sm:px-2"
+  class="mt-1.5 mb-2 flex flex-col lg:flex-row flex-wrap lg:flex-nowrap items-center justify-center gap-1.5 lg:gap-2 text-[9px] sm:text-[10px] font-mono text-white/50 w-full px-0 sm:px-2"
 >
   <div
     class="marquee-container"
     style="-webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);"
   >
     <div class="marquee-content gap-1.5 sm:gap-2">
-      <div
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+      <a
+        href={loc("/sfl-betty")}
+        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
       >
         <img
           src="/img/sunflowerland/123/coins.png"
@@ -131,7 +132,7 @@ const tabs = [
         <span class="tabBettyBest text-white/80 font-bold tracking-wide">
           <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
         </span>
-      </div>
+      </a>
 
       <div
         class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
@@ -143,18 +144,40 @@ const tabs = [
           loading="lazy"
         />
         <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
-          20:
+          <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
           <img
             src="/img/sunflowerland/flower.jpg"
             alt="logo de FLOWER"
             class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
           />
-          1.97
+          <span class="tab-gem-flower-amount">1.97</span>
           <span class="text-white/30 mx-0.5">|</span>
           <span class="tabGemFlowerUsd"
             ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
             </div></span
           >
+        </span>
+      </div>
+
+      <div
+        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+      >
+        <img
+          src="/img/sunflowerland/123/Oil.png"
+          alt="Oil"
+          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+          loading="lazy"
+        />
+        <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+          1:
+          <img
+            src="/img/sunflowerland/flower.jpg"
+            alt="logo de FLOWER"
+            class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+          />
+          <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+          <span class="text-white/30 mx-0.5">|</span>
+          <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
         </span>
       </div>
 
@@ -175,8 +198,9 @@ const tabs = [
 
     <!-- Duplicado solo visible en moviles -->
     <div class="marquee-content marquee-duplicate gap-1.5" aria-hidden="true">
-      <div
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+      <a
+        href={loc("/sfl-betty")}
+        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
       >
         <img
           src="/img/sunflowerland/123/coins.png"
@@ -187,7 +211,7 @@ const tabs = [
         <span class="tabBettyBest text-white/80 font-bold tracking-wide">
           <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
         </span>
-      </div>
+      </a>
 
       <div
         class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
@@ -199,18 +223,40 @@ const tabs = [
           loading="lazy"
         />
         <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
-          20:
+          <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
           <img
             src="/img/sunflowerland/flower.jpg"
             alt="logo de FLOWER"
             class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
           />
-          1.97
+          <span class="tab-gem-flower-amount">1.97</span>
           <span class="text-white/30 mx-0.5">|</span>
           <span class="tabGemFlowerUsd"
             ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
             </div></span
           >
+        </span>
+      </div>
+
+      <div
+        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+      >
+        <img
+          src="/img/sunflowerland/123/Oil.png"
+          alt="Oil"
+          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+          loading="lazy"
+        />
+        <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+          1:
+          <img
+            src="/img/sunflowerland/flower.jpg"
+            alt="logo de FLOWER"
+            class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+          />
+          <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+          <span class="text-white/30 mx-0.5">|</span>
+          <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
         </span>
       </div>
 
@@ -314,15 +360,21 @@ const tabs = [
 
       if (json.flowerPrice) {
         const flowerPriceNum = parseFloat(json.flowerPrice)
-        const tabGemFlowerUsdEls = document.querySelectorAll(".tabGemFlowerUsd")
-        const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd")
-
-        if (tabGemFlowerUsdEls.length > 0) {
-          tabGemFlowerUsdEls.forEach((el) => {
-            el.innerText = "$" + (1.97 * flowerPriceNum).toFixed(4)
-            el.classList.remove("animate-pulse")
-          })
+        window.sflInternalPrice = flowerPriceNum;
+        
+        const inputs = document.querySelectorAll('.tab-gem-input');
+        const initialVal = inputs.length > 0 ? inputs[0].value : 20;
+        if (window.updateTabGems) {
+           window.updateTabGems(initialVal);
         }
+
+        const oilInputs = document.querySelectorAll('.tab-oil-input');
+        const initialOilVal = oilInputs.length > 0 ? oilInputs[0].value : 16.67;
+        if (window.updateTabOil) {
+           window.updateTabOil(initialOilVal);
+        }
+
+        const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd")
         if (tabFlowerUsdEls.length > 0) {
           tabFlowerUsdEls.forEach((el) => {
             el.innerText = "$" + flowerPriceNum.toFixed(4)
@@ -391,9 +443,80 @@ const tabs = [
     })
   }
 
+  window.updateTabGems = (amount) => {
+     let val = parseFloat(amount);
+     if (isNaN(val)) val = 0;
+     
+     document.querySelectorAll('.tab-gem-input').forEach(input => {
+        if (input.value !== amount.toString()) {
+           input.value = amount;
+        }
+     });
+     
+     const sflPrice = window.sflInternalPrice || 0.136;
+     const gemBaseUsd = 0.0103;
+     const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29;
+     const gemCostUsd = gemBaseUsd / (1 + gemBonus);
+     const gemCostFlower = gemCostUsd / sflPrice;
+     
+     const totalFlower = val * gemCostFlower;
+     const totalUsd = totalFlower * sflPrice;
+     
+     const formatUsd = (num) => {
+        if (num === 0) return "0.00";
+        if (num < 0.1) return num.toFixed(4);
+        const rounded = Math.round(num * 100) / 100;
+        return Number.isInteger(rounded) ? rounded.toFixed(2) : rounded.toString();
+     };
+     
+     document.querySelectorAll('.tab-gem-flower-amount').forEach(el => {
+        el.innerText = totalFlower.toFixed(2);
+     });
+     
+     document.querySelectorAll('.tabGemFlowerUsd').forEach(el => {
+        el.innerText = "$" + formatUsd(totalUsd);
+        el.classList.remove("animate-pulse");
+     });
+  };
+
+  window.updateTabOil = (mult) => {
+     let m = parseFloat(mult);
+     if (isNaN(m) || m <= 0) m = 16.67;
+     
+     document.querySelectorAll('.tab-oil-input').forEach(input => {
+        if (input.value !== mult.toString()) {
+           input.value = mult;
+        }
+     });
+     
+     let oilFlower = 0.107;
+     if (window.sflOilDrillCost && window.sflOilDrillCost > 0) {
+        oilFlower = window.sflOilDrillCost / m;
+     } else if (window.sflBestOilPriceFlower) {
+        oilFlower = window.sflBestOilPriceFlower * (16.67 / m);
+     }
+     
+     document.querySelectorAll('.tab-oil-flower-amount').forEach(el => {
+        el.innerText = oilFlower.toFixed(4);
+        el.classList.remove("animate-pulse");
+     });
+  };
+
   const initSflTabs = () => {
     updateTabPrices()
     setupCopyButtons()
+    
+    document.querySelectorAll('.tab-gem-input').forEach(input => {
+       input.addEventListener('input', (e) => {
+          window.updateTabGems(e.target.value);
+       });
+    });
+
+    document.querySelectorAll('.tab-oil-input').forEach(input => {
+       input.addEventListener('input', (e) => {
+          window.updateTabOil(e.target.value);
+       });
+    });
   }
 
   document.addEventListener("astro:page-load", initSflTabs)
