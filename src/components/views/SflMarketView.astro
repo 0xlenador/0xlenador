@@ -1616,27 +1616,40 @@ const t = useTranslations(lang)
        window.updateCalc();
     }
 
-    const box3 = document.getElementById("dashBox3")
+        const box3 = document.getElementById("dashBox3")
     if (box3 && marketData) {
-       const getTop = (cat) => {
+       const getTop = (cat, isGainer) => {
           const items = marketData.filter(i => i.category === cat && i.history && i.history["1d"] && i.currentPrice);
           if (items.length === 0) return null;
-          return items.map(item => {
+          let mapped = items.map(item => {
              const change = ((item.currentPrice - item.history["1d"]) / item.history["1d"]) * 100;
              return { ...item, changeVal: change };
-          }).sort((a,b) => b.changeVal - a.changeVal)[0];
+          });
+          
+          if (isGainer) {
+              mapped = mapped.filter(i => i.changeVal > 0);
+              mapped.sort((a,b) => b.changeVal - a.changeVal);
+          } else {
+              mapped = mapped.filter(i => i.changeVal < 0);
+              mapped.sort((a,b) => a.changeVal - b.changeVal);
+          }
+          
+          return mapped.length > 0 ? mapped.slice(0, 3) : null;
        }
 
-       const topRes = getTop("resources");
-       const topPwr = getTop("powerups");
-       const topCosm = getTop("cosmetics");
+       const topResG = getTop("resources", true);
+       const topPwrG = getTop("powerups", true);
+       const topCosmG = getTop("cosmetics", true);
+       
+       const topResL = getTop("resources", false);
+       const topPwrL = getTop("powerups", false);
+       const topCosmL = getTop("cosmetics", false);
 
-       const renderRow = (label, iconHTML, topItem) => {
-          if (!topItem) {
+       const renderRow = (label, topItems) => {
+          if (!topItems || topItems.length === 0) {
              return `
-                <div class="flex items-center justify-between py-[3px]">
-                   <div class="flex items-center gap-1.5 opacity-40">
-                      ${iconHTML}
+                <div class="flex items-center justify-between py-[3px] px-1 -mx-1">
+                   <div class="w-[75px] shrink-0 opacity-70">
                       <span class="text-[9px] font-bold uppercase tracking-wider text-white/50">${label}</span>
                    </div>
                    <span class="text-[8px] font-mono text-white/30 uppercase tracking-widest bg-white/5 px-1.5 py-0.5 rounded">${tDashPending}</span>
@@ -1644,63 +1657,152 @@ const t = useTranslations(lang)
              `;
           }
           
-          const isPos = topItem.changeVal >= 0;
-          const changeColor = isPos ? "text-emerald-400" : "text-red-400";
-          const changeBg = isPos ? "bg-emerald-500/10 border-emerald-500/20" : "bg-red-500/10 border-red-500/20";
-          const changeSign = isPos ? "+" : "";
-          
-          let basePath = "/img/sunflowerland/";
-          let isCollectible = false;
-          if (topItem.category === "powerups") {
-             basePath += "powerups/" + (topItem.isWearable ? "wearables/" : "");
-          } else if (topItem.category === "cosmetics") {
-             basePath += "cosmetics/" + (topItem.isWearable ? "wearables/" : "collectibles/");
-             if (!topItem.isWearable) isCollectible = true;
-          }
-          let filename = topItem.image || topItem.name + ".png";
-          if (isCollectible) {
-             filename = filename.replace(/\.png$/i, ".webp");
-          }
-          let itemImgSrc = encodeURI(basePath + filename);
-          let safeName = topItem.name.replace(/'/g, "\\'");
+          const itemsHTML = topItems.map(topItem => {
+              const isPos = topItem.changeVal >= 0;
+              const changeColor = isPos ? "text-emerald-400" : "text-red-400";
+              const changeSign = isPos ? "+" : "";
+              
+              let basePath = "/img/sunflowerland/";
+              let isCollectible = false;
+              if (topItem.category === "powerups") {
+                 basePath += "powerups/" + (topItem.isWearable ? "wearables/" : "");
+              } else if (topItem.category === "cosmetics") {
+                 basePath += "cosmetics/" + (topItem.isWearable ? "wearables/" : "collectibles/");
+                 if (!topItem.isWearable) isCollectible = true;
+              }
+              let filename = topItem.image || topItem.name + ".png";
+              if (isCollectible) {
+                 filename = filename.replace(/\.png$/i, ".webp");
+              }
+              let itemImgSrc = encodeURI(basePath + filename);
+              let safeName = topItem.name.replace(/'/g, "\\'");
+              
+              return `
+                 <div class="flex items-center gap-[3px] cursor-pointer group hover:bg-white/[0.05] rounded px-[3px] py-[2px] transition-colors" onclick="window.scrollToItem('${safeName}', event)" title="${safeName}">
+                    <div class="w-[18px] h-[18px] rounded bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden shrink-0 shadow-inner group-hover:border-white/10 transition-colors">
+                       <img src="${itemImgSrc}" class="w-[85%] h-[85%] object-contain drop-shadow-sm" onerror="this.src='/img/sunflowerland/123/bear.png'" />
+                    </div>
+                    <span class="text-[9px] font-mono font-bold ${changeColor}">${changeSign}${topItem.changeVal.toFixed(1)}%</span>
+                 </div>
+              `;
+          }).join("");
 
           return `
-             <div class="flex items-center justify-between py-[2px] hover:bg-white/[0.04] rounded px-1 -mx-1 transition-colors cursor-pointer group" onclick="window.scrollToItem('${safeName}', event)">
-                <div class="flex items-center gap-2 min-w-0">
-                   ${iconHTML}
-                   <div class="w-[22px] h-[22px] rounded bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden shrink-0 shadow-inner group-hover:border-white/10 transition-colors">
-                      <img src="${itemImgSrc}" class="w-[85%] h-[85%] object-contain drop-shadow-sm" onerror="this.src='/img/sunflowerland/123/bear.png'" />
-                   </div>
-                   <span class="text-[10px] font-bold text-white/80 truncate max-w-[65px] group-hover:text-white transition-colors">${topItem.name}</span>
+             <div class="flex items-center justify-between py-[2px] px-1 -mx-1">
+                <div class="w-[75px] shrink-0 opacity-70">
+                   <span class="text-[9px] font-bold uppercase tracking-wider text-white/50">${label}</span>
                 </div>
-                <div class="flex items-center shrink-0 ml-1">
-                   <span class="text-[9px] font-mono font-bold px-1.5 py-[2px] rounded border ${changeBg} ${changeColor}">${changeSign}${topItem.changeVal.toFixed(1)}%</span>
+                <div class="flex flex-1 justify-end items-center gap-1 sm:gap-1.5">
+                   ${itemsHTML}
                 </div>
              </div>
           `;
+       }
+       
+       if (typeof window.currentSlide3 === 'undefined') {
+           window.currentSlide3 = 0;
+       }
+       
+       window.updateBox3Slider = () => {
+           const currentBox = document.getElementById('dashBox3');
+           if (!currentBox) return;
+           
+           const s1 = currentBox.querySelector('#slideGainers');
+           const s2 = currentBox.querySelector('#slideLosers');
+           const title = currentBox.querySelector('#box3Title');
+           const titleIcon = currentBox.querySelector('#box3TitleIcon');
+           const sliderSvg = currentBox.querySelector('#sliderSvg3');
+           
+           if (!s1 || !s2 || !title || !titleIcon) return;
+
+           if (window.currentSlide3 === 0) {
+               s1.classList.remove('hidden');
+               s2.classList.add('hidden');
+               title.textContent = "Top Gainers"; 
+               titleIcon.classList.remove('text-red-500');
+               titleIcon.classList.add('text-emerald-500');
+               titleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>';
+               if (sliderSvg) {
+                   sliderSvg.classList.remove('text-red-500');
+                   sliderSvg.classList.add('text-emerald-500');
+               }
+           } else {
+               s1.classList.add('hidden');
+               s2.classList.remove('hidden');
+               title.textContent = "Top Losers"; 
+               titleIcon.classList.remove('text-emerald-500');
+               titleIcon.classList.add('text-red-500');
+               titleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>';
+               if (sliderSvg) {
+                   sliderSvg.classList.remove('text-emerald-500');
+                   sliderSvg.classList.add('text-red-500');
+               }
+           }
+           
+           const circle = currentBox.querySelector('#sliderProgress3');
+           if (circle) {
+               circle.style.transition = 'none';
+               circle.style.strokeDashoffset = '62.83';
+               void circle.offsetWidth;
+               circle.style.transition = 'stroke-dashoffset 10s linear';
+               circle.style.strokeDashoffset = '0';
+           }
+       }
+       
+       window.nextBox3Slide = (e) => {
+           if (e) {
+               e.preventDefault();
+               e.stopPropagation();
+           }
+           window.currentSlide3 = (window.currentSlide3 + 1) % 2;
+           window.updateBox3Slider();
+           
+           if (window.box3Interval) clearInterval(window.box3Interval);
+           window.box3Interval = setInterval(window.nextBox3Slide, 10000);
        }
        
        box3.innerHTML = `
           <div class="absolute inset-0 w-full h-full pt-2 pb-2 px-3.5 flex flex-col group">
              <div class="flex justify-between items-center mb-1 relative z-30">
                 <div class="flex items-center gap-1.5">
-                   <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                   <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide">
-                      ${tTopGainers}
+                   <svg id="box3TitleIcon" class="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                   <h3 id="box3Title" class="text-[11px] font-sans font-bold text-white/80 tracking-wide">
+                      Top Gainers
                    </h3>
                 </div>
-                <span class="text-[10px] font-bold text-blue-500">24H</span>
+                <div class="flex items-center gap-1.5 cursor-pointer group/btn" onclick="window.nextBox3Slide(event)">
+                   <svg id="sliderSvg3" width="12" height="12" viewBox="0 0 24 24" class="transform -rotate-90 text-emerald-500 transition-colors">
+                      <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.1)" stroke-width="3" fill="none" />
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="62.83" stroke-dashoffset="62.83" id="sliderProgress3" stroke-linecap="round" />
+                   </svg>
+                   <span class="text-[10px] font-bold text-blue-500 group-hover/btn:text-blue-400 transition-colors">24H</span>
+                </div>
              </div>
-             <div class="flex-1 flex flex-col justify-between relative z-20 overflow-hidden">
-                ${renderRow(tDashCatResources, '<div class="w-3.5 flex justify-center"><img src="/img/sunflowerland/Eggplant.png" class="w-3 h-3 object-contain opacity-60" /></div>', topRes)}
-                ${renderRow(tDashCatPowerups, '<div class="w-3.5 flex justify-center"><img src="/img/sunflowerland/123/energy.png" class="w-3 h-3 object-contain opacity-60" /></div>', topPwr)}
-                ${renderRow(tDashCatCosmetics, '<div class="w-3.5 flex justify-center"><img src="/img/sunflowerland/123/bear.png" class="w-3 h-3 object-contain opacity-60" /></div>', topCosm)}
-                ${renderRow('Buds', '<div class="w-3.5 flex justify-center"><span class="text-[10px] grayscale opacity-60">??</span></div>', null)}
-                ${renderRow('Pets', '<div class="w-3.5 flex justify-center"><span class="text-[10px] grayscale opacity-60">??</span></div>', null)}
+             <div id="slideGainers" class="flex-1 flex flex-col justify-between relative z-20 overflow-hidden w-full shrink-0">
+                ${renderRow(tDashCatResources, topResG)}
+                ${renderRow(tDashCatPowerups, topPwrG)}
+                ${renderRow(tDashCatCosmetics, topCosmG)}
+                ${renderRow('Buds', null)}
+                ${renderRow('Pets', null)}
+             </div>
+             <div id="slideLosers" class="flex-1 flex flex-col justify-between relative z-20 overflow-hidden w-full shrink-0 hidden">
+                ${renderRow(tDashCatResources, topResL)}
+                ${renderRow(tDashCatPowerups, topPwrL)}
+                ${renderRow(tDashCatCosmetics, topCosmL)}
+                ${renderRow('Buds', null)}
+                ${renderRow('Pets', null)}
              </div>
           </div>
        `;
        box3.classList.remove("items-center", "justify-center");
+
+       // Initialize the slider state and start interval
+       setTimeout(() => {
+           window.updateBox3Slider();
+       }, 50);
+
+       if (window.box3Interval) clearInterval(window.box3Interval);
+       window.box3Interval = setInterval(window.nextBox3Slide, 10000);
     }
 
     const box4 = document.getElementById("dashBox4")
