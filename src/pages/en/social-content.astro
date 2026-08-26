@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SocialContentView from "../../components/views/SocialContentView.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: "Social Content & Quick Research | 0x Leñador",
+  description: "Curated directory of my social content, threads, and videos published on X and YouTube about Web3 ecosystems.",
+  url: "https://0xlenador.xyz/en/social-content",
+  image: "/img/meta/default.webp", 
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <SocialContentView />
+</Layout>
