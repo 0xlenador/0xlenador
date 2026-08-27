@@ -13,42 +13,62 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Update x_feed.json
-        env:
-          TWEET_URL: ${{ github.event.client_payload.url }}
-          TWEET_TEXT: ${{ github.event.client_payload.text }}
-          TWEET_MEDIA: ${{ github.event.client_payload.media }}
-          TWEET_DATE: ${{ github.event.client_payload.date }}
+      - name: Fetch tweet data and update x_feed.json
         run: |
-          # Extract tweet ID from URL
-          TWEET_ID=$(echo "$TWEET_URL" | grep -oP '\d{10,}')
+          # Get the tweet URL from Make.com
+          TWEET_URL="${{ github.event.client_payload.url }}"
 
-          # Extract title = first line of the tweet
-          TITLE=$(echo "$TWEET_TEXT" | head -n 1)
+          # Convert x.com or twitter.com URL to VxTwitter API URL
+          API_URL=$(echo "$TWEET_URL" | sed 's|x\.com|api.vxtwitter.com|' | sed 's|twitter\.com|api.vxtwitter.com|')
+
+          echo "Fetching data from: $API_URL"
+
+          # Call VxTwitter API to get tweet data
+          RESPONSE=$(curl -s "$API_URL")
+
+          echo "Response received, processing..."
+
+          # Extract fields using jq
+          FULL_TEXT=$(echo "$RESPONSE" | jq -r '.text // ""')
+          MEDIA_URL=$(echo "$RESPONSE" | jq -r '.mediaURLs[0] // ""')
+          RAW_DATE=$(echo "$RESPONSE" | jq -r '.date // ""')
+
+          # Extract title = first non-empty line
+          TITLE=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | head -n 1)
 
           # Extract description = first 12 words of the second non-empty line
-          DESCRIPTION=$(echo "$TWEET_TEXT" | sed '/^\s*$/d' | sed -n '2p' | awk '{for(i=1;i<=12 && i<=NF;i++) printf "%s ", $i; print ""}' | sed 's/ $//')
+          DESCRIPTION=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | sed -n '2p' | awk '{for(i=1;i<=12 && i<=NF;i++) printf "%s ", $i}' | sed 's/ $//')
 
           # Format date to YYYY-MM-DD
-          FORMATTED_DATE=$(date -d "$TWEET_DATE" +%Y-%m-%d 2>/dev/null || echo "$TWEET_DATE")
+          FORMATTED_DATE=$(date -d "$RAW_DATE" +%Y-%m-%d 2>/dev/null || echo "$(date +%Y-%m-%d)")
+
+          # Extract tweet ID from URL
+          TWEET_ID=$(echo "$TWEET_URL" | grep -oP '\d{10,}' | head -1)
 
           # Determine format based on media URL
-          if echo "$TWEET_MEDIA" | grep -qiE '\.(mp4|mov|webm)'; then
+          if echo "$MEDIA_URL" | grep -qiE '\.(mp4|mov|webm)'; then
             FORMAT="video"
-          else
+          elif [ -n "$MEDIA_URL" ]; then
             FORMAT="imagen"
+          else
+            FORMAT="texto"
           fi
 
-          # Use jq to safely build and prepend the new tweet (handles special chars automatically)
-          jq --arg id "${{ github.run_id }}" \
+          echo "Title: $TITLE"
+          echo "Description: $DESCRIPTION"
+          echo "Media: $MEDIA_URL"
+          echo "Date: $FORMATTED_DATE"
+          echo "Format: $FORMAT"
+
+          # Use jq to safely build and prepend the new tweet
+          jq --arg id "$TWEET_ID" \
              --arg tweetId "$TWEET_ID" \
              --arg title "$TITLE" \
              --arg desc "$DESCRIPTION" \
              --arg length "medio" \
              --arg format "$FORMAT" \
              --arg date "$FORMATTED_DATE" \
-             --arg media "$TWEET_MEDIA" \
-             --arg url "$TWEET_URL" \
+             --arg media "$MEDIA_URL" \
              '[{
                id: $id,
                tweetId: $tweetId,
@@ -63,10 +83,13 @@ jobs:
              }] + .' src/content/data/x_feed.json > tmp.json
           mv tmp.json src/content/data/x_feed.json
 
+          echo "x_feed.json updated successfully!"
+
       - name: Commit and push changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add src/content/data/x_feed.json
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "🐦 Nuevo tweet añadido automáticamente"
           git push
