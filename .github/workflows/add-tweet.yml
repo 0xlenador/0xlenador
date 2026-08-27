@@ -62,11 +62,11 @@ jobs:
           # Determine format based on where we found the media
           FORMAT=$(echo "$RESPONSE" | jq -r '
             if .media_extended != null and (.media_extended | length) > 0 then
-              if .media_extended[0].type == "video" then "video" else "imagen" end
+              if .media_extended[0].type == "video" then "video" else "texto" end
             elif .article.image != null then
-              "imagen"
+              "articulo"
             elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 then
-              if .qrt.media_extended[0].type == "video" then "video" else "imagen" end
+              if .qrt.media_extended[0].type == "video" then "video" else "texto" end
             else
               "texto"
             end
