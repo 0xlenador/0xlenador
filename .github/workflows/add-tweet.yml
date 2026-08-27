@@ -30,8 +30,30 @@ jobs:
 
           # Extract fields using jq
           FULL_TEXT=$(echo "$RESPONSE" | jq -r '.text // ""')
-          MEDIA_URL=$(echo "$RESPONSE" | jq -r '.mediaURLs[0] // ""')
           RAW_DATE=$(echo "$RESPONSE" | jq -r '.date // ""')
+
+          # Get first media type
+          MEDIA_TYPE=$(echo "$RESPONSE" | jq -r '.media_extended[0].type // "image"')
+
+          # Get media URL and thumbnail based on type
+          if [ "$MEDIA_TYPE" = "video" ]; then
+            # For videos: save the video URL as media and the thumbnail separately
+            MEDIA_URL=$(echo "$RESPONSE" | jq -r '.media_extended[0].url // ""')
+            THUMBNAIL_URL=$(echo "$RESPONSE" | jq -r '.media_extended[0].thumbnail_url // ""')
+            FORMAT="video"
+          else
+            # For images: save the image URL as media, no thumbnail needed
+            MEDIA_URL=$(echo "$RESPONSE" | jq -r '.mediaURLs[0] // ""')
+            THUMBNAIL_URL=""
+            FORMAT="imagen"
+          fi
+
+          # If no media at all
+          if [ -z "$MEDIA_URL" ] || [ "$MEDIA_URL" = "null" ]; then
+            MEDIA_URL=""
+            THUMBNAIL_URL=""
+            FORMAT="texto"
+          fi
 
           # Extract title = first non-empty line
           TITLE=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | head -n 1)
@@ -45,20 +67,12 @@ jobs:
           # Extract tweet ID from URL
           TWEET_ID=$(echo "$TWEET_URL" | grep -oP '\d{10,}' | head -1)
 
-          # Determine format based on media URL
-          if echo "$MEDIA_URL" | grep -qiE '\.(mp4|mov|webm)'; then
-            FORMAT="video"
-          elif [ -n "$MEDIA_URL" ]; then
-            FORMAT="imagen"
-          else
-            FORMAT="texto"
-          fi
-
           echo "Title: $TITLE"
           echo "Description: $DESCRIPTION"
           echo "Media: $MEDIA_URL"
-          echo "Date: $FORMATTED_DATE"
+          echo "Thumbnail: $THUMBNAIL_URL"
           echo "Format: $FORMAT"
+          echo "Date: $FORMATTED_DATE"
 
           # Use jq to safely build and prepend the new tweet
           jq --arg id "$TWEET_ID" \
@@ -69,6 +83,7 @@ jobs:
              --arg format "$FORMAT" \
              --arg date "$FORMATTED_DATE" \
              --arg media "$MEDIA_URL" \
+             --arg thumbnail "$THUMBNAIL_URL" \
              '[{
                id: $id,
                tweetId: $tweetId,
@@ -79,7 +94,8 @@ jobs:
                length: $length,
                format: $format,
                date: $date,
-               media: $media
+               media: $media,
+               thumbnail: $thumbnail
              }] + .' src/content/data/x_feed.json > tmp.json
           mv tmp.json src/content/data/x_feed.json
 
