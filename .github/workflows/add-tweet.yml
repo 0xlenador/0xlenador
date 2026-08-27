@@ -1,0 +1,45 @@
+name: Add Tweet to Feed
+
+on:
+  repository_dispatch:
+    types: [new_tweet]
+
+jobs:
+  add-tweet:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update x_feed.json
+        run: |
+          # Generate new tweet JSON object
+          NEW_TWEET=$(cat <<EOF
+          {
+            "id": "${{ github.run_id }}",
+            "url": "${{ github.event.client_payload.url }}",
+            "title": "${{ github.event.client_payload.text }}",
+            "title_en": "${{ github.event.client_payload.text }}",
+            "description": "",
+            "description_en": "",
+            "length": "medio",
+            "format": "video",
+            "date": "${{ github.event.client_payload.date }}",
+            "media": "${{ github.event.client_payload.media }}"
+          }
+          EOF
+          )
+          
+          # Use jq to prepend the new tweet to the array
+          jq --argjson new "$NEW_TWEET" '. = [$new] + .' src/content/data/x_feed.json > tmp.json
+          mv tmp.json src/content/data/x_feed.json
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add src/content/data/x_feed.json
+          git commit -m "Automated update: Added new tweet to x_feed.json"
+          git push
