@@ -14,26 +14,53 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update x_feed.json
+        env:
+          TWEET_URL: ${{ github.event.client_payload.url }}
+          TWEET_TEXT: ${{ github.event.client_payload.text }}
+          TWEET_MEDIA: ${{ github.event.client_payload.media }}
+          TWEET_DATE: ${{ github.event.client_payload.date }}
         run: |
-          # Generate new tweet JSON object
-          NEW_TWEET=$(cat <<EOF
-          {
-            "id": "${{ github.run_id }}",
-            "url": "${{ github.event.client_payload.url }}",
-            "title": "${{ github.event.client_payload.text }}",
-            "title_en": "${{ github.event.client_payload.text }}",
-            "description": "",
-            "description_en": "",
-            "length": "medio",
-            "format": "video",
-            "date": "${{ github.event.client_payload.date }}",
-            "media": "${{ github.event.client_payload.media }}"
-          }
-          EOF
-          )
-          
-          # Use jq to prepend the new tweet to the array
-          jq --argjson new "$NEW_TWEET" '. = [$new] + .' src/content/data/x_feed.json > tmp.json
+          # Extract tweet ID from URL
+          TWEET_ID=$(echo "$TWEET_URL" | grep -oP '\d{10,}')
+
+          # Extract title = first line of the tweet
+          TITLE=$(echo "$TWEET_TEXT" | head -n 1)
+
+          # Extract description = first 12 words of the second non-empty line
+          DESCRIPTION=$(echo "$TWEET_TEXT" | sed '/^\s*$/d' | sed -n '2p' | awk '{for(i=1;i<=12 && i<=NF;i++) printf "%s ", $i; print ""}' | sed 's/ $//')
+
+          # Format date to YYYY-MM-DD
+          FORMATTED_DATE=$(date -d "$TWEET_DATE" +%Y-%m-%d 2>/dev/null || echo "$TWEET_DATE")
+
+          # Determine format based on media URL
+          if echo "$TWEET_MEDIA" | grep -qiE '\.(mp4|mov|webm)'; then
+            FORMAT="video"
+          else
+            FORMAT="imagen"
+          fi
+
+          # Use jq to safely build and prepend the new tweet (handles special chars automatically)
+          jq --arg id "${{ github.run_id }}" \
+             --arg tweetId "$TWEET_ID" \
+             --arg title "$TITLE" \
+             --arg desc "$DESCRIPTION" \
+             --arg length "medio" \
+             --arg format "$FORMAT" \
+             --arg date "$FORMATTED_DATE" \
+             --arg media "$TWEET_MEDIA" \
+             --arg url "$TWEET_URL" \
+             '[{
+               id: $id,
+               tweetId: $tweetId,
+               title: $title,
+               title_en: "",
+               description: $desc,
+               description_en: "",
+               length: $length,
+               format: $format,
+               date: $date,
+               media: $media
+             }] + .' src/content/data/x_feed.json > tmp.json
           mv tmp.json src/content/data/x_feed.json
 
       - name: Commit and push changes
@@ -41,5 +68,5 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add src/content/data/x_feed.json
-          git commit -m "Automated update: Added new tweet to x_feed.json"
+          git commit -m "🐦 Nuevo tweet añadido automáticamente"
           git push
