@@ -8,7 +8,7 @@ on:
   # Los commits del bot (GITHUB_TOKEN) no disparan workflows, así que usamos
   # workflow_run que se activa cuando otro workflow completa exitosamente.
   workflow_run:
-    workflows: ["SFL Mercado Updater"]
+    workflows: ["SFL Mercado Updater", "Add Tweet to Feed"]
     types: [completed]
     branches: [main]
 
