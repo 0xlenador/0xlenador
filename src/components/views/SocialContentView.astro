@@ -83,14 +83,23 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
           <svg class="absolute -bottom-2 -right-2 w-24 h-24 text-white/[0.02] group-hover:text-emerald-500/[0.05] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-700" viewBox="0 0 24 24" fill="currentColor" set:html={getIcon(post.platform)} />
 
           <div class="relative z-10 flex flex-col flex-grow">
-            {((post.platform === 'youtube' && post.videoId) || (post.platform === 'x' && post.imageUrl)) && (
+            {((post.platform === 'youtube' && post.videoId) || (post.platform === 'x' && (post.imageUrl || post.media))) && (
               <div class="mb-4 rounded-xl overflow-hidden aspect-video border border-terminal-border/50 bg-terminal-surface/50 relative">
                 <img 
-                  src={post.platform === 'youtube' ? `https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg` : post.imageUrl} 
+                  src={post.platform === 'youtube' 
+                    ? `https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg` 
+                    : (post.imageUrl || post.media)} 
                   alt={lang === 'en' && post.title_en ? post.title_en : post.title} 
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   loading="lazy" 
                 />
+                {post.format === 'video' && (
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-14 h-14 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-emerald-500/80 group-hover:scale-110 transition-all duration-300">
+                      <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                  </div>
+                )}
                 <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
               </div>
             )}
@@ -160,6 +169,29 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
     });
   };
 
+  const setupVideoAutoplay = () => {
+    const videos = document.querySelectorAll('.social-video') as NodeListOf<HTMLVideoElement>;
+    
+    if (!videos.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    videos.forEach(video => observer.observe(video));
+  };
+
   setupSocialSearch();
-  document.addEventListener('astro:page-load', setupSocialSearch);
+  setupVideoAutoplay();
+  document.addEventListener('astro:page-load', () => {
+    setupSocialSearch();
+    setupVideoAutoplay();
+  });
 </script>

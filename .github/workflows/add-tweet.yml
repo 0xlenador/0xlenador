@@ -35,16 +35,14 @@ jobs:
           # Get first media type
           MEDIA_TYPE=$(echo "$RESPONSE" | jq -r '.media_extended[0].type // "image"')
 
-          # Get media URL and thumbnail based on type
+          # Get media URL based on type
           if [ "$MEDIA_TYPE" = "video" ]; then
-            # For videos: save the video URL as media and the thumbnail separately
-            MEDIA_URL=$(echo "$RESPONSE" | jq -r '.media_extended[0].url // ""')
-            THUMBNAIL_URL=$(echo "$RESPONSE" | jq -r '.media_extended[0].thumbnail_url // ""')
+            # For videos: save the thumbnail (the .mp4 is useless due to CORS)
+            MEDIA_URL=$(echo "$RESPONSE" | jq -r '.media_extended[0].thumbnail_url // ""')
             FORMAT="video"
           else
-            # For images: save the image URL as media, no thumbnail needed
+            # For images: save the image URL directly
             MEDIA_URL=$(echo "$RESPONSE" | jq -r '.mediaURLs[0] // ""')
-            THUMBNAIL_URL=""
             FORMAT="imagen"
           fi
 
@@ -83,7 +81,6 @@ jobs:
              --arg format "$FORMAT" \
              --arg date "$FORMATTED_DATE" \
              --arg media "$MEDIA_URL" \
-             --arg thumbnail "$THUMBNAIL_URL" \
              '[{
                id: $id,
                tweetId: $tweetId,
@@ -94,8 +91,7 @@ jobs:
                length: $length,
                format: $format,
                date: $date,
-               media: $media,
-               thumbnail: $thumbnail
+               media: $media
              }] + .' src/content/data/x_feed.json > tmp.json
           mv tmp.json src/content/data/x_feed.json
 
