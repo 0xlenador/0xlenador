@@ -83,10 +83,10 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
           <svg class="absolute -bottom-2 -right-2 w-24 h-24 text-white/[0.02] group-hover:text-emerald-500/[0.05] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-700" viewBox="0 0 24 24" fill="currentColor" set:html={getIcon(post.platform)} />
 
           <div class="relative z-10 flex flex-col flex-grow">
-            {post.platform === 'youtube' && post.videoId && (
+            {((post.platform === 'youtube' && post.videoId) || (post.platform === 'x' && post.imageUrl)) && (
               <div class="mb-4 rounded-xl overflow-hidden aspect-video border border-terminal-border/50 bg-terminal-surface/50 relative">
                 <img 
-                  src={`https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg`} 
+                  src={post.platform === 'youtube' ? `https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg` : post.imageUrl} 
                   alt={lang === 'en' && post.title_en ? post.title_en : post.title} 
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   loading="lazy" 
