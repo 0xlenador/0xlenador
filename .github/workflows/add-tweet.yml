@@ -4,6 +4,10 @@ on:
   repository_dispatch:
     types: [new_tweet]
 
+concurrency:
+  group: "tweet-update"
+  cancel-in-progress: false
+
 jobs:
   add-tweet:
     runs-on: ubuntu-latest
