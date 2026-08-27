@@ -32,30 +32,45 @@ jobs:
 
           echo "Response received, processing..."
 
-          # Extract fields using jq
-          FULL_TEXT=$(echo "$RESPONSE" | jq -r '.text // ""')
+          # Combine texts from main text, article, and quoted tweet. Remove lines that are purely URLs.
+          FULL_TEXT=$(echo "$RESPONSE" | jq -r '
+            [
+              .text,
+              .article.title,
+              .article.preview_text,
+              .qrt.text
+            ] | map(select(. != null and . != "")) | join("\n")
+          ' | sed '/^http/ { /^[[:space:]]*https\?:\/\/[^[:space:]]*[[:space:]]*$/d; }')
+
           RAW_DATE=$(echo "$RESPONSE" | jq -r '.date // ""')
 
-          # Get first media type
-          MEDIA_TYPE=$(echo "$RESPONSE" | jq -r '.media_extended[0].type // "image"')
+          # Smarter Media Extraction (Main tweet, then Article, then Quoted tweet)
+          MEDIA_URL=$(echo "$RESPONSE" | jq -r '
+            if .media_extended != null and (.media_extended | length) > 0 then
+              if .media_extended[0].type == "video" then .media_extended[0].thumbnail_url
+              else .mediaURLs[0] end
+            elif .article.image != null then
+              .article.image
+            elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 then
+              if .qrt.media_extended[0].type == "video" then .qrt.media_extended[0].thumbnail_url
+              else .qrt.mediaURLs[0] end
+            else
+              ""
+            end
+          ')
 
-          # Get media URL based on type
-          if [ "$MEDIA_TYPE" = "video" ]; then
-            # For videos: save the thumbnail (the .mp4 is useless due to CORS)
-            MEDIA_URL=$(echo "$RESPONSE" | jq -r '.media_extended[0].thumbnail_url // ""')
-            FORMAT="video"
-          else
-            # For images: save the image URL directly
-            MEDIA_URL=$(echo "$RESPONSE" | jq -r '.mediaURLs[0] // ""')
-            FORMAT="imagen"
-          fi
-
-          # If no media at all
-          if [ -z "$MEDIA_URL" ] || [ "$MEDIA_URL" = "null" ]; then
-            MEDIA_URL=""
-            THUMBNAIL_URL=""
-            FORMAT="texto"
-          fi
+          # Determine format based on where we found the media
+          FORMAT=$(echo "$RESPONSE" | jq -r '
+            if .media_extended != null and (.media_extended | length) > 0 then
+              if .media_extended[0].type == "video" then "video" else "imagen" end
+            elif .article.image != null then
+              "imagen"
+            elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 then
+              if .qrt.media_extended[0].type == "video" then "video" else "imagen" end
+            else
+              "texto"
+            end
+          ')
 
           # Extract title = first non-empty line
           TITLE=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | head -n 1)
