@@ -60,8 +60,14 @@ jobs:
           # Extract title = first non-empty line
           TITLE=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | head -n 1)
 
-          # Extract description = first 12 words of the second non-empty line
-          DESCRIPTION=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | sed -n '2p' | awk '{for(i=1;i<=12 && i<=NF;i++) printf "%s ", $i}' | sed 's/ $//')
+          # Get body text by removing the title and joining all remaining lines with a space
+          BODY_TEXT=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | tail -n +2 | tr '\n' ' ' | sed 's/  */ /g')
+
+          # Extract description = first 15 words of the body text (ignoring newlines)
+          DESCRIPTION=$(echo "$BODY_TEXT" | awk '{for(i=1;i<=15 && i<=NF;i++) printf "%s ", $i}' | sed 's/ $//')
+
+          # Extract hidden_text = next 70 words (words 16 to 85) for future filtering
+          HIDDEN_TEXT=$(echo "$BODY_TEXT" | awk '{for(i=16;i<=85 && i<=NF;i++) printf "%s ", $i}' | sed 's/ $//')
 
           # Format date to YYYY-MM-DD
           FORMATTED_DATE=$(date -d "$RAW_DATE" +%Y-%m-%d 2>/dev/null || echo "$(date +%Y-%m-%d)")
@@ -81,6 +87,7 @@ jobs:
              --arg tweetId "$TWEET_ID" \
              --arg title "$TITLE" \
              --arg desc "$DESCRIPTION" \
+             --arg hiddenText "$HIDDEN_TEXT" \
              --arg length "medio" \
              --arg format "$FORMAT" \
              --arg date "$FORMATTED_DATE" \
@@ -92,6 +99,7 @@ jobs:
                title_en: "",
                description: $desc,
                description_en: "",
+               hidden_text: $hiddenText,
                length: $length,
                format: $format,
                date: $date,
