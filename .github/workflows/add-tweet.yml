@@ -120,7 +120,7 @@ jobs:
                format: $format,
                date: $date,
                media: $media
-             }] + .' src/content/data/x_feed.json > tmp.json
+             }] + [ .[] | select(.id != $id) ]' src/content/data/x_feed.json > tmp.json
           mv tmp.json src/content/data/x_feed.json
 
           echo "x_feed.json updated successfully!"
