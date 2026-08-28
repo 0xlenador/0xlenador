@@ -72,6 +72,40 @@ jobs:
             end
           ')
 
+          # Determine length dynamically
+          if [ "$FORMAT" = "articulo" ]; then
+            LENGTH="largo"
+          elif [ "$FORMAT" = "video" ]; then
+            # Extract duration_millis (falls back to 0 if null)
+            DURATION_MS=$(echo "$RESPONSE" | jq -r '
+              if .media_extended != null and (.media_extended | length) > 0 and .media_extended[0].type == "video" then .media_extended[0].duration_millis
+              elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 and .qrt.media_extended[0].type == "video" then .qrt.media_extended[0].duration_millis
+              else 0 end
+            ')
+            if [ -z "$DURATION_MS" ] || [ "$DURATION_MS" = "null" ]; then
+              DURATION_MS=0
+            fi
+            
+            # 1 minute = 60000 ms, 15 minutes = 900000 ms
+            if [ "$DURATION_MS" -le 60000 ]; then
+              LENGTH="corto"
+            elif [ "$DURATION_MS" -le 900000 ]; then
+              LENGTH="mediano"
+            else
+              LENGTH="largo"
+            fi
+          else
+            # For "texto", count words in FULL_TEXT
+            WORD_COUNT=$(echo "$FULL_TEXT" | wc -w)
+            if [ "$WORD_COUNT" -le 45 ]; then
+              LENGTH="corto"
+            elif [ "$WORD_COUNT" -le 100 ]; then
+              LENGTH="mediano"
+            else
+              LENGTH="largo"
+            fi
+          fi
+
           # Extract title = first non-empty line
           TITLE=$(echo "$FULL_TEXT" | sed '/^\s*$/d' | head -n 1)
 
@@ -103,7 +137,7 @@ jobs:
              --arg title "$TITLE" \
              --arg desc "$DESCRIPTION" \
              --arg hiddenText "$HIDDEN_TEXT" \
-             --arg length "mediano" \
+             --arg length "$LENGTH" \
              --arg format "$FORMAT" \
              --arg date "$FORMATTED_DATE" \
              --arg media "$MEDIA_URL" \
