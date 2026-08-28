@@ -137,11 +137,11 @@ jobs:
 
           echo "Translating to English..."
           pip install deep-translator --quiet --break-system-packages
-          
+
           export TITLE_ES="$TITLE"
           export DESC_ES="$DESCRIPTION"
           export HIDDEN_ES="$HIDDEN_TEXT"
-          
+
           export EXISTING_TITLE_EN="$EXISTING_TITLE_EN"
           export EXISTING_DESC_EN="$EXISTING_DESC_EN"
           export EXISTING_HIDDEN_EN="$EXISTING_HIDDEN_EN"
@@ -152,7 +152,7 @@ jobs:
           import random
           from deep_translator import GoogleTranslator, MyMemoryTranslator
           import time
-          
+
           def clean_cashtags(text):
               if not text: return ''
               # Replace known specific cashtags
@@ -179,21 +179,21 @@ jobs:
                   except Exception as e2:
                       print('MyMemoryTranslation error:', e2)
                       return ''
-          
+
           title_es = clean_cashtags(os.environ.get('TITLE_ES', ''))
           desc_es = clean_cashtags(os.environ.get('DESC_ES', ''))
           hidden_es = clean_cashtags(os.environ.get('HIDDEN_ES', ''))
-          
+
           ex_title_en = os.environ.get('EXISTING_TITLE_EN', '').strip()
           ex_desc_en = os.environ.get('EXISTING_DESC_EN', '').strip()
           ex_hidden_en = os.environ.get('EXISTING_HIDDEN_EN', '').strip()
-          
+
           title_en = ex_title_en if ex_title_en else translate(title_es)
           desc_en = ex_desc_en if ex_desc_en else translate(desc_es)
           hidden_en = ex_hidden_en if ex_hidden_en else translate(hidden_es)
-          
+
           import shlex
-          
+
           with open('translations.env', 'w', encoding='utf-8') as f:
               f.write(f'TITLE={shlex.quote(title_es)}\n')
               f.write(f'DESCRIPTION={shlex.quote(desc_es)}\n')
