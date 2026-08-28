@@ -78,6 +78,7 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
           rel="noopener noreferrer nofollow"
           data-title={(lang === 'en' && post.title_en ? post.title_en : post.title).toLowerCase()}
           data-desc={(lang === 'en' && post.description_en ? post.description_en : post.description).toLowerCase()}
+          data-hidden={(lang === 'en' && post.hidden_text_en ? post.hidden_text_en : (post.hidden_text || "")).toLowerCase()}
           class="social-card bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl flex flex-col gap-4 group no-underline relative overflow-hidden hover:border-emerald-500/30 hover:bg-terminal-surface/30 transition-all duration-500 shadow-lg hover:shadow-emerald-500/5"
         >
           {/* Resplandor superior sutil */}
@@ -187,23 +188,90 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
 <script>
   const setupSocialSearch = () => {
     const searchInput = document.getElementById('social-search') as HTMLInputElement;
-    const cards = document.querySelectorAll('.social-card') as NodeListOf<HTMLAnchorElement>;
+    const grid = document.getElementById('social-grid');
+    const noResults = document.getElementById('no-results');
+    
+    if (!searchInput || !grid || !noResults) return;
 
-    if (!searchInput) return;
+    // Convertimos a array y guardamos el orden original
+    const cards = Array.from(grid.querySelectorAll('.social-card')) as HTMLAnchorElement[];
+    const originalOrder = [...cards];
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+
+    // Lista de "Stop Words" (artículos y conectores) a ignorar en español e inglés
+    const stopWords = ['el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'o', 'de', 'del', 'a', 'en', 'con', 'por', 'para', 'es', 'the', 'a', 'an', 'and', 'or', 'of', 'in', 'with', 'for', 'is'];
 
     searchInput.addEventListener('input', (e) => {
-      const term = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      clearTimeout(debounceTimer);
       
-      cards.forEach(card => {
-        const title = card.dataset.title || "";
-        const desc = card.dataset.desc || "";
-        
-        if (title.includes(term) || desc.includes(term)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
+      const rawTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      
+      debounceTimer = setTimeout(() => {
+        // Rompemos la búsqueda en palabras sueltas (tokens) y filtramos stop words
+        const tokens = rawTerm.split(/\s+/).filter(word => word.length > 0 && !stopWords.includes(word));
+
+        if (tokens.length === 0) {
+          // Si no hay palabras válidas, restaurar el orden original y mostrar todos
+          originalOrder.forEach(card => {
+            card.style.display = 'flex';
+            grid.appendChild(card);
+          });
+          noResults.classList.add('hidden');
+          return;
         }
-      });
+
+        let hasMatches = false;
+        
+        // Evaluamos cada tarjeta
+        const scoredCards = cards.map(card => {
+          const title = card.dataset.title || "";
+          const desc = card.dataset.desc || "";
+          const hidden = card.dataset.hidden || "";
+          
+          let totalScore = 0;
+          let matchedAllTokens = true; // Lógica AND: requiere que TODAS las palabras buscadas existan en la tarjeta
+
+          for (const token of tokens) {
+            let tokenScore = 0;
+            // Evaluamos la prioridad de la palabra actual
+            if (title.includes(token)) tokenScore = 3;
+            else if (desc.includes(token)) tokenScore = 2;
+            else if (hidden.includes(token)) tokenScore = 1;
+
+            if (tokenScore === 0) {
+              // Si falla en encontrar tan solo una de las palabras (ej. encontró "amigo" pero no "feo"), descartamos la tarjeta
+              matchedAllTokens = false;
+              break;
+            }
+            totalScore += tokenScore;
+          }
+
+          if (matchedAllTokens && totalScore > 0) hasMatches = true;
+          
+          return { card, score: matchedAllTokens ? totalScore : 0 };
+        });
+
+        if (!hasMatches) {
+          cards.forEach(c => c.style.display = 'none');
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+          
+          // Ordenar de mayor a menor puntuación
+          scoredCards.sort((a, b) => b.score - a.score);
+          
+          // Re-adjuntar al DOM en el nuevo orden
+          scoredCards.forEach(({ card, score }) => {
+            if (score > 0) {
+              card.style.display = 'flex';
+              grid.appendChild(card);
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      }, 250); // 250ms de retardo
     });
   };
 
