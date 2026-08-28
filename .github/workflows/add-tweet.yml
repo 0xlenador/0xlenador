@@ -133,8 +133,21 @@ jobs:
 
           python -c "
           import os
+          import re
           from deep_translator import GoogleTranslator
           
+          def clean_cashtags(text):
+              if not text: return ''
+              # Replace known specific cashtags
+              text = text.replace('solana:dog1viwbb2vWDpER5FrJ4YFG6gq6XuyFohUe9TXN65u', '$DOG')
+              text = text.replace('bitcoin:native', '$BTC')
+              text = text.replace('blockstack:native', '$STX')
+              text = text.replace('base:0x3e12b9d6a4d12cd9b4a6d613872d0eb32f68b380', '$FLOWER')
+              # Fallback for any other long addresses
+              text = re.sub(r'(base|ethereum|polygon|optimism|arbitrum):0x[a-fA-F0-9]{40}', '[$TOKEN]', text)
+              text = re.sub(r'solana:[1-9A-HJ-NP-Za-km-z]{32,44}', '[$TOKEN]', text)
+              return text
+
           def translate(text):
               if not text or not text.strip(): return ''
               try:
@@ -143,16 +156,26 @@ jobs:
                   print('Translation error:', e)
                   return ''
           
-          title_en = translate(os.environ.get('TITLE_ES', ''))
-          desc_en = translate(os.environ.get('DESC_ES', ''))
-          hidden_en = translate(os.environ.get('HIDDEN_ES', ''))
+          title_es = clean_cashtags(os.environ.get('TITLE_ES', ''))
+          desc_es = clean_cashtags(os.environ.get('DESC_ES', ''))
+          hidden_es = clean_cashtags(os.environ.get('HIDDEN_ES', ''))
+          
+          title_en = translate(title_es)
+          desc_en = translate(desc_es)
+          hidden_en = translate(hidden_es)
           
           # Clean double quotes to avoid bash sourcing issues
+          title_es = title_es.replace('\"', '\\\"')
+          desc_es = desc_es.replace('\"', '\\\"')
+          hidden_es = hidden_es.replace('\"', '\\\"')
           title_en = title_en.replace('\"', '\\\"')
           desc_en = desc_en.replace('\"', '\\\"')
           hidden_en = hidden_en.replace('\"', '\\\"')
           
           with open('translations.env', 'w', encoding='utf-8') as f:
+              f.write(f'TITLE=\"{title_es}\"\n')
+              f.write(f'DESCRIPTION=\"{desc_es}\"\n')
+              f.write(f'HIDDEN_TEXT=\"{hidden_es}\"\n')
               f.write(f'TITLE_EN=\"{title_en}\"\n')
               f.write(f'DESC_EN=\"{desc_en}\"\n')
               f.write(f'HIDDEN_EN=\"{hidden_en}\"\n')
