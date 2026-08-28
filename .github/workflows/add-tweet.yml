@@ -134,27 +134,36 @@ jobs:
           python -c "
           import os
           import re
-          from deep_translator import GoogleTranslator
+          import random
+          from deep_translator import GoogleTranslator, MyMemoryTranslator
+          import time
           
           def clean_cashtags(text):
               if not text: return ''
               # Replace known specific cashtags
-              text = text.replace('solana:dog1viwbb2vWDpER5FrJ4YFG6gq6XuyFohUe9TXN65u', '$DOG')
-              text = text.replace('bitcoin:native', '$BTC')
-              text = text.replace('blockstack:native', '$STX')
-              text = text.replace('base:0x3e12b9d6a4d12cd9b4a6d613872d0eb32f68b380', '$FLOWER')
+              text = text.replace('solana:dog1viwbb2vWDpER5FrJ4YFG6gq6XuyFohUe9TXN65u', '\$DOG')
+              text = text.replace('bitcoin:native', '\$BTC')
+              text = text.replace('blockstack:native', '\$STX')
+              text = text.replace('base:0x3e12b9d6a4d12cd9b4a6d613872d0eb32f68b380', '\$FLOWER')
               # Fallback for any other long addresses
-              text = re.sub(r'(base|ethereum|polygon|optimism|arbitrum):0x[a-fA-F0-9]{40}', '[$TOKEN]', text)
-              text = re.sub(r'solana:[1-9A-HJ-NP-Za-km-z]{32,44}', '[$TOKEN]', text)
+              text = re.sub(r'(base|ethereum|polygon|optimism|arbitrum):0x[a-fA-F0-9]{40}', '[\$TOKEN]', text)
+              text = re.sub(r'solana:[1-9A-HJ-NP-Za-km-z]{32,44}', '[\$TOKEN]', text)
               return text
 
           def translate(text):
               if not text or not text.strip(): return ''
+              # Hacer una pausa "humana" aleatoria de 2 a 4 segundos antes de pedir a Google
+              time.sleep(random.uniform(2.0, 4.0)) 
               try:
                   return GoogleTranslator(source='es', target='en').translate(text)
               except Exception as e:
-                  print('Translation error:', e)
-                  return ''
+                  print('GoogleTranslation error:', e)
+                  try:
+                      time.sleep(1) # Pequeña pausa antes de intentar el fallback
+                      return MyMemoryTranslator(source='spanish', target='english').translate(text)
+                  except Exception as e2:
+                      print('MyMemoryTranslation error:', e2)
+                      return ''
           
           title_es = clean_cashtags(os.environ.get('TITLE_ES', ''))
           desc_es = clean_cashtags(os.environ.get('DESC_ES', ''))
