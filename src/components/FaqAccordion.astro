@@ -35,7 +35,23 @@ const {
 
 // Generar un ID único por instancia para evitar colisiones de selectores
 const instanceId = `faq-${Math.random().toString(36).slice(2, 8)}`
+
+// Generar esquema JSON-LD para FAQPage (SEO Rich Snippets)
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": items.map(item => ({
+    "@type": "Question",
+    "name": item.pregunta,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.respuesta
+    }
+  }))
+}
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <section class="mt-24 pb-20 reveal">
   <div class="text-center mb-12">
