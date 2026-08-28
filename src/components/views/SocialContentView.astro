@@ -122,14 +122,14 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
 
           <div class="pt-4 mt-auto border-t border-terminal-border/40 relative z-10 flex items-center justify-between">
             <div class="flex items-center gap-2">
-              {post.length && (
-                <span class="px-2 py-0.5 rounded-md bg-terminal-surface/60 border border-terminal-border text-[9px] font-mono uppercase tracking-wider text-emerald-500/80">
-                  {post.length}
-                </span>
-              )}
               {post.format && (
                 <span class="px-2 py-0.5 rounded-md bg-terminal-surface/60 border border-terminal-border text-[9px] font-mono uppercase tracking-wider text-terminal-muted">
                   {post.format}
+                </span>
+              )}
+              {post.length && (
+                <span class="px-2 py-0.5 rounded-md bg-terminal-surface/60 border border-terminal-border text-[9px] font-mono uppercase tracking-wider text-emerald-500/80">
+                  {post.length}
                 </span>
               )}
             </div>
