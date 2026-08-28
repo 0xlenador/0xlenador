@@ -54,8 +54,8 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
       {t("social.description")}
     </p>
 
-    <div class="mb-10 max-w-xl">
-      <div class="relative">
+    <div class="mb-10 flex flex-col md:flex-row gap-4 items-center w-full">
+      <div class="relative flex-grow w-full">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <svg class="w-5 h-5 text-terminal-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
@@ -65,6 +65,17 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
           placeholder={t("social.search.placeholder")} 
           class="w-full bg-terminal-surface/30 border border-terminal-border/60 text-white text-sm rounded-xl focus:ring-emerald-500/50 focus:border-emerald-500 block pl-11 p-3.5 transition-all duration-300 placeholder-terminal-muted"
         />
+      </div>
+      <div class="flex items-center gap-2 self-start md:self-auto">
+        <button type="button" class="platform-btn flex items-center justify-center w-12 h-12 rounded-xl bg-terminal-surface/30 border border-terminal-border/60 text-terminal-muted hover:text-white hover:border-emerald-500/50 transition-all duration-300" data-platform-filter="x" aria-label="Filter X">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" set:html={X_ICON}></svg>
+        </button>
+        <button type="button" class="platform-btn flex items-center justify-center w-12 h-12 rounded-xl bg-terminal-surface/30 border border-terminal-border/60 text-terminal-muted hover:text-white hover:border-emerald-500/50 transition-all duration-300" data-platform-filter="youtube" aria-label="Filter YouTube">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" set:html={YT_ICON}></svg>
+        </button>
+        <button type="button" id="clear-filters" class="flex items-center justify-center w-12 h-12 rounded-xl bg-terminal-surface/30 border border-terminal-border/60 text-terminal-muted hover:text-red-400 hover:border-red-400/50 transition-all duration-300 ml-2" aria-label="Clear filters">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+        </button>
       </div>
     </div>
   </header>
@@ -79,6 +90,7 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
           data-title={(lang === 'en' && post.title_en ? post.title_en : post.title).toLowerCase()}
           data-desc={(lang === 'en' && post.description_en ? post.description_en : post.description).toLowerCase()}
           data-hidden={(lang === 'en' && post.hidden_text_en ? post.hidden_text_en : (post.hidden_text || "")).toLowerCase()}
+          data-platform={post.platform}
           class="social-card bg-terminal-surface/20 border border-terminal-border p-6 rounded-2xl flex flex-col gap-4 group no-underline relative overflow-hidden hover:border-emerald-500/30 hover:bg-terminal-surface/30 transition-all duration-500 shadow-lg hover:shadow-emerald-500/5"
         >
           {/* Resplandor superior sutil */}
@@ -148,11 +160,13 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
           </div>
         </a>
       ))}
-      <div id="no-results" class="hidden text-center py-24 text-terminal-muted">
+      <div id="no-results" class="hidden col-span-full text-center py-24 text-terminal-muted">
         <svg class="w-12 h-12 mx-auto mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         <p>{t("social.no_results")}</p>
       </div>
     </div>
+    {/* Sentinel para Infinite Scroll */}
+    <div id="scroll-sentinel" class="h-10 w-full mt-4"></div>
   </section>
 
   <section class="mt-24 border-t border-terminal-border/30 pt-16">
@@ -190,89 +204,147 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
     const searchInput = document.getElementById('social-search') as HTMLInputElement;
     const grid = document.getElementById('social-grid');
     const noResults = document.getElementById('no-results');
+    const platformBtns = document.querySelectorAll('.platform-btn') as NodeListOf<HTMLButtonElement>;
+    const clearBtn = document.getElementById('clear-filters');
+    const sentinel = document.getElementById('scroll-sentinel');
     
-    if (!searchInput || !grid || !noResults) return;
+    if (!searchInput || !grid || !noResults || !sentinel) return;
 
-    // Convertimos a array y guardamos el orden original
     const cards = Array.from(grid.querySelectorAll('.social-card')) as HTMLAnchorElement[];
     const originalOrder = [...cards];
 
     let debounceTimer: ReturnType<typeof setTimeout>;
+    let currentPlatform: string | null = null;
+    let currentLimit = 9;
+    let activeMatches: HTMLAnchorElement[] = [...originalOrder];
 
-    // Lista de "Stop Words" (artículos y conectores) a ignorar en español e inglés
     const stopWords = ['el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'o', 'de', 'del', 'a', 'en', 'con', 'por', 'para', 'es', 'the', 'a', 'an', 'and', 'or', 'of', 'in', 'with', 'for', 'is'];
 
-    searchInput.addEventListener('input', (e) => {
-      clearTimeout(debounceTimer);
-      
-      const rawTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
-      
-      debounceTimer = setTimeout(() => {
-        // Rompemos la búsqueda en palabras sueltas (tokens) y filtramos stop words
-        const tokens = rawTerm.split(/\s+/).filter(word => word.length > 0 && !stopWords.includes(word));
+    const normalizeText = (text: string) => {
+      return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    };
 
-        if (tokens.length === 0) {
-          // Si no hay palabras válidas, restaurar el orden original y mostrar todos
-          originalOrder.forEach(card => {
-            card.style.display = 'flex';
-            grid.appendChild(card);
-          });
-          noResults.classList.add('hidden');
-          return;
-        }
-
-        let hasMatches = false;
+    const renderCards = () => {
+      // Ocultar todas primero
+      originalOrder.forEach(c => c.style.display = 'none');
+      
+      if (activeMatches.length === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
         
-        // Evaluamos cada tarjeta
+        // Mostrar hasta el límite actual
+        const toShow = activeMatches.slice(0, currentLimit);
+        toShow.forEach(card => {
+          card.style.display = 'flex';
+          grid.appendChild(card); // Re-adjuntar mantiene el orden de la lista 'toShow'
+        });
+      }
+    };
+
+    const applyFilters = () => {
+      const rawTerm = normalizeText(searchInput.value).trim();
+      const tokens = rawTerm.split(/\s+/).filter(word => word.length > 0 && !stopWords.includes(word));
+
+      // Actualizar estado visual de los botones
+      platformBtns.forEach(btn => {
+        if (btn.dataset.platformFilter === currentPlatform) {
+          btn.classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-400');
+          btn.classList.remove('bg-terminal-surface/30', 'border-terminal-border/60', 'text-terminal-muted');
+        } else {
+          btn.classList.remove('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-400');
+          btn.classList.add('bg-terminal-surface/30', 'border-terminal-border/60', 'text-terminal-muted');
+        }
+      });
+
+      if (tokens.length === 0 && !currentPlatform) {
+        // Sin filtros, restauramos la lista original
+        activeMatches = [...originalOrder];
+      } else {
         const scoredCards = cards.map(card => {
-          const title = card.dataset.title || "";
-          const desc = card.dataset.desc || "";
-          const hidden = card.dataset.hidden || "";
+          const title = normalizeText(card.dataset.title || "");
+          const desc = normalizeText(card.dataset.desc || "");
+          const hidden = normalizeText(card.dataset.hidden || "");
+          const platform = card.dataset.platform || "";
           
           let totalScore = 0;
-          let matchedAllTokens = true; // Lógica AND: requiere que TODAS las palabras buscadas existan en la tarjeta
+          let matchedAllTokens = true;
 
-          for (const token of tokens) {
-            let tokenScore = 0;
-            // Evaluamos la prioridad de la palabra actual
-            if (title.includes(token)) tokenScore = 3;
-            else if (desc.includes(token)) tokenScore = 2;
-            else if (hidden.includes(token)) tokenScore = 1;
-
-            if (tokenScore === 0) {
-              // Si falla en encontrar tan solo una de las palabras (ej. encontró "amigo" pero no "feo"), descartamos la tarjeta
-              matchedAllTokens = false;
-              break;
-            }
-            totalScore += tokenScore;
+          if (currentPlatform && platform !== currentPlatform) {
+            matchedAllTokens = false;
           }
 
-          if (matchedAllTokens && totalScore > 0) hasMatches = true;
+          if (matchedAllTokens && tokens.length > 0) {
+            for (const token of tokens) {
+              let tokenScore = 0;
+              if (title.includes(token)) tokenScore = 3;
+              else if (desc.includes(token)) tokenScore = 2;
+              else if (hidden.includes(token)) tokenScore = 1;
+
+              if (tokenScore === 0) {
+                matchedAllTokens = false;
+                break;
+              }
+              totalScore += tokenScore;
+            }
+          } else if (matchedAllTokens && tokens.length === 0) {
+            totalScore = 1;
+          }
           
           return { card, score: matchedAllTokens ? totalScore : 0 };
         });
 
-        if (!hasMatches) {
-          cards.forEach(c => c.style.display = 'none');
-          noResults.classList.remove('hidden');
+        // Filtrar solo los que hicieron match
+        const matches = scoredCards.filter(sc => sc.score > 0);
+        
+        // Ordenar
+        if (tokens.length > 0) {
+          matches.sort((a, b) => b.score - a.score);
         } else {
-          noResults.classList.add('hidden');
-          
-          // Ordenar de mayor a menor puntuación
-          scoredCards.sort((a, b) => b.score - a.score);
-          
-          // Re-adjuntar al DOM en el nuevo orden
-          scoredCards.forEach(({ card, score }) => {
-            if (score > 0) {
-              card.style.display = 'flex';
-              grid.appendChild(card);
-            } else {
-              card.style.display = 'none';
-            }
-          });
+          matches.sort((a, b) => originalOrder.indexOf(a.card) - originalOrder.indexOf(b.card));
         }
-      }, 250); // 250ms de retardo
+
+        activeMatches = matches.map(m => m.card);
+      }
+
+      // Al buscar/filtrar siempre volvemos a la primera página de resultados
+      currentLimit = 9;
+      renderCards();
+    };
+
+    // Infinite Scroll con Intersection Observer
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && currentLimit < activeMatches.length) {
+        currentLimit += 9;
+        renderCards();
+      }
+    }, { rootMargin: '100px' });
+    
+    observer.observe(sentinel);
+
+    // Inicializar render
+    renderCards();
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(applyFilters, 250);
     });
+
+    platformBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const platform = btn.dataset.platformFilter;
+        currentPlatform = currentPlatform === platform ? null : (platform || null);
+        applyFilters();
+      });
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        currentPlatform = null;
+        applyFilters();
+      });
+    }
   };
 
   const setupVideoAutoplay = () => {
