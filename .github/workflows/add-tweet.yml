@@ -124,12 +124,27 @@ jobs:
           # Extract tweet ID from URL
           TWEET_ID=$(echo "$TWEET_URL" | grep -oP '\d{10,}' | head -1)
 
+          # Extract existing fields if the tweet is already in x_feed.json
+          EXISTING_TITLE_EN=$(jq -r ".[] | select(.id == \"$TWEET_ID\") | .title_en // empty" src/content/data/x_feed.json)
+          EXISTING_DESC_EN=$(jq -r ".[] | select(.id == \"$TWEET_ID\") | .description_en // empty" src/content/data/x_feed.json)
+          EXISTING_HIDDEN_EN=$(jq -r ".[] | select(.id == \"$TWEET_ID\") | .hidden_text_en // empty" src/content/data/x_feed.json)
+          EXISTING_HIDDEN_ES=$(jq -r ".[] | select(.id == \"$TWEET_ID\") | .hidden_text // empty" src/content/data/x_feed.json)
+
+          # If the new hidden text is empty but we have an old one, preserve it
+          if [ -z "$HIDDEN_TEXT" ] && [ -n "$EXISTING_HIDDEN_ES" ]; then
+            HIDDEN_TEXT="$EXISTING_HIDDEN_ES"
+          fi
+
           echo "Translating to English..."
           pip install deep-translator --quiet --break-system-packages
           
           export TITLE_ES="$TITLE"
           export DESC_ES="$DESCRIPTION"
           export HIDDEN_ES="$HIDDEN_TEXT"
+          
+          export EXISTING_TITLE_EN="$EXISTING_TITLE_EN"
+          export EXISTING_DESC_EN="$EXISTING_DESC_EN"
+          export EXISTING_HIDDEN_EN="$EXISTING_HIDDEN_EN"
 
           python -c "
           import os
@@ -169,25 +184,23 @@ jobs:
           desc_es = clean_cashtags(os.environ.get('DESC_ES', ''))
           hidden_es = clean_cashtags(os.environ.get('HIDDEN_ES', ''))
           
-          title_en = translate(title_es)
-          desc_en = translate(desc_es)
-          hidden_en = translate(hidden_es)
+          ex_title_en = os.environ.get('EXISTING_TITLE_EN', '').strip()
+          ex_desc_en = os.environ.get('EXISTING_DESC_EN', '').strip()
+          ex_hidden_en = os.environ.get('EXISTING_HIDDEN_EN', '').strip()
           
-          # Clean double quotes to avoid bash sourcing issues
-          title_es = title_es.replace('\"', '\\\"')
-          desc_es = desc_es.replace('\"', '\\\"')
-          hidden_es = hidden_es.replace('\"', '\\\"')
-          title_en = title_en.replace('\"', '\\\"')
-          desc_en = desc_en.replace('\"', '\\\"')
-          hidden_en = hidden_en.replace('\"', '\\\"')
+          title_en = ex_title_en if ex_title_en else translate(title_es)
+          desc_en = ex_desc_en if ex_desc_en else translate(desc_es)
+          hidden_en = ex_hidden_en if ex_hidden_en else translate(hidden_es)
+          
+          import shlex
           
           with open('translations.env', 'w', encoding='utf-8') as f:
-              f.write(f'TITLE=\"{title_es}\"\n')
-              f.write(f'DESCRIPTION=\"{desc_es}\"\n')
-              f.write(f'HIDDEN_TEXT=\"{hidden_es}\"\n')
-              f.write(f'TITLE_EN=\"{title_en}\"\n')
-              f.write(f'DESC_EN=\"{desc_en}\"\n')
-              f.write(f'HIDDEN_EN=\"{hidden_en}\"\n')
+              f.write(f'TITLE={shlex.quote(title_es)}\n')
+              f.write(f'DESCRIPTION={shlex.quote(desc_es)}\n')
+              f.write(f'HIDDEN_TEXT={shlex.quote(hidden_es)}\n')
+              f.write(f'TITLE_EN={shlex.quote(title_en)}\n')
+              f.write(f'DESC_EN={shlex.quote(desc_en)}\n')
+              f.write(f'HIDDEN_EN={shlex.quote(hidden_en)}\n')
           "
           source translations.env
 
