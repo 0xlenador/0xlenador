@@ -125,38 +125,38 @@ jobs:
           TWEET_ID=$(echo "$TWEET_URL" | grep -oP '\d{10,}' | head -1)
 
           echo "Translating to English..."
-          pip install deep-translator --quiet
+          pip install deep-translator --quiet --break-system-packages
           
           export TITLE_ES="$TITLE"
           export DESC_ES="$DESCRIPTION"
           export HIDDEN_ES="$HIDDEN_TEXT"
 
           python -c "
-import os
-from deep_translator import GoogleTranslator
-
-def translate(text):
-    if not text or not text.strip(): return ''
-    try:
-        return GoogleTranslator(source='es', target='en').translate(text)
-    except Exception as e:
-        print('Translation error:', e)
-        return ''
-
-title_en = translate(os.environ.get('TITLE_ES', ''))
-desc_en = translate(os.environ.get('DESC_ES', ''))
-hidden_en = translate(os.environ.get('HIDDEN_ES', ''))
-
-# Clean double quotes to avoid bash sourcing issues
-title_en = title_en.replace('\"', '\\\"')
-desc_en = desc_en.replace('\"', '\\\"')
-hidden_en = hidden_en.replace('\"', '\\\"')
-
-with open('translations.env', 'w', encoding='utf-8') as f:
-    f.write(f'TITLE_EN=\"{title_en}\"\n')
-    f.write(f'DESC_EN=\"{desc_en}\"\n')
-    f.write(f'HIDDEN_EN=\"{hidden_en}\"\n')
-"
+          import os
+          from deep_translator import GoogleTranslator
+          
+          def translate(text):
+              if not text or not text.strip(): return ''
+              try:
+                  return GoogleTranslator(source='es', target='en').translate(text)
+              except Exception as e:
+                  print('Translation error:', e)
+                  return ''
+          
+          title_en = translate(os.environ.get('TITLE_ES', ''))
+          desc_en = translate(os.environ.get('DESC_ES', ''))
+          hidden_en = translate(os.environ.get('HIDDEN_ES', ''))
+          
+          # Clean double quotes to avoid bash sourcing issues
+          title_en = title_en.replace('\"', '\\\"')
+          desc_en = desc_en.replace('\"', '\\\"')
+          hidden_en = hidden_en.replace('\"', '\\\"')
+          
+          with open('translations.env', 'w', encoding='utf-8') as f:
+              f.write(f'TITLE_EN=\"{title_en}\"\n')
+              f.write(f'DESC_EN=\"{desc_en}\"\n')
+              f.write(f'HIDDEN_EN=\"{hidden_en}\"\n')
+          "
           source translations.env
 
           echo "Title: $TITLE"
