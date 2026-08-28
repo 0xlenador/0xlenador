@@ -16,6 +16,7 @@ import type ops from "./locales/es/ops.json"
 import type privacy from "./locales/es/privacy.json"
 import type riskfolio from "./locales/es/riskfolio.json"
 import type sfl from "./locales/es/sfl.json"
+import type social from "./locales/es/social.json"
 import type terms from "./locales/es/terms.json"
 import type tools from "./locales/es/tools.json"
 
@@ -106,6 +107,7 @@ type AllTranslations = typeof _404 &
   typeof privacy &
   typeof riskfolio &
   typeof sfl &
+  typeof social &
   typeof terms &
   typeof tools
 
