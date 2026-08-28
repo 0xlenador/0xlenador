@@ -12,8 +12,22 @@ const seo = {
   url: "https://0xlenador.xyz/en/social-content",
   image: "/img/meta/default.webp", 
 }
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": seo.title,
+  "description": seo.description,
+  "url": seo.url,
+  "inLanguage": "en",
+  "publisher": {
+    "@type": "Person",
+    "name": "0x Leñador",
+    "url": "https://0xlenador.xyz/en"
+  }
+}
 ---
 
-<Layout title={seo.title} description={seo.description} image={seo.image}>
+<Layout title={seo.title} description={seo.description} image={seo.image} schema={schema}>
   <SocialContentView />
 </Layout>
