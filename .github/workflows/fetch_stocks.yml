@@ -1,0 +1,55 @@
+name: Fetch Stocks Data
+
+on:
+  schedule:
+    # Se ejecuta en el minuto 12 de cada hora
+    - cron: "12 * * * *"
+  workflow_dispatch: # Permite ejecución manual
+
+permissions:
+  contents: write
+  actions: write # Necesario para que el watchdog pueda disparar deploy.yml
+
+jobs:
+  fetch-and-watchdog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias de Python
+        run: pip install yfinance pandas
+
+      - name: Extraer datos de acciones (yfinance)
+        run: python scripts/fetch_stocks.py
+
+      - name: Commit y Push del nuevo JSON
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add src/content/data/stocks_data.json
+          # Si no hay cambios, evitamos que el workflow falle
+          git commit -m "chore: actualización horaria de datos de acciones" || echo "Sin cambios en los precios"
+          git push
+
+      - name: Smart Watchdog (Verificar SFL Cron)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Obtenemos el estado de la última ejecución del SFL Cron
+          sfl_status=$(gh run list --workflow=sfl_cron.yml --limit 1 --json conclusion -q '.[0].conclusion')
+          
+          if [ "$sfl_status" != "success" ]; then
+            echo "🚨 SFL Cron falló (o no se ha ejecutado) en su último intento."
+            echo "Forzando despliegue de emergencia para actualizar los datos de la web..."
+            gh workflow run deploy.yml --ref main
+          else
+            echo "✅ SFL Cron está sano (último run: success)."
+            echo "Esperando silenciosamente a que SFL dispare el deploy a las :15."
+          fi

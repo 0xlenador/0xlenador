@@ -1,5 +1,16 @@
 ---
-// src/components/IntrinsicCalculator.astro
+import stocksData from '../content/data/stocks_data.json';
+
+// Si el JSON está vacío (aún no ha corrido el cron), usamos datos por defecto para que no se rompa la UI
+const stocksArray = Object.keys(stocksData).length > 0 
+  ? Object.entries(stocksData).map(([ticker, data]) => ({ ticker, ...(data as any) }))
+  : [
+      { ticker: 'AAPL', name: 'Apple', price: 180.50, fcf: 106000000000, shares: 15440000000, website: 'apple.com' },
+      { ticker: 'MSFT', name: 'Microsoft', price: 410.00, fcf: 70000000000, shares: 7430000000, website: 'microsoft.com' },
+      { ticker: 'TSLA', name: 'Tesla', price: 200.00, fcf: 4300000000, shares: 3180000000, website: 'tesla.com' }
+    ];
+
+const firstStock = stocksArray[0];
 ---
 
 <div class="hub-card p-4 rounded-xl w-full md:w-[480px] flex-shrink-0 border border-terminal-border/50 bg-[#0a0a0a]/80 backdrop-blur-sm shadow-xl">
@@ -16,19 +27,31 @@
     <!-- Columna Izquierda: Entradas -->
     <div class="flex-1 space-y-3">
       <div class="flex flex-col gap-1 relative">
-        <label class="text-[8px] font-mono text-terminal-subtle uppercase tracking-wider">Activo (Datos Simulados)</label>
+        <label class="text-[8px] font-mono text-terminal-subtle uppercase tracking-wider">Activo</label>
         
         <!-- Custom Select -->
         <div id="custom-select-trigger" class="bg-terminal-dark/80 border border-terminal-border text-white text-xs rounded-md px-2.5 py-2 hover:border-emerald-500/50 transition-all cursor-pointer flex justify-between items-center group">
-          <span id="selected-asset-text" class="font-mono">Apple (AAPL)</span>
-          <svg class="w-3 h-3 text-terminal-subtle group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          <div class="flex items-center gap-2 overflow-hidden">
+            <img id="selected-asset-logo" src={`https://logo.clearbit.com/${firstStock.website}`} alt="" class="w-4 h-4 rounded-full bg-white/10" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div id="selected-asset-fallback" class="hidden w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 items-center justify-center text-[8px] font-bold flex-shrink-0">
+              {firstStock.ticker.substring(0, 2)}
+            </div>
+            <span id="selected-asset-text" class="font-mono truncate">{firstStock.name} ({firstStock.ticker})</span>
+          </div>
+          <svg class="w-3 h-3 text-terminal-subtle group-hover:text-emerald-400 transition-colors flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </div>
         
         <!-- Dropdown Menu -->
-        <div id="custom-select-dropdown" class="hidden absolute top-full left-0 w-full mt-1 bg-[#0a0a0a] border border-terminal-border rounded-md shadow-2xl z-50 overflow-hidden divide-y divide-terminal-border/30">
-          <div class="custom-option px-3 py-2.5 text-xs font-mono text-terminal-subtle hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer transition-colors" data-value="AAPL">Apple (AAPL)</div>
-          <div class="custom-option px-3 py-2.5 text-xs font-mono text-terminal-subtle hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer transition-colors" data-value="MSFT">Microsoft (MSFT)</div>
-          <div class="custom-option px-3 py-2.5 text-xs font-mono text-terminal-subtle hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer transition-colors" data-value="TSLA">Tesla (TSLA)</div>
+        <div id="custom-select-dropdown" class="hidden absolute top-full left-0 w-full mt-1 bg-[#0a0a0a] border border-terminal-border rounded-md shadow-2xl z-50 overflow-y-auto max-h-48 divide-y divide-terminal-border/30 custom-scrollbar">
+          {stocksArray.map((stock) => (
+            <div class="custom-option px-3 py-2 flex items-center gap-2 text-xs font-mono text-terminal-subtle hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer transition-colors" data-value={stock.ticker}>
+              <img src={`https://logo.clearbit.com/${stock.website}`} alt="" class="w-4 h-4 rounded-full bg-white/10 flex-shrink-0" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="hidden w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 items-center justify-center text-[8px] font-bold flex-shrink-0">
+                {stock.ticker.substring(0, 2)}
+              </div>
+              <span class="truncate">{stock.name} ({stock.ticker})</span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -65,16 +88,33 @@
   </form>
 </div>
 
-<script>
-  // Simulated data for now
-  const mockData = {
-    AAPL: { price: 180.50, fcf: 106000000000, shares: 15440000000 }, 
-    MSFT: { price: 410.00, fcf: 70000000000, shares: 7430000000 },   
-    TSLA: { price: 200.00, fcf: 4300000000, shares: 3180000000 }     
-  };
+<style>
+  /* Custom scrollbar for the dropdown */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2); 
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(52, 211, 153, 0.2); 
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(52, 211, 153, 0.4); 
+  }
+</style>
 
-  const growthInput = document.getElementById('growth-rate') as HTMLInputElement;
-  const discountInput = document.getElementById('discount-rate') as HTMLInputElement;
+<script define:vars={{ stocksArray }}>
+  // Convert array back to dictionary for fast lookup
+  const stockMap = {};
+  stocksArray.forEach(s => {
+    stockMap[s.ticker] = s;
+  });
+
+  const growthInput = document.getElementById('growth-rate');
+  const discountInput = document.getElementById('discount-rate');
   const resultDisplay = document.getElementById('vi-result');
   const priceDisplay = document.getElementById('vi-price');
   
@@ -82,9 +122,11 @@
   const trigger = document.getElementById('custom-select-trigger');
   const dropdown = document.getElementById('custom-select-dropdown');
   const selectedText = document.getElementById('selected-asset-text');
+  const selectedLogo = document.getElementById('selected-asset-logo');
+  const selectedFallback = document.getElementById('selected-asset-fallback');
   const options = document.querySelectorAll('.custom-option');
   
-  let currentAsset = 'AAPL';
+  let currentAsset = stocksArray[0]?.ticker || 'AAPL';
 
   if (trigger && dropdown) {
     trigger.addEventListener('click', (e) => {
@@ -94,9 +136,21 @@
 
     options.forEach(opt => {
       opt.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        currentAsset = target.dataset.value!;
-        selectedText!.textContent = target.textContent;
+        const target = e.currentTarget;
+        currentAsset = target.dataset.value;
+        const stockData = stockMap[currentAsset];
+        
+        // Actualizar texto
+        selectedText.textContent = `${stockData.name} (${stockData.ticker})`;
+        
+        // Actualizar logo o fallback
+        if (selectedLogo && selectedFallback) {
+          selectedLogo.src = `https://logo.clearbit.com/${stockData.website}`;
+          selectedLogo.style.display = 'block';
+          selectedFallback.style.display = 'none';
+          selectedFallback.textContent = stockData.ticker.substring(0, 2);
+        }
+
         dropdown.classList.add('hidden');
         calculateIntrinsicValue();
       });
@@ -104,7 +158,7 @@
 
     // Close on click outside
     document.addEventListener('click', (e) => {
-      if (!trigger.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+      if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
         dropdown.classList.add('hidden');
       }
     });
@@ -113,8 +167,9 @@
   function calculateIntrinsicValue() {
     if (!growthInput || !discountInput || !resultDisplay || !priceDisplay) return;
 
-    const ticker = currentAsset as keyof typeof mockData;
-    const data = mockData[ticker];
+    const data = stockMap[currentAsset];
+    if (!data || !data.fcf || !data.shares) return; // Si faltan datos vitales
+
     const growth = parseFloat(growthInput.value) / 100;
     const discount = parseFloat(discountInput.value) / 100;
     
@@ -131,15 +186,21 @@
       intrinsicValue += terminalValue / Math.pow(1 + discount, 10);
     }
 
-    resultDisplay.textContent = `$${intrinsicValue.toFixed(2)}`;
-    priceDisplay.textContent = `$${data.price.toFixed(2)}`;
-    
-    // Visual feedback
-    if (intrinsicValue > data.price) {
-      resultDisplay.className = "text-2xl font-black text-emerald-400 tracking-tighter transition-colors duration-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.3)]";
+    // Prevenir NaNs o infinitos si fcf <= 0
+    if (intrinsicValue <= 0 || isNaN(intrinsicValue)) {
+       resultDisplay.textContent = "N/A";
+       resultDisplay.className = "text-2xl font-black text-terminal-subtle tracking-tighter";
     } else {
-      resultDisplay.className = "text-2xl font-black text-rose-400 tracking-tighter transition-colors duration-300 drop-shadow-[0_0_8px_rgba(251,113,133,0.3)]";
+       resultDisplay.textContent = `$${intrinsicValue.toFixed(2)}`;
+       
+       if (intrinsicValue > data.price) {
+         resultDisplay.className = "text-2xl font-black text-emerald-400 tracking-tighter transition-colors duration-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.3)]";
+       } else {
+         resultDisplay.className = "text-2xl font-black text-rose-400 tracking-tighter transition-colors duration-300 drop-shadow-[0_0_8px_rgba(251,113,133,0.3)]";
+       }
     }
+
+    priceDisplay.textContent = `$${data.price.toFixed(2)}`;
   }
 
   // Event Listeners
