@@ -29,10 +29,11 @@ interface StockRow {
   marginOfSafety: number
   fcfPerShare: number
   marketCap: number
+  type: string
 }
 
 // Calcular valor intrínseco DCF para cada acción
-const stockEntries = Object.entries(stocksData) as [string, { name: string; price: number; fcf: number; shares: number; website: string; marketCap: number }][]
+const stockEntries = Object.entries(stocksData) as [string, { name: string; price: number; fcf: number; shares: number; website: string; marketCap: number; type: string }][]
 
 const processedStocks: StockRow[] = stockEntries
   .filter(([, data]) => data.price && data.shares && data.fcf && data.fcf > 0)
@@ -59,6 +60,7 @@ const processedStocks: StockRow[] = stockEntries
       shares: data.shares,
       website: data.website,
       marketCap: data.marketCap,
+      type: data.type,
       intrinsicValue,
       marginOfSafety,
       fcfPerShare,
@@ -115,13 +117,24 @@ function formatBigNumber(num: number): string {
 
   <!-- Controls -->
   <div class="mb-6 flex flex-col md:flex-row gap-4 items-end">
-    <div class="w-full md:w-80">
+    <div class="w-full md:w-80 relative">
       <input
         type="text"
         id="stock-search"
         placeholder={t("undervalued.search")}
-        class="w-full bg-terminal-dark/80 border border-terminal-border text-white text-xs rounded-lg px-4 py-2.5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30 focus:outline-none transition-all font-mono placeholder:text-terminal-muted"
+        class="w-full bg-terminal-dark/80 border border-terminal-border text-white text-xs rounded-lg px-4 py-2.5 pr-10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30 focus:outline-none transition-all font-mono placeholder:text-terminal-muted"
       />
+      <button id="search-clear-btn" class="absolute right-3 top-1/2 -translate-y-1/2 text-terminal-muted hover:text-white hidden transition-colors" title="Borrar búsqueda">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+      </button>
+    </div>
+    <!-- Conservative Mode Toggle -->
+    <div class="flex items-center gap-2 mb-1 md:mb-0 ml-auto md:ml-0 md:mr-auto self-center lg:self-end lg:pb-3">
+      <span class="text-[10px] font-mono text-terminal-muted uppercase tracking-wider">{t("undervalued.conservative" as UiKey)}</span>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="conservative-mode" class="sr-only peer" checked>
+        <div class="w-9 h-5 bg-black/60 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-terminal-muted peer-checked:after:bg-emerald-400 after:border-gray-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500/10 border border-white/10 peer-checked:border-emerald-500/30"></div>
+      </label>
     </div>
     <div class="flex gap-4 w-full md:w-auto">
       <div class="flex flex-col gap-1 w-full md:w-auto">
@@ -152,6 +165,11 @@ function formatBigNumber(num: number): string {
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-terminal-muted text-xs font-mono">%</span>
         </div>
       </div>
+      <button id="reset-all-btn" class="self-end mb-0.5 w-[38px] h-[38px] shrink-0 flex items-center justify-center bg-terminal-dark/80 border border-terminal-border rounded-lg hover:border-emerald-500 hover:text-emerald-400 text-terminal-muted transition-colors" title="Restablecer tabla">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/><path d="M11 9.5 14.5 13"/>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -160,9 +178,15 @@ function formatBigNumber(num: number): string {
     <div class="w-full relative z-10">
       <!-- Desktop Header -->
       <div class="hidden lg:grid grid-cols-[22%_8%_10%_10%_9%_8%_8%_11%_14%] border-b border-white/[0.05] pb-2 mb-2 px-6 mt-4 items-center">
-        <div class="text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none flex items-center gap-2" onclick="window.handleSort('name')">
-          {t("undervalued.table.name")}
-          <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span>
+        <div class="flex items-center gap-4">
+          <div class="text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none flex items-center gap-2" onclick="window.handleSort('name')">
+            {t("undervalued.table.name")}
+            <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="name">↕</span>
+          </div>
+          <button id="btn-sort-crypto" class="text-[6px] font-mono font-medium px-1 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-400/70 border border-fuchsia-500/20 hover:bg-fuchsia-500/20 hover:text-fuchsia-400 transition-all uppercase tracking-wider select-none cursor-pointer flex items-center justify-center" onclick="window.handleSort('type')">
+            <svg id="crypto-btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            <span id="crypto-btn-text" class="hidden">{t("undervalued.cryptos" as UiKey)}</span>
+          </button>
         </div>
         <div class="text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none flex items-center justify-end gap-2" onclick="window.handleSort('price')">
           <span class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity" data-col="price">↕</span>
@@ -203,13 +227,13 @@ function formatBigNumber(num: number): string {
         {processedStocks.map((stock) => {
           const isUndervalued = stock.marginOfSafety > 0
           return (
-            <div class="stock-row border-b border-white/5 hover:bg-white/[0.02] transition-colors group" data-ticker={stock.ticker} data-name={stock.name} data-fcf={stock.fcf} data-shares={stock.shares} data-price={stock.price} data-marketcap={stock.marketCap} data-intrinsic={stock.intrinsicValue} data-margin={stock.marginOfSafety}>
+            <div class="stock-row border-b border-white/5 hover:bg-white/[0.02] transition-colors group" data-type={stock.type} data-ticker={stock.ticker} data-name={stock.name} data-fcf={stock.fcf} data-shares={stock.shares} data-price={stock.price} data-marketcap={stock.marketCap} data-intrinsic={stock.intrinsicValue} data-margin={stock.marginOfSafety}>
               
               {/* DESKTOP ROW */}
               <div class="hidden lg:grid grid-cols-[22%_8%_10%_10%_9%_8%_8%_11%_14%] items-center py-3 px-6 cursor-default">
                 {/* Logo y Nombre */}
                 <div class="flex items-center gap-3">
-                    <div class="relative w-8 h-8 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
+                    <div class={`relative w-8 h-8 rounded bg-terminal-dark border flex items-center justify-center p-1 shrink-0 ${stock.type === 'crypto' ? 'border-fuchsia-500/50 shadow-[0_0_8px_rgba(217,70,239,0.3)]' : 'border-terminal-muted/20'}`}>
                       <img src={`https://logo.clearbit.com/${stock.website}`} alt={stock.ticker} class="w-[90%] h-[90%] object-contain rounded-full" loading="lazy" onerror={`if (this.src.includes('clearbit')) { this.src='https://www.google.com/s2/favicons?domain=${stock.website}&sz=128'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }`} />
                       <div class="hidden w-full h-full rounded-full bg-emerald-500/15 text-emerald-400 items-center justify-center text-[10px] font-bold absolute top-0 left-0">{stock.ticker.substring(0,2)}</div>
                     </div>
@@ -221,7 +245,16 @@ function formatBigNumber(num: number): string {
                 {/* Resto de Columnas */}
                 <div class="text-[13px] font-mono text-white/90 text-right">${stock.price.toFixed(2)}</div>
                 <div class="text-[13px] font-mono text-white/70 text-right">{formatBigNumber(stock.marketCap || 0)}</div>
-                <div class={`text-[13px] font-mono text-right ${stock.fcf > 0 ? 'text-emerald-400/90' : 'text-rose-400/90'}`}>{formatBigNumber(stock.fcf || 0)}</div>
+                {stock.type === 'crypto' ? (
+                  <div class="flex justify-end">
+                    <div class="relative w-20">
+                      <input type="number" class="row-fcf w-full bg-black/40 border border-white/10 text-white text-[11px] rounded px-1.5 py-1 pr-4 text-right font-mono focus:border-emerald-500 focus:outline-none" value={stock.fcf / 1000000} />
+                      <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-white/30 pointer-events-none">M</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div class={`text-[13px] font-mono text-right ${stock.fcf > 0 ? 'text-emerald-400/90' : 'text-rose-400/90'}`}>{formatBigNumber(stock.fcf || 0)}</div>
+                )}
                 <div class="text-[13px] font-mono text-white/50 text-right">{formatBigNumber(stock.shares).replace('$', '')}</div>
                 <div class="flex justify-center">
                   <div class="relative w-14">
@@ -247,7 +280,7 @@ function formatBigNumber(num: number): string {
               <div class="lg:hidden flex flex-col p-4 gap-4 cursor-default">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="relative w-10 h-10 rounded-lg bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
+                    <div class={`relative w-10 h-10 rounded-lg bg-terminal-dark border flex items-center justify-center p-1 shrink-0 ${stock.type === 'crypto' ? 'border-fuchsia-500/50 shadow-[0_0_8px_rgba(217,70,239,0.3)]' : 'border-terminal-muted/20'}`}>
                       <img src={`https://logo.clearbit.com/${stock.website}`} alt={stock.ticker} class="w-[90%] h-[90%] object-contain rounded-full" loading="lazy" onerror={`if (this.src.includes('clearbit')) { this.src='https://www.google.com/s2/favicons?domain=${stock.website}&sz=128'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }`} />
                       <div class="hidden w-full h-full rounded-full bg-emerald-500/15 text-emerald-400 items-center justify-center text-[11px] font-bold absolute top-0 left-0">{stock.ticker.substring(0,2)}</div>
                     </div>
@@ -319,16 +352,22 @@ function formatBigNumber(num: number): string {
 
 <script>
   // Filtro y reactividad del lado del cliente
-  const searchInput = document.getElementById('stock-search') as HTMLInputElement
-  const globalDiscountInput = document.getElementById('discount-input') as HTMLInputElement
-  const globalGrowthInput = document.getElementById('growth-input') as HTMLInputElement
+  const searchInput = document.getElementById('stock-search') as HTMLInputElement | null
+  const globalDiscountInput = document.getElementById('discount-input') as HTMLInputElement | null
+  const globalGrowthInput = document.getElementById('growth-input') as HTMLInputElement | null
+  const conservativeModeToggle = document.getElementById('conservative-mode') as HTMLInputElement | null
   const rows = document.querySelectorAll('.stock-row')
 
   const PERPETUAL_GROWTH = 0.025
   const YEARS = 10
 
   function recalculateRow(row: HTMLElement, discountVal: number, growthVal: number) {
-      const fcf = parseFloat(row.dataset.fcf || '0')
+      const fcfInput = row.querySelector('.row-fcf') as HTMLInputElement
+      const fcf = fcfInput ? parseFloat(fcfInput.value || '0') * 1000000 : parseFloat(row.dataset.fcf || '0')
+      
+      // Update dataset for sorting if modified
+      if (fcfInput) row.dataset.fcf = fcf.toString()
+      
       const shares = parseFloat(row.dataset.shares || '1')
       const price = parseFloat(row.dataset.price || '0')
 
@@ -341,8 +380,15 @@ function formatBigNumber(num: number): string {
         intrinsicValue += (fcfPerShare * Math.pow(1 + growthVal, i)) / Math.pow(1 + discountVal, i)
       }
 
-      if (discountVal > PERPETUAL_GROWTH) {
-        const terminalValue = (fcfPerShare * Math.pow(1 + growthVal, YEARS) * (1 + PERPETUAL_GROWTH)) / (discountVal - PERPETUAL_GROWTH)
+      if (conservativeModeToggle && conservativeModeToggle.checked) {
+        if (discountVal > PERPETUAL_GROWTH) {
+          // Gordon Growth Model
+          const terminalValue = (fcfPerShare * Math.pow(1 + growthVal, YEARS) * (1 + PERPETUAL_GROWTH)) / (discountVal - PERPETUAL_GROWTH)
+          intrinsicValue += terminalValue / Math.pow(1 + discountVal, YEARS)
+        }
+      } else {
+        // Exit Multiple Method (15x)
+        const terminalValue = (fcfPerShare * Math.pow(1 + growthVal, YEARS)) * 15
         intrinsicValue += terminalValue / Math.pow(1 + discountVal, YEARS)
       }
 
@@ -396,9 +442,14 @@ function formatBigNumber(num: number): string {
     globalGrowthInput.addEventListener('input', updateGlobal)
   }
 
+  // Bind conservative mode toggle
+  if (conservativeModeToggle) {
+    conservativeModeToggle.addEventListener('change', updateGlobal)
+  }
+
   // Bind per-row inputs
   rows.forEach(row => {
-      const inputs = row.querySelectorAll<HTMLInputElement>('.row-discount, .mobile-row-discount, .row-growth, .mobile-row-growth')
+      const inputs = row.querySelectorAll<HTMLInputElement>('.row-discount, .mobile-row-discount, .row-growth, .mobile-row-growth, .row-fcf')
       inputs.forEach(input => {
           input.addEventListener('input', () => {
               // Get current row values
@@ -408,48 +459,88 @@ function formatBigNumber(num: number): string {
                   // Sync desktop/mobile counterpart
                   row.querySelectorAll<HTMLInputElement>('.row-discount, .mobile-row-discount').forEach(i => i.value = rowD.toString())
                   rowG = parseFloat(row.querySelector<HTMLInputElement>('.row-growth')?.value || '10')
-              } else {
+              } else if (input.classList.contains('row-growth') || input.classList.contains('mobile-row-growth')) {
                   rowG = parseFloat(input.value) || 10
                   // Sync desktop/mobile counterpart
                   row.querySelectorAll<HTMLInputElement>('.row-growth, .mobile-row-growth').forEach(i => i.value = rowG.toString())
                   rowD = parseFloat(row.querySelector<HTMLInputElement>('.row-discount')?.value || '10')
+              } else {
+                  // It's the FCF input, just grab D and G
+                  rowD = parseFloat(row.querySelector<HTMLInputElement>('.row-discount')?.value || '10')
+                  rowG = parseFloat(row.querySelector<HTMLInputElement>('.row-growth')?.value || '10')
               }
               recalculateRow(row as HTMLElement, rowD / 100, rowG / 100)
           })
       })
   })
 
-  if (searchInput && rows.length > 0) {
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase().trim()
-      rows.forEach((row) => {
-        const ticker = (row as HTMLElement).dataset.ticker?.toLowerCase() || ''
-        const name = (row as HTMLElement).dataset.name?.toLowerCase() || ''
-        const match = ticker.includes(query) || name.includes(query)
-        ;(row as HTMLElement).style.display = match ? '' : 'none'
-      })
+  function filterStocks(query: string) {
+    const q = query.toLowerCase().trim()
+    rows.forEach((row) => {
+      const ticker = (row as HTMLElement).dataset.ticker?.toLowerCase() || ''
+      const name = (row as HTMLElement).dataset.name?.toLowerCase() || ''
+      const match = ticker.includes(q) || name.includes(q)
+      ;(row as HTMLElement).style.display = match ? '' : 'none'
     })
   }
 
-  // Sorting Logic
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const v = (e.target as HTMLInputElement).value
+      const searchClearBtn = document.getElementById('search-clear-btn')
+      if (searchClearBtn) {
+        if (v) searchClearBtn.classList.remove('hidden')
+        else searchClearBtn.classList.add('hidden')
+      }
+      filterStocks(v)
+    })
+  }
+
   let currentSort = { column: 'margin', direction: 'desc' };
   (window as any).handleSort = (column: string) => {
-    if (currentSort.column === column) {
-      currentSort.direction = currentSort.direction === 'desc' ? 'asc' : 'desc'
+    if (column === 'type') {
+      if (currentSort.column === 'type') {
+        currentSort.column = 'margin'
+        currentSort.direction = 'desc'
+      } else {
+        currentSort.column = 'type'
+        currentSort.direction = 'desc'
+      }
     } else {
-      currentSort.column = column
-      currentSort.direction = 'desc'
+      if (currentSort.column === column) {
+        currentSort.direction = currentSort.direction === 'desc' ? 'asc' : 'desc'
+      } else {
+        currentSort.column = column
+        currentSort.direction = 'desc'
+      }
     }
 
     // Update icons
     document.querySelectorAll(".sort-icon").forEach((icon) => {
       icon.innerHTML = "↕"
       icon.classList.remove("text-emerald-400", "opacity-100")
-      if ((icon as HTMLElement).dataset.col === column) {
+      if ((icon as HTMLElement).dataset.col === currentSort.column) {
         icon.innerHTML = currentSort.direction === 'desc' ? "↓" : "↑"
         icon.classList.add("text-emerald-400", "opacity-100")
       }
     })
+
+    // Update Criptos button glow
+    const btnCrypto = document.getElementById('btn-sort-crypto')
+    const textCrypto = document.getElementById('crypto-btn-text')
+    const iconCrypto = document.getElementById('crypto-btn-icon')
+    
+    if (btnCrypto && textCrypto && iconCrypto) {
+      if (currentSort.column === 'type') {
+        btnCrypto.className = "text-[6px] font-mono font-medium px-1 py-0.5 rounded bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/50 hover:bg-fuchsia-500/30 transition-all uppercase tracking-wider select-none cursor-pointer shadow-[0_0_8px_rgba(217,70,239,0.5)] flex items-center justify-center"
+        textCrypto.classList.remove('hidden')
+        iconCrypto.classList.add('hidden')
+      } else {
+        btnCrypto.className = "text-[6px] font-mono font-medium px-1 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-400/70 border border-fuchsia-500/20 hover:bg-fuchsia-500/20 hover:text-fuchsia-400 transition-all uppercase tracking-wider select-none cursor-pointer flex items-center justify-center"
+        textCrypto.classList.add('hidden')
+        iconCrypto.classList.remove('hidden')
+      }
+    }
 
     const tbody = document.getElementById('table-body')
     if (!tbody) return
@@ -460,15 +551,18 @@ function formatBigNumber(num: number): string {
       const elA = a as HTMLElement
       const elB = b as HTMLElement
 
-      if (column === 'name') {
+      if (currentSort.column === 'name') {
         valA = elA.dataset.name?.toLowerCase() || ''
         valB = elB.dataset.name?.toLowerCase() || ''
-      } else if (['price', 'marketcap', 'fcf', 'supply', 'intrinsic', 'margin'].includes(column)) {
-        valA = parseFloat(elA.dataset[column] || '0')
-        valB = parseFloat(elB.dataset[column] || '0')
-      } else if (column === 'discount' || column === 'growth') {
-        valA = parseFloat(elA.querySelector<HTMLInputElement>(`.row-${column}`)?.value || '10')
-        valB = parseFloat(elB.querySelector<HTMLInputElement>(`.row-${column}`)?.value || '10')
+      } else if (currentSort.column === 'type') {
+        valA = elA.dataset.type === 'crypto' ? 1 : 0
+        valB = elB.dataset.type === 'crypto' ? 1 : 0
+      } else if (['price', 'marketcap', 'fcf', 'supply', 'intrinsic', 'margin'].includes(currentSort.column)) {
+        valA = parseFloat(elA.dataset[currentSort.column] || '0')
+        valB = parseFloat(elB.dataset[currentSort.column] || '0')
+      } else if (currentSort.column === 'discount' || currentSort.column === 'growth') {
+        valA = parseFloat(elA.querySelector<HTMLInputElement>(`.row-${currentSort.column}`)?.value || '10')
+        valB = parseFloat(elB.querySelector<HTMLInputElement>(`.row-${currentSort.column}`)?.value || '10')
       }
 
       if (valA < valB) return currentSort.direction === 'desc' ? 1 : -1
@@ -478,5 +572,94 @@ function formatBigNumber(num: number): string {
 
     rowsArray.forEach(row => tbody.appendChild(row))
   }
-</script>
 
+  // Initial render calculations
+  updateGlobal()
+  
+  // Clear Buttons Logic
+  const resetAllBtn = document.getElementById('reset-all-btn')
+  const searchClearBtn = document.getElementById('search-clear-btn')
+
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', () => {
+      if (searchInput) searchInput.value = ''
+      searchClearBtn.classList.add('hidden')
+      filterStocks('')
+    })
+  }
+
+  if (resetAllBtn) {
+    resetAllBtn.addEventListener('click', () => {
+      // 1. Clear search
+      if (searchInput) searchInput.value = ''
+      if (searchClearBtn) searchClearBtn.classList.add('hidden')
+      filterStocks('')
+      
+      // 2. Reset global discount and growth to 10
+      const discountInput = document.getElementById("discount-input") as HTMLInputElement
+      const growthInput = document.getElementById("growth-input") as HTMLInputElement
+      if (discountInput) discountInput.value = '10'
+      if (growthInput) growthInput.value = '10'
+
+      // 3. Reset row-specific inputs and calculations
+      document.querySelectorAll('.stock-row').forEach(row => {
+        const dInput = row.querySelector('.row-discount') as HTMLInputElement
+        const gInput = row.querySelector('.row-growth') as HTMLInputElement
+        const fcfInput = row.querySelector('.row-fcf') as HTMLInputElement
+        if (dInput) dInput.value = '10'
+        if (gInput) gInput.value = '10'
+        if (fcfInput) {
+          const originalFcf = (row as HTMLElement).dataset.fcf_original
+          if (originalFcf) {
+            fcfInput.value = originalFcf
+            ;(row as HTMLElement).dataset.fcf = originalFcf
+          }
+        }
+      })
+      
+      // Restore conservative mode
+      const conservativeToggle = document.getElementById('conservative-mode') as HTMLInputElement
+      if (conservativeToggle) conservativeToggle.checked = true
+      
+      updateGlobal()
+
+      // 4. Reset sorting to default (margin desc)
+      currentSort.column = 'margin'
+      currentSort.direction = 'desc'
+      
+      // Update icons visually
+      document.querySelectorAll(".sort-icon").forEach((icon) => {
+        icon.innerHTML = "↕"
+        icon.classList.remove("text-emerald-400", "opacity-100")
+        if ((icon as HTMLElement).dataset.col === 'margin') {
+          icon.innerHTML = "↓"
+          icon.classList.add("text-emerald-400", "opacity-100")
+        }
+      })
+      
+      // Turn off Cripto glow
+      const btnCrypto = document.getElementById('btn-sort-crypto')
+      const textCrypto = document.getElementById('crypto-btn-text')
+      const iconCrypto = document.getElementById('crypto-btn-icon')
+      if (btnCrypto && textCrypto && iconCrypto) {
+        btnCrypto.className = "text-[6px] font-mono font-medium px-1 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-400/70 border border-fuchsia-500/20 hover:bg-fuchsia-500/20 hover:text-fuchsia-400 transition-all uppercase tracking-wider select-none cursor-pointer flex items-center justify-center"
+        textCrypto.classList.add('hidden')
+        iconCrypto.classList.remove('hidden')
+      }
+
+      // Re-sort DOM
+      const tbody = document.getElementById('table-body')
+      if (tbody) {
+        const rowsArray = Array.from(document.querySelectorAll('.stock-row'))
+        rowsArray.sort((a, b) => {
+          const elA = a as HTMLElement
+          const elB = b as HTMLElement
+          const valA = parseFloat(elA.dataset['margin'] || '0')
+          const valB = parseFloat(elB.dataset['margin'] || '0')
+          return valA < valB ? 1 : -1
+        })
+        rowsArray.forEach(row => tbody.appendChild(row))
+      }
+    })
+  }
+</script>

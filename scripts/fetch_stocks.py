@@ -41,7 +41,7 @@ def fetch_stock_data(ticker_symbol):
         # Extraer campos necesarios (usando .get() para evitar KeyErrors si falta un dato)
         price = info.get('currentPrice') or info.get('regularMarketPrice') or info.get('previousClose')
         fcf = info.get('freeCashflow')
-        shares = info.get('sharesOutstanding') or info.get('impliedSharesOutstanding')
+        shares = info.get('sharesOutstanding') or info.get('impliedSharesOutstanding') or info.get('circulatingSupply')
         market_cap = info.get('marketCap')
         website = clean_domain(info.get('website', ''))
         name = info.get('shortName') or info.get('longName') or ticker_symbol
@@ -102,7 +102,31 @@ def main():
         for future in concurrent.futures.as_completed(future_to_ticker):
             data = future.result()
             if data:
+                # Add type='stock' to each item
+                for k in data:
+                    data[k]['type'] = 'stock'
                 results.update(data)
+                
+    # Descargar Cryptos
+    cryptos_file = 'src/content/data/cryptos.json'
+    if os.path.exists(cryptos_file):
+        print(f"Iniciando descarga de criptomonedas...")
+        with open(cryptos_file, 'r', encoding='utf-8') as f:
+            cryptos_data = json.load(f)
+            
+        crypto_tickers = list(cryptos_data.keys())
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            future_to_crypto = {executor.submit(fetch_stock_data, t): t for t in crypto_tickers}
+            for future in concurrent.futures.as_completed(future_to_crypto):
+                data = future.result()
+                if data:
+                    for k in data:
+                        data[k]['type'] = 'crypto'
+                        # Use the FCF from cryptos.json instead of Yahoo
+                        data[k]['fcf'] = cryptos_data[k].get('fcf', 0)
+                        # Override name if provided
+                        data[k]['name'] = cryptos_data[k].get('name', data[k]['name'])
+                    results.update(data)
                 
     # Ordenar los resultados alfabéticamente por Ticker
     results = dict(sorted(results.items()))
