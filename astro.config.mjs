@@ -189,6 +189,7 @@ export default defineConfig({
     "/recursos": "/herramientas/",
     "/data-perps": "/",
     "/faucets.html": "/faucets/",
+    "/comunidad": "/",
 
     // Redirecciones de miniapps al home
     "/miniapps": "/",
@@ -209,11 +210,17 @@ export default defineConfig({
       // Filtrar páginas que no deben estar en el sitemap:
       // - Páginas 404
       // - Páginas redirect legacy (bitcoin/, ethereum/, sunflowerland/, simulador/, tesis/)
+      // - Páginas legales (no aportan tráfico orgánico, diluyen calidad del sitemap)
+      // - Páginas de autor (sin valor de búsqueda)
       filter: (page) => {
         const { pathname } = new URL(page)
         return (
           !pathname.includes("/404") &&
-          !pathname.match(/^\/(bitcoin|ethereum|sunflowerland|simulador|tesis)\/$/)
+          !pathname.match(/^\/(bitcoin|ethereum|sunflowerland|simulador|tesis)\/$/) &&
+          !pathname.match(/^\/(privacidad|terminos)\/$/) &&
+          !pathname.match(/^\/en\/(privacy|terms)\/$/) &&
+          !pathname.match(/^\/(autor)\/$/) &&
+          !pathname.match(/^\/en\/(author)\/$/)
         )
       },
 

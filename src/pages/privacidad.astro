@@ -7,6 +7,6 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<Layout title={t("privacy.seo.title")} description={t("privacy.seo.description")}>
+<Layout title={t("privacy.seo.title")} description={t("privacy.seo.description")} noindex>
   <PrivacyView />
 </Layout>

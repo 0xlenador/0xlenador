@@ -7,6 +7,6 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<Layout title={t("terms.seo.title")} description={t("terms.seo.description")}>
+<Layout title={t("terms.seo.title")} description={t("terms.seo.description")} noindex>
   <TermsView />
 </Layout>
