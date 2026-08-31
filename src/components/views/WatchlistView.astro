@@ -7,6 +7,7 @@
 import FaqAccordion from "../FaqAccordion.astro"
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 import Sparkline from "../Sparkline.astro"
+import IntrinsicCalculator from "../IntrinsicCalculator.astro"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -105,17 +106,21 @@ const faqItems = [
 
 <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
   <!-- Header -->
-  <header class="mb-16">
-    <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
-      {t("assets.breadcrumb")}
-    </p>
-    <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
-      {t("assets.heading")}{" "}
-      <span class="text-emerald-500">{t("assets.heading.accent")}</span>
-    </h1>
-    <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-      {t("assets.intro")}
-    </p>
+  <header class="mb-16 flex flex-col md:flex-row justify-between items-start gap-8">
+    <div class="max-w-2xl">
+      <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-3">
+        {t("assets.breadcrumb")}
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">
+        {t("assets.heading")}{" "}
+        <span class="text-emerald-500">{t("assets.heading.accent")}</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed">
+        {t("assets.intro")}
+      </p>
+    </div>
+
+    <IntrinsicCalculator />
   </header>
 
   <!-- Watchlist header de tabla -->
