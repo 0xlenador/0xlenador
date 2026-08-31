@@ -75,6 +75,7 @@ export const routeMap: Record<string, Record<Lang, string>> = {
   "/privacidad": { es: "/privacidad/", en: "/en/privacy/" },
   "/terminos": { es: "/terminos/", en: "/en/terms/" },
   "/contenido-social": { es: "/contenido-social/", en: "/en/social-content/" },
+  "/infravalorados": { es: "/infravalorados/", en: "/en/undervalued/" },
 }
 
 /**

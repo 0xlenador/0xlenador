@@ -19,6 +19,7 @@ import type sfl from "./locales/es/sfl.json"
 import type social from "./locales/es/social.json"
 import type terms from "./locales/es/terms.json"
 import type tools from "./locales/es/tools.json"
+import type undervalued from "./locales/es/undervalued.json"
 
 export const languages = {
   es: "Español",
@@ -45,6 +46,7 @@ export const routes = {
     "sfl-cocinando": "sfl-cooking",
     "sfl-betty": "sfl-betty",
     autor: "author",
+    infravalorados: "undervalued",
   },
   es: {
     operations: "operaciones",
@@ -59,6 +61,7 @@ export const routes = {
     "sfl-cooking": "sfl-cocinando",
     "sfl-betty": "sfl-betty",
     author: "autor",
+    undervalued: "infravalorados",
   },
 }
 
@@ -109,6 +112,7 @@ type AllTranslations = typeof _404 &
   typeof sfl &
   typeof social &
   typeof terms &
-  typeof tools
+  typeof tools &
+  typeof undervalued
 
 export type UiKey = keyof AllTranslations

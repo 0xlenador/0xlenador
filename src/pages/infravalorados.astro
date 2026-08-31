@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro"
+import UndervaluedView from "../components/views/UndervaluedView.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<Layout
+  title={t("undervalued.seo.title")}
+  description={t("undervalued.seo.description")}
+  image="/img/meta/tesis.webp"
+>
+  <UndervaluedView />
+</Layout>
