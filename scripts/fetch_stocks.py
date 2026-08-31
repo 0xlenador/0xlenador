@@ -42,6 +42,7 @@ def fetch_stock_data(ticker_symbol):
         price = info.get('currentPrice') or info.get('regularMarketPrice') or info.get('previousClose')
         fcf = info.get('freeCashflow')
         shares = info.get('sharesOutstanding') or info.get('impliedSharesOutstanding')
+        market_cap = info.get('marketCap')
         website = clean_domain(info.get('website', ''))
         name = info.get('shortName') or info.get('longName') or ticker_symbol
 
@@ -49,6 +50,9 @@ def fetch_stock_data(ticker_symbol):
         if price is None or shares is None or shares == 0:
             print(f"[!] Faltan datos financieros críticos (Precio o Acciones) para {ticker_symbol}")
             return None
+            
+        if market_cap is None:
+            market_cap = price * shares
             
         # Si no hay FCF, usamos 0 (muchas empresas de crecimiento o en pérdida no tienen FCF positivo)
         if fcf is None:
@@ -60,6 +64,7 @@ def fetch_stock_data(ticker_symbol):
             ticker_symbol: {
                 "name": name,
                 "price": price,
+                "marketCap": market_cap,
                 "fcf": fcf,
                 "shares": shares,
                 "website": website
