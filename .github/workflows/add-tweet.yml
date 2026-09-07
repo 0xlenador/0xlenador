@@ -47,26 +47,30 @@ jobs:
           # Smarter Media Extraction (Main tweet, then Article, then Quoted tweet)
           MEDIA_URL=$(echo "$RESPONSE" | jq -r '
             if .media_extended != null and (.media_extended | length) > 0 then
-              if .media_extended[0].type == "video" then .media_extended[0].thumbnail_url
+              if .media_extended[0].type == "video" or .media_extended[0].type == "gif" then .media_extended[0].thumbnail_url
               else .mediaURLs[0] end
             elif .article.image != null then
               .article.image
             elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 then
-              if .qrt.media_extended[0].type == "video" then .qrt.media_extended[0].thumbnail_url
+              if .qrt.media_extended[0].type == "video" or .qrt.media_extended[0].type == "gif" then .qrt.media_extended[0].thumbnail_url
               else .qrt.mediaURLs[0] end
+            elif .qrt.article.image != null then
+              .qrt.article.image
             else
-              ""
+              "/images/default-tweet.jpg"
             end
           ')
 
           # Determine format based on where we found the media
           FORMAT=$(echo "$RESPONSE" | jq -r '
             if .media_extended != null and (.media_extended | length) > 0 then
-              if .media_extended[0].type == "video" then "video" else "texto" end
+              if .media_extended[0].type == "video" or .media_extended[0].type == "gif" then "video" else "texto" end
             elif .article.image != null then
               "articulo"
             elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 then
-              if .qrt.media_extended[0].type == "video" then "video" else "texto" end
+              if .qrt.media_extended[0].type == "video" or .qrt.media_extended[0].type == "gif" then "video" else "texto" end
+            elif .qrt.article.image != null then
+              "articulo"
             else
               "texto"
             end
@@ -78,8 +82,8 @@ jobs:
           elif [ "$FORMAT" = "video" ]; then
             # Extract duration_millis (falls back to 0 if null)
             DURATION_MS=$(echo "$RESPONSE" | jq -r '
-              if .media_extended != null and (.media_extended | length) > 0 and .media_extended[0].type == "video" then .media_extended[0].duration_millis
-              elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 and .qrt.media_extended[0].type == "video" then .qrt.media_extended[0].duration_millis
+              if .media_extended != null and (.media_extended | length) > 0 and (.media_extended[0].type == "video" or .media_extended[0].type == "gif") then .media_extended[0].duration_millis
+              elif .qrt.media_extended != null and (.qrt.media_extended | length) > 0 and (.qrt.media_extended[0].type == "video" or .qrt.media_extended[0].type == "gif") then .qrt.media_extended[0].duration_millis
               else 0 end
             ')
             if [ -z "$DURATION_MS" ] || [ "$DURATION_MS" = "null" ]; then
