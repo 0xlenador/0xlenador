@@ -1545,15 +1545,8 @@ const t = useTranslations(lang)
                            </div>
                          ` : ''}
                          ${c === 'Gema' ? `
-                           <div class="ml-auto flex items-center" onclick="event.stopPropagation()">
-                             <select id="gemBonusSelect" class="appearance-none w-10 text-center bg-[#0c1015] border border-white/10 rounded px-1 py-[1px] text-[8.5px] font-mono text-white/70 outline-none focus:border-white/30 transition-colors cursor-pointer" onchange="window.updateGemBonus(this.value)">
-                               <option value="0" ${currentGemBonus === 0 ? 'selected' : ''}>0%</option>
-                               <option value="0.29" ${currentGemBonus === 0.29 ? 'selected' : ''}>+29%</option>
-                               <option value="0.34" ${currentGemBonus === 0.34 ? 'selected' : ''}>+34%</option>
-                               <option value="0.39" ${currentGemBonus === 0.39 ? 'selected' : ''}>+39%</option>
-                               <option value="0.54" ${currentGemBonus === 0.54 ? 'selected' : ''}>+54%</option>
-                               <option value="0.98" ${currentGemBonus === 0.98 ? 'selected' : ''}>+98%</option>
-                             </select>
+                           <div class="ml-auto flex items-center">
+                             <span class="text-[9.5px] font-mono font-bold text-emerald-400/90 tracking-tight mt-[1px]">+<input type="number" id="gemBonusInput" value="${(currentGemBonus * 100).toFixed(1).replace('.0', '')}" step="any" class="w-9 bg-transparent border-none text-[9.5px] font-mono text-emerald-400 outline-none text-center p-0 m-0 shadow-none appearance-none cursor-text" onfocus="this.select()" oninput="window.sflGemBonusManual = true; window.updateGemBonus(this.value / 100)" />%</span>
                            </div>
                          ` : ''}
                       </label>
@@ -1587,8 +1580,11 @@ const t = useTranslations(lang)
        };
 
        window.updateGemBonus = (val) => {
-           window.sflGemBonus = parseFloat(val);
-           window.updateCalc();
+           let parsed = parseFloat(val);
+           if (!isNaN(parsed)) {
+               window.sflGemBonus = parsed;
+               window.updateCalc();
+           }
        };
 
        window.updateCalc = () => {
@@ -1604,24 +1600,65 @@ const t = useTranslations(lang)
               else clearBtn.classList.add('hidden');
            }
            
+           // Si el usuario cambia el input principal, reactivamos el auto-cálculo si estaban interactuando con otra cosa
+           if (document.activeElement === inputEl) {
+               window.sflGemBonusManual = false;
+           }
+           
            const selectedCurr = document.querySelector('input[name="calcCurr"]:checked').value;
            
            // Usamos el precio interno del juego para la calculadora porque las Gemas y monedas se basan en este oráculo interno
            const sflPrice = window.sflInternalPrice || window.sflUsdPrice || 0.073;
            
-           const gemBaseUsd = 0.0103;
-           const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29;
-           const gemCostUsd = gemBaseUsd / (1 + gemBonus);
-           const gemCostFlower = gemCostUsd / sflPrice;
+           const getGemFiatPrice = (gems) => {
+               if (gems < 650) return 1.29 / 100;
+               if (gems < 1350) return 6.49 / 650;
+               if (gems < 2800) return 12.99 / 1350;
+               if (gems < 8000) return 25.99 / 2800;
+               if (gems < 15500) return 0.0087825; // Hidden tier!
+               if (gems < 200000) return 129.99 / 15500;
+               return 1299.99 / 200000;
+           };
 
            const rates = {
                FLOWER: 1,
                COIN: 1 / (window.sflBestCoinsPerFlower || 1330), 
                USD: 1 / sflPrice,
-               Gema: gemCostFlower, 
                Oil: window.sflBestOilPriceFlower || 0.107 
            };
            
+           const baseAmountTmp = selectedCurr !== 'Gema' ? amount * rates[selectedCurr] : 0;
+           
+           let fiatPricePerGem = 0.0129;
+           if (window.sflGemBonusManual && window.sflGemBonus !== undefined) {
+               fiatPricePerGem = 0.0129 / (1 + window.sflGemBonus);
+           } else {
+               if (selectedCurr === 'Gema') {
+                   fiatPricePerGem = getGemFiatPrice(amount);
+               } else {
+                   let usdValue = baseAmountTmp * sflPrice;
+                   let targetGems = usdValue / (0.0129 * 0.8);
+                   for(let i=0; i<3; i++) {
+                       fiatPricePerGem = getGemFiatPrice(targetGems);
+                       targetGems = usdValue / (fiatPricePerGem * 0.8);
+                   }
+               }
+           }
+           
+           const gemBonus = (0.0129 / fiatPricePerGem) - 1;
+           window.sflGemBonus = gemBonus;
+           
+           const gemBonusInput = document.getElementById('gemBonusInput');
+           if (gemBonusInput && !window.sflGemBonusManual) {
+               gemBonusInput.value = (gemBonus * 100).toFixed(1).replace('.0', '');
+           }
+           
+           // El costo mostrado en USD es el precio fiat con el descuento de cripto del 20%
+           const gemCostUsd = fiatPricePerGem * 0.8; 
+           const gemCostFlower = gemCostUsd / sflPrice;
+           
+           rates['Gema'] = gemCostFlower;
+
            const baseAmount = amount * rates[selectedCurr];
            const currencies = ['FLOWER', 'COIN', 'USD', 'Gema', 'Oil'];
            const targets = currencies.filter(c => c !== selectedCurr);
@@ -1635,7 +1672,8 @@ const t = useTranslations(lang)
            };
            
            const outHTML = targets.map(c => {
-               const val = baseAmount / rates[c];
+               let val = baseAmount / rates[c];
+               
                let formatted = val;
                if (val === 0) formatted = "0";
                else if (val < 0.0001) formatted = val.toExponential(2);
