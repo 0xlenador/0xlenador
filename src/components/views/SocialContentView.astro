@@ -32,6 +32,15 @@ const YT_ICON = `<path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5
 
 const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
 
+const getPostImage = (post, lang) => {
+  if (post.platform === 'youtube') return `https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg`;
+  const url = post.imageUrl || post.media;
+  if (url === '/images/default-tweet.jpg') {
+    return lang === 'en' ? '/img/bin/text-x.webp' : '/img/bin/texto-x.webp';
+  }
+  return url;
+}
+
 ---
 
 <main class="max-w-6xl mx-auto px-6 pt-12 pb-24 relative z-10">
@@ -104,17 +113,15 @@ const getIcon = (platform) => platform === 'youtube' ? YT_ICON : X_ICON
             {((post.platform === 'youtube' && post.videoId) || (post.platform === 'x' && (post.imageUrl || post.media))) && (
               <div class="mb-4 rounded-xl overflow-hidden aspect-video border border-terminal-border/50 bg-terminal-surface/50 relative">
                 <img 
-                  src={post.platform === 'youtube' 
-                    ? `https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg` 
-                    : (post.imageUrl || post.media)} 
+                  src={getPostImage(post, lang)} 
                   alt={lang === 'en' && post.title_en ? post.title_en : post.title} 
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   loading="lazy" 
                 />
                 {post.format === 'video' && (
-                  <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-14 h-14 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-emerald-500/80 group-hover:scale-110 transition-all duration-300">
-                      <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <div class="absolute top-3 left-3 pointer-events-none">
+                    <div class="w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center border border-white/20 opacity-70 group-hover:opacity-100 group-hover:bg-black/80 group-hover:scale-110 transition-all duration-300">
+                      <svg class="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
                   </div>
                 )}
