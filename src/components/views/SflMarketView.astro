@@ -1280,8 +1280,9 @@ const t = useTranslations(lang)
         }
 
         if (item.history && item.history.sparkline7d && item.history.sparkline7d.length > 0) {
+           const offset = sparklineLength - item.history.sparkline7d.length;
            item.history.sparkline7d.forEach((price, idx) => {
-              totalSparkline7d[idx] += supply * (price !== null && price !== undefined ? price : item.currentPrice)
+              totalSparkline7d[idx + offset] += supply * (price !== null && price !== undefined ? price : item.currentPrice)
            })
         } else if (sparklineLength > 0) {
            for (let i = 0; i < sparklineLength; i++) {
