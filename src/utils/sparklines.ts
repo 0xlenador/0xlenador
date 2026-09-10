@@ -185,8 +185,8 @@ export const initSparklineHover = () => {
            if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K'
            return num.toFixed(2)
          }
-         displayValStr = `$ ${formatLarge(valUsd)}`
-         subtextHTML = `<div class="text-[9px] text-white/40 font-mono tracking-tight mt-1">${formatLarge(val)} FLOWER</div>`
+         displayValStr = `${formatLarge(val)} <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-3 h-3 rounded-full inline-block opacity-80" style="vertical-align: middle; margin-left: 2px;" />`
+         subtextHTML = sflUsdPrice ? `<div class="text-[9px] text-white/40 font-mono tracking-tight mt-1">~$${formatLarge(valUsd)}</div>` : ''
       }
 
       let pctHTML = ""

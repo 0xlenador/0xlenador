@@ -1273,20 +1273,37 @@ const t = useTranslations(lang)
       if (supply > 0 && item.currentPrice > 0) {
         currentTotalMC += supply * item.currentPrice
         
-        if (item.history && item.history["7d"]) {
-           historicalTotalMC += supply * item.history["7d"]
-        } else {
-           historicalTotalMC += supply * item.currentPrice
+        let pastPrice = 0;
+        let historicalFallback = 0;
+        
+        if (item.history) {
+            if (item.history["7d"]) {
+                pastPrice = item.history["7d"];
+            }
+            if (item.history.sparkline7d) {
+                for(let j=0; j < item.history.sparkline7d.length - 1; j++) {
+                    if(item.history.sparkline7d[j] !== null && item.history.sparkline7d[j] !== undefined) {
+                        historicalFallback = item.history.sparkline7d[j];
+                        if (!pastPrice) pastPrice = historicalFallback;
+                        break;
+                    }
+                }
+            }
         }
+        
+        historicalTotalMC += supply * pastPrice;
 
         if (item.history && item.history.sparkline7d && item.history.sparkline7d.length > 0) {
            const offset = sparklineLength - item.history.sparkline7d.length;
            item.history.sparkline7d.forEach((price, idx) => {
-              totalSparkline7d[idx + offset] += supply * (price !== null && price !== undefined ? price : item.currentPrice)
+              const isToday = idx === item.history.sparkline7d.length - 1;
+              const fallback = isToday ? item.currentPrice : historicalFallback;
+              totalSparkline7d[idx + offset] += supply * (price !== null && price !== undefined ? price : fallback);
            })
         } else if (sparklineLength > 0) {
            for (let i = 0; i < sparklineLength; i++) {
-              totalSparkline7d[i] += supply * item.currentPrice
+              const isToday = i === sparklineLength - 1;
+              totalSparkline7d[i] += supply * (isToday ? item.currentPrice : 0);
            }
         }
       }
@@ -1330,12 +1347,12 @@ const t = useTranslations(lang)
                      </button>
                   </div>
                   <div class="flex items-baseline gap-2.5 flex-wrap">
-                     <span class="text-2xl font-sans font-bold text-white tracking-tight leading-none">$ ${formatLarge(mcInUsd)}</span>
-                     ${sflUsdPrice ? `<span class="text-[11px] text-white/40 font-mono leading-none">${formatLarge(currentTotalMC)} FLOWER</span>` : ''}
-                     <span class="text-xs font-sans font-bold tracking-wide ${mcIsPositive ? 'text-emerald-500' : 'text-red-500'}">
-                        ${mcIsPositive ? '↗' : '↘'} ${Math.abs(mcChangeValue).toFixed(2)}%
-                     </span>
-                  </div>
+                      <span class="text-2xl font-sans font-bold text-white tracking-tight leading-none flex items-center gap-1.5">${formatLarge(currentTotalMC)} <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-5 h-5 rounded-full inline-block opacity-70" /></span>
+                      <span class="text-xs font-sans font-bold tracking-wide ${mcIsPositive ? 'text-emerald-500' : 'text-red-500'}">
+                         ${mcIsPositive ? '↗' : '↘'} ${Math.abs(mcChangeValue).toFixed(2)}%
+                      </span>
+                   </div>
+                   ${sflUsdPrice ? `<div class="text-[11px] text-white/40 font-mono leading-none mt-0.5">~$${formatLarge(mcInUsd)}</div>` : ''}
                </div>
                <span class="text-[10px] font-bold text-blue-500">7D</span>
             </div>
