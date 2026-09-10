@@ -16,6 +16,15 @@ const allIcons = Object.keys(lucideData.icons);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --background: #0a0e12;
+        --foreground: #f5fafc;
+        --border: #b9f0ff29;
+        --cyan: #4fd9ff;
+        --ice: #b9f0ff;
+        --graphite: #101820;
+        --soft: #f5fafc;
+      }
       .sandbox-zone {
         font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important;
       }
@@ -24,25 +33,26 @@ const allIcons = Object.keys(lucideData.icons);
       }
     </style>
   </head>
-  <body class="bg-[#09090b] text-[#f4f4f5] antialiased min-h-screen flex flex-col">
+  <body class="antialiased min-h-screen flex flex-col" style="background-color: var(--background); color: var(--foreground);">
     
     {/* NAVBAR DEL PROYECTO ORIGINAL (Arriba) */}
     <Navbar lang="es" esUrl="/design" enUrl="/en/design" />
 
     {/* NAVBAR INTERNO DEL SANDBOX */}
-    <div class="sandbox-zone sticky top-0 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800 z-50 p-4">
-      <div class="max-w-3xl mx-auto flex items-center justify-between">
-        <div class="font-bold text-emerald-400 text-sm tracking-widest uppercase">Design Sandbox</div>
-        <div class="flex gap-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-          <button id="btn-general" class="px-4 py-1.5 text-sm font-semibold rounded-md bg-emerald-500/20 text-emerald-400 transition-colors">General</button>
+    <div class="sandbox-zone sticky top-0 backdrop-blur-xl border-b z-50 p-4" style="background-color: color-mix(in srgb, var(--background) 90%, transparent); border-color: var(--border);">
+      <div class="max-w-[1600px] mx-auto flex items-center justify-between">
+        <div class="font-bold text-sm tracking-widest uppercase" style="color: var(--soft); opacity: 0.6;">Design Sandbox</div>
+        <div class="flex gap-1 p-1 rounded-lg border-[0.5px]" style="background-color: var(--graphite); border-color: var(--border);">
+          <button id="btn-general" class="px-4 py-1.5 text-sm font-medium rounded-md transition-colors" style="background-color: color-mix(in srgb, var(--cyan) 15%, transparent); color: var(--ice);">General</button>
           <button id="btn-dashboard" class="px-4 py-1.5 text-sm font-semibold rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors">Dashboard</button>
+          <button id="btn-colors" class="px-4 py-1.5 text-sm font-semibold rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors">Branding</button>
           <button id="btn-icons" class="px-4 py-1.5 text-sm font-semibold rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors">Iconos</button>
         </div>
       </div>
     </div>
 
     {/* ZONA DE DISEÑO AISLADA */}
-    <main class="sandbox-zone flex-1 max-w-3xl mx-auto w-full space-y-8 p-8">
+    <main class="sandbox-zone flex-1 max-w-[1600px] mx-auto w-full space-y-8 p-4 md:p-8">
       
       {/* ===================== VISTA GENERAL ===================== */}
       <div id="view-general" class="space-y-8 block animate-in fade-in duration-300">
@@ -58,35 +68,75 @@ const allIcons = Object.keys(lucideData.icons);
           </div>
 
           <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-emerald-400">H2 / text-lg md:text-xl (18px - 20px) / font-bold</span>
-            <h2 class="text-lg md:text-xl font-bold leading-tight">Sección Secundaria</h2>
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H2 / text-lg md:text-[22px] (18px - 22px) / font-bold</span>
+            <h2 class="text-lg md:text-[22px] font-bold leading-tight">Sección Secundaria</h2>
           </div>
 
           <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-emerald-400">H3 / text-base (16px) / font-semibold</span>
-            <h3 class="text-base font-semibold leading-snug">Distribución de Capital</h3>
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H3 / text-base md:text-lg (16px - 18px) / font-semibold</span>
+            <h3 class="text-base md:text-lg font-semibold leading-snug">Distribución de Capital</h3>
           </div>
 
           <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-emerald-400">H4 / text-sm (14px) / font-semibold</span>
-            <h4 class="text-sm font-semibold leading-snug">Opciones Avanzadas</h4>
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H4 / text-sm md:text-base (14px - 16px) / font-semibold</span>
+            <h4 class="text-sm md:text-base font-semibold leading-snug">Opciones Avanzadas</h4>
           </div>
 
           <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-emerald-400">H5 / text-sm (14px) / font-medium</span>
-            <h5 class="text-sm font-medium leading-snug">Margen de apalancamiento</h5>
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H5 / text-sm md:text-base (14px - 16px) / font-medium</span>
+            <h5 class="text-sm md:text-base font-medium leading-snug">Margen de apalancamiento</h5>
           </div>
 
           <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-emerald-400">H6 / text-xs (12px) / font-bold / uppercase</span>
-            <h6 class="text-xs font-bold uppercase tracking-wider leading-snug">Metadato Importante</h6>
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H6 / text-xs md:text-sm (12px - 14px) / font-bold / uppercase</span>
+            <h6 class="text-xs md:text-sm font-bold uppercase tracking-wider leading-snug">Metadato Importante</h6>
           </div>
 
           <div class="space-y-1 pt-4">
-            <span class="text-xs font-mono opacity-50 text-emerald-400">Párrafo Estándar / text-sm (14px)</span>
-            <p class="text-sm leading-normal text-zinc-300">
-              Texto optimizado para inyectar muchísima información en poco espacio sin perder legibilidad. Esta es ahora la base para todo el proyecto.
+            <span class="text-xs font-mono opacity-50 text-emerald-400">Párrafo Estándar / text-sm md:text-base (14px - 16px)</span>
+            <p class="text-sm md:text-base leading-relaxed text-zinc-300">
+              Este es el tamaño perfecto para lectura. En teléfonos móviles se mantiene en 14px porque la pantalla está muy cerca de los ojos, pero en monitores de PC crece a 16px para compensar la distancia, garantizando una legibilidad perfecta.
             </p>
+          </div>
+
+          {/* ========== TEXTOS ESPECIALES ========== */}
+          <div class="border-t border-zinc-800/50 pt-8 mt-8 space-y-8">
+            <h3 class="text-lg md:text-xl font-bold text-white mb-2 flex items-center gap-2">
+              <Icon name="lucide:message-square-quote" class="w-5 h-5 text-emerald-400" /> Citas y Textos Especiales
+            </h3>
+
+            <div class="space-y-1">
+              <span class="text-xs font-mono opacity-50 text-emerald-400">Blockquote (Citas) / border-l-2 bg-muted</span>
+              <blockquote class="border-l-2 border-emerald-500 bg-emerald-500/5 pl-4 py-3 pr-4 rounded-r-lg text-sm md:text-base italic text-zinc-300">
+                "El mercado es un dispositivo para transferir dinero de los impacientes a los pacientes."
+                <footer class="text-xs font-semibold not-italic text-zinc-500 mt-2">— Warren Buffett</footer>
+              </blockquote>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-xs font-mono opacity-50 text-emerald-400">Inline Code / font-mono text-[0.85em] bg-zinc-800</span>
+              <p class="text-sm md:text-base leading-relaxed text-zinc-300">
+                Para interactuar con el contrato, verifica que la dirección empiece con <code class="font-mono text-[0.85em] bg-zinc-800/80 border border-zinc-700/50 rounded px-1.5 py-0.5 text-emerald-400 tracking-tight">0x1234...abcd</code> antes de firmar cualquier transacción en tu wallet.
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-xs font-mono opacity-50 text-emerald-400">Callout (Alerta/Info) / flex gap-3 border rounded-lg</span>
+              <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 flex gap-3">
+                <Icon name="lucide:info" class="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                <div class="text-sm md:text-base leading-relaxed text-blue-100/80">
+                  <strong class="text-blue-400 font-semibold block mb-1">Nota de Seguridad</strong>
+                  Nunca compartas tu frase semilla con nadie, ni siquiera con los administradores del grupo. El equipo oficial nunca te enviará un mensaje directo pidiendo fondos.
+                </div>
+              </div>
+            </div>
+            
+            <div class="space-y-1">
+              <span class="text-xs font-mono opacity-50 text-emerald-400">Resaltado de Métricas / bg-white/5 font-semibold</span>
+              <p class="text-sm md:text-base leading-relaxed text-zinc-300">
+                El TVL del protocolo ha subido un <span class="text-emerald-400 font-bold bg-emerald-400/10 px-1.5 py-0.5 rounded text-[0.9em]">+24.5%</span> hoy, alcanzando un total de <span class="text-white font-semibold bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[0.9em]">$45.2M</span> bloqueados.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -94,48 +144,129 @@ const allIcons = Object.keys(lucideData.icons);
       {/* ===================== VISTA DASHBOARD ===================== */}
       <div id="view-dashboard" class="space-y-8 hidden animate-in fade-in duration-300">
         <div class="border-b border-zinc-800 pb-4">
-          <h2 class="text-xl text-[#f4f4f5] font-bold mb-1">Escala Tipográfica: <span class="text-cyan-400">Dashboard</span></h2>
-          <p class="text-sm text-zinc-400">Densidad alta. Estilo CryptoRank. Todo es compacto para mostrar mucha data en poco espacio.</p>
+          <h2 class="text-xl text-[#f4f4f5] font-bold mb-1">Construcción de <span class="text-cyan-400">Dashboard Base</span></h2>
+          <p class="text-sm text-zinc-400">Lienzo en blanco para diseñar la interfaz y los componentes del dashboard (Tarjetas, Gráficos, Tablas).</p>
         </div>
 
-        <div class="space-y-8">
-          <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">H1 / text-xl md:text-[28px] (20px - 28px) / font-bold</span>
-            <h1 class="text-xl md:text-[28px] font-bold leading-tight">Panel de SFL Mercado</h1>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">H2 / text-lg md:text-xl (18px - 20px) / font-bold</span>
-            <h2 class="text-lg md:text-xl font-bold leading-tight">Resumen de Activos</h2>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">H3 / text-base (16px) / font-semibold</span>
-            <h3 class="text-base font-semibold leading-snug">Estadísticas Rápidas</h3>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">H4 / text-sm (14px) / font-semibold</span>
-            <h4 class="text-sm font-semibold leading-snug">Volumen 24h</h4>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">H5 / text-sm (14px) / font-medium</span>
-            <h5 class="text-sm font-medium leading-snug">Filtros Activos</h5>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">H6 / text-xs (12px) / font-bold / uppercase</span>
-            <h6 class="text-xs font-bold uppercase tracking-wider leading-snug">Etiqueta Mini</h6>
-          </div>
-
-          <div class="space-y-1 pt-4">
-            <span class="text-xs font-mono opacity-50 text-cyan-400">Párrafo Pequeño / text-sm (14px)</span>
-            <p class="text-sm leading-normal text-zinc-300">
-              Texto mucho más pequeño y compacto. Es perfecto para herramientas donde el usuario necesita ver tablas enteras, listas de tokens y métricas sin tener que hacer scroll.
-            </p>
-          </div>
+        {/* CONTENEDOR DEL DASHBOARD EN BLANCO */}
+        <div class="w-full min-h-[500px] border border-dashed border-zinc-800 rounded-xl flex items-center justify-center bg-zinc-900/20 relative overflow-hidden">
+          <p class="text-sm text-zinc-500 font-mono flex items-center gap-2">
+            Lienzo vacío para el Dashboard
+          </p>
         </div>
+      </div>
+
+      {/* ===================== VISTA COLORES / BRANDING ===================== */}
+      <div id="view-colors" class="space-y-10 hidden animate-in fade-in duration-300">
+        
+        {/* HEADER */}
+        <div class="border-b pb-4" style="border-color: var(--border);">
+          <h2 class="text-xl font-bold mb-1" style="color: var(--foreground);">0xL <span style="color: var(--cyan);">/</span> Visual Language</h2>
+          <p class="text-sm opacity-60" style="color: var(--soft);">Configuración basada 100% en las variables CSS del <code class="font-mono bg-white/5 px-1 rounded">root</code> interno. Edita estas variables en el archivo para iterar el diseño al instante.</p>
+        </div>
+
+        {/* ─── PALETA CROMÁTICA ─── */}
+        <section class="space-y-5">
+          <div>
+            <h3 class="text-base font-semibold" style="color: var(--foreground);">Paleta Cromática (CSS Variables)</h3>
+          </div>
+
+          <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="p-4 rounded-2xl border-[0.5px] flex flex-col gap-2" style="background-color: var(--graphite); border-color: var(--border);">
+              <div class="w-full h-8 rounded-lg border" style="background-color: var(--background); border-color: var(--border);"></div>
+              <div class="text-sm font-semibold" style="color: var(--foreground);">Background</div>
+              <div class="text-[10px] font-mono" style="color: var(--cyan);">--background</div>
+            </div>
+            
+            <div class="p-4 rounded-2xl border-[0.5px] flex flex-col gap-2" style="background-color: var(--graphite); border-color: var(--border);">
+              <div class="w-full h-8 rounded-lg" style="background-color: var(--cyan); box-shadow: 0 0 12px color-mix(in srgb, var(--cyan) 40%, transparent);"></div>
+              <div class="text-sm font-semibold" style="color: var(--foreground);">Electric Cyan</div>
+              <div class="text-[10px] font-mono" style="color: var(--cyan);">--cyan</div>
+            </div>
+
+            <div class="p-4 rounded-2xl border-[0.5px] flex flex-col gap-2" style="background-color: var(--graphite); border-color: var(--border);">
+              <div class="w-full h-8 rounded-lg" style="background-color: var(--ice);"></div>
+              <div class="text-sm font-semibold" style="color: var(--foreground);">Ice Blue</div>
+              <div class="text-[10px] font-mono" style="color: var(--cyan);">--ice</div>
+            </div>
+
+            <div class="p-4 rounded-2xl border-[0.5px] flex flex-col gap-2" style="background-color: var(--graphite); border-color: var(--border);">
+              <div class="w-full h-8 rounded-lg border-[0.5px]" style="background-color: var(--graphite); border-color: var(--border);"></div>
+              <div class="text-sm font-semibold" style="color: var(--foreground);">Graphite</div>
+              <div class="text-[10px] font-mono" style="color: var(--cyan);">--graphite</div>
+            </div>
+
+            <div class="p-4 rounded-2xl border-[0.5px] flex flex-col gap-2" style="background-color: var(--graphite); border-color: var(--border);">
+              <div class="w-full h-8 rounded-lg" style="background-color: var(--soft);"></div>
+              <div class="text-sm font-semibold" style="color: var(--foreground);">Soft White</div>
+              <div class="text-[10px] font-mono" style="color: var(--cyan);">--soft</div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── COMPONENTES ─── */}
+        <section class="space-y-6">
+          <div>
+            <h3 class="text-base font-semibold" style="color: var(--foreground);">Componentes (Conectados al root)</h3>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* ── Tarjeta Graphite Glass ── */}
+            <div class="relative group">
+              <div class="relative p-6 rounded-2xl border-[0.5px] shadow-lg transition-all" style="background-color: var(--graphite); border-color: var(--border);">
+                
+                <div class="flex justify-between items-center mb-5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-lg border-[0.5px]" style="background-color: color-mix(in srgb, var(--cyan) 10%, transparent); border-color: var(--border);">
+                      <Icon name="lucide:diamond" class="w-4 h-4" style="color: var(--cyan);" />
+                    </div>
+                    <span class="text-sm font-medium opacity-70" style="color: var(--soft);">Activos Netos</span>
+                  </div>
+                  <button class="p-1.5 rounded-lg transition-colors opacity-30 hover:opacity-60" style="color: var(--soft);">
+                    <Icon name="lucide:more-horizontal" class="w-4.5 h-4.5" />
+                  </button>
+                </div>
+                
+                <div class="text-3xl font-bold tracking-tight mb-3" style="color: var(--foreground);">$45,920<span class="opacity-40">.50</span></div>
+                
+                {/* Badge con cyan */}
+                <div class="text-xs font-medium flex items-center gap-1.5 w-max px-2.5 py-1 rounded-full border-[0.5px]" style="background-color: color-mix(in srgb, var(--cyan) 15%, transparent); border-color: var(--border); color: var(--ice);">
+                  <Icon name="lucide:trending-up" class="w-3.5 h-3.5" /> +12.4%
+                </div>
+              </div>
+            </div>
+
+            {/* ── Botones ── */}
+            <div class="flex flex-col justify-center gap-6">
+              
+              {/* Primario: Cyan controlado */}
+              <div class="space-y-2">
+                <span class="text-[10px] uppercase tracking-widest font-medium opacity-40 pl-1" style="color: var(--soft);">Primario</span>
+                <button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-[0.5px] font-medium rounded-xl transition-all text-sm" style="background-color: color-mix(in srgb, var(--cyan) 15%, transparent); border-color: var(--border); color: var(--ice); box-shadow: 0 0 15px color-mix(in srgb, var(--cyan) 10%, transparent);">
+                  Depositar Fondos <Icon name="lucide:arrow-right" class="w-4 h-4" style="color: var(--cyan);" />
+                </button>
+              </div>
+
+              {/* Secundario: Graphite Glass */}
+              <div class="space-y-2">
+                <span class="text-[10px] uppercase tracking-widest font-medium opacity-40 pl-1" style="color: var(--soft);">Secundario</span>
+                <button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-[0.5px] font-medium rounded-xl transition-all text-sm opacity-80 hover:opacity-100" style="background-color: var(--graphite); border-color: var(--border); color: var(--soft);">
+                  Ver Historial
+                </button>
+              </div>
+
+              {/* Peligro */}
+              <div class="space-y-2">
+                <span class="text-[10px] uppercase tracking-widest font-medium opacity-40 pl-1" style="color: var(--soft);">Peligro</span>
+                <button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-red-500/10 border-[0.5px] border-red-500/20 text-red-400 font-medium rounded-xl transition-all text-sm">
+                  <Icon name="lucide:alert-triangle" class="w-4 h-4" /> Desconectar
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
 
       {/* ===================== VISTA ICONOS ===================== */}
@@ -176,9 +307,9 @@ const allIcons = Object.keys(lucideData.icons);
 
     <script>
       // Lógica de pestañas escalable para cualquier cantidad de vistas
-      const tabs = ['general', 'dashboard', 'icons'];
-      const activeClasses = ['bg-emerald-500/20', 'text-emerald-400'];
-      const inactiveClasses = ['text-zinc-400', 'hover:text-zinc-200', 'hover:bg-zinc-800'];
+      const tabs = ['general', 'dashboard', 'colors', 'icons'];
+      const activeClasses = ['bg-[#0FD8F7]/15', 'text-[#B0F8FF]'];
+      const inactiveClasses = ['text-[#F5FAFC]/40', 'hover:text-[#F5FAFC]/70', 'hover:bg-white/5'];
 
       tabs.forEach(tab => {
         const btn = document.getElementById(`btn-${tab}`);
