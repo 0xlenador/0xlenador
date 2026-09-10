@@ -1,0 +1,263 @@
+---
+import Navbar from "../components/Navbar.astro"
+import Footer from "../components/Footer.astro"
+import { Icon } from "astro-icon/components"
+import lucideData from "@iconify-json/lucide/icons.json"
+import "../styles/main.css"
+
+const allIcons = Object.keys(lucideData.icons);
+---
+<html lang="es" class="dark scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design System Sandbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      .sandbox-zone {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+      }
+      .sandbox-zone * {
+        font-family: inherit !important;
+      }
+    </style>
+  </head>
+  <body class="bg-[#09090b] text-[#f4f4f5] antialiased min-h-screen flex flex-col">
+    
+    {/* NAVBAR DEL PROYECTO ORIGINAL (Arriba) */}
+    <Navbar lang="es" esUrl="/design" enUrl="/en/design" />
+
+    {/* NAVBAR INTERNO DEL SANDBOX */}
+    <div class="sandbox-zone sticky top-0 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800 z-50 p-4">
+      <div class="max-w-3xl mx-auto flex items-center justify-between">
+        <div class="font-bold text-emerald-400 text-sm tracking-widest uppercase">Design Sandbox</div>
+        <div class="flex gap-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+          <button id="btn-general" class="px-4 py-1.5 text-sm font-semibold rounded-md bg-emerald-500/20 text-emerald-400 transition-colors">General</button>
+          <button id="btn-dashboard" class="px-4 py-1.5 text-sm font-semibold rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors">Dashboard</button>
+          <button id="btn-icons" class="px-4 py-1.5 text-sm font-semibold rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors">Iconos</button>
+        </div>
+      </div>
+    </div>
+
+    {/* ZONA DE DISEÑO AISLADA */}
+    <main class="sandbox-zone flex-1 max-w-3xl mx-auto w-full space-y-8 p-8">
+      
+      {/* ===================== VISTA GENERAL ===================== */}
+      <div id="view-general" class="space-y-8 block animate-in fade-in duration-300">
+        <div class="border-b border-zinc-800 pb-4">
+          <h2 class="text-xl text-[#f4f4f5] font-bold mb-1">Escala Tipográfica: <span class="text-emerald-400">Universal (Compacta)</span></h2>
+          <p class="text-sm text-zinc-400">A partir de ahora, todo el proyecto (General y Dashboards) usará esta única escala densa y compacta.</p>
+        </div>
+
+        <div class="space-y-8">
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H1 / text-xl md:text-[28px] (20px - 28px) / font-bold</span>
+            <h1 class="text-xl md:text-[28px] font-bold leading-tight">Página de Operaciones</h1>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H2 / text-lg md:text-xl (18px - 20px) / font-bold</span>
+            <h2 class="text-lg md:text-xl font-bold leading-tight">Sección Secundaria</h2>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H3 / text-base (16px) / font-semibold</span>
+            <h3 class="text-base font-semibold leading-snug">Distribución de Capital</h3>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H4 / text-sm (14px) / font-semibold</span>
+            <h4 class="text-sm font-semibold leading-snug">Opciones Avanzadas</h4>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H5 / text-sm (14px) / font-medium</span>
+            <h5 class="text-sm font-medium leading-snug">Margen de apalancamiento</h5>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">H6 / text-xs (12px) / font-bold / uppercase</span>
+            <h6 class="text-xs font-bold uppercase tracking-wider leading-snug">Metadato Importante</h6>
+          </div>
+
+          <div class="space-y-1 pt-4">
+            <span class="text-xs font-mono opacity-50 text-emerald-400">Párrafo Estándar / text-sm (14px)</span>
+            <p class="text-sm leading-normal text-zinc-300">
+              Texto optimizado para inyectar muchísima información en poco espacio sin perder legibilidad. Esta es ahora la base para todo el proyecto.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ===================== VISTA DASHBOARD ===================== */}
+      <div id="view-dashboard" class="space-y-8 hidden animate-in fade-in duration-300">
+        <div class="border-b border-zinc-800 pb-4">
+          <h2 class="text-xl text-[#f4f4f5] font-bold mb-1">Escala Tipográfica: <span class="text-cyan-400">Dashboard</span></h2>
+          <p class="text-sm text-zinc-400">Densidad alta. Estilo CryptoRank. Todo es compacto para mostrar mucha data en poco espacio.</p>
+        </div>
+
+        <div class="space-y-8">
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">H1 / text-xl md:text-[28px] (20px - 28px) / font-bold</span>
+            <h1 class="text-xl md:text-[28px] font-bold leading-tight">Panel de SFL Mercado</h1>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">H2 / text-lg md:text-xl (18px - 20px) / font-bold</span>
+            <h2 class="text-lg md:text-xl font-bold leading-tight">Resumen de Activos</h2>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">H3 / text-base (16px) / font-semibold</span>
+            <h3 class="text-base font-semibold leading-snug">Estadísticas Rápidas</h3>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">H4 / text-sm (14px) / font-semibold</span>
+            <h4 class="text-sm font-semibold leading-snug">Volumen 24h</h4>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">H5 / text-sm (14px) / font-medium</span>
+            <h5 class="text-sm font-medium leading-snug">Filtros Activos</h5>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">H6 / text-xs (12px) / font-bold / uppercase</span>
+            <h6 class="text-xs font-bold uppercase tracking-wider leading-snug">Etiqueta Mini</h6>
+          </div>
+
+          <div class="space-y-1 pt-4">
+            <span class="text-xs font-mono opacity-50 text-cyan-400">Párrafo Pequeño / text-sm (14px)</span>
+            <p class="text-sm leading-normal text-zinc-300">
+              Texto mucho más pequeño y compacto. Es perfecto para herramientas donde el usuario necesita ver tablas enteras, listas de tokens y métricas sin tener que hacer scroll.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ===================== VISTA ICONOS ===================== */}
+      <div id="view-icons" class="space-y-8 hidden animate-in fade-in duration-300">
+        <div class="border-b border-zinc-800 pb-4 flex flex-col gap-4">
+          <div>
+            <h2 class="text-xl text-[#f4f4f5] font-bold mb-1">Astro Icons: <span class="text-purple-400">Catálogo Base</span></h2>
+            <p class="text-sm text-zinc-400">Actualmente hay {allIcons.length} iconos de Lucide instalados.</p>
+          </div>
+          <input 
+            type="text" 
+            id="icon-search" 
+            placeholder="Buscar icono por nombre (ej: user, wallet, arrow)..." 
+            class="w-full bg-[#09090b] border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-emerald-500/50 transition-colors"
+          />
+        </div>
+
+        <div id="icon-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 text-zinc-400 text-2xl">
+          {allIcons.map((iconName, index) => (
+            <div 
+              class={`icon-card flex flex-col items-center justify-center gap-2 p-4 bg-zinc-900/40 border border-zinc-800/50 rounded-lg hover:bg-zinc-800 hover:text-emerald-400 hover:border-emerald-500/30 transition-all cursor-crosshair group ${index >= 300 ? 'hidden' : ''}`}
+              data-name={iconName}
+            >
+              <Icon name={`lucide:${iconName}`} />
+              <span class="text-[0.55rem] font-mono opacity-0 group-hover:opacity-100 transition-opacity absolute translate-y-8 bg-[#09090b] px-1.5 py-0.5 rounded border border-zinc-800 pointer-events-none z-10">{iconName}</span>
+            </div>
+          ))}
+        </div>
+        
+        {/* Elemento fantasma para detectar cuando el usuario llega al fondo */}
+        <div id="icon-sentinel" class="h-10 w-full"></div>
+      </div>
+
+    </main>
+
+    {/* FOOTER DEL PROYECTO ORIGINAL (Abajo) */}
+    <Footer lang="es" />
+
+    <script>
+      // Lógica de pestañas escalable para cualquier cantidad de vistas
+      const tabs = ['general', 'dashboard', 'icons'];
+      const activeClasses = ['bg-emerald-500/20', 'text-emerald-400'];
+      const inactiveClasses = ['text-zinc-400', 'hover:text-zinc-200', 'hover:bg-zinc-800'];
+
+      tabs.forEach(tab => {
+        const btn = document.getElementById(`btn-${tab}`);
+        
+        btn?.addEventListener('click', () => {
+          tabs.forEach(t => {
+            const isMatch = t === tab;
+            const targetView = document.getElementById(`view-${t}`);
+            const targetBtn = document.getElementById(`btn-${t}`);
+            
+            if (isMatch) {
+              targetView?.classList.remove('hidden');
+              targetBtn?.classList.remove(...inactiveClasses);
+              targetBtn?.classList.add(...activeClasses);
+            } else {
+              targetView?.classList.add('hidden');
+              targetBtn?.classList.remove(...activeClasses);
+              targetBtn?.classList.add(...inactiveClasses);
+            }
+          });
+        });
+      });
+
+      // ==============================================
+      // LÓGICA DE ICONOS (Buscador y Scroll Infinito)
+      // ==============================================
+      const searchInput = document.getElementById('icon-search');
+      const allCards = Array.from(document.querySelectorAll('.icon-card'));
+      const sentinel = document.getElementById('icon-sentinel');
+      
+      let currentQuery = "";
+      let visibleLimit = 300;
+      let filteredCards = allCards; // Inicialmente todos los iconos
+
+      // Función para mostrar solo los permitidos por el límite
+      function renderGrid() {
+        filteredCards.forEach((card, i) => {
+          if (i < visibleLimit) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
+
+      // Evento del Buscador
+      searchInput?.addEventListener('input', (e) => {
+        currentQuery = e.target.value.toLowerCase().trim();
+        visibleLimit = 300; // Resetear límite al buscar algo nuevo
+        
+        if (!currentQuery) {
+          filteredCards = allCards;
+          allCards.forEach(c => c.classList.add('hidden')); // ocultar todos antes del render
+        } else {
+          filteredCards = allCards.filter(card => {
+            const name = card.getAttribute('data-name');
+            const matches = name.includes(currentQuery);
+            if (!matches) card.classList.add('hidden'); // Ocultar al instante los que no coinciden
+            return matches;
+          });
+        }
+        
+        renderGrid();
+      });
+
+      // Intersection Observer para revelar más iconos al scrollear
+      if (sentinel && window.IntersectionObserver) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            // Si el centinela es visible y hay más iconos filtrados por mostrar
+            if (visibleLimit < filteredCards.length) {
+              visibleLimit += 300;
+              renderGrid();
+            }
+          }
+        }, { rootMargin: '300px' });
+        
+        observer.observe(sentinel);
+      }
+    </script>
+  </body>
+</html>
