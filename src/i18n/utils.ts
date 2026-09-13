@@ -58,6 +58,7 @@ export const routeMap: Record<string, Record<Lang, string>> = {
   "/": { es: "/", en: "/en/" },
   "/herramientas": { es: "/herramientas/", en: "/en/tools/" },
   "/directorio": { es: "/directorio/", en: "/en/directory/" },
+  "/yakkamon": { es: "/yakkamon/", en: "/en/yakkamon/" },
   "/activos": { es: "/activos/", en: "/en/watchlist/" },
   // Los activos individuales (/activos/bitcoin/, etc.) NO necesitan entrada aquí.
   // El fallback por segmentos traduce "activos"→"watchlist" automáticamente via `routes`.

@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro"
+import YakkamonView from "../components/views/YakkamonView.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("yakkamon.seo.title"),
+  description: t("yakkamon.seo.description"),
+  image: "/img/cripto/yakkamon.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <YakkamonView />
+</Layout>

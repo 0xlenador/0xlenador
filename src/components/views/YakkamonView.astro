@@ -1,0 +1,536 @@
+---
+// ==========================================
+// src/components/views/YakkamonView.astro
+// View puro para la página hub de Yakkamon
+// ==========================================
+
+import FaqAccordion from "../FaqAccordion.astro"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
+import directoryData from "../../content/data/directory.json"
+
+const yakkamonLink = directoryData.find(item => item.id === "yakkamon")?.url || "https://yakkamon.com";
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+const loc = (path: string) => getLocalizedPath(path, lang)
+
+const faqItems = [
+  { pregunta: t("yakkamon.faq.q1"), respuesta: t("yakkamon.faq.a1") },
+  { pregunta: t("yakkamon.faq.q2"), respuesta: t("yakkamon.faq.a2") },
+  { pregunta: t("yakkamon.faq.q3"), respuesta: t("yakkamon.faq.a3") },
+  { pregunta: t("yakkamon.faq.q4"), respuesta: t("yakkamon.faq.a4") },
+  { pregunta: t("yakkamon.faq.q5"), respuesta: t("yakkamon.faq.a5") },
+]
+
+const upcomingCards = [
+  { title: t("yakkamon.upcoming.card1.title"), desc: t("yakkamon.upcoming.card1.desc"), icon: "🚀" },
+  { title: t("yakkamon.upcoming.card2.title"), desc: t("yakkamon.upcoming.card2.desc"), icon: "🌸" },
+  { title: t("yakkamon.upcoming.card3.title"), desc: t("yakkamon.upcoming.card3.desc"), icon: "⚔️" },
+]
+
+// Extraemos los eventos de la tabla con fechas para poder mutearlos y hacer cuenta regresiva
+const tableEvents = [
+  {
+    id: "event-1",
+    dateStr: t("yakkamon.table.e1.date"),
+    nameKey: "yakkamon.table.e1.name",
+    statusText: t("yakkamon.table.e1.status"),
+    statusType: "closed",
+    targetDate: "2026-09-10T00:00:00Z"
+  },
+  {
+    id: "event-2",
+    dateStr: t("yakkamon.table.e2.date"),
+    nameKey: "yakkamon.table.e2.name",
+    statusText: t("yakkamon.table.e2.status"),
+    statusType: "upcoming",
+    targetDate: "2026-09-14T00:00:00Z",
+    subEvents: [
+      { name: "Top Trainers", dateStr: "14 Sep at 00:00", targetDate: "2026-09-14T00:00:00Z", icon: "🏆" },
+      { name: "OG Trainers", dateStr: "15 Sep at 00:00", targetDate: "2026-09-15T00:00:00Z", icon: "🏅" },
+      { name: "Ronin Wave", dateStr: "16 Sep at 08:00", targetDate: "2026-09-16T08:00:00Z", icon: "🌊" },
+      { name: "Yakkamon Hunters", dateStr: "17 Sep at 08:00", targetDate: "2026-09-17T08:00:00Z", icon: "🏹" },
+      { name: "Public Trainers", dateStr: "18 Sep at 00:00", targetDate: "2026-09-18T00:00:00Z", icon: "🌍" },
+      { name: "Public Stage", dateStr: "19 Sep at 00:00", targetDate: "2026-09-19T00:00:00Z", icon: "🎪" }
+    ]
+  },
+  {
+    id: "event-3",
+    dateStr: t("yakkamon.table.e3.date"),
+    nameKey: "yakkamon.table.e3.name",
+    statusText: t("yakkamon.table.e3.status"),
+    statusType: "upcoming",
+    targetDate: "2026-10-14T00:00:00Z"
+  },
+  {
+    id: "event-4",
+    dateStr: t("yakkamon.table.e4.date"),
+    nameKey: "yakkamon.table.e4.name",
+    statusText: t("yakkamon.table.e4.status"),
+    statusType: "upcoming",
+    targetDate: null
+  },
+  {
+    id: "event-5",
+    dateStr: t("yakkamon.table.e5.date"),
+    nameKey: "yakkamon.table.e5.name",
+    statusText: t("yakkamon.table.e5.status"),
+    statusType: "highlight",
+    targetDate: null
+  }
+]
+---
+
+<main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+  <!-- Breadcrumb -->
+  <p class="text-[10px] font-mono text-emerald-500/70 uppercase tracking-[0.4em] mb-6">
+    {t("yakkamon.breadcrumb")}
+  </p>
+
+  <!-- Header -->
+  <header class="mb-8 pb-8 flex flex-col md:flex-row gap-6 items-center md:items-start justify-between">
+    <div class="flex-1 text-center md:text-left">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
+        {t("yakkamon.heading")}{" "}
+        <span class="text-emerald-500">{t("yakkamon.heading.accent")}</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl font-light mx-auto md:mx-0">
+        <span id="yakkamon-intro-text">{t("yakkamon.intro")}</span>
+        <span id="yakkamon-more-text" class="hidden"> {t("yakkamon.intro.more")}</span>
+        <button id="yakkamon-more-btn" data-more={t("yakkamon.intro.more_btn")} data-less={t("yakkamon.intro.less_btn")} class="text-terminal-muted hover:text-white font-bold text-sm ml-1 underline underline-offset-4 decoration-terminal-muted/40 hover:decoration-white/60 transition-all">
+          {t("yakkamon.intro.more_btn")}
+        </button>
+      </p>
+    </div>
+    <div class="shrink-0">
+      <img src="/img/cripto/yakkamon.webp" alt="Yakkamon" class="w-32 h-32 md:w-32 md:h-32 object-contain rounded-2xl border border-white/10 shadow-xl shadow-emerald-500/10" />
+    </div>
+  </header>
+
+  <!-- Tabla de fechas -->
+  <section class="mb-16">
+    <div class="flex items-center gap-4 mb-6">
+      <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
+        {t("yakkamon.table.title")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/40"></div>
+    </div>
+    
+    <div class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-black/20 border-b border-terminal-border/50 text-[10px] uppercase tracking-wider text-terminal-muted font-bold">
+              <th class="py-4 px-6">{t("yakkamon.table.date")}</th>
+              <th class="py-4 px-6">{t("yakkamon.table.event")}</th>
+              <th class="py-4 px-6 text-right">{t("yakkamon.table.status")}</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm font-medium text-white/90 divide-y divide-terminal-border/30">
+            {tableEvents.map((evt, i) => {
+              const isClosed = evt.statusType === "closed"
+              const isHighlight = evt.statusType === "highlight"
+              const hasSub = !!evt.subEvents
+              
+              return (
+                <>
+                  <tr 
+                    class:list={[
+                      "transition-colors group",
+                      isClosed ? "opacity-40 hover:opacity-60 grayscale" : "hover:bg-white/[0.02]",
+                      isHighlight ? "bg-emerald-500/5" : "",
+                      hasSub ? "toggle-subevents cursor-pointer" : ""
+                    ]}
+                    data-target={hasSub ? `sub-rows-${i}` : undefined}
+                  >
+                    <td class:list={["py-4 px-6", isHighlight ? "text-emerald-400 font-bold" : (isClosed ? "text-white/30" : "text-white/50")]}>
+                      <span>{evt.dateStr}</span>
+                    </td>
+                    <td class:list={["py-4 px-6", isHighlight ? "font-bold text-emerald-400" : (isClosed ? "" : "font-bold")]}>
+                      <div class="flex items-center gap-4">
+                        <span>{t(evt.nameKey as any)}</span>
+                        {hasSub && (
+                          <div class="event-progress flex items-center h-4" data-stages={JSON.stringify(evt.subEvents!.map(s => s.targetDate))}>
+                            <div class="w-4 h-[1px] bg-emerald-500/20 stage-line transition-all duration-300"></div>
+                            {evt.subEvents!.map((sub, idx) => (
+                              <div class="flex items-center">
+                                <div class="w-2.5 h-2.5 rounded-full border border-emerald-500/20 bg-black/50 stage-dot transition-all duration-300"></div>
+                                <div class="w-4 h-[1px] bg-emerald-500/20 stage-line transition-all duration-300"></div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td class:list={["py-4 px-6 text-right font-mono", isClosed ? "text-xs text-red-500/70" : "text-yellow-400"]}>
+                      <div class="flex flex-col items-end gap-1">
+                        {hasSub ? (
+                          <div class="main-countdown-container flex flex-col items-end min-h-[30px] justify-center">
+                            {/* SSR Placeholder */}
+                            <span class="text-xs text-emerald-500/50">{t("yakkamon.status.loading")}</span>
+                          </div>
+                        ) : (
+                          evt.targetDate && !isClosed ? (
+                            <div class="flex flex-col items-end">
+                              <span 
+                                class="countdown-timer text-lg md:text-xl font-black tracking-widest text-emerald-400" 
+                                data-target={evt.targetDate}
+                              >
+                                --:--:--
+                              </span>
+                            </div>
+                          ) : (
+                            <span class="text-xs">{evt.statusText}</span>
+                          )
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {/* Filas de SubEventos (desplegables) */}
+                  {hasSub && evt.subEvents!.map((sub) => (
+                    <tr class={`sub-rows-${i} hidden bg-black/20 hover:bg-black/40 transition-colors border-t-0`}>
+                      <td class="py-3 px-6 pl-10 text-white/40 text-xs">
+                        {sub.dateStr}
+                      </td>
+                      <td class="py-3 px-6 font-bold text-white/70 text-xs flex items-center gap-2">
+                        <span class="text-terminal-border">└</span>
+                        <span>{sub.icon}</span>
+                        {sub.name}
+                      </td>
+                      <td class="py-3 px-6 text-right">{/* Columna vacía */}
+                        <div class="flex flex-col items-end">
+                          <span class="countdown-timer text-sm md:text-base font-black tracking-widest text-emerald-400/80" data-target={sub.targetDate}>--:--:--</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tarjetas del Proceso -->
+  <section class="mb-20">
+    <div class="flex items-center gap-4 mb-8">
+      <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
+        {t("yakkamon.process.title")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/40"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Step 1 -->
+      <div class="bg-terminal-surface/40 border border-emerald-500/20 rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-emerald-500/40 transition-colors">
+        <div class="absolute -right-6 -top-6 text-8xl font-black text-emerald-500/5 select-none group-hover:scale-110 transition-transform duration-500">1</div>
+        <h3 class="text-lg font-bold text-emerald-400 mb-3 relative z-10">{t("yakkamon.process.step1.title")}</h3>
+        <p class="text-sm text-terminal-secondary leading-relaxed mb-6 flex-1 relative z-10">{t("yakkamon.process.step1.desc")}</p>
+        <a href={yakkamonLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-xs px-4 py-2.5 rounded-lg transition-colors w-full relative z-10 gap-2">
+          {t("yakkamon.process.step1.btn")}
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        </a>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="bg-terminal-surface/40 border border-terminal-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-white/20 transition-colors">
+        <div class="absolute -right-6 -top-6 text-8xl font-black text-white/5 select-none group-hover:scale-110 transition-transform duration-500">2</div>
+        <h3 class="text-lg font-bold text-white mb-3 relative z-10">{t("yakkamon.process.step2.title")}</h3>
+        <p class="text-sm text-terminal-secondary leading-relaxed mb-6 flex-1 relative z-10">{t("yakkamon.process.step2.desc")}</p>
+        <a href={loc("/operaciones/yakkamon")} class="inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors border border-white/10 w-full relative z-10">
+          {t("yakkamon.process.step2.btn")}
+        </a>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="bg-terminal-surface/40 border border-terminal-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-white/20 transition-colors">
+        <div class="absolute -right-6 -top-6 text-8xl font-black text-white/5 select-none group-hover:scale-110 transition-transform duration-500">3</div>
+        <h3 class="text-lg font-bold text-white mb-3 relative z-10">{t("yakkamon.process.step3.title")}</h3>
+        <p class="text-sm text-terminal-secondary leading-relaxed mb-6 flex-1 relative z-10">{t("yakkamon.process.step3.desc")}</p>
+        <a href="https://docs.yakkamon.com/content/yakkapedia" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors border border-white/10 w-full relative z-10 gap-2">
+          {t("yakkamon.process.step3.btn")}
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  <!-- Coleccionables (Huevos) -->
+  <section class="mb-20">
+    <div class="flex items-center gap-4 mb-4">
+      <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
+        {t("yakkamon.eggs.title")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/40"></div>
+    </div>
+    <h3 class="text-lg md:text-xl font-bold text-white mb-8 text-center md:text-left">
+      {t("yakkamon.eggs.subtitle")}
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Card 1: Monster Egg -->
+      <div class="bg-terminal-surface/40 border border-emerald-500/20 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden group hover:border-emerald-500/40 transition-colors">
+        <div class="w-28 h-28 mb-6 relative">
+          <div class="absolute inset-0 bg-emerald-500/10 blur-2xl rounded-full group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
+          <img src="/img/yakkamon/egg-monster.webp" alt="Monster Egg" class="w-full h-full object-contain relative z-10 group-hover:-translate-y-2 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.15)] [image-rendering:pixelated]" />
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">{t("yakkamon.eggs.card1.title")}</h3>
+        <p class="text-sm text-terminal-secondary leading-relaxed">{t("yakkamon.eggs.card1.desc")}</p>
+      </div>
+
+      <!-- Card 2: Legendary Founder -->
+      <div class="bg-terminal-surface/40 border border-purple-500/20 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-500/40 transition-colors">
+        <div class="w-28 h-28 mb-6 relative">
+          <div class="absolute inset-0 bg-purple-500/10 blur-2xl rounded-full group-hover:bg-purple-500/20 transition-colors duration-500"></div>
+          <img src="/img/yakkamon/airdrop-monster.webp" alt="Legendary Founder" class="w-full h-full object-contain relative z-10 group-hover:-translate-y-2 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(168,85,247,0.15)] [image-rendering:pixelated]" />
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">{t("yakkamon.eggs.card2.title")}</h3>
+        <p class="text-sm text-terminal-secondary leading-relaxed">{t("yakkamon.eggs.card2.desc")}</p>
+      </div>
+
+      <!-- Card 3: Ronin Free Mint -->
+      <div class="bg-terminal-surface/40 border border-blue-500/20 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden group hover:border-blue-500/40 transition-colors">
+        <div class="w-28 h-28 mb-6 relative">
+          <div class="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+          <img src="/img/yakkamon/freemint.webp" alt="Ronin Free Mint" class="w-full h-full object-contain relative z-10 group-hover:-translate-y-2 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.15)] [image-rendering:pixelated]" />
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">{t("yakkamon.eggs.card3.title")}</h3>
+        <p class="text-sm text-terminal-secondary leading-relaxed">{t("yakkamon.eggs.card3.desc")}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lo que viene -->
+  <section class="mb-8">
+    <div class="flex items-center gap-4 mb-8">
+      <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
+        {t("yakkamon.upcoming.title")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/40"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {upcomingCards.map(card => (
+        <div class="bg-black/20 border border-terminal-border p-5 rounded-xl flex items-start gap-4">
+          <div class="text-2xl bg-white/5 w-10 h-10 flex items-center justify-center rounded-lg shrink-0">
+            {card.icon}
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white mb-1.5">{card.title}</h4>
+            <p class="text-xs text-terminal-muted leading-relaxed">{card.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <FaqAccordion items={faqItems} titulo="FAQ" subtitulo="PREGUNTAS FRECUENTES" />
+</main>
+
+<div id="yakkamon-i18n" 
+  data-active={t("yakkamon.status.active")}
+  data-closed={t("yakkamon.status.closed")}
+  data-mint={t("yakkamon.status.mint")}
+  data-next={t("yakkamon.status.next")}
+  class="hidden">
+</div>
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": t("yakkamon.seo.title"),
+  "description": t("yakkamon.seo.description"),
+  "mainEntity": {
+    "@type": "Article",
+    "headline": t("yakkamon.seo.title"),
+    "description": t("yakkamon.seo.description"),
+    "articleBody": `${t("yakkamon.intro")} ${t("yakkamon.intro.more")}`,
+    "author": {
+      "@type": "Organization",
+      "name": "0x Leñador"
+    }
+  }
+})} />
+
+<script>
+  // Lógica del botón Ver Más
+  const moreBtn = document.getElementById('yakkamon-more-btn');
+  const moreText = document.getElementById('yakkamon-more-text');
+  
+  if (moreBtn && moreText) {
+    moreBtn.addEventListener('click', () => {
+      const isHidden = moreText.classList.contains('hidden');
+      if (isHidden) {
+        moreText.classList.remove('hidden');
+        moreBtn.textContent = moreBtn.getAttribute('data-less');
+      } else {
+        moreText.classList.add('hidden');
+        moreBtn.textContent = moreBtn.getAttribute('data-more');
+      }
+    });
+  }
+
+  function updateCountdowns() {
+    const now = new Date().getTime();
+
+    const i18nEl = document.getElementById('yakkamon-i18n');
+    const textActive = i18nEl?.getAttribute('data-active') || "🟢 ACTIVO";
+    const textClosed = i18nEl?.getAttribute('data-closed') || "🔴 Cerrado";
+    const textMint = i18nEl?.getAttribute('data-mint') || "🚀 ¡VE A MINTEAR!";
+    const textNext = i18nEl?.getAttribute('data-next') || "Siguiente Etapa";
+
+    // 1. Contadores normales (filas hijas y eventos sin subEventos)
+    const timers = document.querySelectorAll<HTMLElement>('.countdown-timer');
+    timers.forEach(timer => {
+      const targetStr = timer.getAttribute('data-target');
+      if (!targetStr) return;
+      
+      const target = new Date(targetStr).getTime();
+      const distance = target - now;
+
+      if (distance < 0) {
+        if (distance > -3600000) {
+          timer.innerHTML = `<span class="text-emerald-400 animate-pulse">${textActive}</span>`;
+        } else {
+          timer.innerHTML = `<span class="text-red-500/70 text-xs uppercase tracking-widest font-mono">${textClosed}</span>`;
+        }
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      const h = hours.toString().padStart(2, '0');
+      const m = minutes.toString().padStart(2, '0');
+      const s = seconds.toString().padStart(2, '0');
+
+      if (days > 0) {
+        timer.innerText = `${days}d ${h}h ${m}m ${s}s`;
+      } else {
+        timer.innerText = `${h}:${m}:${s}`;
+      }
+    });
+
+    // 2. Lógica compleja para eventos con sub-etapas (Ronin Free Mint)
+    const progressContainers = document.querySelectorAll<HTMLElement>('.event-progress');
+    progressContainers.forEach(container => {
+      const stagesStr = container.getAttribute('data-stages');
+      if (!stagesStr) return;
+      
+      const stages = JSON.parse(stagesStr).map((d: string) => new Date(d).getTime());
+      
+      let activeIndex = -1;
+      let nextIndex = -1;
+      
+      for (let i = 0; i < stages.length; i++) {
+        // Si estamos dentro de 1 hora después del targetDate, la etapa está activa (Live)
+        if (now >= stages[i] && now < stages[i] + 3600000) { 
+          activeIndex = i;
+          break;
+        } else if (now < stages[i]) {
+          nextIndex = i;
+          break;
+        }
+      }
+
+      const dots = container.querySelectorAll('.stage-dot');
+      const lines = container.querySelectorAll('.stage-line');
+      
+      // Actualizar UI de los puntos
+      dots.forEach((dot, idx) => {
+        dot.className = 'w-2.5 h-2.5 rounded-full stage-dot transition-all duration-300 ';
+        if (activeIndex === idx) {
+          // Live (brillando)
+          dot.className += 'bg-emerald-400 border border-emerald-400 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]';
+        } else if (now > stages[idx]) {
+          // Pasado
+          dot.className += 'bg-emerald-600 border border-emerald-600 opacity-50';
+        } else {
+          // Futuro
+          dot.className += 'border border-emerald-500/20 bg-black/50';
+        }
+      });
+      
+      // Actualizar UI de las líneas (ahora hay N+1 líneas)
+      lines.forEach((line, idx) => {
+         line.className = 'w-4 h-[1px] stage-line transition-all duration-300 ';
+         const targetTime = idx < stages.length ? stages[idx] : stages[stages.length-1] + 3600000;
+         if (now >= targetTime) {
+           line.className += 'bg-emerald-600 opacity-50';
+         } else {
+           line.className += 'bg-emerald-500/20';
+         }
+      });
+
+      // Encontrar contenedor de estado de la fila padre
+      const mainRow = container.closest('tr');
+      if (!mainRow) return;
+      const mainCountdownContainer = mainRow.querySelector('.main-countdown-container');
+      
+      if (activeIndex !== -1) {
+        // ESTADO 1: Etapa activa (minteo en vivo durante 1 hora)
+        if (mainCountdownContainer) {
+          mainCountdownContainer.innerHTML = `
+            <a href="https://marketplace.roninchain.com/launchpads/mints/yakkamon" target="_blank" rel="noopener noreferrer" class="text-sm md:text-base font-black tracking-wider text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 px-4 py-1.5 rounded-lg border border-emerald-500/30 transition-all flex items-center gap-2 animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+              ${textMint}
+            </a>
+          `;
+        }
+      } else if (nextIndex !== -1) {
+        // ESTADO 2: Esperando a la siguiente etapa
+        const distance = stages[nextIndex] - now;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        const h = hours.toString().padStart(2, '0');
+        const m = minutes.toString().padStart(2, '0');
+        const s = seconds.toString().padStart(2, '0');
+        
+        let timeStr = days > 0 ? `${days}d ${h}h ${m}m ${s}s` : `${h}:${m}:${s}`;
+        
+        if (mainCountdownContainer) {
+          mainCountdownContainer.innerHTML = `
+            <div class="flex flex-col items-end">
+              <span class="text-[10px] text-terminal-muted uppercase tracking-widest mb-0.5">${textNext}</span>
+              <span class="text-lg md:text-xl font-black tracking-widest text-emerald-400">${timeStr}</span>
+            </div>
+          `;
+        }
+      } else {
+        // ESTADO 3: Todas las etapas finalizaron
+        mainRow.classList.add('opacity-40', 'grayscale');
+        if (mainCountdownContainer) {
+          mainCountdownContainer.innerHTML = `<span class="text-xs text-red-500/70 uppercase tracking-widest font-mono">${textClosed}</span>`;
+        }
+      }
+    });
+  }
+
+  // Initial update and interval
+  updateCountdowns();
+  setInterval(updateCountdowns, 1000);
+
+  // Toggle sub-events
+  const toggles = document.querySelectorAll<HTMLElement>('.toggle-subevents');
+  toggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetClass = btn.getAttribute('data-target');
+      if (!targetClass) return;
+      
+      const rows = document.querySelectorAll(`.${targetClass}`);
+      
+      let isHidden = false;
+      rows.forEach(row => {
+        row.classList.toggle('hidden');
+        isHidden = row.classList.contains('hidden');
+      });
+    });
+  });
+</script>

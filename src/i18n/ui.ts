@@ -20,6 +20,7 @@ import type social from "./locales/es/social.json"
 import type terms from "./locales/es/terms.json"
 import type tools from "./locales/es/tools.json"
 import type undervalued from "./locales/es/undervalued.json"
+import type yakkamon from "./locales/es/yakkamon.json"
 
 export const languages = {
   es: "Español",
@@ -113,6 +114,7 @@ type AllTranslations = typeof _404 &
   typeof social &
   typeof terms &
   typeof tools &
-  typeof undervalued
+  typeof undervalued &
+  typeof yakkamon
 
 export type UiKey = keyof AllTranslations
