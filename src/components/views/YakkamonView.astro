@@ -447,11 +447,14 @@ const tableEvents = [
         if (activeIndex === idx) {
           // Live (brillando)
           dot.className += 'bg-emerald-400 border border-emerald-400 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]';
-        } else if (now > stages[idx]) {
-          // Pasado
+        } else if (now > stages[idx] + 3600000) {
+          // Pasado (ya pasó la hora de estar vivo)
           dot.className += 'bg-emerald-600 border border-emerald-600 opacity-50';
+        } else if (nextIndex === idx) {
+          // Próximo en suceder (palpita tenue)
+          dot.className += 'border border-emerald-500/60 bg-emerald-500/10 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.3)]';
         } else {
-          // Futuro
+          // Futuro lejano
           dot.className += 'border border-emerald-500/20 bg-black/50';
         }
       });
