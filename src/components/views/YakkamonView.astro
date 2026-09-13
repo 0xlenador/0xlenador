@@ -300,6 +300,99 @@ const tableEvents = [
         <p class="text-sm text-terminal-secondary leading-relaxed">{t("yakkamon.eggs.card3.desc")}</p>
       </div>
     </div>
+
+    <!-- Conectores visuales (solo desktop) -->
+    <div class="hidden md:grid grid-cols-3 gap-6 h-12 mt-2">
+      <div class="flex justify-center h-full">
+        <div class="w-px h-full bg-emerald-500/30"></div>
+      </div>
+      <div class="col-span-2 relative">
+        <div class="absolute top-0 left-1/4 w-px h-1/2 bg-purple-500/30 -translate-x-1/2"></div>
+        <div class="absolute top-0 right-1/4 w-px h-1/2 bg-blue-500/30 translate-x-1/2"></div>
+        <div class="absolute top-1/2 left-1/4 right-1/4 h-px bg-white/10" style="width: calc(50% + 24px); transform: translateX(calc(-12px - 50%)); left: 50%;"></div>
+        <div class="absolute top-1/2 left-1/2 w-px h-1/2 bg-white/10"></div>
+      </div>
+    </div>
+
+    <!-- Contenido debajo de los conectores -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 md:mt-0">
+      <!-- Columna 1: Niveles de Huevos -->
+      <div class="col-span-1 bg-terminal-surface/40 border border-emerald-500/20 rounded-2xl p-6 flex flex-col">
+        <h3 class="text-xl font-bold text-white mb-3">{t("yakkamon.eggLevels.title")}</h3>
+        <p class="text-sm text-terminal-secondary mb-6">{t("yakkamon.eggLevels.desc")}</p>
+
+        <div class="bg-black/20 rounded-xl border border-white/5 overflow-hidden mb-6">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-white/5 text-terminal-muted text-[10px] uppercase tracking-wider">
+              <tr>
+                <th class="px-4 py-3 font-semibold">{t("yakkamon.eggLevels.table.col1")}</th>
+                <th class="px-4 py-3 font-semibold">{t("yakkamon.eggLevels.table.col2")}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-white">
+              <tr>
+                <td class="px-4 py-3 font-mono text-emerald-400">{t("yakkamon.eggLevels.table.r1")}</td>
+                <td class="px-4 py-3">{t("yakkamon.eggLevels.table.r1v")}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-mono text-yellow-500">{t("yakkamon.eggLevels.table.r2")}</td>
+                <td class="px-4 py-3">{t("yakkamon.eggLevels.table.r2v")}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-mono text-slate-300">{t("yakkamon.eggLevels.table.r3")}</td>
+                <td class="px-4 py-3">{t("yakkamon.eggLevels.table.r3v")}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-mono text-orange-500">{t("yakkamon.eggLevels.table.r4")}</td>
+                <td class="px-4 py-3">{t("yakkamon.eggLevels.table.r4v")}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-mono text-terminal-muted">{t("yakkamon.eggLevels.table.r5")}</td>
+                <td class="px-4 py-3">{t("yakkamon.eggLevels.table.r5v")}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <p class="text-xs text-terminal-muted mb-6">
+          {t("yakkamon.eggLevels.note")}
+        </p>
+
+        <!-- Warning Alert -->
+        <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-4 flex items-start gap-3">
+          <div class="text-amber-500 mt-0.5 shrink-0">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          </div>
+          <div>
+            <h4 class="text-amber-500 font-bold text-sm">{t("yakkamon.eggLevels.alert1.title")}</h4>
+            <p class="text-amber-500/80 text-xs mt-1 leading-relaxed">{t("yakkamon.eggLevels.alert1.desc")}</p>
+          </div>
+        </div>
+
+        <!-- Success Alert -->
+        <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
+          <div class="text-emerald-500 mt-0.5 shrink-0">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <div>
+            <h4 class="text-emerald-500 font-bold text-sm">{t("yakkamon.eggLevels.alert2.title")}</h4>
+            <p class="text-emerald-500/80 text-xs mt-1 leading-relaxed">{t("yakkamon.eggLevels.alert2.desc")}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna 2 y 3: Monster Genesis -->
+      <div class="col-span-1 md:col-span-2 bg-terminal-surface/40 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col justify-center items-center text-center relative overflow-hidden h-full min-h-[300px]">
+        <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10">
+          <svg class="w-8 h-8 text-terminal-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-3 relative z-10">{t("yakkamon.genesis.title")}</h3>
+        <p class="text-terminal-muted relative z-10">{t("yakkamon.genesis.empty")}</p>
+      </div>
+    </div>
   </section>
 
   <!-- Lo que viene -->
