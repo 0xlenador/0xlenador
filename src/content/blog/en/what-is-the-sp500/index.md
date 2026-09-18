@@ -5,7 +5,7 @@ description: "Discover what the S&P 500 index is, how it works, and how you can 
 category: "Traditional Markets"
 date: 2026-09-18
 author: "0x Leñador"
-coverImage: "./s&p500.webp"
+coverImage: "../../es/que-es-el-sp500/s&p500.webp"
 coverAlt: "Market chart and logos of top S&P 500 companies."
 translationSlug: "que-es-el-sp500"
 ---

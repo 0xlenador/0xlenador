@@ -5,7 +5,7 @@ description: "Investment thesis based on strategic understanding and active invo
 category: "Investment Thesis"
 date: 2026-05-27
 author: "0x Leñador"
-coverImage: "./tesis.webp"
+coverImage: "../../es/tesis-de-inversion/tesis.webp"
 coverAlt: "Hybrid 60/40 portfolio diagram combining traditional investment and Web3 digital assets."
 translationSlug: "tesis-de-inversion"
 ---

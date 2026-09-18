@@ -5,7 +5,7 @@ description: "Learn investment strategies to beat inflation and protect your cap
 category: "Investment Strategy"
 date: 2026-05-27
 author: "0x Leñador"
-coverImage: "./ganarle-a-la-inflacion.webp"
+coverImage: "../../es/ganarle-a-la-inflacion/ganarle-a-la-inflacion.webp"
 coverAlt: "Abstract image about investment strategies against inflation, featuring a shield protecting capital, a rising price line, and financial growth charts."
 translationSlug: "ganarle-a-la-inflacion"
 ---
