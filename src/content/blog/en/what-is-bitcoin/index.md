@@ -14,7 +14,7 @@ translationSlug: "que-es-bitcoin"
 
 ## Money that belongs to no one
 
-Let's talk about Bitcoin, but in a simple way without technical jargon. Imagine an open-source type of money that doesn't belong to any specific corporation or person.
+Imagine an open-source type of money that doesn't belong to any specific corporation or person.
 
 Unlike traditional money (like the dollar or the euro) which can be manipulated or printed at will by central banks, Bitcoin is sustained by thousands of computers connected to each other worldwide. This guarantees that its mathematical rules are enforced publicly and immutably.
 

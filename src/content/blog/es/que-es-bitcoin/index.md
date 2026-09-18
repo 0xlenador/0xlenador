@@ -10,11 +10,11 @@ coverAlt: "Logo de bitcoin sobre el mundo"
 translationSlug: "what-is-bitcoin"
 ---
 
-> **Resumen al grano:** Bitcoin (BTC) es la primera criptomoneda de la historia. Es un activo puramente digital que vive en internet y se transfiere de persona a persona sin depender de una entidad central. Su propia infraestructura nativa valida y asegura cada transacción mediante una red de consenso global y descentralizado.
+> **Resumen:** Bitcoin (BTC) es la primera criptomoneda de la historia. Es un activo puramente digital que vive en internet y se transfiere de persona a persona sin depender de una entidad central. Su propia infraestructura nativa valida y asegura cada transacción mediante una red de consenso global y descentralizado.
 
 ## El dinero que no le pertenece a nadie
 
-Hablemos de Bitcoin, pero de forma sencilla y sin enredos técnicos. Imagínate un tipo de dinero de código abierto que no le pertenece a ninguna corporación o persona en específico.
+Imagina un dinero de código abierto que no le pertenece a ninguna corporación o persona en específico.
 
 A diferencia del dinero tradicional (como el dólar o el euro) que puede ser manipulado o impreso a voluntad por entidades centrales, Bitcoin es sostenido por miles de computadoras conectadas entre sí alrededor del mundo. Esto garantiza que sus reglas matemáticas se cumplan de forma pública e inalterable.
 
