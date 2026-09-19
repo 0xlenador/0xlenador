@@ -39,7 +39,7 @@ const formattedDate = new Date(date).toLocaleDateString(lang === "en" ? "en-US" 
   timeZone: "UTC",
 })
 const formatDeadline = (fecha: string) => {
-  if (fecha === "TBD") return "TBD"
+  if (isNaN(Date.parse(fecha))) return fecha
   return new Date(fecha).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
     day: "numeric",
     month: "short",
@@ -55,6 +55,10 @@ const categoriaConfig: Record<string, { badge: string; icon: string }> = {
   Gaming: { badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20", icon: "🎮" },
   Trading: { badge: "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20", icon: "📈" },
   Mixta: { badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: "🔀" },
+  Predicciones: { badge: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: "🔮" },
+  Perpetuos: { badge: "text-orange-400 bg-orange-500/10 border-orange-500/20", icon: "⚡" },
+  L1: { badge: "text-slate-200 bg-slate-500/20 border-slate-500/30", icon: "⛓️" },
+  L2: { badge: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20", icon: "🚀" },
 }
 const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
   activa: {

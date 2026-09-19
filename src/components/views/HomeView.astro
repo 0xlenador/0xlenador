@@ -260,8 +260,8 @@ const faqItems = [
               {guia.data.fechaLimite && (
                 <span class="text-[10px] font-mono text-yellow-400/80 hidden sm:block">
                   ⏳{" "}
-                  {guia.data.fechaLimite === "TBD"
-                    ? "TBD"
+                  {isNaN(Date.parse(guia.data.fechaLimite))
+                    ? guia.data.fechaLimite
                     : new Date(guia.data.fechaLimite).toLocaleDateString(
                         lang === "en" ? "en-US" : "es-CO",
                         {

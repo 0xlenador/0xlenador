@@ -38,7 +38,7 @@ const guias = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    categoria: z.enum(["Airdrop", "DeFi", "Gaming", "Trading", "Mixta"]),
+    categoria: z.enum(["Airdrop", "DeFi", "Gaming", "Trading", "Mixta", "Predicciones", "Perpetuos", "L1", "L2"]),
     estado: z.enum(["activa", "completada", "expirada"]).default("activa"),
     temporada: z.string().optional(),
     fechaLimite: z.coerce.string().optional(),
