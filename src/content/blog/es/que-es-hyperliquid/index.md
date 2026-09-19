@@ -44,9 +44,9 @@ Al ser una Capa 1 de código abierto, interactuar con Hyperliquid no se limita a
 
 Si deseas probar la plataforma o explorar las interfaces disponibles, aquí tienes los accesos directos:
 
-- **DEX Oficial de Hyperliquid:** [Enlace pendiente]
-- **Frontend Alternativo 1:** [Enlace pendiente]
-- **Frontend Alternativo 2:** [Enlace pendiente]
+- **DEX Oficial de Hyperliquid:** [https://app.hyperliquid.xyz/](https://app.hyperliquid.xyz/join/ELLENAADOR)
+- **Frontend Alternativo 1:** [https://fomo.family](https://fomo.family/r/0xlenador)
+- **Frontend Alternativo 2:** [https://app.trade.xyz/](https://app.trade.xyz/)
 
 _(Nota: Siempre verifica estar utilizando los enlaces oficiales al conectar tu billetera Web3)._
 

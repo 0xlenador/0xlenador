@@ -45,8 +45,8 @@ Being an open-source Layer 1, interacting with Hyperliquid is not limited to a s
 If you want to try the platform or explore the available interfaces, here are the direct links:
 
 - **Official Hyperliquid DEX:** [https://app.hyperliquid.xyz/](https://app.hyperliquid.xyz/join/ELLENAADOR)
-- **Alternative Frontend 1:** [Link pending]
-- **Alternative Frontend 2:** [Link pending]
+- **Alternative Frontend 1:** [https://fomo.family](https://fomo.family/r/0xlenador)
+- **Alternative Frontend 2:** [https://app.trade.xyz/](https://app.trade.xyz/)
 
 _(Note: Always verify you are using official links when connecting your Web3 wallet)._
 
