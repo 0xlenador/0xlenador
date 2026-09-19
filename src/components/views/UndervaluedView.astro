@@ -497,7 +497,7 @@ function formatBigNumber(num: number): string {
   }
 
   let currentSort = { column: 'margin', direction: 'desc' };
-  (window as any).handleSort = (column: string) => {
+  (window as unknown as Record<string, unknown>).handleSort = (column: string) => {
     if (column === 'type') {
       if (currentSort.column === 'type') {
         currentSort.column = 'margin'
@@ -547,7 +547,7 @@ function formatBigNumber(num: number): string {
 
     const rowsArray = Array.from(document.querySelectorAll('.stock-row'))
     rowsArray.sort((a, b) => {
-      let valA: any, valB: any
+      let valA: string | number, valB: string | number
       const elA = a as HTMLElement
       const elB = b as HTMLElement
 

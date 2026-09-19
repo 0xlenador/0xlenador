@@ -765,10 +765,8 @@ const tableEvents = [
       
       const rows = document.querySelectorAll(`.${targetClass}`);
       
-      let isHidden = false;
       rows.forEach(row => {
         row.classList.toggle('hidden');
-        isHidden = row.classList.contains('hidden');
       });
     });
   });

@@ -12,6 +12,7 @@ import getReadingTime from "reading-time"
  * Calcula dinámicamente el tiempo de lectura usando el body del post/guía
  * y lo inyecta en la propiedad data.readTime.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function attachReadingTime(item: any) {
   if (!item.data.readTime) {
     const text = item.body || ""

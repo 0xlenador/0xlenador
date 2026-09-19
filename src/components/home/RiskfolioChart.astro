@@ -324,6 +324,7 @@ const PROFILES_DATA = {
   }
 
   // ─── Cambiar perfil ───────────────────────────────────────────────
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function setProfile(key) {
     currentProfile = key
 
@@ -365,6 +366,7 @@ const PROFILES_DATA = {
   }
 
   // ─── Cambiar capital (presets) ────────────────────────────────────
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function setCapital(amount, btnEl) {
     currentCapital = parseFloat(amount) || 0
     document.getElementById("capitalInput").value = currentCapital
@@ -388,6 +390,7 @@ const PROFILES_DATA = {
   }
 
   // ─── Actualizar desde input/slider ───────────────────────────────
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function liveUpdate(val) {
     currentCapital = parseFloat(val) || 0
     // Limpiar preset activo al escribir manualmente

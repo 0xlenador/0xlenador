@@ -94,8 +94,8 @@ export const createSparklineSVG = (
 
 export const initSparklineHover = () => {
   // Prevent multiple initializations
-  if (typeof window === "undefined" || (window as any).__sparklineHoverInitialized) return;
-  (window as any).__sparklineHoverInitialized = true;
+  if (typeof window === "undefined" || (window as unknown as Record<string, unknown>).__sparklineHoverInitialized) return;
+  (window as unknown as Record<string, unknown>).__sparklineHoverInitialized = true;
 
   let activeSparkline: HTMLElement | null = null;
   
@@ -167,7 +167,7 @@ export const initSparklineHover = () => {
 
       tooltip.classList.remove("hidden")
       
-      const initialPrice = dataPoints[0]
+      // initialPrice is unused, removed
       const formatType = container.dataset.format || ""
       
       let displayLabel = "Price:"
@@ -176,7 +176,7 @@ export const initSparklineHover = () => {
       
       if (formatType === "usd-large-sfl") {
          displayLabel = "Market Cap:"
-         const sflUsdPrice = (window as any).sflUsdPrice || 0
+         const sflUsdPrice = ((window as unknown as Record<string, unknown>).sflUsdPrice as number) || 0
          const valUsd = val * sflUsdPrice
          const formatLarge = (num: number) => {
            if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T'

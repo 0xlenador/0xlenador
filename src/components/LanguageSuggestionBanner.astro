@@ -219,6 +219,7 @@
       // 5. Mostrar el banner
       banner.removeAttribute("hidden")
       // Forzar reflow para que la transición funcione
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       banner.offsetHeight
       banner.setAttribute("data-visible", "true")
 
@@ -245,7 +246,7 @@
           dismiss()
         }
       })
-    } catch (e) {
+    } catch {
       // Silenciar errores (ej. localStorage no disponible)
     }
   })()

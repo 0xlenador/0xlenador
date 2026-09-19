@@ -860,7 +860,6 @@ const t = useTranslations(lang)
     tCol30d: t("sfl.market.col.30d"),
     tCol180d: t("sfl.market.col.180d"),
     tColMarketcap: t("sfl.market.col.marketcap"),
-    tToggleUnits: t("sfl.market.toggleUnits"),
     tHideFlower: t("sfl.market.hideFlower"),
     tDashPending: t("sfl.dashboard.pending"),
     tDashWhales: t("sfl.dashboard.whales.title"),
@@ -892,10 +891,6 @@ const t = useTranslations(lang)
 >
   const searchInput = document.getElementById("searchInput")
   const tableBody = document.getElementById("tableBody")
-  const filterContainer = document.getElementById("filterContainer")
-  const desktopHeader = document.getElementById("desktopHeader")
-  const supplyHeader = document.getElementById("supplyHeader")
-  const marketcapHeader = document.getElementById("marketcapHeader")
   const searchIcon = document.getElementById("searchIcon")
   const clearSearchBtn = document.getElementById("clearSearchBtn")
   const fetchBtn = document.getElementById("fetchBtn")
@@ -908,7 +903,6 @@ const t = useTranslations(lang)
   let dashboardData = null
   let currentCategory = "resources"
   let currentSubCategories = ["collectibles", "wearables"]
-  let searchQuery = ""
   window.activeGraphPeriod = window.activeGraphPeriod || "7d"
 
   window.toggleGraph = (period) => {
@@ -953,9 +947,6 @@ const t = useTranslations(lang)
     currentSubCategories = ["collectibles", "wearables"]
 
     const filterContainer = document.getElementById("subfilters-container")
-    const desktopHeader = document.getElementById("desktopHeader")
-    const supplyHeader = document.getElementById("supplyHeader")
-    const marketcapHeader = document.getElementById("marketcapHeader")
 
     if (category === "powerups" || category === "cosmetics") {
       if (filterContainer) {
@@ -1539,7 +1530,7 @@ const t = useTranslations(lang)
                    </button>
                 </div>
                 <div class="flex flex-col gap-[3px] flex-1 min-h-0" id="calcRadios">
-                   ${['FLOWER', 'COIN', 'USD', 'Gema', 'Oil'].map((c, i) => {
+                   ${['FLOWER', 'COIN', 'USD', 'Gema', 'Oil'].map((c, _i) => {
                       const icons = {
                          FLOWER: '/img/sunflowerland/flower.jpg',
                          COIN: '/img/sunflowerland/123/coins.png',
@@ -1915,7 +1906,7 @@ const t = useTranslations(lang)
            </div>
            
            <div class="flex-1 overflow-y-auto pr-1 space-y-2 no-scrollbar">
-              ${dashboardData.topTrades.slice(0, 7).map((trade, i) => {
+              ${dashboardData.topTrades.slice(0, 7).map((trade, _i) => {
                  let sflValue = trade.sfl || 0;
                  let usdValue = sflValue * (window.sflUsdPrice || 0);
                  let itemName = Object.keys(trade.items)[0] || "Unknown";

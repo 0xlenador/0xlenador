@@ -123,7 +123,7 @@ export function getAlternateUrl(url: URL, targetLang: Lang): string {
   // Traducción por segmentos para rutas dinámicas (ej. /operations/slug -> /operaciones/slug)
   const segments = cleanPathNorm.split("/").filter(Boolean)
   const translatedSegments = segments.map((segment) => {
-    // @ts-ignore - Indexing routes object dynamically
+    // @ts-expect-error - Indexing routes object dynamically
     return routes[targetLang]?.[segment] || segment
   })
   cleanPath = "/" + translatedSegments.join("/")
@@ -155,7 +155,7 @@ export function getLocalizedPath(path: string, lang: Lang, useTranslatedSlug = t
     // Traducción por segmentos (rutas dinámicas como /operaciones/slug)
     const segments = path.replace(/\/$/, "").split("/").filter(Boolean)
     const translatedSegments = segments.map((segment) => {
-      // @ts-ignore
+      // @ts-expect-error - Indexing dynamically
       return routes[lang]?.[segment] || segment
     })
     const translatedPath = "/" + translatedSegments.join("/")
@@ -231,7 +231,7 @@ export type BilingualField<T = string> = T | { es: T; en: T }
 export function getBilingual<T = string>(field: BilingualField<T>, lang: Lang): T {
   if (field === null || field === undefined) return field as T
   if (typeof field === "object" && !Array.isArray(field) && "es" in field) {
-    return (field as any)[lang] ?? (field as any)[defaultLang]
+    return (field as Record<Lang, T>)[lang] ?? (field as Record<Lang, T>)[defaultLang]
   }
   return field as T
 }

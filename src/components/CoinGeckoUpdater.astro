@@ -6,7 +6,7 @@
  */
 ---
 <script>
-  import { createSparklineSVG, formatNumber, initSparklineHover } from "../utils/sparklines";
+  import { createSparklineSVG, initSparklineHover } from "../utils/sparklines";
 
   const CACHE_KEY = "ticker_prices_v3"
   const CACHE_TTL = 15 * 60 * 1000 // 15 minutos en ms
@@ -87,7 +87,7 @@
   }
 
   function publishData(dataMap: Record<string, CoinData>) {
-    (window as any).__CoinGeckoEngine = dataMap;
+    (window as unknown as Record<string, unknown>).__CoinGeckoEngine = dataMap;
     document.dispatchEvent(new CustomEvent("coingecko-data-ready", { detail: dataMap }));
     applyPrices(dataMap);
   }
@@ -182,7 +182,7 @@
       for (const nftId of missingNftIds) {
         try {
           const res = await fetch(`https://api.coingecko.com/api/v3/nfts/${nftId}`)
-          const data = (await res.json()) as any
+          const data = (await res.json()) as { floor_price?: { usd?: number; native_currency?: number } }
           const usd =
             data.floor_price?.usd ??
             (data.floor_price?.native_currency && btcUsd > 0
