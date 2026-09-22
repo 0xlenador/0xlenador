@@ -2,6 +2,7 @@
 import { getBlogPostsByLang } from "../../../lib/content"
 import Layout from "../../../layouts/Layout.astro"
 import BlogArticleView from "../../../components/views/BlogArticleView.astro"
+import { getImage } from "astro:assets"
 
 // 1. Generar rutas solo para posts en inglés
 export async function getStaticPaths() {
@@ -15,7 +16,21 @@ export async function getStaticPaths() {
 const { post } = Astro.props
 const { title, description, keywords, date, coverImage } = post.data
 
-const ogImage = coverImage?.src
+let ogImage = undefined
+let ogImageWidth = undefined
+let ogImageHeight = undefined
+
+if (coverImage) {
+  const optimizedOgImage = await getImage({
+    src: coverImage,
+    width: 1200,
+    height: 630,
+    format: "jpg",
+  })
+  ogImage = optimizedOgImage.src
+  ogImageWidth = optimizedOgImage.attributes.width
+  ogImageHeight = optimizedOgImage.attributes.height
+}
 
 // Schema.org BlogPosting para SEO estructurado
 const blogSchema = {
@@ -55,6 +70,8 @@ const esUrl = translationSlug ? `/blog/${translationSlug}/` : `/blog/${post.slug
   keywords={keywords}
   ogType="article"
   image={ogImage}
+  imageWidth={ogImageWidth}
+  imageHeight={ogImageHeight}
   schema={blogSchema}
   publishedTime={new Date(date).toISOString()}
   author="0x Leñador"
