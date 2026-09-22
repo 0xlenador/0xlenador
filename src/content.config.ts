@@ -28,6 +28,14 @@ const blog = defineCollection({
       // Slug del post hermano en el otro idioma para hreflang cruzado.
       // Ej: en es/ganarle-a-la-inflacion → translationSlug: "beating-inflation"
       translationSlug: z.string().optional(),
+      faq: z
+        .array(
+          z.object({
+            pregunta: z.string(),
+            respuesta: z.string(),
+          })
+        )
+        .optional(),
     }),
 })
 

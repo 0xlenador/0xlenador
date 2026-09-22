@@ -8,6 +8,19 @@ author: "0x Leñador"
 coverImage: "./ganarle-a-la-inflacion.webp"
 coverAlt: "Imagen abstracta sobre estrategias de inversión contra la inflación, con un escudo protegiendo capital, una línea de precios en aumento y gráficos de crecimiento financiero."
 translationSlug: "beating-inflation"
+faq:
+  - pregunta: "¿Cuál es la mejor inversión contra la inflación?"
+    respuesta: "No existe una única mejor inversión. Depende de tu perfil, país, moneda, horizonte y tolerancia al riesgo. Para algunas personas puede ser una mezcla de CDTs, bonos y renta fija. Para otras, acciones, ETFs, bienes raíces o una pequeña exposición a cripto. Lo más sensato suele ser diversificar."
+  - pregunta: "¿Los CDTs sirven para ganarle a la inflación?"
+    respuesta: "Sí pueden servir, pero depende de la tasa. Si el CDT paga más que la inflación después de impuestos, puede proteger capital. Si paga menos, solo reduce parcialmente la pérdida de poder adquisitivo."
+  - pregunta: "¿Es buena idea invertir en acciones cuando hay inflación?"
+    respuesta: "Puede serlo, especialmente en empresas sólidas con capacidad de subir precios, mantener márgenes y generar flujo de caja. Pero las acciones son volátiles y deben pensarse con horizonte de largo plazo."
+  - pregunta: "¿Las criptomonedas protegen contra la inflación?"
+    respuesta: "No necesariamente. Aunque algunos ven Bitcoin como alternativa frente al sistema monetario tradicional, las criptomonedas son muy volátiles. Pueden formar parte de una estrategia agresiva, pero no deberían verse como protección garantizada."
+  - pregunta: "¿Qué es mejor: bonos, acciones, oro o cripto?"
+    respuesta: "No compiten exactamente por el mismo papel. Los bonos pueden dar estabilidad, las acciones crecimiento, el oro diversificación y las criptomonedas exposición alternativa de alto riesgo. La clave es saber qué función cumple cada activo dentro del portafolio."
+  - pregunta: "¿Cómo empiezo a invertir si vivo en Latinoamérica?"
+    respuesta: "Empieza por educación financiera básica, fondo de emergencia y comprensión de la inflación. Luego puedes explorar instrumentos simples como cuentas remuneradas, CDTs, fondos de inversión, ETFs o acciones fraccionadas, según la regulación y plataformas disponibles en tu país. Lo importante es empezar con poco, aprender y no arriesgar dinero que necesitas para vivir."
 ---
 
 ## Introdución
@@ -329,30 +342,4 @@ La clave está en educarse, diversificar y construir una estrategia que puedas s
 
 Proteger tu capital no significa evitar todo riesgo. Significa elegir qué riesgos vale la pena tomar.
 
-## Preguntas frecuentes sobre estrategias de inversión contra la inflación
 
-### ¿Cuál es la mejor inversión contra la inflación?
-
-No existe una única mejor inversión. Depende de tu perfil, país, moneda, horizonte y tolerancia al riesgo. Para algunas personas puede ser una mezcla de CDTs, bonos y renta fija. Para otras, acciones, ETFs, bienes raíces o una pequeña exposición a cripto.
-
-Lo más sensato suele ser diversificar.
-
-### ¿Los CDTs sirven para ganarle a la inflación?
-
-Sí pueden servir, pero depende de la tasa. Si el CDT paga más que la inflación después de impuestos, puede proteger capital. Si paga menos, solo reduce parcialmente la pérdida de poder adquisitivo.
-
-### ¿Es buena idea invertir en acciones cuando hay inflación?
-
-Puede serlo, especialmente en empresas sólidas con capacidad de subir precios, mantener márgenes y generar flujo de caja. Pero las acciones son volátiles y deben pensarse con horizonte de largo plazo.
-
-### ¿Las criptomonedas protegen contra la inflación?
-
-No necesariamente. Aunque algunos ven Bitcoin como alternativa frente al sistema monetario tradicional, las criptomonedas son muy volátiles. Pueden formar parte de una estrategia agresiva, pero no deberían verse como protección garantizada.
-
-### ¿Qué es mejor: bonos, acciones, oro o cripto?
-
-No compiten exactamente por el mismo papel. Los bonos pueden dar estabilidad, las acciones crecimiento, el oro diversificación y las criptomonedas exposición alternativa de alto riesgo. La clave es saber qué función cumple cada activo dentro del portafolio.
-
-### ¿Cómo empiezo a invertir si vivo en Latinoamérica?
-
-Empieza por educación financiera básica, fondo de emergencia y comprensión de la inflación. Luego puedes explorar instrumentos simples como cuentas remuneradas, CDTs, fondos de inversión, ETFs o acciones fraccionadas, según la regulación y plataformas disponibles en tu país. Lo importante es empezar con poco, aprender y no arriesgar dinero que necesitas para vivir.

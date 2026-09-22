@@ -8,6 +8,19 @@ author: "0x Leñador"
 coverImage: "../../es/ganarle-a-la-inflacion/ganarle-a-la-inflacion.webp"
 coverAlt: "Abstract image about investment strategies against inflation, featuring a shield protecting capital, a rising price line, and financial growth charts."
 translationSlug: "ganarle-a-la-inflacion"
+faq:
+  - pregunta: "What is the best investment against inflation?"
+    respuesta: "There is no single best investment. It depends on your profile, country, currency, horizon, and risk tolerance. For some people, it might be a mix of CDs, bonds, and fixed income. For others, stocks, ETFs, real estate, or a small exposure to crypto. The most sensible thing is usually to diversify."
+  - pregunta: "Do CDs help beat inflation?"
+    respuesta: "They can help, but it depends on the rate. If the CD pays more than inflation after taxes, it can protect capital. If it pays less, it only partially reduces the loss of purchasing power."
+  - pregunta: "Is it a good idea to invest in stocks when there is inflation?"
+    respuesta: "It can be, especially in solid companies with the ability to raise prices, maintain margins, and generate cash flow. But stocks are volatile and should be thought of with a long-term horizon."
+  - pregunta: "Do cryptocurrencies protect against inflation?"
+    respuesta: "Not necessarily. Although some see Bitcoin as an alternative to the traditional monetary system, cryptocurrencies are very volatile. They can be part of an aggressive strategy, but they should not be seen as guaranteed protection."
+  - pregunta: "What is better: bonds, stocks, gold, or crypto?"
+    respuesta: "They don't compete exactly for the same role. Bonds can provide stability, stocks growth, gold diversification, and cryptocurrencies high-risk alternative exposure. The key is knowing what function each asset fulfills within the portfolio."
+  - pregunta: "How do I start investing if I live in Latin America?"
+    respuesta: "Start with basic financial education, an emergency fund, and understanding inflation. Then you can explore simple instruments like high-yield savings accounts, CDs, mutual funds, ETFs, or fractional shares, depending on the regulation and platforms available in your country. The important thing is to start small, learn, and not risk money you need to live."
 ---
 
 ## Introduction
@@ -329,30 +342,4 @@ The key is to educate yourself, diversify, and build a strategy that you can sus
 
 Protecting your capital doesn't mean avoiding all risk. It means choosing which risks are worth taking.
 
-## Frequently asked questions about investment strategies against inflation
 
-### What is the best investment against inflation?
-
-There is no single best investment. It depends on your profile, country, currency, horizon, and risk tolerance. For some people, it might be a mix of CDs, bonds, and fixed income. For others, stocks, ETFs, real estate, or a small exposure to crypto.
-
-The most sensible thing is usually to diversify.
-
-### Do CDs help beat inflation?
-
-They can help, but it depends on the rate. If the CD pays more than inflation after taxes, it can protect capital. If it pays less, it only partially reduces the loss of purchasing power.
-
-### Is it a good idea to invest in stocks when there is inflation?
-
-It can be, especially in solid companies with the ability to raise prices, maintain margins, and generate cash flow. But stocks are volatile and should be thought of with a long-term horizon.
-
-### Do cryptocurrencies protect against inflation?
-
-Not necessarily. Although some see Bitcoin as an alternative to the traditional monetary system, cryptocurrencies are very volatile. They can be part of an aggressive strategy, but they should not be seen as guaranteed protection.
-
-### What is better: bonds, stocks, gold, or crypto?
-
-They don't compete exactly for the same role. Bonds can provide stability, stocks growth, gold diversification, and cryptocurrencies high-risk alternative exposure. The key is knowing what function each asset fulfills within the portfolio.
-
-### How do I start investing if I live in Latin America?
-
-Start with basic financial education, an emergency fund, and understanding inflation. Then you can explore simple instruments like high-yield savings accounts, CDs, mutual funds, ETFs, or fractional shares, depending on the regulation and platforms available in your country. The important thing is to start small, learn, and not risk money you need to live.

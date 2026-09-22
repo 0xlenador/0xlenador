@@ -67,7 +67,38 @@ const ogImage = coverImage?.src
     <!-- Cuerpo del artículo renderizado desde Markdown -->
     <div class="content relative text-left md:text-justify" id="article-content">
       <Content />
+      
+      {post.data.faq && (
+        <div class="mt-12">
+          <h2>{lang === "en" ? "Frequently Asked Questions" : "Preguntas frecuentes"}</h2>
+          {post.data.faq.map((item: any) => (
+            <>
+              <h3>{item.pregunta}</h3>
+              <p>{item.respuesta}</p>
+            </>
+          ))}
+        </div>
+      )}
     </div>
+
+    <!-- Schema FAQPage Invisible para Google -->
+    {post.data.faq && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: post.data.faq.map((item: any) => ({
+            "@type": "Question",
+            name: item.pregunta,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.respuesta,
+            },
+          })),
+        })}
+      />
+    )}
 
     <!-- Pie del artículo: autor -->
     <footer
