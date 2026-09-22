@@ -8,6 +8,7 @@ author: "0x Leñador"
 coverImage: "./ganarle-a-la-inflacion.webp"
 coverAlt: "Imagen abstracta sobre estrategias de inversión contra la inflación, con un escudo protegiendo capital, una línea de precios en aumento y gráficos de crecimiento financiero."
 translationSlug: "beating-inflation"
+draft: false
 faq:
   - pregunta: "¿Cuál es la mejor inversión contra la inflación?"
     respuesta: "No existe una única mejor inversión. Depende de tu perfil, país, moneda, horizonte y tolerancia al riesgo. Para algunas personas puede ser una mezcla de CDTs, bonos y renta fija. Para otras, acciones, ETFs, bienes raíces o una pequeña exposición a cripto. Lo más sensato suele ser diversificar."

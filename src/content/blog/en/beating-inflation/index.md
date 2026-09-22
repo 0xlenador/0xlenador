@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Investment Strategies Against Inflation: How to Protect Your Capital"
 description: "Learn investment strategies to beat inflation and protect your capital: CDs, bonds, stocks, ETFs, real estate, gold, crypto, and risk management."
 category: "Investment Strategy"
@@ -8,6 +7,7 @@ author: "0x Leñador"
 coverImage: "../../es/ganarle-a-la-inflacion/ganarle-a-la-inflacion.webp"
 coverAlt: "Abstract image about investment strategies against inflation, featuring a shield protecting capital, a rising price line, and financial growth charts."
 translationSlug: "ganarle-a-la-inflacion"
+draft: false
 faq:
   - pregunta: "What is the best investment against inflation?"
     respuesta: "There is no single best investment. It depends on your profile, country, currency, horizon, and risk tolerance. For some people, it might be a mix of CDs, bonds, and fixed income. For others, stocks, ETFs, real estate, or a small exposure to crypto. The most sensible thing is usually to diversify."
@@ -341,5 +341,3 @@ Risk exists everywhere. It exists in investing badly, but also in never investin
 The key is to educate yourself, diversify, and build a strategy that you can sustain.
 
 Protecting your capital doesn't mean avoiding all risk. It means choosing which risks are worth taking.
-
-

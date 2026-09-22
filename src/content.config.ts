@@ -12,23 +12,18 @@ const blog = defineCollection({
   }),
   schema: ({ image: img }) =>
     z.object({
-      title: z.string(),
-      description: z.string(),
-      category: z.string().default("Investigación"),
-      date: z.coerce.string(),
-      author: z.string().default("0x Leñador"),
-      layout: z.string().optional(),
-      keywords: z.string().optional(),
-      readTime: z.string().optional(),
-      draft: z.boolean().optional().default(false),
-      // image() activa el pipeline de optimización de Astro para imágenes locales.
-      // Los paths en el frontmatter deben ser relativos al archivo .md.
-      coverImage: img().optional(),
-      coverAlt: z.string().optional(),
-      // Slug del post hermano en el otro idioma para hreflang cruzado.
-      // Ej: en es/ganarle-a-la-inflacion → translationSlug: "beating-inflation"
-      translationSlug: z.string().optional(),
-      faq: z
+      title: z.string(), // manual
+      description: z.string(), // manual
+      category: z.string().default("Investigación"), // manual
+      date: z.coerce.string(), // manual
+      author: z.string().default("0x Leñador"), // manual
+      layout: z.string().optional(), // manual
+      readTime: z.string().optional(), // automático (calculado por src/lib/content.ts si no lo pones)
+      draft: z.boolean().optional().default(false), // manual
+      coverImage: img().optional(), // manual
+      coverAlt: z.string().optional(), // manual
+      translationSlug: z.string().optional(), // manual
+      faq: z // manual
         .array(
           z.object({
             pregunta: z.string(),
@@ -44,24 +39,24 @@ const guias = defineCollection({
   // generateId emite "es/polymarket" o "en/polymarket"
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/guias" }),
   schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    categoria: z.enum(["Airdrop", "DeFi", "Gaming", "Trading", "Mixta", "Predicciones", "Perpetuos", "L1", "L2"]),
-    estado: z.enum(["activa", "completada", "expirada"]).default("activa"),
-    temporada: z.string().optional(),
-    fechaLimite: z.coerce.string().optional(),
-    plataforma: z.string(),
-    imagen: z.string().optional(),
-    ogImage: z.string().optional(),
-    tags: z.array(z.string()).default([]),
-    dificultad: z.enum(["baja", "media", "alta"]).default("media"),
-    tiempoEstimado: z.string().optional(),
-    date: z.coerce.string(),
-    author: z.string().default("0x Leñador"),
-    readTime: z.string().optional(),
-    prioridad: z.number().default(0),
+    title: z.string(), // manual
+    description: z.string(), // manual
+    categoria: z.enum(["Airdrop", "DeFi", "Gaming", "Trading", "Mixta", "Predicciones", "Perpetuos", "L1", "L2"]), // manual
+    estado: z.enum(["activa", "completada", "expirada"]).default("activa"), // manual
+    temporada: z.string().optional(), // manual
+    fechaLimite: z.coerce.string().optional(), // manual
+    plataforma: z.string(), // manual
+    imagen: z.string().optional(), // manual
+    ogImage: z.string().optional(), // manual
+    tags: z.array(z.string()).default([]), // manual
+    dificultad: z.enum(["baja", "media", "alta"]).default("media"), // manual
+    tiempoEstimado: z.string().optional(), // manual
+    date: z.coerce.string(), // manual
+    author: z.string().default("0x Leñador"), // manual
+    readTime: z.string().optional(), // automático (calculado por src/lib/content.ts)
+    prioridad: z.number().default(0), // manual
     // Slug de la guía hermana en el otro idioma para hreflang cruzado.
-    translationSlug: z.string().optional(),
+    translationSlug: z.string().optional(), // manual
   }),
 })
 
