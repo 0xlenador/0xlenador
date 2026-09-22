@@ -30,6 +30,22 @@ const schema = {
   ],
 }
 
+// Schema WebSite con Sitelink Search Box
+const webSiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "0x Leñador",
+  url: "https://0xlenador.xyz/",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://0xlenador.xyz/busqueda?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+}
+
 // Últimas 3 entradas del blog en inglés
 const posts = (await getBlogPostsByLang("en")).slice(0, 3)
 
@@ -41,7 +57,7 @@ const guiasActivas = (await getGuiasByLang("en")).filter((g) => g.data.estado ==
   title={seo.title}
   description={seo.description}
   image={seo.image}
-  schema={schema}
+  schema={[schema, webSiteSchema]}
   customSpacing
 >
   <HomeView posts={posts} guiasActivas={guiasActivas} />

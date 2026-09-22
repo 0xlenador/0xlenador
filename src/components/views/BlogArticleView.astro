@@ -8,6 +8,7 @@ import { render } from "astro:content"
 import ArticleHeader from "../blog/ArticleHeader.astro"
 import ShareButtons from "../blog/ShareButtons.astro"
 import TableOfContents from "../blog/TableOfContents.astro"
+import RelatedArticles from "../blog/RelatedArticles.astro"
 import { getLangFromUrl, useTranslations, formatDate } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
@@ -88,6 +89,9 @@ const ogImage = coverImage?.src
         </div>
       </div>
     </footer>
+
+    <!-- Artículos Relacionados -->
+    <RelatedArticles post={post} lang={lang} t={t} />
   </article>
 
   <!-- ─── COLUMNA LATERAL: SIDEBAR ─── -->

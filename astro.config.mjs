@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite"
 import sitemap from "@astrojs/sitemap"
 import mdx from "@astrojs/mdx"
 import icon from "astro-icon"
+import rehypeExternalLinks from "rehype-external-links"
 import { getAlternateUrl } from "./src/i18n/utils.ts"
 import { buildBlogSlugMap, buildGuiasSlugMap } from "./src/lib/sitemapHelpers.mjs"
 
@@ -204,6 +205,17 @@ export default defineConfig({
     "/miniapps/slime-miner": "/",
     "/miniapps/elderglade": "/",
     "/miniapps/billionzombies": "/",
+  },
+  markdown: {
+    rehypePlugins: [
+      [
+        rehypeExternalLinks,
+        {
+          target: "_blank",
+          rel: ["nofollow", "noopener", "noreferrer"],
+        },
+      ],
+    ],
   },
   integrations: [
     mdx(),
