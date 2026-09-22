@@ -1,0 +1,28 @@
+---
+import Layout from "../../../layouts/Layout.astro"
+import { getBlogPostsByLang } from "../../../lib/content"
+import BlogView from "../../../components/views/BlogView.astro"
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+
+export async function getStaticPaths({ paginate }) {
+  // Solo posts en inglés
+  const posts = await getBlogPostsByLang("en")
+  return paginate(posts, { pageSize: 20 })
+}
+
+const { page } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("blog.seo.title"),
+  description: t("blog.seo.description"),
+  url: "https://0xlenador.xyz/en/blog",
+  image: "/img/meta/blog.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <BlogView page={page} />
+</Layout>

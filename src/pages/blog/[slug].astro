@@ -7,13 +7,21 @@ import { getImage } from "astro:assets"
 // 1. Generar rutas solo para posts en español
 export async function getStaticPaths() {
   const posts = await getBlogPostsByLang("es")
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }))
+  return posts.map((post, index) => {
+    // El arreglo viene ordenado de más nuevo a más viejo
+    // Por tanto, el "siguiente" (más nuevo) es index - 1
+    // y el "anterior" (más viejo) es index + 1
+    const nextPost = index > 0 ? posts[index - 1] : null
+    const prevPost = index < posts.length - 1 ? posts[index + 1] : null
+
+    return {
+      params: { slug: post.slug },
+      props: { post, nextPost, prevPost },
+    }
+  })
 }
 
-const { post } = Astro.props
+const { post, nextPost, prevPost } = Astro.props
 const { title, description, date, updatedDate, coverImage, coverAlt } = post.data
 
 let ogImage = undefined
@@ -104,5 +112,5 @@ const enUrl = translationSlug ? `/en/blog/${translationSlug}/` : `/en/blog/${pos
   esUrl={esUrl}
   enUrl={enUrl}
 >
-  <BlogArticleView post={post} />
+  <BlogArticleView post={post} nextPost={nextPost} prevPost={prevPost} />
 </Layout>

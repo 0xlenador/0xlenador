@@ -4,20 +4,25 @@ import { getBlogPostsByLang } from "../../lib/content"
 import BlogView from "../../components/views/BlogView.astro"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
+export async function getStaticPaths({ paginate }) {
+  // Solo posts en español — ya vienen ordenados por fecha desc desde el helper
+  const posts = await getBlogPostsByLang("es")
+  return paginate(posts, { pageSize: 20 })
+}
+
+const { page } = Astro.props
+
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
-
-// English posts
-const [featuredPost, ...regularPosts] = await getBlogPostsByLang("en")
 
 const seo = {
   title: t("blog.seo.title"),
   description: t("blog.seo.description"),
-  url: "https://0xlenador.xyz/en/blog",
+  url: "https://0xlenador.xyz/blog",
   image: "/img/meta/blog.webp",
 }
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
-  <BlogView featuredPost={featuredPost} regularPosts={regularPosts} />
+  <BlogView page={page} />
 </Layout>

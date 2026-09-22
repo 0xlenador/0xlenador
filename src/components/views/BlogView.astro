@@ -8,7 +8,16 @@ import FaqAccordion from "../FaqAccordion.astro"
 import { getLangFromUrl, useTranslations, formatDate } from "../../i18n/utils"
 import socialFeed from "../../content/data/social_feed.json"
 
-const { featuredPost, regularPosts } = Astro.props
+const { page } = Astro.props
+
+let featuredPost = null
+let regularPosts = page.data
+
+// Solo mostramos el artículo destacado en la página 1
+if (page.currentPage === 1 && regularPosts.length > 0) {
+  featuredPost = regularPosts[0]
+  regularPosts = regularPosts.slice(1)
+}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -174,6 +183,27 @@ const assetsData = [
             </a>
           ))}
         </div>
+
+        <!-- Controles de Paginación -->
+        {page.lastPage > 1 && (
+          <div class="mt-16 flex justify-between items-center border-t border-terminal-border/50 pt-8">
+            {page.url.prev ? (
+              <a href={page.url.prev} class="text-emerald-400 hover:text-emerald-300 font-mono text-xs uppercase tracking-wider flex items-center gap-2 transition-colors">
+                ← {lang === "en" ? "Previous" : "Anterior"}
+              </a>
+            ) : <span></span>}
+            
+            <span class="text-terminal-muted font-mono text-xs">
+              {page.currentPage} / {page.lastPage}
+            </span>
+
+            {page.url.next ? (
+              <a href={page.url.next} class="text-emerald-400 hover:text-emerald-300 font-mono text-xs uppercase tracking-wider flex items-center gap-2 transition-colors">
+                {lang === "en" ? "Next" : "Siguiente"} →
+              </a>
+            ) : <span></span>}
+          </div>
+        )}
       </section>
     )
   }

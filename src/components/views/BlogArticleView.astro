@@ -9,12 +9,13 @@ import ArticleHeader from "../blog/ArticleHeader.astro"
 import ShareButtons from "../blog/ShareButtons.astro"
 import TableOfContents from "../blog/TableOfContents.astro"
 import RelatedArticles from "../blog/RelatedArticles.astro"
+import { Icon } from "astro-icon/components"
 import { getLangFromUrl, useTranslations, formatDate } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
-const { post } = Astro.props
+const { post, prevPost, nextPost } = Astro.props
 const { title, description, keywords, date, category, coverImage, coverAlt } = post.data
 const { Content, headings } = await render(post)
 const readTime = post.data.readTime || "5 min"
@@ -89,6 +90,29 @@ const ogImage = coverImage?.src
         </div>
       </div>
     </footer>
+
+    <!-- Navegación Post a Post -->
+    {(prevPost || nextPost) && (
+      <div class="mt-12 flex flex-col sm:flex-row items-stretch justify-between gap-4">
+        {prevPost ? (
+          <a href={lang === "en" ? `/en/blog/${prevPost.slug}/` : `/blog/${prevPost.slug}/`} class="flex-1 group">
+            <div class="h-full px-6 py-4 rounded-xl border border-terminal-border/50 bg-terminal-surface/10 hover:bg-terminal-surface/30 hover:border-emerald-500/30 transition-all flex flex-col">
+              <span class="text-xs font-mono uppercase tracking-wider text-terminal-muted group-hover:text-emerald-400 mb-1 transition-colors">← {lang === "en" ? "Previous" : "Anterior"}</span>
+              <span class="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1">{prevPost.data.title}</span>
+            </div>
+          </a>
+        ) : <div class="flex-1"></div>}
+        
+        {nextPost ? (
+          <a href={lang === "en" ? `/en/blog/${nextPost.slug}/` : `/blog/${nextPost.slug}/`} class="flex-1 group text-right">
+            <div class="h-full px-6 py-4 rounded-xl border border-terminal-border/50 bg-terminal-surface/10 hover:bg-terminal-surface/30 hover:border-emerald-500/30 transition-all flex flex-col">
+              <span class="text-xs font-mono uppercase tracking-wider text-terminal-muted group-hover:text-emerald-400 mb-1 transition-colors">{lang === "en" ? "Next" : "Siguiente"} →</span>
+              <span class="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1">{nextPost.data.title}</span>
+            </div>
+          </a>
+        ) : <div class="flex-1"></div>}
+      </div>
+    )}
 
     <!-- Artículos Relacionados -->
     <RelatedArticles post={post} lang={lang} t={t} />
