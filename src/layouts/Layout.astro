@@ -16,12 +16,14 @@ interface Props {
   title?: string
   description?: string
   image?: string
+  imageAlt?: string
   schema?: object | object[]
-  keywords?: string
   ogType?: string
   customSpacing?: boolean
-  /** ISO 8601 — solo para ogType="article" */
+  /** ISO 8601 — fecha de publicación original */
   publishedTime?: string
+  /** ISO 8601 — última modificación */
+  modifiedTime?: string
   /** Nombre del autor — solo para ogType="article" */
   author?: string
   /** Ocultar de los motores de búsqueda (temporal para traducciones) */
@@ -41,11 +43,12 @@ const {
   title = t("layout.title.default"),
   description = t("layout.description.default"),
   image = "/img/44.webp",
+  imageAlt = title,
   schema,
-  keywords,
   ogType = "website",
   customSpacing = false,
   publishedTime,
+  modifiedTime,
   author,
   noindex = false,
   esUrl: customEsUrl,
@@ -54,16 +57,15 @@ const {
   imageHeight,
 } = Astro.props
 
-// 4. Generación automática de la URL Canónica
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-
-// 5. URLs alternativas para hreflang (SEO bilingüe)
-// ensureTrailingSlash: los hreflang DEBEN coincidir exactamente con el canonical.
-// Astro genera canonical con trailing slash (carpeta/index.html → /ruta/),
-// así que normalizamos aquí para que coincidan en todo caso.
+// 4. Utilidad para asegurar trailing slash (Evita bucles de contenido duplicado y garantiza que Canonical = Hreflang)
 function ensureTS(path: string): string {
   return path === "/" || path.endsWith("/") ? path : path + "/"
 }
+
+// 5. Generación automática de la URL Canónica (Normalizada)
+const canonicalURL = new URL(ensureTS(Astro.url.pathname), Astro.site)
+
+// 6. URLs alternativas para hreflang (SEO bilingüe)
 
 const esUrlStr = ensureTS(customEsUrl || getAlternateUrl(Astro.url, "es"))
 const enUrlStr = ensureTS(customEnUrl || getAlternateUrl(Astro.url, "en"))
@@ -84,7 +86,6 @@ const enUrl = new URL(enUrlStr, Astro.site)
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    {keywords && <meta name="keywords" content={keywords} />}
 
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -103,10 +104,12 @@ const enUrl = new URL(enUrlStr, Astro.site)
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image:alt" content={imageAlt} />
     {imageWidth && <meta property="og:image:width" content={imageWidth.toString()} />}
     {imageHeight && <meta property="og:image:height" content={imageHeight.toString()} />}
     <meta property="og:url" content={canonicalURL} />
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
     {author && <meta property="article:author" content={author} />}
 
     <meta property="twitter:card" content="summary_large_image" />
@@ -115,6 +118,7 @@ const enUrl = new URL(enUrlStr, Astro.site)
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL(image, Astro.site)} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <meta name="theme-color" content="#141414" />
 
