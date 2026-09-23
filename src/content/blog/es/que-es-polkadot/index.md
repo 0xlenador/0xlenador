@@ -1,18 +1,24 @@
 ---
-layout: post
-title: "¿Qué es Polkadot y por qué es clave para el futuro de Web3?"
-description: "Artículo recuperado de 0xdegenerados sobre ¿Qué es Polkadot y por qué es clave para el futuro de Web3?."
-category: "Recuperado"
-date: 2025-06-08
+title: "¿Qué es Polkadot?"
+description: "Descubre qué es Polkadot, cómo su red de parachains permite la interoperabilidad entre blockchains y por qué es clave para el futuro de la Web3."
+category: "Polkadot"
+date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "que-es-polkadot"
-coverImage: "./cover.png"
+translationSlug: ""
+coverImage: "./polkadot.webp"
 coverAlt: "¿Qué es Polkadot y por qué es clave para el futuro de Web3?"
+faq:
+  - pregunta: "¿Qué es Polkadot?"
+    respuesta: "Es una red blockchain multicadena (capa 0) que conecta distintas blockchains (parachains) para que compartan información y seguridad de forma interoperable."
+  - pregunta: "¿Qué son las parachains?"
+    respuesta: "Son blockchains independientes y personalizables conectadas a la red principal de Polkadot (Relay Chain) para beneficiarse de su infraestructura."
+  - pregunta: "¿Para qué sirve el token DOT?"
+    respuesta: "Sirve para participar en la gobernanza, hacer staking para validar transacciones y como garantía económica al conectar nuevas parachains."
 ---
 
 Polkadot es una red blockchain de nueva generación, diseñada para permitir la interoperabilidad entre diferentes blockchains, también conocidas como cadenas de bloques. A diferencia de otras criptomonedas que operan en sus propias redes aisladas, Polkadot permite que distintas blockchains trabajen juntas dentro de un mismo ecosistema, compartiendo seguridad y facilitando la comunicación entre ellas.
 
-En el corazón de Polkadot está la idea de una red multicadena o multichain. Es decir, en lugar de tener una sola blockchain que lo hace todo, Polkadot funciona como una capa base (relay chain) sobre la cual se pueden conectar múltiples blockchains especializadas llamadas *parachains*. Esto la convierte en una infraestructura blockchain extremadamente escalable, segura e innovadora.
+En el corazón de Polkadot está la idea de una red multicadena o multichain. Es decir, en lugar de tener una sola blockchain que lo hace todo, Polkadot funciona como una capa base (relay chain) sobre la cual se pueden conectar múltiples blockchains especializadas llamadas _parachains_. Esto la convierte en una infraestructura blockchain extremadamente escalable, segura e innovadora.
 
 Desde el punto de vista del usuario, esto se traduce en una red que permite crear nuevas aplicaciones descentralizadas (dApps) que no están limitadas por la capacidad o las reglas de una sola cadena. Gracias a su diseño modular, Polkadot promete resolver el clásico “trilema” de la blockchain: escalabilidad, seguridad y descentralización.
 
@@ -54,8 +60,8 @@ Polkadot no usa Proof of Work (como Bitcoin) ni Proof of Stake puro (como Ethere
 
 Además, utiliza dos algoritmos complementarios:
 
-* **BABE**: se encarga de la producción de bloques.
-* **GRANDPA**: se encarga de la finalización de bloques, haciendo que el consenso sea más rápido y seguro.
+- **BABE**: se encarga de la producción de bloques.
+- **GRANDPA**: se encarga de la finalización de bloques, haciendo que el consenso sea más rápido y seguro.
 
 Este sistema híbrido permite que la red tenga un alto rendimiento sin comprometer la seguridad ni la descentralización.
 
@@ -97,9 +103,9 @@ Todas las parachains heredan la seguridad de la relay chain, eliminando la neces
 
 Aunque es un proyecto ambicioso, Polkadot no está exento de desafíos:
 
-* **Complejidad técnica**: No es tan accesible para principiantes. Entender cómo funciona la red puede ser un obstáculo de entrada.
-* **Adopción decreciente**: Tras su auge inicial, su uso ha disminuido en comparación con otras blockchains más orientadas al usuario final.
-* **Competencia feroz**: Redes como Cosmos y Ethereum 2.0 también promueven la interoperabilidad y tienen grandes comunidades detrás.
+- **Complejidad técnica**: No es tan accesible para principiantes. Entender cómo funciona la red puede ser un obstáculo de entrada.
+- **Adopción decreciente**: Tras su auge inicial, su uso ha disminuido en comparación con otras blockchains más orientadas al usuario final.
+- **Competencia feroz**: Redes como Cosmos y Ethereum 2.0 también promueven la interoperabilidad y tienen grandes comunidades detrás.
 
 **He notado en carne propia la caída en la actividad de la comunidad. Polkadot fue en su momento el epicentro de la innovación, pero ahora está en una fase más silenciosa. Sin embargo, creo firmemente que su tecnología sobrevivirá.**
 

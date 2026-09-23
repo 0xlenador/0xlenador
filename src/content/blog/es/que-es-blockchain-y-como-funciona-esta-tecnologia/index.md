@@ -1,18 +1,24 @@
 ---
-layout: post
 title: "¿Qué es Blockchain y cómo funciona esta tecnología?"
-description: "Artículo recuperado de 0xdegenerados sobre ¿Qué es Blockchain y cómo funciona esta tecnología?."
-category: "Recuperado"
-date: 2025-05-20
+description: "Descubre qué es la tecnología Blockchain, cómo funciona su registro inmutable y por qué su descentralización está revolucionando la seguridad y confianza digital."
+category: "Blockchain"
+date: 2026-09-23
 author: "0x Leñador"
 translationSlug: "que-es-blockchain-y-como-funciona-esta-tecnologia"
-coverImage: "./cover.png"
+coverImage: "./blockchain.webp"
 coverAlt: "¿Qué es Blockchain y cómo funciona esta tecnología?"
+faq:
+  - pregunta: "¿Qué es Blockchain?"
+    respuesta: "Es una base de datos descentralizada e inmutable que registra transacciones en una red global sin depender de un intermediario central."
+  - pregunta: "¿Por qué es tan segura la Blockchain?"
+    respuesta: "Porque utiliza criptografía avanzada y el consenso de miles de nodos conectados, haciendo prácticamente imposible alterar o hackear la información."
+  - pregunta: "¿Cuál es la diferencia entre Blockchain pública y privada?"
+    respuesta: "Las públicas (como Bitcoin) son abiertas y no tienen dueño, mientras que las privadas están cerradas y controladas por una entidad o empresa específica."
 ---
 
 La primera vez que escuché hablar sobre Blockchain, lo vi como una especie de base de datos muy segura. Pero con el tiempo, entendí que no se trataba solo de guardar información: **Blockchain es una revolución en cómo entendemos la confianza, la transparencia y el control de los datos**.
 
-Blockchain es una tecnología que permite almacenar información de manera **segura, transparente y descentralizada**, en lo que se conoce como una *cadena de bloques*. Cada bloque contiene un conjunto de transacciones, que una vez validadas y aceptadas por la red, pasan a formar parte de un registro inmutable. Esta es una diferencia clave con respecto a las bases de datos tradicionales.
+Blockchain es una tecnología que permite almacenar información de manera **segura, transparente y descentralizada**, en lo que se conoce como una _cadena de bloques_. Cada bloque contiene un conjunto de transacciones, que una vez validadas y aceptadas por la red, pasan a formar parte de un registro inmutable. Esta es una diferencia clave con respecto a las bases de datos tradicionales.
 
 La clave está en que **no hay una autoridad central**. No hay un banco, gobierno o empresa que controle la red. La información se distribuye entre miles de nodos, que cooperan entre sí mediante un proceso llamado **consenso** para validar los datos. Así, nadie puede alterar la información ya registrada sin modificar simultáneamente miles de copias en todo el mundo.
 
@@ -22,7 +28,7 @@ La clave está en que **no hay una autoridad central**. No hay un banco, gobiern
 
 Desde un punto de vista técnico, Blockchain funciona como un **libro contable público**, donde cada página es un bloque que contiene información (transacciones, contratos, datos, etc.) validada y asegurada con técnicas criptográficas.
 
-Cada vez que un conjunto de transacciones es validado, se crea un nuevo bloque. Este bloque se enlaza al anterior a través de una referencia criptográfica llamada *hash*. De ahí el nombre "cadena de bloques". Si alguien intentara modificar la información de un bloque anterior, todos los bloques siguientes se volverían inválidos automáticamente.
+Cada vez que un conjunto de transacciones es validado, se crea un nuevo bloque. Este bloque se enlaza al anterior a través de una referencia criptográfica llamada _hash_. De ahí el nombre "cadena de bloques". Si alguien intentara modificar la información de un bloque anterior, todos los bloques siguientes se volverían inválidos automáticamente.
 
 En palabras más sencillas: es como si cada bloque fuera una página de un libro. Una vez escrita, no se puede borrar ni editar. Si se comete un error, se corrige escribiendo una nueva página, pero la anterior permanece intacta.
 
@@ -46,7 +52,7 @@ Desde mi punto de vista, **si una Blockchain no es descentralizada ni inmutable,
 
 Este es un tema polémico, y en mi opinión, **las Blockchain privadas contradicen la esencia misma de esta tecnología**.
 
-En una Blockchain pública, como [Bitcoin](https://0xdegenerados.com/que-es-bitcoin-y-por-que-estarevolucionando-el-dinero/) o Ethereum, cualquier persona puede participar, validar transacciones y consultar la información. Es abierta, descentralizada y resistente a la censura.
+En una Blockchain pública, como Bitcoin o Ethereum, cualquier persona puede participar, validar transacciones y consultar la información. Es abierta, descentralizada y resistente a la censura.
 
 Las Blockchain privadas, por el contrario, **están controladas por una empresa o grupo cerrado**. Aunque utilizan algunos elementos técnicos de Blockchain (como el hash o el encadenamiento de bloques), **pierden su mayor virtud: la confianza sin necesidad de confianza (trustless)**.
 
@@ -80,16 +86,16 @@ Así funciona la inmutabilidad: **cuanto más tiempo pasa desde que un bloque fu
 
 ## Aplicaciones reales de la Blockchain que ya están cambiando industrias
 
-Blockchain no es solo para [Bitcoin](https://0xdegenerados.com/que-es-bitcoin-y-por-que-estarevolucionando-el-dinero/) o Ethereum. De hecho, su potencial es mucho más amplio.
+Blockchain no es solo para Bitcoin o Ethereum. De hecho, su potencial es mucho más amplio.
 
 En el mundo real ya se están viendo aplicaciones en sectores como:
 
-* **Finanzas descentralizadas (DeFi):** préstamos, inversiones, trading sin intermediarios.
-* **NFTs y arte digital:** propiedad única sobre activos digitales.
-* **Gaming:** objetos y personajes únicos, intercambiables entre juegos.
-* **Logística:** trazabilidad de productos, desde el origen hasta el consumidor.
-* **Gobernanza digital (DAOs):** organizaciones gestionadas por votaciones en cadena.
-* **Propiedad digital:** desde títulos de propiedad hasta dominios en la Web3.
+- **Finanzas descentralizadas (DeFi):** préstamos, inversiones, trading sin intermediarios.
+- **NFTs y arte digital:** propiedad única sobre activos digitales.
+- **Gaming:** objetos y personajes únicos, intercambiables entre juegos.
+- **Logística:** trazabilidad de productos, desde el origen hasta el consumidor.
+- **Gobernanza digital (DAOs):** organizaciones gestionadas por votaciones en cadena.
+- **Propiedad digital:** desde títulos de propiedad hasta dominios en la Web3.
 
 Lo más impresionante es cómo **Blockchain permite construir sistemas resistentes al pirateo y al control centralizado**, algo esencial en la era digital actual.
 
@@ -97,7 +103,7 @@ Lo más impresionante es cómo **Blockchain permite construir sistemas resistent
 
 ## El consenso como clave: qué papel juegan los mineros y validadores
 
-Volviendo al consenso, existen varios mecanismos. En **[Bitcoin](https://0xdegenerados.com/que-es-bitcoin-y-por-que-estarevolucionando-el-dinero/)**, se usa la prueba de trabajo (*Proof of Work*), donde los mineros compiten para resolver un problema matemático. En **Ethereum**, desde la actualización de “The Merge”, se utiliza **prueba de participación (*Proof of Stake*)**, donde validadores depositan fondos como garantía para validar bloques.
+Volviendo al consenso, existen varios mecanismos. En **Bitcoin**, se usa la prueba de trabajo (_Proof of Work_), donde los mineros compiten para resolver un problema matemático. En **Ethereum**, desde la actualización de “The Merge”, se utiliza **prueba de participación (_Proof of Stake_)**, donde validadores depositan fondos como garantía para validar bloques.
 
 En ambos casos, el objetivo es el mismo: **garantizar que nadie pueda hacer trampa**. En mi experiencia, este aspecto técnico suele pasarse por alto, pero es **la clave que permite que todo funcione sin necesidad de confiar en nadie**.
 
@@ -109,10 +115,10 @@ Aunque muchas personas asocian Blockchain exclusivamente con criptomonedas, lo c
 
 Yo he explorado muchas de estas áreas, y puedo confirmar que el potencial es real. Por ejemplo:
 
-* En DeFi puedes acceder a servicios financieros sin necesidad de bancos.
-* En las DAOs puedes participar en decisiones colectivas sin jerarquías.
-* Los NFTs permiten tener objetos únicos que puedes transferir, prestar o vender.
-* Y los metaversos basados en Blockchain están abriendo nuevas formas de socialización, trabajo y entretenimiento.
+- En DeFi puedes acceder a servicios financieros sin necesidad de bancos.
+- En las DAOs puedes participar en decisiones colectivas sin jerarquías.
+- Los NFTs permiten tener objetos únicos que puedes transferir, prestar o vender.
+- Y los metaversos basados en Blockchain están abriendo nuevas formas de socialización, trabajo y entretenimiento.
 
 Además, existen servicios de hosting, sistemas de apuestas, agregadores de liquidez, derivados, protocolos de préstamos y mucho más.
 
@@ -124,11 +130,11 @@ La Blockchain se está convirtiendo en la **infraestructura de la próxima gener
 
 A pesar de su crecimiento, Blockchain enfrenta desafíos importantes:
 
-* **Escalabilidad:** ¿cómo procesar millones de transacciones sin perder descentralización?
-* **Consumo energético:** en algunos protocolos como [Bitcoin](https://0xdegenerados.com/que-es-bitcoin-y-por-que-estarevolucionando-el-dinero/), la minería consume mucha energía.
-* **Usabilidad:** aún es complejo para el usuario promedio.
-* **Regulación:** falta un marco claro en muchos países.
-* **Interoperabilidad:** conectar diferentes Blockchains sin fricción.
+- **Escalabilidad:** ¿cómo procesar millones de transacciones sin perder descentralización?
+- **Consumo energético:** en algunos protocolos como Bitcoin, la minería consume mucha energía.
+- **Usabilidad:** aún es complejo para el usuario promedio.
+- **Regulación:** falta un marco claro en muchos países.
+- **Interoperabilidad:** conectar diferentes Blockchains sin fricción.
 
 Sin embargo, hay avances prometedores: **blockchains modulares**, **rollups**, **sharding**, entre otros. Todo apunta a que en los próximos años veremos una Blockchain más rápida, accesible y útil para todos.
 

@@ -1,13 +1,19 @@
 ---
-layout: post
 title: "¿Qué es Solana y por qué está revolucionando el mundo cripto?"
-description: "Artículo recuperado de 0xdegenerados sobre ¿Qué es Solana y por qué está revolucionando el mundo cripto?."
+description: "Descubre qué es Solana, cómo funciona su innovador mecanismo Proof of History (PoH) y por qué sus transacciones ultrarrápidas están revolucionando el ecosistema cripto."
 category: "Recuperado"
 date: 2025-05-21
 author: "0x Leñador"
-translationSlug: "que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto"
-coverImage: "./cover.png"
+translationSlug: ""
+coverImage: "./solana.webp"
 coverAlt: "¿Qué es Solana y por qué está revolucionando el mundo cripto?"
+faq:
+  - pregunta: "¿Qué es Solana?"
+    respuesta: "Es una blockchain pública de alto rendimiento diseñada para procesar más de 65.000 transacciones por segundo (TPS) a un costo extremadamente bajo, enfocada en la escalabilidad sin sacrificar la seguridad."
+  - pregunta: "¿Cómo funciona el mecanismo de consenso de Solana?"
+    respuesta: "Solana utiliza un sistema híbrido que combina Proof of Stake (PoS) con Proof of History (PoH). Este último funciona como un reloj criptográfico que agiliza la sincronización de los nodos y reduce la latencia."
+  - pregunta: "¿Para qué sirve el token SOL?"
+    respuesta: "SOL es el token nativo de la red. Sirve para pagar comisiones de transacción (gas fees), participar en staking para asegurar la red, y es la moneda base para interactuar con aplicaciones DeFi y comprar NFTs."
 ---
 
 Hace un tiempo, me topé con Solana casi por accidente. Venía explorando distintas blockchains en busca de alternativas a Ethereum, cuando me crucé con este proyecto que prometía transacciones casi instantáneas y a costos bajísimos. Para ser sincero, al principio era bastante escéptico: no me convencía su grado de descentralización y me parecía demasiado bueno para ser verdad. Pero con el tiempo, y tras usarla, esa percepción cambió radicalmente.
@@ -44,10 +50,10 @@ Pero el tiempo, la evolución de la red y sobre todo los resultados me hicieron 
 
 Solana no es solo otra blockchain rápida. Sus ventajas competitivas son varias:
 
-* **Escalabilidad sin fragmentación (sharding):** a diferencia de otras redes, Solana no necesita dividir la red para escalar.
-* **Bajas comisiones:** hacer una transacción cuesta menos de $0.01, algo impensado en Ethereum durante sus picos de congestión.
-* **Velocidad asombrosa:** con más de 65.000 TPS, puede competir con redes de tarjetas de crédito como Visa.
-* **Ecosistema en expansión:** DeFi, NFTs, wallets, exchanges y hasta videojuegos están floreciendo en Solana.
+- **Escalabilidad sin fragmentación (sharding):** a diferencia de otras redes, Solana no necesita dividir la red para escalar.
+- **Bajas comisiones:** hacer una transacción cuesta menos de $0.01, algo impensado en Ethereum durante sus picos de congestión.
+- **Velocidad asombrosa:** con más de 65.000 TPS, puede competir con redes de tarjetas de crédito como Visa.
+- **Ecosistema en expansión:** DeFi, NFTs, wallets, exchanges y hasta videojuegos están floreciendo en Solana.
 
 Lo más interesante es que todas estas ventajas son **tangibles**. No es promesa de whitepaper, es algo que experimentás desde el primer momento que usás una dApp sobre Solana. Yo, por ejemplo, he utilizado wallets como Phantom, y la experiencia es tan fluida que se siente como estar usando una app financiera tradicional.
 
@@ -57,10 +63,10 @@ Lo más interesante es que todas estas ventajas son **tangibles**. No es promesa
 
 SOL es el token nativo de la red Solana. Se utiliza principalmente para:
 
-* Pagar comisiones por transacciones.
-* Staking y delegación para asegurar la red.
-* Participación en la gobernanza del ecosistema (aunque Solana aún no es plenamente gobernada por la comunidad).
-* Incentivos para validadores y desarrolladores.
+- Pagar comisiones por transacciones.
+- Staking y delegación para asegurar la red.
+- Participación en la gobernanza del ecosistema (aunque Solana aún no es plenamente gobernada por la comunidad).
+- Incentivos para validadores y desarrolladores.
 
 Cuando empecé a usar la red, comprar SOL fue bastante sencillo a través de exchanges como Binance, Coinbase o incluso brokers cripto locales. Lo que me sorprendió fue la cantidad de usos reales que tenía: desde pagar comisiones hasta participar en la compra de NFTs o en pools de liquidez.
 

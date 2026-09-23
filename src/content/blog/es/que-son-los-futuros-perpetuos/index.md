@@ -1,13 +1,19 @@
 ---
-layout: post
 title: "Futuros Perpetuos: Más Allá del Apalancamiento"
-description: "Artículo recuperado de 0xdegenerados sobre Futuros Perpetuos: Más Allá del Apalancamiento."
-category: "Recuperado"
-date: 2025-05-17
+description: "Descubre qué son los contratos de futuros perpetuos en criptomonedas, cómo funciona el funding rate y cómo usar la estrategia delta neutral para ganar airdrops sin riesgo."
+category: "Perps"
+date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "que-son-los-futuros-perpetuos"
-coverImage: "./cover.png"
+translationSlug: ""
+coverImage: "./perps.webp"
 coverAlt: "Futuros Perpetuos: Más Allá del Apalancamiento"
+faq:
+  - pregunta: "¿Qué son los futuros perpetuos?"
+    respuesta: "Son contratos financieros sin fecha de vencimiento que te permiten operar sobre el precio de una criptomoneda utilizando apalancamiento."
+  - pregunta: "¿Qué es el funding rate?"
+    respuesta: "Es un mecanismo de pago periódico entre operadores diseñado para mantener el precio del contrato perpetuo alineado con el mercado spot (real)."
+  - pregunta: "¿Qué es la estrategia delta neutral?"
+    respuesta: "Consiste en abrir simultáneamente una posición en largo y otra en corto para anular el riesgo de volatilidad del mercado."
 ---
 
 ## **¿Qué son los contratos de futuros perpetuos y cómo funcionan?**
@@ -16,9 +22,9 @@ Los contratos de futuros perpetuos son derivados financieros que permiten especu
 
 Estos contratos son muy populares en el mundo de las criptomonedas porque ofrecen flexibilidad, alta liquidez y la posibilidad de operar con apalancamiento. Pero su funcionamiento tiene peculiaridades que es vital entender:
 
-* **No tienen fecha de vencimiento**, por lo que no es necesario renovarlos ni rolarlos.
-* Se mantienen en línea con el precio del mercado spot gracias a un mecanismo llamado **funding rate** (de esto hablaremos más adelante).
-* Pueden utilizarse para abrir **posiciones largas o cortas**, lo cual permite ganar en mercados tanto alcistas como bajistas.
+- **No tienen fecha de vencimiento**, por lo que no es necesario renovarlos ni rolarlos.
+- Se mantienen en línea con el precio del mercado spot gracias a un mecanismo llamado **funding rate** (de esto hablaremos más adelante).
+- Pueden utilizarse para abrir **posiciones largas o cortas**, lo cual permite ganar en mercados tanto alcistas como bajistas.
 
 Este tipo de contrato fue popularizado por plataformas como BitMEX y posteriormente adoptado por gigantes como Binance, Kraken y muchas plataformas DeFi.
 
@@ -26,13 +32,13 @@ Este tipo de contrato fue popularizado por plataformas como BitMEX y posteriorme
 
 Aunque pueden parecer similares, hay **diferencias fundamentales** entre un futuro tradicional y uno perpetuo:
 
-| Característica | Futuro Tradicional | Futuro Perpetuo |
-| --- | --- | --- |
-| Fecha de vencimiento | Sí | No |
-| Necesita renovación/rollover | Sí | No |
-| Basado en índice de referencia | Sí | Sí |
-| Mecanismo de ajuste de precio | Ajuste por vencimiento | **Funding rate** |
-| Liquidez | Variable (según vencimiento) | Alta (continuamente operable) |
+| Característica                 | Futuro Tradicional           | Futuro Perpetuo               |
+| ------------------------------ | ---------------------------- | ----------------------------- |
+| Fecha de vencimiento           | Sí                           | No                            |
+| Necesita renovación/rollover   | Sí                           | No                            |
+| Basado en índice de referencia | Sí                           | Sí                            |
+| Mecanismo de ajuste de precio  | Ajuste por vencimiento       | **Funding rate**              |
+| Liquidez                       | Variable (según vencimiento) | Alta (continuamente operable) |
 
 Por ejemplo, si compras un futuro tradicional sobre BTC que expira en junio, cuando llegue esa fecha el contrato finaliza. En cambio, un contrato perpetuo sobre BTC simplemente **sigue abierto** mientras cumplas las condiciones del margen.
 
@@ -44,8 +50,8 @@ El **funding rate** es uno de los elementos más importantes y a menudo **menos 
 
 Es un pago periódico entre traders que tienen posiciones largas y cortas. Su objetivo es **mantener el precio del contrato perpetuo cercano al del mercado spot**.
 
-* Si el contrato se cotiza **por encima** del precio spot, los traders largos pagan a los cortos.
-* Si se cotiza **por debajo**, los traders cortos pagan a los largos.
+- Si el contrato se cotiza **por encima** del precio spot, los traders largos pagan a los cortos.
+- Si se cotiza **por debajo**, los traders cortos pagan a los largos.
 
 Este mecanismo hace que, en esencia, mantener una posición perpetua no sea “gratis”. Estás ganando o pagando constantemente según el funding rate.
 
@@ -57,17 +63,17 @@ Como cualquier instrumento financiero potente, los futuros perpetuos ofrecen **o
 
 ### Ventajas:
 
-* **Flexibilidad total**: puedes mantener tu posición tanto tiempo como desees.
-* **Apalancamiento**: multiplicar exposición sin necesidad de capital completo.
-* **Permiten ganar en mercados bajistas** abriendo posiciones cortas.
-* **Alta liquidez**, especialmente en mercados como BTC o ETH.
+- **Flexibilidad total**: puedes mantener tu posición tanto tiempo como desees.
+- **Apalancamiento**: multiplicar exposición sin necesidad de capital completo.
+- **Permiten ganar en mercados bajistas** abriendo posiciones cortas.
+- **Alta liquidez**, especialmente en mercados como BTC o ETH.
 
 ### Riesgos:
 
-* **Liquidación automática** si tu margen no cubre las pérdidas.
-* **Costos por funding rate**.
-* **Volatilidad extrema**, especialmente en criptomonedas.
-* **Gestión emocional**: operar con apalancamiento puede ser estresante.
+- **Liquidación automática** si tu margen no cubre las pérdidas.
+- **Costos por funding rate**.
+- **Volatilidad extrema**, especialmente en criptomonedas.
+- **Gestión emocional**: operar con apalancamiento puede ser estresante.
 
 Por eso, aunque muchos traders lo usan para buscar rentabilidad rápida, mi enfoque ha sido completamente diferente.
 
@@ -87,16 +93,16 @@ Para ejecutar esta idea de forma segura, aplico una **estrategia delta neutral**
 
 Consiste en abrir dos operaciones contrarias sobre el mismo activo, de manera que **tu exposición al precio sea cero**. Ejemplo:
 
-* Abrir una **posición larga en Hyperliquid** (esperando que suba).
-* Abrir una **posición corta en Paradex** al mismo tiempo (esperando que baje).
+- Abrir una **posición larga en Hyperliquid** (esperando que suba).
+- Abrir una **posición corta en Paradex** al mismo tiempo (esperando que baje).
 
 Al hacer esto, el efecto neto del movimiento de precio **se cancela**, y lo único que importa es **cumplir con las condiciones del volumen o de tiempo activo** en la plataforma que otorga el airdrop.
 
 Esta estrategia me ha permitido:
 
-* Minimizar el riesgo
-* Aumentar mi exposición a posibles airdrops
-* No depender del análisis técnico ni del market timing
+- Minimizar el riesgo
+- Aumentar mi exposición a posibles airdrops
+- No depender del análisis técnico ni del market timing
 
 Eso sí, es importante vigilar que ambas plataformas tengan comisiones razonables y mecanismos similares de funding.
 
@@ -104,8 +110,8 @@ Eso sí, es importante vigilar que ambas plataformas tengan comisiones razonable
 
 Aquí es donde la jugada se vuelve realmente interesante. En el ecosistema cripto, muchos proyectos nuevos implementan **estrategias de distribución basadas en actividad**:
 
-* Operar en la plataforma = ganar puntos
-* Retener activos o usar funcionalidades = sumar reputación
+- Operar en la plataforma = ganar puntos
+- Retener activos o usar funcionalidades = sumar reputación
 
 Usando contratos perpetuos en estos entornos, puedes posicionarte para recibir recompensas futuras **sin tener que especular** ni asumir grandes riesgos. Y si combinas esto con una estrategia delta neutral, estás cubierto.
 
@@ -117,8 +123,10 @@ Este enfoque, aunque más técnico y silencioso, puede generar **beneficios much
 
 No todas las plataformas permiten este tipo de estrategias. Estas son las que recomiendo por experiencia:
 
-[latest_airdropdegen limit="9" categoria="perpetuos"]
-[airdrop_tierlist_cta text="¡Explora Ahora!" button_text="Apps con futuros perpetuos" url="https://0xdegenerados.com/all-airdrops/?categories=Perpetuos" button_text_2="Ver todos los airdrops" url_2="/all-airdrops" style="peregrinacion"]
+- [Hyperliquid](https://app.hyperliquid.xyz/join/ELLENAADOR)
+- [Lighter](https://app.lighter.xyz/?referral=9PQKM3LUEU7L)
+- [fomo](https://fomo.family/r/0xlenador)
+- [Nado](https://app.nado.xyz/?join=iour8mw)
 
 Consejo: busca siempre plataformas que **tengan sistemas de incentivos por uso**, y no solo trading especulativo. El secreto está en la acumulación silenciosa.
 
@@ -126,11 +134,11 @@ Consejo: busca siempre plataformas que **tengan sistemas de incentivos por uso**
 
 Aunque parecen sencillos, estos contratos encierran muchas trampas para los desprevenidos. Estos son los errores más frecuentes que he visto (y evitado):
 
-* **No entender el funding rate** y acabar pagando más de lo que ganas.
-* **Usar demasiado apalancamiento** sin conocer bien el riesgo.
-* **No tener un plan de salida claro**, lo que lleva a liquidaciones.
-* **No monitorear ambas posiciones en estrategias delta neutral**.
-* **Dejarse llevar por la emoción o FOMO en airdrops** sin calcular bien el coste-beneficio.
+- **No entender el funding rate** y acabar pagando más de lo que ganas.
+- **Usar demasiado apalancamiento** sin conocer bien el riesgo.
+- **No tener un plan de salida claro**, lo que lleva a liquidaciones.
+- **No monitorear ambas posiciones en estrategias delta neutral**.
+- **Dejarse llevar por la emoción o FOMO en airdrops** sin calcular bien el coste-beneficio.
 
 La clave está en usar los contratos perpetuos **como una herramienta estratégica**, no como un billete de lotería.
 

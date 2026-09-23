@@ -1,12 +1,11 @@
 ---
-layout: post
 title: "Satoshi Nakamoto: El Enigma que Transformó el Dinero Digital"
 description: "Descubre la historia y el legado de Satoshi Nakamoto, el misterioso creador de Bitcoin. Explora las teorías sobre su identidad y cómo su visión transformó el sistema financiero descentralizado."
-category: "Recuperado"
-date: 2025-05-26
+category: "Bitcoin"
+date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "satoshi-nakamoto-el-enigma-que-transformo-el-dinero-digital"
-coverImage: "./cover.png"
+translationSlug: ""
+coverImage: "./satoshi.webp"
 coverAlt: "Satoshi Nakamoto: El Enigma que Transformó el Dinero Digital"
 faq:
   - pregunta: "¿Quién es Satoshi Nakamoto?"
@@ -53,11 +52,11 @@ Pero su decisión de desaparecer también dejó una huella. Al no reclamar nunca
 
 Desde su desaparición, Internet ha generado una avalancha de teorías para desenmascarar a Satoshi. Algunos nombres que se repiten constantemente son:
 
-* **Hal Finney**: Primer receptor de una transacción de Bitcoin y colaborador clave.
-* **Nick Szabo**: Criptógrafo creador del concepto de “bit gold”.
-* **Dorian Nakamoto**: Un ingeniero californiano cuyo nombre coincidió, pero que negó toda relación.
-* **Adam Back**: Inventor de Hashcash, tecnología utilizada en el proof-of-work de Bitcoin.
-* **Craig Wright**: Un empresario australiano que afirma ser Nakamoto, sin pruebas concluyentes.
+- **Hal Finney**: Primer receptor de una transacción de Bitcoin y colaborador clave.
+- **Nick Szabo**: Criptógrafo creador del concepto de “bit gold”.
+- **Dorian Nakamoto**: Un ingeniero californiano cuyo nombre coincidió, pero que negó toda relación.
+- **Adam Back**: Inventor de Hashcash, tecnología utilizada en el proof-of-work de Bitcoin.
+- **Craig Wright**: Un empresario australiano que afirma ser Nakamoto, sin pruebas concluyentes.
 
 De todas estas teorías, la única constante es la falta de evidencia verificable. Y aunque algunos podrían ver esto como una debilidad, para quienes entendemos el ADN de Bitcoin, esto refuerza su valor.
 
