@@ -41,6 +41,16 @@ def fetch_stock_data(ticker_symbol):
         # Extraer campos necesarios (usando .get() para evitar KeyErrors si falta un dato)
         price = info.get('currentPrice') or info.get('regularMarketPrice') or info.get('previousClose')
         fcf = info.get('freeCashflow')
+        
+        # Fallback: Si no hay FCF en info (ej: bancos, AXP), lo extraemos del estado de flujo de caja
+        if fcf is None or fcf == 0:
+            try:
+                cf = stock.cashflow
+                if not cf.empty and 'Free Cash Flow' in cf.index:
+                    fcf = float(cf.loc['Free Cash Flow'].iloc[0])
+            except:
+                pass
+
         shares = info.get('sharesOutstanding') or info.get('impliedSharesOutstanding') or info.get('circulatingSupply')
         market_cap = info.get('marketCap')
         website = clean_domain(info.get('website', ''))
