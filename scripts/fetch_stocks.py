@@ -41,15 +41,31 @@ def fetch_stock_data(ticker_symbol):
         # Extraer campos necesarios (usando .get() para evitar KeyErrors si falta un dato)
         price = info.get('currentPrice') or info.get('regularMarketPrice') or info.get('previousClose')
         fcf = info.get('freeCashflow')
+        operating_cf = info.get('operatingCashflow')
         
-        # Fallback: Si no hay FCF en info (ej: bancos, AXP), lo extraemos del estado de flujo de caja
-        if fcf is None or fcf == 0:
+        # Validación de FCF: Si el FCF reportado es mayor que el flujo operativo (error de Yahoo), o falta:
+        if fcf is None or fcf == 0 or (operating_cf is not None and fcf > operating_cf):
             try:
                 cf = stock.cashflow
-                if not cf.empty and 'Free Cash Flow' in cf.index:
-                    fcf = float(cf.loc['Free Cash Flow'].iloc[0])
+                if not cf.empty:
+                    # Extraer Operativo y CapEx manualmente para calcular un FCF real
+                    op_cf_real = cf.loc['Operating Cash Flow'].iloc[0] if 'Operating Cash Flow' in cf.index else 0
+                    capex_real = cf.loc['Capital Expenditure'].iloc[0] if 'Capital Expenditure' in cf.index else 0
+                    
+                    # El CapEx suele venir en negativo, así que se suman
+                    calculated_fcf = float(op_cf_real + capex_real)
+                    
+                    import math
+                    # Solo reemplazamos si logramos un cálculo válido y numérico
+                    if not math.isnan(calculated_fcf) and calculated_fcf != 0:
+                        fcf = calculated_fcf
             except:
                 pass
+                
+        # Asegurarnos de que no queden NaNs sueltos si yfinance los devolvió
+        import math
+        if isinstance(fcf, float) and math.isnan(fcf):
+            fcf = 0
 
         shares = info.get('sharesOutstanding') or info.get('impliedSharesOutstanding') or info.get('circulatingSupply')
         market_cap = info.get('marketCap')
