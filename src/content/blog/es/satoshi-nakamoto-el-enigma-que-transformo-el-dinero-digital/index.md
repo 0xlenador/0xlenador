@@ -28,9 +28,7 @@ Lo fascinante de Nakamoto no es solo su invención, sino su desaparición. Desde
 
 Todo comenzó en 2008, cuando Nakamoto publicó un documento técnico titulado **“Bitcoin: A Peer-to-Peer Electronic Cash System”**. Este paper describía un sistema de dinero electrónico descentralizado que eliminaba la necesidad de intermediarios como bancos o gobiernos. La idea, aunque sencilla en papel, suponía una ruptura radical con siglos de estructura financiera.
 
-[Whitepaper English (Original)](https://0xdegenerados.com/wp-content/uploads/2025/05/bitcoin.pdf)[Descargar](https://0xdegenerados.com/wp-content/uploads/2025/05/bitcoin.pdf)
-
-[Whitepaper en Español](https://0xdegenerados.com/wp-content/uploads/2025/05/bitcoin_es.pdf)[Descargar](https://0xdegenerados.com/wp-content/uploads/2025/05/bitcoin_es.pdf)
+[Whitepaper (Original)](https://bitcoin.org/es/bitcoin-documento)
 
 El verdadero giro de tuerca fue la implementación del sistema. Con **la prueba de trabajo (proof-of-work)** y la creación del **blockchain**, Nakamoto resolvió el histórico problema del “doble gasto”, una de las mayores barreras para el dinero digital.
 
