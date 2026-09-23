@@ -7,7 +7,6 @@
 import FaqAccordion from "../FaqAccordion.astro"
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 import Sparkline from "../Sparkline.astro"
-import IntrinsicCalculator from "../IntrinsicCalculator.astro"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -119,8 +118,6 @@ const faqItems = [
         {t("assets.intro")}
       </p>
     </div>
-
-    <IntrinsicCalculator />
   </header>
 
   <!-- Watchlist header de tabla -->

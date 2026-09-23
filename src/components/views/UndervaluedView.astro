@@ -36,7 +36,7 @@ interface StockRow {
 const stockEntries = Object.entries(stocksData) as [string, { name: string; price: number; fcf: number; shares: number; website: string; marketCap: number; type: string }][]
 
 const processedStocks: StockRow[] = stockEntries
-  .filter(([, data]) => data.price && data.shares && data.fcf && data.fcf > 0)
+  .filter(([, data]) => data.price && data.shares && data.fcf !== undefined)
   .map(([ticker, data]) => {
     const fcfPerShare = data.fcf / data.shares
 
@@ -50,7 +50,7 @@ const processedStocks: StockRow[] = stockEntries
       intrinsicValue += terminalValue / Math.pow(1 + DISCOUNT_RATE, YEARS)
     }
 
-    const marginOfSafety = ((intrinsicValue - data.price) / intrinsicValue) * 100
+    const marginOfSafety = intrinsicValue > 0 ? ((intrinsicValue - data.price) / intrinsicValue) * 100 : -999
 
     return {
       ticker,
@@ -392,7 +392,7 @@ function formatBigNumber(num: number): string {
         intrinsicValue += terminalValue / Math.pow(1 + discountVal, YEARS)
       }
 
-      const marginOfSafety = ((intrinsicValue - price) / intrinsicValue) * 100
+      const marginOfSafety = intrinsicValue > 0 ? ((intrinsicValue - price) / intrinsicValue) * 100 : -999
       const isUndervalued = marginOfSafety > 0
 
       // Update dataset for sorting
