@@ -5,12 +5,24 @@ import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: t("undervalued.schema.name"),
+  operatingSystem: "Web",
+  applicationCategory: "FinanceApplication",
+  description: t("undervalued.schema.desc"),
+  author: { "@type": "Person", name: "0x Leñador", url: "https://0xlenador.xyz/" },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+}
 ---
 
 <Layout
   title={t("undervalued.seo.title")}
   description={t("undervalued.seo.description")}
   image="/img/meta/tesis.webp"
+  schema={schema}
 >
   <UndervaluedView />
 </Layout>

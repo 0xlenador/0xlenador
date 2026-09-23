@@ -73,6 +73,16 @@ const totalStocks = processedStocks.length
 const undervaluedCount = processedStocks.filter((s) => s.marginOfSafety > 0).length
 const overvaluedCount = totalStocks - undervaluedCount
 
+// FAQ
+const faqItems = [
+  { pregunta: t("undervalued.faq.q1"), respuesta: t("undervalued.faq.a1") },
+  { pregunta: t("undervalued.faq.q2"), respuesta: t("undervalued.faq.a2") },
+  { pregunta: t("undervalued.faq.q3"), respuesta: t("undervalued.faq.a3") },
+  { pregunta: t("undervalued.faq.q4"), respuesta: t("undervalued.faq.a4") },
+  { pregunta: t("undervalued.faq.q5"), respuesta: t("undervalued.faq.a5") },
+  { pregunta: t("undervalued.faq.q6"), respuesta: t("undervalued.faq.a6") }
+]
+
 // Helper para formatear números grandes
 function formatBigNumber(num: number): string {
   if (Math.abs(num) >= 1e12) return `$${(num / 1e12).toFixed(1)}T`
@@ -344,8 +354,17 @@ function formatBigNumber(num: number): string {
     </div>
   )}
 
+  <!-- FAQ -->
+  <div class="mt-16">
+    <FaqAccordion 
+      titulo={t("undervalued.faq.title")}
+      subtitulo={t("undervalued.faq.subtitle")}
+      items={faqItems}
+    />
+  </div>
+
   <!-- Disclaimer -->
-  <p class="text-[9px] font-mono text-terminal-muted mt-6 max-w-3xl leading-relaxed opacity-60">
+  <p class="text-[9px] font-mono text-terminal-muted mt-10 max-w-3xl leading-relaxed opacity-60">
     {t("undervalued.disclaimer")}
   </p>
 </main>
