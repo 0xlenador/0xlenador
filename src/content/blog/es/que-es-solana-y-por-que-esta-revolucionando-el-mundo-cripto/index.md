@@ -4,7 +4,7 @@ description: "Descubre qué es Solana, cómo funciona su innovador mecanismo Pro
 category: "Recuperado"
 date: 2025-05-21
 author: "0x Leñador"
-translationSlug: ""
+translationSlug: "what-is-solana-and-why-it-is-revolutionizing-crypto"
 coverImage: "./solana.webp"
 coverAlt: "¿Qué es Solana y por qué está revolucionando el mundo cripto?"
 faq:

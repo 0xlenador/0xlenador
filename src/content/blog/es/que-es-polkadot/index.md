@@ -4,7 +4,7 @@ description: "Descubre qué es Polkadot, cómo su red de parachains permite la i
 category: "Polkadot"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: ""
+translationSlug: "what-is-polkadot"
 coverImage: "./polkadot.webp"
 coverAlt: "¿Qué es Polkadot y por qué es clave para el futuro de Web3?"
 faq:

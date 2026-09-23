@@ -5,7 +5,7 @@ description: "Descubre qué es un AMM (Automated Market Maker), cómo funcionan 
 category: "DeFi"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "que-es-un-amm-automated-market-maker"
+translationSlug: "what-is-an-amm-automated-market-maker"
 coverImage: "./amm.webp"
 coverAlt: "¿Qué es un AMM (Automated Market Maker)?"
 faq:

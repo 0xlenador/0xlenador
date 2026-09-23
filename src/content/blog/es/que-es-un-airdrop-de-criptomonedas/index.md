@@ -5,7 +5,7 @@ description: "Descubre qué es un airdrop de criptomonedas, cómo funcionan, qu�
 category: "AirDrop"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: ""
+translationSlug: "what-is-a-crypto-airdrop"
 coverImage: "./airdrop.webp"
 coverAlt: "¿Qué es un Airdrop de Criptomonedas?"
 faq:

@@ -4,7 +4,7 @@ description: "Descubre qué es DePIN (Redes de Infraestructura Física Descentra
 category: "Depin"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "que-es-depin"
+translationSlug: "what-is-depin"
 coverImage: "./depin.webp"
 coverAlt: "¿Qué es DePIN y cómo transforma la infraestructura física?"
 faq:

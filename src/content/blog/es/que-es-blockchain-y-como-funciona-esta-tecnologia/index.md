@@ -4,7 +4,7 @@ description: "Descubre qué es la tecnología Blockchain, cómo funciona su regi
 category: "Blockchain"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "que-es-blockchain-y-como-funciona-esta-tecnologia"
+translationSlug: "what-is-blockchain-and-how-it-works"
 coverImage: "./blockchain.webp"
 coverAlt: "¿Qué es Blockchain y cómo funciona esta tecnología?"
 faq:

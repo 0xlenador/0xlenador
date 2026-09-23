@@ -2,7 +2,7 @@
 title: "What is Solana and why is it revolutionizing the crypto world?"
 description: "Discover what Solana is, how its innovative Proof of History (PoH) mechanism works, and why its ultra-fast transactions are revolutionizing the crypto ecosystem."
 category: "Recuperado"
-date: 2025-05-21
+date: 2026-09-23
 author: "0x Leñador"
 translationSlug: "que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto"
 coverImage: "../../es/que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto/solana.webp"

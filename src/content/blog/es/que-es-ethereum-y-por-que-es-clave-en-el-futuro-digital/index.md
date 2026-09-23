@@ -4,7 +4,7 @@ description: "Descubre qué es Ethereum, cómo funcionan sus contratos inteligen
 category: "Ethereum"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: "que-es-ethereum-y-por-que-es-clave-en-el-futuro-digital"
+translationSlug: "what-is-ethereum-and-why-is-it-key-in-the-digital-future"
 coverImage: "./ethereum.webp"
 coverAlt: "¿Qué es Ethereum y por qué es clave en el futuro digital?"
 faq:

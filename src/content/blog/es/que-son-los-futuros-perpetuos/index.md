@@ -4,7 +4,7 @@ description: "Descubre qué son los contratos de futuros perpetuos en criptomone
 category: "Perps"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: ""
+translationSlug: "what-are-perpetual-futures"
 coverImage: "./perps.webp"
 coverAlt: "Futuros Perpetuos: Más Allá del Apalancamiento"
 faq:

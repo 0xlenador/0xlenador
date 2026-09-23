@@ -5,7 +5,7 @@ description: "Descubre qué son las finanzas descentralizadas (DeFi), cómo gene
 category: "DeFi"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: ""
+translationSlug: "what-is-defi-invest-earn-yields-and-receive-airdrops"
 coverImage: "./defi.webp"
 coverAlt: "¿Qué es DeFi? Invierte, gana rendimientos y recibe airdrops"
 faq:

@@ -4,7 +4,7 @@ description: "Descubre la historia y el legado de Satoshi Nakamoto, el misterios
 category: "Bitcoin"
 date: 2026-09-23
 author: "0x Leñador"
-translationSlug: ""
+translationSlug: "satoshi-nakamoto-the-enigma-that-transformed-digital-money"
 coverImage: "./satoshi.webp"
 coverAlt: "Satoshi Nakamoto: El Enigma que Transformó el Dinero Digital"
 faq:
