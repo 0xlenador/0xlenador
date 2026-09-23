@@ -28,7 +28,7 @@ Lo fascinante de Nakamoto no es solo su invención, sino su desaparición. Desde
 
 Todo comenzó en 2008, cuando Nakamoto publicó un documento técnico titulado **“Bitcoin: A Peer-to-Peer Electronic Cash System”**. Este paper describía un sistema de dinero electrónico descentralizado que eliminaba la necesidad de intermediarios como bancos o gobiernos. La idea, aunque sencilla en papel, suponía una ruptura radical con siglos de estructura financiera.
 
-[Whitepaper (Original)](https://bitcoin.org/es/bitcoin-documento)
+Si quieres entender verdaderamente el espíritu y la visión detrás de esta tecnología, te recomiendo muchísimo que leas el documento original. Es un pedazo de historia de internet que cambió las reglas del juego para siempre. Puedes leerlo completo aquí: [Whitepaper de Bitcoin (en Español)](https://bitcoin.org/es/bitcoin-documento).
 
 El verdadero giro de tuerca fue la implementación del sistema. Con **la prueba de trabajo (proof-of-work)** y la creación del **blockchain**, Nakamoto resolvió el histórico problema del “doble gasto”, una de las mayores barreras para el dinero digital.
 

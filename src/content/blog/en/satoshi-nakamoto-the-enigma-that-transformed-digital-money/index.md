@@ -28,7 +28,7 @@ What's fascinating about Nakamoto isn't just their invention, but their disappea
 
 It all started in 2008 when Nakamoto published a technical document titled **"Bitcoin: A Peer-to-Peer Electronic Cash System"**. This paper described a decentralized electronic money system that eliminated the need for intermediaries like banks or governments. The idea, though simple on paper, represented a radical break from centuries of financial structure.
 
-[Whitepaper](https://bitcoin.org/es/bitcoin-documento)
+If you want to truly understand the spirit and vision behind this technology, I highly recommend reading the original document. It's a piece of internet history that changed the rules of the game forever. You can read the original version here: [Bitcoin Whitepaper (Original in English)](https://bitcoin.org/bitcoin.pdf).
 
 The real game-changer was the implementation of the system. With **proof-of-work** and the creation of the **blockchain**, Nakamoto solved the historical "double-spending" problem, one of the biggest barriers to digital money.
 
