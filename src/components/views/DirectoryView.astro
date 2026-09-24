@@ -14,7 +14,7 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
 // Categorías únicas del directorio, ordenadas
-const tags = [...new Set(directoryData.map((item) => item.tag))].sort()
+const categories = [...new Set(directoryData.map((item) => item.category))].sort()
 
 // Estadísticas de faucets para el bloque resumen
 const testnetCount = faucetsData.filter((f) => f.type === "testnet").length
@@ -86,12 +86,12 @@ const faqItems = [
         {t("directory.filter.all")}
       </button>
       {
-        tags.map((tag) => (
+        categories.map((cat) => (
           <button
             class="badge filter-btn bg-terminal-surface/60 text-terminal-muted border border-terminal-border hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
-            data-filter={tag}
+            data-filter={cat}
           >
-            {tag}
+            {cat}
           </button>
         ))
       }
@@ -108,7 +108,7 @@ const faqItems = [
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            data-tag={item.tag}
+            data-category={item.category}
             id={`dir-${item.id}`}
             class="group flex flex-col items-center gap-2.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all duration-300 no-underline text-center relative overflow-hidden hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
           >
@@ -127,7 +127,7 @@ const faqItems = [
               <p class="text-white text-xs font-semibold leading-tight group-hover:text-emerald-400 transition-colors duration-300">
                 {item.name}
               </p>
-              <p class="text-terminal-muted text-[9px] mt-0.5 font-mono">{item.tag}</p>
+              <p class="text-terminal-muted text-[9px] mt-0.5 font-mono">{item.category}</p>
             </div>
             {item.sponsored && (
               <span class="text-[8px] font-mono text-emerald-500/40 uppercase tracking-wider">
@@ -236,7 +236,7 @@ const faqItems = [
 <script>
   const setupDirectoryFilter = () => {
     const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn")
-    const cards = document.querySelectorAll<HTMLAnchorElement>("#dir-grid a[data-tag]")
+    const cards = document.querySelectorAll<HTMLAnchorElement>("#dir-grid a[data-category]")
 
     buttons.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -250,7 +250,7 @@ const faqItems = [
         btn.classList.remove("bg-terminal-surface/60", "text-terminal-muted")
 
         cards.forEach((card) => {
-          const show = filter === "all" || card.dataset.tag === filter
+          const show = filter === "all" || card.dataset.category === filter
           card.style.display = show ? "" : "none"
         })
       })
