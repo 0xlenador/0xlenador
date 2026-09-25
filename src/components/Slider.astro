@@ -1,0 +1,227 @@
+---
+import { Icon } from "astro-icon/components"
+
+export interface Slide {
+  id?: string;
+  tag: string;
+  title: string;
+  description: string;
+  url: string;
+  urlText?: string;
+  icon?: string;
+  image?: string;
+  images?: string[];
+  guides?: { logo: string }[];
+}
+
+export interface Props {
+  slides: Slide[];
+  autoplay?: boolean;
+  interval?: number;
+}
+
+const { slides, autoplay = true, interval = 5000 } = Astro.props;
+---
+
+<div class="agy-slider relative w-full rounded-3xl overflow-hidden group border border-white/5 bg-[#0a0a0a] shadow-2xl" data-autoplay={autoplay ? "true" : "false"} data-interval={interval}>
+  
+  <!-- Slides Container -->
+  <div class="agy-slider-container flex transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] h-full">
+    {slides.map((slide, index) => (
+      <div class="w-full flex-shrink-0 relative p-8 md:p-12 min-h-[320px] flex flex-col justify-center" data-index={index}>
+        
+        <!-- Ambient Decor -->
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent pointer-events-none"></div>
+
+        <div class="relative z-10 w-full md:w-2/3 lg:w-3/5 text-left pr-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-emerald-400 text-[10px] font-mono mb-6 uppercase tracking-widest">
+            {slide.icon && <Icon name={slide.icon} class="w-3 h-3" />}
+            {slide.tag}
+          </div>
+          
+          <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight mb-4">{slide.title}</h2>
+          <p class="text-sm md:text-base text-terminal-secondary leading-relaxed mb-8 max-w-xl">
+            {slide.description}
+          </p>
+          
+          <a href={slide.url} class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-500 text-white font-semibold text-sm hover:bg-emerald-400 hover:-translate-y-0.5 transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+            {slide.urlText || "Explorar"}
+            <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          </a>
+        </div>
+
+        {slide.image && (
+          <div class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 hidden md:block opacity-100 pointer-events-none">
+             <img src={slide.image} alt={slide.title} class="w-40 md:w-56 lg:w-64 h-auto object-contain rounded-2xl border border-white/10 bg-white/[0.02] p-2 shadow-[0_0_30px_rgba(16,185,129,0.15)]" />
+          </div>
+        )}
+
+        {slide.images && slide.images.length > 0 && (
+          <div class="absolute right-0 top-0 bottom-0 w-1/2 hidden md:block pointer-events-none overflow-hidden rounded-r-3xl">
+             {slide.images.map((img, i) => {
+               const top = [15, 65, 25, 75, 45, 10][i % 6] + '%';
+               const right = [15, 45, 70, 30, 85, 55][i % 6] + '%';
+               const opacity = [0.3, 0.6, 0.4, 0.8, 0.2, 0.5][i % 6];
+               const scale = [0.9, 1.2, 0.8, 1.4, 1, 1.1][i % 6];
+               return (
+                 <img 
+                   src={img} 
+                   alt="decoration" 
+                   class="absolute rounded-xl w-12 h-12 lg:w-16 lg:h-16 object-contain filter drop-shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-transform duration-[3s]"
+                   style={`top: ${top}; right: ${right}; opacity: ${opacity}; transform: scale(${scale});`}
+                 />
+               )
+             })}
+          </div>
+        )}
+
+        {slide.guides && slide.guides.length > 0 && (
+          <div class="absolute right-6 md:right-16 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-64 h-80 opacity-100 pointer-events-none perspective-[1000px]">
+             
+            <!-- SVG Silhouette of a Notepad -->
+            <svg class="absolute inset-0 w-full h-full drop-shadow-[0_0_20px_rgba(16,185,129,0.15)]" viewBox="0 0 240 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotateY(-10deg) rotateX(5deg);">
+              <!-- Back page for depth -->
+              <rect x="35" y="35" width="180" height="240" rx="12" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1" transform="rotate(4 120 150)"/>
+              <!-- Front page glass effect -->
+              <rect x="30" y="30" width="180" height="240" rx="12" fill="rgba(0,0,0,0.6)" stroke="rgba(16,185,129,0.3)" stroke-width="1.5" style="backdrop-filter: blur(8px);"/>
+              <!-- Top spiral binding holes/rings -->
+              <path d="M50 30 V20 M80 30 V20 M110 30 V20 M140 30 V20 M170 30 V20 M200 30 V20" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M50 30 V24 M80 30 V24 M110 30 V24 M140 30 V24 M170 30 V24 M200 30 V24" stroke="rgba(0,0,0,0.8)" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+
+            <!-- Inner List with Skeleton Descriptions -->
+            <div class="relative z-10 w-full px-12 py-10 flex flex-col gap-6 mt-4" style="transform: rotateY(-10deg) rotateX(5deg);">
+               {slide.guides.map((g, i) => (
+                 <div class="flex items-center gap-4 transition-opacity" style={`opacity: ${0.9 - (i * 0.25)}`}>
+                   <div class="w-10 h-10 rounded-full border border-white/10 bg-white/5 p-1 flex-shrink-0 flex items-center justify-center">
+                     <img src={g.logo} alt="guide project" class="w-full h-full object-contain rounded-full" />
+                   </div>
+                   <div class="flex flex-col gap-2 flex-1">
+                     <div class="h-2 bg-white/20 rounded w-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.1)]"></div>
+                     <div class="h-1.5 bg-white/10 rounded w-2/3 animate-pulse"></div>
+                   </div>
+                 </div>
+               ))}
+            </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <!-- Navigation Arrows -->
+  <button class="agy-slider-prev absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-emerald-500 hover:border-emerald-400 transition-all duration-300 z-20 backdrop-blur-md" aria-label="Anterior">
+    <Icon name="lucide:chevron-left" class="w-5 h-5" />
+  </button>
+  <button class="agy-slider-next absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-emerald-500 hover:border-emerald-400 transition-all duration-300 z-20 backdrop-blur-md" aria-label="Siguiente">
+    <Icon name="lucide:chevron-right" class="w-5 h-5" />
+  </button>
+
+  <!-- Dots -->
+  <div class="agy-slider-dots absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+    {slides.map((_, i) => (
+      <button class={`agy-slider-dot transition-all duration-300 ${i === 0 ? 'w-8 h-1.5 rounded-full bg-emerald-500' : 'w-1.5 h-1.5 rounded-full bg-white/20 hover:bg-white/40'}`} data-index={i} aria-label={`Ir a slide ${i + 1}`}></button>
+    ))}
+  </div>
+</div>
+
+<script>
+  const initSliders = () => {
+    const sliders = document.querySelectorAll('.agy-slider');
+    
+    sliders.forEach(slider => {
+      // Evitar inicializar múltiples veces si astro:page-load se dispara
+      if (slider.hasAttribute('data-slider-initialized')) return;
+      slider.setAttribute('data-slider-initialized', 'true');
+
+      const container = slider.querySelector('.agy-slider-container') as HTMLElement;
+      const prevBtn = slider.querySelector('.agy-slider-prev') as HTMLButtonElement;
+      const nextBtn = slider.querySelector('.agy-slider-next') as HTMLButtonElement;
+      const dots = slider.querySelectorAll('.agy-slider-dot');
+      
+      const isAutoplay = slider.getAttribute('data-autoplay') === 'true';
+      const intervalTime = parseInt(slider.getAttribute('data-interval') || '5000', 10);
+      
+      let currentIndex = 0;
+      const totalSlides = dots.length;
+      let autoplayInterval: ReturnType<typeof setInterval>;
+
+      if (totalSlides <= 1) {
+         if (prevBtn) prevBtn.style.display = 'none';
+         if (nextBtn) nextBtn.style.display = 'none';
+         const dotsContainer = slider.querySelector('.agy-slider-dots') as HTMLElement;
+         if (dotsContainer) dotsContainer.style.display = 'none';
+         return;
+      }
+
+      const updateSlider = () => {
+        container.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.className = 'agy-slider-dot w-8 h-1.5 rounded-full transition-all duration-300 bg-emerald-500';
+          } else {
+            dot.className = 'agy-slider-dot w-1.5 h-1.5 rounded-full transition-all duration-300 bg-white/20 hover:bg-white/40';
+          }
+        });
+      };
+
+      const nextSlide = () => {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        updateSlider();
+      };
+
+      const prevSlide = () => {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        updateSlider();
+      };
+
+      const startAutoplay = () => {
+        if (isAutoplay) {
+          clearInterval(autoplayInterval);
+          autoplayInterval = setInterval(nextSlide, intervalTime);
+        }
+      };
+
+      const stopAutoplay = () => {
+        clearInterval(autoplayInterval);
+      };
+
+      // Event Listeners
+      if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); startAutoplay(); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); startAutoplay(); });
+      
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          currentIndex = index;
+          updateSlider();
+          startAutoplay();
+        });
+      });
+
+      slider.addEventListener('mouseenter', stopAutoplay);
+      slider.addEventListener('mouseleave', startAutoplay);
+
+      // Touch events para swipe
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      slider.addEventListener('touchstart', e => {
+        touchStartX = (e as TouchEvent).changedTouches[0].screenX;
+        stopAutoplay();
+      }, { passive: true });
+
+      slider.addEventListener('touchend', e => {
+        touchEndX = (e as TouchEvent).changedTouches[0].screenX;
+        if (touchStartX - touchEndX > 50) nextSlide();
+        if (touchEndX - touchStartX > 50) prevSlide();
+        startAutoplay();
+      }, { passive: true });
+
+      startAutoplay();
+    });
+  };
+
+  initSliders();
+  document.addEventListener('astro:page-load', initSliders);
+</script>
