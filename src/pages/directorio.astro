@@ -242,7 +242,445 @@ const pageSchema = {
           </div>
         </div>
       </a>
+    </div>
 
+    <!-- Índice Completo -->
+    <div class="mt-16">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <h3 class="text-xl font-bold text-white">Índice del Ecosistema</h3>
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+          <!-- Buscador -->
+          <div class="relative w-full sm:w-64 group/search">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Icon name="lucide:search" class="w-4 h-4 text-terminal-muted" />
+            </div>
+            <input
+              type="text"
+              id="directorySearch"
+              placeholder="Buscar por nombre, categoría o descripción..."
+              class="w-full bg-[#0a0a0a] border border-white/5 rounded-lg py-2 pl-9 pr-9 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+            />
+            <button type="button" id="clearSearch" class="absolute inset-y-0 right-0 pr-3 flex items-center text-terminal-muted hover:text-white transition-colors hidden">
+              <Icon name="lucide:x" class="w-4 h-4" />
+            </button>
+          </div>
+          <!-- Filtros -->
+          <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 hide-scrollbar">
+            <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap transition-colors">Todos</button>
+            <button data-filter="activos" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Activos</button>
+            <button data-filter="guias" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Guías</button>
+            <button data-filter="herramientas" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Herramientas</button>
+            <button data-filter="directorio" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Directorio</button>
+          </div>
+        </div>
+      </div>
+      <div class="overflow-hidden rounded-xl border border-white/5 bg-[#0a0a0a]">
+        <div class="overflow-x-auto">
+          <table id="directoryTable" class="w-full text-left text-sm text-terminal-secondary">
+            <thead class="bg-white/[0.02] border-b border-white/5 text-emerald-500 font-mono text-xs uppercase tracking-wider">
+              <tr>
+                <th scope="col" class="px-6 py-4 w-1/3">Página</th>
+                <th scope="col" class="px-6 py-4">Categoría</th>
+                <th scope="col" class="px-6 py-4">Descripción</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/activos/bitcoin" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/bitcoin.webp" alt="Bitcoin" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Bitcoin
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/activos" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de BTC.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/activos/ethereum" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/ethereum.webp" alt="Ethereum" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Ethereum
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/activos" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de ETH.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/activos/hyperliquid" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/hyperliquid.webp" alt="Hyperliquid" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Hyperliquid
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/activos" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de HYPE.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/activos/runestone" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/runestone.webp" alt="Runestone" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Runestone
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/activos" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de Runestone.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/activos/sunflowerland" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/sunflowerland/123/flower.jpg" alt="Sunflower Land" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Sunflower Land
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/activos" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de SFL.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/operaciones/arc-circle" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/arc.webp" alt="Arc Testnet" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Arc Testnet
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/operaciones" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía operativa para interactuar con Arc Testnet.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/operaciones/polymarket" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/polymarket.webp" alt="Polymarket" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Polymarket
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/operaciones" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía paso a paso para operar en Polymarket.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/operaciones/soneium-portal" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/soneium.webp" alt="Soneium" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Soneium
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/operaciones" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía paso a paso para el portal de Soneium.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/operaciones/yakkamon" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/yakkamon.webp" alt="Yakkamon" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Yakkamon
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/operaciones" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía operativa optimizada para el ecosistema Yakkamon.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/contenido-social" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.75 19.5v-.75a7.5 7.5 0 00-7.5-7.5H4.5m0-6.75h.75c7.87 0 14.25 6.38 14.25 14.25v.75M6 18.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                      </svg>
+                    </div>
+                    Contenido Social
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Feed de nuestra actividad, videos y análisis en YouTube y X.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/faucets" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
+                      </svg>
+                    </div>
+                    Directorio Faucets
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Directorio de grifos para reclamar tokens de prueba y mainnet.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/infravalorados" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    </div>
+                    Activos Infravalorados
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Explorador de oportunidades y tokens por debajo de su valor real.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/intrinseco" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    Valor Intrínseco
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/herramientas" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Calculadora para estimar el precio justo de un token.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/lista-web3" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                    </div>
+                    Recursos Web3
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Colección de exchanges, puentes, exploradores y herramientas útiles.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/riskfolio" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                      </svg>
+                    </div>
+                    Riskfolio
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/herramientas" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Evaluación y gestión de riesgo para la distribución de portafolios.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/sfl-betty" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/sunflowerland/123/coins.png" alt="SFL Betty" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    SFL Betty
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/herramientas" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Calculadora y optimizador de riego y cultivos en Sunflower Land.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/sfl-cocinando" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/sunflowerland/food/Pizza%20Margherita.png" alt="SFL Cocinando" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    SFL Cocinando
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/herramientas" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Optimizador para las recetas y consumibles de Sunflower Land.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/sfl-mascotas" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/sunflowerland/123/ramsey.webp" alt="SFL Mascotas" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    SFL Mascotas
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/herramientas" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Gestor de recursos y estadísticas de mascotas en Sunflower Land.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/sfl-mercado" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/sunflowerland/123/exchange.png" alt="SFL Mercado" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    SFL Mercado
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a href="/herramientas" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Análisis de precios del mercado interno y P2P de Sunflower Land.</td>
+              </tr>
+              <tr class="hover:bg-white/[0.02] transition-colors group">
+                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                  <a href="/yakkamon" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                    <img src="/img/cripto/yakkamon.webp" alt="Yakkamon Hub" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
+                    Yakkamon Hub
+                  </a>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
+                </td>
+                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Herramientas de cría y optimización de recursos para Yakkamon.</td>
+              </tr>
+              <!-- Fila de Sin Resultados -->
+              <tr id="noResultsRow" class="hidden">
+                <td colspan="3" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center justify-center gap-2 text-terminal-muted">
+                    <Icon name="lucide:search-x" class="w-8 h-8 text-white/10 mb-2" />
+                    <p>No se encontraron resultados para tu búsqueda.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </main>
 </Layout>
+
+<script>
+  function initDirectoryFilter() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const directorySearch = document.getElementById('directorySearch') as HTMLInputElement;
+    const clearSearch = document.getElementById('clearSearch');
+    const table = document.getElementById('directoryTable');
+    const noResultsRow = document.getElementById('noResultsRow');
+    
+    if (!table || !directorySearch) return;
+    if (table.hasAttribute('data-initialized')) return;
+    table.setAttribute('data-initialized', 'true');
+    
+    // Seleccionar solo las filas de datos, excluyendo la de "no encontrados"
+    const rows = Array.from(table.querySelectorAll('tbody tr')).filter(r => r.id !== 'noResultsRow');
+
+    function filterTable() {
+      // 1. Quitar espacios al inicio y final
+      const rawSearch = directorySearch.value.trim().toLowerCase();
+      // 2. Filtrar solo si tiene 3 o más caracteres
+      const searchTerm = rawSearch.length >= 3 ? rawSearch : '';
+      
+      if (clearSearch) {
+        if (directorySearch.value.length > 0) {
+          clearSearch.classList.remove('hidden');
+        } else {
+          clearSearch.classList.add('hidden');
+        }
+      }
+
+      const activeBtn = document.querySelector('.filter-btn.active') as HTMLElement;
+      const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
+
+      let visibleCount = 0;
+
+      rows.forEach(r => {
+        const row = r as HTMLElement;
+        const text = row.textContent?.toLowerCase() || '';
+        // Categoria is in the second cell
+        const cell = row.querySelectorAll('td')[1];
+        const category = cell ? cell.textContent?.trim().toLowerCase() || '' : '';
+        
+        // Match Search (solo filtra si hay al menos 3 caracteres, sino asume true)
+        const matchesSearch = searchTerm === '' ? true : text.includes(searchTerm);
+        
+        // Match Filter
+        let matchesFilter = true;
+        if (activeFilter !== 'all') {
+          // Normalize to remove accents like 'í' in guías
+          const normalizedCategory = category.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          matchesFilter = normalizedCategory === activeFilter;
+        }
+
+        if (matchesSearch && matchesFilter) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Mostrar mensaje de no resultados si corresponde
+      if (noResultsRow) {
+        if (visibleCount === 0) {
+          noResultsRow.classList.remove('hidden');
+        } else {
+          noResultsRow.classList.add('hidden');
+        }
+      }
+    }
+
+    // Retardo (Debounce)
+    let timeout: ReturnType<typeof setTimeout>;
+    function debouncedFilter() {
+      clearTimeout(timeout);
+      timeout = setTimeout(filterTable, 300);
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const clickedBtn = e.currentTarget as HTMLElement;
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20', 'active');
+          b.classList.add('bg-[#0a0a0a]', 'text-terminal-muted', 'border-white/5');
+        });
+        clickedBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20', 'active');
+        clickedBtn.classList.remove('bg-[#0a0a0a]', 'text-terminal-muted', 'border-white/5');
+        // Filtro inmediato al cambiar categoría
+        filterTable();
+      });
+    });
+
+    directorySearch.addEventListener('input', debouncedFilter);
+    
+    if (clearSearch) {
+      clearSearch.addEventListener('click', () => {
+        directorySearch.value = '';
+        // Filtro inmediato al limpiar
+        filterTable();
+        directorySearch.focus();
+      });
+    }
+  }
+
+  // Ejecutar script
+  initDirectoryFilter();
+  document.addEventListener('astro:page-load', initDirectoryFilter);
+</script>
+
+<style>
+  /* Ocultar barra de scroll en contenedor de filtros */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
