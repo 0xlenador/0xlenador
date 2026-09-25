@@ -45,13 +45,29 @@ const heroSlides = [
 ];
 
 const seo = {
-  title: "Ecosistema | 0x Leñador",
-  description: "Descubre todas las herramientas, análisis y recursos del ecosistema 0x Leñador.",
+  title: "Directorio | 0x Leñador",
+  description: "Tu puerta de entrada al ecosistema. Explora calculadoras, análisis profundos y todas las herramientas para tu operativa on-chain.",
   image: "/img/meta/home.webp",
+}
+
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": seo.title,
+  "description": seo.description,
+  "url": "https://0xlenador.xyz/directorio/",
+  "publisher": {
+    "@type": "Organization",
+    "name": "0x Leñador",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://0xlenador.xyz/img/logo.png"
+    }
+  }
 }
 ---
 
-<Layout title={seo.title} description={seo.description} image={seo.image}>
+<Layout title={seo.title} description={seo.description} image={seo.image} schema={pageSchema}>
   <main class="relative max-w-6xl mx-auto px-6 pt-12 pb-32">
     <!-- Ambient Background Glow -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
@@ -104,7 +120,7 @@ const seo = {
           <!-- H2 aplicando regla de jerarquía estricta -->
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Operaciones & Diario</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Registra y analiza tus operaciones, construye estrategias basadas en datos y mantén una bitácora detallada de tu rendimiento.
+            El campo de batalla. Descubre nuestras estrategias, guías de interacción y bitácora para operar on-chain con ventaja estadística.
           </p>
           <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
             <span>Acceder al Dashboard</span>
@@ -124,7 +140,7 @@ const seo = {
         <div class="relative z-10 mt-8">
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Tesis de Activos</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Análisis fundamental, seguimiento de tokens y evaluación métrica de riesgo para tu portafolio.
+            No compramos por fe. Análisis fundamental sólido, métricas on-chain y evaluación de riesgo para filtrar el ruido del mercado.
           </p>
           <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
             <span>Explorar Tokens</span>
@@ -150,9 +166,9 @@ const seo = {
         </div>
 
         <div class="relative z-10 mt-8">
-          <h2 class="text-lg md:text-xl font-bold text-white mb-2">Herramientas DeFi</h2>
+          <h2 class="text-lg md:text-xl font-bold text-white mb-2">Herramientas</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Calculadoras, simuladores de rendimiento y utilidades diseñadas para la supervivencia on-chain.
+            Deja de operar a ciegas. Simuladores de impermanent loss, calculadoras de yields y utilidades clave para tu supervivencia on-chain.
           </p>
           <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
             <span>Usar Utilidades</span>
@@ -183,9 +199,9 @@ const seo = {
           <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-white/[0.08] transition-colors duration-300">
             <Icon name="lucide:globe" class="w-5 h-5" />
           </div>
-          <h2 class="text-lg md:text-xl font-bold text-white mb-2">Directorio Web3</h2>
+          <h2 class="text-lg md:text-xl font-bold text-white mb-2">Recursos Web3</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Una colección exhaustiva y curada de plataformas, exchanges, infraestructuras y herramientas analíticas que conforman nuestro stack operativo.
+            Nuestro arsenal curado. Links a faucets, exchanges, infraestructura y todas las plataformas de análisis que conforman nuestro stack.
           </p>
           <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
             <span>Explorar Stack</span>
@@ -203,9 +219,9 @@ const seo = {
             <Icon name="lucide:book-open" class="w-3 h-3 text-emerald-400" />
             Educación y Análisis
           </div>
-          <h2 class="text-lg md:text-xl font-bold text-white mb-2">Artículos & Reflexiones</h2>
+          <h2 class="text-lg md:text-xl font-bold text-white mb-2">Diario del Leñador</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Publicaciones detalladas sobre finanzas descentralizadas, narrativas de mercado y tutoriales paso a paso para dominar el ecosistema.
+            Reflexiones profundas sobre el mercado, narrativas, seguridad y tutoriales paso a paso para dominar el ecosistema DeFi como un experto.
           </p>
           <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
             <span>Leer el Blog</span>
