@@ -18,24 +18,28 @@ function slugify(text) {
     .replace(/\-\-+/g, "-")
 }
 
+const TARGET_FILES = [
+  { name: "0xL-links-ref.tsv", sponsored: true },
+  { name: "0xL-links-noref.tsv", sponsored: false }
+]
+
 function processTsvFiles() {
-  const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith(".tsv"))
-
-  if (files.length === 0) {
-    console.error("❌ No se encontró ningún archivo TSV en: ", DATA_DIR)
-    console.log("👉 Por favor, guarda tus Excel exportados como .tsv en esa ruta y vuelve a intentar.")
-    process.exit(1)
-  }
-
   const result = []
+  let processedCount = 0
 
-  for (const file of files) {
-    const tsvPath = path.join(DATA_DIR, file)
+  for (const target of TARGET_FILES) {
+    const tsvPath = path.join(DATA_DIR, target.name)
+    
+    if (!fs.existsSync(tsvPath)) {
+      console.warn(`⚠️ Archivo no encontrado: ${target.name}. Se omitirá.`)
+      continue
+    }
+
     const content = fs.readFileSync(tsvPath, "utf-8")
     const lines = content.split(/\r?\n/).filter(Boolean)
 
     if (lines.length < 2) {
-      console.warn(`⚠️ El archivo ${file} está vacío o no tiene suficientes datos. Se omitirá.`)
+      console.warn(`⚠️ El archivo ${target.name} está vacío o no tiene suficientes datos. Se omitirá.`)
       continue
     }
 
@@ -49,7 +53,7 @@ function processTsvFiles() {
     const urlIdx = headers.indexOf("enlace")
 
     if (nameIdx === -1 || urlIdx === -1) {
-      console.warn(`⚠️ El archivo ${file} debe tener al menos las columnas 'nombre' y 'enlace'. Se omitirá.`)
+      console.warn(`⚠️ El archivo ${target.name} debe tener al menos las columnas 'nombre' y 'enlace'. Se omitirá.`)
       continue
     }
 
@@ -69,7 +73,7 @@ function processTsvFiles() {
         .filter(Boolean)
 
       const id = slugify(nombre)
-      const isSponsored = /(ref=|code=|join=|invite|referral=)/i.test(url)
+      const isSponsored = target.sponsored
 
       result.push({
         id,
@@ -83,7 +87,14 @@ function processTsvFiles() {
       })
       count++
     }
-    console.log(`📄 Archivo procesado: ${file} (${count} enlaces extraídos)`)
+    console.log(`📄 Archivo procesado: ${target.name} (${count} enlaces extraídos)`)
+    processedCount++
+  }
+
+  if (processedCount === 0) {
+    console.error("❌ No se encontró ninguno de los archivos TSV requeridos en: ", DATA_DIR)
+    console.log("👉 Asegúrate de guardar '0xL-links-ref.tsv' o '0xL-links-noref.tsv'.")
+    process.exit(1)
   }
 
   fs.writeFileSync(JSON_FILE, JSON.stringify(result, null, 2))
