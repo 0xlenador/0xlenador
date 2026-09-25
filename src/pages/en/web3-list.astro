@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import DirectoryView from "../../components/views/DirectoryView.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("directory.seo.title"),
+  description: t("directory.seo.description"),
+  image: "/img/meta/home.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image}>
+  <DirectoryView />
+</Layout>

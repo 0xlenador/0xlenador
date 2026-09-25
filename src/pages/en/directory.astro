@@ -1,18 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro"
-import DirectoryView from "../../components/views/DirectoryView.astro"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
 const seo = {
-  title: t("directory.seo.title"),
-  description: t("directory.seo.description"),
+  title: "Directory Hub | 0x Leñador",
+  description: "Main Directory Hub",
   image: "/img/meta/home.webp",
 }
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image}>
-  <DirectoryView />
+  <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
+      Main <span class="text-emerald-500">Directory</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm">
+      This page will serve as the main directory Hub.
+      <br/><br/>
+      <a href="/en/web3-list" class="text-emerald-400 hover:underline">View Web3 Sites List &rarr;</a>
+    </p>
+  </main>
 </Layout>

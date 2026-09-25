@@ -105,9 +105,8 @@ const schema = {
             >
               <p
                 class={`p-6 pt-0 text-terminal-secondary text-sm leading-relaxed border-t border-terminal-border/50 ${accentBorder ? `border-l-2 ${accentBorder} pl-4 mt-4` : ""}`}
-              >
-                {item.respuesta}
-              </p>
+                set:html={item.respuesta}
+              ></p>
             </div>
           </div>
         )

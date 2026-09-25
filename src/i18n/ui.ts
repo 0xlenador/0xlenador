@@ -48,6 +48,7 @@ export const routes = {
     "sfl-betty": "sfl-betty",
     autor: "author",
     infravalorados: "undervalued",
+    "lista-web3": "web3-list",
   },
   es: {
     operations: "operaciones",
@@ -63,6 +64,7 @@ export const routes = {
     "sfl-betty": "sfl-betty",
     author: "autor",
     undervalued: "infravalorados",
+    "web3-list": "lista-web3",
   },
 }
 

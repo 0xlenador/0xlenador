@@ -6,7 +6,7 @@
 
 import FaqAccordion from "../FaqAccordion.astro"
 
-import { directoryData, faucetsData, getTopFaucetNetworks } from "../../lib/data"
+import { directoryData } from "../../lib/data"
 
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
@@ -16,21 +16,7 @@ const t = useTranslations(lang)
 // Categorías únicas del directorio, ordenadas
 const categories = [...new Set(directoryData.map((item) => item.category))].sort()
 
-// Estadísticas de faucets para el bloque resumen
-const testnetCount = faucetsData.filter((f) => f.type === "testnet").length
-const mainnetCount = faucetsData.filter((f) => f.type === "mainnet").length
 
-// Redes más cubiertas: contar frecuencia de cada tag en faucets
-const tagFrequency: Record<string, number> = {}
-faucetsData.forEach((f) => {
-  f.tags.forEach((tag) => {
-    tagFrequency[tag] = (tagFrequency[tag] || 0) + 1
-  })
-})
-const topNetworks = Object.entries(tagFrequency)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 5)
-  .map(([name, count]) => ({ name, count }))
 
 const faqItems = [
   {
@@ -45,6 +31,18 @@ const faqItems = [
     pregunta: t("directory.faq.q3"),
     respuesta: t("directory.faq.a3"),
   },
+  {
+    pregunta: t("directory.faq.q4"),
+    respuesta: t("directory.faq.a4"),
+  },
+  {
+    pregunta: t("directory.faq.q5"),
+    respuesta: t("directory.faq.a5"),
+  },
+  {
+    pregunta: t("directory.faq.q6"),
+    respuesta: t("directory.faq.a6"),
+  },
 ]
 ---
 
@@ -55,7 +53,7 @@ const faqItems = [
   </p>
 
   <!-- Header -->
-  <header class="mb-12 border-b border-terminal-border/50 pb-8">
+  <header class="mb-6">
     <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
       {t("directory.heading")}{" "}
       <span class="text-emerald-500">{t("directory.subheading")}</span>
@@ -75,8 +73,7 @@ const faqItems = [
       </h2>
       <div class="h-px flex-grow bg-terminal-border/40"></div>
       <span class="text-[10px] font-mono text-terminal-muted whitespace-nowrap">
-        {directoryData.length}
-        {t("directory.section.subresources")}
+        {directoryData.length} {t("directory.section.subresources")}
       </span>
     </div>
 
@@ -140,85 +137,7 @@ const faqItems = [
     </div>
   </section>
 
-  <!-- ─── SECCIÓN 2: Bloque Resumen Faucets ─── -->
-  <section class="mb-20">
-    <div class="flex items-center gap-4 mb-6">
-      <h2
-        class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap"
-      >
-        {t("directory.section.faucets")}
-      </h2>
-      <div class="h-px flex-grow bg-terminal-border/40"></div>
-    </div>
 
-    <div class="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Stat: Total -->
-        <div class="text-center md:text-left">
-          <p class="text-3xl font-black text-white font-mono">{faucetsData.length}</p>
-          <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">
-            {t("directory.faucets.total")}
-          </p>
-        </div>
-        <!-- Stat: Testnet -->
-        <div class="text-center md:text-left">
-          <p class="text-3xl font-black text-yellow-400 font-mono">{testnetCount}</p>
-          <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">
-            {t("directory.faucets.testnet")}
-          </p>
-        </div>
-        <!-- Stat: Mainnet -->
-        <div class="text-center md:text-left">
-          <p class="text-3xl font-black text-amber-500 font-mono">{mainnetCount}</p>
-          <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mt-1">
-            {t("directory.faucets.mainnet")}
-          </p>
-        </div>
-      </div>
-
-      <!-- Redes más cubiertas -->
-      <div class="border-t border-white/[0.05] pt-6 mb-8">
-        <p class="text-[10px] font-mono text-terminal-muted uppercase tracking-widest mb-3">
-          {t("directory.faucets.networks")}
-        </p>
-        <div class="flex flex-wrap gap-2">
-          {
-            topNetworks.map((net) => (
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-terminal-surface/50 border border-terminal-border text-xs text-terminal-secondary font-mono">
-                {net.name}
-                <span class="text-[9px] text-terminal-muted">×{net.count}</span>
-              </span>
-            ))
-          }
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <a
-        href={getLocalizedPath("/faucets", lang)}
-        id="faucets-cta-link"
-        class="group inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-terminal-surface/60 border border-terminal-border hover:border-emerald-500/50 hover:bg-terminal-surface transition-all duration-300 no-underline"
-      >
-        <span
-          class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors"
-        >
-          {t("directory.faucets.cta")}
-        </span>
-        <svg
-          class="w-4 h-4 text-terminal-muted group-hover:text-emerald-400 transition-all duration-300 group-hover:translate-x-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-        </svg>
-      </a>
-    </div>
-  </section>
 
   <!-- FAQ -->
   <div class="border-t border-terminal-border/60 pt-14">
