@@ -1,0 +1,122 @@
+---
+import { getGuiasByLang } from "../../lib/content"
+
+const { guia, lang, t } = Astro.props
+
+// 1. Obtener los tags de la guía actual
+const currentTags = guia.data.tags || []
+
+// 2. Obtener todas las guías en el idioma actual (excluyendo la actual y las expiradas)
+const allGuias = await getGuiasByLang(lang)
+const eligibleGuias = allGuias.filter((g) => g.slug !== guia.slug && g.data.estado !== "expirada")
+
+// 3. Filtrar las guías que compartan al menos un tag
+let relatedGuias = eligibleGuias.filter((g) => {
+  const gTags = g.data.tags || []
+  return gTags.some((tag) => currentTags.includes(tag))
+})
+
+// 4. Limitar a máximo 2 guías relacionadas para el grid
+relatedGuias = relatedGuias.slice(0, 2)
+
+// Configuración de colores
+const categoriaConfig: Record<string, { badge: string; icon: string }> = {
+  Airdrop: { badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", icon: "🎯" },
+  DeFi: { badge: "text-blue-400 bg-blue-500/10 border-blue-500/20", icon: "💧" },
+  Gaming: { badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20", icon: "🎮" },
+  Trading: { badge: "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20", icon: "📈" },
+  Mixta: { badge: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", icon: "🔀" },
+  Predicciones: { badge: "text-purple-400 bg-purple-500/10 border-purple-500/20", icon: "🔮" },
+  Perpetuos: { badge: "text-orange-400 bg-orange-500/10 border-orange-500/20", icon: "⚡" },
+  L1: { badge: "text-slate-200 bg-slate-500/20 border-slate-500/30", icon: "⛓️" },
+  L2: { badge: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20", icon: "🚀" },
+}
+
+const estadoConfig: Record<string, { label: string; dot: string; text: string }> = {
+  activa: { label: t("ops.state.active"), dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]", text: "text-emerald-400" },
+  completada: { label: t("ops.state.completed"), dot: "bg-blue-500", text: "text-blue-400" },
+  expirada: { label: t("ops.state.expired"), dot: "bg-red-500", text: "text-red-400" },
+}
+
+const formatDeadline = (fecha: string) => {
+  if (isNaN(Date.parse(fecha))) return fecha
+  return new Date(fecha).toLocaleDateString(lang === "en" ? "en-US" : "es-CO", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+}
+---
+
+{relatedGuias.length > 0 && (
+  <section class="mt-20 pt-10 border-t border-terminal-border/60">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-1 h-6 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+      <h3 class="text-xl font-bold text-white tracking-tight">{lang === "en" ? "Related Operations" : "Operaciones Relacionadas"}</h3>
+      {currentTags.length > 0 && (
+        <div class="ml-auto hidden sm:flex flex-wrap gap-2 justify-end">
+          {currentTags.slice(0, 3).map((tag) => (
+            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 shadow-sm">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {relatedGuias.map((rGuia) => {
+        const cfg = categoriaConfig[rGuia.data.categoria] ?? categoriaConfig["Airdrop"]
+        const est = estadoConfig[rGuia.data.estado]
+        return (
+          <a
+            href={lang === "en" ? `/en/operations/${rGuia.slug}/` : `/operaciones/${rGuia.slug}/`}
+            class="p-5 flex flex-col group no-underline rounded-2xl border border-terminal-border/50 bg-terminal-surface/10 hover:bg-terminal-surface/30 hover:border-emerald-500/30 transition-all h-full"
+          >
+            <div class="flex items-start justify-between gap-2 mb-3">
+              <span
+                class:list={[
+                  "text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border",
+                  cfg.badge,
+                ]}
+              >
+                {cfg.icon} {t(`ops.cat.${rGuia.data.categoria.toLowerCase()}` as any)}
+              </span>
+              <span class="flex items-center gap-1.5 text-[10px] font-mono">
+                <span class:list={["w-1.5 h-1.5 rounded-full", est.dot]} />
+                <span class:list={[est.text]}>{est.label}</span>
+              </span>
+            </div>
+
+            <div class="flex items-start gap-3 mb-2 flex-1">
+              {rGuia.data.imagen && (
+                <img
+                  src={rGuia.data.imagen}
+                  alt=""
+                  class="w-8 h-8 rounded-md object-contain shrink-0 mt-0.5"
+                  loading="lazy"
+                />
+              )}
+              <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors leading-snug m-0">
+                {rGuia.data.title}
+              </h3>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-terminal-subtle mt-4 pt-4 border-t border-terminal-border/50">
+              {rGuia.data.fechaLimite && rGuia.data.fechaLimite.toUpperCase() !== "N/A" && (
+                <span class="text-yellow-400/70">
+                  ⏳ {formatDeadline(rGuia.data.fechaLimite)}
+                </span>
+              )}
+              {rGuia.data.tiempoEstimado && <span>⏱ {rGuia.data.tiempoEstimado}</span>}
+              <span class="ml-auto text-emerald-500/60 group-hover:text-emerald-400 transition-colors font-bold uppercase tracking-widest">
+                {t("ops.guide.view")}
+              </span>
+            </div>
+          </a>
+        )
+      })}
+    </div>
+  </section>
+)}

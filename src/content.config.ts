@@ -16,6 +16,7 @@ const blog = defineCollection({
       description: z.string(), // manual
       category: z.string().default("Investigación"), // manual
       date: z.coerce.string(), // manual
+      updatedDate: z.coerce.string().optional(), // manual
       author: z.string().default("0x Leñador"), // manual
       layout: z.string().optional(), // manual
       readTime: z.string().optional(), // automático (calculado por src/lib/content.ts si no lo pones)
@@ -52,6 +53,7 @@ const guias = defineCollection({
     dificultad: z.enum(["baja", "media", "alta"]).default("media"), // manual
     tiempoEstimado: z.string().optional(), // manual
     date: z.coerce.string(), // manual
+    updatedDate: z.coerce.string().optional(), // manual
     author: z.string().default("0x Leñador"), // manual
     readTime: z.string().optional(), // automático (calculado por src/lib/content.ts)
     prioridad: z.number().default(0), // manual

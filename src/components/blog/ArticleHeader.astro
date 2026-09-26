@@ -17,12 +17,13 @@ interface Props {
   title: string
   category: string
   formattedDate: string
+  formattedUpdatedDate?: string
   readTime: string
   coverImage?: ImageMetadata
   coverAlt?: string
 }
 
-const { title, category, formattedDate, readTime, coverImage, coverAlt } = Astro.props
+const { title, category, formattedDate, formattedUpdatedDate, readTime, coverImage, coverAlt } = Astro.props
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -62,9 +63,12 @@ const t = useTranslations(lang)
     </div>
 
     <!-- Fecha -->
-    <div class="flex items-center gap-2 border-l border-terminal-border pl-4 md:pl-6">
-      <span class="text-terminal-muted">{t("ops.updated").replace("{date}", "")}</span>
-      <span class="text-terminal-secondary">{formattedDate}</span>
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-2 border-l border-terminal-border pl-4 md:pl-6">
+      {formattedUpdatedDate ? (
+        <span class="text-terminal-muted">{lang === "en" ? "Updated" : "Actualizado"}: <span class="text-terminal-secondary">{formattedUpdatedDate}</span></span>
+      ) : (
+        <span class="text-terminal-muted">{lang === "en" ? "Published" : "Publicado"}: <span class="text-terminal-secondary">{formattedDate}</span></span>
+      )}
     </div>
 
     <!-- Tiempo de lectura -->

@@ -16,7 +16,7 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
 const { post, prevPost, nextPost } = Astro.props
-const { title, description, keywords, date, category, coverImage, coverAlt } = post.data
+const { title, description, keywords, date, updatedDate, category, coverImage, coverAlt } = post.data
 const { Content, headings } = await render(post)
 const readTime = post.data.readTime || "5 min"
 
@@ -36,6 +36,7 @@ for (const h of tocHeadings) {
 
 // 4. Formatear fecha al estilo: Apr 22, 2026 (EN) o 22 abr. 2026 (ES)
 const formattedDate = formatDate(date, lang)
+const formattedUpdatedDate = updatedDate ? formatDate(updatedDate, lang) : undefined
 // coverImage es ImageMetadata cuando viene de image() — extraemos .src para la OG tag
 const ogImage = coverImage?.src
 ---
@@ -59,6 +60,7 @@ const ogImage = coverImage?.src
       title={title}
       category={category}
       formattedDate={formattedDate}
+      formattedUpdatedDate={formattedUpdatedDate}
       readTime={readTime}
       coverImage={coverImage}
       coverAlt={coverAlt}

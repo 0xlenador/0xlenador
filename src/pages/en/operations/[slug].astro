@@ -6,24 +6,42 @@ import GuiaDetailView from "../../../components/views/GuiaDetailView.astro"
 // 1. Generar rutas estáticas solo para guías en inglés
 export async function getStaticPaths() {
   const guias = await getGuiasByLang("en")
-  return guias.map((guia) => ({
-    params: { slug: guia.slug },
-    props: { guia },
-  }))
+  // Filtrar las guías activas para la paginación (omitimos "expirada")
+  const activeGuias = guias.filter((g) => g.data.estado !== "expirada")
+
+  return guias.map((guia) => {
+    // Si la guía actual está expirada, la aislamos (no muestra navegación)
+    if (guia.data.estado === "expirada") {
+      return {
+        params: { slug: guia.slug },
+        props: { guia, nextGuia: null, prevGuia: null },
+      }
+    }
+
+    const index = activeGuias.findIndex((g) => g.slug === guia.slug)
+    const nextGuia = index > 0 ? activeGuias[index - 1] : null
+    const prevGuia = index < activeGuias.length - 1 ? activeGuias[index + 1] : null
+
+    return {
+      params: { slug: guia.slug },
+      props: { guia, nextGuia, prevGuia },
+    }
+  })
 }
 
-const { guia } = Astro.props
-const { title, description, imagen, tags, date } = guia.data
+const { guia, nextGuia, prevGuia } = Astro.props
+const { title, description, imagen, tags, date, updatedDate, tiempoEstimado } = guia.data
 
 const ogImage = guia.data.ogImage || imagen
 
-// Schema.org TechArticle para SEO estructurado
+// Schema.org TechArticle para SEO estructurado básico
 const guiaSchema = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   headline: title,
   description,
   datePublished: new Date(date).toISOString(),
+  dateModified: updatedDate ? new Date(updatedDate).toISOString() : new Date(date).toISOString(),
   author: {
     "@type": "Person",
     name: "0x Leñador",
@@ -41,6 +59,65 @@ const guiaSchema = {
   },
 }
 
+// Extraer dinámicamente los pasos del markdown para armar el Schema HowTo (En inglés sería ## Step X:)
+const stepMatches = guia.body ? guia.body.match(/## Step \d+:\s*(.*)/g) : null;
+const steps = stepMatches ? stepMatches.map((match, index) => {
+  const stepName = match.replace(/## Step \d+:\s*/, '').trim();
+  return {
+    "@type": "HowToStep",
+    "position": index + 1,
+    "name": stepName,
+    "text": stepName
+  }
+}) : [];
+
+let finalSchema: any = [guiaSchema];
+
+if (steps.length > 0) {
+  const durationMatch = tiempoEstimado ? String(tiempoEstimado).match(/(\d+)/) : null;
+  const totalTimeISO = durationMatch ? `PT${durationMatch[1]}M` : undefined;
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": title,
+    "description": description,
+    "totalTime": totalTimeISO,
+    "step": steps,
+    "image": ogImage ? new URL(ogImage, "https://0xlenador.xyz").href : undefined
+  };
+  
+  finalSchema.push(howToSchema);
+}
+
+// Schema.org BreadcrumbList para migas de pan (Inglés)
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": new URL("/en/", Astro.site).href
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Operations",
+      "item": new URL("/en/operations/", Astro.site).href
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": title,
+      "item": new URL(Astro.url.pathname, Astro.site).href
+    }
+  ]
+};
+
+finalSchema.push(breadcrumbSchema);
+
 const translationSlug = guia.data.translationSlug
 const enUrl = `/en/operations/${guia.slug}/`
 const esUrl = translationSlug ? `/operaciones/${translationSlug}/` : `/operaciones/${guia.slug}/`
@@ -52,11 +129,12 @@ const esUrl = translationSlug ? `/operaciones/${translationSlug}/` : `/operacion
   keywords={tags.join(", ")}
   ogType="article"
   image={ogImage}
-  schema={guiaSchema}
+  schema={finalSchema}
   publishedTime={new Date(date).toISOString()}
+  modifiedTime={updatedDate ? new Date(updatedDate).toISOString() : undefined}
   author="0x Leñador"
   esUrl={esUrl}
   enUrl={enUrl}
 >
-  <GuiaDetailView guia={guia} />
+  <GuiaDetailView guia={guia} nextGuia={nextGuia} prevGuia={prevGuia} />
 </Layout>

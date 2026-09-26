@@ -6,14 +6,32 @@ import GuiaDetailView from "../../components/views/GuiaDetailView.astro"
 // 1. Generar rutas estáticas solo para guías en español
 export async function getStaticPaths() {
   const guias = await getGuiasByLang("es")
-  return guias.map((guia) => ({
-    params: { slug: guia.slug },
-    props: { guia },
-  }))
+  // Filtrar las guías activas para la paginación (omitimos "expirada")
+  const activeGuias = guias.filter((g) => g.data.estado !== "expirada")
+
+  return guias.map((guia) => {
+    // Si la guía actual está expirada, la aislamos (no muestra navegación)
+    if (guia.data.estado === "expirada") {
+      return {
+        params: { slug: guia.slug },
+        props: { guia, nextGuia: null, prevGuia: null },
+      }
+    }
+
+    // Buscar su índice en la lista de guías activas
+    const index = activeGuias.findIndex((g) => g.slug === guia.slug)
+    const nextGuia = index > 0 ? activeGuias[index - 1] : null
+    const prevGuia = index < activeGuias.length - 1 ? activeGuias[index + 1] : null
+
+    return {
+      params: { slug: guia.slug },
+      props: { guia, nextGuia, prevGuia },
+    }
+  })
 }
 
-const { guia } = Astro.props
-const { title, description, imagen, tags, date, tiempoEstimado } = guia.data
+const { guia, nextGuia, prevGuia } = Astro.props
+const { title, description, imagen, tags, date, updatedDate, tiempoEstimado } = guia.data
 
 const ogImage = guia.data.ogImage || imagen
 
@@ -24,6 +42,7 @@ const guiaSchema = {
   headline: title,
   description,
   datePublished: new Date(date).toISOString(),
+  dateModified: updatedDate ? new Date(updatedDate).toISOString() : new Date(date).toISOString(),
   author: {
     "@type": "Person",
     name: "0x Leñador",
@@ -116,9 +135,10 @@ const enUrl = translationSlug
   image={ogImage}
   schema={finalSchema}
   publishedTime={new Date(date).toISOString()}
+  modifiedTime={updatedDate ? new Date(updatedDate).toISOString() : undefined}
   author="0x Leñador"
   esUrl={esUrl}
   enUrl={enUrl}
 >
-  <GuiaDetailView guia={guia} />
+  <GuiaDetailView guia={guia} nextGuia={nextGuia} prevGuia={prevGuia} />
 </Layout>
