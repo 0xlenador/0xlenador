@@ -1,0 +1,75 @@
+---
+import { Image } from "astro:assets";
+
+const { src, alt, class: className = "", ...rest } = Astro.props;
+
+// Generamos un ID único para el diálogo de esta imagen en específico
+const modalId = `modal-${Math.random().toString(36).substring(2, 11)}`;
+---
+
+<div class="zoomable-image-wrapper relative inline-block w-full">
+  <!-- Imagen miniatura (con botón invisible para accesibilidad y click) -->
+  <button 
+    type="button" 
+    class="w-full text-left outline-none p-0 m-0 bg-transparent border-none block cursor-zoom-in"
+    onclick={`document.getElementById('${modalId}').showModal()`}
+    aria-label={`Ampliar imagen: ${alt}`}
+  >
+    <!-- Quitamos el hover:scale-[1.30] agresivo de la miniatura porque ahora la ampliación principal será el modal -->
+    <!-- Puedes mantener un leve hover:scale-[1.05] si quieres que siga reaccionando al pasar el cursor -->
+    <Image 
+      src={src} 
+      alt={alt} 
+      class:list={[className, "transition-transform duration-300 ease-out hover:scale-[1.05] relative z-10 [image-rendering:pixelated]"]} 
+      {...rest} 
+    />
+  </button>
+
+  <!-- Modal nativo de HTML5 -->
+  <dialog 
+    id={modalId} 
+    class="backdrop:bg-black/90 backdrop:backdrop-blur-sm bg-transparent border-none p-0 m-auto w-full max-w-5xl max-h-screen overscroll-none overflow-hidden outline-none cursor-zoom-out"
+    onclick={`if (event.target === this) this.close()`}
+  >
+    <div class="relative flex items-center justify-center p-4 min-h-screen pointer-events-none">
+      <button 
+        type="button"
+        class="absolute top-4 right-4 z-50 text-white/50 hover:text-white bg-black/40 hover:bg-black/80 border border-white/10 rounded-full p-2 transition-colors focus:outline-none cursor-pointer pointer-events-auto"
+        onclick={`document.getElementById('${modalId}').close()`}
+        aria-label="Cerrar imagen"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <!-- Imagen Ampliada -->
+      <Image 
+        src={src} 
+        alt={alt} 
+        class="w-auto max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl pointer-events-auto [image-rendering:pixelated]" 
+      />
+    </div>
+  </dialog>
+</div>
+
+<style>
+  /* Animaciones para que la apertura sea muy premium */
+  dialog::backdrop {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  dialog[open] {
+    animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+</style>

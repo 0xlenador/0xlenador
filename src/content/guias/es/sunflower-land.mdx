@@ -18,6 +18,22 @@ prioridad: 10
 import ResourceCard from "@components/guias/ResourceCard.astro"
 import GuideSummary from "@components/guias/GuideSummary.astro"
 import GuideStep from "@components/guias/GuideStep.astro"
+import { Image } from "astro:assets"
+import ZoomableImage from "@components/guias/ZoomableImage.astro"
+import img2 from "../../../assets/img/guias/sunflowerland/image2.png"
+import img3 from "../../../assets/img/guias/sunflowerland/image3.png"
+import img4 from "../../../assets/img/guias/sunflowerland/image4.png"
+import img5 from "../../../assets/img/guias/sunflowerland/image5.png"
+import img6 from "../../../assets/img/guias/sunflowerland/image6.png"
+import img7 from "../../../assets/img/guias/sunflowerland/image7.png"
+import img8 from "../../../assets/img/guias/sunflowerland/image8.png"
+import img9 from "../../../assets/img/guias/sunflowerland/image9.png"
+import img10 from "../../../assets/img/guias/sunflowerland/image10.webp"
+import img11 from "../../../assets/img/guias/sunflowerland/image11.webp"
+import img12 from "../../../assets/img/guias/sunflowerland/image12.webp"
+import img13 from "../../../assets/img/guias/sunflowerland/image13.webp"
+import mapLandingGif from "../../../assets/img/guias/sunflowerland/map_landing.gif"
+import farmGif from "../../../assets/img/guias/sunflowerland/farm.gif"
 
 <GuideSummary>
   <GuideStep step="1" text="Crear tu cuenta">
@@ -43,6 +59,10 @@ import GuideStep from "@components/guias/GuideStep.astro"
 
 ## Introducción a Sunflower Land
 
+<div class="w-full h-[15vh] overflow-hidden rounded-2xl my-6 border-none">
+  <img src={farmGif.src} alt="Farm Gameplay Banner" class="w-full h-full object-cover object-center [image-rendering:pixelated]" />
+</div>
+
 Sunflower Land es un juego de granja que combina eventos interactivos, una gran comunidad y mecánicas muy divertidas. Pero aquí viene lo interesante: te invita a "poner toda la carne en el asador", ya que está respaldado por una economía real y, sobre todo, mucho amor por el juego.
 
 Si quieres adentrarte en este mundo, aquí te explico cómo empezar paso a paso.
@@ -57,13 +77,11 @@ Sigue estos sencillos pasos para tener tu granja lista en menos de 5 minutos:
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
     <div>
       <h3 class="text-base font-bold text-white mb-2">1. Inicia Sesión</h3>
-      <p class="text-sm text-terminal-secondary">Entra a <a href="https://sunflower-land.com/play/?ref=Oxlenador" target="_blank" rel="noopener noreferrer" class="text-emerald-500 hover:underline">Sunflower Land</a>. Recomendamos usar una wallet de Polygon (<ResourceCard id="rabby" label="Rabby Wallet" />), pero si buscas mayor simplicidad, usar tu cuenta de Google funciona perfecto.</p>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Entra a <a href="https://sunflower-land.com/play/?ref=Oxlenador" target="_blank" rel="noopener noreferrer" class="text-emerald-500 hover:underline font-medium">Sunflower Land</a>. Recomendamos usar una wallet de Polygon (<a href="https://rabby.io" target="_blank" class="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 text-indigo-400 transition-colors text-[11px] font-bold no-underline align-middle mx-0.5"><img src="/img/cripto/rabby.webp" alt="Rabby" class="w-3.5 h-3.5 rounded-sm" />Rabby Wallet</a>), pero si buscas mayor simplicidad, usar tu cuenta de Google funciona perfecto.</p>
     </div>
     <div class="flex justify-center md:justify-end">
-      <div class="w-full max-w-[200px] overflow-hidden rounded-xl border border-white/10">
-
-![Opciones de inicio de sesión](../../../assets/img/guias/sunflowerland/image2.png)
-
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img2} alt="Opciones de inicio de sesión" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
       </div>
     </div>
   </div>
@@ -71,32 +89,38 @@ Sigue estos sencillos pasos para tener tu granja lista en menos de 5 minutos:
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
     <div>
       <h3 class="text-base font-bold text-white mb-2">2. Crea tu Granja</h3>
-      <p class="text-sm text-terminal-secondary">Firma el acceso. Cuando el juego te pregunte si ya tienes una "Land", selecciona <strong>"Yes, let’s go!"</strong> para confirmar que eres nuevo y mintear tu primera granja NFT.</p>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Firma el acceso. Cuando el juego te pregunte si deseas crear una "Granja", selecciona <strong class="text-white">"Yes, let’s go!"</strong> para confirmar que eres nuevo y mintear tu primera granja NFT.</p>
     </div>
     <div class="flex justify-center md:justify-end">
-      <div class="w-full max-w-[200px] overflow-hidden rounded-xl border border-white/10">
-
-![Confirmación de creación de granja](../../../assets/img/guias/sunflowerland/image3.png)
-
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img3} alt="Confirmación de creación de granja" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
       </div>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
     <div>
-      <h3 class="text-base font-bold text-white mb-2">3. Recompensas y Avatar</h3>
-      <p class="text-sm text-terminal-secondary">Aplica el código <strong>Oxlenador</strong> para recibir tu paquete de bienvenida. Luego, escoge el diseño inicial de tu Bumpkin (tu avatar) y dale al botón de <strong>Start</strong>.</p>
+      <h3 class="text-base font-bold text-white mb-2">3. Código de Referido</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Aplica el código <strong class="text-emerald-400">Oxlenador</strong> para recibir tu paquete de bienvenida gratis.</p>
     </div>
-    <div class="flex justify-center md:justify-end gap-2">
-      <div class="w-full max-w-[140px] overflow-hidden rounded-xl border border-white/10 hidden md:block">
-
-![Paquete de bienvenida por referido](../../../assets/img/guias/sunflowerland/image5.png)
-
+    <div class="flex justify-center md:justify-end gap-3">
+      <div class="w-full max-w-[180px] hidden md:block">
+        <ZoomableImage src={img4} alt="Ingresar código de referido" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
       </div>
-      <div class="w-full max-w-[140px] overflow-hidden rounded-xl border border-white/10">
+      <div class="w-full max-w-[180px]">
+        <ZoomableImage src={img5} alt="Paquete de bienvenida por referido" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
 
-![Selección del Bumpkin](../../../assets/img/guias/sunflowerland/image6.png)
-
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">4. Selecciona tu Avatar</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Escoge el diseño inicial de tu Bumpkin (el avatar que te representará en el juego) y dale al botón de <strong class="text-white">Start</strong> para entrar a tu granja.</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img6} alt="Selección del Bumpkin" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
       </div>
     </div>
   </div>
@@ -106,41 +130,177 @@ Sigue estos sencillos pasos para tener tu granja lista en menos de 5 minutos:
 
 ## Paso 2: Recibir recompensas de bienvenida
 
-Al entrar, es probable que recibas un regalo de bienvenida, como unas 50 gemas (valoradas en promedio en unos 5 tokens de FLOWER).
+<div class="space-y-4 mb-8 mt-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">1. Regalo Inicial</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Al entrar, es muy probable que el juego te reciba con un regalo sorpresa de bienvenida, como unas <strong class="text-emerald-400">50 gemas</strong> (valoradas en aproximadamente 5 tokens de FLOWER).</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img7} alt="Recompensa de 50 gemas" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
 
-![Recompensa de 50 gemas](../../../assets/img/guias/sunflowerland/image7.png)
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">2. Paquete de Referido</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Por haber utilizado el código <strong class="text-white">Oxlenador</strong>, recibirás un paquete extra que incluye <strong>Love Charms</strong>, más <strong>Gemas</strong> y un <strong>Time Warp Totem</strong>.</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img8} alt="Paquete de recompensas por referido" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
 
-Además, por haber utilizado el código de referido, recibirás este otro paquete de recompensas extra.
-
-![Paquete de recompensas por referido](../../../assets/img/guias/sunflowerland/image8.png)
-
-Aquí te explico para qué sirve cada cosa:
-- **Love Charms:** Son puntos de amor que obtienes al interactuar socialmente en el juego. Cada uno equivale aproximadamente a 0.012 FLOWER.
-- **Gemas:** Funcionan como créditos dentro del juego. Se utilizan para ciertas mecánicas especiales, como resetear el mercado de semillas, comprar herramientas y más.
-- **Time Warp Totem:** Es un potenciador temporal. Durante 2 horas, duplicará la velocidad de producción de tus cultivos, minerales, frutas, cocina y árboles.
-
-> 💡 **Tip Estratégico:** Hay muchísimas estrategias, pero mi consejo para empezar es que vendas los *Love Charms* a cambio de FLOWER en la "Isla del Amor" (disponible cada 7 horas en la plaza principal). Guarda tus **Gemas** exclusivamente para resetear el mercado de semillas y herramientas, ya que no hay otra forma de hacerlo y te harán mucha falta. En cuanto al **Tótem**, consérvalo para más adelante, cuando tu granja sea más grande o haya algún evento especial de producción.
+  <div class="bg-emerald-500/5 border border-emerald-500/20 p-5 rounded-2xl">
+    <h3 class="text-base font-bold text-emerald-400 mb-3 flex items-center gap-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      ¿Para qué sirve cada cosa?
+    </h3>
+    <ul class="text-sm text-terminal-secondary space-y-3 mb-5">
+      <li class="flex gap-2 items-start"><span class="text-emerald-500 mt-1">✦</span><span><strong class="text-white">Love Charms:</strong> Puntos de amor que obtienes al interactuar socialmente en el juego. Cada uno equivale aproximadamente a 0.012 FLOWER.</span></li>
+      <li class="flex gap-2 items-start"><span class="text-emerald-500 mt-1">✦</span><span><strong class="text-white">Gemas:</strong> Funcionan como créditos dentro del juego. Se utilizan para mecánicas especiales como resetear el mercado de semillas, comprar herramientas y más.</span></li>
+      <li class="flex gap-2 items-start"><span class="text-emerald-500 mt-1">✦</span><span><strong class="text-white">Time Warp Totem:</strong> Potenciador temporal. Durante 2 horas, duplicará la velocidad de producción de tus cultivos, minerales, frutas, cocina y árboles.</span></li>
+    </ul>
+    <div class="p-4 bg-[#0a0a0a] rounded-xl border border-white/5">
+      <strong class="text-emerald-400 block mb-1">💡 Tip Estratégico:</strong>
+      <p class="text-sm text-terminal-secondary">Hay muchísimas estrategias, pero mi consejo para empezar es que vendas los <em>Love Charms</em> a cambio de FLOWER en la "Isla del Amor" (disponible cada 7 horas en la plaza principal). Guarda tus <strong>Gemas</strong> exclusivamente para resetear el mercado de semillas y herramientas, ya que te harán mucha falta. En cuanto al <strong>Tótem</strong>, consérvalo para más adelante cuando tu granja sea más grande o haya un evento de producción especial.</p>
+    </div>
+  </div>
+</div>
 
 ---
 
 ## Paso 3: Introducción a las mecánicas básicas
 
-En Sunflower Land, tu granja inicial está ubicada en una isla pequeña, dividida por expansiones de terreno de 36 espacios (slots). La mecánica principal del juego consiste en realizar las siguientes acciones para ir creciendo:
+En Sunflower Land, tu granja inicial está ubicada en una isla pequeña que puedes ir expandiendo. Para desbloquear nuevos terrenos y crecer, deberás dominar el ciclo básico del juego.
 
-- Cultivar.
-- Cortar madera.
-- Minar.
-- Craftear (crear objetos).
-- Comerciar.
+<div class="space-y-4 mb-8 mt-6">
 
-![Mecánicas de cultivo y recolección](../../../assets/img/guias/sunflowerland/image9.png)
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">1. Gestión de la Isla</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Tu isla está dividida en expansiones. Para desbloquear nuevos espacios, necesitarás gastar recursos (comida, madera, minerales) y subir de nivel. A medida que expandas tu tierra, descubrirás más nodos de recursos.</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img9} alt="Vista general de la isla" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
 
-Para desbloquear nuevos terrenos, necesitarás gastar recursos. Estos recursos los consigues recolectando en los diferentes nodos de tu isla: árboles (madera), rocas (piedra), vetas de hierro, etc. A medida que expandas tu tierra, irás descubriendo más nodos que aumentarán tu producción. 
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">2. Agricultura (Cultivos)</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Es la base de la economía. Planta semillas en tus parcelas de tierra, espera su tiempo de crecimiento y coséchalas. Los cultivos sirven para hacer entregas, cocinar platos y ganar experiencia.</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img10} alt="Cultivando semillas" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
 
-Luego, podrás utilizar esos recursos para craftear materiales más avanzados o comerciarlos por monedas (coins) y FLOWER en los distintos mercados del juego, como el mercado de Betty, el comercio P2P (entre jugadores) y las entregas (deliverys) que podrás hacer a diferentes NPCs repartidos por el mapa.
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">3. Recolección y Minería</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Con tu hacha puedes talar árboles para conseguir madera, y con el pico puedes minar rocas para obtener piedra, hierro y oro. Estos recursos son vitales para craftear herramientas y edificios avanzados.</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img11} alt="Tala de árboles y recolección" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">4. Cocina y Crafteo</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Usa tus cultivos para cocinar platos que dan muchísima experiencia a tu Bumpkin. Además, puedes utilizar tus recursos naturales para craftear herramientas nuevas o comerciarlos por FLOWER en el mercado y con otros jugadores.</p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img12} alt="Cocina y crafteo de platos" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <h3 class="text-base font-bold text-white mb-2">5. Comercio y Entregas</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed">Algunos recursos se pueden vender. Al inicio tendrás opciones limitadas, pero a medida que subas de nivel, aumentará la variedad de productos que puedes intercambiar por <strong class="text-yellow-400">monedas</strong>, <strong class="text-emerald-400">FLOWER</strong> o boletos de temporada.</p>
+      <div class="mt-4 p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20 text-xs text-emerald-400 leading-relaxed shadow-sm">
+        <strong>💡 Recomendación:</strong> Al principio, concéntrate en vender únicamente por monedas y FLOWER para acelerar el crecimiento inicial de tu granja.
+      </div>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[280px]">
+        <ZoomableImage src={img13} alt="Comercio y venta de recursos" class="w-full h-auto rounded-xl border border-white/10 hover:scale-[1.30] hover:z-20 transition-transform duration-500 ease-out cursor-pointer relative z-10 shadow-lg" />
+      </div>
+    </div>
+  </div>
+
+</div>
 
 ---
 
-## Siguientes pasos
+## Resumen de rutina recomendada
 
-¡Felicidades! Ya tienes tu granja y entiendes lo básico. El siguiente paso es empezar a optimizar tus cultivos y subir de nivel a tu Bumpkin para desbloquear nuevas zonas y recetas.
+Para crecer rápido y no perder el ritmo en el juego, te sugerimos esta sencilla rutina diaria enfocada en tus dos pilares principales:
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 not-prose">
+  <div class="p-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 transition-colors shadow-sm">
+    <h3 class="text-emerald-400 font-bold text-lg mb-4 flex items-center gap-2">
+      🌻 Expansión de Granja
+    </h3>
+    <ul class="space-y-3 text-sm text-gray-300 m-0 p-0 list-none">
+      <li class="flex items-start gap-2">
+        <span class="text-emerald-500 font-bold mt-0.5">•</span>
+        <span><strong>Diario:</strong> Recolectar tus cultivos plantados, talar los árboles y extraer minerales cada vez que los nodos estén listos.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-emerald-500 font-bold mt-0.5">•</span>
+        <span><strong>Siempre:</strong> Reinvertir tus recursos para subir de nivel a tu Bumpkin y craftear herramientas necesarias para expandir la isla.</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="p-5 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 hover:border-yellow-500/40 transition-colors shadow-sm">
+    <h3 class="text-yellow-400 font-bold text-lg mb-4 flex items-center gap-2">
+      💰 Economía y Mercado
+    </h3>
+    <ul class="space-y-3 text-sm text-gray-300 m-0 p-0 list-none">
+      <li class="flex items-start gap-2">
+        <span class="text-yellow-500 font-bold mt-0.5">•</span>
+        <span><strong>Cada 7 horas:</strong> Visitar la Isla del Amor para vender tus <em>Love Charms</em> a cambio de FLOWER.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-yellow-500 font-bold mt-0.5">•</span>
+        <span><strong>Diario:</strong> Vender parte de tu producción por Monedas (Coins) para comprar más semillas.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-yellow-500 font-bold mt-0.5">•</span>
+        <span><strong>Regla de Oro:</strong> Guarda tus gemas estrictamente para resetear los mercados de semillas y herramientas.</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="mt-12 mb-8 flex flex-col items-center justify-center gap-8">
+  <a 
+    href="https://sunflower-land.com/play/?ref=Oxlenador" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="group relative inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 !text-cyan-400 hover:!text-cyan-300 font-bold text-base rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.2)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all duration-300 hover:scale-105 !no-underline"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>¡Inicia tu Granja Ahora!</span>
+  </a>
+
+  <div class="w-full max-w-[240px] rounded-xl overflow-hidden border border-white/10 shadow-lg relative">
+    <img src={mapLandingGif.src} alt="Sunflower Land Map Animado" class="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-300 [image-rendering:pixelated]" />
+  </div>
+</div>
