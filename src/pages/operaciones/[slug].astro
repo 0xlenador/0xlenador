@@ -13,11 +13,11 @@ export async function getStaticPaths() {
 }
 
 const { guia } = Astro.props
-const { title, description, imagen, tags, date } = guia.data
+const { title, description, imagen, tags, date, tiempoEstimado } = guia.data
 
 const ogImage = guia.data.ogImage || imagen
 
-// Schema.org TechArticle para SEO estructurado
+// Schema.org TechArticle para SEO estructurado básico
 const guiaSchema = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
@@ -41,6 +41,66 @@ const guiaSchema = {
   },
 }
 
+// Extraer dinámicamente los pasos del markdown para armar el Schema HowTo
+const stepMatches = guia.body ? guia.body.match(/## Paso \d+:\s*(.*)/g) : null;
+const steps = stepMatches ? stepMatches.map((match, index) => {
+  const stepName = match.replace(/## Paso \d+:\s*/, '').trim();
+  return {
+    "@type": "HowToStep",
+    "position": index + 1,
+    "name": stepName,
+    "text": stepName
+  }
+}) : [];
+
+let finalSchema: any = [guiaSchema];
+
+if (steps.length > 0) {
+  // Convertir formato "15 min" a ISO 8601 "PT15M"
+  const durationMatch = tiempoEstimado ? String(tiempoEstimado).match(/(\d+)/) : null;
+  const totalTimeISO = durationMatch ? `PT${durationMatch[1]}M` : undefined;
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": title,
+    "description": description,
+    "totalTime": totalTimeISO,
+    "step": steps,
+    "image": ogImage ? new URL(ogImage, "https://0xlenador.xyz").href : undefined
+  };
+  
+  finalSchema.push(howToSchema);
+}
+
+// Schema.org BreadcrumbList para migas de pan
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": new URL("/", Astro.site).href
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Operaciones",
+      "item": new URL("/operaciones/", Astro.site).href
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": title,
+      "item": new URL(Astro.url.pathname, Astro.site).href
+    }
+  ]
+};
+
+finalSchema.push(breadcrumbSchema);
+
 const translationSlug = guia.data.translationSlug
 const esUrl = `/operaciones/${guia.slug}/`
 const enUrl = translationSlug
@@ -54,7 +114,7 @@ const enUrl = translationSlug
   keywords={tags.join(", ")}
   ogType="article"
   image={ogImage}
-  schema={guiaSchema}
+  schema={finalSchema}
   publishedTime={new Date(date).toISOString()}
   author="0x Leñador"
   esUrl={esUrl}

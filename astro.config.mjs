@@ -235,9 +235,7 @@ export default defineConfig({
           !pathname.includes("/404") &&
           !pathname.match(/^\/(bitcoin|ethereum|sunflowerland|simulador|tesis)\/$/) &&
           !pathname.match(/^\/(privacidad|terminos)\/$/) &&
-          !pathname.match(/^\/en\/(privacy|terms)\/$/) &&
-          !pathname.match(/^\/(autor)\/$/) &&
-          !pathname.match(/^\/en\/(author)\/$/)
+          !pathname.match(/^\/en\/(privacy|terms)\/$/)
         )
       },
 
