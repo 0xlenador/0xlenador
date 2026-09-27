@@ -110,10 +110,6 @@ export default defineConfig({
     "/en/tweets": "/en/social-content/",
     // Activos: movidos de la raíz a /activos/ para evitar el efecto catch-all.
     // Los redirects 301 aseguran que los enlaces externos y el SEO se preserven.
-    "/bitcoin": "/activos/bitcoin",
-    "/ethereum": "/activos/ethereum",
-    "/sunflowerland": "/activos/sunflowerland/",
-    "/hyperliquid": "/activos/hyperliquid/",
 
     // Redirecciones SEO de artículos de WordPress al blog en español
     "/que-es-polkadot": "/blog/que-es-polkadot/",
@@ -226,14 +222,14 @@ export default defineConfig({
     sitemap({
       // Filtrar páginas que no deben estar en el sitemap:
       // - Páginas 404
-      // - Páginas redirect legacy (bitcoin/, ethereum/, sunflowerland/, simulador/, tesis/)
+      // - Páginas redirect legacy (simulador/, tesis/)
       // - Páginas legales (no aportan tráfico orgánico, diluyen calidad del sitemap)
       // - Páginas de autor (sin valor de búsqueda)
       filter: (page) => {
         const { pathname } = new URL(page)
         return (
           !pathname.includes("/404") &&
-          !pathname.match(/^\/(bitcoin|ethereum|sunflowerland|simulador|tesis)\/$/) &&
+          !pathname.match(/^\/(simulador|tesis|design)\/$/) &&
           !pathname.match(/^\/(privacidad|terminos)\/$/) &&
           !pathname.match(/^\/en\/(privacy|terms)\/$/)
         )
