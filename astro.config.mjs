@@ -102,109 +102,13 @@ export default defineConfig({
     },
   },
 
-  redirects: {
-    // /tesis migrada como artículo del blog (301 = Moved Permanently, preserva SEO)
-    "/tesis": "/blog/tesis-de-inversion",
-    "/simulador": "/riskfolio",
-    "/tweets": "/contenido-social/",
-    "/en/tweets": "/en/social-content/",
-    // Activos: movidos de la raíz a /activos/ para evitar el efecto catch-all.
-    // Los redirects 301 aseguran que los enlaces externos y el SEO se preserven.
-
-    // Redirecciones SEO de artículos de WordPress al blog en español
-    "/que-es-polkadot": "/blog/que-es-polkadot/",
-    "/que-es-una-wallet-de-criptomonedas-y-como-funciona-realmente": "/blog/",
-    "/que-son-las-acciones-tokenizadas": "/blog/",
-    "/que-es-ethereum-y-por-que-es-clave-en-el-futuro-digital": "/blog/que-es-ethereum-y-por-que-es-clave-en-el-futuro-digital/",
-    "/que-son-los-nfts": "/blog/",
-    "/que-es-blockchain-y-como-funciona-esta-tecnologia": "/blog/que-es-blockchain-y-como-funciona-esta-tecnologia/",
-    "/que-es-una-altcoin-y-por-que-deberias-entenderlo-hoy": "/blog/",
-    "/satoshi-nakamoto-el-enigma-que-transformo-el-dinero-digital": "/blog/satoshi-nakamoto-el-enigma-que-transformo-el-dinero-digital/",
-    "/que-es-defi-invierte-gana-rendimientos-y-recibe-airdrops": "/blog/que-es-defi-invierte-gana-rendimientos-y-recibe-airdrops/",
-    "/que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto": "/blog/que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto/",
-    "/inteligencia-artificial-en-criptomonedas": "/blog/",
-    "/que-es-un-metaverso-mas-alla-de-lo-digital": "/blog/",
-    "/stablecoins-guia-completa-criptomonedas-estables": "/blog/",
-    "/que-es-un-airdrop-de-criptomonedas": "/blog/que-es-un-airdrop-de-criptomonedas/",
-    "/que-es-depin": "/blog/que-es-depin/",
-    "/que-son-los-futuros-perpetuos": "/blog/que-son-los-futuros-perpetuos/",
-    "/que-es-un-amm-automated-market-maker": "/blog/que-es-un-amm-automated-market-maker/",
-    "/que-es-una-memecoin-o-criptomoneda-meme": "/blog/",
-    "/que-son-los-real-world-assets-rwa": "/blog/",
-
-    // Redirecciones específicas de airdropdegen a Hyperliquid
-    "/airdropdegen/hyperpie": "/activos/hyperliquid/",
-    "/airdropdegen/hypurrfi": "/activos/hyperliquid/",
-    "/airdropdegen/hyperlend": "/activos/hyperliquid/",
-    "/airdropdegen/kite-ai": "/activos/hyperliquid/",
-
-    // Redirecciones del resto de airdropdegen a la sección de activos
-    "/airdropdegen/dawn": "/activos/",
-    "/airdropdegen/gte": "/activos/",
-    "/airdropdegen/valhalla": "/activos/",
-    "/airdropdegen/backpack": "/activos/",
-    "/airdropdegen/succinct": "/activos/",
-    "/airdropdegen/meta-toy-dragonz-saga": "/activos/",
-    "/airdropdegen/cess": "/activos/",
-    "/airdropdegen/li-fi": "/activos/",
-    "/airdropdegen/oro-ai": "/activos/",
-    "/airdropdegen/opengradient": "/activos/",
-    "/airdropdegen/farcaster": "/activos/",
-    "/airdropdegen/towns": "/activos/",
-    "/airdropdegen/mythos": "/activos/",
-    "/airdropdegen/paradex": "/activos/",
-    "/airdropdegen/dscvr": "/activos/",
-    "/airdropdegen/pluralis-research": "/activos/",
-    "/airdropdegen/arichain": "/activos/",
-    "/airdropdegen/binance": "/activos/",
-    "/airdropdegen/allo": "/activos/",
-    "/airdropdegen/teko": "/activos/",
-    "/airdropdegen/kaia": "/activos/",
-    "/airdropdegen/bybit": "/activos/",
-    "/airdropdegen/jupiter": "/activos/",
-    "/airdropdegen/sophon": "/activos/",
-    "/airdropdegen/beamable": "/activos/",
-    "/airdropdegen/lumiterra": "/activos/",
-    "/airdropdegen/kiichain": "/activos/",
-    "/airdropdegen/somnia-network": "/activos/",
-    "/airdropdegen/bronto": "/activos/",
-    "/airdropdegen/bless": "/activos/",
-    "/airdropdegen/awe": "/activos/",
-    "/airdropdegen/fragmetric": "/activos/",
-    "/airdropdegen/gradient": "/activos/",
-    "/airdropdegen/humanity-protocol": "/activos/",
-    "/airdropdegen/laminar": "/activos/",
-    "/airdropdegen/resolv": "/activos/",
-    "/airdropdegen/lighter": "/activos/",
-    "/airdropdegen/immutable": "/activos/",
-    "/airdropdegen/zeeverse": "/activos/",
-    "/airdropdegen/metamask": "/activos/",
-    "/airdropdegen/dexari": "/activos/",
-    "/airdropdegen/sleepagotchi": "/activos/",
-    "/airdropdegen/grass": "/activos/",
-
-    // Redirecciones de páginas generales y recursos
-    "/en/blog/ganarle-a-la-inflacion": "/blog/ganarle-a-la-inflacion/",
-    "/all-airdrops": "/activos/",
-    "/check-airdrops": "/activos/",
-    "/recursos": "/herramientas/",
-    "/data-perps": "/",
-    "/faucets.html": "/faucets/",
-    "/comunidad": "/",
-
-    // Redirecciones de miniapps al home
-    "/miniapps": "/",
-    "/miniapps/cosmic-bomber": "/",
-    "/miniapps/blum": "/",
-    "/miniapps/captain-tsubasa-rivals": "/",
-    "/miniapps/fameverse": "/",
-    "/miniapps/evaa-protocol": "/",
-    "/miniapps/puparty": "/",
-    "/miniapps/bombie": "/",
-    "/miniapps/slime-miner": "/",
-    "/miniapps/elderglade": "/",
-    "/miniapps/billionzombies": "/",
-  },
+  // Redirects eliminados intencionalmente (2026-10-01):
+  // En output estático (GitHub Pages), Astro genera redirects como páginas HTML
+  // con meta-refresh + noindex (status 200), lo cual confunde a Google más que
+  // un 404 limpio. Googlebot gastaba crawl budget rastreando 80+ páginas
+  // meta-refresh en vez de indexar las páginas reales.
+  // Referencia: diagnóstico de Search Console — 80 URLs en "No se ha encontrado (404)"
+  // que en realidad devolvían 200 + noindex.
   markdown: {
     rehypePlugins: [
       [
