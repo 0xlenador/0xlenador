@@ -1,0 +1,52 @@
+---
+import { Icon } from "astro-icon/components";
+import { directoryData, faucetsData } from "../../lib/data"
+
+interface Props {
+  id?: string;
+  isFaucet?: boolean;
+  href?: string;
+  text?: string;
+  icon?: string;
+  target?: string;
+  rel?: string;
+}
+
+const { 
+  id,
+  isFaucet = false,
+  href, 
+  text, 
+  icon = "lucide:play-circle",
+  target = "_blank",
+  rel = "noopener noreferrer"
+} = Astro.props;
+
+let finalHref = href;
+let finalText = text;
+
+if (id) {
+  const source = isFaucet ? faucetsData : directoryData;
+  const resource = source.find((item: any) => item.id === id);
+  if (resource) {
+    finalHref = finalHref || resource.url;
+    finalText = finalText || resource.name;
+  }
+}
+---
+
+{finalHref ? (
+<a 
+  href={finalHref} 
+  target={target} 
+  rel={rel} 
+  class="group relative inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/40 hover:from-cyan-500/20 hover:to-emerald-500/20 hover:border-cyan-400 !text-cyan-400 hover:!text-cyan-300 font-bold text-base rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.2)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all duration-300 hover:scale-105 !no-underline"
+>
+  <Icon name={icon} class="w-5 h-5" />
+  <span>{finalText}</span>
+</a>
+) : (
+  <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400/70 text-xs font-mono">
+    ⚠ id "{id}" no encontrado en PlayButton
+  </span>
+)}

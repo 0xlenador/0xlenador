@@ -1,0 +1,47 @@
+---
+/**
+ * TextLink.astro
+ * Componente para enlaces en línea (dentro de párrafos o listas).
+ * Soporta buscar la URL inteligentemente por ID o recibir un href manual.
+ */
+import { directoryData, faucetsData } from "../../lib/data"
+
+interface Props {
+  id?: string
+  isFaucet?: boolean
+  href?: string
+  text?: string
+  class?: string
+}
+
+const { 
+  id, 
+  isFaucet = false, 
+  href, 
+  text, 
+  class: className = "text-emerald-500 hover:underline font-medium" 
+} = Astro.props
+
+let finalUrl = href
+let finalLabel = text
+
+if (id) {
+  const source = isFaucet ? faucetsData : directoryData
+  const resource = source.find((item: any) => item.id === id)
+  if (resource) {
+    finalUrl = finalUrl || resource.url
+    finalLabel = finalLabel || resource.name
+  }
+}
+---
+
+{finalUrl ? (
+  <a 
+    href={finalUrl} 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class={className}
+  >{finalLabel}</a>
+) : (
+  <span class="text-red-500 font-mono text-xs">⚠ id "{id}" no encontrado</span>
+)}

@@ -6,9 +6,9 @@ const blog = defineCollection({
   // generateId emite "es/ganarle-a-la-inflacion" o "en/beating-inflation"
   // permitiendo filtrar por idioma con: post.id.startsWith("es/")
   loader: glob({
-    pattern: "**/index.md",
+    pattern: "**/index.{md,mdx}",
     base: "./src/content/blog",
-    generateId: ({ entry }: { entry: string }) => entry.replace(/\/index\.md$/, ""),
+    generateId: ({ entry }: { entry: string }) => entry.replace(/\/index\.(md|mdx)$/, ""),
   }),
   schema: ({ image: img }) =>
     z.object({
