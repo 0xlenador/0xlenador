@@ -1,0 +1,86 @@
+---
+title: "What is fomo? The social crypto trading app"
+description: "Discover what fomo is, the app that combines memecoins and crypto trading with a social layer, without seed phrases or manual bridges."
+category: "Perps"
+date: 2026-10-02
+author: "0x Leñador"
+coverImage: "./fomo-blog.webp"
+coverAlt: "fomo social trading app"
+translationSlug: "what-is-fomo"
+faq:
+  - pregunta: "Is fomo an exchange?"
+    respuesta: "No. It's a trading app. The wallet belongs to the user: fomo doesn't custody tokens or move them. You sign in with email or Apple ID and the account is created within the app."
+  - pregunta: "Are other people's trades copied automatically?"
+    respuesta: "No. Following a trader shows you what they buy or sell and sends you an alert. The order is confirmed by the app user. There is no automatic copy trading."
+  - pregunta: "Do I need to know about networks, gas or bridges?"
+    respuesta: "Not to start. There is a single balance and the app routes your purchase across networks. That doesn't change the token's risk: it only removes the technical step of moving funds manually."
+  - pregunta: "What is a thesis?"
+    respuesta: "A short text where a token holder explains why they bought or hold it. It's an opinion published next to the position, not a verified analysis."
+  - pregunta: "Can I lose more than my deposit?"
+    respuesta: "In a normal spot purchase, no: at most you lose what you invested in that token. In perpetuals, with leverage, a position can be liquidated and the risk is higher. That feature is also not available in all countries."
+---
+
+import PlayButton from "@components/buttons/PlayButton.astro"
+
+> **Summary:** fomo is a social trading app focused on cryptocurrencies and memecoins. Unlike a traditional exchange, it offers a simplified experience: a single account and unified balance to trade across multiple networks (Solana, Base, Ethereum, etc.), without needing to set up _seed phrases_ or deal with _bridges_. Its main differentiator is the integrated social layer, where traders can publish their trades and the "thesis" behind them, making the market a visible and community-driven environment.
+
+Entering the crypto world is still harder than it seems. You have to choose the right network, get the necessary gas token, move funds across chains (bridges), and finally decide who to trust when a new token appears out of nowhere.
+
+**fomo** tries to compress all that friction: it gives you an account, a balance, and a buy button, all with a _feed_ next to it to see what the rest of the community is doing.
+
+The name plays with the Fear Of Missing Out, but the product isn't sold simply as a shortcut to copy winners. It's sold as a place where **the market stops being anonymous**. Every trader can be visible: you can see what they buy, what they sell, and why they say they do it.
+
+This separates it from a classic exchange, where the main screen is a boring order book, and also from a _copy trading_ bot, where the other person's order executes automatically. In fomo, the final trade is always triggered by the user.
+
+## What can you do in fomo?
+
+You enter simply with your email or Apple ID. You don't need to arrive with an already created _wallet_. When you open the account, the app generates a wallet for you.
+
+According to their documentation, this wallet is _non-custodial_: fomo doesn't custody the tokens nor can it move them on its own. The private key can be exported if at any point you wish to use the funds outside the app. In exchange, you cannot import an existing wallet, but the advantage is that you don't need to write down a seed phrase to get started.
+
+<div class="mt-12 mb-8 flex flex-col items-center justify-center gap-8">
+  <PlayButton id="fomo" text="Try fomo app!" />
+</div>
+
+### A single balance, multiple networks
+
+The balance is unified. With that deposited cash you buy tokens across several networks —like Solana, Base, BNB Chain, Ethereum and others the app may add— **without building the bridge manually or having to pay the native gas of each chain**.
+
+Deposits easily come in through credit card, Apple Pay or a traditional crypto transfer. Furthermore, the same account works on your phone and desktop: an open position on one side is reflected on the other.
+
+### The catalog and the social layer
+
+The catalog is intentionally broad. Memecoins and viral tokens coexist with more established names. The app marks some tokens with **risk warnings**; the warning doesn't block your purchase, but it alerts you. You also have integrated charts to read price action, it's not just a blind buy button.
+
+The **social layer** is the heart of the product. In fomo you will find:
+
+- A live activity _feed_.
+- A trader leaderboard.
+- Alerts when you follow someone.
+- Comments and community.
+- **The thesis:** a short text where the token holder explains why they bought or hold it in their portfolio.
+
+Following a trader does not copy their trade automatically. You get the alert, but you have to confirm the order yourself.
+
+### Futures and perpetuals (Extension)
+
+Besides the spot market, the app includes perpetual futures: contracts to position yourself long or short, with leverage, both in crypto and other markets (stocks, indices, commodities). That section has restrictions depending on your country and a different risk profile than simply buying and holding a token. It's not the core of the app, but it is an interesting extension.
+
+## How is it sustained?
+
+fomo charges a fee for every trade. The percentage depends on the network and the type of token (established names are usually cheaper than exotic ones). When there is a network _fee_, that goes to the network validators, not to the app.
+
+Those who enter with a referral code pay less, and those who invite keep a portion of the fees generated by that person.
+
+**It does not issue its own token**. The model is that of a traditional software company: the app is the product, the fee is the revenue. The horizon they've described is expanding what can be bought towards tokenized stocks and other real-world assets (RWA), without turning the project into a protocol that relies on printing a native coin.
+
+## What fomo is NOT
+
+- **It is not a centralized exchange (CEX)** where the platform holds the user's money.
+- **It is not automatic _copy trading_**, although the feed invites you to look closely at what others do.
+- **It is not a layer 1 blockchain**, nor a token launchpad, nor a guarantee that the number one trader on the leaderboard will keep getting it right tomorrow. The leaderboard only shows past results.
+- **A published thesis is an opinion**, not an audited analysis or investment advice.
+
+The underlying risk does not change because of the app's design. A memecoin can go to zero. A leveraged perpetual can be liquidated. Exporting the key and pasting it anywhere is losing control of the funds.
+
+The abstraction fomo offers —a unified balance, no gas, no complex bridges— makes it much easier and more attractive to start trading; but it **does not make the asset you are buying safer**. Trade responsibly!
