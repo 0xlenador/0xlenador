@@ -11,8 +11,12 @@ import SflToolLayout from "../SflToolLayout.astro"
 
 const sflRecipesEntry = await getEntry("sfl", "recipes")
 const sflIdsEntry = await getEntry("sfl", "resources")
+const sflPowerUpsEntry = await getEntry("sfl", "calculo_powerups")
+const sflPowerUpsDataEntry = await getEntry("sfl", "powerups")
 const sflRecipes = sflRecipesEntry.data
 const sflIds = sflIdsEntry.data
+const sflPowerUps = sflPowerUpsEntry.data
+const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -28,6 +32,35 @@ const t = useTranslations(lang)
       <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
         {t("sfl.cooking.intro")}
       </p>
+    </div>
+
+    <!-- PowerUps (NFTs / Wearables) -->
+    <div class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+      <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
+        <span class="text-emerald-500">✨</span> PowerUps & Boosts
+      </h3>
+      <div class="flex flex-wrap gap-4">
+        {
+          Object.entries(sflPowerUps).map(([id, powerup]) => {
+            const group = powerup.type + "s";
+            const imgFile = sflPowerUpsData[group]?.[id]?.image || `${powerup.name}.webp`;
+            const mainSrc = `/img/sunflowerland/powerups/${imgFile}`;
+            const fallbackSrc = `/img/sunflowerland/powerups/wearables/${imgFile}`;
+            const errorFallback = `/img/cripto/sunflowerland.webp`;
+            
+            return (
+            <label class="flex items-center gap-3 cursor-pointer group bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-xl p-2.5 transition-all">
+              <input type="checkbox" class="powerup-checkbox w-4 h-4 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-powerup-id={id} />
+              <img src={mainSrc} class="w-8 h-8 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={powerup.name} title={powerup.boost} />
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-white group-hover:text-emerald-400 transition-colors">{powerup.name}</span>
+                <span class="text-[10px] text-terminal-muted max-w-[120px] leading-tight truncate" title={powerup.boost}>{powerup.boost}</span>
+              </div>
+            </label>
+            );
+          })
+        }
+      </div>
     </div>
 
     <!-- Controles y Filtros -->
@@ -94,6 +127,8 @@ const t = useTranslations(lang)
       </div>
       <p class="text-terminal-muted font-mono text-xs animate-pulse">{t("sfl.cooking.loading")}</p>
     </div>
+
+
 
     <!-- Tabla de Recetas -->
     <div id="dataContainer" class="hidden relative z-10">
@@ -174,6 +209,7 @@ const t = useTranslations(lang)
   define:vars={{
     sflRecipes,
     sflIds,
+    sflPowerUps,
     tEmpty: t("sfl.cooking.empty"),
     tError: t("sfl.cooking.error"),
     tTime: t("sfl.cooking.col.time"),
@@ -190,6 +226,42 @@ const t = useTranslations(lang)
 
   window.currentSort = { column: "xp", direction: "desc" }
   let currentCategory = "all"
+  
+  let activePowerUps = new Set()
+
+  const isTargetMatch = (item, target) => {
+    if (target === "all") return true;
+    if (target === "Cakes") return item.building === "Bakery" || item.name.includes("Cake");
+    if (target === "Fermented Carrots") return item.name === "Fermented Carrots";
+    if (target === "Cheese Recipes") return item.name.includes("Cheese") || item.ingredients.some(ing => ing.name.includes("Cheese"));
+    if (target === "Fish") {
+      const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse'];
+      return item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper"].includes(item.name);
+    }
+    return false;
+  };
+
+  const getCalculatedXp = (item) => {
+    let finalXp = item.xp;
+    let multipliers = 1;
+    let additions = 0;
+    
+    activePowerUps.forEach(id => {
+      const powerup = sflPowerUps[id];
+      if (powerup && powerup.mathematics_1) {
+         const math = powerup.mathematics_1;
+         if (math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
+           if (math.mathematics_operation === "multiply") {
+             multipliers *= math.calc;
+           } else if (math.mathematics_operation === "add") {
+             additions += math.calc;
+           }
+         }
+      }
+    });
+    
+    return (finalXp * multipliers) + additions;
+  };
 
   const parseTime = (timeStr) => {
     if (!timeStr) return 0
@@ -303,8 +375,8 @@ const t = useTranslations(lang)
           valA = a.name.toLowerCase()
           valB = b.name.toLowerCase()
         } else if (column === "xp") {
-          valA = a.xp
-          valB = b.xp
+          valA = getCalculatedXp(a)
+          valB = getCalculatedXp(b)
         } else if (column === "cost") {
           const costA = calculateRecipeCost(a.ingredients)
           const costB = calculateRecipeCost(b.ingredients)
@@ -313,13 +385,13 @@ const t = useTranslations(lang)
         } else if (column === "xpsfl") {
           const costA = calculateRecipeCost(a.ingredients)
           const costB = calculateRecipeCost(b.ingredients)
-          valA = costA.total > 0 ? a.xp / costA.total : 0
-          valB = costB.total > 0 ? b.xp / costB.total : 0
+          valA = costA.total > 0 ? getCalculatedXp(a) / costA.total : 0
+          valB = costB.total > 0 ? getCalculatedXp(b) / costB.total : 0
         } else if (column === "xpday") {
           const timeA = parseTime(a.time)
           const timeB = parseTime(b.time)
-          valA = timeA > 0 ? (86400 / timeA) * a.xp : 0
-          valB = timeB > 0 ? (86400 / timeB) * b.xp : 0
+          valA = timeA > 0 ? (86400 / timeA) * getCalculatedXp(a) : 0
+          valB = timeB > 0 ? (86400 / timeB) * getCalculatedXp(b) : 0
         }
 
         if (valA < valB) return direction === "asc" ? -1 : 1
@@ -338,8 +410,9 @@ const t = useTranslations(lang)
     filtered.forEach((item) => {
       const costObj = calculateRecipeCost(item.ingredients)
       const timeSeconds = parseTime(item.time)
-      const xpPerSfl = costObj.total > 0 ? item.xp / costObj.total : 0
-      const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * item.xp : 0
+      const finalXp = getCalculatedXp(item);
+      const xpPerSfl = costObj.total > 0 ? finalXp / costObj.total : 0
+      const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * finalXp : 0
 
       const row = document.createElement("div")
       row.className =
@@ -385,8 +458,9 @@ const t = useTranslations(lang)
         </div>
         
         <!-- XP Column -->
-        <div class="mt-2 lg:mt-0 lg:px-4 flex items-center">
-          <span class="text-white text-sm">${formatNumber(item.xp, 0)}</span>
+        <div class="mt-2 lg:mt-0 lg:px-4 flex items-center gap-1">
+          <span class="text-white text-sm font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}">${formatNumber(finalXp, 0)}</span>
+          ${finalXp > item.xp ? `<span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(item.xp, 0)}">✨</span>` : ""}
         </div>
 
         <!-- SFL Cost Column -->
@@ -454,6 +528,14 @@ const t = useTranslations(lang)
   }
 
   // Listeners
+  document.querySelectorAll(".powerup-checkbox").forEach((cb) => {
+    cb.addEventListener("change", (e) => {
+      if (e.target.checked) activePowerUps.add(e.target.dataset.powerupId);
+      else activePowerUps.delete(e.target.dataset.powerupId);
+      renderTable(searchInput ? searchInput.value : "");
+    });
+  });
+
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       window.handleCategory(e.target.dataset.category)
