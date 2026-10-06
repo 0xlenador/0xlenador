@@ -2821,7 +2821,7 @@
         "Fast Feasts": {
             "id": 93,
             "name": "Fast Feasts",
-            "description": "x0.9 Firepit and Kitchen cooking time",
+            "description": "x{math1} Firepit and Kitchen cooking time",
             "image": "/img/sunflowerland/skills/fast_feasts.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -2842,9 +2842,9 @@
                 "target": "all",
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
-                    "rank_1": 0.1,
-                    "rank_2": 0.15,
-                    "rank_3": 0.2
+                    "rank_1": 0.9,
+                    "rank_2": 0.85,
+                    "rank_3": 0.8
                 }
             }
         },
@@ -2876,7 +2876,8 @@
                     "rank_2": 0.3,
                     "rank_3": 0.5
                 }
-            }
+            },
+            "disabled": true
         },
         "Munching Mastery": {
             "id": 95,
@@ -2911,7 +2912,7 @@
         "Swift Sizzle": {
             "id": 96,
             "name": "Swift Sizzle",
-            "description": "x0.6 Fire Pit cooking time with oil",
+            "description": "x{math1} Fire Pit cooking time with oil",
             "image": "/img/sunflowerland/skills/swift_sizzle.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -2932,16 +2933,16 @@
                 "target": "all",
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
-                    "rank_1": 0.4,
-                    "rank_2": 0.45,
-                    "rank_3": 0.5
+                    "rank_1": 0.6,
+                    "rank_2": 0.5,
+                    "rank_3": 0.4
                 }
             }
         },
         "Frosted Cakes": {
             "id": 97,
             "name": "Frosted Cakes",
-            "description": "x0.9 Cakes cooking time",
+            "description": "x{math1} Cakes cooking time",
             "image": "/img/sunflowerland/skills/frosted_cakes.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -2962,9 +2963,9 @@
                 "target": "all",
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
-                    "rank_1": 0.1,
-                    "rank_2": 0.2,
-                    "rank_3": 0.3
+                    "rank_1": 0.9,
+                    "rank_2": 0.85,
+                    "rank_3": 0.8
                 }
             }
         },
@@ -3031,7 +3032,7 @@
         "Instant Gratification": {
             "id": 100,
             "name": "Instant Gratification",
-            "description": "Ability to make all meals currently cooking ready to be eaten | \u26a0\ufe0f 2x ingredients required for cooking",
+            "description": "Ability to make all meals currently cooking ready to be eaten | {math1_days}d cooldown",
             "image": "/img/sunflowerland/skills/instant_gratification.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -3056,12 +3057,13 @@
                     "rank_2": 302400000.0,
                     "rank_3": 259200000.0
                 }
-            }
+            },
+            "disabled": true
         },
         "Double Nom": {
             "id": 101,
             "name": "Double Nom",
-            "description": "+1 food from cooking | \u26a0\ufe0f 2x ingredients required for cooking",
+            "description": "+{math1} food from cooking | \u26a0\ufe0f {math2}x ingredients required for cooking",
             "image": "/img/sunflowerland/skills/double_nom.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -3093,8 +3095,8 @@
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
                     "rank_1": 2.0,
-                    "rank_2": 3.0,
-                    "rank_3": 4.0
+                    "rank_2": 2.0,
+                    "rank_3": 2.0
                 }
             }
         },
@@ -3131,7 +3133,7 @@
         "Fry Frenzy": {
             "id": 103,
             "name": "Fry Frenzy",
-            "description": "x0.4 Deli cooking time with oil",
+            "description": "x{math1} Deli cooking time with oil",
             "image": "/img/sunflowerland/skills/fry_frenzy.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -3152,9 +3154,9 @@
                 "target": "all",
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
-                    "rank_1": 0.6,
-                    "rank_2": 0.65,
-                    "rank_3": 0.7
+                    "rank_1": 0.4,
+                    "rank_2": 0.3,
+                    "rank_3": 0.2
                 }
             }
         }
@@ -3615,7 +3617,7 @@
         "Oil Gadget": {
             "id": 118,
             "name": "Oil Gadget",
-            "description": "x0.9 Oil consumption in Crop Machine",
+            "description": "x{math1} Oil consumption in Crop Machine",
             "image": "/img/sunflowerland/skills/oil_gadget.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -3636,9 +3638,9 @@
                 "target": "all",
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
-                    "rank_1": 0.1,
-                    "rank_2": 0.15,
-                    "rank_3": 0.2
+                    "rank_1": 0.9,
+                    "rank_2": 0.85,
+                    "rank_3": 0.8
                 }
             }
         },
@@ -3863,7 +3865,7 @@
         "Efficiency Extension Module": {
             "id": 127,
             "name": "Efficiency Extension Module",
-            "description": "x0.7 Oil consumption in Crop Machine",
+            "description": "x{math1} Oil consumption in Crop Machine",
             "image": "/img/sunflowerland/skills/efficiency_extension_module.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -3884,8 +3886,8 @@
                 "target": "all",
                 "mathematics_operation": "multiply",
                 "calc_by_rank": {
-                    "rank_1": 0.3,
-                    "rank_2": 0.4,
+                    "rank_1": 0.7,
+                    "rank_2": 0.6,
                     "rank_3": 0.5
                 }
             }

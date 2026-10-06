@@ -22,6 +22,19 @@ const sflSkills = sflSkillsEntry.data.Cooking || {}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
+
+const formatAstroDescription = (skill) => {
+  let desc = skill.description || "";
+  if (skill.mathematics_1?.calc_by_rank?.rank_1 !== undefined) {
+    const m1 = skill.mathematics_1.calc_by_rank.rank_1;
+    desc = desc.replace("{math1}", m1).replace("{math1_pct}", parseFloat((m1 * 100).toFixed(2))).replace("{math1_days}", parseFloat((m1 / 86400000).toFixed(2)));
+  }
+  if (skill.mathematics_2?.calc_by_rank?.rank_1 !== undefined) {
+    const m2 = skill.mathematics_2.calc_by_rank.rank_1;
+    desc = desc.replace("{math2}", m2).replace("{math2_pct}", parseFloat((m2 * 100).toFixed(2))).replace("{math2_days}", parseFloat((m2 / 86400000).toFixed(2)));
+  }
+  return desc;
+};
 ---
 
 <SflToolLayout activeTab="cocinando">
@@ -81,14 +94,16 @@ const t = useTranslations(lang)
             Object.entries(sflSkills).map(([skillName, skillData]) => {
               const mainSrc = skillData.image;
               const fallbackSrc = `/img/cripto/sunflowerland.webp`;
+                const formattedDesc = formatAstroDescription(skillData);
               
               return (
-              <div class="skill-card flex flex-col bg-white/5 border border-white/5 hover:border-blue-500/30 hover:bg-blue-500/5 rounded-lg p-1.5 transition-all group cursor-pointer" data-skill-id={skillName}>
+
+              <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                 <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                  <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={skillData.description} />
+                  <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
                   <div class="flex flex-col">
                     <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors">{skillName}</span>
-                    <span class="text-[9px] text-terminal-muted leading-tight" title={skillData.description}>{skillData.description}</span>
+                    <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
                   </div>
                 </div>
                 
@@ -301,7 +316,7 @@ const t = useTranslations(lang)
          const math = powerup.mathematics_1;
          if (math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
            if (math.mathematics_operation === "multiply") {
-             multipliers *= math.calc;
+             multipliers += (math.calc - 1); // convert 1.2 to +0.2
            } else if (math.mathematics_operation === "add") {
              additions += math.calc;
            }
@@ -309,22 +324,67 @@ const t = useTranslations(lang)
       }
     });
     
+    // Skills Logic for XP
     activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
       const skill = sflSkills[skillName];
-      if (skill && skill.mathematics_1) {
-         const math = skill.mathematics_1;
-         if (math.category === "cooking") {
-           // We'll apply it depending on the actual buff behavior later
-           // For now, simple multiplier hook:
-           if (math.mathematics_operation === "multiply") {
-             // For Double Nom, the calculation logic for XP vs Time vs Food varies.
-             // Currently this function only calculates XP, so we don't apply cooking time or yield debuffs here.
-           }
-         }
+      if (!skill) return;
+      const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
+      
+      // Munching Mastery (+5% XP)
+      if (skillName === "Munching Mastery") {
+        multipliers += math1;
+      }
+      // Juicy Boost (+10% XP for Smoothie Shack)
+      if (skillName === "Juicy Boost" && item.building === "Smoothie Shack") {
+        multipliers += math1;
+      }
+      // Double Nom (+1 food = 2x XP essentially)
+      if (skillName === "Double Nom") {
+        multipliers += math1; // +1 = 100% more XP
+      }
+      // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
+      if (skillName === "Fiery Jackpot" && item.building === "Fire Pit") {
+        multipliers += (math1 / 100); // 20% = 0.2 expected XP increase
       }
     });
     
     return (finalXp * multipliers) + additions;
+  };
+
+  const getCalculatedTime = (item) => {
+    let timeSeconds = parseTime(item.time);
+    if (timeSeconds === 0) return 0;
+    
+    let timeMultiplier = 1;
+    
+    activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
+      const skill = sflSkills[skillName];
+      if (!skill) return;
+      const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
+      
+      // Fast Feasts (Fire Pit and Kitchen)
+      if (skillName === "Fast Feasts" && (item.building === "Fire Pit" || item.building === "Kitchen")) {
+        timeMultiplier *= math1;
+      }
+      // Frosted Cakes (Bakery / Cakes)
+      if (skillName === "Frosted Cakes" && (item.building === "Bakery" || item.name.includes("Cake"))) {
+        timeMultiplier *= math1;
+      }
+      // Swift Sizzle (Fire Pit with oil)
+      if (skillName === "Swift Sizzle" && item.building === "Fire Pit") {
+        timeMultiplier *= math1;
+      }
+      // Turbo Fry (Kitchen with oil)
+      if (skillName === "Turbo Fry" && item.building === "Kitchen") {
+        timeMultiplier *= math1;
+      }
+      // Fry Frenzy (Deli with oil)
+      if (skillName === "Fry Frenzy" && item.building === "Deli") {
+        timeMultiplier *= math1;
+      }
+    });
+    
+    return timeSeconds * timeMultiplier;
   };
 
   const parseTime = (timeStr) => {
@@ -338,6 +398,19 @@ const t = useTranslations(lang)
     }
     const [h, m, s] = tStr.split(":").map(Number)
     return days * 86400 + h * 3600 + m * 60 + (s || 0)
+  }
+
+  const formatSeconds = (totalSeconds) => {
+    if (!totalSeconds) return "00:00:00";
+    let days = Math.floor(totalSeconds / 86400);
+    let remaining = totalSeconds % 86400;
+    let h = Math.floor(remaining / 3600);
+    remaining %= 3600;
+    let m = Math.floor(remaining / 60);
+    let s = Math.floor(remaining % 60);
+    
+    let timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    return days > 0 ? `${days}d ${timeStr}` : timeStr;
   }
 
   window.handleCategory = (category) => {
@@ -412,7 +485,25 @@ const t = useTranslations(lang)
         }
       }
     }
-    return { total, missing }
+    
+    // Skills Logic for Cost (Debuffs)
+    let costMultiplier = 1;
+    activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
+      const skill = sflSkills[skillName];
+      if (!skill) return;
+      
+      // Double Nom Debuff (2x ingredients)
+      if (skillName === "Double Nom" && skill.mathematics_2) {
+        costMultiplier *= skill.mathematics_2.calc_by_rank[`rank_${rank}`];
+      }
+      // Instant Gratification Debuff (2x ingredients)
+      if (skillName === "Instant Gratification") {
+        // Assume default x2 since rank logic is complex for this one
+        costMultiplier *= 2; 
+      }
+    });
+    
+    return { total: total * costMultiplier, missing, baseTotal: total }
   }
 
   window.renderTable = (searchTerm = "") => {
@@ -473,10 +564,13 @@ const t = useTranslations(lang)
 
     filtered.forEach((item) => {
       const costObj = calculateRecipeCost(item.ingredients)
-      const timeSeconds = parseTime(item.time)
+      const timeSeconds = getCalculatedTime(item)
       const finalXp = getCalculatedXp(item);
       const xpPerSfl = costObj.total > 0 ? finalXp / costObj.total : 0
       const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * finalXp : 0
+
+      // Format visual time
+      const displayTime = formatSeconds(timeSeconds);
 
       const row = document.createElement("div")
       row.className =
@@ -506,7 +600,7 @@ const t = useTranslations(lang)
             </div>
             <div class="flex flex-col">
               <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</span>
-              <span class="text-[11px] text-terminal-muted mt-0.5">${tTime} ${item.time}</span>
+              <span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">${tTime} ${displayTime}</span>
               ${
                 item.instant
                   ? `
@@ -529,8 +623,9 @@ const t = useTranslations(lang)
 
         <!-- SFL Cost Column -->
         <div class="mt-2 lg:mt-0 lg:px-4 flex flex-col">
-          <span class="text-white text-sm">${costObj.total > 0 ? formatNumber(costObj.total, 2) : "0"}</span>
+          <span class="text-white text-sm ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, 2) : "0"}</span>
           ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70" title="Missing some P2P prices">*Incomplete</span>` : ""}
+          ${costObj.total > costObj.baseTotal ? `<span class="text-[9px] text-red-500/70" title="Base: ${formatNumber(costObj.baseTotal, 2)}">Debuff x${costObj.total/costObj.baseTotal}</span>` : ""}
         </div>
         
         <!-- XP / SFL Column -->
@@ -600,6 +695,35 @@ const t = useTranslations(lang)
     });
   });
 
+  const formatSkillDescription = (skillName, rank, originalDesc) => {
+    const skill = sflSkills[skillName];
+    if (!skill) return originalDesc;
+    
+    // When rank is 0, we still want to show the rank_1 values instead of {math} templates
+    const effectiveRank = rank === 0 ? 1 : rank;
+    let updatedDesc = originalDesc;
+    
+    if (skill.mathematics_1 && skill.mathematics_1.calc_by_rank) {
+      const m1 = skill.mathematics_1.calc_by_rank[`rank_${effectiveRank}`];
+      if (m1 !== undefined) {
+         updatedDesc = updatedDesc.replace('{math1}', m1);
+         updatedDesc = updatedDesc.replace('{math1_pct}', parseFloat((m1 * 100).toFixed(2)));
+         updatedDesc = updatedDesc.replace('{math1_days}', parseFloat((m1 / 86400000).toFixed(2)));
+      }
+    }
+    
+    if (skill.mathematics_2 && skill.mathematics_2.calc_by_rank) {
+      const m2 = skill.mathematics_2.calc_by_rank[`rank_${effectiveRank}`];
+      if (m2 !== undefined) {
+         updatedDesc = updatedDesc.replace('{math2}', m2);
+         updatedDesc = updatedDesc.replace('{math2_pct}', parseFloat((m2 * 100).toFixed(2)));
+         updatedDesc = updatedDesc.replace('{math2_days}', parseFloat((m2 / 86400000).toFixed(2)));
+      }
+    }
+    
+    return updatedDesc;
+  };
+
   const updateSkillUI = (skillId) => {
     const rank = activeSkills[skillId] || 0;
     const safeId = skillId.replace(/\s+/g, '_');
@@ -613,6 +737,11 @@ const t = useTranslations(lang)
       } else {
         card.classList.remove("border-blue-500/50", "bg-blue-500/10", "active");
         card.classList.add("border-white/5", "bg-white/5");
+      }
+      
+      const descSpan = card.querySelector('.skill-description-text');
+      if (descSpan) {
+        descSpan.textContent = formatSkillDescription(skillId, rank, descSpan.dataset.original);
       }
     }
     
