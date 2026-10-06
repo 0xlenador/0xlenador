@@ -13,10 +13,12 @@ const sflRecipesEntry = await getEntry("sfl", "recipes")
 const sflIdsEntry = await getEntry("sfl", "resources")
 const sflPowerUpsEntry = await getEntry("sfl", "calculo_powerups")
 const sflPowerUpsDataEntry = await getEntry("sfl", "powerups")
+const sflSkillsEntry = await getEntry("sfl", "skills")
 const sflRecipes = sflRecipesEntry.data
 const sflIds = sflIdsEntry.data
 const sflPowerUps = sflPowerUpsEntry.data
 const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
+const sflSkills = sflSkillsEntry.data.Cooking || {}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -34,33 +36,78 @@ const t = useTranslations(lang)
       </p>
     </div>
 
-    <!-- PowerUps (NFTs / Wearables) -->
+    <!-- Boosts (PowerUps & Skills) -->
     <div class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
       <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
-        <span class="text-emerald-500">✨</span> PowerUps & Boosts
+        <span class="text-emerald-500">✨</span> Boosts
       </h3>
-      <div class="flex flex-wrap gap-4">
-        {
-          Object.entries(sflPowerUps).map(([id, powerup]) => {
-            const group = powerup.type + "s";
-            const imgFile = sflPowerUpsData[group]?.[id]?.image || `${powerup.name}.webp`;
-            const mainSrc = `/img/sunflowerland/powerups/${imgFile}`;
-            const fallbackSrc = `/img/sunflowerland/powerups/wearables/${imgFile}`;
-            const errorFallback = `/img/cripto/sunflowerland.webp`;
-            
-            return (
-            <label class="flex items-center gap-3 cursor-pointer group bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-xl p-2.5 transition-all">
-              <input type="checkbox" class="powerup-checkbox w-4 h-4 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-powerup-id={id} />
-              <img src={mainSrc} class="w-8 h-8 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={powerup.name} title={powerup.boost} />
-              <div class="flex flex-col">
-                <span class="text-xs font-semibold text-white group-hover:text-emerald-400 transition-colors">{powerup.name}</span>
-                <span class="text-[10px] text-terminal-muted max-w-[120px] leading-tight truncate" title={powerup.boost}>{powerup.boost}</span>
+      
+      <!-- PowerUps Sub-group -->
+      <details class="group mb-5" open>
+        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-emerald-400 transition-colors list-none">
+          <span class="mr-2 transform group-open:rotate-90 transition-transform text-emerald-500/50">▶</span> PowerUps
+        </summary>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+          {
+            Object.entries(sflPowerUps).map(([id, powerup]) => {
+              const group = powerup.type + "s";
+              const imgFile = sflPowerUpsData[group]?.[id]?.image || `${powerup.name}.webp`;
+              const mainSrc = `/img/sunflowerland/powerups/${imgFile}`;
+              const fallbackSrc = `/img/sunflowerland/powerups/wearables/${imgFile}`;
+              const errorFallback = `/img/cripto/sunflowerland.webp`;
+              
+              return (
+              <label class="flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
+                <input type="checkbox" class="powerup-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-powerup-id={id} />
+                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={powerup.name} title={powerup.boost} />
+                <div class="flex flex-col">
+                  <span class="text-[10px] font-bold text-white group-hover:text-emerald-400 transition-colors">{powerup.name}</span>
+                  <span class="text-[9px] text-terminal-muted leading-tight" title={powerup.boost}>{powerup.boost}</span>
+                </div>
+              </label>
+              );
+            })
+          }
+        </div>
+      </details>
+
+      <!-- Skills Sub-group -->
+      <details class="group" open>
+        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-blue-400 transition-colors list-none">
+          <span class="mr-2 transform group-open:rotate-90 transition-transform text-blue-500/50">▶</span> Skills
+        </summary>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+          {
+            Object.entries(sflSkills).map(([skillName, skillData]) => {
+              const mainSrc = skillData.image;
+              const fallbackSrc = `/img/cripto/sunflowerland.webp`;
+              
+              return (
+              <div class="skill-card flex flex-col bg-white/5 border border-white/5 hover:border-blue-500/30 hover:bg-blue-500/5 rounded-lg p-1.5 transition-all group cursor-pointer" data-skill-id={skillName}>
+                <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                  <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={skillData.description} />
+                  <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors">{skillName}</span>
+                    <span class="text-[9px] text-terminal-muted leading-tight" title={skillData.description}>{skillData.description}</span>
+                  </div>
+                </div>
+                
+                {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
+                  <div class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10" onclick="event.stopPropagation()">
+                    {Object.keys(skillData.cost_by_rank).map((rankKey, idx) => (
+                      <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+                        <input type="checkbox" value={idx + 1} class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500/50 rank-input-${skillName.replace(/\s+/g, '_')}`} data-skill-id={skillName} data-rank={idx + 1} />
+                        <span class="text-[8px] font-mono font-bold text-white/50">R{idx + 1}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
-            </label>
-            );
-          })
-        }
-      </div>
+              );
+            })
+          }
+        </div>
+      </details>
     </div>
 
     <!-- Controles y Filtros -->
@@ -210,6 +257,7 @@ const t = useTranslations(lang)
     sflRecipes,
     sflIds,
     sflPowerUps,
+    sflSkills,
     tEmpty: t("sfl.cooking.empty"),
     tError: t("sfl.cooking.error"),
     tTime: t("sfl.cooking.col.time"),
@@ -228,6 +276,7 @@ const t = useTranslations(lang)
   let currentCategory = "all"
   
   let activePowerUps = new Set()
+  let activeSkills = {} // Format: { "Skill Name": rank (1, 2 or 3) }
 
   const isTargetMatch = (item, target) => {
     if (target === "all") return true;
@@ -255,6 +304,21 @@ const t = useTranslations(lang)
              multipliers *= math.calc;
            } else if (math.mathematics_operation === "add") {
              additions += math.calc;
+           }
+         }
+      }
+    });
+    
+    activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
+      const skill = sflSkills[skillName];
+      if (skill && skill.mathematics_1) {
+         const math = skill.mathematics_1;
+         if (math.category === "cooking") {
+           // We'll apply it depending on the actual buff behavior later
+           // For now, simple multiplier hook:
+           if (math.mathematics_operation === "multiply") {
+             // For Double Nom, the calculation logic for XP vs Time vs Food varies.
+             // Currently this function only calculates XP, so we don't apply cooking time or yield debuffs here.
            }
          }
       }
@@ -532,6 +596,63 @@ const t = useTranslations(lang)
     cb.addEventListener("change", (e) => {
       if (e.target.checked) activePowerUps.add(e.target.dataset.powerupId);
       else activePowerUps.delete(e.target.dataset.powerupId);
+      renderTable(searchInput ? searchInput.value : "");
+    });
+  });
+
+  const updateSkillUI = (skillId) => {
+    const rank = activeSkills[skillId] || 0;
+    const safeId = skillId.replace(/\s+/g, '_');
+    
+    // Update card styling
+    const card = document.querySelector(`.skill-card[data-skill-id="${skillId}"]`);
+    if (card) {
+      if (rank > 0) {
+        card.classList.add("border-blue-500/50", "bg-blue-500/10", "active");
+        card.classList.remove("border-white/5", "bg-white/5");
+      } else {
+        card.classList.remove("border-blue-500/50", "bg-blue-500/10", "active");
+        card.classList.add("border-white/5", "bg-white/5");
+      }
+    }
+    
+    // Update checkboxes progressively
+    document.querySelectorAll(`.rank-input-${safeId}`).forEach((cb) => {
+      const cbRank = parseInt(cb.dataset.rank);
+      cb.checked = cbRank <= rank;
+    });
+  };
+
+  document.querySelectorAll(".skill-card").forEach((card) => {
+    card.addEventListener("click", (e) => {
+      const skillId = card.dataset.skillId;
+      if (activeSkills[skillId]) {
+        delete activeSkills[skillId]; // Turn off
+      } else {
+        activeSkills[skillId] = 1; // Turn on to rank 1
+      }
+      updateSkillUI(skillId);
+      renderTable(searchInput ? searchInput.value : "");
+    });
+  });
+
+  document.querySelectorAll(".skill-rank-checkbox").forEach((cb) => {
+    cb.addEventListener("change", (e) => {
+      const skillId = e.target.dataset.skillId;
+      const rank = parseInt(e.target.value);
+      
+      if (e.target.checked) {
+        // Turning ON a rank => set skill to that rank
+        activeSkills[skillId] = rank;
+      } else {
+        // Turning OFF a rank => set skill to rank-1 (or delete if 0)
+        if (rank - 1 > 0) {
+          activeSkills[skillId] = rank - 1;
+        } else {
+          delete activeSkills[skillId];
+        }
+      }
+      updateSkillUI(skillId);
       renderTable(searchInput ? searchInput.value : "");
     });
   });
