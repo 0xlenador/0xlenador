@@ -16,14 +16,16 @@ const sflPowerUpsDataEntry = await getEntry("sfl", "powerups")
 const sflSkillsEntry = await getEntry("sfl", "skills")
 const sflRecipes = sflRecipesEntry.data
 const sflIds = sflIdsEntry.data
-const sflBuffs = sflBuffsEntry.data
+const sflBuffsRaw = sflBuffsEntry.data
+const sflBuffs = sflBuffsRaw.powerups || sflBuffsRaw;
+const sflShrines = sflBuffsRaw.shrines || {};
 const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
 const sflSkills = { ...(sflSkillsEntry.data.Cooking || {}) }
 if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
   sflSkills["Fishy Feast"] = sflSkillsEntry.data.Fishing["Fishy Feast"]
 }
-const sflOthers = sflSkillsEntry.data.Others || {}
-const sflConsumables = sflSkillsEntry.data.Consumables || {}
+const sflOthers = sflBuffsRaw.others || {}
+const sflConsumables = sflBuffsRaw.consumables || {}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -249,6 +251,25 @@ const formatAstroDescription = (skill) => {
                 );
               })
             }
+              {
+                Object.entries(sflShrines).map(([id, buff]) => {
+                  const mainSrc = '/img/sunflowerland/shrines/' + buff.image;
+                  const fallbackSrc = '/img/cripto/sunflowerland.webp';
+                  return (
+                  <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
+                    <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50" data-buff-id={id} />
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={buff.boost} />
+                    <div class="flex flex-col normal-view">
+                      <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 group-hover:text-orange-400 transition-colors">{buff.name}</span>
+                      <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
+                    </div>
+                    <div class="hidden compact-view w-full mr-2">
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors" title={buff.boost}>{getCompactText(buff, buff.boost, 'shrine')}</span>
+                    </div>
+                  </label>
+                  );
+                })
+              }
           </div>
         </details>
 
@@ -473,7 +494,7 @@ const formatAstroDescription = (skill) => {
   define:vars={{
     sflRecipes,
     sflIds,
-    sflBuffs,
+      sflBuffs: { ...sflBuffs, ...sflShrines },
     sflSkills,
       sflOthers,
       sflConsumables,
@@ -602,6 +623,17 @@ const formatAstroDescription = (skill) => {
         timeMultiplier *= math1;
       }
     });
+      activeBuffs.forEach(id => {
+        const buff = sflBuffs[id];
+        if (buff && buff.mathematics_1) {
+           const math = buff.mathematics_1;
+           if (math.category === "cooking_time" && isTargetMatch(item, math.target_food)) {
+             if (math.mathematics_operation === "multiply") {
+               timeMultiplier *= math.calc;
+             }
+           }
+        }
+      });
     
     return timeSeconds * timeMultiplier;
   };
@@ -1064,3 +1096,6 @@ const formatAstroDescription = (skill) => {
   // Init
   fetchPrices()
 </script>
+
+
+
