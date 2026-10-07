@@ -91,14 +91,25 @@ const formatAstroDescription = (skill) => {
 
 <SflToolLayout activeTab="cocinando">
 
-    <div class="mb-4 relative z-10 text-center sm:text-left">
-      <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
-        {t("sfl.cooking.heading")}
-        <span class="text-emerald-500"> {t("sfl.cooking.heading.accent")}</span>
-      </h1>
-      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        {t("sfl.cooking.intro")}
-      </p>
+    <div class="mb-4 relative z-10 flex flex-col sm:flex-row justify-between items-start gap-4">
+      <div class="text-center sm:text-left">
+        <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
+          {t("sfl.cooking.heading")}
+          <span class="text-emerald-500"> {t("sfl.cooking.heading.accent")}</span>
+        </h1>
+        <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
+          {t("sfl.cooking.intro")}
+        </p>
+      </div>
+
+      <!-- Card for Fishing Rod -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-3 shrink-0 mx-auto sm:mx-0 shadow-lg backdrop-blur-sm group hover:bg-white/10 transition-colors">
+        <img src="/img/sunflowerland/123/rod.webp" class="w-10 h-10 object-contain drop-shadow-md group-hover:scale-110 transition-transform" alt="Fishing Rod" />
+        <div class="flex flex-col">
+          <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider">Rod Cost</span>
+          <span class="text-emerald-400 font-mono font-bold text-sm" id="fishingRodCostDisplay">...</span>
+        </div>
+      </div>
     </div>
 
     <!-- Boosts (PowerUps & Skills) -->
@@ -536,6 +547,48 @@ const formatAstroDescription = (skill) => {
     tInstant: t("sfl.cooking.col.instant"),
   }}
 >
+  window.handleImgError = function(img, originalName) {
+    const nameStr = originalName || "";
+    const nameSafe = nameStr.replace(/\s+/g, '_').toLowerCase();
+    
+    if (!img.dataset.attempts) {
+      img.dataset.attempts = "0";
+    }
+    
+    const paths = [
+      `/img/sunflowerland/food/${nameStr}.png`,
+      `/img/sunflowerland/${nameStr}.png`,
+      `/img/sunflowerland/${nameStr}.webp`,
+      `/img/sunflowerland/food/${nameSafe}.png`,
+      `/img/sunflowerland/${nameSafe}.png`,
+      `/img/sunflowerland/${nameSafe}.webp`,
+      `/img/sunflowerland/123/${nameStr}.png`,
+      `/img/sunflowerland/123/${nameStr}.webp`,
+      `/img/sunflowerland/123/${nameSafe}.png`,
+      `/img/sunflowerland/123/${nameSafe}.webp`,
+      `/img/sunflowerland/fish/specials/${nameStr}.png`,
+      `/img/sunflowerland/fish/specials/${nameStr}.webp`,
+      `/img/sunflowerland/fish/specials/${nameSafe}.png`,
+      `/img/sunflowerland/fish/specials/${nameSafe}.webp`,
+      `/img/sunflowerland/fish/${nameStr}.png`,
+      `/img/sunflowerland/fish/${nameStr}.webp`,
+      `/img/sunflowerland/fish/${nameSafe}.png`,
+      `/img/sunflowerland/fish/${nameSafe}.webp`,
+      `/img/cripto/sunflowerland.webp`
+    ];
+    
+    let attempt = parseInt(img.dataset.attempts);
+    attempt++;
+    
+    if (attempt < paths.length) {
+      img.dataset.attempts = attempt.toString();
+      img.src = paths[attempt];
+    } else {
+      img.onerror = null;
+      img.src = `/img/cripto/sunflowerland.webp`;
+    }
+  };
+
   const searchInput = document.getElementById("searchInput")
   const loadingState = document.getElementById("loadingState")
   const dataContainer = document.getElementById("dataContainer")
@@ -569,10 +622,26 @@ const formatAstroDescription = (skill) => {
     
     const searchInput = document.getElementById("searchInput");
     renderTable(searchInput ? searchInput.value : "");
+    if (typeof saveState === "function") saveState();
   };
   
   let activeBuffs = new Set()
   let activeSkills = {} // Format: { "Skill Name": rank (1, 2 or 3) }
+
+  const CACHE_KEY = "sfl_cooking_state";
+  const saveState = () => {
+    const state = {
+      activeBuffs: Array.from(activeBuffs),
+      activeSkills: activeSkills,
+      currentHideXpLimit: window.currentHideXpLimit,
+      currentCategory: currentCategory,
+      boostFilter: document.querySelector('.filter-boost-btn.active')?.dataset?.filter || 'all',
+      viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'compact',
+      accordionState: document.querySelector('.accordion-switch-btn.active')?.dataset?.action || 'expand'
+    };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(state));
+  };
+
 
   const isTargetMatch = (item, target) => {
     if (target === "all") return true;
@@ -734,6 +803,7 @@ const formatAstroDescription = (skill) => {
     })
 
     renderTable(searchInput ? searchInput.value : "")
+    if (typeof saveState === "function") saveState();
   }
 
   window.handleSort = (column) => {
@@ -776,9 +846,34 @@ const formatAstroDescription = (skill) => {
   const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true) => {
     let total = 0
     let missing = false
+    
+    const fishNames = [
+      "Anchovy", "Angelfish", "Barred Knifejaw", "Blowfish", "Blue Marlin", "Butterflyfish", 
+      "Clownfish", "Cobia", "Coelacanth", "Football fish", "Halibut", "Hammerhead shark", 
+      "Horse Mackerel", "Mahi Mahi", "Napoleanfish", "Oarfish", "Olive Flounder", "Parrotfish", 
+      "Phantom Barracuda", "Porgy", "Ray", "Red Snapper", "Rock Blackfish", "Saw Shark", 
+      "Sea Bass", "Sea Horse", "Squid", "Sunfish", "Surgeonfish", "Tilapia", "Trout", 
+      "Tuna", "Walleye", "Weakfish", "Whale Shark", "White Shark", "Zebra Turkeyfish",
+      "Crystal Shrimp", "Deep Sea Pig", "Deep Sea Slug", "Dollocaris", "Garden Eel", 
+      "Giant Isopod", "Gilded Swordfish", "Longhorn Cowfish", "Nautilus", "Twilight Anglerfish",
+      "Octopus", "Moray Eel"
+    ];
+
     for (const ing of ingredients) {
       if (priceDict[ing.name]) {
         total += priceDict[ing.name] * ing.amount
+      } else if (fishNames.includes(ing.name) && window.sflRodCost) {
+        total += window.sflRodCost * ing.amount;
+      } else if (ing.name === "Fish Flake" && window.sflRodCost) {
+        total += (8 * window.sflRodCost) * ing.amount;
+      } else if (ing.name === "Fish Stick" && window.sflRodCost) {
+        total += (10 * window.sflRodCost) * ing.amount;
+      } else if (ing.name === "Fish Oil" && window.sflRodCost) {
+        total += (14 * window.sflRodCost) * ing.amount;
+      } else if (ing.name === "Crab Stick") {
+        total += 6 * ing.amount;
+      } else if (ing.name === "Magic Mushroom" || ing.name === "Wild Mushroom") {
+        total += 0;
       } else {
         // Buscar si el ingrediente es en realidad otra receta
         const subRecipe = recipesData.find((r) => r.name === ing.name)
@@ -901,11 +996,11 @@ const formatAstroDescription = (skill) => {
         .map((ing) => {
           const isFood = recipesData.some((r) => r.name === ing.name)
           const basePath = isFood ? "/img/sunflowerland/food" : "/img/sunflowerland"
-          const fallbackPath = isFood ? "/img/sunflowerland" : "/img/sunflowerland/food"
+          const safeName = ing.name.replace(/'/g, "\\'");
 
           return `
           <div class="flex items-center gap-2">
-            <img src="${basePath}/${ing.name}.png" class="w-4 h-4 object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='${fallbackPath}/${ing.name}.png'; this.onerror=function(){this.src='/img/cripto/sunflowerland.webp'};" />
+            <img src="${basePath}/${ing.name}.png" class="w-4 h-4 object-contain drop-shadow-sm" onerror="window.handleImgError(this, '${safeName}')" />
             <span class="text-xs text-white/80">${ing.name} (${ing.amount * doubleNomMultiplier})</span>
           </div>
         `
@@ -917,7 +1012,7 @@ const formatAstroDescription = (skill) => {
         <div class="lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="w-10 h-10 lg:w-8 lg:h-8 flex items-center justify-center shrink-0">
-              <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
+              <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="window.handleImgError(this, '${item.name.replace(/'/g, "\\'")}')" />
             </div>
             <div class="flex flex-col">
               <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${displayName}</span>
@@ -997,6 +1092,18 @@ const formatAstroDescription = (skill) => {
         }
       })
 
+      // Calcular costo dinámico de la caña de pescar (1 Stone + 3 Wood + 20 Coins)
+      const stonePrice = priceDict["Stone"] || 0;
+      const woodPrice = priceDict["Wood"] || 0;
+      const coinsCostInFlower = 20 / 1330; // Aproximación SFL per Coin en Market
+      const rodCost = (1 * stonePrice) + (3 * woodPrice) + coinsCostInFlower;
+      window.sflRodCost = rodCost;
+      
+      const rodDisplay = document.getElementById("fishingRodCostDisplay");
+      if (rodDisplay) {
+        rodDisplay.innerText = formatNumber(rodCost, 4) + " SFL";
+      }
+
       loadingState.classList.add("hidden")
       dataContainer.classList.remove("hidden")
 
@@ -1034,6 +1141,7 @@ const formatAstroDescription = (skill) => {
       
       const searchInput = document.getElementById("searchInput");
       renderTable(searchInput ? searchInput.value : "");
+      if (typeof saveState === "function") saveState();
     });
   }
 
@@ -1055,6 +1163,7 @@ const formatAstroDescription = (skill) => {
         }
       }
       renderTable(searchInput ? searchInput.value : "");
+      if (typeof saveState === "function") saveState();
     });
   });
 
@@ -1144,6 +1253,7 @@ const formatAstroDescription = (skill) => {
       }
       updateSkillUI(skillId);
       renderTable(searchInput ? searchInput.value : "");
+      if (typeof saveState === "function") saveState();
     });
   });
 
@@ -1167,6 +1277,7 @@ const formatAstroDescription = (skill) => {
       }
       updateSkillUI(skillId);
       renderTable(searchInput ? searchInput.value : "");
+      if (typeof saveState === "function") saveState();
     });
   });
 
@@ -1189,6 +1300,7 @@ const formatAstroDescription = (skill) => {
     document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active'));
     const btn = document.querySelector('.accordion-switch-btn[data-action="' + state + '"]');
     if (btn) btn.classList.add('active');
+    if (typeof saveState === "function") saveState();
   };
 
   window.setViewStyle = function(style) {
@@ -1201,6 +1313,7 @@ const formatAstroDescription = (skill) => {
     if (btn) btn.classList.add('active');
     
     window.setAccordionState('expand');
+    if (typeof saveState === "function") saveState();
   };
 
   window.toggleBoostFilter = function(filter) {
@@ -1215,9 +1328,70 @@ const formatAstroDescription = (skill) => {
     document.querySelector('.filter-boost-btn[data-filter="' + filter + '"]').classList.add("active");
     
     window.setAccordionState('expand');
+    if (typeof saveState === "function") saveState();
   };
 
+  const loadState = () => {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      try {
+        const state = JSON.parse(cached);
+        if (state.activeBuffs) {
+          state.activeBuffs.forEach(buffId => {
+            activeBuffs.add(buffId);
+            const cb = document.querySelector(`.buff-checkbox[data-buff-id="${buffId}"]`);
+            if (cb) {
+              cb.checked = true;
+              const card = cb.closest('label');
+              if (card) {
+                card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active");
+                card.classList.remove("border-white/5", "bg-white/5");
+              }
+            }
+          });
+        }
+        if (state.activeSkills) {
+          activeSkills = state.activeSkills;
+          Object.keys(activeSkills).forEach(skillId => updateSkillUI(skillId));
+        }
+        if (state.currentCategory) {
+          window.handleCategory(state.currentCategory);
+        }
+        if (state.currentHideXpLimit) {
+          window.setHideXpLimit(state.currentHideXpLimit);
+        }
+        
+        if (state.boostFilter) {
+          const container = document.getElementById("boosts-container");
+          document.querySelectorAll(".filter-boost-btn").forEach(btn => btn.classList.remove("active"));
+          if (state.boostFilter === 'all') container.removeAttribute("data-filter");
+          else container.setAttribute("data-filter", state.boostFilter);
+          const fBtn = document.querySelector(`.filter-boost-btn[data-filter="${state.boostFilter}"]`);
+          if (fBtn) fBtn.classList.add("active");
+        }
+        if (state.viewStyle) {
+          const container = document.getElementById('boosts-container');
+          if (state.viewStyle === 'compact') container.classList.add('is-compact');
+          else container.classList.remove('is-compact');
+          document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active'));
+          const vBtn = document.querySelector(`.view-switch-btn[data-action="${state.viewStyle}"]`);
+          if (vBtn) vBtn.classList.add('active');
+        }
+        if (state.accordionState) {
+          const isExpand = state.accordionState === 'expand';
+          document.querySelectorAll('#boosts-container details').forEach(d => d.open = isExpand);
+          document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active'));
+          const aBtn = document.querySelector(`.accordion-switch-btn[data-action="${state.accordionState}"]`);
+          if (aBtn) aBtn.classList.add('active');
+        }
+      } catch (e) {
+        console.error("Failed to parse cached state", e);
+      }
+    }
+  };
+  
   // Init
+  loadState();
   fetchPrices()
 </script>
 
