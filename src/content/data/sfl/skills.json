@@ -4596,5 +4596,94 @@
                 }
             }
         }
+    },
+    "Others": {
+        "VIP Pass": {
+            "id": 9001,
+            "name": "VIP Pass",
+            "description": "+10% Bumpkin XP",
+            "image": "/img/sunflowerland/123/vip.webp",
+            "mathematics_1": {
+                "category": "bumpkin_xp",
+                "target": "all",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.1
+                }
+            }
+        },
+        "Blossom Beard": {
+            "id": 9002,
+            "name": "Blossom Beard",
+            "description": "+10% Bumpkin XP",
+            "image": "/img/sunflowerland/aoe/blossom_beard.webp",
+            "mathematics_1": {
+                "category": "bumpkin_xp",
+                "target": "all",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.1
+                }
+            }
+        },
+        "Desert Gnome": {
+            "id": 9003,
+            "name": "Desert Gnome",
+            "description": "-10% Cooking Time",
+            "image": "/img/sunflowerland/123/desert_gnome.webp",
+            "mathematics_1": {
+                "category": "cooking_time",
+                "target": "all",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.9
+                }
+            }
+        },
+        "Luminous Anglerfish": {
+            "id": 9004,
+            "name": "Luminous Anglerfish",
+            "description": "+50% Bumpkin XP from Fish",
+            "image": "/img/sunflowerland/123/luminous_anglerfish.webp",
+            "mathematics_1": {
+                "category": "bumpkin_xp",
+                "target": "Fish",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.5
+                }
+            }
+        },
+        "Faction Pet": {
+            "id": 9005,
+            "name": "Faction Pet",
+            "description": "Bonus XP based on week",
+            "image": "/img/sunflowerland/123/bumpkins_pet_happy.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0
+                },
+                "rank_2": {
+                    "shards": 0
+                },
+                "rank_3": {
+                    "shards": 0
+                },
+                "rank_4": {
+                    "shards": 0
+                }
+            },
+            "mathematics_1": {
+                "category": "bumpkin_xp",
+                "target": "all",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.1,
+                    "rank_2": 0.2,
+                    "rank_3": 0.3,
+                    "rank_4": 0.5
+                }
+            }
+        }
     }
 }
