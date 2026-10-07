@@ -67,6 +67,14 @@ const getCompactText = (data, formattedDesc, typeName) => {
   return `${value}${effectType} [${target}] ${data.name}`;
 }
 
+const getEffectType = (desc) => {
+  if (!desc) return "other";
+  const descLower = desc.toLowerCase();
+  if (descLower.includes("xp")) return "xp";
+  if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) return "time";
+  return "other";
+};
+
 const formatAstroDescription = (skill) => {
   let desc = skill.description || "";
   if (skill.mathematics_1?.calc_by_rank?.rank_1 !== undefined) {
@@ -97,9 +105,21 @@ const formatAstroDescription = (skill) => {
     <div id="boosts-container" class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
       <h3 class="flex items-center justify-between text-sm font-bold text-white mb-4 uppercase tracking-wider">
         <span class="flex items-center gap-2"><span class="text-emerald-500">✨</span> Boosts</span>
-        <button id="toggle-compact-btn" class="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-mono text-white/70 transition-colors" onclick="document.getElementById('boosts-container').classList.toggle('is-compact')">
-          Compact View
-        </button>
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10">
+            <button class="filter-boost-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="all" onclick="toggleBoostFilter('all')">All</button>
+            <button class="filter-boost-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="xp" onclick="toggleBoostFilter('xp')">XP</button>
+            <button class="filter-boost-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="time" onclick="toggleBoostFilter('time')">Time</button>
+          </div>
+          <div class="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10">
+            <button class="accordion-switch-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.querySelectorAll('#boosts-container details').forEach(d => d.open = true); document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Expand</button>
+            <button class="accordion-switch-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.querySelectorAll('#boosts-container details').forEach(d => d.open = false); document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Collapse</button>
+          </div>
+          <div class="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10">
+            <button class="view-switch-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.getElementById('boosts-container').classList.remove('is-compact'); document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Detailed</button>
+            <button class="view-switch-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.getElementById('boosts-container').classList.add('is-compact'); document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Compact</button>
+          </div>
+        </div>
       </h3>
       
       <!-- PowerUps Sub-group -->
@@ -117,7 +137,7 @@ const formatAstroDescription = (skill) => {
               const errorFallback = `/img/cripto/sunflowerland.webp`;
               
               return (
-              <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
+              <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
                 <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
                 <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={buff.name} title={buff.boost} />
                 <div class="flex flex-col normal-view">
@@ -148,7 +168,7 @@ const formatAstroDescription = (skill) => {
               
               return (
 
-              <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
+              <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                 <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                   <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
                   <div class="flex flex-col normal-view">
@@ -189,7 +209,7 @@ const formatAstroDescription = (skill) => {
                 const formattedDesc = formatAstroDescription(skillData);
                 
                 return (
-                <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
+                <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                   <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                     <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
                     <div class="flex flex-col normal-view">
@@ -236,7 +256,7 @@ const formatAstroDescription = (skill) => {
                 const formattedDesc = formatAstroDescription(skillData);
                 
                 return (
-                <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
+                <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                   <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                     <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
                     <div class="flex flex-col normal-view">
@@ -256,7 +276,7 @@ const formatAstroDescription = (skill) => {
                   const mainSrc = '/img/sunflowerland/shrines/' + buff.image;
                   const fallbackSrc = '/img/cripto/sunflowerland.webp';
                   return (
-                  <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
+                  <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
                     <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50" data-buff-id={id} />
                     <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={buff.boost} />
                     <div class="flex flex-col normal-view">
@@ -1093,9 +1113,36 @@ const formatAstroDescription = (skill) => {
     })
   }
 
+
+  window.toggleBoostFilter = function(filter) {
+    const container = document.getElementById("boosts-container");
+    document.querySelectorAll(".filter-boost-btn").forEach(btn => btn.classList.remove("active"));
+    
+    if (filter === 'all') {
+      container.removeAttribute("data-filter");
+    } else {
+      container.setAttribute("data-filter", filter);
+    }
+    document.querySelector('.filter-boost-btn[data-filter="' + filter + '"]').classList.add("active");
+  };
+
   // Init
   fetchPrices()
 </script>
 
 
+
+
+
+<style>
+  .filter-boost-btn.active, .accordion-switch-btn.active, .view-switch-btn.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .filter-boost-btn.active[data-filter="xp"] { background-color: rgba(16, 185, 129, 0.2); color: rgb(52, 211, 153); }
+  .filter-boost-btn.active[data-filter="time"] { background-color: rgba(59, 130, 246, 0.2); color: rgb(96, 165, 250); }
+  
+  #boosts-container[data-filter="xp"] .buff-card:not([data-effect*="xp"]), #boosts-container[data-filter="xp"] .skill-card:not([data-effect*="xp"]) { display: none !important; }
+  #boosts-container[data-filter="time"] .buff-card:not([data-effect*="time"]), #boosts-container[data-filter="time"] .skill-card:not([data-effect*="time"]) { display: none !important; }
+</style>
 
