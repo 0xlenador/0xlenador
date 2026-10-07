@@ -11,17 +11,18 @@ import SflToolLayout from "../SflToolLayout.astro"
 
 const sflRecipesEntry = await getEntry("sfl", "recipes")
 const sflIdsEntry = await getEntry("sfl", "resources")
-const sflPowerUpsEntry = await getEntry("sfl", "calculo_powerups")
+const sflBuffsEntry = await getEntry("sfl", "calculo_buffs")
 const sflPowerUpsDataEntry = await getEntry("sfl", "powerups")
 const sflSkillsEntry = await getEntry("sfl", "skills")
 const sflRecipes = sflRecipesEntry.data
 const sflIds = sflIdsEntry.data
-const sflPowerUps = sflPowerUpsEntry.data
+const sflBuffs = sflBuffsEntry.data
 const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
 const sflSkills = { ...(sflSkillsEntry.data.Cooking || {}) }
 if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
   sflSkills["Fishy Feast"] = sflSkillsEntry.data.Fishing["Fishy Feast"]
 }
+const sflOthers = sflSkillsEntry.data.Others || {}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -65,20 +66,20 @@ const formatAstroDescription = (skill) => {
         </summary>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
           {
-            Object.entries(sflPowerUps).map(([id, powerup]) => {
-              const group = powerup.type + "s";
-              const imgFile = sflPowerUpsData[group]?.[id]?.image || `${powerup.name}.webp`;
+            Object.entries(sflBuffs).map(([id, buff]) => {
+              const group = buff.type + "s";
+              const imgFile = sflPowerUpsData[group]?.[id]?.image || `${buff.name}.webp`;
               const mainSrc = `/img/sunflowerland/powerups/${imgFile}`;
               const fallbackSrc = `/img/sunflowerland/powerups/wearables/${imgFile}`;
               const errorFallback = `/img/cripto/sunflowerland.webp`;
               
               return (
               <label class="flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
-                <input type="checkbox" class="powerup-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-powerup-id={id} />
-                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={powerup.name} title={powerup.boost} />
+                <input type="checkbox" class="buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
+                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={buff.name} title={buff.boost} />
                 <div class="flex flex-col">
-                  <span class="text-[10px] font-bold text-white group-hover:text-emerald-400 transition-colors">{powerup.name}</span>
-                  <span class="text-[9px] text-terminal-muted leading-tight" title={powerup.boost}>{powerup.boost}</span>
+                  <span class="text-[10px] font-bold text-white group-hover:text-emerald-400 transition-colors">{buff.name}</span>
+                  <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
                 </div>
               </label>
               );
@@ -126,6 +127,51 @@ const formatAstroDescription = (skill) => {
           }
         </div>
       </details>
+
+        <details open class="group mb-2">
+          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-purple-400 transition-colors list-none">
+            <span class="mr-2 transform group-open:rotate-90 transition-transform text-purple-500/50">▶</span> Others
+          </summary>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+            {
+              Object.entries(sflOthers).map(([skillName, skillData]) => {
+                const mainSrc = skillData.image;
+                const fallbackSrc = `/img/cripto/sunflowerland.webp`;
+                const formattedDesc = formatAstroDescription(skillData);
+                
+                return (
+                <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
+                  <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 transition-colors">{skillName}</span>
+                      <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
+                    </div>
+                  </div>
+                  
+                  {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
+                    <div class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10" onclick="event.stopPropagation()">
+                      {Object.keys(skillData.cost_by_rank).map((rankKey, idx) => {
+                        const isFaction = skillName === "Faction Pet";
+                        const labels = ["10%", "20%", "30%", "50%"];
+                        const labelText = isFaction ? labels[idx] : `R${idx + 1}`;
+                        
+                        return (
+                        <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+                          <input type="checkbox" value={idx + 1} class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-purple-500 bg-white/5 border-white/20 focus:ring-purple-500/50 rank-input-${skillName.replace(/\s+/g, '_')}`} data-skill-id={skillName} data-rank={idx + 1} />
+                          <span class="text-[8px] font-mono font-bold text-white/50">{labelText}</span>
+                        </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                );
+              })
+            }
+          </div>
+        </details>
+
     </div>
 
     <!-- Controles y Filtros -->
@@ -274,8 +320,9 @@ const formatAstroDescription = (skill) => {
   define:vars={{
     sflRecipes,
     sflIds,
-    sflPowerUps,
+    sflBuffs,
     sflSkills,
+      sflOthers,
     tEmpty: t("sfl.cooking.empty"),
     tError: t("sfl.cooking.error"),
     tTime: t("sfl.cooking.col.time"),
@@ -293,7 +340,7 @@ const formatAstroDescription = (skill) => {
   window.currentSort = { column: "xp", direction: "desc" }
   let currentCategory = "all"
   
-  let activePowerUps = new Set()
+  let activeBuffs = new Set()
   let activeSkills = {} // Format: { "Skill Name": rank (1, 2 or 3) }
 
   const isTargetMatch = (item, target) => {
@@ -302,8 +349,8 @@ const formatAstroDescription = (skill) => {
     if (target === "Fermented Carrots") return item.name === "Fermented Carrots";
     if (target === "Cheese Recipes") return item.name.includes("Cheese") || item.ingredients.some(ing => ing.name.includes("Cheese"));
     if (target === "Fish") {
-      const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse', 'Crab Stick'];
-      return item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper"].includes(item.name);
+      const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse', 'Crab Stick', 'Fish Stick'];
+      return item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper", "Surimi Rice Bowl"].includes(item.name);
     }
     return false;
   };
@@ -313,10 +360,10 @@ const formatAstroDescription = (skill) => {
     let multipliers = 1;
     let additions = 0;
     
-    activePowerUps.forEach(id => {
-      const powerup = sflPowerUps[id];
-      if (powerup && powerup.mathematics_1) {
-         const math = powerup.mathematics_1;
+    activeBuffs.forEach(id => {
+      const buff = sflBuffs[id];
+      if (buff && buff.mathematics_1) {
+         const math = buff.mathematics_1;
          if (math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
            if (math.mathematics_operation === "multiply") {
              multipliers += (math.calc - 1); // convert 1.2 to +0.2
@@ -329,9 +376,15 @@ const formatAstroDescription = (skill) => {
     
     // Skills Logic for XP
     activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName];
+      const skill = sflSkills[skillName] || sflOthers[skillName];
       if (!skill) return;
       const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
+      
+      // Others XP Buffs
+      if (skillName === "VIP Pass") { multipliers += math1; }
+      if (skillName === "Blossom Beard") { multipliers += math1; }
+      if (skillName === "Luminous Anglerfish" && isTargetMatch(item, "Fish")) { multipliers += math1; }
+      if (skillName === "Faction Pet") { multipliers += math1; }
       
       // Munching Mastery (+5% XP)
       if (skillName === "Munching Mastery") {
@@ -365,9 +418,12 @@ const formatAstroDescription = (skill) => {
     let timeMultiplier = 1;
     
     activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName];
+      const skill = sflSkills[skillName] || sflOthers[skillName];
       if (!skill) return;
       const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
+      
+      // Others Time Buffs
+      if (skillName === "Desert Gnome") { timeMultiplier *= math1; }
       
       // Fast Feasts (Fire Pit and Kitchen)
       if (skillName === "Fast Feasts" && (item.building === "Fire Pit" || item.building === "Kitchen")) {
@@ -497,7 +553,7 @@ const formatAstroDescription = (skill) => {
     let costMultiplier = 1;
     if (isTopLevel) {
       activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-        const skill = sflSkills[skillName];
+        const skill = sflSkills[skillName] || sflOthers[skillName];
         if (!skill) return;
         
         // Double Nom Debuff (2x ingredients)
@@ -704,16 +760,16 @@ const formatAstroDescription = (skill) => {
   }
 
   // Listeners
-  document.querySelectorAll(".powerup-checkbox").forEach((cb) => {
+  document.querySelectorAll(".buff-checkbox").forEach((cb) => {
     cb.addEventListener("change", (e) => {
-      if (e.target.checked) activePowerUps.add(e.target.dataset.powerupId);
-      else activePowerUps.delete(e.target.dataset.powerupId);
+      if (e.target.checked) activeBuffs.add(e.target.dataset.buffId);
+      else activeBuffs.delete(e.target.dataset.buffId);
       renderTable(searchInput ? searchInput.value : "");
     });
   });
 
   const formatSkillDescription = (skillName, rank, originalDesc) => {
-    const skill = sflSkills[skillName];
+    const skill = sflSkills[skillName] || sflOthers[skillName];
     if (!skill) return originalDesc;
     
     // When rank is 0, we still want to show the rank_1 values instead of {math} templates
@@ -765,7 +821,7 @@ const formatAstroDescription = (skill) => {
     // Update checkboxes progressively
     document.querySelectorAll(`.rank-input-${safeId}`).forEach((cb) => {
       const cbRank = parseInt(cb.dataset.rank);
-      cb.checked = cbRank <= rank;
+      cb.checked = skillId === "Faction Pet" ? cbRank === rank : cbRank <= rank;
     });
   };
 
@@ -792,7 +848,9 @@ const formatAstroDescription = (skill) => {
         activeSkills[skillId] = rank;
       } else {
         // Turning OFF a rank => set skill to rank-1 (or delete if 0)
-        if (rank - 1 > 0) {
+        if (skillId === "Faction Pet") {
+          delete activeSkills[skillId];
+        } else if (rank - 1 > 0) {
           activeSkills[skillId] = rank - 1;
         } else {
           delete activeSkills[skillId];
