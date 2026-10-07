@@ -28,6 +28,43 @@ const sflConsumables = sflSkillsEntry.data.Consumables || {}
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
+
+const getCompactText = (data, formattedDesc, typeName) => {
+  let value = "?";
+  const match = formattedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i);
+  if (match) {
+    value = match[1].trim();
+    if (value.toLowerCase().endsWith('x')) {
+      value = 'x' + value.slice(0, -1);
+    }
+  }
+
+  let effectType = "";
+  const descLower = formattedDesc.toLowerCase();
+  if (descLower.includes("xp")) {
+    effectType = " XP";
+  } else if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) {
+    effectType = " Time";
+  } else if (descLower.includes("food") || descLower.includes("yield")) {
+    effectType = " Food";
+  }
+
+  let target = "All";
+  if (data.mathematics_1) {
+    if (data.mathematics_1.target_food && data.mathematics_1.target_food !== "all") {
+       target = data.mathematics_1.target_food;
+    } else if (data.mathematics_1.target && data.mathematics_1.target !== "all") {
+       target = data.mathematics_1.target;
+    }
+  }
+  if (data.building) {
+    target = data.building;
+  }
+  
+  target = target.charAt(0).toUpperCase() + target.slice(1);
+  return `${value}${effectType} [${target}] ${data.name}`;
+}
+
 const formatAstroDescription = (skill) => {
   let desc = skill.description || "";
   if (skill.mathematics_1?.calc_by_rank?.rank_1 !== undefined) {
@@ -55,9 +92,12 @@ const formatAstroDescription = (skill) => {
     </div>
 
     <!-- Boosts (PowerUps & Skills) -->
-    <div class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
-      <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
-        <span class="text-emerald-500">✨</span> Boosts
+    <div id="boosts-container" class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+      <h3 class="flex items-center justify-between text-sm font-bold text-white mb-4 uppercase tracking-wider">
+        <span class="flex items-center gap-2"><span class="text-emerald-500">✨</span> Boosts</span>
+        <button id="toggle-compact-btn" class="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-mono text-white/70 transition-colors" onclick="document.getElementById('boosts-container').classList.toggle('is-compact')">
+          Compact View
+        </button>
       </h3>
       
       <!-- PowerUps Sub-group -->
@@ -76,11 +116,14 @@ const formatAstroDescription = (skill) => {
               
               return (
               <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
-                <input type="checkbox" class="buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
+                <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
                 <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={buff.name} title={buff.boost} />
-                <div class="flex flex-col">
+                <div class="flex flex-col normal-view">
                   <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors">{buff.name}</span>
                   <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
+                </div>
+                <div class="hidden compact-view w-full">
+                  <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-emerald-400 transition-colors" title={buff.boost}>{getCompactText(buff, buff.boost, buff.type || 'buff')}</span>
                 </div>
               </label>
               );
@@ -106,9 +149,12 @@ const formatAstroDescription = (skill) => {
               <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                 <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                   <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
-                  <div class="flex flex-col">
+                  <div class="flex flex-col normal-view">
                     <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors">{skillName}</span>
                     <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
+                  </div>
+                  <div class="hidden compact-view w-full mr-2">
+                    <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors" title={formattedDesc}>{getCompactText(skillData, formattedDesc, 'skill')}</span>
                   </div>
                 </div>
                 
@@ -144,9 +190,12 @@ const formatAstroDescription = (skill) => {
                 <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                   <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                     <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
-                    <div class="flex flex-col">
+                    <div class="flex flex-col normal-view">
                       <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 transition-colors">{skillName}</span>
                       <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
+                    </div>
+                    <div class="hidden compact-view w-full mr-2">
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-purple-400 transition-colors" title={formattedDesc}>{getCompactText(skillData, formattedDesc, 'skill')}</span>
                     </div>
                   </div>
                   
@@ -188,9 +237,12 @@ const formatAstroDescription = (skill) => {
                 <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                   <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                     <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
-                    <div class="flex flex-col">
+                    <div class="flex flex-col normal-view">
                       <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 transition-colors">{skillName}</span>
                       <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
+                    </div>
+                    <div class="hidden compact-view w-full mr-2">
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors" title={formattedDesc}>{getCompactText(skillData, formattedDesc, 'consumable')}</span>
                     </div>
                   </div>
                 </div>
@@ -341,6 +393,79 @@ const formatAstroDescription = (skill) => {
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  
+  #boosts-container.is-compact .normal-view { display: none !important; }
+  #boosts-container.is-compact img { 
+    display: block !important; 
+    width: 14px !important; 
+    height: 14px !important; 
+    margin-right: 0 !important;
+  }
+  
+  #boosts-container.is-compact details {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    margin-bottom: 8px !important;
+  }
+  
+  #boosts-container.is-compact details summary {
+    margin-bottom: 0 !important;
+    margin-right: 12px !important;
+    padding-top: 6px !important;
+    white-space: nowrap !important;
+  }
+  
+  #boosts-container.is-compact details > div.grid {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    width: auto !important;
+    padding-left: 0 !important;
+  }
+  
+  #boosts-container.is-compact .grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  
+  #boosts-container.is-compact .skill-card,
+  #boosts-container.is-compact .buff-card {
+    padding: 4px 8px !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    min-height: 28px !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+  }
+  
+  #boosts-container.is-compact .skill-card > div:first-child {
+    margin-bottom: 0 !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+  
+  #boosts-container.is-compact .compact-view { 
+    display: flex !important;
+    width: auto !important; 
+    margin-right: 0 !important;
+  }
+  
+  #boosts-container.is-compact .compact-view span {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+  
+  #boosts-container.is-compact .skill-card .mt-auto {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+    margin-left: 8px !important;
   }
 </style>
 
@@ -857,8 +982,27 @@ const formatAstroDescription = (skill) => {
       }
       
       const descSpan = card.querySelector('.skill-description-text');
+      let updatedDesc = "";
       if (descSpan) {
-        descSpan.textContent = formatSkillDescription(skillId, rank, descSpan.dataset.original);
+        updatedDesc = formatSkillDescription(skillId, rank, descSpan.dataset.original);
+        descSpan.textContent = updatedDesc;
+      }
+      
+      const compactSpan = card.querySelector('.compact-view span');
+      if (compactSpan) {
+        if (skillId === "Faction Pet") {
+          const labels = ["10%", "20%", "30%", "50%"];
+          const displayVal = rank > 0 ? "+" + labels[rank - 1] : "?";
+          compactSpan.textContent = compactSpan.textContent.replace(/^[^\s]+/, displayVal);
+        } else if (descSpan) {
+          const descToParse = rank === 0 ? formatSkillDescription(skillId, 1, descSpan.dataset.original) : updatedDesc;
+          const match = descToParse.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i);
+          if (match) {
+            let newVal = match[1].trim();
+            if (newVal.toLowerCase().endsWith('x')) newVal = 'x' + newVal.slice(0, -1);
+            compactSpan.textContent = compactSpan.textContent.replace(/^[^\s]+/, newVal);
+          }
+        }
       }
     }
     
