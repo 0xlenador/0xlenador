@@ -23,6 +23,7 @@ if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
   sflSkills["Fishy Feast"] = sflSkillsEntry.data.Fishing["Fishy Feast"]
 }
 const sflOthers = sflSkillsEntry.data.Others || {}
+const sflConsumables = sflSkillsEntry.data.Consumables || {}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -60,7 +61,7 @@ const formatAstroDescription = (skill) => {
       </h3>
       
       <!-- PowerUps Sub-group -->
-      <details class="group mb-5" open>
+      <details class="group mb-6" open>
         <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-emerald-400 transition-colors list-none">
           <span class="mr-2 transform group-open:rotate-90 transition-transform text-emerald-500/50">▶</span> PowerUps
         </summary>
@@ -74,11 +75,11 @@ const formatAstroDescription = (skill) => {
               const errorFallback = `/img/cripto/sunflowerland.webp`;
               
               return (
-              <label class="flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
+              <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
                 <input type="checkbox" class="buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
                 <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={buff.name} title={buff.boost} />
                 <div class="flex flex-col">
-                  <span class="text-[10px] font-bold text-white group-hover:text-emerald-400 transition-colors">{buff.name}</span>
+                  <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors">{buff.name}</span>
                   <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
                 </div>
               </label>
@@ -89,7 +90,7 @@ const formatAstroDescription = (skill) => {
       </details>
 
       <!-- Skills Sub-group -->
-      <details class="group" open>
+      <details class="group mb-6" open>
         <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-blue-400 transition-colors list-none">
           <span class="mr-2 transform group-open:rotate-90 transition-transform text-blue-500/50">▶</span> Skills
         </summary>
@@ -128,7 +129,7 @@ const formatAstroDescription = (skill) => {
         </div>
       </details>
 
-        <details open class="group mb-2">
+        <details class="group mb-6" open>
           <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-purple-400 transition-colors list-none">
             <span class="mr-2 transform group-open:rotate-90 transition-transform text-purple-500/50">▶</span> Others
           </summary>
@@ -165,6 +166,33 @@ const formatAstroDescription = (skill) => {
                       })}
                     </div>
                   )}
+                </div>
+                );
+              })
+            }
+          </div>
+        </details>
+
+        <details class="group mb-6" open>
+          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-orange-400 transition-colors list-none">
+            <span class="mr-2 transform group-open:rotate-90 transition-transform text-orange-500/50">▶</span> Consumables
+          </summary>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+            {
+              Object.entries(sflConsumables).map(([skillName, skillData]) => {
+                const mainSrc = skillData.image;
+                const fallbackSrc = `/img/cripto/sunflowerland.webp`;
+                const formattedDesc = formatAstroDescription(skillData);
+                
+                return (
+                <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
+                  <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 transition-colors">{skillName}</span>
+                      <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
+                    </div>
+                  </div>
                 </div>
                 );
               })
@@ -323,6 +351,7 @@ const formatAstroDescription = (skill) => {
     sflBuffs,
     sflSkills,
       sflOthers,
+      sflConsumables,
     tEmpty: t("sfl.cooking.empty"),
     tError: t("sfl.cooking.error"),
     tTime: t("sfl.cooking.col.time"),
@@ -376,7 +405,7 @@ const formatAstroDescription = (skill) => {
     
     // Skills Logic for XP
     activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName] || sflOthers[skillName];
+      const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
       if (!skill) return;
       const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
       
@@ -418,12 +447,14 @@ const formatAstroDescription = (skill) => {
     let timeMultiplier = 1;
     
     activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName] || sflOthers[skillName];
+      const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
       if (!skill) return;
       const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
       
       // Others Time Buffs
       if (skillName === "Desert Gnome") { timeMultiplier *= math1; }
+      if (skillName === "Time Warp Totem") { timeMultiplier *= math1; }
+      if (skillName === "Gourmet Hourglass") { timeMultiplier *= math1; }
       
       // Fast Feasts (Fire Pit and Kitchen)
       if (skillName === "Fast Feasts" && (item.building === "Fire Pit" || item.building === "Kitchen")) {
@@ -553,7 +584,7 @@ const formatAstroDescription = (skill) => {
     let costMultiplier = 1;
     if (isTopLevel) {
       activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-        const skill = sflSkills[skillName] || sflOthers[skillName];
+        const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
         if (!skill) return;
         
         // Double Nom Debuff (2x ingredients)
@@ -762,14 +793,27 @@ const formatAstroDescription = (skill) => {
   // Listeners
   document.querySelectorAll(".buff-checkbox").forEach((cb) => {
     cb.addEventListener("change", (e) => {
-      if (e.target.checked) activeBuffs.add(e.target.dataset.buffId);
-      else activeBuffs.delete(e.target.dataset.buffId);
+      const buffId = e.target.dataset.buffId;
+      const card = e.target.closest('label');
+      if (e.target.checked) {
+        activeBuffs.add(buffId);
+        if (card) {
+          card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active");
+          card.classList.remove("border-white/5", "bg-white/5");
+        }
+      } else {
+        activeBuffs.delete(buffId);
+        if (card) {
+          card.classList.remove("border-emerald-500/50", "bg-emerald-500/10", "active");
+          card.classList.add("border-white/5", "bg-white/5");
+        }
+      }
       renderTable(searchInput ? searchInput.value : "");
     });
   });
 
   const formatSkillDescription = (skillName, rank, originalDesc) => {
-    const skill = sflSkills[skillName] || sflOthers[skillName];
+    const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
     if (!skill) return originalDesc;
     
     // When rank is 0, we still want to show the rank_1 values instead of {math} templates
