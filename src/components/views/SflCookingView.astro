@@ -18,7 +18,10 @@ const sflRecipes = sflRecipesEntry.data
 const sflIds = sflIdsEntry.data
 const sflPowerUps = sflPowerUpsEntry.data
 const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
-const sflSkills = sflSkillsEntry.data.Cooking || {}
+const sflSkills = { ...(sflSkillsEntry.data.Cooking || {}) }
+if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
+  sflSkills["Fishy Feast"] = sflSkillsEntry.data.Fishing["Fishy Feast"]
+}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -299,7 +302,7 @@ const formatAstroDescription = (skill) => {
     if (target === "Fermented Carrots") return item.name === "Fermented Carrots";
     if (target === "Cheese Recipes") return item.name.includes("Cheese") || item.ingredients.some(ing => ing.name.includes("Cheese"));
     if (target === "Fish") {
-      const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse'];
+      const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse', 'Crab Stick'];
       return item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper"].includes(item.name);
     }
     return false;
@@ -345,6 +348,10 @@ const formatAstroDescription = (skill) => {
       // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
       if (skillName === "Fiery Jackpot" && item.building === "Fire Pit") {
         multipliers += (math1 / 100); // 20% = 0.2 expected XP increase
+      }
+      // Fishy Feast (+20% XP for Fish)
+      if (skillName === "Fishy Feast" && isTargetMatch(item, "Fish")) {
+        multipliers += math1;
       }
     });
     
