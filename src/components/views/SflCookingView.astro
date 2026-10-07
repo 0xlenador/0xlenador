@@ -70,7 +70,7 @@ const getCompactText = (data, formattedDesc, typeName) => {
 const getEffectType = (desc) => {
   if (!desc) return "other";
   const descLower = desc.toLowerCase();
-  if (descLower.includes("xp")) return "xp";
+  if (descLower.includes("xp") || descLower.includes("yield") || (descLower.includes("food") && !descLower.includes("revenue"))) return "xp";
   if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) return "time";
   return "other";
 };
@@ -102,28 +102,29 @@ const formatAstroDescription = (skill) => {
     </div>
 
     <!-- Boosts (PowerUps & Skills) -->
-    <div id="boosts-container" class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+    <div id="boosts-container" class="mb-8 relative z-10 bg-white/[0.02] border border-white/5 rounded-2xl p-5 is-compact" data-filter="xp">
       <h3 class="flex items-center justify-between text-sm font-bold text-white mb-4 uppercase tracking-wider">
         <span class="flex items-center gap-2"><span class="text-emerald-500">✨</span> Boosts</span>
         <div class="flex items-center gap-2 flex-wrap">
           <div class="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10">
-            <button class="filter-boost-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="all" onclick="toggleBoostFilter('all')">All</button>
-            <button class="filter-boost-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="xp" onclick="toggleBoostFilter('xp')">XP</button>
+            <button class="filter-boost-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="all" onclick="toggleBoostFilter('all')">All</button>
+            <button class="filter-boost-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="xp" onclick="toggleBoostFilter('xp')">XP</button>
             <button class="filter-boost-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-filter="time" onclick="toggleBoostFilter('time')">Time</button>
           </div>
           <div class="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10">
-            <button class="accordion-switch-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.querySelectorAll('#boosts-container details').forEach(d => d.open = true); document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Expand</button>
-            <button class="accordion-switch-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.querySelectorAll('#boosts-container details').forEach(d => d.open = false); document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Collapse</button>
+            <button class="accordion-switch-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-action="expand" onclick="setAccordionState('expand')">Expand</button>
+            <button class="accordion-switch-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-action="collapse" onclick="setAccordionState('collapse')">Collapse</button>
           </div>
           <div class="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10">
-            <button class="view-switch-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.getElementById('boosts-container').classList.remove('is-compact'); document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Detailed</button>
-            <button class="view-switch-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" onclick="document.getElementById('boosts-container').classList.add('is-compact'); document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active')); this.classList.add('active');">Compact</button>
+            <button class="view-switch-btn px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-action="detailed" onclick="setViewStyle('detailed')">Detailed</button>
+            <button class="view-switch-btn active px-2 py-0.5 rounded-sm text-[10px] font-mono text-white/50 hover:text-white transition-colors" data-action="compact" onclick="setViewStyle('compact')">Compact</button>
           </div>
         </div>
       </h3>
       
+      <div class="flex flex-wrap items-start justify-center gap-x-6 gap-y-2 w-full mt-2">
       <!-- PowerUps Sub-group -->
-      <details class="group mb-6" open>
+      <details class="group w-auto open:w-full open:mb-6" open>
         <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-emerald-400 transition-colors list-none">
           <span class="mr-2 transform group-open:rotate-90 transition-transform text-emerald-500/50">▶</span> PowerUps
         </summary>
@@ -155,7 +156,7 @@ const formatAstroDescription = (skill) => {
       </details>
 
       <!-- Skills Sub-group -->
-      <details class="group mb-6" open>
+      <details class="group w-auto open:w-full open:mb-6" open>
         <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-blue-400 transition-colors list-none">
           <span class="mr-2 transform group-open:rotate-90 transition-transform text-blue-500/50">▶</span> Skills
         </summary>
@@ -197,7 +198,7 @@ const formatAstroDescription = (skill) => {
         </div>
       </details>
 
-        <details class="group mb-6" open>
+        <details class="group w-auto open:w-full open:mb-6" open>
           <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-purple-400 transition-colors list-none">
             <span class="mr-2 transform group-open:rotate-90 transition-transform text-purple-500/50">▶</span> Others
           </summary>
@@ -244,7 +245,7 @@ const formatAstroDescription = (skill) => {
           </div>
         </details>
 
-        <details class="group mb-6" open>
+        <details class="group w-auto open:w-full open:mb-6" open>
           <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-orange-400 transition-colors list-none">
             <span class="mr-2 transform group-open:rotate-90 transition-transform text-orange-500/50">▶</span> Consumables
           </summary>
@@ -292,7 +293,7 @@ const formatAstroDescription = (skill) => {
               }
           </div>
         </details>
-
+      </div>
     </div>
 
     <!-- Controles y Filtros -->
@@ -1114,6 +1115,26 @@ const formatAstroDescription = (skill) => {
   }
 
 
+  window.setAccordionState = function(state) {
+    const isExpand = state === 'expand';
+    document.querySelectorAll('#boosts-container details').forEach(d => d.open = isExpand);
+    document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector('.accordion-switch-btn[data-action="' + state + '"]');
+    if (btn) btn.classList.add('active');
+  };
+
+  window.setViewStyle = function(style) {
+    const container = document.getElementById('boosts-container');
+    if (style === 'compact') container.classList.add('is-compact');
+    else container.classList.remove('is-compact');
+    
+    document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector('.view-switch-btn[data-action="' + style + '"]');
+    if (btn) btn.classList.add('active');
+    
+    window.setAccordionState('expand');
+  };
+
   window.toggleBoostFilter = function(filter) {
     const container = document.getElementById("boosts-container");
     document.querySelectorAll(".filter-boost-btn").forEach(btn => btn.classList.remove("active"));
@@ -1124,6 +1145,8 @@ const formatAstroDescription = (skill) => {
       container.setAttribute("data-filter", filter);
     }
     document.querySelector('.filter-boost-btn[data-filter="' + filter + '"]').classList.add("active");
+    
+    window.setAccordionState('expand');
   };
 
   // Init
