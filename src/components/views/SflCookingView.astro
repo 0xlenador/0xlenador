@@ -466,7 +466,7 @@ const formatAstroDescription = (skill) => {
     }).format(num)
   }
 
-  const calculateRecipeCost = (ingredients, visited = new Set()) => {
+  const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true) => {
     let total = 0
     let missing = false
     for (const ing of ingredients) {
@@ -477,7 +477,7 @@ const formatAstroDescription = (skill) => {
         const subRecipe = recipesData.find((r) => r.name === ing.name)
         if (subRecipe && !visited.has(ing.name)) {
           visited.add(ing.name)
-          const subCost = calculateRecipeCost(subRecipe.ingredients, visited)
+          const subCost = calculateRecipeCost(subRecipe.ingredients, visited, false)
           if (subCost.missing) missing = true
           total += subCost.total * ing.amount
         } else {
@@ -488,20 +488,22 @@ const formatAstroDescription = (skill) => {
     
     // Skills Logic for Cost (Debuffs)
     let costMultiplier = 1;
-    activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName];
-      if (!skill) return;
-      
-      // Double Nom Debuff (2x ingredients)
-      if (skillName === "Double Nom" && skill.mathematics_2) {
-        costMultiplier *= skill.mathematics_2.calc_by_rank[`rank_${rank}`];
-      }
-      // Instant Gratification Debuff (2x ingredients)
-      if (skillName === "Instant Gratification") {
-        // Assume default x2 since rank logic is complex for this one
-        costMultiplier *= 2; 
-      }
-    });
+    if (isTopLevel) {
+      activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
+        const skill = sflSkills[skillName];
+        if (!skill) return;
+        
+        // Double Nom Debuff (2x ingredients)
+        if (skillName === "Double Nom" && skill.mathematics_2) {
+          costMultiplier *= skill.mathematics_2.calc_by_rank[`rank_${rank}`];
+        }
+        // Instant Gratification Debuff (2x ingredients)
+        if (skillName === "Instant Gratification") {
+          // Assume default x2 since rank logic is complex for this one
+          costMultiplier *= 2; 
+        }
+      });
+    }
     
     return { total: total * costMultiplier, missing, baseTotal: total }
   }
@@ -563,6 +565,13 @@ const formatAstroDescription = (skill) => {
     }
 
     filtered.forEach((item) => {
+      let doubleNomMultiplier = 1;
+      if (activeSkills && activeSkills["Double Nom"]) {
+        const rank = activeSkills["Double Nom"];
+        const math1 = sflSkills["Double Nom"]?.mathematics_1?.calc_by_rank[`rank_${rank}`] || 0;
+        doubleNomMultiplier = 1 + math1;
+      }
+      
       const costObj = calculateRecipeCost(item.ingredients)
       const timeSeconds = getCalculatedTime(item)
       const finalXp = getCalculatedXp(item);
@@ -571,6 +580,7 @@ const formatAstroDescription = (skill) => {
 
       // Format visual time
       const displayTime = formatSeconds(timeSeconds);
+      const displayName = doubleNomMultiplier > 1 ? `${item.name} x${doubleNomMultiplier}` : item.name;
 
       const row = document.createElement("div")
       row.className =
@@ -585,7 +595,7 @@ const formatAstroDescription = (skill) => {
           return `
           <div class="flex items-center gap-2">
             <img src="${basePath}/${ing.name}.png" class="w-4 h-4 object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='${fallbackPath}/${ing.name}.png'; this.onerror=function(){this.src='/img/cripto/sunflowerland.webp'};" />
-            <span class="text-xs text-white/80">${ing.name} (${ing.amount})</span>
+            <span class="text-xs text-white/80">${ing.name} (${ing.amount * doubleNomMultiplier})</span>
           </div>
         `
         })
@@ -599,7 +609,7 @@ const formatAstroDescription = (skill) => {
               <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" />
             </div>
             <div class="flex flex-col">
-              <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</span>
+              <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${displayName}</span>
               <span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">${tTime} ${displayTime}</span>
               ${
                 item.instant
