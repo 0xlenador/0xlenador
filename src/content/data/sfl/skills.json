@@ -3159,6 +3159,36 @@
                     "rank_3": 0.2
                 }
             }
+        },
+        "Buzzworthy Treats": {
+            "id": 104,
+            "name": "Buzzworthy Treats",
+            "description": "+{math1_pct}% Bumpkin XP from Honey Foods",
+            "image": "/img/sunflowerland/food/Honey Cake.png",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 1
+                },
+                "rank_2": {
+                    "shards": 1,
+                    "skills": 1
+                },
+                "rank_3": {
+                    "shards": 1,
+                    "skills": 1
+                }
+            },
+            "mathematics_1": {
+                "category": "cooking",
+                "target": "Honey Foods",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.1,
+                    "rank_2": 0.15,
+                    "rank_3": 0.2
+                }
+            }
         }
     },
     "Bees & Flowers": {
@@ -4509,7 +4539,7 @@
         "Sea Blessed": {
             "id": 148,
             "name": "Sea Blessed",
-            "description": "5% chance to restore 1 charge to 4 Salt Nodes on harvest | ?? 2× Aging Shed inputs (ingredients, fish & salt)",
+            "description": "5% chance to restore 1 charge to 4 Salt Nodes on harvest | ?? 2\u00d7 Aging Shed inputs (ingredients, fish & salt)",
             "image": "/img/sunflowerland/skills/sea_blessed.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -4539,7 +4569,7 @@
         "Ager": {
             "id": 149,
             "name": "Ager",
-            "description": "2× output from Aging Shed Racks | ?? 2× Aging Shed inputs (ingredients, fish & salt)",
+            "description": "2\u00d7 output from Aging Shed Racks | ?? 2\u00d7 Aging Shed inputs (ingredients, fish & salt)",
             "image": "/img/sunflowerland/skills/ager.webp",
             "cost_by_rank": {
                 "rank_1": {

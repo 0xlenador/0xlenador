@@ -675,6 +675,9 @@ const formatAstroDescription = (skill) => {
       const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse', 'Crab Stick', 'Fish Stick'];
       return item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper", "Surimi Rice Bowl"].includes(item.name);
     }
+    if (target === "Honey Foods") {
+      return item.ingredients.some(ing => ing.name === "Honey");
+    }
     return false;
   };
 
@@ -727,6 +730,10 @@ const formatAstroDescription = (skill) => {
       }
       // Fishy Feast (+20% XP for Fish)
       if (skillName === "Fishy Feast" && isTargetMatch(item, "Fish")) {
+        multipliers += math1;
+      }
+      // Buzzworthy Treats (+10% XP for Honey Foods)
+      if (skillName === "Buzzworthy Treats" && isTargetMatch(item, "Honey Foods")) {
         multipliers += math1;
       }
     });
