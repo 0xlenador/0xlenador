@@ -1,0 +1,246 @@
+---
+title: "Sunflower Land — Season 16: Caves & Pigs (Operational Guide)"
+description: "Technical and operational guide for Sunflower Land Season 16 (Caves, Pigs & Weather): cave mining, pig breeding, truffles, dynamic weather, and resource optimization."
+categoria: "Gaming"
+estado: "activa"
+temporada: "Season 16: Caves & Pigs"
+fechaLimite: "2027-02-02"
+plataforma: "Polygon"
+imagen: "/img/cripto/sunflowerland.webp"
+ogImage: "/img/cripto/sunflowerland.webp"
+tags: ["gaming", "polygon", "sunflower-land", "caves-and-pigs", "season-16", "operation", "guide"]
+dificultad: "media"
+tiempoEstimado: "15 min"
+date: "2026-10-12"
+updatedDate: "2026-10-12"
+prioridad: 25
+translationSlug: "sfl-temporada-16"
+---
+
+import ResourceCard from "@components/buttons/ResourceCard.astro"
+import GuideSummary from "@components/guias/GuideSummary.astro"
+import GuideStep from "@components/guias/GuideStep.astro"
+
+<GuideSummary>
+  <GuideStep step="1" text="Stockpile basic resources and tools for cave entry">
+    <a href="#step-1-pre-season-stockpile-checklist-before-november-2nd" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Entry Checklist</span>
+    </a>
+  </GuideStep>
+  <GuideStep step="2" text="Unlock the Caves and run the Myco-Composter">
+    <a href="#step-2-the-underground-caves-and-the-myco-composter" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Caves & Recipes</span>
+    </a>
+  </GuideStep>
+  <GuideStep step="3" text="Build the Pigpen, raise Pigs, and harvest Truffles">
+    <a href="#step-3-pig-husbandry-truffles-and-pig-bristles" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Pigs & Mud Upkeep</span>
+    </a>
+  </GuideStep>
+  <GuideStep step="4" text="Manage Global Weather and Craft Protection Gear">
+    <a href="#step-4-dynamic-global-weather-and-hazard-mitigation" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>9 Weather Events</span>
+    </a>
+  </GuideStep>
+  <GuideStep step="5" text="Cook Truffle Recipes, Spice Treats, and Visit Cave Merchant">
+    <a href="#step-5-advanced-cooking-truffle-seasoning-and-cave-merchant" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Buffs & Trade</span>
+    </a>
+  </GuideStep>
+</GuideSummary>
+
+## Introduction to Season 16
+
+**Season 16 (Chapter 16: Caves, Pigs & Weather)** officially begins on **November 2, 2026** in Sunflower Land. This major update shifts gameplay around three core interconnected economic pillars:
+
+1. **The Caves:** Unlocked on Spring Island, featuring the new **Myco-Composter** processing machines, 25-tile excavation patches producing Wild Mushrooms, Magic Mushrooms, 4 tiers of Beetles, and Mud.
+2. **Pig Husbandry (Pigs & Pigpen):** Level 1 to 15 Pigs, recurring **Truffles** harvests, **Pig Bristles** trade-ins, and **Mud** health/XP management (+25% final XP).
+3. **Dynamic Global Weather System:** Non-stop rotation of 9 worldwide weather events (lasting 3 to 4 days each, completing cycles every ~27 to 36 days) with positive bonuses and seasonal threats mitigated through craftable protection gear.
+4. **Goblin Cave Merchant:** Visiting vendor offering exclusive items for 48-hour periods, unlocked starting at Cave Tier I.
+
+---
+
+## Step 1: Pre-Season Stockpile Checklist before November 2nd
+
+To avoid early-game bottlenecks on launch day, stock up on these key farm assets:
+
+| Resource / Tool | Recommended Quantity | Immediate Operational Purpose |
+| :--- | :--- | :--- |
+| **Coins** | 500+ | 200 Coins for cave entrance + pig purchases (100 Coins each after 3 free starters). |
+| **Wood** | 100+ | 20 Wood for cave unlock + 10 Wood per Mushroom batch in the Myco-Composter. |
+| **Stone** | 30+ | 5 Stone for cave entrance + crafting reserves. |
+| **Eggs** | 50+ | 10 Eggs per Beetle batch in the Myco-Composter. |
+| **Crops (Carrots / Wheat)** | 100+ | 10 crops per batch for Mud production + feed supplies for Pigs. |
+| **Digging Tools (Sand Shovels / Drills)** | 30+ | Shared with Desert Digging, but **NO daily dig cap** in Caves. |
+| **Merino Wool** | 30+ | Required (10 each) for Thermal Stone, Shade Cloth, and Merino Wool Insulation. |
+| **Leather** | 10+ | Used to craft Sandbags and Balks for bad weather events. |
+
+<div class="flex flex-wrap gap-2 my-4 not-prose">
+  <ResourceCard id="polygon" label="Polygon Network" />
+  <ResourceCard id="metamask" label="Web3 Wallet" />
+</div>
+
+---
+
+## Step 2: The Underground Caves and the Myco-Composter
+
+The Cave Entrance unlocks on **Spring Island**. Building the entrance gives access to the first subterranean chamber with one **Myco-Composter** machine and a dedicated 25-tile (5x5) digging grid.
+
+### Cave Access & Expansion Tiers
+
+* **Entrance Cost (Tier I):** 200 Coins, 20 Wood, and 5 Stone.
+* **Expansion Path:** Up to 8 levels (Tier VIII). Each expansion adds 1 Myco-Composter and an independent 25-tile patch (reaching 8 machines and 200 tiles total).
+* **High-Tier Materials:** From **Tier V onward**, upgrades require **Pig Bristles** instead of Leather, along with accumulated Mud.
+
+### Myco-Composter Batches (Base: 12 Hours)
+
+Each machine runs any of the three available recipes. Standard batch time is 12 hours:
+
+| Recipe | Required Input | 25-Tile Excavation Output |
+| :--- | :--- | :--- |
+| **Mushrooms** | 10 Wood | Wild Mushroom tiles. Each tile has a **10% chance** to yield a Magic Mushroom. |
+| **Beetles** | 10 Eggs | Beetle tiles across 4 rarity tiers (Brown, Blue, Pink, Amber). |
+| **Mud** | 10 Crops (Carrot equivalents) | Mud tiles used for pig baths and health maintenance. |
+
+### Excavation Tools
+
+* Digging uses standard **Sand Shovels** and **Sand Drills**.
+* **Key difference from Desert:** Caves have **NO daily dig cap**. Dig as many patches as your tool supply allows.
+* Cave patches do not contain prior chapter artifacts.
+* Cave Skill Tier 2 boosts purchasable stock of Shovels & Drills in the shop by **+50% / +100% / +200%**.
+
+### Beetles: Rarity & Direct Feeding
+
+All 4 beetle types are tradable on the P2P market and available from Cave Tier I:
+
+* **Brown Beetle:** **80 XP** direct animal feed.
+* **Blue Beetle:** **160 XP** direct animal feed.
+* **Pink Beetle:** **320 XP** direct animal feed.
+* **Amber Beetle:** **640 XP** direct animal feed.
+
+*Direct feeding note:* Beetles can be fed directly to **Pigs, Cows, Sheep, or Chickens**.
+
+---
+
+## Step 3: Pig Husbandry, Truffles, and Pig Bristles
+
+Pigs introduce a full lifecycle with level-up milestones, nutrition preferences, and dual resource yields.
+
+### Pigpen Capacity & Rules
+
+* **Housing Capacity:** 3 / 6 / 9 pigs based on Pigpen tier.
+* **Purchase Cost:** 100 Coins per pig (first **3 starting pigs are free**).
+* **Max Level:** Any pig can reach **Level 15** from Pigpen Level 1, following Cow XP progression curves.
+* **Target Farm Size:** Midrange farms aim to maintain 6 to 9 synchronized pigs through levels 0 to 8. Higher levels require significant feed stockpiling.
+
+### Pig Feeding
+
+Pigs accept all eligible crops at any level with preferred-band efficiency. Crop weight follows the formula: `Weight = √(Seed Coin Cost × Base Grow Time in Minutes)`.
+
+* **Tier Anchors:** 10 Carrots / 3 Cauliflower / 1 Wheat.
+* Regular fish classify according to their standard fishing categories.
+
+### Mud Upkeep: Protection & +25% Final XP
+
+* Applying **10 Mud** to a pig grants **3 feeding charges**.
+* Each charge yields **+25% final feeding XP** (including direct Beetle feedings).
+* Charges persist across sleep cycles.
+* While charges remain, pigs are **immune to sickness** (does not cure an already sick pig).
+
+### Truffle Production
+
+Truffles are collected every 24-hour sleep cycle starting at Level 1 and are fully tradable:
+
+| Pig Level | Truffles per Claim | Cumulative Truffles Produced to Level 15 |
+| :--- | :--- | :--- |
+| **Levels 1 – 3** | 1 Truffle / cycle | ~3 Truffles |
+| **Levels 4 – 7** | 2 Truffles / cycle | ~8 Truffles |
+| **Levels 8 – 14** | 3 Truffles / cycle | ~21 Truffles |
+| **Level 15** | 4 Truffles / cycle (daily) | 4 Truffles / day continuously |
+
+A farm with 6 mature pigs generates **24 Truffles per day** before extra bonuses.
+
+### Pig Bristles
+
+Bristles are **NOT collected through daily sleep**; they are awarded solely upon **trading-in / retiring** pigs at the Pigpen or completing Bounty tasks:
+
+| Retirement Milestone | Base Bristles Awarded |
+| :--- | :--- |
+| **Level 3** | 1 Bristle |
+| **Level 6** | 3 Bristles |
+| **Level 10** | 6 Bristles |
+| **Level 15** | 12 Bristles |
+
+* **Sickness Penalty:** Sick pigs suffer a **-25% penalty** on awarded Bristles.
+* Bristles are tradable and essential for high-tier Cave expansions (Tier V–VIII) and Weather protection crafts.
+
+---
+
+## Step 4: Dynamic Global Weather and Hazard Mitigation
+
+Season 16 features **one active global weather event at all times**:
+
+* **Continuous Cycle:** 9 global weather events, lasting **3 to 4 days** each (~27 to 36 days total cycle).
+* **Weather Forecast:** Upcoming events are previewed **72 hours in advance**.
+* **Overlays:** Full Moon and Double Delivery continue as separate 24-hour overlays.
+
+### Weather Events & Magnitudes
+
+| Weather Event | Normal Magnitude | Blessed Magnitude |
+| :--- | :--- | :--- |
+| **Bountiful Harvest** | +0.4 crop yield | +0.8 crop yield |
+| **Fish Frenzy** | +0.4 fish yield | +0.8 fish yield |
+| **Sun Shower** | 1.3x crop speed | 1.6x with Shade Cloth / Guardian (2.0x with both) |
+| **Heavy Rains** | Well speed & water recovery | Enhanced water bonuses |
+| **Bee Migration** | Honey production bonus | Substantial honey boost with Wildflower Lures |
+
+### Weather Protection Recipes
+
+* **Thermal Stone, Merino Wool Insulation, Shade Cloth:** Each requires **25 Pig Bristles + 10 Merino Wool**.
+* **Sandbag & Balk:** Each requires **2 Leather**.
+* **Wildflower Lure:** Consumes **1 Flower** (lasts 1 to 5 days based on flower tier). Adds **+125% to +150% Honey** (+187.5% to +225% during Blessed conditions).
+
+---
+
+## Step 5: Advanced Cooking, Truffle Seasoning, and Cave Merchant
+
+Truffles unlock high-XP gourmet kitchen meals and animal cycle acceleration treats:
+
+### New Cooking Recipes
+
+| Recipe | Cook Location | Duration | Key Requirements | XP Awarded |
+| :--- | :--- | :--- | :--- | :--- |
+| **Ember-Roasted Truffle Potatoes** | Fire Pit | 8 hours | Truffles + Potatoes | 15,000 XP |
+| **Truffle & Honey Cake** | Bakery | 12 hours | 15 Truffles + 30 Wheat + 30 Eggs + 5 Honey | 25,000 XP |
+| **Truffle Risotto** | Kitchen | 16 hours | Truffles + Rice / High-tier crops | 35,000 XP |
+
+### Truffle Seasoning (Spice Rack / Aging Shed)
+
+* Crafted in batches of **5 units per 1 hour**.
+* **Effect:** Grants **-50% wake/sleep time** across **ALL four animal types** (Pigs, Cows, Sheep, Chickens).
+* **Duration:** 1 sleep cycle (2 with *Vibraphone*).
+
+### Goblin Cave Merchant
+
+* Unlocked starting at **Cave Tier I**.
+* Features 1 exclusive offer at Tier I, adding **+1 offer per cave tier unlocked**.
+* Visits occur for **48 hours** with advance announcements and per-player quotas.
+
+---
+
+## Recommended Strategy (0x Leñador)
+
+1. **Launch Day:** Claim the 3 free pigs right away and build the Cave Entrance on Spring Island. Start with a Mud batch (10 crops) to give your pigs the +25% XP mud bath boost without sickness risk.
+2. **Bristles Cycle:** Raise pigs to at least Level 3 or 6 before retiring them to secure Bristles for early weather protection (*Shade Cloth* / *Thermal Stone*).
+3. **Synergy with 0x Leñador Tools:**
+   * Track P2P market prices for Truffles, Beetles, and Merino Wool on the [SFL Market](/en/sfl-market).
+   * Compare crop sell values using [SFL Betty](/en/sfl-betty).
+   * Monitor animal stats with [SFL Pets](/en/sfl-pets) and plan kitchen queues with [SFL Cooking](/en/sfl-cooking).
+
+---
+
+## Official Links and Resources
+
+* [Play Sunflower Land](https://sunflower-land.com/play/?ref=Oxlenador)
+* [Official Chapter 16 Specification (GitHub Discussion #7721)](https://github.com/sunflower-land/sunflower-land/discussions/7721)
+* [0x Leñador Tools Directory](/en/directory)
