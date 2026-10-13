@@ -1,0 +1,44 @@
+---
+import Layout from "../layouts/Layout.astro"
+import CommunityView from "../components/views/CommunityView.astro"
+import { getLangFromUrl, useTranslations } from "../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("community.seo.title"),
+  description: t("community.seo.description"),
+  url: "https://0xlenador.xyz/comunidad",
+  image: "/img/44.webp",
+}
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  name: seo.title,
+  description: seo.description,
+  url: seo.url,
+  inLanguage: "es",
+  mainEntity: {
+    "@type": "Person",
+    name: "0x Leñador",
+    alternateName: "Manuel Felipe Vargas",
+    jobTitle: "Investigador Web3",
+    url: "https://0xlenador.xyz",
+    image: "https://0xlenador.xyz/img/44.webp",
+    sameAs: [
+      "https://x.com/0xlenador",
+      "https://t.me/zero0xlenador",
+      "https://www.youtube.com/@0xlenador000",
+      "https://www.instagram.com/0xlenador",
+      "https://www.tiktok.com/@0xlenador",
+      "https://warpcast.com/0xlenador",
+    ],
+  },
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image} schema={schema}>
+  <CommunityView />
+</Layout>

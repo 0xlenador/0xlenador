@@ -95,6 +95,12 @@ const loc = (path: string) => getLocalizedPath(path, lang)
         <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2">
           {t("footer.col.comunidad")}
         </h4>
+        <a
+          href={loc("/comunidad")}
+          class="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition w-fit flex items-center gap-1.5"
+        >
+          {t("footer.link.comunidad")} →
+        </a>
         <SocialLinks variant="with-label" size="sm" />
       </div>
 

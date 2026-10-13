@@ -1,0 +1,784 @@
+---
+// ==========================================
+// src/components/views/CommunityView.astro
+// Collage Bento Hero de Alta Densidad:
+// - Izquierda: X (priorizado) + Telegram + Discord (Soon)
+// - Derecha: Slider interactivo de YouTube, TikTok e Instagram
+// - Debajo: Filtros interactivos + Tarjetas inferiores
+// ==========================================
+
+import FaqAccordion from "../FaqAccordion.astro"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+const loc = (path: string) => getLocalizedPath(path, lang)
+
+// Canales del slider audiovisual (lado derecho del hero)
+const visualChannels = [
+  {
+    id: "youtube",
+    tag: "Videos & Guías",
+    title: t("community.channels.youtube.title"),
+    handle: t("community.channels.youtube.handle"),
+    slogan: t("community.channels.youtube.slogan"),
+    href: "https://www.youtube.com/@0xlenador000",
+    cta: t("community.channels.youtube.cta"),
+    themeColor: "red",
+    gradientClass: "from-red-500/15 via-red-950/5 to-transparent",
+    borderClass: "border-red-500/25 hover:border-red-500/50",
+    textAccent: "text-red-400",
+    bgIcon: "bg-red-500/15 text-red-500 border-red-500/30",
+    btnClass: "bg-red-500/20 hover:bg-red-500 text-red-200 hover:text-black border-red-500/40",
+    svgPath: "M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z",
+  },
+  {
+    id: "tiktok",
+    tag: "Shorts & Tips Express",
+    title: t("community.channels.tiktok.title"),
+    handle: t("community.channels.tiktok.handle"),
+    slogan: t("community.channels.tiktok.slogan"),
+    href: "https://www.tiktok.com/@0xlenador",
+    cta: t("community.channels.tiktok.cta"),
+    themeColor: "teal",
+    gradientClass: "from-teal-500/15 via-teal-950/5 to-transparent",
+    borderClass: "border-teal-500/25 hover:border-teal-500/50",
+    textAccent: "text-teal-300",
+    bgIcon: "bg-teal-500/15 text-teal-300 border-teal-500/30",
+    btnClass: "bg-teal-500/20 hover:bg-teal-400 text-teal-200 hover:text-black border-teal-500/40",
+    svgPath: "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.14 1.1 2.06 2.21 2.37.89.26 1.88.16 2.68-.31.78-.45 1.34-1.24 1.53-2.12.16-.64.19-1.31.18-1.97.02-5.59.01-11.18.01-16.78z",
+  },
+  {
+    id: "instagram",
+    tag: "Visual & Reels",
+    title: t("community.channels.instagram.title"),
+    handle: t("community.channels.instagram.handle"),
+    slogan: t("community.channels.instagram.slogan"),
+    href: "https://www.instagram.com/0xlenador",
+    cta: t("community.channels.instagram.cta"),
+    themeColor: "pink",
+    gradientClass: "from-pink-500/15 via-purple-950/5 to-transparent",
+    borderClass: "border-pink-500/25 hover:border-pink-500/50",
+    textAccent: "text-pink-300",
+    bgIcon: "bg-pink-500/15 text-pink-400 border-pink-500/30",
+    btnClass: "bg-pink-500/20 hover:bg-pink-400 text-pink-200 hover:text-black border-pink-500/40",
+    svgPath: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z",
+  },
+]
+
+const faqItems = [
+  {
+    pregunta: t("community.faq.q1"),
+    respuesta: t("community.faq.a1"),
+  },
+  {
+    pregunta: t("community.faq.q2"),
+    respuesta: t("community.faq.a2"),
+  },
+  {
+    pregunta: t("community.faq.q3"),
+    respuesta: t("community.faq.a3"),
+  },
+]
+---
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-14">
+  <!-- HEADER COMPACTO SUPERIOR -->
+  <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-terminal-border/60">
+    <div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">
+          Canales Oficiales y Comunitarios de 0x Lenador
+        </h1>
+      </div>
+      <p class="text-xs text-terminal-secondary mt-1 max-w-xl">
+        {t("community.header.bio")}
+      </p>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <button
+        id="copy-link-btn"
+        type="button"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-terminal-surface hover:bg-terminal-elevated border border-terminal-border text-xs font-mono text-terminal-text hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
+      >
+        <svg class="w-3.5 h-3.5 text-terminal-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+        </svg>
+        <span id="copy-btn-text">Copiar Enlace</span>
+      </button>
+
+      <span class="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-xs flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+        <span>Verificado</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       HERO COLLAGE PRINCIPAL (2 COLUMNAS)
+       Izquierda: X (priorizado) + Telegram + Discord (Soon)
+       Derecha: Slider Audiovisual (YouTube + TikTok + Instagram)
+       ======================================================== -->
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 mb-5">
+    
+    <!-- COLUMNA IZQUIERDA (lg:col-span-7): X + Telegram + Discord -->
+    <div class="lg:col-span-7 flex flex-col gap-3">
+      
+      <!-- 1. TARJETA PRIORITARIA: X (TWITTER) -->
+      <div
+        data-channel-card="x"
+        data-status="active"
+        class="channel-item relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-white/30 p-4 sm:p-5 transition-all duration-300 group shadow-lg"
+      >
+        <div class="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+        
+        <div class="relative z-10">
+          <div class="flex items-center justify-between gap-3 mb-2.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center border border-white/15 group-hover:scale-105 transition-transform">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-base font-bold text-white tracking-tight">X (Twitter)</h3>
+                  <span class="text-xs font-mono text-terminal-muted">@0xlenador</span>
+                </div>
+                <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Canal Principal // Alpha Diario</span>
+              </div>
+            </div>
+
+            <!-- Badge Estado -->
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide uppercase bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Full Activo
+            </span>
+          </div>
+
+          <p class="text-xs sm:text-sm text-terminal-secondary leading-relaxed mb-3.5">
+            {t("community.channels.x.slogan")}
+          </p>
+
+          <a
+            href="https://x.com/0xlenador"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-all shadow-sm group/btn"
+          >
+            <span>Seguir en X (@0xlenador)</span>
+            <svg class="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. TARJETA COMPACTA: TELEGRAM (GRUPO) -->
+      <div
+        data-channel-card="telegram"
+        data-status="active"
+        class="channel-item relative overflow-hidden rounded-xl bg-[#0a0a0a] border border-sky-500/20 hover:border-sky-500/40 p-3.5 sm:p-4 transition-all duration-300 group"
+      >
+        <div class="absolute inset-0 bg-gradient-to-r from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-start gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/20 flex-shrink-0 mt-0.5 group-hover:scale-105 transition-transform">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-sm font-bold text-white tracking-tight">Telegram (Grupo Oficial)</h4>
+                <span class="text-[10px] font-mono text-sky-400 bg-sky-500/10 px-1.5 py-0.5 rounded border border-sky-500/20 font-medium">Comunidad Activa</span>
+              </div>
+              <p class="text-xs text-terminal-secondary leading-snug mt-1">
+                {t("community.channels.telegram.slogan")}
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://t.me/zero0xlenador"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500 text-sky-300 hover:text-black border border-sky-500/30 text-xs font-semibold transition-all flex-shrink-0"
+          >
+            <span>Unirse al Grupo</span>
+            <span class="text-[10px]">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. TARJETA COMPACTA: DISCORD (SOON / DESACTIVADA) -->
+      <div
+        data-channel-card="discord"
+        data-status="soon"
+        class="channel-item relative overflow-hidden rounded-xl bg-[#0a0a0a]/70 border border-white/5 p-3.5 opacity-80 hover:opacity-95 transition-all group"
+      >
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-start gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400/80 flex items-center justify-center border border-indigo-500/20 flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-sm font-semibold text-terminal-text tracking-tight">Discord (Servidor Oficial)</h4>
+                <span class="text-[10px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.5 rounded flex items-center gap-1 font-medium">
+                  <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Soon
+                </span>
+              </div>
+              <p class="text-xs text-terminal-muted leading-snug mt-1">
+                {t("community.channels.discord.slogan")}
+              </p>
+            </div>
+          </div>
+
+          <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-terminal-elevated/50 text-terminal-dim border border-white/5 text-xs font-mono flex-shrink-0 cursor-not-allowed select-none">
+            🔒 Próximamente
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA (lg:col-span-5): SLIDER AUDIOVISUAL (YouTube + TikTok + Instagram) -->
+    <div class="lg:col-span-5 flex flex-col">
+      <div class="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/10 p-4 sm:p-5 h-full flex flex-col justify-between shadow-lg" id="visual-slider-card">
+        
+        <!-- Header del Slider con Tabs -->
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-bold">
+              Canales Audiovisuales & Contenido
+            </span>
+            <!-- Indicador 1/3 -->
+            <span id="slider-counter" class="text-[10px] font-mono text-terminal-dim">1 / 3</span>
+          </div>
+
+          <!-- Selector de Pestañas del Slider -->
+          <div class="flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/5 mb-4" id="slider-tabs">
+            <button
+              data-slide-index="0"
+              class="slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all text-white bg-red-500/20 border border-red-500/40"
+            >
+              YouTube
+            </button>
+            <button
+              data-slide-index="1"
+              class="slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all text-terminal-muted hover:text-white border border-transparent"
+            >
+              TikTok
+            </button>
+            <button
+              data-slide-index="2"
+              class="slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all text-terminal-muted hover:text-white border border-transparent"
+            >
+              Instagram
+            </button>
+          </div>
+        </div>
+
+        <!-- Slides Wrapper -->
+        <div class="relative min-h-[190px] flex-grow flex flex-col justify-center my-1" id="slider-viewport">
+          {
+            visualChannels.map((item, idx) => (
+              <div
+                data-slide={idx}
+                class:list={[
+                  "slide-content transition-all duration-300 flex flex-col justify-between",
+                  idx === 0 ? "block opacity-100" : "hidden opacity-0",
+                ]}
+              >
+                <!-- Ambient Backdrop Gradient -->
+                <div class:list={["absolute inset-0 bg-gradient-to-br opacity-40 pointer-events-none rounded-xl", item.gradientClass]}></div>
+                
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2.5">
+                      <div class:list={["w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm", item.bgIcon]}>
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d={item.svgPath} />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-base font-bold text-white tracking-tight">{item.title}</h4>
+                        <p class="text-xs font-mono text-terminal-muted">{item.handle}</p>
+                      </div>
+                    </div>
+                    <span class:list={["text-[10px] font-mono px-2 py-0.5 rounded-full border uppercase font-medium", item.borderClass, item.textAccent]}>
+                      {item.tag}
+                    </span>
+                  </div>
+
+                  <p class="text-xs sm:text-sm text-terminal-secondary leading-relaxed mb-4">
+                    {item.slogan}
+                  </p>
+                </div>
+
+                <div class="relative z-10 pt-2">
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class:list={[
+                      "w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all shadow-sm border",
+                      item.btnClass,
+                    ]}
+                  >
+                    <span>{item.cta}</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Slider Controls: Dots + Arrows -->
+        <div class="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
+          <!-- Dots -->
+          <div class="flex items-center gap-1.5" id="slider-dots">
+            <button data-dot-index="0" class="w-2 h-2 rounded-full bg-red-400 transition-all"></button>
+            <button data-dot-index="1" class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
+            <button data-dot-index="2" class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
+          </div>
+
+          <!-- Arrows -->
+          <div class="flex items-center gap-1 text-terminal-muted">
+            <button
+              id="slider-prev"
+              type="button"
+              class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors"
+              title="Anterior"
+            >
+              ‹
+            </button>
+            <button
+              id="slider-next"
+              type="button"
+              class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors"
+              title="Siguiente"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ========================================================
+       BARRA DE FILTROS (DEBAJO DEL HERO)
+       Controla las tarjetas inferiores y la vista de canales
+       ======================================================== -->
+  <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10 mb-4">
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
+        Filtrar Canales:
+      </span>
+      <div class="flex items-center gap-1.5" id="community-filters">
+        <button
+          data-filter="all"
+          class="filter-tab active px-3 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-colors"
+        >
+          Todos (8)
+        </button>
+        <button
+          data-filter="active"
+          class="filter-tab px-3 py-1 rounded-lg text-xs font-mono text-terminal-muted hover:text-white border border-transparent hover:border-terminal-border transition-colors"
+        >
+          Activos (6)
+        </button>
+        <button
+          data-filter="soon"
+          class="filter-tab px-3 py-1 rounded-lg text-xs font-mono text-terminal-muted hover:text-white border border-transparent hover:border-terminal-border transition-colors"
+        >
+          Próximamente (2)
+        </button>
+      </div>
+    </div>
+
+    <!-- Security Check Notice -->
+    <div class="flex items-center gap-1.5 text-xs text-terminal-secondary">
+      <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+      <span class="text-[11px] font-mono text-terminal-muted">
+        Seguridad: Todos los enlaces verificados oficialmente.
+      </span>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       TARJETAS INFERIORES: Farcaster + WhatsApp + Ecosistema
+       Responden directamente al filtro superior
+       ======================================================== -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8" id="bottom-cards-container">
+    
+    <!-- 1. FARCASTER / WARPCAST -->
+    <div
+      data-channel-card="farcaster"
+      data-status="active"
+      class="channel-item p-4 rounded-xl bg-[#0a0a0a] border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex flex-col justify-between group shadow-sm"
+    >
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center border border-purple-500/25">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.24.24H5.76A5.76 5.76 0 0 0 0 6v12a5.76 5.76 0 0 0 5.76 5.76h12.48A5.76 5.76 0 0 0 24 18V6A5.76 5.76 0 0 0 18.24.24m.816 17.166v.816H4.944v-.816h1.224v-6.936H4.944V9.246h4.896v1.224H8.616v6.936h1.632V6.798H7.799V5.574h8.402v1.224h-2.45v10.608h1.633v-6.936h-1.225V9.246h4.897v1.224h-1.225v6.936z"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-white tracking-tight">{t("community.channels.farcaster.title")}</h4>
+              <p class="text-[10px] font-mono text-purple-400 font-medium">0xlenador</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border border-purple-500/30 bg-purple-500/15 text-purple-300 uppercase">
+            Web3 Nativo
+          </span>
+        </div>
+        <p class="text-xs text-terminal-secondary leading-snug mb-3">
+          {t("community.channels.farcaster.slogan")}
+        </p>
+      </div>
+
+      <a
+        href="https://warpcast.com/0xlenador"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-between text-xs font-mono font-medium text-purple-400 hover:text-purple-300 pt-2 border-t border-white/5"
+      >
+        <span>Conectar en Warpcast</span>
+        <span>↗</span>
+      </a>
+    </div>
+
+    <!-- 2. WHATSAPP (CANAL DE AVISOS - SOON) -->
+    <div
+      data-channel-card="whatsapp"
+      data-status="soon"
+      class="channel-item p-4 rounded-xl bg-[#0a0a0a]/70 border border-white/5 opacity-80 hover:opacity-95 transition-all flex flex-col justify-between"
+    >
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400/80 flex items-center justify-center border border-emerald-500/20">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.2.301-.778.978-.953 1.178-.176.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.895-.799-1.5-1.786-1.675-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.3.301-.501.1-.2.05-.376-.025-.526-.075-.15-.677-1.633-.928-2.238-.244-.589-.493-.509-.678-.519-.176-.01-.376-.01-.577-.01-.2 0-.526.075-.802.376-.276.301-1.053 1.028-1.053 2.506 0 1.479 1.078 2.907 1.228 3.108.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.9.12.579-.087 1.78-.727 2.03-1.429.25-.702.25-1.303.175-1.429-.075-.125-.276-.2-.577-.35zM12.04 21.78a9.71 9.71 0 0 1-4.96-1.356l-.356-.211-3.687.967.984-3.595-.232-.369a9.718 9.718 0 0 1-1.493-5.184c0-5.367 4.368-9.734 9.743-9.734 2.6 0 5.045 1.013 6.883 2.853a9.687 9.687 0 0 1 2.852 6.88c0 5.368-4.367 9.749-9.734 9.749zm8.309-18.053A11.66 11.66 0 0 0 12.04.28C5.58.28.32 5.54.32 12c0 2.064.538 4.08 1.56 5.857L0 24l6.326-1.66A11.69 11.69 0 0 0 12.04 23.72c6.46 0 11.72-5.26 11.72-11.72 0-3.13-1.22-6.075-3.411-8.273z"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-terminal-text tracking-tight">{t("community.channels.whatsapp.title")}</h4>
+              <p class="text-[10px] font-mono text-terminal-dim">Canal de Difusión</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border border-amber-500/25 bg-amber-500/10 text-amber-300 uppercase flex items-center gap-1">
+            🔒 Pendiente
+          </span>
+        </div>
+        <p class="text-xs text-terminal-muted leading-snug mb-3">
+          {t("community.channels.whatsapp.slogan")}
+        </p>
+      </div>
+
+      <div class="pt-2 border-t border-white/5 text-[11px] font-mono text-terminal-dim flex items-center justify-between">
+        <span>Apertura en cola</span>
+        <span>🔒</span>
+      </div>
+    </div>
+
+    <!-- 3. HERRAMIENTAS WEB3 (ECOSISTEMA) -->
+    <a
+      href={loc("/herramientas")}
+      data-channel-card="tools"
+      data-status="active"
+      class="channel-item p-4 rounded-xl bg-[#0a0a0a] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between group shadow-sm"
+    >
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-sm">🛠️</span>
+            <div>
+              <h4 class="text-sm font-bold text-white tracking-tight group-hover:text-emerald-300 transition-colors">Herramientas Web3</h4>
+              <p class="text-[10px] font-mono text-terminal-muted">Calculadoras & Dashboards</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono text-emerald-400 uppercase">Hub 0x</span>
+        </div>
+        <p class="text-xs text-terminal-secondary leading-snug mb-3">
+          Calculadoras de mercado, simulador de rentabilidad y seguimiento de Sunflower Land.
+        </p>
+      </div>
+      <div class="pt-2 border-t border-white/5 text-xs font-mono text-emerald-400 flex items-center justify-between">
+        <span>Abrir Herramientas</span>
+        <span>→</span>
+      </div>
+    </a>
+
+    <!-- 4. DIRECTORIO WEB3 -->
+    <a
+      href={loc("/directorio")}
+      data-channel-card="directory"
+      data-status="active"
+      class="channel-item p-4 rounded-xl bg-[#0a0a0a] border border-white/10 hover:border-sky-500/40 transition-all duration-300 flex flex-col justify-between group shadow-sm"
+    >
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 text-sm">📂</span>
+            <div>
+              <h4 class="text-sm font-bold text-white tracking-tight group-hover:text-sky-300 transition-colors">Directorio Curado</h4>
+              <p class="text-[10px] font-mono text-terminal-muted">Recursos & Faucets</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono text-sky-400 uppercase">Verificado</span>
+        </div>
+        <p class="text-xs text-terminal-secondary leading-snug mb-3">
+          Lista curada de faucets, herramientas de desarrollo y enlaces verificados del ecosistema.
+        </p>
+      </div>
+      <div class="pt-2 border-t border-white/5 text-xs font-mono text-sky-400 flex items-center justify-between">
+        <span>Explorar Directorio</span>
+        <span>→</span>
+      </div>
+    </a>
+
+    <!-- 5. OPERACIONES & DIARIO -->
+    <a
+      href={loc("/operaciones")}
+      data-channel-card="operations"
+      data-status="active"
+      class="channel-item p-4 rounded-xl bg-[#0a0a0a] border border-white/10 hover:border-amber-500/40 transition-all duration-300 flex flex-col justify-between group shadow-sm"
+    >
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 text-sm">⚡</span>
+            <div>
+              <h4 class="text-sm font-bold text-white tracking-tight group-hover:text-amber-300 transition-colors">Operaciones & Guías</h4>
+              <p class="text-[10px] font-mono text-terminal-muted">Bitácora On-Chain</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono text-amber-400 uppercase">Estrategias</span>
+        </div>
+        <p class="text-xs text-terminal-secondary leading-snug mb-3">
+          Paso a paso de airdrops, testnets activas y seguimiento operativo en tiempo real.
+        </p>
+      </div>
+      <div class="pt-2 border-t border-white/5 text-xs font-mono text-amber-400 flex items-center justify-between">
+        <span>Ver Operaciones</span>
+        <span>→</span>
+      </div>
+    </a>
+
+    <!-- 6. BLOG & TESIS -->
+    <a
+      href={loc("/blog")}
+      data-channel-card="blog"
+      data-status="active"
+      class="channel-item p-4 rounded-xl bg-[#0a0a0a] border border-white/10 hover:border-purple-500/40 transition-all duration-300 flex flex-col justify-between group shadow-sm"
+    >
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 text-sm">📖</span>
+            <div>
+              <h4 class="text-sm font-bold text-white tracking-tight group-hover:text-purple-300 transition-colors">Blog & Tesis</h4>
+              <p class="text-[10px] font-mono text-terminal-muted">Investigación Profunda</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono text-purple-400 uppercase">Artículos</span>
+        </div>
+        <p class="text-xs text-terminal-secondary leading-snug mb-3">
+          Tesis de inversión, fundamentos de protocolos y artículos sobre macro y Web3.
+        </p>
+      </div>
+      <div class="pt-2 border-t border-white/5 text-xs font-mono text-purple-400 flex items-center justify-between">
+        <span>Leer Artículos</span>
+        <span>→</span>
+      </div>
+    </a>
+
+  </section>
+
+  <!-- FAQ DE LA COMUNIDAD -->
+  <FaqAccordion
+    titulo={t("community.faq.heading")}
+    startId={600}
+    items={faqItems}
+  />
+</main>
+
+<!-- SCRIPT INTERACTIVO: SLIDER AUDIOVISUAL + FILTROS + COPIAR ENLACE -->
+<script>
+  function setupCommunityView() {
+    // ----------------------------------------------------
+    // 1. Slider Audiovisual (YouTube / TikTok / Instagram)
+    // ----------------------------------------------------
+    const slides = document.querySelectorAll<HTMLElement>("#slider-viewport .slide-content")
+    const tabs = document.querySelectorAll<HTMLButtonElement>("#slider-tabs .slide-tab")
+    const dots = document.querySelectorAll<HTMLButtonElement>("#slider-dots button")
+    const prevBtn = document.getElementById("slider-prev")
+    const nextBtn = document.getElementById("slider-next")
+    const counter = document.getElementById("slider-counter")
+
+    let currentSlide = 0
+    const totalSlides = slides.length
+
+    const tabActiveClasses = [
+      ["text-white", "bg-red-500/20", "border-red-500/40"],
+      ["text-white", "bg-teal-500/20", "border-teal-500/40"],
+      ["text-white", "bg-pink-500/20", "border-pink-500/40"]
+    ]
+
+    const dotActiveClasses = ["bg-red-400", "bg-teal-400", "bg-pink-400"]
+
+    function showSlide(index: number) {
+      if (index < 0) index = totalSlides - 1
+      if (index >= totalSlides) index = 0
+      currentSlide = index
+
+      // Actualizar slides
+      slides.forEach((s, idx) => {
+        if (idx === currentSlide) {
+          s.classList.remove("hidden", "opacity-0")
+          s.classList.add("block", "opacity-100")
+        } else {
+          s.classList.add("hidden", "opacity-0")
+          s.classList.remove("block", "opacity-100")
+        }
+      })
+
+      // Actualizar tabs
+      tabs.forEach((tab, idx) => {
+        tab.className = "slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all border "
+        if (idx === currentSlide) {
+          tab.classList.add(...tabActiveClasses[idx])
+        } else {
+          tab.classList.add("text-terminal-muted", "hover:text-white", "border-transparent")
+        }
+      })
+
+      // Actualizar dots
+      dots.forEach((dot, idx) => {
+        dot.className = "w-2 h-2 rounded-full transition-all "
+        if (idx === currentSlide) {
+          dot.classList.add(dotActiveClasses[idx], "w-4")
+        } else {
+          dot.classList.add("bg-white/20", "hover:bg-white/40")
+        }
+      })
+
+      if (counter) {
+        counter.textContent = `${currentSlide + 1} / ${totalSlides}`
+      }
+    }
+
+    if (tabs.length > 0) {
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const idx = parseInt(tab.getAttribute("data-slide-index") || "0", 10)
+          showSlide(idx)
+        })
+      })
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const idx = parseInt(dot.getAttribute("data-dot-index") || "0", 10)
+          showSlide(idx)
+        })
+      })
+
+      if (prevBtn) prevBtn.addEventListener("click", () => showSlide(currentSlide - 1))
+      if (nextBtn) nextBtn.addEventListener("click", () => showSlide(currentSlide + 1))
+    }
+
+    // ----------------------------------------------------
+    // 2. Filtros de Canales (Todos / Activos / Próximamente)
+    // ----------------------------------------------------
+    const filterTabs = document.querySelectorAll<HTMLButtonElement>("#community-filters .filter-tab")
+    const channelItems = document.querySelectorAll<HTMLElement>(".channel-item")
+
+    filterTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const filter = tab.getAttribute("data-filter")
+
+        // Activar tab
+        filterTabs.forEach((t) => {
+          t.classList.remove("bg-emerald-500/20", "text-emerald-300", "border-emerald-500/30")
+          t.classList.add("text-terminal-muted", "border-transparent")
+        })
+        tab.classList.remove("text-terminal-muted", "border-transparent")
+        tab.classList.add("bg-emerald-500/20", "text-emerald-300", "border-emerald-500/30")
+
+        // Filtrar elementos
+        channelItems.forEach((item) => {
+          const status = item.getAttribute("data-status")
+          if (filter === "all") {
+            item.style.display = ""
+          } else if (filter === "active") {
+            item.style.display = status === "active" ? "" : "none"
+          } else if (filter === "soon") {
+            item.style.display = status === "soon" ? "" : "none"
+          }
+        })
+      })
+    })
+
+    // ----------------------------------------------------
+    // 3. Botón de Copiar Enlace
+    // ----------------------------------------------------
+    const copyBtn = document.getElementById("copy-link-btn")
+    const copyBtnText = document.getElementById("copy-btn-text")
+    if (copyBtn && copyBtnText) {
+      const originalText = copyBtnText.textContent || "Copiar Enlace"
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href)
+          copyBtnText.textContent = "¡Copiado!"
+          copyBtn.classList.add("border-emerald-400", "text-emerald-300")
+          setTimeout(() => {
+            copyBtnText.textContent = originalText
+            copyBtn.classList.remove("border-emerald-400", "text-emerald-300")
+          }, 2000)
+        } catch {
+          const input = document.createElement("input")
+          input.value = window.location.href
+          document.body.appendChild(input)
+          input.select()
+          document.execCommand("copy")
+          document.body.removeChild(input)
+          copyBtnText.textContent = "¡Copiado!"
+          setTimeout(() => {
+            copyBtnText.textContent = originalText
+          }, 2000)
+        }
+      })
+    }
+  }
+
+  // Ejecución inicial y soporte View Transitions de Astro
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupCommunityView)
+  } else {
+    setupCommunityView()
+  }
+  document.addEventListener("astro:page-load", setupCommunityView)
+</script>

@@ -8,6 +8,7 @@ import type _404 from "./locales/es/404.json"
 import type assets from "./locales/es/assets.json"
 import type blog from "./locales/es/blog.json"
 import type common from "./locales/es/common.json"
+import type community from "./locales/es/community.json"
 import type directory from "./locales/es/directory.json"
 import type faucets from "./locales/es/faucets.json"
 import type home from "./locales/es/home.json"
@@ -49,6 +50,7 @@ export const routes = {
     autor: "author",
     infravalorados: "undervalued",
     "lista-web3": "web3-list",
+    comunidad: "community",
   },
   es: {
     operations: "operaciones",
@@ -65,6 +67,7 @@ export const routes = {
     author: "autor",
     undervalued: "infravalorados",
     "web3-list": "lista-web3",
+    community: "comunidad",
   },
 }
 
@@ -105,6 +108,7 @@ type AllTranslations = typeof _404 &
   typeof assets &
   typeof blog &
   typeof common &
+  typeof community &
   typeof directory &
   typeof faucets &
   typeof home &
