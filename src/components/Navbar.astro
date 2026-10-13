@@ -3,6 +3,7 @@ import { Image } from "astro:assets"
 import logoImg from "../assets/img/logo.webp"
 import LanguageSwitcher from "./LanguageSwitcher.astro"
 import { useTranslations, getLocalizedPath, type Lang } from "../i18n"
+import { socials } from "../data/socials"
 
 interface Props {
   lang: Lang
@@ -337,7 +338,7 @@ const navLinks = [
       </a>
       <div class="w-px h-5 bg-terminal-border mx-2"></div>
       <a
-        href="https://x.com/0xlenador"
+        href={socials.x.url}
         target="_blank"
         rel="noopener"
         aria-label="X (Twitter)"
@@ -350,7 +351,7 @@ const navLinks = [
         >
       </a>
       <a
-        href="https://t.me/zero0xlenador"
+        href={socials.telegram.url}
         target="_blank"
         rel="noopener"
         aria-label="Telegram"
@@ -494,7 +495,7 @@ const navLinks = [
             >
           </a>
           <a
-            href="https://x.com/0xlenador"
+            href={socials.x.url}
             target="_blank"
             rel="noopener"
             aria-label="X (Twitter)"
@@ -507,7 +508,7 @@ const navLinks = [
             >
           </a>
           <a
-            href="https://t.me/zero0xlenador"
+            href={socials.telegram.url}
             target="_blank"
             rel="noopener"
             aria-label="Telegram"

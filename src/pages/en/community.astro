@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro"
 import CommunityView from "../../components/views/CommunityView.astro"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { sameAsSocialUrls } from "../../data/socials"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -27,14 +28,7 @@ const schema = {
     jobTitle: "Web3 Researcher",
     url: "https://0xlenador.xyz/en",
     image: "https://0xlenador.xyz/img/44.webp",
-    sameAs: [
-      "https://x.com/0xlenador",
-      "https://t.me/zero0xlenador",
-      "https://www.youtube.com/@0xlenador000",
-      "https://www.instagram.com/0xlenador",
-      "https://www.tiktok.com/@0xlenador",
-      "https://warpcast.com/0xlenador",
-    ],
+    sameAs: sameAsSocialUrls,
   },
 }
 ---

@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro"
 import HomeView from "../../components/views/HomeView.astro"
 import { getBlogPostsByLang, getGuiasByLang } from "../../lib/content"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import { sameAsSocialUrls } from "../../data/socials"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -23,11 +24,7 @@ const schema = {
   image: "https://0xlenador.xyz/img/44.webp",
   jobTitle: t("home.schema.jobTitle"),
   description: t("home.schema.description"),
-  sameAs: [
-    "https://www.youtube.com/@0xlenadorgamefi",
-    "https://x.com/0xlenador",
-    "https://t.me/zero0xlenador",
-  ],
+  sameAs: sameAsSocialUrls,
 }
 
 // Schema WebSite con Sitelink Search Box
