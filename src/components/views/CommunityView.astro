@@ -18,7 +18,7 @@ const t = useTranslations(lang)
 const visualChannels = [
   {
     id: "youtube",
-    tag: "Videos & Guías",
+    tag: t("community.channels.youtube.badge"),
     title: t("community.channels.youtube.title"),
     handle: socials.youtube.handle,
     slogan: t("community.channels.youtube.slogan"),
@@ -34,7 +34,7 @@ const visualChannels = [
   },
   {
     id: "tiktok",
-    tag: "Shorts & Tips Express",
+    tag: t("community.channels.tiktok.badge"),
     title: t("community.channels.tiktok.title"),
     handle: socials.tiktok.handle,
     slogan: t("community.channels.tiktok.slogan"),
@@ -50,7 +50,7 @@ const visualChannels = [
   },
   {
     id: "instagram",
-    tag: "Visual & Reels",
+    tag: t("community.channels.instagram.badge"),
     title: t("community.channels.instagram.title"),
     handle: socials.instagram.handle,
     slogan: t("community.channels.instagram.slogan"),
@@ -101,7 +101,7 @@ const allChannels = [
   {
     id: socials.discord.id,
     title: t("community.channels.discord.title"),
-    handle: socials.discord.handle,
+    handle: t("community.channels.discord.handle"),
     slogan: t("community.channels.discord.slogan"),
     badge: t("community.channels.discord.badge"),
     cta: t("community.channels.discord.cta"),
@@ -176,7 +176,7 @@ const allChannels = [
   {
     id: socials.whatsapp.id,
     title: t("community.channels.whatsapp.title"),
-    handle: socials.whatsapp.handle,
+    handle: t("community.channels.whatsapp.handle"),
     slogan: t("community.channels.whatsapp.slogan"),
     badge: t("community.channels.whatsapp.badge"),
     cta: t("community.channels.whatsapp.cta"),
@@ -188,7 +188,41 @@ const allChannels = [
     textCta: "text-terminal-dim",
     svgPath: "M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.2.301-.778.978-.953 1.178-.176.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.895-.799-1.5-1.786-1.675-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.3.301-.501.1-.2.05-.376-.025-.526-.075-.15-.677-1.633-.928-2.238-.244-.589-.493-.509-.678-.519-.176-.01-.376-.01-.577-.01-.2 0-.526.075-.802.376-.276.301-1.053 1.028-1.053 2.506 0 1.479 1.078 2.907 1.228 3.108.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.9.12.579-.087 1.78-.727 2.03-1.429.25-.702.25-1.303.175-1.429-.075-.125-.276-.2-.577-.35zM12.04 21.78a9.71 9.71 0 0 1-4.96-1.356l-.356-.211-3.687.967.984-3.595-.232-.369a9.718 9.718 0 0 1-1.493-5.184c0-5.367 4.368-9.734 9.743-9.734 2.6 0 5.045 1.013 6.883 2.853a9.687 9.687 0 0 1 2.852 6.88c0 5.368-4.367 9.749-9.734 9.749zm8.309-18.053A11.66 11.66 0 0 0 12.04.28C5.58.28.32 5.54.32 12c0 2.064.538 4.08 1.56 5.857L0 24l6.326-1.66A11.69 11.69 0 0 0 12.04 23.72c6.46 0 11.72-5.26 11.72-11.72 0-3.13-1.22-6.075-3.411-8.273z",
   },
+  {
+    id: socials.telegramChannel.id,
+    title: t("community.channels.telegramChannel.title"),
+    handle: socials.telegramChannel.handle,
+    slogan: t("community.channels.telegramChannel.slogan"),
+    badge: t("community.channels.telegramChannel.badge"),
+    cta: t("community.channels.telegramChannel.cta"),
+    href: socials.telegramChannel.url,
+    status: socials.telegramChannel.status,
+    themeBorder: "border-sky-500/20 hover:border-sky-500/40",
+    badgeClass: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+    iconBoxClass: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+    textCta: "text-sky-400 hover:text-sky-300",
+    svgPath: "M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z",
+  },
+  {
+    id: socials.facebook.id,
+    title: t("community.channels.facebook.title"),
+    handle: socials.facebook.handle,
+    slogan: t("community.channels.facebook.slogan"),
+    badge: t("community.channels.facebook.badge"),
+    cta: t("community.channels.facebook.cta"),
+    href: socials.facebook.url,
+    status: socials.facebook.status,
+    themeBorder: "border-blue-500/20 hover:border-blue-500/40",
+    badgeClass: "bg-blue-500/15 text-blue-300 border-blue-500/30",
+    iconBoxClass: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    textCta: "text-blue-400 hover:text-blue-300",
+    svgPath: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z",
+  },
 ]
+
+const totalCount = allChannels.length
+const activeCount = allChannels.filter((c) => c.status === "active").length
+const soonCount = allChannels.filter((c) => c.status === "soon").length
 
 const faqItems = [
   {
@@ -212,7 +246,7 @@ const faqItems = [
     <div>
       <div class="flex items-center gap-2 flex-wrap">
         <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">
-          Canales Oficiales y Comunitarios de 0x Lenador
+          {t("community.header.heading")}
         </h1>
       </div>
       <p class="text-xs text-terminal-secondary mt-1 max-w-xl">
@@ -225,19 +259,21 @@ const faqItems = [
       <button
         id="copy-link-btn"
         type="button"
+        data-copy-text={t("community.share.button")}
+        data-copied-text={t("community.share.copied")}
         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-terminal-surface hover:bg-terminal-elevated border border-terminal-border text-xs font-mono text-terminal-text hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
       >
         <svg class="w-3.5 h-3.5 text-terminal-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
         </svg>
-        <span id="copy-btn-text">Copiar Enlace</span>
+        <span id="copy-btn-text">{t("community.share.button")}</span>
       </button>
 
       <span class="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-xs flex items-center gap-1">
         <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
         </svg>
-        <span>Verificado</span>
+        <span>{t("community.badge.verified")}</span>
       </span>
     </div>
   </header>
@@ -268,17 +304,17 @@ const faqItems = [
               </div>
               <div>
                 <div class="flex items-center gap-1.5">
-                  <h3 class="text-base font-bold text-white tracking-tight">X (Twitter)</h3>
-                  <span class="text-xs font-mono text-terminal-muted">@0xlenador</span>
+                  <h3 class="text-base font-bold text-white tracking-tight">{t("community.channels.x.title")}</h3>
+                  <span class="text-xs font-mono text-terminal-muted">{socials.x.handle}</span>
                 </div>
-                <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Canal Principal // Alpha Diario</span>
+                <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">{t("community.hero.x.highlight")}</span>
               </div>
             </div>
 
             <!-- Badge Estado -->
             <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide uppercase bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Full Activo
+              {t("community.channels.x.badge")}
             </span>
           </div>
 
@@ -292,7 +328,7 @@ const faqItems = [
             rel="noopener noreferrer"
             class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-all shadow-sm group/btn"
           >
-            <span>Seguir en X ({socials.x.handle})</span>
+            <span>{t("community.hero.x.cta")} ({socials.x.handle})</span>
             <svg class="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
@@ -315,8 +351,8 @@ const faqItems = [
             </div>
             <div class="min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
-                <h4 class="text-sm font-bold text-white tracking-tight">Telegram (Grupo Oficial)</h4>
-                <span class="text-[10px] font-mono text-sky-400 bg-sky-500/10 px-1.5 py-0.5 rounded border border-sky-500/20 font-medium">Comunidad Activa</span>
+                <h4 class="text-sm font-bold text-white tracking-tight">{t("community.channels.telegram.title")}</h4>
+                <span class="text-[10px] font-mono text-sky-400 bg-sky-500/10 px-1.5 py-0.5 rounded border border-sky-500/20 font-medium">{t("community.channels.telegram.badge")}</span>
               </div>
               <p class="text-xs text-terminal-secondary leading-snug mt-1">
                 {t("community.channels.telegram.slogan")}
@@ -330,7 +366,7 @@ const faqItems = [
             rel="noopener noreferrer"
             class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500 text-sky-300 hover:text-black border border-sky-500/30 text-xs font-semibold transition-all flex-shrink-0"
           >
-            <span>Unirse al Grupo</span>
+            <span>{t("community.channels.telegram.cta")}</span>
             <span class="text-[10px]">↗</span>
           </a>
         </div>
@@ -349,12 +385,12 @@ const faqItems = [
             </div>
             <div class="min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
-                <h4 class="text-sm font-semibold text-terminal-text tracking-tight">Discord (Servidor Oficial)</h4>
+                <h4 class="text-sm font-semibold text-terminal-text tracking-tight">{t("community.channels.discord.title")}</h4>
                 <span class="text-[10px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.5 rounded flex items-center gap-1 font-medium">
                   <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
-                  Soon
+                  {t("community.channels.discord.badge")}
                 </span>
               </div>
               <p class="text-xs text-terminal-muted leading-snug mt-1">
@@ -364,7 +400,7 @@ const faqItems = [
           </div>
 
           <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-terminal-elevated/50 text-terminal-dim border border-white/5 text-xs font-mono flex-shrink-0 cursor-not-allowed select-none">
-            🔒 Próximamente
+            🔒 {t("community.channels.discord.cta")}
           </span>
         </div>
       </div>
@@ -379,7 +415,7 @@ const faqItems = [
         <div>
           <div class="flex items-center justify-between gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-bold">
-              Canales Audiovisuales & Contenido
+              {t("community.slider.tag")}
             </span>
             <!-- Indicador 1/3 -->
             <span id="slider-counter" class="text-[10px] font-mono text-terminal-dim">1 / 3</span>
@@ -391,19 +427,19 @@ const faqItems = [
               data-slide-index="0"
               class="slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all text-white bg-red-500/20 border border-red-500/40"
             >
-              YouTube
+              {t("community.channels.youtube.title")}
             </button>
             <button
               data-slide-index="1"
               class="slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all text-terminal-muted hover:text-white border border-transparent"
             >
-              TikTok
+              {t("community.channels.tiktok.title")}
             </button>
             <button
               data-slide-index="2"
               class="slide-tab flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-medium transition-all text-terminal-muted hover:text-white border border-transparent"
             >
-              Instagram
+              {t("community.channels.instagram.title")}
             </button>
           </div>
         </div>
@@ -470,9 +506,9 @@ const faqItems = [
         <div class="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
           <!-- Dots -->
           <div class="flex items-center gap-1.5" id="slider-dots">
-            <button data-dot-index="0" class="w-2 h-2 rounded-full bg-red-400 transition-all"></button>
-            <button data-dot-index="1" class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
-            <button data-dot-index="2" class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
+            <button data-dot-index="0" aria-label={t("community.channels.youtube.title")} class="w-2 h-2 rounded-full bg-red-400 transition-all"></button>
+            <button data-dot-index="1" aria-label={t("community.channels.tiktok.title")} class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
+            <button data-dot-index="2" aria-label={t("community.channels.instagram.title")} class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"></button>
           </div>
 
           <!-- Arrows -->
@@ -481,7 +517,8 @@ const faqItems = [
               id="slider-prev"
               type="button"
               class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors"
-              title="Anterior"
+              title={t("community.slider.prev")}
+              aria-label={t("community.slider.prev")}
             >
               ‹
             </button>
@@ -489,7 +526,8 @@ const faqItems = [
               id="slider-next"
               type="button"
               class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-colors"
-              title="Siguiente"
+              title={t("community.slider.next")}
+              aria-label={t("community.slider.next")}
             >
               ›
             </button>
@@ -508,26 +546,26 @@ const faqItems = [
   <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10 mb-4">
     <div class="flex items-center gap-2 flex-wrap">
       <span class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
-        Filtrar Canales:
+        {t("community.filter.label")}
       </span>
       <div class="flex items-center gap-1.5" id="community-filters">
         <button
           data-filter="all"
           class="filter-tab active px-3 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-colors"
         >
-          Todos (8)
+          {t("community.filter.all").replace("{count}", totalCount.toString())}
         </button>
         <button
           data-filter="active"
           class="filter-tab px-3 py-1 rounded-lg text-xs font-mono text-terminal-muted hover:text-white border border-transparent hover:border-terminal-border transition-colors"
         >
-          Activos (6)
+          {t("community.filter.active")} ({activeCount})
         </button>
         <button
           data-filter="soon"
           class="filter-tab px-3 py-1 rounded-lg text-xs font-mono text-terminal-muted hover:text-white border border-transparent hover:border-terminal-border transition-colors"
         >
-          Próximamente (2)
+          {t("community.filter.soon")} ({soonCount})
         </button>
       </div>
     </div>
@@ -538,7 +576,7 @@ const faqItems = [
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
       <span class="text-[11px] font-mono text-terminal-muted">
-        Seguridad: Todos los enlaces verificados oficialmente.
+        {t("community.security.badge")}
       </span>
     </div>
   </section>
@@ -783,11 +821,12 @@ const faqItems = [
     const copyBtn = document.getElementById("copy-link-btn")
     const copyBtnText = document.getElementById("copy-btn-text")
     if (copyBtn && copyBtnText) {
-      const originalText = copyBtnText.textContent || "Copiar Enlace"
+      const originalText = copyBtn.getAttribute("data-copy-text") || copyBtnText.textContent || "Compartir Enlace"
+      const copiedText = copyBtn.getAttribute("data-copied-text") || "¡Enlace copiado!"
       copyBtn.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(window.location.href)
-          copyBtnText.textContent = "¡Copiado!"
+          copyBtnText.textContent = copiedText
           copyBtn.classList.add("border-emerald-400", "text-emerald-300")
           setTimeout(() => {
             copyBtnText.textContent = originalText
@@ -800,7 +839,7 @@ const faqItems = [
           input.select()
           document.execCommand("copy")
           document.body.removeChild(input)
-          copyBtnText.textContent = "¡Copiado!"
+          copyBtnText.textContent = copiedText
           setTimeout(() => {
             copyBtnText.textContent = originalText
           }, 2000)
