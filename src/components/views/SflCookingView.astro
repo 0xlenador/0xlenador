@@ -116,7 +116,9 @@ const formatAstroDescription = (skill) => {
     <details class="group w-full mb-8 bg-white/[0.02] border border-white/5 rounded-2xl" open>
       <summary class="flex flex-col xl:flex-row xl:items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors rounded-2xl list-none gap-4">
         <div class="flex items-center gap-2 shrink-0">
-           <span class="text-emerald-500 transform group-open:rotate-90 transition-transform font-bold">▶</span>
+           <svg class="w-2.5 h-2.5 text-emerald-500 transition-transform duration-200 group-open:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+             <path d="M8 5v14l11-7z" />
+           </svg>
            <span class="text-sm font-bold text-white uppercase tracking-wider">✨ Configure Boosts & Buffs</span>
         </div>
         
@@ -129,10 +131,6 @@ const formatAstroDescription = (skill) => {
                 <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="all" onclick="toggleBoostFilter('all'); event.stopPropagation();">All</button>
                 <button class="filter-boost-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="xp" onclick="toggleBoostFilter('xp'); event.stopPropagation();">XP</button>
                 <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="time" onclick="toggleBoostFilter('time'); event.stopPropagation();">Time</button>
-              </div>
-              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
-                <button class="accordion-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="expand" onclick="setAccordionState('expand'); event.stopPropagation();">Expand</button>
-                <button class="accordion-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="collapse" onclick="setAccordionState('collapse'); event.stopPropagation();">Collapse</button>
               </div>
               <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
                 <button class="view-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="detailed" onclick="setViewStyle('detailed'); event.stopPropagation();">Detailed</button>
@@ -153,21 +151,20 @@ const formatAstroDescription = (skill) => {
                 <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="time" onclick="toggleBoostFilter('time')">Time</button>
               </div>
               <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
-                <button class="accordion-switch-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="expand" onclick="setAccordionState('expand')">Expand</button>
-                <button class="accordion-switch-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="collapse" onclick="setAccordionState('collapse')">Collapse</button>
-              </div>
-              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
                 <button class="view-switch-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="detailed" onclick="setViewStyle('detailed')">Detailed</button>
                 <button class="view-switch-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="compact" onclick="setViewStyle('compact')">Compact</button>
               </div>
             </div>
           </div>
           
-          <div class="flex flex-wrap items-start justify-center gap-x-6 gap-y-2 w-full mt-2">
+          <div class="flex flex-col items-start w-full mt-2">
           <!-- PowerUps Sub-group -->
-      <details class="group w-auto open:w-full open:mb-6" open>
-        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-emerald-400 transition-colors list-none">
-          <span class="mr-2 transform group-open:rotate-90 transition-transform text-emerald-500/50">▶</span> PowerUps
+      <details class="group/sub w-full mb-1 open:mb-6" open>
+        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-emerald-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+          <svg class="w-2.5 h-2.5 mr-2 text-emerald-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          PowerUps
         </summary>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
           {
@@ -197,9 +194,12 @@ const formatAstroDescription = (skill) => {
       </details>
 
       <!-- Skills Sub-group -->
-      <details class="group w-auto open:w-full open:mb-6" open>
-        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-blue-400 transition-colors list-none">
-          <span class="mr-2 transform group-open:rotate-90 transition-transform text-blue-500/50">▶</span> Skills
+      <details class="group/sub w-full mb-1 open:mb-6" open>
+        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-blue-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+          <svg class="w-2.5 h-2.5 mr-2 text-blue-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          Skills
         </summary>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
           {
@@ -239,9 +239,12 @@ const formatAstroDescription = (skill) => {
         </div>
       </details>
 
-        <details class="group w-auto open:w-full open:mb-6" open>
-          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-purple-400 transition-colors list-none">
-            <span class="mr-2 transform group-open:rotate-90 transition-transform text-purple-500/50">▶</span> Others
+        <details class="group/sub w-full mb-1 open:mb-6" open>
+          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-purple-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+            <svg class="w-2.5 h-2.5 mr-2 text-purple-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Others
           </summary>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
             {
@@ -286,9 +289,12 @@ const formatAstroDescription = (skill) => {
           </div>
         </details>
 
-        <details class="group w-auto open:w-full open:mb-6" open>
-          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-3 hover:text-orange-400 transition-colors list-none">
-            <span class="mr-2 transform group-open:rotate-90 transition-transform text-orange-500/50">▶</span> Consumables
+        <details class="group/sub w-full mb-1 open:mb-6" open>
+          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-orange-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+            <svg class="w-2.5 h-2.5 mr-2 text-orange-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Consumables
           </summary>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
             {
@@ -659,8 +665,7 @@ const formatAstroDescription = (skill) => {
       currentHideXpLimit: window.currentHideXpLimit,
       currentCategory: currentCategory,
       boostFilter: document.querySelector('.filter-boost-btn.active')?.dataset?.filter || 'all',
-      viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'compact',
-      accordionState: document.querySelector('.accordion-switch-btn.active')?.dataset?.action || 'expand'
+      viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'compact'
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(state));
   };
@@ -1356,14 +1361,6 @@ const formatAstroDescription = (skill) => {
   }
 
 
-  window.setAccordionState = function(state) {
-    const isExpand = state === 'expand';
-    document.querySelectorAll('#boosts-container details').forEach(d => d.open = isExpand);
-    document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.accordion-switch-btn[data-action="' + state + '"]').forEach(btn => btn.classList.add('active'));
-    if (typeof saveState === "function") saveState();
-  };
-
   window.setViewStyle = function(style) {
     const container = document.getElementById('boosts-container');
     if (style === 'compact') container.classList.add('is-compact');
@@ -1372,7 +1369,6 @@ const formatAstroDescription = (skill) => {
     document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.view-switch-btn[data-action="' + style + '"]').forEach(btn => btn.classList.add('active'));
     
-    window.setAccordionState('expand');
     if (typeof saveState === "function") saveState();
   };
 
@@ -1387,7 +1383,6 @@ const formatAstroDescription = (skill) => {
     }
     document.querySelectorAll('.filter-boost-btn[data-filter="' + filter + '"]').forEach(btn => btn.classList.add('active'));
     
-    window.setAccordionState('expand');
     if (typeof saveState === "function") saveState();
   };
 
@@ -1435,12 +1430,6 @@ const formatAstroDescription = (skill) => {
           document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active'));
           document.querySelectorAll(`.view-switch-btn[data-action="${state.viewStyle}"]`).forEach(btn => btn.classList.add('active'));
         }
-        if (state.accordionState) {
-          const isExpand = state.accordionState === 'expand';
-          document.querySelectorAll('#boosts-container details').forEach(d => d.open = isExpand);
-          document.querySelectorAll('.accordion-switch-btn').forEach(b => b.classList.remove('active'));
-          document.querySelectorAll(`.accordion-switch-btn[data-action="${state.accordionState}"]`).forEach(btn => btn.classList.add('active'));
-        }
       } catch (e) {
         console.error("Failed to parse cached state", e);
       }
@@ -1457,7 +1446,7 @@ const formatAstroDescription = (skill) => {
 
 
 <style>
-  .filter-boost-btn.active, .accordion-switch-btn.active, .view-switch-btn.active {
+  .filter-boost-btn.active, .view-switch-btn.active {
     background-color: rgba(255, 255, 255, 0.15);
     color: white;
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
