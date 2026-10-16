@@ -682,8 +682,7 @@ const formatAstroDescription = (skill) => {
   };
 
   const getCalculatedXp = (item) => {
-    let finalXp = item.xp;
-    let multipliers = 1;
+    let boostedExp = item.xp;
     let additions = 0;
     
     activeBuffs.forEach(id => {
@@ -692,7 +691,7 @@ const formatAstroDescription = (skill) => {
          const math = buff.mathematics_1;
          if (math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
            if (math.mathematics_operation === "multiply") {
-             multipliers += (math.calc - 1); // convert 1.2 to +0.2
+             boostedExp *= math.calc;
            } else if (math.mathematics_operation === "add") {
              additions += math.calc;
            }
@@ -700,45 +699,48 @@ const formatAstroDescription = (skill) => {
       }
     });
     
-    // Skills Logic for XP
-    activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
-      if (!skill) return;
-      const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
-      
-      // Others XP Buffs
-      if (skillName === "VIP Pass") { multipliers += math1; }
-      if (skillName === "Blossom Beard") { multipliers += math1; }
-      if (skillName === "Luminous Anglerfish" && isTargetMatch(item, "Fish")) { multipliers += math1; }
-      if (skillName === "Faction Pet") { multipliers += math1; }
-      
-      // Munching Mastery (+5% XP)
-      if (skillName === "Munching Mastery") {
-        multipliers += math1;
-      }
-      // Juicy Boost (+10% XP for Smoothie Shack)
-      if (skillName === "Juicy Boost" && item.building === "Smoothie Shack") {
-        multipliers += math1;
-      }
-      // Double Nom (+1 food = 2x XP essentially)
-      if (skillName === "Double Nom") {
-        multipliers += math1; // +1 = 100% more XP
-      }
-      // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
-      if (skillName === "Fiery Jackpot" && item.building === "Fire Pit") {
-        multipliers += (math1 / 100); // 20% = 0.2 expected XP increase
-      }
-      // Fishy Feast (+20% XP for Fish)
-      if (skillName === "Fishy Feast" && isTargetMatch(item, "Fish")) {
-        multipliers += math1;
-      }
-      // Buzzworthy Treats (+10% XP for Honey Foods)
-      if (skillName === "Buzzworthy Treats" && isTargetMatch(item, "Honey Foods")) {
-        multipliers += math1;
-      }
-    });
+    // Skills Logic for XP (Multiplicative compounding according to SFL engine)
+    if (activeSkills) {
+      Object.entries(activeSkills).forEach(([skillName, rank]) => {
+        const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
+        if (!skill) return;
+        const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
+        if (math1 === undefined || math1 === null) return;
+        
+        // Others XP Buffs
+        if (skillName === "VIP Pass") { boostedExp *= (1 + math1); }
+        if (skillName === "Blossom Beard") { boostedExp *= (1 + math1); }
+        if (skillName === "Luminous Anglerfish" && isTargetMatch(item, "Fish")) { boostedExp *= (1 + math1); }
+        if (skillName === "Faction Pet") { boostedExp *= (1 + math1); }
+        
+        // Munching Mastery (+5% XP)
+        if (skillName === "Munching Mastery") {
+          boostedExp *= (1 + math1);
+        }
+        // Juicy Boost (+10% XP for Smoothie Shack)
+        if (skillName === "Juicy Boost" && item.building === "Smoothie Shack") {
+          boostedExp *= (1 + math1);
+        }
+        // Double Nom (+1 food = 2x XP essentially)
+        if (skillName === "Double Nom") {
+          boostedExp *= (1 + math1);
+        }
+        // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
+        if (skillName === "Fiery Jackpot" && item.building === "Fire Pit") {
+          boostedExp *= (1 + (math1 / 100));
+        }
+        // Fishy Feast (+20% XP for Fish)
+        if (skillName === "Fishy Feast" && isTargetMatch(item, "Fish")) {
+          boostedExp *= (1 + math1);
+        }
+        // Buzzworthy Treats (+10% XP for Honey Foods)
+        if (skillName === "Buzzworthy Treats" && isTargetMatch(item, "Honey Foods")) {
+          boostedExp *= (1 + math1);
+        }
+      });
+    }
     
-    return (finalXp * multipliers) + additions;
+    return boostedExp + additions;
   };
 
   const getCalculatedTime = (item) => {
