@@ -92,102 +92,150 @@ const formatAstroDescription = (skill) => {
 
 <SflToolLayout activeTab="cocinando">
 
-    <div class="mb-4 relative z-10 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
-      <div class="text-center sm:text-left max-w-xl">
-        <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
-          {t("sfl.cooking.heading")}
-          <span class="text-emerald-500"> {t("sfl.cooking.heading.accent")}</span>
-        </h1>
-        <p class="text-terminal-secondary text-xs sm:text-sm leading-relaxed">
-          {t("sfl.cooking.intro")}
-        </p>
-      </div>
+    <!-- Encabezado Principal -->
+    <div class="mb-5 relative z-10 text-center sm:text-left">
+      <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
+        {t("sfl.cooking.heading")}
+        <span class="text-emerald-500"> {t("sfl.cooking.heading.accent")}</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-relaxed max-w-3xl">
+        {t("sfl.cooking.intro")}
+      </p>
+    </div>
 
-      <!-- Header Widgets: Skill Cost Calculator + Fishing Rod Cost -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto justify-end shrink-0">
-        <!-- Bloque horizontal pequeño: Calculadora Costo de Skill -->
-        <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row items-center gap-3 shadow-lg backdrop-blur-sm hover:border-emerald-500/30 transition-all">
-          <div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-between sm:justify-start">
-            <div class="flex items-center gap-2">
-              <img src="/img/sunflowerland/skills/munching_mastery.webp" class="w-8 h-8 object-contain drop-shadow-md shrink-0" alt="Skill Point" />
-              <div class="flex flex-col">
-                <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider">{t("sfl.cooking.skillCalc.title")}</span>
-                <div class="flex items-center gap-1">
-                  <span class="text-xs text-white/70 font-mono font-semibold">Lvl</span>
-                  <input
-                    type="number"
-                    id="skillLevelInput"
-                    min="1"
-                    max="200"
-                    value="10"
-                    class="w-12 h-5.5 bg-black/40 border border-white/15 focus:border-emerald-400 rounded text-center text-xs font-mono font-bold text-emerald-400 outline-none transition-colors"
-                  />
+    <!-- Dashboard Inicial Minimalista (Ancho completo) -->
+    <div class="w-full mb-8 relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
+        
+        <!-- Bloque 1: Calculadora de Skills (xl:col-span-5) -->
+        <div class="xl:col-span-5 bg-white/[0.03] border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg backdrop-blur-sm hover:border-emerald-500/20 transition-all">
+          <div>
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <div class="flex items-center gap-2.5">
+                <img src="/img/sunflowerland/skills/munching_mastery.webp" class="w-7 h-7 object-contain drop-shadow" alt="Skill Point" />
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-white uppercase tracking-wider">{t("sfl.cooking.dash.skillTitle")}</span>
+                  <span class="text-[10px] text-terminal-muted">{t("sfl.cooking.dash.skillSubtitle")}</span>
                 </div>
+              </div>
+              <div class="flex items-center gap-1.5 bg-black/40 border border-white/10 px-2.5 py-1 rounded-lg">
+                <span class="text-[11px] text-white/50 font-mono font-semibold">Lvl</span>
+                <input
+                  type="number"
+                  id="skillLevelInput"
+                  min="1"
+                  max="200"
+                  value="10"
+                  class="w-10 text-center text-xs font-mono font-bold text-emerald-400 bg-transparent outline-none"
+                />
               </div>
             </div>
 
-            <!-- Mobile cost display -->
-            <div class="flex flex-col items-end sm:hidden">
-              <span class="text-emerald-400 font-mono font-bold text-sm" id="skillCostDisplayMobile">...</span>
-              <span class="text-[9px] font-mono text-white/40" id="skillDeltaXpDisplayMobile">...</span>
+            <!-- Slider bar -->
+            <div class="flex flex-col gap-1.5 my-3 px-0.5">
+              <div class="flex justify-between items-center text-[10px] font-mono text-white/40">
+                <span>1</span>
+                <span class="text-emerald-400 font-bold" id="skillSliderBadge">Lvl 10</span>
+                <span>200</span>
+              </div>
+              <input
+                type="range"
+                id="skillLevelRange"
+                min="1"
+                max="200"
+                value="10"
+                class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none"
+              />
             </div>
           </div>
 
-          <!-- Slider bar -->
-          <div class="flex flex-col gap-1 w-full sm:w-36 md:w-44 px-1 shrink-0">
-            <div class="flex justify-between items-center text-[9px] font-mono text-white/40">
-              <span>1</span>
-              <span class="text-emerald-400/80 font-semibold" id="skillSliderBadge">Lvl 10</span>
-              <span>200</span>
+          <!-- Métricas del Skill -->
+          <div class="grid grid-cols-2 gap-2.5 mt-2 pt-3 border-t border-white/5">
+            <div class="bg-black/20 border border-white/5 rounded-xl p-2.5 flex flex-col justify-center">
+              <span class="text-[9px] uppercase tracking-wider font-bold text-white/40 mb-0.5">{t("sfl.cooking.dash.skillCost")}</span>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-emerald-400 font-mono font-bold text-base" id="skillCostDisplay">...</span>
+                <span class="text-[10px] font-mono text-white/40" id="skillDeltaXpDisplay">...</span>
+              </div>
             </div>
-            <input
-              type="range"
-              id="skillLevelRange"
-              min="1"
-              max="200"
-              value="10"
-              class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none"
-            />
-          </div>
-
-          <div class="hidden sm:block w-px h-8 bg-white/10 shrink-0"></div>
-
-          <!-- Desktop Cost & Optimal Dish Details -->
-          <div class="hidden sm:flex flex-col justify-center min-w-[130px] shrink-0">
-            <div class="flex items-baseline gap-1.5">
-              <span class="text-emerald-400 font-mono font-bold text-sm tracking-tight" id="skillCostDisplay">...</span>
-              <span class="text-[10px] font-mono text-white/40" id="skillDeltaXpDisplay">...</span>
-            </div>
-            <div class="flex items-center gap-1.5 text-[10px] text-white/60 font-mono mt-0.5" title={t("sfl.cooking.skillCalc.dishTip")}>
-              <span class="text-white/40">{t("sfl.cooking.skillCalc.total")}</span>
-              <span id="skillTotalCostDisplay" class="text-white/80 font-bold">...</span>
-              <span class="text-white/30">•</span>
-              <img id="skillBestDishImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-3.5 h-3.5 object-contain shrink-0" onerror="window.handleImgError(this, 'Boiled Eggs')" />
-              <span id="skillBestDishDisplay" class="truncate max-w-[100px] text-white/70">...</span>
+            <div class="bg-black/20 border border-white/5 rounded-xl p-2.5 flex flex-col justify-center">
+              <span class="text-[9px] uppercase tracking-wider font-bold text-white/40 mb-0.5">{t("sfl.cooking.dash.accumulated")}</span>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-white/90 font-mono font-bold text-base" id="skillTotalCostDisplay">...</span>
+                <span class="text-[10px] font-mono text-white/40" id="skillTotalXpDisplay">...</span>
+              </div>
             </div>
           </div>
+        </div>
 
-          <!-- Mobile optimal dish details -->
-          <div class="flex sm:hidden items-center justify-between w-full pt-1.5 border-t border-white/5 text-[10px] text-white/50 font-mono">
+        <!-- Bloque 2: Alimento Más Rentable & XP por FLOWER (xl:col-span-4) -->
+        <div class="xl:col-span-4 bg-white/[0.03] border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg backdrop-blur-sm hover:border-emerald-500/20 transition-all">
+          <div>
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <img id="bestFoodImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-7 h-7 object-contain drop-shadow shrink-0" onerror="window.handleImgError(this, 'Boiled Eggs')" />
+                <div class="flex flex-col min-w-0">
+                  <span class="text-xs font-bold text-white uppercase tracking-wider">{t("sfl.cooking.dash.bestFoodTitle")}</span>
+                  <span id="bestFoodNameDisplay" class="text-xs font-bold text-emerald-400 truncate">...</span>
+                </div>
+              </div>
+              <span class="text-[10px] text-white/40 font-mono border border-white/5 bg-white/5 px-1.5 py-0.5 rounded shrink-0">BASE</span>
+            </div>
+
+            <!-- Métrica Estrella: XP por cada FLOWER -->
+            <div class="my-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+              <div class="flex flex-col">
+                <span class="text-[9px] uppercase tracking-wider text-emerald-400/80 font-bold">{t("sfl.cooking.dash.xpPerFlower")}</span>
+                <span id="bestFoodEfficiencyDisplay" class="text-xl sm:text-2xl font-black font-mono text-emerald-300">...</span>
+              </div>
+              <span class="text-2xl select-none">⚡</span>
+            </div>
+          </div>
+
+          <!-- Costo y XP base del plato -->
+          <div class="flex items-center justify-between pt-3 border-t border-white/5 text-xs font-mono text-white/60">
             <div class="flex items-center gap-1">
-              <span class="text-white/40">{t("sfl.cooking.skillCalc.total")}</span>
-              <span id="skillTotalCostDisplayMobile" class="text-white/80 font-bold">...</span>
+              <span class="text-white/40">{t("sfl.cooking.dash.foodCost")}</span>
+              <span id="bestFoodCostDisplay" class="text-white/90 font-bold">...</span>
             </div>
-            <div class="flex items-center gap-1 truncate max-w-[170px]">
-              <img id="skillBestDishImgMobile" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-3 h-3 object-contain shrink-0" onerror="window.handleImgError(this, 'Boiled Eggs')" />
-              <span id="skillBestDishDisplayMobile" class="truncate">...</span>
+            <div class="flex items-center gap-1">
+              <span class="text-white/40">{t("sfl.cooking.dash.foodXp")}</span>
+              <span id="bestFoodXpDisplay" class="text-white/90 font-bold">...</span>
             </div>
           </div>
         </div>
 
-        <!-- Card for Fishing Rod -->
-        <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-3 shrink-0 mx-auto sm:mx-0 shadow-lg backdrop-blur-sm group hover:bg-white/10 transition-colors">
-          <img src="/img/sunflowerland/123/rod.webp" class="w-10 h-10 object-contain drop-shadow-md group-hover:scale-110 transition-transform" alt="Fishing Rod" />
-          <div class="flex flex-col">
-            <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider">Rod Cost</span>
-            <span class="text-emerald-400 font-mono font-bold text-sm" id="fishingRodCostDisplay">...</span>
+        <!-- Bloque 3: Apartado de Precios Clave (xl:col-span-3) -->
+        <div class="md:col-span-2 xl:col-span-3 bg-white/[0.03] border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg backdrop-blur-sm hover:border-emerald-500/20 transition-all">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="text-xs font-bold text-white uppercase tracking-wider">{t("sfl.cooking.dash.pricesTitle")}</span>
+              <span class="text-[10px] text-terminal-muted">{t("sfl.cooking.dash.pricesSubtitle")}</span>
+            </div>
+
+            <!-- Lista de Precios Rápidos (Modular para agregar más precios adelante) -->
+            <div id="marketQuickPrices" class="flex flex-col gap-2">
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-black/20 border border-white/5 hover:bg-white/[0.03] transition-colors group">
+                <div class="flex items-center gap-2.5">
+                  <img src="/img/sunflowerland/123/rod.webp" class="w-7 h-7 object-contain drop-shadow group-hover:scale-110 transition-transform" alt="Fishing Rod" />
+                  <div class="flex flex-col">
+                    <span class="text-xs font-semibold text-white/90 group-hover:text-emerald-400 transition-colors">{t("sfl.cooking.dash.rodName")}</span>
+                    <span class="text-[9px] text-white/40 font-mono">{t("sfl.cooking.dash.rodFormula")}</span>
+                  </div>
+                </div>
+                <div class="flex flex-col items-end">
+                  <span class="text-emerald-400 font-mono font-bold text-sm" id="fishingRodCostDisplay">...</span>
+                  <span class="text-[9px] font-mono text-white/30 uppercase">SFL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 text-[10px] text-white/30 font-mono text-center">
+            P2P Live Market
           </div>
         </div>
+
       </div>
     </div>
 
@@ -1246,11 +1294,12 @@ const formatAstroDescription = (skill) => {
     return best;
   };
 
-  const formatCompactXp = (xp) => {
+  const formatCompactXp = (xp, isDelta = true) => {
     if (xp === 0) return "0 XP";
-    if (xp >= 1000000) return `+${(xp / 1000000).toFixed(2)}M XP`;
-    if (xp >= 10000) return `+${(xp / 1000).toFixed(1)}k XP`;
-    return `+${formatNumber(xp, 0)} XP`;
+    const prefix = isDelta ? "+" : "";
+    if (xp >= 1000000) return `${prefix}${(xp / 1000000).toFixed(2)}M XP`;
+    if (xp >= 10000) return `${prefix}${(xp / 1000).toFixed(1)}k XP`;
+    return `${prefix}${formatNumber(xp, 0)} XP`;
   };
 
   const updateSkillCalculator = () => {
@@ -1270,18 +1319,17 @@ const formatAstroDescription = (skill) => {
     const costDisplay = document.getElementById("skillCostDisplay");
     const deltaXpDisplay = document.getElementById("skillDeltaXpDisplay");
     const totalCostDisplay = document.getElementById("skillTotalCostDisplay");
-    const bestDishDisplay = document.getElementById("skillBestDishDisplay");
-    const bestDishImg = document.getElementById("skillBestDishImg");
+    const totalXpDisplay = document.getElementById("skillTotalXpDisplay");
 
-    const costDisplayMobile = document.getElementById("skillCostDisplayMobile");
-    const deltaXpDisplayMobile = document.getElementById("skillDeltaXpDisplayMobile");
-    const totalCostDisplayMobile = document.getElementById("skillTotalCostDisplayMobile");
-    const bestDishDisplayMobile = document.getElementById("skillBestDishDisplayMobile");
-    const bestDishImgMobile = document.getElementById("skillBestDishImgMobile");
+    const bestFoodImg = document.getElementById("bestFoodImg");
+    const bestFoodNameDisplay = document.getElementById("bestFoodNameDisplay");
+    const bestFoodEfficiencyDisplay = document.getElementById("bestFoodEfficiencyDisplay");
+    const bestFoodCostDisplay = document.getElementById("bestFoodCostDisplay");
+    const bestFoodXpDisplay = document.getElementById("bestFoodXpDisplay");
 
     if (!best || !best.efficiency || best.efficiency <= 0) {
       if (costDisplay) costDisplay.innerText = "...";
-      if (costDisplayMobile) costDisplayMobile.innerText = "...";
+      if (bestFoodEfficiencyDisplay) bestFoodEfficiencyDisplay.innerText = "...";
       return;
     }
 
@@ -1292,48 +1340,31 @@ const formatAstroDescription = (skill) => {
     const costThisLevel = deltaXp / best.efficiency;
     const totalCost = currentLevelXp / best.efficiency;
 
-    const formattedCost = `${formatNumber(costThisLevel, 2)} SFL`;
-    const formattedDelta = formatCompactXp(deltaXp);
-    const formattedTotal = `${formatNumber(totalCost, 2)} SFL`;
-    const formattedDish = `${best.name} (${formatNumber(best.efficiency, 1)} XP/SFL)`;
     const safeDishName = best.name.replace(/'/g, "\\'");
 
-    if (costDisplay) costDisplay.innerText = formattedCost;
-    if (costDisplayMobile) costDisplayMobile.innerText = formattedCost;
-
+    // Tarjeta 1: Skill Calculator
+    if (costDisplay) costDisplay.innerText = `${formatNumber(costThisLevel, 2)} SFL`;
     if (deltaXpDisplay) {
-      deltaXpDisplay.innerText = formattedDelta;
+      deltaXpDisplay.innerText = formatCompactXp(deltaXp, true);
       deltaXpDisplay.title = `${formatNumber(deltaXp, 0)} XP`;
     }
-    if (deltaXpDisplayMobile) {
-      deltaXpDisplayMobile.innerText = formattedDelta;
+    if (totalCostDisplay) totalCostDisplay.innerText = `${formatNumber(totalCost, 2)} SFL`;
+    if (totalXpDisplay) {
+      totalXpDisplay.innerText = formatCompactXp(currentLevelXp, false);
+      totalXpDisplay.title = `Total: ${formatNumber(currentLevelXp, 0)} XP`;
     }
 
-    if (totalCostDisplay) {
-      totalCostDisplay.innerText = formattedTotal;
-      totalCostDisplay.title = `Total XP: ${formatNumber(currentLevelXp, 0)} XP`;
-    }
-    if (totalCostDisplayMobile) {
-      totalCostDisplayMobile.innerText = formattedTotal;
-    }
+    // Tarjeta 2: Alimento Más Rentable & XP por FLOWER
+    if (bestFoodNameDisplay) bestFoodNameDisplay.innerText = best.name;
+    if (bestFoodEfficiencyDisplay) bestFoodEfficiencyDisplay.innerText = `${formatNumber(best.efficiency, 1)} XP/SFL`;
+    if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, 3)} SFL`;
+    if (bestFoodXpDisplay) bestFoodXpDisplay.innerText = `${formatNumber(best.xp, 1)} XP`;
 
-    if (bestDishDisplay) {
-      bestDishDisplay.innerText = formattedDish;
-      bestDishDisplay.title = `${best.name} - ${formatNumber(best.efficiency, 2)} XP/SFL`;
+    if (bestFoodImg) {
+      bestFoodImg.src = `/img/sunflowerland/food/${best.name}.png`;
+      bestFoodImg.alt = best.name;
+      bestFoodImg.onerror = function() { window.handleImgError(this, safeDishName); };
     }
-    if (bestDishDisplayMobile) {
-      bestDishDisplayMobile.innerText = formattedDish;
-    }
-
-    const setupDishImg = (img) => {
-      if (!img) return;
-      img.src = `/img/sunflowerland/food/${best.name}.png`;
-      img.alt = best.name;
-      img.onerror = function() { window.handleImgError(this, safeDishName); };
-    };
-
-    setupDishImg(bestDishImg);
-    setupDishImg(bestDishImgMobile);
   };
 
   const fetchPrices = async () => {
