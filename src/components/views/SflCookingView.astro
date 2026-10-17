@@ -1320,7 +1320,7 @@ const formatAstroDescription = (skill) => {
             <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5 relative z-10">SFL Cost</span>
             <div class="flex flex-col relative z-10">
               <div class="flex items-center gap-1">
-                <span class="text-white text-[15px] font-mono ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, 2) : "0"}</span>
+                <span class="text-white text-[15px] font-mono ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, costObj.total >= 100 ? 0 : 2) : "0"}</span>
                 ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70">*Inc</span>` : ""}
               </div>
               ${costObj.total > costObj.baseTotal ? `<span class="text-[8px] text-red-500/70 leading-none mt-0.5">Debuff x${(costObj.total/costObj.baseTotal).toFixed(2)}</span>` : ""}
@@ -1328,7 +1328,7 @@ const formatAstroDescription = (skill) => {
           </div>
           <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center">
             <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">XP/SFL</span>
-            <span class="text-emerald-300/90 text-sm font-mono">${xpPerSfl > 0 ? formatNumber(xpPerSfl, 2) : "0.00"}</span>
+            <span class="text-emerald-300/90 text-sm font-mono">${xpPerSfl > 0 ? formatNumber(xpPerSfl, xpPerSfl >= 100 ? 0 : 2) : "0.00"}</span>
           </div>
           <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center">
             <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">XP/Day</span>
@@ -1342,13 +1342,13 @@ const formatAstroDescription = (skill) => {
         </div>
         
         <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 flex-col justify-center">
-          <span class="text-white text-sm ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, 2) : "0"}</span>
+          <span class="text-white text-sm ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, costObj.total >= 100 ? 0 : 2) : "0"}</span>
           ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70" title="Missing some P2P prices">*Incomplete</span>` : ""}
           ${costObj.total > costObj.baseTotal ? `<span class="text-[9px] text-red-500/70" title="Base: ${formatNumber(costObj.baseTotal, 2)}">Debuff x${(costObj.total/costObj.baseTotal).toFixed(2)}</span>` : ""}
         </div>
         
         <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 items-center">
-          <span class="text-white text-sm font-mono">${xpPerSfl > 0 ? formatNumber(xpPerSfl, 2) : "0.00"}</span>
+          <span class="text-white text-sm font-mono">${xpPerSfl > 0 ? formatNumber(xpPerSfl, xpPerSfl >= 100 ? 0 : 2) : "0.00"}</span>
         </div>
 
         <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 items-center">
@@ -1457,12 +1457,14 @@ const formatAstroDescription = (skill) => {
     const safeDishName = best.name.replace(/'/g, "\\'");
 
     // Tarjeta 1: Skill Calculator
-    if (costDisplay) costDisplay.innerText = `${formatNumber(costThisLevel, 2)} SFL`;
+    const costThisLevelDecimals = costThisLevel >= 100 ? 0 : 2;
+    if (costDisplay) costDisplay.innerText = `${formatNumber(costThisLevel, costThisLevelDecimals)} SFL`;
     if (deltaXpDisplay) {
       deltaXpDisplay.innerText = `(${formatCompactXp(deltaXp, true)})`;
       deltaXpDisplay.title = `${formatNumber(deltaXp, 0)} XP`;
     }
-    if (totalCostDisplay) totalCostDisplay.innerText = `${formatNumber(totalCost, 2)} SFL`;
+    const totalCostDecimals = totalCost >= 100 ? 0 : 2;
+    if (totalCostDisplay) totalCostDisplay.innerText = `${formatNumber(totalCost, totalCostDecimals)} SFL`;
     if (totalXpDisplay) {
       totalXpDisplay.innerText = `(${formatCompactXp(currentLevelXp, false)})`;
       totalXpDisplay.title = `Total: ${formatNumber(currentLevelXp, 0)} XP`;
@@ -1470,8 +1472,12 @@ const formatAstroDescription = (skill) => {
 
     // Tarjeta 2: Alimento Más Rentable & XP por FLOWER
     if (bestFoodNameDisplay) bestFoodNameDisplay.innerText = best.name;
-    if (bestFoodEfficiencyDisplay) bestFoodEfficiencyDisplay.innerText = `${formatNumber(best.efficiency, 1)} XP/SFL`;
-    if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, 3)} SFL`;
+    if (bestFoodEfficiencyDisplay) {
+      const effDecimals = best.efficiency >= 100 ? 0 : 1;
+      bestFoodEfficiencyDisplay.innerText = `${formatNumber(best.efficiency, effDecimals)} XP/SFL`;
+    }
+    const baseCostDecimals = best.baseCost >= 100 ? 0 : 3;
+    if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, baseCostDecimals)} SFL`;
     if (bestFoodXpDisplay) bestFoodXpDisplay.innerText = `${formatNumber(best.xp, 0)}`;
 
     if (bestFoodImg) {
