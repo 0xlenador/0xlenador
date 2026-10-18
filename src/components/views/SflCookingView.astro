@@ -111,7 +111,7 @@ const formatAstroDescription = (skill) => {
       <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
         
         <!-- Bloque Izquierdo: ALIMENTO ÓPTIMO (md:col-span-7 xl:col-span-8) -->
-        <div class="md:col-span-7 xl:col-span-8 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative overflow-hidden">
+        <div class="md:col-span-7 xl:col-span-8 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-20">
           <div>
             <!-- Header sutil -->
             <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-4">
@@ -142,9 +142,65 @@ const formatAstroDescription = (skill) => {
               </div>
             </div>
 
-            <!-- Nombre del Plato -->
-            <div id="bestFoodNameDisplay" class="text-lg sm:text-xl font-bold text-white tracking-wide mt-2 mb-3">
-              ...
+            <!-- Nombre del Plato con Selector Manual Discreto -->
+            <div class="relative mt-2 mb-3" id="dishSelectContainer">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="bestFoodNameDisplay" class="text-lg sm:text-xl font-bold text-white tracking-wide">
+                  ...
+                </span>
+                
+                <!-- Botón discreto y sutil al lado derecho del nombre -->
+                <button
+                  type="button"
+                  id="dishSelectDropdownBtn"
+                  class="p-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/25 text-white/50 hover:text-emerald-400 transition-all flex items-center justify-center cursor-pointer"
+                  title={t("sfl.cooking.dash.selectDishBtnTitle")}
+                  aria-expanded="false"
+                >
+                  <svg id="dishDropdownChevron" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <!-- Badge discreto si hay selección manual -->
+                <button
+                  type="button"
+                  id="dishManualBadge"
+                  class="hidden text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 transition-all items-center gap-1 cursor-pointer"
+                  title={t("sfl.cooking.dash.manualBadgeTitle")}
+                >
+                  <span>{t("sfl.cooking.dash.manualBadge")}</span>
+                  <span class="text-blue-300/60 hover:text-white font-bold">✕</span>
+                </button>
+              </div>
+
+              <!-- Menú Desplegable Minimalista -->
+              <div
+                id="dishSelectDropdownMenu"
+                class="hidden absolute left-0 top-full mt-2 w-full max-w-sm sm:max-w-md bg-[#141414]/98 border border-white/15 rounded-2xl shadow-2xl backdrop-blur-xl z-50 overflow-hidden flex flex-col"
+              >
+                <!-- Buscador rápido dentro del desplegable -->
+                <div class="p-2.5 border-b border-white/10 bg-black/40">
+                  <input
+                    type="text"
+                    id="dishDropdownSearch"
+                    placeholder={t("sfl.cooking.dash.searchDishPlaceholder")}
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-emerald-500/50 font-mono"
+                  />
+                </div>
+
+                <!-- Lista de platos ordenados por eficiencia -->
+                <div
+                  id="dishDropdownList"
+                  class="overflow-y-auto divide-y divide-white/5 py-1 text-xs font-mono max-h-64 no-scrollbar"
+                  data-label-auto-optimal={t("sfl.cooking.dash.autoOptimal")}
+                  data-label-auto-desc={t("sfl.cooking.dash.autoOptimalDesc")}
+                  data-label-no-dishes={t("sfl.cooking.dash.noDishesFound")}
+                  data-label-cost={t("sfl.cooking.dash.foodCost")}
+                >
+                  <!-- Generado dinámicamente -->
+                </div>
+              </div>
             </div>
 
             <!-- Filtros de Min XP (Píldoras idénticas a la imagen) -->
@@ -938,6 +994,7 @@ const formatAstroDescription = (skill) => {
   
   let activeBuffs = new Set()
   let activeSkills = {} // Format: { "Skill Name": rank (1, 2 or 3) }
+  window.manualSelectedDish = null;
 
   const CACHE_KEY = "sfl_cooking_state";
   const saveState = () => {
@@ -946,6 +1003,7 @@ const formatAstroDescription = (skill) => {
       activeSkills: activeSkills,
       currentHideXpLimit: window.currentHideXpLimit,
       currentCategory: currentCategory,
+      manualSelectedDish: window.manualSelectedDish || null,
       boostFilter: document.querySelector('.filter-boost-btn.active')?.dataset?.filter || 'all',
       viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'compact',
       skillLevel: document.getElementById('skillLevelRange')?.value || '100'
@@ -1413,36 +1471,56 @@ const formatAstroDescription = (skill) => {
     })
   }
 
-  const getBestBaseRecipe = () => {
+  const getBestRecipe = () => {
+    if (window.manualSelectedDish) {
+      const manualRecipe = recipesData.find((r) => r.name === window.manualSelectedDish);
+      if (manualRecipe) {
+        const calcXp = getCalculatedXp(manualRecipe);
+        const costObj = calculateRecipeCost(manualRecipe.ingredients);
+        const totalCost = costObj.total;
+        const efficiency = totalCost > 0 ? calcXp / totalCost : 0;
+        return {
+          ...manualRecipe,
+          xp: calcXp,
+          rawBaseXp: manualRecipe.xp,
+          baseCost: totalCost,
+          efficiency,
+          isManual: true,
+        };
+      }
+    }
+
     let best = null;
     let maxEfficiency = 0;
     const minXp = window.currentHideXpLimit || 0;
 
     for (const recipe of recipesData) {
-      if (!recipe.xp || recipe.xp <= 0) continue;
-      if (recipe.xp < minXp) continue;
+      const calcXp = getCalculatedXp(recipe);
+      if (!calcXp || calcXp <= 0) continue;
+      if (calcXp < minXp) continue;
       const costObj = calculateRecipeCost(recipe.ingredients);
-      const baseCost = costObj.baseTotal;
-      if (baseCost > 0 && !costObj.missing) {
-        const efficiency = recipe.xp / baseCost;
+      const totalCost = costObj.total;
+      if (totalCost > 0 && !costObj.missing) {
+        const efficiency = calcXp / totalCost;
         if (efficiency > maxEfficiency) {
           maxEfficiency = efficiency;
-          best = { ...recipe, efficiency, baseCost };
+          best = { ...recipe, xp: calcXp, rawBaseXp: recipe.xp, baseCost: totalCost, efficiency };
         }
       }
     }
 
     if (!best) {
       for (const recipe of recipesData) {
-        if (!recipe.xp || recipe.xp <= 0) continue;
-        if (recipe.xp < minXp) continue;
+        const calcXp = getCalculatedXp(recipe);
+        if (!calcXp || calcXp <= 0) continue;
+        if (calcXp < minXp) continue;
         const costObj = calculateRecipeCost(recipe.ingredients);
-        const baseCost = costObj.baseTotal;
-        if (baseCost > 0) {
-          const efficiency = recipe.xp / baseCost;
+        const totalCost = costObj.total;
+        if (totalCost > 0) {
+          const efficiency = calcXp / totalCost;
           if (efficiency > maxEfficiency) {
             maxEfficiency = efficiency;
-            best = { ...recipe, efficiency, baseCost };
+            best = { ...recipe, xp: calcXp, rawBaseXp: recipe.xp, baseCost: totalCost, efficiency };
           }
         }
       }
@@ -1472,7 +1550,7 @@ const formatAstroDescription = (skill) => {
       levelInput.value = level;
     }
 
-    const best = getBestBaseRecipe();
+    const best = getBestRecipe();
 
     const costDisplay = document.getElementById("skillCostDisplay");
     const deltaXpDisplay = document.getElementById("skillDeltaXpDisplay");
@@ -1640,12 +1718,32 @@ const formatAstroDescription = (skill) => {
     }
     const baseCostDecimals = best.baseCost >= 100 ? 0 : 3;
     if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, baseCostDecimals)} FLOWER`;
-    if (bestFoodXpDisplay) bestFoodXpDisplay.innerText = `${formatNumber(best.xp, 0)}`;
+    if (bestFoodXpDisplay) {
+      const isBoosted = best.rawBaseXp && best.xp > best.rawBaseXp;
+      bestFoodXpDisplay.innerHTML = `${formatNumber(best.xp, 0)}${isBoosted ? ` <span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(best.rawBaseXp, 0)}">✨</span>` : ""}`;
+    }
 
     if (bestFoodImg) {
       bestFoodImg.src = `/img/sunflowerland/food/${best.name}.png`;
       bestFoodImg.alt = best.name;
       bestFoodImg.onerror = function() { window.handleImgError(this, safeDishName); };
+    }
+
+    const dishManualBadge = document.getElementById("dishManualBadge");
+    if (dishManualBadge) {
+      if (window.manualSelectedDish) {
+        dishManualBadge.classList.remove("hidden");
+        dishManualBadge.classList.add("inline-flex");
+      } else {
+        dishManualBadge.classList.add("hidden");
+        dishManualBadge.classList.remove("inline-flex");
+      }
+    }
+
+    const menu = document.getElementById("dishSelectDropdownMenu");
+    if (menu && !menu.classList.contains("hidden")) {
+      const searchInput = document.getElementById("dishDropdownSearch");
+      renderDishDropdownList(searchInput ? searchInput.value : "");
     }
   };
 
@@ -1791,6 +1889,7 @@ const formatAstroDescription = (skill) => {
 
   document.querySelectorAll('.dash-hide-xp-btn, .hide-xp-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
+      window.manualSelectedDish = null;
       const target = e.currentTarget;
       const minXpAttr = target.dataset.minXp !== undefined ? target.dataset.minXp : target.dataset.xp;
       const limit = parseInt(minXpAttr);
@@ -1806,11 +1905,176 @@ const formatAstroDescription = (skill) => {
     const customInput = document.getElementById(id);
     if (customInput) {
       customInput.addEventListener('input', (e) => {
+        window.manualSelectedDish = null;
         const val = e.target.value;
         const limit = val ? parseInt(val) : 0;
         window.setHideXpLimit(isNaN(limit) ? 0 : limit);
       });
     }
+  });
+
+  // Funciones y Listeners del Menú Desplegable de Platos
+  const toggleDishDropdown = () => {
+    const menu = document.getElementById("dishSelectDropdownMenu");
+    const chevron = document.getElementById("dishDropdownChevron");
+    const btn = document.getElementById("dishSelectDropdownBtn");
+    if (!menu) return;
+
+    const isHidden = menu.classList.contains("hidden");
+    if (isHidden) {
+      menu.classList.remove("hidden");
+      if (chevron) chevron.classList.add("rotate-180");
+      if (btn) btn.setAttribute("aria-expanded", "true");
+      renderDishDropdownList();
+      const searchInput = document.getElementById("dishDropdownSearch");
+      if (searchInput) {
+        searchInput.value = "";
+        setTimeout(() => searchInput.focus(), 50);
+      }
+    } else {
+      closeDishDropdown();
+    }
+  };
+
+  const closeDishDropdown = () => {
+    const menu = document.getElementById("dishSelectDropdownMenu");
+    const chevron = document.getElementById("dishDropdownChevron");
+    const btn = document.getElementById("dishSelectDropdownBtn");
+    if (menu) menu.classList.add("hidden");
+    if (chevron) chevron.classList.remove("rotate-180");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  };
+
+  window.selectManualDish = (dishName) => {
+    window.manualSelectedDish = dishName;
+    closeDishDropdown();
+    updateSkillCalculator();
+    if (typeof saveState === "function") saveState();
+  };
+
+  const renderDishDropdownList = (search = "") => {
+    const listContainer = document.getElementById("dishDropdownList");
+    if (!listContainer) return;
+
+    const query = search.trim().toLowerCase();
+    
+    // Calcular eficiencia de todos los platos con boosts actuales
+    const sortedDishes = recipesData
+      .map((recipe) => {
+        const calcXp = getCalculatedXp(recipe);
+        const costObj = calculateRecipeCost(recipe.ingredients);
+        const totalCost = costObj.total;
+        const efficiency = totalCost > 0 ? calcXp / totalCost : 0;
+        return {
+          ...recipe,
+          calcXp,
+          totalCost,
+          efficiency,
+          missing: costObj.missing
+        };
+      })
+      .filter((r) => r.totalCost > 0)
+      .sort((a, b) => b.efficiency - a.efficiency);
+
+    const isAutoActive = !window.manualSelectedDish;
+    const labelAutoOptimal = listContainer.dataset.labelAutoOptimal || "Automático (Más Óptimo)";
+    const labelAutoDesc = listContainer.dataset.labelAutoDesc || "Selecciona siempre el de mayor rendimiento según boosts";
+    const labelNoDishes = listContainer.dataset.labelNoDishes || "No se encontraron platos";
+    const labelCost = listContainer.dataset.labelCost || "Costo:";
+
+    let html = `
+      <button
+        type="button"
+        class="w-full px-3 py-2 text-left flex items-center justify-between gap-2 hover:bg-white/10 transition-colors cursor-pointer ${isAutoActive ? 'bg-emerald-500/15 text-emerald-400 font-bold' : 'text-white/80'}"
+        onclick="window.selectManualDish(null)"
+      >
+        <div class="flex items-center gap-2.5">
+          <span class="text-sm">⚡</span>
+          <div class="flex flex-col">
+            <span class="text-xs ${isAutoActive ? 'text-emerald-400 font-bold' : 'text-white'}">${labelAutoOptimal}</span>
+            <span class="text-[9px] text-white/40">${labelAutoDesc}</span>
+          </div>
+        </div>
+        ${isAutoActive ? '<span class="text-xs text-emerald-400">✓</span>' : ''}
+      </button>
+      <div class="border-t border-white/10 my-1"></div>
+    `;
+
+    const filtered = query
+      ? sortedDishes.filter((d) => d.name.toLowerCase().includes(query))
+      : sortedDishes;
+
+    if (filtered.length === 0) {
+      html += `<div class="p-3 text-center text-white/40 text-xs font-mono">${labelNoDishes}</div>`;
+    } else {
+      filtered.forEach((dish) => {
+        const isSelected = window.manualSelectedDish === dish.name;
+        const safeName = dish.name.replace(/'/g, "\\'");
+        const effDecimals = dish.efficiency >= 100 ? 0 : 1;
+        const costDecimals = dish.totalCost >= 100 ? 0 : 2;
+
+        html += `
+          <button
+            type="button"
+            class="w-full px-3 py-2 text-left flex items-center gap-2.5 hover:bg-white/10 transition-colors cursor-pointer ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/90'}"
+            onclick="window.selectManualDish('${safeName}')"
+          >
+            <img src="/img/sunflowerland/food/${dish.name}.png" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="window.handleImgError(this, '${safeName}')" />
+            <div class="flex flex-col min-w-0 flex-1">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs truncate font-medium ${isSelected ? 'text-emerald-400 font-bold' : 'text-white'}">${dish.name}</span>
+                <span class="text-xs font-mono font-bold ${isSelected ? 'text-emerald-300' : 'text-emerald-400'} shrink-0">${formatNumber(dish.efficiency, effDecimals)} <span class="text-[9px] text-white/50 font-normal">XP/FLOWER</span></span>
+              </div>
+              <div class="flex items-center gap-2 text-[10px] text-white/40 font-mono mt-0.5">
+                <span>${labelCost} ${formatNumber(dish.totalCost, costDecimals)} FLOWER</span>
+                <span>•</span>
+                <span>${formatNumber(dish.calcXp, 0)} XP</span>
+              </div>
+            </div>
+            ${isSelected ? '<span class="text-xs text-emerald-400 ml-1">✓</span>' : ''}
+          </button>
+        `;
+      });
+    }
+
+    listContainer.innerHTML = html;
+  };
+
+  const dishDropdownBtn = document.getElementById("dishSelectDropdownBtn");
+  if (dishDropdownBtn) {
+    dishDropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleDishDropdown();
+    });
+  }
+
+  const manualBadge = document.getElementById("dishManualBadge");
+  if (manualBadge) {
+    manualBadge.addEventListener("click", (e) => {
+      e.stopPropagation();
+      window.selectManualDish(null);
+    });
+  }
+
+  const dishDropdownSearch = document.getElementById("dishDropdownSearch");
+  if (dishDropdownSearch) {
+    dishDropdownSearch.addEventListener("input", (e) => {
+      renderDishDropdownList(e.target.value);
+    });
+    dishDropdownSearch.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    const container = document.getElementById("dishSelectContainer");
+    if (container && !container.contains(e.target)) {
+      closeDishDropdown();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDishDropdown();
   });
 
   document.querySelectorAll(".buff-checkbox").forEach((cb) => {
@@ -1831,6 +2095,7 @@ const formatAstroDescription = (skill) => {
         }
       }
       renderTable(searchInput ? searchInput.value : "");
+      updateSkillCalculator();
       if (typeof saveState === "function") saveState();
     });
   });
@@ -1921,6 +2186,7 @@ const formatAstroDescription = (skill) => {
       }
       updateSkillUI(skillId);
       renderTable(searchInput ? searchInput.value : "");
+      updateSkillCalculator();
       if (typeof saveState === "function") saveState();
     });
   });
@@ -1945,6 +2211,7 @@ const formatAstroDescription = (skill) => {
       }
       updateSkillUI(skillId);
       renderTable(searchInput ? searchInput.value : "");
+      updateSkillCalculator();
       if (typeof saveState === "function") saveState();
     });
   });
@@ -2017,6 +2284,9 @@ const formatAstroDescription = (skill) => {
           window.setHideXpLimit(state.currentHideXpLimit);
         } else {
           window.setHideXpLimit(0);
+        }
+        if (state.manualSelectedDish) {
+          window.manualSelectedDish = state.manualSelectedDish;
         }
         
         if (state.boostFilter) {
