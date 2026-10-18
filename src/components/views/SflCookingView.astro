@@ -2346,10 +2346,12 @@ const formatAstroDescription = (skill) => {
 </style>
 
 <style is:global>
-  /* Punto medio: Renderizado de pixeles pero con un difuminado microscópico para suavizar bordes bruscos al escalar */
+  /* Renderizado nítido y fiel para Pixel Art en móviles (Retina/High-DPI) y navegadores de escritorio */
   img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
     image-rendering: pixelated;
-    filter: blur(0.35px) contrast(1.05);
   }
 </style>
 
