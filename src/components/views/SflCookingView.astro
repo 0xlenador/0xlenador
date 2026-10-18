@@ -212,12 +212,12 @@ const formatAstroDescription = (skill) => {
         <div class="md:col-span-5 xl:col-span-4 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md">
           <div>
             <!-- Header sutil -->
-            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-4">
+            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-3">
               {t("sfl.cooking.dash.skillTitle")}
             </span>
 
             <!-- Fila: Lvl [100] + Slider -->
-            <div class="flex items-center justify-between gap-3 mb-4">
+            <div class="flex items-center justify-between gap-3 mb-3">
               <div class="flex items-center text-xs font-mono text-white/80">
                 <span>Lvl [</span>
                 <input
@@ -240,30 +240,80 @@ const formatAstroDescription = (skill) => {
               />
             </div>
 
-            <!-- Caja 1: Este Nivel (con borde esmeralda idéntico al mockup) -->
-            <div class="border border-emerald-500/40 bg-emerald-950/20 rounded-xl p-3 sm:p-3.5 flex flex-col items-center justify-center text-center shadow-[inset_0_1px_0_rgba(16,185,129,0.15)] transition-all hover:border-emerald-500/60">
-              <span class="text-[11px] font-mono text-emerald-200/80 mb-0.5">
-                {t("sfl.cooking.dash.skillCost")}
+            <!-- Métrica Principal Destacada: COSTO PROMEDIO POR SKILL (El que prima) -->
+            <div class="border border-emerald-500/50 bg-emerald-950/30 rounded-xl p-3 sm:p-3.5 flex flex-col items-center justify-center text-center shadow-[0_0_20px_rgba(16,185,129,0.12)] transition-all hover:border-emerald-500/70">
+              <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-emerald-200/80 mb-0.5">
+                {t("sfl.cooking.dash.skillAvgTitle")}
               </span>
-              <span id="skillCostDisplay" class="text-xl sm:text-2xl font-mono font-black text-emerald-400 tracking-tight">
+              <span id="skillAvgCostDisplay" class="text-2xl sm:text-3xl font-mono font-black text-emerald-400 tracking-tight drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">
                 ...
               </span>
-              <span id="skillDeltaXpDisplay" class="text-xs font-mono text-emerald-300/70 mt-0.5">
-                ...
+              <span class="text-[10px] sm:text-[11px] font-mono text-white/50 block mt-0.5">
+                {t("sfl.cooking.dash.skillPerPoint")} (<span id="skillAvgXpDisplay">...</span>)
               </span>
             </div>
 
-            <!-- Caja 2: Acumulado (con borde esmeralda idéntico al mockup) -->
-            <div class="border border-emerald-500/40 bg-emerald-950/20 rounded-xl p-3 sm:p-3.5 flex flex-col items-center justify-center text-center shadow-[inset_0_1px_0_rgba(16,185,129,0.15)] transition-all hover:border-emerald-500/60 mt-3">
-              <span class="text-[11px] font-mono text-emerald-200/80 mb-0.5">
-                {t("sfl.cooking.dash.accumulated")}
-              </span>
-              <span id="skillTotalCostDisplay" class="text-xl sm:text-2xl font-mono font-black text-emerald-400 tracking-tight">
-                ...
-              </span>
-              <span id="skillTotalXpDisplay" class="text-xs font-mono text-emerald-300/70 mt-0.5">
-                ...
-              </span>
+            <!-- Desglose de Niveles y Costo Histórico (Cantidad de platos, imagen y costo) -->
+            <div class="grid grid-cols-3 gap-1.5 sm:gap-2 mt-3">
+              <!-- Col 1: Llegar a este nivel -->
+              <div class="bg-black/40 border border-white/5 rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-between text-center min-h-[105px]">
+                <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase tracking-wider truncate w-full" id="skillReachLabel" data-prefix={t("sfl.cooking.dash.skillReachLevel")}>
+                  {t("sfl.cooking.dash.skillReachLevel")} 100
+                </span>
+                
+                <div class="flex flex-col items-center justify-center text-center font-mono my-0.5">
+                  <span id="skillCostDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-tight">...</span>
+                  <span id="skillDeltaXpDisplay" class="text-[8px] sm:text-[9px] text-white/40 leading-tight mt-0.5">...</span>
+                </div>
+
+                <div class="flex items-center justify-center gap-1.5 mt-0.5">
+                  <img id="skillReachDishImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow shrink-0" alt="Dish" />
+                  <div class="flex items-baseline gap-0.5">
+                    <span id="skillReachDishCount" class="text-xs sm:text-sm font-mono font-bold text-white">...</span>
+                    <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase">{t("sfl.cooking.dash.dishesLabel")}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Col 2: Próximo nivel -->
+              <div class="bg-black/40 border border-white/5 rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-between text-center min-h-[105px]">
+                <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase tracking-wider truncate w-full" id="skillNextLabel" data-prefix={t("sfl.cooking.dash.skillNextLevel")}>
+                  {t("sfl.cooking.dash.skillNextLevel")} 101
+                </span>
+                
+                <div class="flex flex-col items-center justify-center text-center font-mono my-0.5">
+                  <span id="skillNextCostDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-tight">...</span>
+                  <span id="skillNextDeltaXpDisplay" class="text-[8px] sm:text-[9px] text-white/40 leading-tight mt-0.5">...</span>
+                </div>
+
+                <div class="flex items-center justify-center gap-1.5 mt-0.5">
+                  <img id="skillNextDishImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow shrink-0" alt="Dish" />
+                  <div class="flex items-baseline gap-0.5">
+                    <span id="skillNextDishCount" class="text-xs sm:text-sm font-mono font-bold text-white">...</span>
+                    <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase">{t("sfl.cooking.dash.dishesLabel")}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Col 3: Histórico total -->
+              <div class="bg-black/40 border border-white/5 rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-between text-center min-h-[105px]">
+                <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase tracking-wider truncate w-full">
+                  {t("sfl.cooking.dash.skillTotalHistory")}
+                </span>
+                
+                <div class="flex flex-col items-center justify-center text-center font-mono my-0.5">
+                  <span id="skillTotalCostDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-tight">...</span>
+                  <span id="skillTotalXpDisplay" class="text-[8px] sm:text-[9px] text-white/40 leading-tight mt-0.5">...</span>
+                </div>
+
+                <div class="flex items-center justify-center gap-1.5 mt-0.5">
+                  <img id="skillTotalDishImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow shrink-0" alt="Dish" />
+                  <div class="flex items-baseline gap-0.5">
+                    <span id="skillTotalDishCount" class="text-xs sm:text-sm font-mono font-bold text-white">...</span>
+                    <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase">{t("sfl.cooking.dash.dishesLabel")}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -609,8 +659,8 @@ const formatAstroDescription = (skill) => {
                 <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0">Sort By</span>
                 <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="name" onclick="window.handleSort('name')">Name<span class="sort-icon opacity-0" data-col="name">↕</span></button>
                 <button class="mobile-sort-btn px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xp" onclick="window.handleSort('xp')">XP<span class="sort-icon opacity-100 text-emerald-500" data-col="xp">↓</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="cost" onclick="window.handleSort('cost')">SFL Cost<span class="sort-icon opacity-0" data-col="cost">↕</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpsfl" onclick="window.handleSort('xpsfl')">XP/SFL<span class="sort-icon opacity-0" data-col="xpsfl">↕</span></button>
+                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="cost" onclick="window.handleSort('cost')">FLOWER Cost<span class="sort-icon opacity-0" data-col="cost">↕</span></button>
+                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpsfl" onclick="window.handleSort('xpsfl')">XP/FLOWER<span class="sort-icon opacity-0" data-col="xpsfl">↕</span></button>
                 <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpday" onclick="window.handleSort('xpday')">XP/Day<span class="sort-icon opacity-0" data-col="xpday">↕</span></button>
               </div>
             </div>
@@ -663,7 +713,7 @@ const formatAstroDescription = (skill) => {
           class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('cost')"
         >
-          SFL Cost <span
+          FLOWER Cost <span
             class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
             data-col="cost">↕</span
           >
@@ -672,7 +722,7 @@ const formatAstroDescription = (skill) => {
           class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('xpsfl')"
         >
-          XP/SFL <span
+          XP/FLOWER <span
             class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
             data-col="xpsfl">↕</span
           >
@@ -1317,7 +1367,7 @@ const formatAstroDescription = (skill) => {
           </div>
           <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center relative overflow-hidden">
             <div class="absolute -right-2 -bottom-2 text-white/5 text-4xl font-black pointer-events-none">$</div>
-            <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5 relative z-10">SFL Cost</span>
+            <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5 relative z-10">FLOWER Cost</span>
             <div class="flex flex-col relative z-10">
               <div class="flex items-center gap-1">
                 <span class="text-white text-[15px] font-mono ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, costObj.total >= 100 ? 0 : 2) : "0"}</span>
@@ -1327,7 +1377,7 @@ const formatAstroDescription = (skill) => {
             </div>
           </div>
           <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center">
-            <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">XP/SFL</span>
+            <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">XP/FLOWER</span>
             <span class="text-emerald-300/90 text-sm font-mono">${xpPerSfl > 0 ? formatNumber(xpPerSfl, xpPerSfl >= 100 ? 0 : 2) : "0.00"}</span>
           </div>
           <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center">
@@ -1426,8 +1476,21 @@ const formatAstroDescription = (skill) => {
 
     const costDisplay = document.getElementById("skillCostDisplay");
     const deltaXpDisplay = document.getElementById("skillDeltaXpDisplay");
+    const skillNextCostDisplay = document.getElementById("skillNextCostDisplay");
+    const skillNextDeltaXpDisplay = document.getElementById("skillNextDeltaXpDisplay");
     const totalCostDisplay = document.getElementById("skillTotalCostDisplay");
     const totalXpDisplay = document.getElementById("skillTotalXpDisplay");
+    const skillAvgCostDisplay = document.getElementById("skillAvgCostDisplay");
+    const skillAvgXpDisplay = document.getElementById("skillAvgXpDisplay");
+    const skillReachLabel = document.getElementById("skillReachLabel");
+    const skillNextLabel = document.getElementById("skillNextLabel");
+
+    const skillReachDishImg = document.getElementById("skillReachDishImg");
+    const skillReachDishCount = document.getElementById("skillReachDishCount");
+    const skillNextDishImg = document.getElementById("skillNextDishImg");
+    const skillNextDishCount = document.getElementById("skillNextDishCount");
+    const skillTotalDishImg = document.getElementById("skillTotalDishImg");
+    const skillTotalDishCount = document.getElementById("skillTotalDishCount");
 
     const bestFoodImg = document.getElementById("bestFoodImg");
     const bestFoodNameDisplay = document.getElementById("bestFoodNameDisplay");
@@ -1436,10 +1499,17 @@ const formatAstroDescription = (skill) => {
     const bestFoodXpDisplay = document.getElementById("bestFoodXpDisplay");
 
     if (!best || !best.efficiency || best.efficiency <= 0) {
+      if (skillAvgCostDisplay) skillAvgCostDisplay.innerText = "...";
+      if (skillAvgXpDisplay) skillAvgXpDisplay.innerText = "...";
       if (costDisplay) costDisplay.innerText = "...";
       if (deltaXpDisplay) deltaXpDisplay.innerText = "...";
+      if (skillNextCostDisplay) skillNextCostDisplay.innerText = "...";
+      if (skillNextDeltaXpDisplay) skillNextDeltaXpDisplay.innerText = "...";
       if (totalCostDisplay) totalCostDisplay.innerText = "...";
       if (totalXpDisplay) totalXpDisplay.innerText = "...";
+      if (skillReachDishCount) skillReachDishCount.innerText = "...";
+      if (skillNextDishCount) skillNextDishCount.innerText = "...";
+      if (skillTotalDishCount) skillTotalDishCount.innerText = "...";
       if (bestFoodNameDisplay) bestFoodNameDisplay.innerText = "...";
       if (bestFoodEfficiencyDisplay) bestFoodEfficiencyDisplay.innerText = "...";
       if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = "...";
@@ -1449,22 +1519,114 @@ const formatAstroDescription = (skill) => {
 
     const currentLevelXp = levelExperience[level] || 0;
     const prevLevelXp = level > 1 ? (levelExperience[level - 1] || 0) : 0;
+    const nextLevelXp = level < 200 ? (levelExperience[level + 1] || currentLevelXp) : currentLevelXp;
+
     const deltaXp = level > 1 ? (currentLevelXp - prevLevelXp) : 0;
+    const nextDeltaXp = level < 200 ? (nextLevelXp - currentLevelXp) : 0;
+
+    const dishesThisLevel = (best.xp > 0 && deltaXp > 0) ? Math.ceil(deltaXp / best.xp) : 0;
+    const dishesNextLevel = (best.xp > 0 && nextDeltaXp > 0) ? Math.ceil(nextDeltaXp / best.xp) : 0;
+    const dishesTotal = (best.xp > 0 && currentLevelXp > 0) ? Math.ceil(currentLevelXp / best.xp) : 0;
 
     const costThisLevel = deltaXp / best.efficiency;
+    const costNextLevel = nextDeltaXp / best.efficiency;
     const totalCost = currentLevelXp / best.efficiency;
 
+    // Skills obtenidos hasta este nivel (1 por cada nivel superado a partir de lvl 2)
+    const skillsEarned = Math.max(1, level - 1);
+    const avgCostPerSkill = totalCost / skillsEarned;
+    const avgXpPerSkill = currentLevelXp / skillsEarned;
+
     const safeDishName = best.name.replace(/'/g, "\\'");
+    const dishImgSrc = `/img/sunflowerland/food/${best.name}.png`;
 
     // Tarjeta 1: Skill Calculator
-    const costThisLevelDecimals = costThisLevel >= 100 ? 0 : 2;
-    if (costDisplay) costDisplay.innerText = `${formatNumber(costThisLevel, costThisLevelDecimals)} SFL`;
+    // Métrica Hero: Promedio por Skill (La que prima)
+    if (skillAvgCostDisplay) {
+      const avgDecimals = avgCostPerSkill >= 100 ? 0 : 2;
+      skillAvgCostDisplay.innerText = `${formatNumber(avgCostPerSkill, avgDecimals)} FLOWER`;
+    }
+    if (skillAvgXpDisplay) {
+      skillAvgXpDisplay.innerText = `~${formatCompactXp(avgXpPerSkill, false)}`;
+      skillAvgXpDisplay.title = `Promedio: ${formatNumber(avgXpPerSkill, 0)} XP`;
+    }
+
+    // Col 1: Llegar a este nivel
+    if (skillReachLabel) {
+      const prefix = skillReachLabel.dataset.prefix || "Lvl";
+      skillReachLabel.innerText = `${prefix} ${level}`;
+    }
+    if (skillReachDishCount) {
+      skillReachDishCount.innerText = formatNumber(dishesThisLevel, 0);
+      skillReachDishCount.title = `${formatNumber(dishesThisLevel, 0)}x ${best.name}`;
+    }
+    if (skillReachDishImg) {
+      skillReachDishImg.src = dishImgSrc;
+      skillReachDishImg.alt = best.name;
+      skillReachDishImg.title = best.name;
+      skillReachDishImg.onerror = function() { window.handleImgError(this, safeDishName); };
+    }
+    if (costDisplay) {
+      const costThisLevelDecimals = costThisLevel >= 100 ? 0 : 2;
+      costDisplay.innerText = `${formatNumber(costThisLevel, costThisLevelDecimals)} FLOWER`;
+    }
     if (deltaXpDisplay) {
       deltaXpDisplay.innerText = `(${formatCompactXp(deltaXp, true)})`;
       deltaXpDisplay.title = `${formatNumber(deltaXp, 0)} XP`;
     }
-    const totalCostDecimals = totalCost >= 100 ? 0 : 2;
-    if (totalCostDisplay) totalCostDisplay.innerText = `${formatNumber(totalCost, totalCostDecimals)} SFL`;
+
+    // Col 2: Próximo nivel
+    if (skillNextLabel) {
+      const prefix = skillNextLabel.dataset.prefix || "Próx. Lvl";
+      skillNextLabel.innerText = level < 200 ? `${prefix} ${level + 1}` : "Max Lvl";
+    }
+    if (skillNextDishCount) {
+      if (level >= 200) {
+        skillNextDishCount.innerText = "-";
+        skillNextDishCount.title = "Max Lvl";
+      } else {
+        skillNextDishCount.innerText = formatNumber(dishesNextLevel, 0);
+        skillNextDishCount.title = `${formatNumber(dishesNextLevel, 0)}x ${best.name}`;
+      }
+    }
+    if (skillNextDishImg) {
+      skillNextDishImg.src = dishImgSrc;
+      skillNextDishImg.alt = best.name;
+      skillNextDishImg.title = best.name;
+      skillNextDishImg.onerror = function() { window.handleImgError(this, safeDishName); };
+    }
+    if (skillNextCostDisplay) {
+      if (level >= 200) {
+        skillNextCostDisplay.innerText = "-";
+      } else {
+        const costNextLevelDecimals = costNextLevel >= 100 ? 0 : 2;
+        skillNextCostDisplay.innerText = `${formatNumber(costNextLevel, costNextLevelDecimals)} FLOWER`;
+      }
+    }
+    if (skillNextDeltaXpDisplay) {
+      if (level >= 200) {
+        skillNextDeltaXpDisplay.innerText = "(Max)";
+      } else {
+        skillNextDeltaXpDisplay.innerText = `(${formatCompactXp(nextDeltaXp, true)})`;
+        skillNextDeltaXpDisplay.title = `${formatNumber(nextDeltaXp, 0)} XP`;
+      }
+    }
+
+    // Col 3: Histórico total acumulado
+    if (skillTotalDishCount) {
+      skillTotalDishCount.innerText = formatNumber(dishesTotal, 0);
+      skillTotalDishCount.title = `${formatNumber(dishesTotal, 0)}x ${best.name}`;
+    }
+    if (skillTotalDishImg) {
+      skillTotalDishImg.src = dishImgSrc;
+      skillTotalDishImg.alt = best.name;
+      skillTotalDishImg.title = best.name;
+      skillTotalDishImg.onerror = function() { window.handleImgError(this, safeDishName); };
+    }
+    if (totalCostDisplay) {
+      const totalCostDecimals = totalCost >= 100 ? 0 : 2;
+      totalCostDisplay.innerText = `${formatNumber(totalCost, totalCostDecimals)} FLOWER`;
+    }
     if (totalXpDisplay) {
       totalXpDisplay.innerText = `(${formatCompactXp(currentLevelXp, false)})`;
       totalXpDisplay.title = `Total: ${formatNumber(currentLevelXp, 0)} XP`;
@@ -1474,10 +1636,10 @@ const formatAstroDescription = (skill) => {
     if (bestFoodNameDisplay) bestFoodNameDisplay.innerText = best.name;
     if (bestFoodEfficiencyDisplay) {
       const effDecimals = best.efficiency >= 100 ? 0 : 1;
-      bestFoodEfficiencyDisplay.innerText = `${formatNumber(best.efficiency, effDecimals)} XP/SFL`;
+      bestFoodEfficiencyDisplay.innerText = `${formatNumber(best.efficiency, effDecimals)} XP/FLOWER`;
     }
     const baseCostDecimals = best.baseCost >= 100 ? 0 : 3;
-    if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, baseCostDecimals)} SFL`;
+    if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, baseCostDecimals)} FLOWER`;
     if (bestFoodXpDisplay) bestFoodXpDisplay.innerText = `${formatNumber(best.xp, 0)}`;
 
     if (bestFoodImg) {
