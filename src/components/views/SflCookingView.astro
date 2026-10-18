@@ -197,6 +197,7 @@ const formatAstroDescription = (skill) => {
                   data-label-auto-desc={t("sfl.cooking.dash.autoOptimalDesc")}
                   data-label-no-dishes={t("sfl.cooking.dash.noDishesFound")}
                   data-label-cost={t("sfl.cooking.dash.foodCost")}
+                  data-label-low-xp={t("sfl.cooking.dash.lowXpWarning")}
                 >
                   <!-- Generado dinámicamente -->
                 </div>
@@ -259,7 +260,7 @@ const formatAstroDescription = (skill) => {
             </div>
             <div>
               <span>{t("sfl.cooking.dash.foodXp")}</span>
-              <span id="bestFoodXpDisplay" class="text-white font-mono font-bold ml-1">...</span>
+              <span id="bestFoodXpDisplay" class="text-white font-mono font-bold ml-1" data-label-low-xp={t("sfl.cooking.dash.lowXpWarning")}>...</span>
             </div>
           </div>
         </div>
@@ -1720,7 +1721,9 @@ const formatAstroDescription = (skill) => {
     if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, baseCostDecimals)} FLOWER`;
     if (bestFoodXpDisplay) {
       const isBoosted = best.rawBaseXp && best.xp > best.rawBaseXp;
-      bestFoodXpDisplay.innerHTML = `${formatNumber(best.xp, 0)}${isBoosted ? ` <span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(best.rawBaseXp, 0)}">✨</span>` : ""}`;
+      const isLowXp = best.xp < 1000;
+      const labelLowXp = bestFoodXpDisplay.dataset.labelLowXp || "Baja XP (< 1,000 XP)";
+      bestFoodXpDisplay.innerHTML = `${formatNumber(best.xp, 0)}${isBoosted ? ` <span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(best.rawBaseXp, 0)}">✨</span>` : ""}${isLowXp ? ` <span class="inline-block text-xs select-none ml-1 cursor-help" title="${labelLowXp}">😐</span>` : ""}`;
     }
 
     if (bestFoodImg) {
@@ -1981,6 +1984,7 @@ const formatAstroDescription = (skill) => {
     const labelAutoDesc = listContainer.dataset.labelAutoDesc || "Selecciona siempre el de mayor rendimiento según boosts";
     const labelNoDishes = listContainer.dataset.labelNoDishes || "No se encontraron platos";
     const labelCost = listContainer.dataset.labelCost || "Costo:";
+    const labelLowXp = listContainer.dataset.labelLowXp || "Baja XP (< 1,000 XP)";
 
     let html = `
       <button
@@ -2012,6 +2016,7 @@ const formatAstroDescription = (skill) => {
         const safeName = dish.name.replace(/'/g, "\\'");
         const effDecimals = dish.efficiency >= 100 ? 0 : 1;
         const costDecimals = dish.totalCost >= 100 ? 0 : 2;
+        const isLowXp = dish.calcXp < 1000;
 
         html += `
           <button
@@ -2028,7 +2033,7 @@ const formatAstroDescription = (skill) => {
               <div class="flex items-center gap-2 text-[10px] text-white/40 font-mono mt-0.5">
                 <span>${labelCost} ${formatNumber(dish.totalCost, costDecimals)} FLOWER</span>
                 <span>•</span>
-                <span>${formatNumber(dish.calcXp, 0)} XP</span>
+                <span>${formatNumber(dish.calcXp, 0)} XP${isLowXp ? ` <span class="inline-block text-[11px] leading-none select-none cursor-help" title="${labelLowXp}">😐</span>` : ''}</span>
               </div>
             </div>
             ${isSelected ? '<span class="text-xs text-emerald-400 ml-1">✓</span>' : ''}
