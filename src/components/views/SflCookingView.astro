@@ -391,10 +391,9 @@ const formatAstroDescription = (skill) => {
               <div class="flex items-center gap-0.5">
                 <span class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">1:</span>
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
                   id="quickCoinsInput"
-                  step="10"
-                  min="1"
                   class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
                   title={t("sfl.cooking.dash.clickToEditCoins")}
                   placeholder="..."
@@ -418,10 +417,9 @@ const formatAstroDescription = (skill) => {
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.rodName")}</span>
               <div class="flex items-center gap-0.5">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
                   id="fishingRodInput"
-                  step="0.001"
-                  min="0"
                   class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
                   title={t("sfl.cooking.dash.clickToEditRod")}
                   placeholder="..."
@@ -445,10 +443,9 @@ const formatAstroDescription = (skill) => {
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishFlakeName")}</span>
               <div class="flex items-center gap-0.5">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
                   id="quickFishFlakeInput"
-                  step="0.001"
-                  min="0"
                   class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
                   title={t("sfl.cooking.dash.clickToEditFlake")}
                   placeholder="..."
@@ -472,10 +469,9 @@ const formatAstroDescription = (skill) => {
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishStickName")}</span>
               <div class="flex items-center gap-0.5">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
                   id="quickFishStickInput"
-                  step="0.001"
-                  min="0"
                   class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
                   title={t("sfl.cooking.dash.clickToEditStick")}
                   placeholder="..."
@@ -499,10 +495,9 @@ const formatAstroDescription = (skill) => {
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.crabStickName")}</span>
               <div class="flex items-center gap-0.5">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
                   id="quickCrabStickInput"
-                  step="0.001"
-                  min="0"
                   class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
                   title={t("sfl.cooking.dash.clickToEditCrab")}
                   placeholder="..."
@@ -526,10 +521,9 @@ const formatAstroDescription = (skill) => {
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishOilName")}</span>
               <div class="flex items-center gap-0.5">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
                   id="quickFishOilInput"
-                  step="0.001"
-                  min="0"
                   class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
                   title={t("sfl.cooking.dash.clickToEditOil")}
                   placeholder="..."
@@ -2558,7 +2552,7 @@ const formatAstroDescription = (skill) => {
     const rodInput = document.getElementById("fishingRodInput");
     const resetRodBtn = document.getElementById("resetRodBtn");
     if (rodInput) {
-      rodInput.value = isCustomRod ? effectiveRod : formatNumber(effectiveRod, 4);
+      rodInput.value = isCustomRod ? effectiveRod.toString() : formatNumber(effectiveRod, 4);
       if (isCustomRod) {
         rodInput.classList.add("text-amber-400", "border-amber-400/50");
         rodInput.classList.remove("text-emerald-400");
@@ -2579,7 +2573,7 @@ const formatAstroDescription = (skill) => {
       const inputEl = document.getElementById(inputId);
       const resetEl = document.getElementById(resetBtnId);
       if (inputEl) {
-        inputEl.value = isCustom ? effectiveVal : formatNumber(effectiveVal, 4);
+        inputEl.value = isCustom ? effectiveVal.toString() : formatNumber(effectiveVal, 4);
         if (isCustom) {
           inputEl.classList.add("text-amber-400", "border-amber-400/50");
           inputEl.classList.remove("text-emerald-400");
@@ -2632,7 +2626,8 @@ const formatAstroDescription = (skill) => {
     const resetBtnEl = document.getElementById(resetBtnId);
     if (inputEl) {
       const handleChange = (e) => {
-        const val = parseFloat(e.target.value);
+        const rawStr = (e.target.value || "").trim().replace(',', '.');
+        const val = parseFloat(rawStr);
         if (!isNaN(val) && val >= 0) {
           window[customKey] = val;
         } else {
