@@ -38,12 +38,21 @@ function getSemesterString(dateStr) {
   return `${yyyy}-${half}`
 }
 
+const SFL_API_KEY = process.env.SFL_API_KEY || ""
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 async function fetchWithRetry(url, maxRetries = 3) {
+  const headers = {
+    "User-Agent": "Mozilla/5.0 (compatible; 0xLenadorBot/1.0)",
+  }
+  if (SFL_API_KEY && url.includes("sunflower-land.com")) {
+    headers["x-api-key"] = SFL_API_KEY
+  }
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const res = await fetch(url)
+      const res = await fetch(url, { headers })
       if (res.ok) return res
       if (res.status < 500) return res
       console.log(

@@ -8,12 +8,12 @@ async function updateDashboardData() {
   
   try {
     const url = "https://api.sunflower-land.com/marketplace/trends"
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-        "Authorization": JWT_TOKEN
-      }
-    })
+    const headers = {
+      "User-Agent": "Mozilla/5.0 (compatible; 0xLenadorBot/1.0)",
+      "Authorization": JWT_TOKEN,
+      ...(process.env.SFL_API_KEY ? { "x-api-key": process.env.SFL_API_KEY } : {})
+    }
+    const response = await fetch(url, { headers })
     
     if (!response.ok) {
       throw new Error(`Error en la API: ${response.status} ${response.statusText}`)
