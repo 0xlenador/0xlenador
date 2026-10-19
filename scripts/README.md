@@ -41,7 +41,7 @@ node scripts/update_sfl.js
 ```
 
 **¿Qué hace este script?**
-- Actúa como una "Máquina del Tiempo": descarga hasta 7 meses de historial de precios del mercado de Sunflower Land, usando un sistema de caché semestral (`public/api/history/`) para ser súper eficiente.
+- Actúa como una "Máquina del Tiempo": descarga hasta 7 meses de historial de precios del mercado de Sunflower Land, usando un sistema de caché semestral (`data/sfl_history/`) para ser súper eficiente.
 - Cruza la información del juego con datos de **CoinGecko** para calcular exactamente cuántos Dólares (USD) movió cada ítem.
 - Genera cálculos matemáticos listos para graficar (volumen 24h/7d, líneas de tendencia sparkline, etc.).
 - Exporta toda esta inteligencia de mercado al archivo maestro `public/api/sfl_data.json`.

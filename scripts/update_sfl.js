@@ -86,7 +86,7 @@ async function updateSFLData() {
   try {
     console.log("Iniciando motor avanzado de recolección SFL (Semestral)...")
 
-    const historyDir = path.join(process.cwd(), "public", "api", "history")
+    const historyDir = path.join(process.cwd(), "data", "sfl_history")
     await fs.mkdir(historyDir, { recursive: true })
 
     let rawData = {}
