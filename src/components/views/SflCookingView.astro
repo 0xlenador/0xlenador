@@ -377,62 +377,170 @@ const formatAstroDescription = (skill) => {
 
       </div>
 
-      <!-- Fila 2: Franja Horizontal de Precios Clave (Idéntico al TOP ROW del mockup, ubicado justo debajo) -->
-      <div class="w-full bg-[#18181b]/95 border border-white/10 rounded-2xl p-3 sm:px-6 sm:py-3.5 shadow-xl backdrop-blur-md">
-        <div id="marketQuickPrices" class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/5 items-center">
+      <!-- Fila 2: Franja Horizontal de Precios Clave (Coins, Rod, Fish Flake, Fish Stick, Crab Stick, Fish Oil) -->
+      <div class="w-full bg-[#18181b]/95 border border-white/10 rounded-2xl p-3 sm:px-4 sm:py-3.5 shadow-xl backdrop-blur-md">
+        <div id="marketQuickPrices" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/5 items-center">
           
-          <!-- 1. FLOWER -->
+          <!-- 1. Coins (Clic para editar ratio) -->
           <div class="flex items-center gap-3 sm:justify-center">
-            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/flower.jpg" class="w-full h-full object-contain rounded-full" alt="FLOWER" />
-            </div>
-            <div class="flex flex-col">
-              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">FLOWER</span>
-              <span id="quickFlowerPriceDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">...</span>
-            </div>
-          </div>
-
-          <!-- 2. Coins -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3">
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/123/coins.png" class="w-full h-full object-contain" alt="Coins" />
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.coinsName")}</span>
-              <span id="quickCoinsPriceDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">...</span>
+              <div class="flex items-center gap-0.5">
+                <span class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">1:</span>
+                <input
+                  type="number"
+                  id="quickCoinsInput"
+                  step="10"
+                  min="1"
+                  class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
+                  title={t("sfl.cooking.dash.clickToEditCoins")}
+                  placeholder="..."
+                />
+                <button
+                  type="button"
+                  id="resetCoinsBtn"
+                  class="hidden text-[10px] font-mono text-white/40 hover:text-white px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  title={t("sfl.cooking.dash.resetAuto")}
+                >↺</button>
+              </div>
             </div>
           </div>
 
-          <!-- 3. Oil -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="Oil Drill / 16.67">
-            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/123/Oil.png" class="w-full h-full object-contain" alt="Oil" />
-            </div>
-            <div class="flex flex-col">
-              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.oilName")}</span>
-              <span id="quickOilPriceDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">...</span>
-            </div>
-          </div>
-
-          <!-- 4. Gem -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="1 Gem P2P (+29% Bonus)">
-            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/123/Gem.png" class="w-full h-full object-contain" alt="Gem" />
-            </div>
-            <div class="flex flex-col">
-              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.gemsName")}</span>
-              <span id="quickGemsPriceDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">...</span>
-            </div>
-          </div>
-
-          <!-- 5. Rod -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3 col-span-2 sm:col-span-1" title="1 Stone + 3 Wood + 20 Coins">
+          <!-- 2. Rod (Clic para editar costo) -->
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="1 Stone + 3 Wood + 20 Coins">
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/123/rod.webp" class="w-full h-full object-contain" alt="Rod" />
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.rodName")}</span>
-              <span id="fishingRodCostDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none">...</span>
+              <div class="flex items-center gap-0.5">
+                <input
+                  type="number"
+                  id="fishingRodInput"
+                  step="0.001"
+                  min="0"
+                  class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
+                  title={t("sfl.cooking.dash.clickToEditRod")}
+                  placeholder="..."
+                />
+                <button
+                  type="button"
+                  id="resetRodBtn"
+                  class="hidden text-[10px] font-mono text-white/40 hover:text-white px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  title={t("sfl.cooking.dash.resetAuto")}
+                >↺</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Fish Flake (Clic para editar costo) -->
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="8 Rods">
+            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+              <img src="/img/sunflowerland/fish/specials/fish_flake.webp" class="w-full h-full object-contain" alt="Fish Flake" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishFlakeName")}</span>
+              <div class="flex items-center gap-0.5">
+                <input
+                  type="number"
+                  id="quickFishFlakeInput"
+                  step="0.001"
+                  min="0"
+                  class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
+                  title={t("sfl.cooking.dash.clickToEditFlake")}
+                  placeholder="..."
+                />
+                <button
+                  type="button"
+                  id="resetFishFlakeBtn"
+                  class="hidden text-[10px] font-mono text-white/40 hover:text-white px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  title={t("sfl.cooking.dash.resetAuto")}
+                >↺</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Fish Stick (Clic para editar costo) -->
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="10 Rods">
+            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+              <img src="/img/sunflowerland/fish/specials/fish_stick.webp" class="w-full h-full object-contain" alt="Fish Stick" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishStickName")}</span>
+              <div class="flex items-center gap-0.5">
+                <input
+                  type="number"
+                  id="quickFishStickInput"
+                  step="0.001"
+                  min="0"
+                  class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
+                  title={t("sfl.cooking.dash.clickToEditStick")}
+                  placeholder="..."
+                />
+                <button
+                  type="button"
+                  id="resetFishStickBtn"
+                  class="hidden text-[10px] font-mono text-white/40 hover:text-white px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  title={t("sfl.cooking.dash.resetAuto")}
+                >↺</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Crab Stick (Clic para editar costo) -->
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="Promedio: 5.9 FLOWER">
+            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+              <img src="/img/sunflowerland/fish/specials/crab_stick.webp" class="w-full h-full object-contain" alt="Crab Stick" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.crabStickName")}</span>
+              <div class="flex items-center gap-0.5">
+                <input
+                  type="number"
+                  id="quickCrabStickInput"
+                  step="0.001"
+                  min="0"
+                  class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
+                  title={t("sfl.cooking.dash.clickToEditCrab")}
+                  placeholder="..."
+                />
+                <button
+                  type="button"
+                  id="resetCrabStickBtn"
+                  class="hidden text-[10px] font-mono text-white/40 hover:text-white px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  title={t("sfl.cooking.dash.resetAuto")}
+                >↺</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Fish Oil (Clic para editar costo) -->
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="14 Rods">
+            <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+              <img src="/img/sunflowerland/fish/specials/fish_oil.webp" class="w-full h-full object-contain" alt="Fish Oil" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishOilName")}</span>
+              <div class="flex items-center gap-0.5">
+                <input
+                  type="number"
+                  id="quickFishOilInput"
+                  step="0.001"
+                  min="0"
+                  class="w-16 sm:w-20 bg-transparent text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-none outline-none border-b border-dashed border-white/20 hover:border-emerald-400/60 focus:border-emerald-400 transition-colors p-0 cursor-text select-all"
+                  title={t("sfl.cooking.dash.clickToEditOil")}
+                  placeholder="..."
+                />
+                <button
+                  type="button"
+                  id="resetFishOilBtn"
+                  class="hidden text-[10px] font-mono text-white/40 hover:text-white px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  title={t("sfl.cooking.dash.resetAuto")}
+                >↺</button>
+              </div>
             </div>
           </div>
 
@@ -1056,6 +1164,12 @@ const formatAstroDescription = (skill) => {
   let activeBuffs = new Set()
   let activeSkills = {} // Format: { "Skill Name": rank (1, 2 or 3) }
   window.manualSelectedDish = null;
+  window.sflCustomCoinsPerFlower = null;
+  window.sflCustomRodCost = null;
+  window.sflCustomFishFlakeCost = null;
+  window.sflCustomFishStickCost = null;
+  window.sflCustomCrabStickCost = null;
+  window.sflCustomFishOilCost = null;
 
   const CACHE_KEY = "sfl_cooking_state";
   const saveState = () => {
@@ -1065,6 +1179,12 @@ const formatAstroDescription = (skill) => {
       currentHideXpLimit: window.currentHideXpLimit,
       currentCategory: currentCategory,
       manualSelectedDish: window.manualSelectedDish || null,
+      customCoins: window.sflCustomCoinsPerFlower !== null && window.sflCustomCoinsPerFlower !== undefined ? window.sflCustomCoinsPerFlower : null,
+      customRod: window.sflCustomRodCost !== null && window.sflCustomRodCost !== undefined ? window.sflCustomRodCost : null,
+      customFishFlake: window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined ? window.sflCustomFishFlakeCost : null,
+      customFishStick: window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined ? window.sflCustomFishStickCost : null,
+      customCrabStick: window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined ? window.sflCustomCrabStickCost : null,
+      customFishOil: window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined ? window.sflCustomFishOilCost : null,
       boostFilter: document.querySelector('.filter-boost-btn.active')?.dataset?.filter || 'all',
       viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'detailed',
       skillLevel: document.getElementById('skillLevelRange')?.value || '100'
@@ -1312,14 +1432,26 @@ const formatAstroDescription = (skill) => {
         total += priceDict[ing.name] * ing.amount
       } else if (fishNames.includes(ing.name) && window.sflRodCost) {
         total += window.sflRodCost * ing.amount;
-      } else if (ing.name === "Fish Flake" && window.sflRodCost) {
-        total += (8 * window.sflRodCost) * ing.amount;
-      } else if (ing.name === "Fish Stick" && window.sflRodCost) {
-        total += (10 * window.sflRodCost) * ing.amount;
-      } else if (ing.name === "Fish Oil" && window.sflRodCost) {
-        total += (14 * window.sflRodCost) * ing.amount;
+      } else if (ing.name === "Fish Flake") {
+        const flakeCost = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined)
+          ? window.sflCustomFishFlakeCost
+          : (window.sflRodCost ? 8 * window.sflRodCost : 0);
+        total += flakeCost * ing.amount;
+      } else if (ing.name === "Fish Stick") {
+        const stickCost = (window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined)
+          ? window.sflCustomFishStickCost
+          : (window.sflRodCost ? 10 * window.sflRodCost : 0);
+        total += stickCost * ing.amount;
+      } else if (ing.name === "Fish Oil") {
+        const oilCost = (window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined)
+          ? window.sflCustomFishOilCost
+          : (window.sflRodCost ? 14 * window.sflRodCost : 0);
+        total += oilCost * ing.amount;
       } else if (ing.name === "Crab Stick") {
-        total += 6 * ing.amount;
+        const crabCost = (window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined)
+          ? window.sflCustomCrabStickCost
+          : 5.9;
+        total += crabCost * ing.amount;
       } else if (ing.name === "Magic Mushroom" || ing.name === "Wild Mushroom") {
         total += 0;
       } else {
@@ -1867,34 +1999,22 @@ const formatAstroDescription = (skill) => {
         });
       }
       if (bestCoinsPerFlower <= 0) bestCoinsPerFlower = 1330;
-      window.sflBestCoinsPerFlower = bestCoinsPerFlower;
-      const coinsDisplay = document.getElementById("quickCoinsPriceDisplay");
-      if (coinsDisplay) {
-        coinsDisplay.innerText = `1:${Math.round(bestCoinsPerFlower)}`;
-      }
+      window.sflAutoCoinsPerFlower = bestCoinsPerFlower;
 
       // 3. Caña de Pescar (1 Stone + 3 Wood + 20 Coins)
       const stonePrice = priceDict["Stone"] || (json.items['collectibles-602']?.currentPrice) || 0;
       const woodPrice = priceDict["Wood"] || (json.items['collectibles-601']?.currentPrice) || 0;
-      const rodCoinsCostInFlower = 20 / bestCoinsPerFlower;
-      const rodCost = (1 * stonePrice) + (3 * woodPrice) + rodCoinsCostInFlower;
-      window.sflRodCost = rodCost;
-      const rodDisplay = document.getElementById("fishingRodCostDisplay");
-      if (rodDisplay) {
-        rodDisplay.innerText = formatNumber(rodCost, 4);
-      }
+      window.sflStonePrice = stonePrice;
+      window.sflWoodPrice = woodPrice;
 
       // 4. Petróleo / Oil (Oil Drill: 20 Wood + 9 Iron + 10 Leather + 100 Coins -> rinde 16.67 Oil)
       const ironPrice = priceDict["Iron"] || (json.items['collectibles-603']?.currentPrice) || 0;
       const leatherPrice = priceDict["Leather"] || (json.items['collectibles-641']?.currentPrice) || 0;
-      const drillCoinsCostInFlower = 100 / bestCoinsPerFlower;
-      const oilDrillCost = (20 * woodPrice) + (9 * ironPrice) + (10 * leatherPrice) + drillCoinsCostInFlower;
-      const oilCostPerUnit = oilDrillCost > 0 ? oilDrillCost / 16.67 : 0.107;
-      window.sflOilPrice = oilCostPerUnit;
-      const oilDisplay = document.getElementById("quickOilPriceDisplay");
-      if (oilDisplay) {
-        oilDisplay.innerText = formatNumber(oilCostPerUnit, 4);
-      }
+      window.sflIronPrice = ironPrice;
+      window.sflLeatherPrice = leatherPrice;
+
+      // Actualizar precios clave dinámicos (soporta edición personalizada de Coins y Rod)
+      window.updateKeyPrices();
 
       // 5. Gemas / Gems (Gema P2P: 0.0103 USD con 29% bonus -> convertido a FLOWER)
       const gemBaseUsd = 0.0103;
@@ -2354,6 +2474,24 @@ const formatAstroDescription = (skill) => {
           window.manualSelectedDish = state.manualSelectedDish;
         }
         
+        if (state.customCoins) {
+          window.sflCustomCoinsPerFlower = parseFloat(state.customCoins);
+        }
+        if (state.customRod !== null && state.customRod !== undefined) {
+          window.sflCustomRodCost = parseFloat(state.customRod);
+        }
+        if (state.customFishFlake !== null && state.customFishFlake !== undefined) {
+          window.sflCustomFishFlakeCost = parseFloat(state.customFishFlake);
+        }
+        if (state.customFishStick !== null && state.customFishStick !== undefined) {
+          window.sflCustomFishStickCost = parseFloat(state.customFishStick);
+        }
+        if (state.customCrabStick !== null && state.customCrabStick !== undefined) {
+          window.sflCustomCrabStickCost = parseFloat(state.customCrabStick);
+        }
+        if (state.customFishOil !== null && state.customFishOil !== undefined) {
+          window.sflCustomFishOilCost = parseFloat(state.customFishOil);
+        }
         const isFirstTimeBoosts = localStorage.getItem("sfl_boosts_expanded") !== "true";
         if (state.boostFilter && !isFirstTimeBoosts) {
           window.toggleBoostFilter(state.boostFilter);
@@ -2381,6 +2519,153 @@ const formatAstroDescription = (skill) => {
       window.setViewStyle('detailed');
     }
   };
+
+  window.updateKeyPrices = function() {
+    // 1. Coins
+    const autoCoins = window.sflAutoCoinsPerFlower || 1330;
+    const isCustomCoins = window.sflCustomCoinsPerFlower !== null && window.sflCustomCoinsPerFlower !== undefined && window.sflCustomCoinsPerFlower > 0;
+    const effectiveCoins = isCustomCoins ? window.sflCustomCoinsPerFlower : autoCoins;
+    window.sflBestCoinsPerFlower = effectiveCoins;
+
+    const coinsInput = document.getElementById("quickCoinsInput");
+    const resetCoinsBtn = document.getElementById("resetCoinsBtn");
+    if (coinsInput) {
+      coinsInput.value = Math.round(effectiveCoins);
+      if (isCustomCoins) {
+        coinsInput.classList.add("text-amber-400", "border-amber-400/50");
+        coinsInput.classList.remove("text-emerald-400");
+      } else {
+        coinsInput.classList.remove("text-amber-400", "border-amber-400/50");
+        coinsInput.classList.add("text-emerald-400");
+      }
+    }
+    if (resetCoinsBtn) {
+      if (isCustomCoins) resetCoinsBtn.classList.remove("hidden");
+      else resetCoinsBtn.classList.add("hidden");
+    }
+
+    // 2. Rod
+    const stoneP = window.sflStonePrice || 0;
+    const woodP = window.sflWoodPrice || 0;
+    const rodCoinsInFlower = 20 / effectiveCoins;
+    const autoRodCost = (1 * stoneP) + (3 * woodP) + rodCoinsInFlower;
+    window.sflAutoRodCost = autoRodCost;
+
+    const isCustomRod = window.sflCustomRodCost !== null && window.sflCustomRodCost !== undefined && window.sflCustomRodCost >= 0;
+    const effectiveRod = isCustomRod ? window.sflCustomRodCost : autoRodCost;
+    window.sflRodCost = effectiveRod;
+
+    const rodInput = document.getElementById("fishingRodInput");
+    const resetRodBtn = document.getElementById("resetRodBtn");
+    if (rodInput) {
+      rodInput.value = isCustomRod ? effectiveRod : formatNumber(effectiveRod, 4);
+      if (isCustomRod) {
+        rodInput.classList.add("text-amber-400", "border-amber-400/50");
+        rodInput.classList.remove("text-emerald-400");
+      } else {
+        rodInput.classList.remove("text-amber-400", "border-amber-400/50");
+        rodInput.classList.add("text-emerald-400");
+      }
+    }
+    if (resetRodBtn) {
+      if (isCustomRod) resetRodBtn.classList.remove("hidden");
+      else resetRodBtn.classList.add("hidden");
+    }
+
+    // Helper para actualizar inputs de derivados
+    const updateDerivedPriceInput = (inputId, resetBtnId, customCost, autoCost) => {
+      const isCustom = customCost !== null && customCost !== undefined && customCost >= 0;
+      const effectiveVal = isCustom ? customCost : autoCost;
+      const inputEl = document.getElementById(inputId);
+      const resetEl = document.getElementById(resetBtnId);
+      if (inputEl) {
+        inputEl.value = isCustom ? effectiveVal : formatNumber(effectiveVal, 4);
+        if (isCustom) {
+          inputEl.classList.add("text-amber-400", "border-amber-400/50");
+          inputEl.classList.remove("text-emerald-400");
+        } else {
+          inputEl.classList.remove("text-amber-400", "border-amber-400/50");
+          inputEl.classList.add("text-emerald-400");
+        }
+      }
+      if (resetEl) {
+        if (isCustom) resetEl.classList.remove("hidden");
+        else resetEl.classList.add("hidden");
+      }
+    };
+
+    // 3. Fish Flake (8 rods por defecto)
+    updateDerivedPriceInput(
+      "quickFishFlakeInput",
+      "resetFishFlakeBtn",
+      window.sflCustomFishFlakeCost,
+      8 * effectiveRod
+    );
+
+    // 4. Fish Stick (10 rods por defecto)
+    updateDerivedPriceInput(
+      "quickFishStickInput",
+      "resetFishStickBtn",
+      window.sflCustomFishStickCost,
+      10 * effectiveRod
+    );
+
+    // 5. Crab Stick (5.9 FLOWER promedio por defecto)
+    updateDerivedPriceInput(
+      "quickCrabStickInput",
+      "resetCrabStickBtn",
+      window.sflCustomCrabStickCost,
+      5.9
+    );
+
+    // 6. Fish Oil (14 rods por defecto)
+    updateDerivedPriceInput(
+      "quickFishOilInput",
+      "resetFishOilBtn",
+      window.sflCustomFishOilCost,
+      14 * effectiveRod
+    );
+  };
+
+  const setupEditablePrice = (inputId, resetBtnId, customKey) => {
+    const inputEl = document.getElementById(inputId);
+    const resetBtnEl = document.getElementById(resetBtnId);
+    if (inputEl) {
+      const handleChange = (e) => {
+        const val = parseFloat(e.target.value);
+        if (!isNaN(val) && val >= 0) {
+          window[customKey] = val;
+        } else {
+          window[customKey] = null;
+        }
+        window.updateKeyPrices();
+        renderTable(searchInput ? searchInput.value : "");
+        updateSkillCalculator();
+        if (typeof saveState === "function") saveState();
+      };
+      inputEl.addEventListener("change", handleChange);
+      inputEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") inputEl.blur();
+      });
+    }
+    if (resetBtnEl) {
+      resetBtnEl.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window[customKey] = null;
+        window.updateKeyPrices();
+        renderTable(searchInput ? searchInput.value : "");
+        updateSkillCalculator();
+        if (typeof saveState === "function") saveState();
+      });
+    }
+  };
+
+  setupEditablePrice("quickCoinsInput", "resetCoinsBtn", "sflCustomCoinsPerFlower");
+  setupEditablePrice("fishingRodInput", "resetRodBtn", "sflCustomRodCost");
+  setupEditablePrice("quickFishFlakeInput", "resetFishFlakeBtn", "sflCustomFishFlakeCost");
+  setupEditablePrice("quickFishStickInput", "resetFishStickBtn", "sflCustomFishStickCost");
+  setupEditablePrice("quickCrabStickInput", "resetCrabStickBtn", "sflCustomCrabStickCost");
+  setupEditablePrice("quickFishOilInput", "resetFishOilBtn", "sflCustomFishOilCost");
 
   const boostsExpandBtn = document.getElementById("boosts-expand-btn");
   if (boostsExpandBtn && window.expandBoosts) {
