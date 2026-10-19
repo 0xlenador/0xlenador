@@ -37,6 +37,7 @@ export type Lang = keyof typeof languages
 export const routes = {
   en: {
     operaciones: "operations",
+    "sfl-temporada-16": "sfl-season-16",
     herramientas: "tools",
     activos: "watchlist",
     directorio: "directory",
@@ -54,6 +55,7 @@ export const routes = {
   },
   es: {
     operations: "operaciones",
+    "sfl-season-16": "sfl-temporada-16",
     tools: "herramientas",
     watchlist: "activos",
     directory: "directorio",
