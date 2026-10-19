@@ -457,34 +457,35 @@ const formatAstroDescription = (skill) => {
         <div class="hidden group-open:xl:flex overflow-x-auto no-scrollbar w-full xl:w-auto pb-2 xl:pb-0 -mx-4 px-4 xl:mx-0 xl:px-0" onclick="event.preventDefault();">
             <div class="flex items-center gap-3 w-max shrink-0 mx-auto xl:mx-0 xl:ml-auto">
               <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
-                <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="all" onclick="toggleBoostFilter('all'); event.stopPropagation();">All</button>
-                <button class="filter-boost-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="xp" onclick="toggleBoostFilter('xp'); event.stopPropagation();">XP</button>
+                <button class="filter-boost-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="all" onclick="toggleBoostFilter('all'); event.stopPropagation();">All</button>
+                <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="xp" onclick="toggleBoostFilter('xp'); event.stopPropagation();">XP</button>
                 <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="time" onclick="toggleBoostFilter('time'); event.stopPropagation();">Time</button>
               </div>
               <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
-                <button class="view-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="detailed" onclick="setViewStyle('detailed'); event.stopPropagation();">Detailed</button>
-                <button class="view-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="compact" onclick="setViewStyle('compact'); event.stopPropagation();">Compact</button>
+                <button class="view-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="detailed" onclick="setViewStyle('detailed'); event.stopPropagation();">Detailed</button>
+                <button class="view-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="compact" onclick="setViewStyle('compact'); event.stopPropagation();">Compact</button>
               </div>
             </div>
         </div>
       </summary>
       
-      <div class="p-4 pt-0">
-        <div id="boosts-container" class="relative z-10 is-compact" data-filter="xp">
-          <!-- Filters (Mobile Only: appears inside container) -->
-          <div class="flex items-center justify-end mb-5 xl:hidden">
-            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
-              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
-                <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="all" onclick="toggleBoostFilter('all')">All</button>
-                <button class="filter-boost-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="xp" onclick="toggleBoostFilter('xp')">XP</button>
-                <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="time" onclick="toggleBoostFilter('time')">Time</button>
-              </div>
-              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
-                <button class="view-switch-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="detailed" onclick="setViewStyle('detailed')">Detailed</button>
-                <button class="view-switch-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="compact" onclick="setViewStyle('compact')">Compact</button>
+      <div class="p-4 pt-0 relative">
+        <div id="boosts-peek-wrapper" class="relative overflow-hidden transition-[max-height] duration-500 ease-in-out">
+          <div id="boosts-container" class="relative z-10">
+            <!-- Filters (Mobile Only: appears inside container) -->
+            <div class="flex items-center justify-end mb-5 xl:hidden">
+              <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+                <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
+                  <button class="filter-boost-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="all" onclick="toggleBoostFilter('all')">All</button>
+                  <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="xp" onclick="toggleBoostFilter('xp')">XP</button>
+                  <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="time" onclick="toggleBoostFilter('time')">Time</button>
+                </div>
+                <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
+                  <button class="view-switch-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="detailed" onclick="setViewStyle('detailed')">Detailed</button>
+                  <button class="view-switch-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="compact" onclick="setViewStyle('compact')">Compact</button>
+                </div>
               </div>
             </div>
-          </div>
           
           <div class="flex flex-col items-start w-full mt-2">
           <!-- PowerUps Sub-group -->
@@ -672,7 +673,40 @@ const formatAstroDescription = (skill) => {
       </div>
     </div>
   </div>
-</details>
+
+      <!-- Overlay con degradado suave y botón "Ver todo" (solo se muestra la primera vez hasta que el usuario lo expanda) -->
+      <div
+        id="boosts-fade-overlay"
+        class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#141414] via-[#141414]/85 to-transparent flex items-end justify-center pb-3 z-20 pointer-events-none rounded-b-2xl transition-all duration-300"
+      >
+        <button
+          type="button"
+          id="boosts-expand-btn"
+          class="pointer-events-auto px-4 py-1.5 rounded-full bg-[#1e1e1e]/95 hover:bg-emerald-500/20 text-white/80 hover:text-emerald-400 border border-white/10 hover:border-emerald-500/40 text-xs font-mono font-medium transition-all shadow-xl flex items-center gap-1.5 cursor-pointer backdrop-blur-md group/btn"
+        >
+          <span>{t("sfl.cooking.boosts.viewAll")}</span>
+          <svg class="w-3.5 h-3.5 text-emerald-400 group-hover/btn:translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </details>
+
+  <script is:inline>
+    // Inicialización inmediata para evitar parpadeos:
+    // Si el usuario ya lo expandió antes, quitamos la restricción de altura y el overlay.
+    // Si es la primera vez, aplicamos max-h-[380px] para que quede medio abierto.
+    if (typeof localStorage !== "undefined" && localStorage.getItem("sfl_boosts_expanded") === "true") {
+      var wrap = document.getElementById("boosts-peek-wrapper");
+      var ov = document.getElementById("boosts-fade-overlay");
+      if (wrap) wrap.classList.remove("max-h-[380px]");
+      if (ov) ov.classList.add("hidden");
+    } else {
+      var wrap = document.getElementById("boosts-peek-wrapper");
+      if (wrap) wrap.classList.add("max-h-[240px]");
+    }
+  </script>
 
     <!-- Controles y Filtros (Sticky Header) -->
     <div class="sticky top-0 z-40 bg-[#06080A]/95 backdrop-blur-md py-4 border-b border-white/5 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:border-0 sm:static sm:py-0">
@@ -715,9 +749,9 @@ const formatAstroDescription = (skill) => {
               <div class="flex items-center gap-1.5 w-max pr-6">
                 <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0">Sort By</span>
                 <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="name" onclick="window.handleSort('name')">Name<span class="sort-icon opacity-0" data-col="name">↕</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xp" onclick="window.handleSort('xp')">XP<span class="sort-icon opacity-100 text-emerald-500" data-col="xp">↓</span></button>
+                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xp" onclick="window.handleSort('xp')">XP<span class="sort-icon opacity-0" data-col="xp">↕</span></button>
                 <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="cost" onclick="window.handleSort('cost')">FLOWER Cost<span class="sort-icon opacity-0" data-col="cost">↕</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpsfl" onclick="window.handleSort('xpsfl')">XP/FLOWER<span class="sort-icon opacity-0" data-col="xpsfl">↕</span></button>
+                <button class="mobile-sort-btn px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpsfl" onclick="window.handleSort('xpsfl')">XP/FLOWER<span class="sort-icon opacity-100 text-emerald-500" data-col="xpsfl">↓</span></button>
                 <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpday" onclick="window.handleSort('xpday')">XP/Day<span class="sort-icon opacity-0" data-col="xpday">↕</span></button>
               </div>
             </div>
@@ -762,8 +796,9 @@ const formatAstroDescription = (skill) => {
           class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('xp')"
         >
-          XP <span class="sort-icon opacity-100 text-emerald-500 transition-opacity" data-col="xp"
-            >↓</span
+          XP <span
+            class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+            data-col="xp">↕</span
           >
         </div>
         <div
@@ -779,9 +814,8 @@ const formatAstroDescription = (skill) => {
           class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('xpsfl')"
         >
-          XP/FLOWER <span
-            class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-            data-col="xpsfl">↕</span
+          XP/FLOWER <span class="sort-icon opacity-100 text-emerald-500 transition-opacity" data-col="xpsfl"
+            >↓</span
           >
         </div>
         <div
@@ -957,7 +991,7 @@ const formatAstroDescription = (skill) => {
   let recipesData = sflRecipes.recipes
   let priceDict = {}
 
-  window.currentSort = { column: "xp", direction: "desc" }
+  window.currentSort = { column: "xpsfl", direction: "desc" }
   let currentCategory = "all"
   
   window.currentHideXpLimit = 0;
@@ -1006,7 +1040,7 @@ const formatAstroDescription = (skill) => {
       currentCategory: currentCategory,
       manualSelectedDish: window.manualSelectedDish || null,
       boostFilter: document.querySelector('.filter-boost-btn.active')?.dataset?.filter || 'all',
-      viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'compact',
+      viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'detailed',
       skillLevel: document.getElementById('skillLevelRange')?.value || '100'
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(state));
@@ -2294,19 +2328,16 @@ const formatAstroDescription = (skill) => {
           window.manualSelectedDish = state.manualSelectedDish;
         }
         
-        if (state.boostFilter) {
-          const container = document.getElementById("boosts-container");
-          document.querySelectorAll(".filter-boost-btn").forEach(btn => btn.classList.remove("active"));
-          if (state.boostFilter === 'all') container.removeAttribute("data-filter");
-          else container.setAttribute("data-filter", state.boostFilter);
-          document.querySelectorAll(`.filter-boost-btn[data-filter="${state.boostFilter}"]`).forEach(btn => btn.classList.add('active'));
+        const isFirstTimeBoosts = localStorage.getItem("sfl_boosts_expanded") !== "true";
+        if (state.boostFilter && !isFirstTimeBoosts) {
+          window.toggleBoostFilter(state.boostFilter);
+        } else {
+          window.toggleBoostFilter('all');
         }
-        if (state.viewStyle) {
-          const container = document.getElementById('boosts-container');
-          if (state.viewStyle === 'compact') container.classList.add('is-compact');
-          else container.classList.remove('is-compact');
-          document.querySelectorAll('.view-switch-btn').forEach(b => b.classList.remove('active'));
-          document.querySelectorAll(`.view-switch-btn[data-action="${state.viewStyle}"]`).forEach(btn => btn.classList.add('active'));
+        if (state.viewStyle && !isFirstTimeBoosts) {
+          window.setViewStyle(state.viewStyle);
+        } else {
+          window.setViewStyle('detailed');
         }
         const targetLevel = (state.skillLevel && state.skillLevel !== "10") ? state.skillLevel : "100";
         const range = document.getElementById("skillLevelRange");
@@ -2320,8 +2351,21 @@ const formatAstroDescription = (skill) => {
       }
     } else {
       window.setHideXpLimit(0);
+      window.toggleBoostFilter('all');
+      window.setViewStyle('detailed');
     }
   };
+
+  const boostsExpandBtn = document.getElementById("boosts-expand-btn");
+  if (boostsExpandBtn) {
+    boostsExpandBtn.addEventListener("click", () => {
+      const wrapper = document.getElementById("boosts-peek-wrapper");
+      const overlay = document.getElementById("boosts-fade-overlay");
+      if (wrapper) wrapper.classList.remove("max-h-[380px]");
+      if (overlay) overlay.classList.add("hidden");
+      localStorage.setItem("sfl_boosts_expanded", "true");
+    });
+  }
   
   // Init
   loadState();
