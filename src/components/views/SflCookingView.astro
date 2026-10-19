@@ -470,7 +470,7 @@ const formatAstroDescription = (skill) => {
       </summary>
       
       <div class="p-4 pt-0 relative">
-        <div id="boosts-peek-wrapper" class="relative overflow-hidden transition-[max-height] duration-500 ease-in-out">
+        <div id="boosts-peek-wrapper" class="relative">
           <div id="boosts-container" class="relative z-10">
             <!-- Filters (Mobile Only: appears inside container) -->
             <div class="flex items-center justify-end mb-5 xl:hidden">
@@ -682,6 +682,7 @@ const formatAstroDescription = (skill) => {
         <button
           type="button"
           id="boosts-expand-btn"
+          onclick="window.expandBoosts ? window.expandBoosts() : (document.getElementById('boosts-peek-wrapper')?.classList.remove('is-peek'), document.getElementById('boosts-fade-overlay')?.remove());"
           class="pointer-events-auto px-4 py-1.5 rounded-full bg-[#1e1e1e]/95 hover:bg-emerald-500/20 text-white/80 hover:text-emerald-400 border border-white/10 hover:border-emerald-500/40 text-xs font-mono font-medium transition-all shadow-xl flex items-center gap-1.5 cursor-pointer backdrop-blur-md group/btn"
         >
           <span>{t("sfl.cooking.boosts.viewAll")}</span>
@@ -694,18 +695,43 @@ const formatAstroDescription = (skill) => {
   </details>
 
   <script is:inline>
-    // Inicialización inmediata para evitar parpadeos:
-    // Si el usuario ya lo expandió antes, quitamos la restricción de altura y el overlay.
-    // Si es la primera vez, aplicamos max-h-[380px] para que quede medio abierto.
-    if (typeof localStorage !== "undefined" && localStorage.getItem("sfl_boosts_expanded") === "true") {
+    // Función global inmediata para expandir al 100% sin importar qué script se cargue después:
+    window.expandBoosts = function() {
       var wrap = document.getElementById("boosts-peek-wrapper");
       var ov = document.getElementById("boosts-fade-overlay");
-      if (wrap) wrap.classList.remove("max-h-[380px]");
-      if (ov) ov.classList.add("hidden");
-    } else {
+      if (wrap) {
+        wrap.classList.remove("is-peek");
+        wrap.style.maxHeight = "none";
+        wrap.style.overflow = "visible";
+      }
+      if (ov) {
+        ov.style.display = "none";
+        ov.remove();
+      }
+      try {
+        localStorage.setItem("sfl_boosts_expanded", "true");
+      } catch (e) {}
+    };
+
+    // Inicialización inmediata para evitar parpadeos:
+    (function() {
+      var isExpanded = typeof localStorage !== "undefined" && localStorage.getItem("sfl_boosts_expanded") === "true";
       var wrap = document.getElementById("boosts-peek-wrapper");
-      if (wrap) wrap.classList.add("max-h-[240px]");
-    }
+      var ov = document.getElementById("boosts-fade-overlay");
+      if (isExpanded) {
+        if (wrap) {
+          wrap.classList.remove("is-peek");
+          wrap.style.maxHeight = "none";
+          wrap.style.overflow = "visible";
+        }
+        if (ov) {
+          ov.style.display = "none";
+          ov.remove();
+        }
+      } else {
+        if (wrap) wrap.classList.add("is-peek");
+      }
+    })();
   </script>
 
     <!-- Controles y Filtros (Sticky Header) -->
@@ -2357,14 +2383,8 @@ const formatAstroDescription = (skill) => {
   };
 
   const boostsExpandBtn = document.getElementById("boosts-expand-btn");
-  if (boostsExpandBtn) {
-    boostsExpandBtn.addEventListener("click", () => {
-      const wrapper = document.getElementById("boosts-peek-wrapper");
-      const overlay = document.getElementById("boosts-fade-overlay");
-      if (wrapper) wrapper.classList.remove("max-h-[380px]");
-      if (overlay) overlay.classList.add("hidden");
-      localStorage.setItem("sfl_boosts_expanded", "true");
-    });
+  if (boostsExpandBtn && window.expandBoosts) {
+    boostsExpandBtn.addEventListener("click", window.expandBoosts);
   }
   
   // Init
@@ -2387,6 +2407,11 @@ const formatAstroDescription = (skill) => {
   
   #boosts-container[data-filter="xp"] .buff-card:not([data-effect*="xp"]), #boosts-container[data-filter="xp"] .skill-card:not([data-effect*="xp"]) { display: none !important; }
   #boosts-container[data-filter="time"] .buff-card:not([data-effect*="time"]), #boosts-container[data-filter="time"] .skill-card:not([data-effect*="time"]) { display: none !important; }
+
+  #boosts-peek-wrapper.is-peek {
+    max-height: 380px;
+    overflow: hidden;
+  }
 </style>
 
 <style is:global>
