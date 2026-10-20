@@ -79,21 +79,7 @@ async function refreshSflData(env) {
     sfl_data: "pending",
   }
 
-  // A. Actualizar Dashboard de Tendencias (sfl_dashboard)
-  try {
-    const trendsRes = await fetch("https://api.sunflower-land.com/marketplace/trends", { headers })
-    if (trendsRes.ok) {
-      const trendsData = await trendsRes.text()
-      await env.SFL_KV.put("sfl_dashboard", trendsData)
-      results.dashboard = "success"
-    } else {
-      results.dashboard = `error: status ${trendsRes.status}`
-    }
-  } catch (e) {
-    results.dashboard = `error: ${e.message}`
-  }
-
-  // B. Actualizar Precios en Vivo (sfl_data)
+  // Consultar el reporte de actividad de mercado (Community API oficial con x-api-key)
   try {
     const liveRes = await fetch("https://api.sunflower-land.com/data?type=marketplaceActivity", {
       headers,
@@ -106,14 +92,16 @@ async function refreshSflData(env) {
       if (reports) {
         const reportKeys = Object.keys(reports)
         if (reportKeys.length > 0) {
-          const liveItems = reports[reportKeys[0]].items
+          const report = reports[reportKeys[0]]
+          const liveItems = report.items
+          const totals = report.totals
 
-          // Obtener base previa (de KV o del archivo estático base)
+          // 1. Actualizar sfl_data.json en KV
           let baseData = null
-          const cached = await env.SFL_KV.get("sfl_data")
-          if (cached) {
+          const cachedData = await env.SFL_KV.get("sfl_data")
+          if (cachedData) {
             try {
-              baseData = JSON.parse(cached)
+              baseData = JSON.parse(cachedData)
             } catch (_) {}
           }
 
@@ -151,13 +139,42 @@ async function refreshSflData(env) {
           } else {
             results.sfl_data = "error: no se encontró baseData para fusionar"
           }
+
+          // 2. Actualizar sfl_dashboard.json en KV (volumen y trades oficiales)
+          let baseDashboard = null
+          const cachedDash = await env.SFL_KV.get("sfl_dashboard")
+          if (cachedDash) {
+            try {
+              baseDashboard = JSON.parse(cachedDash)
+            } catch (_) {}
+          }
+
+          if (!baseDashboard) {
+            const assetDashRes = await env.ASSETS.fetch(
+              new Request("https://0xlenador.xyz/api/sfl_dashboard.json"),
+            )
+            if (assetDashRes.ok) {
+              baseDashboard = await assetDashRes.json()
+            }
+          }
+
+          if (baseDashboard) {
+            if (totals?.volume) baseDashboard.volume = totals.volume
+            if (totals?.trades) baseDashboard.trades = totals.trades
+            await env.SFL_KV.put("sfl_dashboard", JSON.stringify(baseDashboard))
+            results.dashboard = "success (community-totals)"
+          } else {
+            results.dashboard = "skipped: base dashboard no disponible"
+          }
         }
       }
     } else {
       results.sfl_data = `error: status ${liveRes.status}`
+      results.dashboard = `skipped: api status ${liveRes.status}`
     }
   } catch (e) {
     results.sfl_data = `error: ${e.message}`
+    results.dashboard = `error: ${e.message}`
   }
 
   return results
