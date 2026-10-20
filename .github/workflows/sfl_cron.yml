@@ -2,8 +2,8 @@ name: SFL Mercado Updater
 
 on:
   schedule:
-    # Se ejecuta cada 15 minutos
-    - cron: "*/15 * * * *"
+    # Se ejecuta 1 vez al día a medianoche (00:00 UTC) para archivar el historial en Git
+    - cron: "0 0 * * *"
   workflow_dispatch: # Permite ejecución manual desde GitHub
 
 permissions:
