@@ -125,7 +125,7 @@ const formatAstroDescription = (skill) => {
                   id="bestFoodImg"
                   src="/img/sunflowerland/food/Boiled Eggs.png"
                   class="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
-                  onerror="window.handleImgError(this, 'Boiled Eggs')"
+                  onerror="window.handleImgError(this)"
                   alt="Optimal Food"
                 />
               </div>
@@ -601,16 +601,18 @@ const formatAstroDescription = (skill) => {
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
           {
             Object.entries(sflBuffs).map(([id, buff]) => {
-              const group = buff.type + "s";
-              const imgFile = sflPowerUpsData[group]?.[id]?.image || `${buff.name}.webp`;
-              const mainSrc = `/img/sunflowerland/powerups/${imgFile}`;
-              const fallbackSrc = `/img/sunflowerland/powerups/wearables/${imgFile}`;
+              const powerUpItem = sflPowerUpsData.wearables?.[id] || sflPowerUpsData.collectibles?.[id];
+              const isWearable = Boolean(sflPowerUpsData.wearables?.[id]);
+              const imgFile = powerUpItem?.image || `${buff.name}.webp`;
+              const mainSrc = isWearable
+                ? `/img/sunflowerland/powerups/wearables/${imgFile}`
+                : `/img/sunflowerland/powerups/${imgFile}`;
               const errorFallback = `/img/cripto/sunflowerland.webp`;
               
               return (
               <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
                 <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
-                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${fallbackSrc}'; this.onerror=function(){this.src='${errorFallback}'};`} alt={buff.name} title={buff.boost} />
+                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${errorFallback}';`} alt={buff.name} title={buff.boost} />
                 <div class="flex flex-col normal-view">
                   <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors">{buff.name}</span>
                   <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
@@ -1069,47 +1071,30 @@ const formatAstroDescription = (skill) => {
     tInstant: t("sfl.cooking.col.instant"),
   }}
 >
-  window.handleImgError = function(img, originalName) {
-    const nameStr = originalName || "";
-    const nameSafe = nameStr.replace(/\s+/g, '_').toLowerCase();
-    
-    if (!img.dataset.attempts) {
-      img.dataset.attempts = "0";
-    }
-    
-    const paths = [
-      `/img/sunflowerland/food/${nameStr}.png`,
-      `/img/sunflowerland/${nameStr}.png`,
-      `/img/sunflowerland/${nameStr}.webp`,
-      `/img/sunflowerland/food/${nameSafe}.png`,
-      `/img/sunflowerland/${nameSafe}.png`,
-      `/img/sunflowerland/${nameSafe}.webp`,
-      `/img/sunflowerland/123/${nameStr}.png`,
-      `/img/sunflowerland/123/${nameStr}.webp`,
-      `/img/sunflowerland/123/${nameSafe}.png`,
-      `/img/sunflowerland/123/${nameSafe}.webp`,
-      `/img/sunflowerland/fish/specials/${nameStr}.png`,
-      `/img/sunflowerland/fish/specials/${nameStr}.webp`,
-      `/img/sunflowerland/fish/specials/${nameSafe}.png`,
-      `/img/sunflowerland/fish/specials/${nameSafe}.webp`,
-      `/img/sunflowerland/fish/${nameStr}.png`,
-      `/img/sunflowerland/fish/${nameStr}.webp`,
-      `/img/sunflowerland/fish/${nameSafe}.png`,
-      `/img/sunflowerland/fish/${nameSafe}.webp`,
-      `/img/cripto/sunflowerland.webp`
-    ];
-    
-    let attempt = parseInt(img.dataset.attempts);
-    attempt++;
-    
-    if (attempt < paths.length) {
-      img.dataset.attempts = attempt.toString();
-      img.src = paths[attempt];
-    } else {
-      img.onerror = null;
-      img.src = `/img/cripto/sunflowerland.webp`;
-    }
+  window.handleImgError = function(img) {
+    img.onerror = null;
+    img.src = "/img/cripto/sunflowerland.webp";
   };
+
+  const fishList = [
+    'Anchovy', 'Angelfish', 'Blowfish', 'Butterflyfish', 'Halibut', 
+    'Horse Mackerel', 'Napoleanfish', 'Olive Flounder', 'Red Snapper', 
+    'Squid', 'Sunfish', 'Surgeonfish', 'Tuna'
+  ];
+  const fishSpecialsWebp = ['Fish Flake', 'Fish Stick', 'Crab Stick'];
+
+  function getIngredientImg(name) {
+    if (recipesData.some(r => r.name === name)) {
+      return `/img/sunflowerland/food/${name}.png`;
+    }
+    if (name === 'Magic Mushroom') return '/img/sunflowerland/123/magic_mushroom.webp';
+    if (name === 'Wild Mushroom') return '/img/sunflowerland/123/wild_mushroom.webp';
+    if (name === 'Seaweed') return '/img/sunflowerland/123/seaweed.webp';
+    if (fishList.includes(name)) return `/img/sunflowerland/fish/${name}.png`;
+    if (fishSpecialsWebp.includes(name)) return `/img/sunflowerland/fish/specials/${name.toLowerCase().replace(/\s+/g, '_')}.webp`;
+    if (name === 'Fish Oil') return '/img/sunflowerland/fish/specials/Fish Oil.png';
+    return `/img/sunflowerland/${name}.png`;
+  }
 
   const searchInput = document.getElementById("searchInput")
   const loadingState = document.getElementById("loadingState")
@@ -1568,13 +1553,12 @@ const formatAstroDescription = (skill) => {
 
       const ingredientsHtml = item.ingredients
         .map((ing) => {
-          const isFood = recipesData.some((r) => r.name === ing.name)
-          const basePath = isFood ? "/img/sunflowerland/food" : "/img/sunflowerland"
+          const imgSrc = getIngredientImg(ing.name);
           const safeName = ing.name.replace(/'/g, "\\'");
 
           return `
           <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2 py-1 lg:p-0 rounded-md lg:rounded-none shrink-0 border border-white/5 lg:border-0">
-            <img src="${basePath}/${ing.name}.png" class="w-4 h-4 object-contain drop-shadow-sm" onerror="window.handleImgError(this, '${safeName}')" />
+            <img src="${imgSrc}" alt="${safeName}" class="w-4 h-4 object-contain drop-shadow-sm" onerror="window.handleImgError(this)" />
             <span class="text-[11px] lg:text-xs text-white/80">${ing.name} <span class="text-white/40 font-mono ml-0.5">x${ing.amount * doubleNomMultiplier}</span></span>
           </div>
         `
@@ -1585,7 +1569,7 @@ const formatAstroDescription = (skill) => {
         <div class="lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full mb-3 lg:mb-0">
           <div class="flex items-center gap-3 lg:gap-3 w-full">
             <div class="w-12 h-12 lg:w-8 lg:h-8 flex items-center justify-center shrink-0 bg-white/5 rounded-xl lg:bg-transparent lg:rounded-none p-1 lg:p-0">
-              <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="window.handleImgError(this, '${item.name.replace(/'/g, "\\'")}')" />
+              <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="window.handleImgError(this)" />
             </div>
             <div class="flex flex-col flex-1">
               <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${displayName}</span>
@@ -1829,7 +1813,7 @@ const formatAstroDescription = (skill) => {
       skillReachDishImg.src = dishImgSrc;
       skillReachDishImg.alt = best.name;
       skillReachDishImg.title = best.name;
-      skillReachDishImg.onerror = function() { window.handleImgError(this, safeDishName); };
+      skillReachDishImg.onerror = function() { window.handleImgError(this); };
     }
     if (costDisplay) {
       const costThisLevelDecimals = costThisLevel >= 100 ? 0 : 2;
@@ -1858,7 +1842,7 @@ const formatAstroDescription = (skill) => {
       skillNextDishImg.src = dishImgSrc;
       skillNextDishImg.alt = best.name;
       skillNextDishImg.title = best.name;
-      skillNextDishImg.onerror = function() { window.handleImgError(this, safeDishName); };
+      skillNextDishImg.onerror = function() { window.handleImgError(this); };
     }
     if (skillNextCostDisplay) {
       if (level >= 200) {
@@ -1886,7 +1870,7 @@ const formatAstroDescription = (skill) => {
       skillTotalDishImg.src = dishImgSrc;
       skillTotalDishImg.alt = best.name;
       skillTotalDishImg.title = best.name;
-      skillTotalDishImg.onerror = function() { window.handleImgError(this, safeDishName); };
+      skillTotalDishImg.onerror = function() { window.handleImgError(this); };
     }
     if (totalCostDisplay) {
       const totalCostDecimals = totalCost >= 100 ? 0 : 2;
@@ -1915,7 +1899,7 @@ const formatAstroDescription = (skill) => {
     if (bestFoodImg) {
       bestFoodImg.src = `/img/sunflowerland/food/${best.name}.png`;
       bestFoodImg.alt = best.name;
-      bestFoodImg.onerror = function() { window.handleImgError(this, safeDishName); };
+      bestFoodImg.onerror = function() { window.handleImgError(this); };
     }
 
     const dishManualBadge = document.getElementById("dishManualBadge");
@@ -2198,7 +2182,7 @@ const formatAstroDescription = (skill) => {
             class="w-full px-3 py-2 text-left flex items-center gap-2.5 hover:bg-white/10 transition-colors cursor-pointer ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/90'}"
             onclick="window.selectManualDish('${safeName}')"
           >
-            <img src="/img/sunflowerland/food/${dish.name}.png" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="window.handleImgError(this, '${safeName}')" />
+            <img src="/img/sunflowerland/food/${dish.name}.png" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="window.handleImgError(this)" />
             <div class="flex flex-col min-w-0 flex-1">
               <div class="flex items-center justify-between gap-1">
                 <span class="text-xs truncate font-medium ${isSelected ? 'text-emerald-400 font-bold' : 'text-white'}">${dish.name}</span>
