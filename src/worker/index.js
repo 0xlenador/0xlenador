@@ -5,9 +5,34 @@
  * - Para cualquier otra ruta, delega directamente a los archivos estáticos de Astro (ASSETS)
  */
 
+// Redirecciones 301 permanentes (migración WordPress / URLs legacy a Astro)
+const REDIRECTS_301 = {
+  "/que-es-polkadot": "/blog/que-es-polkadot/",
+  "/que-es-ethereum-y-por-que-es-clave-en-el-futuro-digital": "/blog/que-es-ethereum-y-por-que-es-clave-en-el-futuro-digital/",
+  "/que-es-blockchain-y-como-funciona-esta-tecnologia": "/blog/que-es-blockchain-y-como-funciona-esta-tecnologia/",
+  "/satoshi-nakamoto-el-enigma-que-transformo-el-dinero-digital": "/blog/satoshi-nakamoto-el-enigma-que-transformo-el-dinero-digital/",
+  "/que-es-defi-invierte-gana-rendimientos-y-recibe-airdrops": "/blog/que-es-defi-invierte-gana-rendimientos-y-recibe-airdrops/",
+  "/que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto": "/blog/que-es-solana-y-por-que-esta-revolucionando-el-mundo-cripto/",
+  "/faucets.html": "/faucets/",
+  "/en/blog/ganarle-a-la-inflacion": "/en/blog/beating-inflation/",
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url)
+
+    // 0. Redirecciones 301 permanentes (legacy / WordPress a Astro)
+    const normalizedPath =
+      url.pathname.endsWith("/") && url.pathname.length > 1
+        ? url.pathname.slice(0, -1)
+        : url.pathname
+
+    const targetRedirect = REDIRECTS_301[normalizedPath] || REDIRECTS_301[url.pathname]
+    if (targetRedirect) {
+      const targetUrl = new URL(targetRedirect, url.origin)
+      targetUrl.search = url.search
+      return Response.redirect(targetUrl.toString(), 301)
+    }
 
     // 1. Interceptar /api/sfl_data.json
     if (url.pathname === "/api/sfl_data.json") {
