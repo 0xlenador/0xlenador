@@ -5,16 +5,26 @@ trigger: always_on
 # 0xLeñador — Reglas Fundamentales
 
 ## Identidad
+
 Plataforma de **herramientas, dashboards y contenido educativo** sobre crypto/finanzas.
 **NO es un blog genérico ni una landing page comercial.** Las decisiones de diseño priorizan densidad de datos y utilidad operativa.
 
-## Stack
-- **Framework:** Astro v7 (SSG estático, GitHub Pages)
+## Stack & Arquitectura
+
+- **Framework:** Astro v7 (SSG estático)
+- **Infraestructura:** Cloudflare Workers (Static Assets + Cloudflare KV para caché de APIs)
+- **CI/CD:** GitHub Actions (despliegue automático con Wrangler + crons automáticos de datos)
 - **Estilos:** Tailwind CSS v4 (`@tailwindcss/vite`) + clases custom en `src/styles/main.css`
 - **Contenido:** Content Collections con Zod schemas (`src/content.config.ts`)
 - **Tipado:** TypeScript strict
 - **Package manager:** pnpm (NUNCA npm ni yarn)
 - **Formato:** Prettier (sin semicolons, comillas dobles, printWidth 100, LF)
+
+## Flujo Git & Despliegue
+
+1. **No commits ni deploy** a menos que se pida explícitamente.
+2. **Siempre hacer `git pull --rebase origin main` antes de pushear:** Los crons de GitHub Actions commitean datos horarios de mercado/acciones.
+3. El push a `main` dispara automáticamente el workflow de GitHub Actions que compila Astro y despliega a Cloudflare Workers.
 
 ## Design System — Tokens y Clases Clave
 
