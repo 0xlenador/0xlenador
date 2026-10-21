@@ -1274,19 +1274,33 @@ const formatAstroDescription = (skill) => {
       if (skillName === "Frosted Cakes" && (item.building === "Bakery" || item.name.includes("Cake"))) {
         timeMultiplier *= math1;
       }
-      // Swift Sizzle (Fire Pit with oil)
+      // Swift Sizzle (Fire Pit con oil)
       if (skillName === "Swift Sizzle" && item.building === "Fire Pit") {
         timeMultiplier *= math1;
       }
-      // Turbo Fry (Kitchen with oil)
+      // Turbo Fry (Kitchen con oil)
       if (skillName === "Turbo Fry" && item.building === "Kitchen") {
         timeMultiplier *= math1;
       }
-      // Fry Frenzy (Deli with oil)
+      // Fry Frenzy (Deli con oil)
       if (skillName === "Fry Frenzy" && item.building === "Deli") {
         timeMultiplier *= math1;
       }
     });
+
+    // Boost Base de Oil en edificios (cuando Oil está activo y no se sobreescribe por una skill superior)
+    const hasOil = Boolean(activeSkills && activeSkills["Oil"]);
+    if (hasOil) {
+      if (item.building === "Fire Pit" && !(activeSkills && activeSkills["Swift Sizzle"])) {
+        timeMultiplier *= 0.8; // -20% tiempo base Fire Pit con Oil
+      } else if (item.building === "Kitchen" && !(activeSkills && activeSkills["Turbo Fry"])) {
+        timeMultiplier *= 0.75; // -25% tiempo base Kitchen con Oil
+      } else if (item.building === "Bakery") {
+        timeMultiplier *= 0.65; // -35% tiempo base Bakery con Oil
+      } else if (item.building === "Deli" && !(activeSkills && activeSkills["Fry Frenzy"])) {
+        timeMultiplier *= 0.6; // -40% tiempo base Deli con Oil
+      }
+    }
       activeBuffs.forEach(id => {
         const buff = sflBuffs[id];
         if (buff && buff.mathematics_1) {
