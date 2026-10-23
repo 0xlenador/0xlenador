@@ -415,7 +415,8 @@ const formatAstroDescription = (skill) => {
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.rodName")}</span>
-              <div class="flex items-center gap-0.5">
+              <div class="flex items-center gap-1">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
                 <input
                   type="text"
                   inputmode="decimal"
@@ -441,7 +442,8 @@ const formatAstroDescription = (skill) => {
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishFlakeName")}</span>
-              <div class="flex items-center gap-0.5">
+              <div class="flex items-center gap-1">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
                 <input
                   type="text"
                   inputmode="decimal"
@@ -467,7 +469,8 @@ const formatAstroDescription = (skill) => {
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishStickName")}</span>
-              <div class="flex items-center gap-0.5">
+              <div class="flex items-center gap-1">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
                 <input
                   type="text"
                   inputmode="decimal"
@@ -493,7 +496,8 @@ const formatAstroDescription = (skill) => {
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.crabStickName")}</span>
-              <div class="flex items-center gap-0.5">
+              <div class="flex items-center gap-1">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
                 <input
                   type="text"
                   inputmode="decimal"
@@ -519,7 +523,8 @@ const formatAstroDescription = (skill) => {
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishOilName")}</span>
-              <div class="flex items-center gap-0.5">
+              <div class="flex items-center gap-1">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
                 <input
                   type="text"
                   inputmode="decimal"
@@ -911,10 +916,10 @@ const formatAstroDescription = (skill) => {
     <div id="dataContainer" class="hidden relative z-10">
       <!-- Header Tabla Desktop -->
       <div
-        class="hidden lg:grid grid-cols-[25%_10%_15%_15%_15%_20%] gap-4 px-6 py-4 bg-white/[0.02] border border-white/5 rounded-2xl mb-4"
+        class="hidden lg:grid grid-cols-[25%_10%_15%_15%_15%_20%] lg:p-2 py-3.5 bg-white/[0.02] border border-white/5 rounded-2xl mb-4 items-center"
       >
         <div
-          class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
+          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('name')"
         >
           Name <span
@@ -923,7 +928,7 @@ const formatAstroDescription = (skill) => {
           >
         </div>
         <div
-          class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
+          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('xp')"
         >
           XP <span
@@ -932,7 +937,7 @@ const formatAstroDescription = (skill) => {
           >
         </div>
         <div
-          class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
+          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('cost')"
         >
           FLOWER Cost <span
@@ -941,7 +946,7 @@ const formatAstroDescription = (skill) => {
           >
         </div>
         <div
-          class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
+          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('xpsfl')"
         >
           XP/FLOWER <span class="sort-icon opacity-100 text-emerald-500 transition-opacity" data-col="xpsfl"
@@ -949,7 +954,7 @@ const formatAstroDescription = (skill) => {
           >
         </div>
         <div
-          class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
+          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
           onclick="window.handleSort('xpday')"
         >
           XP/Day <span
@@ -957,7 +962,7 @@ const formatAstroDescription = (skill) => {
             data-col="xpday">↕</span
           >
         </div>
-        <div class="text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
+        <div class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
           Ingredients
         </div>
       </div>
@@ -1613,6 +1618,7 @@ const formatAstroDescription = (skill) => {
             <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5 relative z-10">FLOWER Cost</span>
             <div class="flex flex-col relative z-10">
               <div class="flex items-center gap-1">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
                 <span class="text-white text-[15px] font-mono ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, costObj.total >= 100 ? 0 : 2) : "0"}</span>
                 ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70">*Inc</span>` : ""}
               </div>
@@ -1635,8 +1641,11 @@ const formatAstroDescription = (skill) => {
         </div>
         
         <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 flex-col justify-center">
-          <span class="text-white text-sm ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, costObj.total >= 100 ? 0 : 2) : "0"}</span>
-          ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70" title="Missing some P2P prices">*Incomplete</span>` : ""}
+          <div class="flex items-center gap-1.5">
+            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
+            <span class="text-white text-sm ${costObj.total > costObj.baseTotal ? 'text-red-400' : ''}">${costObj.total > 0 ? formatNumber(costObj.total, costObj.total >= 100 ? 0 : 2) : "0"}</span>
+            ${costObj.missing && costObj.total > 0 ? `<span class="text-[9px] text-yellow-500/70" title="Missing some P2P prices">*Incomplete</span>` : ""}
+          </div>
           ${costObj.total > costObj.baseTotal ? `<span class="text-[9px] text-red-500/70" title="Base: ${formatNumber(costObj.baseTotal, 2)}">Debuff x${(costObj.total/costObj.baseTotal).toFixed(2)}</span>` : ""}
         </div>
         
