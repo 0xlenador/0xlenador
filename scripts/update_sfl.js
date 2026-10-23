@@ -227,6 +227,23 @@ async function updateSFLData() {
       console.log("⚠️ Error obteniendo historial de CoinGecko:", e.message)
     }
 
+    // 5.6 Fallback para precio live de FLOWER si la API oficial no lo proveyó
+    if (!currentFlowerPrice) {
+      try {
+        console.log("Obteniendo precio live de FLOWER desde CoinGecko...")
+        const cgPriceRes = await fetchWithRetry("https://api.coingecko.com/api/v3/simple/price?ids=flower-2&vs_currencies=usd")
+        if (cgPriceRes && cgPriceRes.ok) {
+          const pData = await cgPriceRes.json()
+          if (pData["flower-2"] && pData["flower-2"].usd) {
+            currentFlowerPrice = pData["flower-2"].usd
+            console.log(`✅ Precio live de FLOWER obtenido de CoinGecko: $${currentFlowerPrice}`)
+          }
+        }
+      } catch (e) {
+        console.log("⚠️ No se pudo obtener precio live de FLOWER desde CoinGecko:", e.message)
+      }
+    }
+
     // 6. GENERAR sfl_data.json (Siempre se ejecuta para actualizar live)
     const dirPath = path.join(process.cwd(), "public", "api")
 

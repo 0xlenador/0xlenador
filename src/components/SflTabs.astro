@@ -39,6 +39,7 @@ const tabs = [
 ---
 
 <div class="relative z-20 w-full">
+  <span class="price-value hidden" data-coin-id="flower-2"></span>
   <div class="bg-black/30 border border-white/[0.03] rounded-xl p-1 flex items-center w-full">
     {
       tabs.map((tab) => {
@@ -352,35 +353,54 @@ const tabs = [
   import bettyPrices from "../content/data/sfl/betty_prices.json"
   import sflIds from "../content/data/sfl/resources.json"
 
+  const applyFlowerPrice = (priceNum) => {
+    if (!priceNum || isNaN(priceNum) || priceNum <= 0) return;
+    window.sflInternalPrice = priceNum;
+
+    const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd");
+    tabFlowerUsdEls.forEach((el) => {
+      el.innerText = "$" + priceNum.toFixed(4);
+      el.classList.remove("animate-pulse");
+    });
+
+    const inputs = document.querySelectorAll(".tab-gem-input");
+    const initialVal = inputs.length > 0 ? inputs[0].value : 20;
+    if (window.updateTabGems) {
+      window.updateTabGems(initialVal);
+    }
+
+    const oilInputs = document.querySelectorAll(".tab-oil-input");
+    const initialOilVal = oilInputs.length > 0 ? oilInputs[0].value : 16.67;
+    if (window.updateTabOil) {
+      window.updateTabOil(initialOilVal);
+    }
+  };
+
+  // Escuchar evento global de CoinGecko si sfl_data viene sin flowerPrice
+  document.addEventListener("coingecko-data-ready", (e) => {
+    const dataMap = e.detail;
+    if (dataMap && dataMap["flower-2"] && dataMap["flower-2"].usd) {
+      applyFlowerPrice(dataMap["flower-2"].usd);
+    }
+  });
+
   const updateTabPrices = async () => {
+    // 1. Aplicar precio previo en memoria, de CoinGecko o fallback seguro para evitar skeletons pegados
+    const initialPrice =
+      window.sflInternalPrice ||
+      (window.__CoinGeckoEngine && window.__CoinGeckoEngine["flower-2"] && window.__CoinGeckoEngine["flower-2"].usd) ||
+      0.1501;
+    applyFlowerPrice(initialPrice);
+
     try {
       const response = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`)
       if (!response.ok) return
       const json = await response.json()
 
       if (json.flowerPrice) {
-        const flowerPriceNum = parseFloat(json.flowerPrice)
-        window.sflInternalPrice = flowerPriceNum;
-        
-        const inputs = document.querySelectorAll('.tab-gem-input');
-        const initialVal = inputs.length > 0 ? inputs[0].value : 20;
-        if (window.updateTabGems) {
-           window.updateTabGems(initialVal);
-        }
-
-        const oilInputs = document.querySelectorAll('.tab-oil-input');
-        const initialOilVal = oilInputs.length > 0 ? oilInputs[0].value : 16.67;
-        if (window.updateTabOil) {
-           window.updateTabOil(initialOilVal);
-        }
-
-        const tabFlowerUsdEls = document.querySelectorAll(".tabFlowerUsd")
-        if (tabFlowerUsdEls.length > 0) {
-          tabFlowerUsdEls.forEach((el) => {
-            el.innerText = "$" + flowerPriceNum.toFixed(4)
-            el.classList.remove("animate-pulse")
-          })
-        }
+        applyFlowerPrice(parseFloat(json.flowerPrice));
+      } else if (window.__CoinGeckoEngine && window.__CoinGeckoEngine["flower-2"] && window.__CoinGeckoEngine["flower-2"].usd) {
+        applyFlowerPrice(window.__CoinGeckoEngine["flower-2"].usd);
       }
 
       if (json.items) {
@@ -503,6 +523,7 @@ const tabs = [
   };
 
   const initSflTabs = () => {
+    applyFlowerPrice(window.sflInternalPrice || 0.1501)
     updateTabPrices()
     setupCopyButtons()
     
