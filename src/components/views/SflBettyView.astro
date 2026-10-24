@@ -51,7 +51,7 @@ const t = useTranslations(lang)
               <img
                 id="bestItemHeroImg"
                 src="/img/sunflowerland/123/empty.png"
-                class="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
+                class="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
                 alt="Optimal Item"
               />
             </div>
@@ -186,7 +186,7 @@ const t = useTranslations(lang)
                 <img
                   id="itemsOutputImg"
                   src="/img/sunflowerland/123/empty.png"
-                  class="w-6 h-6 object-contain absolute right-0 drop-shadow"
+                  class="w-6 h-6 object-contain absolute right-0 drop-shadow [image-rendering:pixelated]"
                   alt="Item"
                 />
               </div>
@@ -375,6 +375,14 @@ const t = useTranslations(lang)
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Renderizado nítido y fiel para Pixel Art en móviles (Retina/High-DPI) y navegadores de escritorio */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
   }
 </style>
 
