@@ -9,54 +9,245 @@ const t = useTranslations(lang)
 ---
 
 <SflToolLayout activeTab="betty">
-  <div class="flex flex-col lg:flex-row items-start justify-between gap-6 mb-6 lg:mb-8">
-    <div class="max-w-2xl text-center lg:text-left px-4 lg:px-0">
-      <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-3">
-        {t("sfl.betty.heading")}
-        <span class="text-emerald-500"> {t("sfl.betty.heading.accent")}</span>
-      </h1>
-      <p class="text-terminal-secondary text-sm leading-relaxed max-w-2xl">
-        {t("sfl.betty.intro")}
-      </p>
-    </div>
-    
-    <!-- Calculator Card -->
-    <div class="w-full lg:w-[420px] bg-white/[0.02] border border-white/5 rounded-xl p-3 flex flex-col gap-3 shrink-0 mt-2 lg:mt-0">
-      <div class="flex items-center justify-between">
-        <span class="text-[10px] font-bold text-terminal-muted uppercase tracking-wider">{t("sfl.betty.calculator.title")}</span>
-        <button id="resetBestBtn" class="text-[9px] font-mono text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer" title={t("sfl.betty.calculator.resetTitle")}>{t("sfl.betty.calculator.reset")}</button>
-      </div>
-      <div class="relative">
-        <button id="itemSelectorBtn" class="w-full flex items-center justify-between bg-black/20 hover:bg-white/[0.04] transition-colors rounded-lg p-2 border border-white/5 cursor-pointer text-left">
-          <div id="selectedItemContent" class="flex items-center gap-2 w-full">
-            <div class="animate-pulse bg-white/5 h-7 w-7 rounded"></div>
-            <div class="animate-pulse bg-white/5 h-3 w-16 rounded"></div>
-          </div>
-          <svg class="w-4 h-4 text-white/30 shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        </button>
-        
-        <!-- Dropdown Menu -->
-        <div id="itemDropdown" class="hidden absolute top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-[#1a1a1a] border border-white/10 rounded-lg shadow-xl z-50 flex flex-col gap-1 p-1 no-scrollbar">
-          <!-- Items injected via JS -->
-        </div>
-      </div>
+  <!-- Encabezado Principal -->
+  <div class="mb-5 relative z-10 text-center sm:text-left">
+    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
+      {t("sfl.betty.heading")}
+      <span class="text-emerald-500"> {t("sfl.betty.heading.accent")}</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm leading-relaxed max-w-3xl">
+      {t("sfl.betty.intro")}
+    </p>
+  </div>
+
+  <!-- Dashboard de Arbitraje Minimalista (Ancho Completo) -->
+  <div class="w-full mb-8 relative z-20 flex flex-col gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
       
-      <div class="flex items-center gap-1.5 mt-1">
-        <div class="relative flex-1" title="Inversión en $FLOWER">
-          <input type="number" id="flowerInput" value="10" min="0" step="0.1" class="w-full bg-black/40 border border-white/10 rounded-lg py-1.5 pl-2 pr-6 text-xs text-white font-mono focus:!outline-none focus-visible:!outline-none focus:!ring-1 focus:!ring-emerald-500/30 focus:!border-emerald-500/30 transition-all" />
-          <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full absolute right-2 top-1/2 -translate-y-1/2 opacity-70" />
+      <!-- Bloque Izquierdo: MEJOR OPORTUNIDAD & HERO STAT (lg:col-span-5) -->
+      <div class="lg:col-span-5 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-30">
+        <div>
+          <!-- Header con Título y Botón de Reset a Mejor Opción -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60">
+              {t("sfl.betty.dash.bestTitle")}
+            </span>
+            <button
+              type="button"
+              id="resetBestBtn"
+              class="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-mono text-emerald-400 font-bold transition-all cursor-pointer flex items-center gap-1.5"
+              title={t("sfl.betty.calculator.resetTitle")}
+            >
+              <svg class="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span>{t("sfl.betty.calculator.reset")}</span>
+            </button>
+          </div>
+
+          <!-- Hero: Imagen del Ítem + Métrica Gigante con Resplandor Esmeralda -->
+          <div class="relative flex items-center gap-4 sm:gap-6 my-2">
+            <div class="relative shrink-0">
+              <img
+                id="bestItemHeroImg"
+                src="/img/sunflowerland/123/empty.png"
+                class="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
+                alt="Optimal Item"
+              />
+            </div>
+
+            <div class="relative flex items-center min-w-0">
+              <!-- Resplandor esmeralda difuminado -->
+              <div class="absolute left-1/4 top-1/2 -translate-y-1/2 w-48 sm:w-64 h-20 bg-emerald-500/30 blur-2xl rounded-full pointer-events-none -z-0"></div>
+              <span
+                id="bestItemProfitDisplay"
+                class="text-3xl sm:text-4xl lg:text-[44px] font-mono font-black text-emerald-400 tracking-tight drop-shadow-[0_0_30px_rgba(16,185,129,0.5)] relative z-10 truncate"
+              >
+                ...
+              </span>
+            </div>
+          </div>
+
+          <!-- Selector de Ítem Desplegable -->
+          <div class="relative mt-4">
+            <button
+              type="button"
+              id="itemSelectorBtn"
+              class="w-full flex items-center justify-between bg-black/40 hover:bg-white/[0.06] transition-all rounded-xl p-3 border border-white/10 hover:border-white/20 cursor-pointer text-left"
+            >
+              <div id="selectedItemContent" class="flex items-center gap-2.5 w-full min-w-0">
+                <div class="animate-pulse bg-white/5 h-8 w-8 rounded-lg shrink-0"></div>
+                <div class="flex flex-col gap-1.5 flex-1">
+                  <div class="animate-pulse bg-white/5 h-3.5 w-24 rounded"></div>
+                  <div class="animate-pulse bg-white/5 h-2.5 w-16 rounded"></div>
+                </div>
+              </div>
+              <svg class="w-4 h-4 text-white/40 shrink-0 ml-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Dropdown Menu Flotante -->
+            <div
+              id="itemDropdown"
+              class="hidden absolute top-full left-0 right-0 mt-2 max-h-64 overflow-y-auto bg-[#141414]/98 border border-white/15 rounded-xl shadow-2xl backdrop-blur-xl z-50 flex flex-col divide-y divide-white/5 p-1 no-scrollbar"
+            >
+              <!-- Items inyectados dinámicamente via JS -->
+            </div>
+          </div>
         </div>
-        <svg class="w-3 h-3 text-white/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-        <div class="relative flex-1 bg-white/5 border border-white/10 rounded-lg" title="Cantidad de items a comprar">
-          <input type="number" id="itemsInput" value="0" min="0" step="1" class="w-full bg-transparent py-1.5 pl-2 pr-7 text-xs text-white/90 font-bold font-mono text-right focus:!outline-none focus-visible:!outline-none focus:!ring-0 focus:bg-white/10 rounded-lg transition-colors" />
-          <img id="itemsOutputImg" src="/img/sunflowerland/123/empty.png" class="w-4 h-4 absolute right-1.5 top-1/2 -translate-y-1/2 object-contain" />
-        </div>
-        <svg class="w-3 h-3 text-white/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-        <div class="relative flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg" title="Coins recibidas de Betty">
-          <input type="number" id="coinsInput" value="0" min="0" step="10" class="w-full bg-transparent py-1.5 pl-2 pr-6 text-xs text-emerald-400 font-bold font-mono text-right focus:!outline-none focus-visible:!outline-none focus:!ring-0 focus:bg-emerald-500/20 rounded-lg transition-colors" />
-          <img src="/img/sunflowerland/123/coins.png" class="w-3 h-3 absolute right-2 top-1/2 -translate-y-1/2" />
+
+        <!-- Barra Inferior de Ratio y Comparativa con Cambio Oficial -->
+        <div class="bg-black/50 border border-white/5 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs font-mono text-white/60 mt-4">
+          <div class="flex items-center gap-1.5">
+            <span>1 FLOWER =</span>
+            <span id="heroCoinsPerFlower" class="text-emerald-400 font-mono font-bold">... Coins</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-white/40">{t("sfl.betty.dash.officialRate")}</span>
+            <span class="text-white/80 font-mono font-medium">320 Coins</span>
+          </div>
         </div>
       </div>
+
+      <!-- Bloque Derecho: SIMULADOR DE CONVERSIÓN EN 3 PASOS (lg:col-span-7) -->
+      <div class="lg:col-span-7 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-20">
+        <div>
+          <!-- Header con Presets Rápidos de Inversión -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60">
+              {t("sfl.betty.dash.simulatorTitle")}
+            </span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-mono text-white/40 uppercase mr-1">Presets:</span>
+              <button type="button" class="preset-flower-btn px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/40 text-[10px] font-mono text-white/70 hover:text-emerald-400 transition-all cursor-pointer" data-flower="5">5</button>
+              <button type="button" class="preset-flower-btn px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/40 text-[10px] font-mono text-white/70 hover:text-emerald-400 transition-all cursor-pointer" data-flower="10">10</button>
+              <button type="button" class="preset-flower-btn px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/40 text-[10px] font-mono text-white/70 hover:text-emerald-400 transition-all cursor-pointer" data-flower="50">50</button>
+              <button type="button" class="preset-flower-btn px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/40 text-[10px] font-mono text-white/70 hover:text-emerald-400 transition-all cursor-pointer" data-flower="100">100</button>
+            </div>
+          </div>
+
+          <!-- Flujo de Conversión de 3 Pasos Conectados -->
+          <div class="grid grid-cols-1 md:grid-cols-11 gap-2.5 items-center my-3">
+            
+            <!-- Paso 1: Presupuesto FLOWER (md:col-span-3) -->
+            <div class="md:col-span-3 bg-black/40 border border-white/10 hover:border-white/20 rounded-xl p-3 flex flex-col justify-between transition-all focus-within:border-emerald-500/50 min-h-[96px]">
+              <div class="flex items-center justify-between text-[10px] font-mono text-white/50 uppercase tracking-wider mb-1">
+                <span>{t("sfl.betty.dash.step1")}</span>
+                <span class="text-emerald-400 font-bold">$FLOWER</span>
+              </div>
+              <div class="relative flex items-center">
+                <input
+                  type="number"
+                  id="flowerInput"
+                  value="10"
+                  min="0"
+                  step="0.1"
+                  class="w-full bg-transparent text-xl font-mono font-black text-white focus:outline-none pr-7"
+                />
+                <img
+                  src="/img/sunflowerland/flower.jpg"
+                  class="w-5 h-5 rounded-full absolute right-0 object-cover opacity-90 shadow"
+                  alt="FLOWER"
+                />
+              </div>
+              <div class="text-[10px] font-mono text-white/40 mt-1 truncate">
+                Mercado P2P
+              </div>
+            </div>
+
+            <!-- Conector 1 (md:col-span-1) -->
+            <div class="md:col-span-1 flex justify-center py-0.5 md:py-0">
+              <div class="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 border border-white/10 text-white/40 shrink-0">
+                <svg class="w-4 h-4 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+                <svg class="w-4 h-4 md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Paso 2: Items a Comprar en P2P (md:col-span-3) -->
+            <div class="md:col-span-3 bg-black/40 border border-white/10 hover:border-white/20 rounded-xl p-3 flex flex-col justify-between transition-all focus-within:border-emerald-500/50 min-h-[96px]">
+              <div class="flex items-center justify-between text-[10px] font-mono text-white/50 uppercase tracking-wider mb-1">
+                <span>{t("sfl.betty.dash.step2")}</span>
+                <span id="calcItemCategoryBadge" class="text-white/40 font-mono text-[9px] uppercase">...</span>
+              </div>
+              <div class="relative flex items-center">
+                <input
+                  type="number"
+                  id="itemsInput"
+                  value="0"
+                  min="0"
+                  step="1"
+                  class="w-full bg-transparent text-xl font-mono font-black text-white/90 focus:outline-none pr-7"
+                />
+                <img
+                  id="itemsOutputImg"
+                  src="/img/sunflowerland/123/empty.png"
+                  class="w-6 h-6 object-contain absolute right-0 drop-shadow"
+                  alt="Item"
+                />
+              </div>
+              <div id="calcItemUnitCost" class="text-[10px] font-mono text-white/40 mt-1 truncate">
+                ...
+              </div>
+            </div>
+
+            <!-- Conector 2 (md:col-span-1) -->
+            <div class="md:col-span-1 flex justify-center py-0.5 md:py-0">
+              <div class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shrink-0">
+                <svg class="w-4 h-4 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+                <svg class="w-4 h-4 md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Paso 3: Venta a Betty por Coins (md:col-span-3) -->
+            <div class="md:col-span-3 bg-emerald-950/20 border border-emerald-500/40 hover:border-emerald-500/60 rounded-xl p-3 flex flex-col justify-between transition-all focus-within:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] min-h-[96px]">
+              <div class="flex items-center justify-between text-[10px] font-mono text-emerald-200/80 uppercase tracking-wider mb-1">
+                <span>{t("sfl.betty.dash.step3")}</span>
+                <span class="text-amber-400 font-bold">COINS</span>
+              </div>
+              <div class="relative flex items-center">
+                <input
+                  type="number"
+                  id="coinsInput"
+                  value="0"
+                  min="0"
+                  step="10"
+                  class="w-full bg-transparent text-xl font-mono font-black text-emerald-400 focus:outline-none pr-7"
+                />
+                <img
+                  src="/img/sunflowerland/123/coins.png"
+                  class="w-5 h-5 absolute right-0 object-contain drop-shadow"
+                  alt="Coins"
+                />
+              </div>
+              <div id="calcBettyUnitPay" class="text-[10px] font-mono text-emerald-300/60 mt-1 truncate">
+                ...
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Barra Inferior de Ganancia Neta -->
+        <div class="bg-black/50 border border-white/5 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs font-mono mt-4">
+          <span class="text-white/60">{t("sfl.betty.dash.extraProfit")}</span>
+          <div class="flex items-center gap-1.5">
+            <span id="calcProfitCoinsDisplay" class="text-emerald-400 font-mono font-bold">...</span>
+            <span class="text-white/40">(</span>
+            <span id="calcProfitPctDisplay" class="text-white font-mono font-bold">...</span>
+            <span class="text-white/40">)</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -187,7 +378,18 @@ const t = useTranslations(lang)
   }
 </style>
 
-<script define:vars={{ bettyPrices, sflIds, tEmpty: t("sfl.betty.empty"), tBestBetty: t("sfl.betty.best.betty"), tBestP2p: t("sfl.betty.best.p2p"), tBettyCoins: t("sfl.betty.col.bettyCoins"), tP2pPrice: t("sfl.betty.col.p2pPrice"), tCoinsPerFlower: t("sfl.betty.col.coinsPerFlower"), tCalcNoData: t("sfl.betty.calculator.noData") }}>
+<script define:vars={{
+  bettyPrices,
+  sflIds,
+  tEmpty: t("sfl.betty.empty"),
+  tBestBetty: t("sfl.betty.best.betty"),
+  tBestP2p: t("sfl.betty.best.p2p"),
+  tBettyCoins: t("sfl.betty.col.bettyCoins"),
+  tP2pPrice: t("sfl.betty.col.p2pPrice"),
+  tCoinsPerFlower: t("sfl.betty.col.coinsPerFlower"),
+  tCalcNoData: t("sfl.betty.calculator.noData"),
+  tDashEach: t("sfl.betty.dash.each")
+}}>
 
 
   let marketData = {}
@@ -262,19 +464,57 @@ const t = useTranslations(lang)
     const itemsOutputImg = document.getElementById("itemsOutputImg")
     const coinsInput = document.getElementById("coinsInput")
     
+    const heroImg = document.getElementById("bestItemHeroImg")
+    const heroProfit = document.getElementById("bestItemProfitDisplay")
+    const heroRatio = document.getElementById("heroCoinsPerFlower")
+    const catBadge = document.getElementById("calcItemCategoryBadge")
+    const unitCost = document.getElementById("calcItemUnitCost")
+    const bettyPay = document.getElementById("calcBettyUnitPay")
+    const profitCoinsDisplay = document.getElementById("calcProfitCoinsDisplay")
+    const profitPctDisplay = document.getElementById("calcProfitPctDisplay")
+
     if (item && selectedContent) {
       const coinsForOneFlower = formatNumber(item.coinsPerFlower, 0)
-      
+      const profitFormatted = formatNumber(item.profit, 0)
+      const isPositive = item.profit > 0
+
+      // Actualizar Hero Visual
+      if (heroImg) {
+        heroImg.src = `/img/sunflowerland/${item.name}.png`
+        heroImg.onerror = () => { heroImg.src = '/img/sunflowerland/123/empty.png' }
+      }
+      if (heroProfit) {
+        heroProfit.innerText = `${isPositive ? '+' : ''}${profitFormatted}%`
+        heroProfit.className = `text-3xl sm:text-4xl lg:text-[44px] font-mono font-black ${isPositive ? 'text-emerald-400 drop-shadow-[0_0_30px_rgba(16,185,129,0.5)]' : 'text-red-400 drop-shadow-[0_0_30px_rgba(239,68,68,0.5)]'} tracking-tight relative z-10 truncate`
+      }
+      if (heroRatio) {
+        heroRatio.innerText = `${coinsForOneFlower} Coins`
+      }
+      if (catBadge) {
+        catBadge.innerText = item.category || "Item"
+      }
+      if (unitCost) {
+        unitCost.innerText = item.p2pPrice > 0 ? `${formatNumber(item.p2pPrice, 4)} FLOWER ${tDashEach}` : "N/A"
+      }
+      if (bettyPay) {
+        bettyPay.innerText = `${formatNumber(item.bettyCoins, 0)} Coins ${tDashEach}`
+      }
+
+      // Selector de ítem contenido
       selectedContent.innerHTML = `
-        <div class="flex flex-1 items-center gap-2">
-          <img src="/img/sunflowerland/${item.name}.png" class="w-7 h-7 object-contain" onerror="this.src='/img/sunflowerland/123/empty.png'" />
-          <div class="flex flex-col">
-            <span class="text-xs font-bold text-white leading-tight">${item.name}</span>
-            ${item.profit > 0 ? `<span class="text-[9px] text-emerald-400 font-mono">+${formatNumber(item.profit, 0)}%</span>` : `<span class="text-[9px] text-red-400 font-mono">${formatNumber(item.profit, 0)}%</span>`}
+        <div class="flex flex-1 items-center gap-2.5 min-w-0">
+          <img src="/img/sunflowerland/${item.name}.png" class="w-8 h-8 object-contain shrink-0 drop-shadow" onerror="this.src='/img/sunflowerland/123/empty.png'" />
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs sm:text-sm font-bold text-white leading-tight truncate">${item.name}</span>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white/50">${item.category}</span>
+              ${isPositive ? `<span class="text-[10px] text-emerald-400 font-mono font-bold">+${profitFormatted}%</span>` : `<span class="text-[10px] text-red-400 font-mono font-bold">${profitFormatted}%</span>`}
+            </div>
           </div>
         </div>
-        <div class="flex flex-col items-end text-[9px] font-mono text-white/40 shrink-0">
-          <span>1 <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 inline rounded-full grayscale opacity-70" /> = ${coinsForOneFlower} Coins</span>
+        <div class="flex flex-col items-end text-[10px] font-mono text-white/50 shrink-0">
+          <span class="text-white/40">1 FLOWER =</span>
+          <span class="text-emerald-400 font-bold">${coinsForOneFlower} Coins</span>
         </div>
       `
       
@@ -283,42 +523,69 @@ const t = useTranslations(lang)
         itemsOutputImg.onerror = () => { itemsOutputImg.src = '/img/sunflowerland/123/empty.png' }
       }
 
+      const updateCalculatedProfit = (flowerVal, coinsVal) => {
+        if (!profitCoinsDisplay || !profitPctDisplay) return
+        if (flowerVal <= 0 || coinsVal <= 0) {
+          profitCoinsDisplay.innerText = "0 Coins"
+          profitCoinsDisplay.className = "text-white/40 font-mono font-bold"
+          profitPctDisplay.innerText = "0%"
+          return
+        }
+        // Cambio directo en juego: 1 FLOWER = 320 Coins
+        const directCoins = flowerVal * 320
+        const extraCoins = coinsVal - directCoins
+        const isExtraPositive = extraCoins > 0
+        
+        profitCoinsDisplay.innerText = `${isExtraPositive ? '+' : ''}${formatNumber(extraCoins, 0)} Coins extra`
+        profitCoinsDisplay.className = `${isExtraPositive ? 'text-emerald-400' : 'text-red-400'} font-mono font-bold`
+        
+        profitPctDisplay.innerText = `${isPositive ? '+' : ''}${profitFormatted}%`
+      }
+
       if (flowerInput && itemsInput && coinsInput) {
         const updateFromFlower = () => {
           if (flowerInput.value === "") {
             itemsInput.value = ""
             coinsInput.value = ""
+            updateCalculatedProfit(0, 0)
             return
           }
           const flowerVal = parseFloat(flowerInput.value) || 0
           const itemsVal = item.p2pPrice > 0 ? Math.floor(flowerVal / item.p2pPrice) : 0
+          const totalCoins = itemsVal * item.bettyCoins
           itemsInput.value = itemsVal.toString()
-          coinsInput.value = (itemsVal * item.bettyCoins).toFixed(0)
+          coinsInput.value = totalCoins.toFixed(0)
+          updateCalculatedProfit(flowerVal, totalCoins)
         }
         
         const updateFromItems = () => {
           if (itemsInput.value === "") {
             flowerInput.value = ""
             coinsInput.value = ""
+            updateCalculatedProfit(0, 0)
             return
           }
           const itemsVal = Math.round(parseFloat(itemsInput.value) || 0)
           const fv = itemsVal * item.p2pPrice
+          const totalCoins = itemsVal * item.bettyCoins
           flowerInput.value = fv === 0 ? "0" : parseFloat(fv.toFixed(3)).toString()
-          coinsInput.value = (itemsVal * item.bettyCoins).toFixed(0)
+          coinsInput.value = totalCoins.toFixed(0)
+          updateCalculatedProfit(fv, totalCoins)
         }
         
         const updateFromCoins = () => {
           if (coinsInput.value === "") {
             itemsInput.value = ""
             flowerInput.value = ""
+            updateCalculatedProfit(0, 0)
             return
           }
           const coinsVal = parseFloat(coinsInput.value) || 0
-          const itemsVal = Math.round(coinsVal / item.bettyCoins)
+          const itemsVal = item.bettyCoins > 0 ? Math.round(coinsVal / item.bettyCoins) : 0
           itemsInput.value = itemsVal.toString()
           const fv = itemsVal * item.p2pPrice
           flowerInput.value = fv === 0 ? "0" : parseFloat(fv.toFixed(3)).toString()
+          updateCalculatedProfit(fv, coinsVal)
         }
         
         flowerInput.oninput = updateFromFlower
@@ -331,6 +598,9 @@ const t = useTranslations(lang)
       selectedContent.innerHTML = `<span class="text-xs text-terminal-muted">${tCalcNoData}</span>`
       if (coinsInput) coinsInput.value = "0"
       if (itemsInput) itemsInput.value = "0"
+      if (heroProfit) heroProfit.innerText = "..."
+      if (profitCoinsDisplay) profitCoinsDisplay.innerText = "0 Coins"
+      if (profitPctDisplay) profitPctDisplay.innerText = "0%"
     }
   }
 
@@ -354,15 +624,22 @@ const t = useTranslations(lang)
      const dropdown = document.getElementById("itemDropdown")
      if (!dropdown) return
      
-     const sortedItems = [...allItemsData].sort((a,b) => a.name.localeCompare(b.name))
+     // Ordenar por profit descendente para destacar las mejores oportunidades
+     const sortedItems = [...allItemsData].sort((a,b) => b.profit - a.profit)
      
      dropdown.innerHTML = sortedItems.map(item => `
-        <button class="dropdown-item w-full flex items-center justify-between p-2 hover:bg-white/5 rounded-md transition-colors text-left" data-name="${item.name}">
-           <div class="flex items-center gap-2">
-             <img src="/img/sunflowerland/${item.name}.png" class="w-5 h-5 object-contain" onerror="this.src='/img/sunflowerland/123/empty.png'" loading="lazy" />
-             <span class="text-xs font-medium text-white">${item.name}</span>
+        <button type="button" class="dropdown-item w-full flex items-center justify-between p-2.5 hover:bg-white/10 rounded-lg transition-colors text-left cursor-pointer group" data-name="${item.name}">
+           <div class="flex items-center gap-2.5 min-w-0">
+             <img src="/img/sunflowerland/${item.name}.png" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="this.src='/img/sunflowerland/123/empty.png'" loading="lazy" />
+             <div class="flex flex-col min-w-0">
+               <span class="text-xs font-semibold text-white group-hover:text-emerald-300 transition-colors truncate">${item.name}</span>
+               <span class="text-[9px] font-mono text-white/40 uppercase">${item.category}</span>
+             </div>
            </div>
-           ${item.profit > 0 ? `<span class="text-[10px] text-emerald-400 font-mono">+${formatNumber(item.profit, 0)}%</span>` : `<span class="text-[10px] text-red-400/50 font-mono">${formatNumber(item.profit, 0)}%</span>`}
+           <div class="flex flex-col items-end shrink-0 ml-2 font-mono">
+             ${item.profit > 0 ? `<span class="text-xs text-emerald-400 font-bold">+${formatNumber(item.profit, 0)}%</span>` : `<span class="text-xs text-red-400/60">${formatNumber(item.profit, 0)}%</span>`}
+             <span class="text-[9px] text-white/40">${formatNumber(item.coinsPerFlower, 0)} Coins/FLOWER</span>
+           </div>
         </button>
      `).join('')
      
@@ -374,6 +651,18 @@ const t = useTranslations(lang)
            toggleDropdown(false)
         })
      })
+  }
+
+  const setupPresetButtons = () => {
+    document.querySelectorAll(".preset-flower-btn").forEach((btn) => {
+      btn.onclick = () => {
+        const flowerInput = document.getElementById("flowerInput")
+        if (flowerInput && btn.dataset.flower) {
+          flowerInput.value = btn.dataset.flower
+          flowerInput.dispatchEvent(new Event("input"))
+        }
+      }
+    })
   }
 
   const initDropdown = () => {
@@ -630,6 +919,7 @@ const t = useTranslations(lang)
 
   const initApp = () => {
     setupSearchListener()
+    setupPresetButtons()
     fetchMarketData()
     const fetchBtn = document.getElementById("fetchBtn")
     if (fetchBtn && !fetchBtn.dataset.listenerAttached) {
