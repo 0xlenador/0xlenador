@@ -693,30 +693,38 @@ const unallocatedGenesisPercent = ((unallocatedGenesisCount / totalGenesisSupply
         <!-- ═══════════════════════════════════════════════ -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full relative z-10">
           {
-            genesisMonsters.map((m) => {
+            genesisMonsters.map((m, idx) => {
               const circulatingPercent = (m.circulating / m.supply) * 100
               const airdropPercent = (m.airdrop / m.supply) * 100
 
               return (
                 <div class="genesis-card group">
                   {/* Info row */}
-                  <div class="flex gap-3 items-center">
-                    <div class="w-12 h-12 shrink-0 rounded-lg overflow-hidden border border-white/[0.08] bg-black/60 relative flex items-center justify-center">
-                      {/* Fondo de silueta con blur ambiental para dar profundidad */}
-                      <img
-                        src={m.img}
-                        alt=""
-                        aria-hidden="true"
-                        class="absolute inset-0 w-full h-full object-cover genesis-silhouette-bg"
-                      />
-                      {/* Sutil viñeta para enmarcar el monstruo */}
-                      <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none"></div>
-                      {/* Monstruo revelado sobrepuesto, 100% nítido */}
-                      <img
-                        src={m.monsterImg}
-                        alt={t(m.nameKey as any)}
-                        class="relative z-10 w-10 h-10 object-contain [image-rendering:pixelated] drop-shadow-[0_2px_5px_rgba(0,0,0,0.85)] transition-transform duration-300 group-hover:scale-110"
-                      />
+                  <div class="flex gap-4 items-center">
+                    {/* Marco del avatar con pop-out permitido */}
+                    <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+                      {/* Fondo recortado con silueta blur */}
+                      <div class="absolute inset-0 rounded-lg overflow-hidden border border-white/[0.08] bg-black/60">
+                        <img
+                          src={m.img}
+                          alt=""
+                          aria-hidden="true"
+                          class="w-full h-full object-cover genesis-silhouette-bg"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+                      </div>
+
+                      {/* Monstruo al 200% levitando y sobresaliendo libremente del marco */}
+                      <div
+                        class="relative z-10 flex items-center justify-center pointer-events-none monster-levitate"
+                        style={`animation-delay: ${(idx * 0.35).toFixed(2)}s`}
+                      >
+                        <img
+                          src={m.monsterImg}
+                          alt={t(m.nameKey as any)}
+                          class="w-28 h-28 max-w-none object-contain [image-rendering:pixelated] drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] transition-transform duration-300 group-hover:scale-110"
+                        />
+                      </div>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="flex items-center justify-between gap-2">
@@ -737,7 +745,7 @@ const unallocatedGenesisPercent = ((unallocatedGenesisCount / totalGenesisSupply
                   </div>
 
                   {/* Ability */}
-                  <p class="text-[11px] text-white/30 mt-2 truncate">
+                  <p class="text-[11px] text-white mt-2 truncate">
                     {t(m.abilityKey as any)}
                   </p>
 
@@ -1242,6 +1250,21 @@ const unallocatedGenesisPercent = ((unallocatedGenesisCount / totalGenesisSupply
   .genesis-card:hover .genesis-silhouette-bg {
     transform: scale(1.25);
     opacity: 0.8;
+  }
+
+  /* Monster levitation float animation */
+  .monster-levitate {
+    animation: monster-float 3.4s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes monster-float {
+    0%, 100% {
+      transform: translateY(1.5px);
+    }
+    50% {
+      transform: translateY(-3.5px);
+    }
   }
 
   /* Apple Glass Track — sleek frosted capsule */
