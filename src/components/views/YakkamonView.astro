@@ -79,6 +79,75 @@ const tableEvents = [
     targetDate: null
   }
 ]
+
+const genesisMonsters = [
+  {
+    id: "storm",
+    nameKey: "yakkamon.genesis.storm.name",
+    tagKey: "yakkamon.genesis.tag.legendary",
+    prob: "0.3%",
+    supply: 75,
+    circulating: 3,
+    abilityKey: "yakkamon.genesis.storm.ability",
+    img: "/img/yakkamon/genesis/storm.webp",
+    color: "purple"
+  },
+  {
+    id: "echo",
+    nameKey: "yakkamon.genesis.echo.name",
+    tagKey: "yakkamon.genesis.tag.legendary",
+    prob: "1.2%",
+    supply: 275,
+    circulating: 5,
+    abilityKey: "yakkamon.genesis.echo.ability",
+    img: "/img/yakkamon/genesis/echo.webp",
+    color: "purple"
+  },
+  {
+    id: "ghost",
+    nameKey: "yakkamon.genesis.ghost.name",
+    tagKey: "yakkamon.genesis.tag.legendary",
+    prob: "1.8%",
+    supply: 400,
+    circulating: 10,
+    abilityKey: "yakkamon.genesis.ghost.ability",
+    img: "/img/yakkamon/genesis/ghost.webp",
+    color: "purple"
+  },
+  {
+    id: "bloom",
+    nameKey: "yakkamon.genesis.bloom.name",
+    tagKey: "yakkamon.genesis.tag.legendary",
+    prob: "9%",
+    supply: 2000,
+    circulating: 50,
+    abilityKey: "yakkamon.genesis.bloom.ability",
+    img: "/img/yakkamon/genesis/bloom.webp",
+    color: "purple"
+  },
+  {
+    id: "rare",
+    nameKey: "yakkamon.genesis.rare.name",
+    tagKey: "yakkamon.genesis.tag.rare",
+    prob: "18.2%",
+    supply: 4000,
+    circulating: 50,
+    abilityKey: "yakkamon.genesis.rare.ability",
+    img: "/img/yakkamon/genesis/rare.webp",
+    color: "blue"
+  },
+  {
+    id: "uncommon",
+    nameKey: "yakkamon.genesis.uncommon.name",
+    tagKey: "yakkamon.genesis.tag.uncommon",
+    prob: "68.2%",
+    supply: 15000,
+    circulating: 10316,
+    abilityKey: "yakkamon.genesis.uncommon.ability",
+    img: "/img/yakkamon/genesis/uncommon.webp",
+    color: "emerald"
+  }
+]
 ---
 
 <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
@@ -304,115 +373,79 @@ const tableEvents = [
 
         <!-- Grid de Monstruos -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full relative z-10">
-          
-          <!-- Storm -->
-          <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex gap-3 items-center hover:bg-white/5 transition-colors group">
-            <div class="w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.1)] group-hover:border-purple-500/50 transition-colors">
-              <img src="/img/yakkamon/genesis/storm.webp" alt="Storm" class="w-full h-full object-contain [image-rendering:pixelated]" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-0.5 gap-2">
-                <h4 class="text-white font-bold text-sm truncate">{t("yakkamon.genesis.storm.name")}</h4>
-                <span class="text-[10px] font-mono text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded border border-purple-500/30 shrink-0">0.3%</span>
-              </div>
-              <div class="flex items-center justify-between mb-1">
-                <p class="text-[9px] uppercase font-mono text-purple-400 tracking-wider">{t("yakkamon.genesis.tag.legendary")}</p>
-                <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} 75</span>
-              </div>
-              <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t("yakkamon.genesis.storm.ability")}</p>
-            </div>
-          </div>
-          
-          <!-- Echo -->
-          <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex gap-3 items-center hover:bg-white/5 transition-colors group">
-            <div class="w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.1)] group-hover:border-purple-500/50 transition-colors">
-              <img src="/img/yakkamon/genesis/echo.webp" alt="Echo" class="w-full h-full object-contain [image-rendering:pixelated]" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-0.5 gap-2">
-                <h4 class="text-white font-bold text-sm truncate">{t("yakkamon.genesis.echo.name")}</h4>
-                <span class="text-[10px] font-mono text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded border border-purple-500/30 shrink-0">1.2%</span>
-              </div>
-              <div class="flex items-center justify-between mb-1">
-                <p class="text-[9px] uppercase font-mono text-purple-400 tracking-wider">{t("yakkamon.genesis.tag.legendary")}</p>
-                <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} 275</span>
-              </div>
-              <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t("yakkamon.genesis.echo.ability")}</p>
-            </div>
-          </div>
+          {genesisMonsters.map((m) => {
+            const percent = (m.circulating / m.supply) * 100
+            const isPurple = m.color === "purple"
+            const isBlue = m.color === "blue"
 
-          <!-- Ghost -->
-          <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex gap-3 items-center hover:bg-white/5 transition-colors group">
-            <div class="w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.1)] group-hover:border-purple-500/50 transition-colors">
-              <img src="/img/yakkamon/genesis/ghost.webp" alt="Ghost" class="w-full h-full object-contain [image-rendering:pixelated]" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-0.5 gap-2">
-                <h4 class="text-white font-bold text-sm truncate">{t("yakkamon.genesis.ghost.name")}</h4>
-                <span class="text-[10px] font-mono text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded border border-purple-500/30 shrink-0">1.8%</span>
-              </div>
-              <div class="flex items-center justify-between mb-1">
-                <p class="text-[9px] uppercase font-mono text-purple-400 tracking-wider">{t("yakkamon.genesis.tag.legendary")}</p>
-                <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} 400</span>
-              </div>
-              <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t("yakkamon.genesis.ghost.ability")}</p>
-            </div>
-          </div>
+            const borderClass = isPurple 
+              ? "border-purple-500/30 group-hover:border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.1)]" 
+              : isBlue 
+              ? "border-blue-500/30 group-hover:border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.1)]" 
+              : "border-emerald-500/30 group-hover:border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
 
-          <!-- Bloom -->
-          <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex gap-3 items-center hover:bg-white/5 transition-colors group">
-            <div class="w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.1)] group-hover:border-purple-500/50 transition-colors">
-              <img src="/img/yakkamon/genesis/bloom.webp" alt="Bloom" class="w-full h-full object-contain [image-rendering:pixelated]" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-0.5 gap-2">
-                <h4 class="text-white font-bold text-sm truncate">{t("yakkamon.genesis.bloom.name")}</h4>
-                <span class="text-[10px] font-mono text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded border border-purple-500/30 shrink-0">9%</span>
-              </div>
-              <div class="flex items-center justify-between mb-1">
-                <p class="text-[9px] uppercase font-mono text-purple-400 tracking-wider">{t("yakkamon.genesis.tag.legendary")}</p>
-                <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} 2,000</span>
-              </div>
-              <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t("yakkamon.genesis.bloom.ability")}</p>
-            </div>
-          </div>
+            const badgeClass = isPurple 
+              ? "text-purple-300 bg-purple-500/20 border-purple-500/30" 
+              : isBlue 
+              ? "text-blue-300 bg-blue-500/20 border-blue-500/30" 
+              : "text-emerald-300 bg-emerald-500/20 border-emerald-500/30"
 
-          <!-- Rare -->
-          <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex gap-3 items-center hover:bg-white/5 transition-colors group">
-            <div class="w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border border-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.1)] group-hover:border-blue-500/50 transition-colors">
-              <img src="/img/yakkamon/genesis/rare.webp" alt="Rare" class="w-full h-full object-contain [image-rendering:pixelated]" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-0.5 gap-2">
-                <h4 class="text-white font-bold text-sm truncate">{t("yakkamon.genesis.rare.name")}</h4>
-                <span class="text-[10px] font-mono text-blue-300 bg-blue-500/20 px-1.5 py-0.5 rounded border border-blue-500/30 shrink-0">18.2%</span>
-              </div>
-              <div class="flex items-center justify-between mb-1">
-                <p class="text-[9px] uppercase font-mono text-blue-400 tracking-wider">{t("yakkamon.genesis.tag.rare")}</p>
-                <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} 4,000</span>
-              </div>
-              <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t("yakkamon.genesis.rare.ability")}</p>
-            </div>
-          </div>
+            const tagColor = isPurple ? "text-purple-400" : isBlue ? "text-blue-400" : "text-emerald-400"
 
-          <!-- Uncommon -->
-          <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex gap-3 items-center hover:bg-white/5 transition-colors group">
-            <div class="w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.1)] group-hover:border-emerald-500/50 transition-colors">
-              <img src="/img/yakkamon/genesis/uncommon.webp" alt="Uncommon" class="w-full h-full object-contain [image-rendering:pixelated]" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-0.5 gap-2">
-                <h4 class="text-white font-bold text-sm truncate">{t("yakkamon.genesis.uncommon.name")}</h4>
-                <span class="text-[10px] font-mono text-emerald-300 bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/30 shrink-0">68.2%</span>
-              </div>
-              <div class="flex items-center justify-between mb-1">
-                <p class="text-[9px] uppercase font-mono text-emerald-400 tracking-wider">{t("yakkamon.genesis.tag.uncommon")}</p>
-                <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} 15,000</span>
-              </div>
-              <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t("yakkamon.genesis.uncommon.ability")}</p>
-            </div>
-          </div>
+            const barGradient = isPurple
+              ? "bg-gradient-to-r from-purple-600 via-fuchsia-500 to-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.6)]"
+              : isBlue
+              ? "bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.6)]"
+              : "bg-gradient-to-r from-emerald-600 via-teal-400 to-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.6)]"
 
+            const dotColor = isPurple ? "bg-purple-400 shadow-[0_0_6px_rgba(168,85,247,0.9)]" : isBlue ? "bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.9)]" : "bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.9)]"
+            const percentText = isPurple ? "text-purple-300" : isBlue ? "text-blue-300" : "text-emerald-400"
+
+            return (
+              <div class="bg-black/20 border border-white/5 rounded-xl p-3 flex flex-col justify-between hover:bg-white/[0.04] transition-all group">
+                <!-- Info Superior -->
+                <div class="flex gap-3 items-center">
+                  <div class={`w-12 h-12 shrink-0 bg-black/40 rounded-lg overflow-hidden flex items-center justify-center border ${borderClass} transition-colors`}>
+                    <img src={m.img} alt={t(m.nameKey as any)} class="w-full h-full object-contain [image-rendering:pixelated]" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-0.5 gap-2">
+                      <h4 class="text-white font-bold text-sm truncate">{t(m.nameKey as any)}</h4>
+                      <span class={`text-[10px] font-mono px-1.5 py-0.5 rounded border shrink-0 ${badgeClass}`}>{m.prob}</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-1">
+                      <p class={`text-[9px] uppercase font-mono tracking-wider ${tagColor}`}>{t(m.tagKey as any)}</p>
+                      <span class="text-[9px] font-mono text-white/30">{t("yakkamon.genesis.supply")} {m.supply.toLocaleString("en-US")}</span>
+                    </div>
+                    <p class="text-[11px] text-terminal-secondary leading-tight truncate">{t(m.abilityKey as any)}</p>
+                  </div>
+                </div>
+
+                <!-- Barra de Nivel / NFTs Liberados -->
+                <div class="mt-3 pt-2.5 border-t border-white/5 flex flex-col gap-1.5">
+                  <div class="flex items-center justify-between text-[9px] font-mono leading-none">
+                    <div class="flex items-center gap-1.5">
+                      <span class={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
+                      <span class="text-white/40 uppercase tracking-wider">{t("yakkamon.genesis.circulating")}:</span>
+                      <span class="font-bold text-white/90">{m.circulating.toLocaleString("en-US")}</span>
+                      <span class="text-white/30">/ {m.supply.toLocaleString("en-US")}</span>
+                    </div>
+                    <span class={`font-bold ${percentText}`}>{percent.toFixed(1)}%</span>
+                  </div>
+
+                  <!-- Track & Glow Bar -->
+                  <div class="w-full h-1.5 bg-black/60 rounded-full p-[1px] border border-white/10 overflow-hidden shadow-inner flex items-center">
+                    <div 
+                      class={`h-full rounded-full transition-all duration-700 relative ${barGradient}`}
+                      style={`width: ${Math.max(percent, 2)}%`}
+                    >
+                      <div class="absolute right-0 top-0 bottom-0 w-2 bg-white/40 rounded-full blur-[1px]"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         <!-- Investigando / Placeholder -->
