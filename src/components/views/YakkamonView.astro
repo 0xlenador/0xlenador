@@ -107,113 +107,6 @@ const tableEvents = [
     </div>
   </header>
 
-  <!-- Tabla de fechas -->
-  <section class="mb-16">
-    <div class="flex items-center gap-4 mb-6">
-      <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
-        {t("yakkamon.table.title")}
-      </h2>
-      <div class="h-px flex-grow bg-terminal-border/40"></div>
-    </div>
-    
-    <div class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="bg-black/20 border-b border-terminal-border/50 text-[10px] uppercase tracking-wider text-terminal-muted font-bold">
-              <th class="py-4 px-6">{t("yakkamon.table.date")}</th>
-              <th class="py-4 px-6">{t("yakkamon.table.event")}</th>
-              <th class="py-4 px-6 text-right">{t("yakkamon.table.status")}</th>
-            </tr>
-          </thead>
-          <tbody class="text-sm font-medium text-white/90 divide-y divide-terminal-border/30">
-            {tableEvents.map((evt, i) => {
-              const isClosed = evt.statusType === "closed"
-              const isHighlight = evt.statusType === "highlight"
-              const hasSub = !!evt.subEvents
-              
-              return (
-                <>
-                  <tr 
-                    class:list={[
-                      "transition-colors group",
-                      isClosed ? "opacity-40 hover:opacity-60 grayscale" : "hover:bg-white/[0.02]",
-                      isHighlight ? "bg-emerald-500/5" : "",
-                      hasSub ? "toggle-subevents cursor-pointer" : ""
-                    ]}
-                    data-target={hasSub ? `sub-rows-${i}` : undefined}
-                  >
-                    <td class:list={["py-4 px-6", isHighlight ? "text-emerald-400 font-bold" : (isClosed ? "text-white/30" : "text-white/50")]}>
-                      <span>{evt.dateStr}</span>
-                    </td>
-                    <td class:list={["py-4 px-6", isHighlight ? "font-bold text-emerald-400" : (isClosed ? "" : "font-bold")]}>
-                      <div class="flex items-center gap-4">
-                        <span>{t(evt.nameKey as any)}</span>
-                        {hasSub && (
-                          <div class="event-progress flex items-center h-4" data-stages={JSON.stringify(evt.subEvents!.map(s => s.targetDate))}>
-                            <div class="w-4 h-[1px] bg-emerald-500/20 stage-line transition-all duration-300"></div>
-                            {evt.subEvents!.map((sub, idx) => (
-                              <div class="flex items-center">
-                                <div class="w-2.5 h-2.5 rounded-full border border-emerald-500/20 bg-black/50 stage-dot transition-all duration-300"></div>
-                                <div class="w-4 h-[1px] bg-emerald-500/20 stage-line transition-all duration-300"></div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td class:list={["py-4 px-6 text-right font-mono", isClosed ? "text-xs text-red-500/70" : "text-yellow-400"]}>
-                      <div class="flex flex-col items-end gap-1">
-                        {hasSub ? (
-                          <div class="main-countdown-container flex flex-col items-end min-h-[30px] justify-center">
-                            {/* SSR Placeholder */}
-                            <span class="text-xs text-emerald-500/50">{t("yakkamon.status.loading")}</span>
-                          </div>
-                        ) : (
-                          evt.targetDate && !isClosed ? (
-                            <div class="flex flex-col items-end">
-                              <span 
-                                class="countdown-timer text-lg md:text-xl font-black tracking-widest text-emerald-400" 
-                                data-target={evt.targetDate}
-                              >
-                                --:--:--
-                              </span>
-                            </div>
-                          ) : (
-                            <span class="text-xs">{evt.statusText}</span>
-                          )
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                  
-                  {/* Filas de SubEventos (desplegables) */}
-                  {hasSub && evt.subEvents!.map((sub) => (
-                    <tr class={`sub-rows-${i} hidden bg-black/20 hover:bg-black/40 transition-colors border-t-0`}>
-                      <td class="py-3 px-6 pl-10 text-white/40 text-xs">
-                        {sub.dateStr}
-                      </td>
-                      <td class="py-3 px-6 font-bold text-white/70 text-xs flex items-center gap-2">
-                        <span class="text-terminal-border">└</span>
-                        <span>{sub.icon}</span>
-                        {sub.name}
-                      </td>
-                      <td class="py-3 px-6 text-right">{/* Columna vacía */}
-                        <div class="flex flex-col items-end">
-                          <span class="countdown-timer text-sm md:text-base font-black tracking-widest text-emerald-400/80" data-target={sub.targetDate}>--:--:--</span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
   <!-- Tarjetas del Proceso -->
   <section class="mb-20">
     <div class="flex items-center gap-4 mb-8">
@@ -539,7 +432,7 @@ const tableEvents = [
   </section>
 
   <!-- Lo que viene -->
-  <section class="mb-8">
+  <section class="mb-20">
     <div class="flex items-center gap-4 mb-8">
       <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
         {t("yakkamon.upcoming.title")}
@@ -559,6 +452,113 @@ const tableEvents = [
           </div>
         </div>
       ))}
+    </div>
+  </section>
+
+  <!-- Tabla de fechas -->
+  <section class="mb-20">
+    <div class="flex items-center gap-4 mb-6">
+      <h2 class="text-[10px] font-mono text-terminal-muted uppercase tracking-[0.5em] whitespace-nowrap">
+        {t("yakkamon.table.title")}
+      </h2>
+      <div class="h-px flex-grow bg-terminal-border/40"></div>
+    </div>
+    
+    <div class="bg-terminal-surface/40 border border-terminal-border rounded-2xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-black/20 border-b border-terminal-border/50 text-[10px] uppercase tracking-wider text-terminal-muted font-bold">
+              <th class="py-4 px-6">{t("yakkamon.table.date")}</th>
+              <th class="py-4 px-6">{t("yakkamon.table.event")}</th>
+              <th class="py-4 px-6 text-right">{t("yakkamon.table.status")}</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm font-medium text-white/90 divide-y divide-terminal-border/30">
+            {tableEvents.map((evt, i) => {
+              const isClosed = evt.statusType === "closed"
+              const isHighlight = evt.statusType === "highlight"
+              const hasSub = !!evt.subEvents
+              
+              return (
+                <>
+                  <tr 
+                    class:list={[
+                      "transition-colors group",
+                      isClosed ? "opacity-40 hover:opacity-60 grayscale" : "hover:bg-white/[0.02]",
+                      isHighlight ? "bg-emerald-500/5" : "",
+                      hasSub ? "toggle-subevents cursor-pointer" : ""
+                    ]}
+                    data-target={hasSub ? `sub-rows-${i}` : undefined}
+                  >
+                    <td class:list={["py-4 px-6", isHighlight ? "text-emerald-400 font-bold" : (isClosed ? "text-white/30" : "text-white/50")]}>
+                      <span>{evt.dateStr}</span>
+                    </td>
+                    <td class:list={["py-4 px-6", isHighlight ? "font-bold text-emerald-400" : (isClosed ? "" : "font-bold")]}>
+                      <div class="flex items-center gap-4">
+                        <span>{t(evt.nameKey as any)}</span>
+                        {hasSub && (
+                          <div class="event-progress flex items-center h-4" data-stages={JSON.stringify(evt.subEvents!.map(s => s.targetDate))}>
+                            <div class="w-4 h-[1px] bg-emerald-500/20 stage-line transition-all duration-300"></div>
+                            {evt.subEvents!.map((sub, idx) => (
+                              <div class="flex items-center">
+                                <div class="w-2.5 h-2.5 rounded-full border border-emerald-500/20 bg-black/50 stage-dot transition-all duration-300"></div>
+                                <div class="w-4 h-[1px] bg-emerald-500/20 stage-line transition-all duration-300"></div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td class:list={["py-4 px-6 text-right font-mono", isClosed ? "text-xs text-red-500/70" : "text-yellow-400"]}>
+                      <div class="flex flex-col items-end gap-1">
+                        {hasSub ? (
+                          <div class="main-countdown-container flex flex-col items-end min-h-[30px] justify-center">
+                            {/* SSR Placeholder */}
+                            <span class="text-xs text-emerald-500/50">{t("yakkamon.status.loading")}</span>
+                          </div>
+                        ) : (
+                          evt.targetDate && !isClosed ? (
+                            <div class="flex flex-col items-end">
+                              <span 
+                                class="countdown-timer text-lg md:text-xl font-black tracking-widest text-emerald-400" 
+                                data-target={evt.targetDate}
+                              >
+                                --:--:--
+                              </span>
+                            </div>
+                          ) : (
+                            <span class="text-xs">{evt.statusText}</span>
+                          )
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {/* Filas de SubEventos (desplegables) */}
+                  {hasSub && evt.subEvents!.map((sub) => (
+                    <tr class={`sub-rows-${i} hidden bg-black/20 hover:bg-black/40 transition-colors border-t-0`}>
+                      <td class="py-3 px-6 pl-10 text-white/40 text-xs">
+                        {sub.dateStr}
+                      </td>
+                      <td class="py-3 px-6 font-bold text-white/70 text-xs flex items-center gap-2">
+                        <span class="text-terminal-border">└</span>
+                        <span>{sub.icon}</span>
+                        {sub.name}
+                      </td>
+                      <td class="py-3 px-6 text-right">{/* Columna vacía */}
+                        <div class="flex flex-col items-end">
+                          <span class="countdown-timer text-sm md:text-base font-black tracking-widest text-emerald-400/80" data-target={sub.targetDate}>--:--:--</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
