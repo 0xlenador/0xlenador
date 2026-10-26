@@ -128,6 +128,7 @@ const genesisMonsters = [
     id: "storm",
     nameKey: "yakkamon.genesis.storm.name",
     tagKey: "yakkamon.genesis.tag.legendary",
+    typeKey: "yakkamon.genesis.type.dragon",
     prob: "0.3%",
     supply: 75,
     circulating: 3,
@@ -141,6 +142,7 @@ const genesisMonsters = [
     id: "echo",
     nameKey: "yakkamon.genesis.echo.name",
     tagKey: "yakkamon.genesis.tag.legendary",
+    typeKey: "yakkamon.genesis.type.dragon",
     prob: "1.2%",
     supply: 275,
     circulating: 5,
@@ -154,6 +156,7 @@ const genesisMonsters = [
     id: "ghost",
     nameKey: "yakkamon.genesis.ghost.name",
     tagKey: "yakkamon.genesis.tag.legendary",
+    typeKey: "yakkamon.genesis.type.dragon",
     prob: "1.8%",
     supply: 400,
     circulating: 10,
@@ -167,6 +170,7 @@ const genesisMonsters = [
     id: "bloom",
     nameKey: "yakkamon.genesis.bloom.name",
     tagKey: "yakkamon.genesis.tag.legendary",
+    typeKey: "yakkamon.genesis.type.dragon",
     prob: "9%",
     supply: 2000,
     circulating: 50,
@@ -180,6 +184,7 @@ const genesisMonsters = [
     id: "rare",
     nameKey: "yakkamon.genesis.rare.name",
     tagKey: "yakkamon.genesis.tag.rare",
+    typeKey: "yakkamon.genesis.type.psychic",
     prob: "18.2%",
     supply: 4000,
     circulating: 50,
@@ -193,6 +198,7 @@ const genesisMonsters = [
     id: "uncommon",
     nameKey: "yakkamon.genesis.uncommon.name",
     tagKey: "yakkamon.genesis.tag.uncommon",
+    typeKey: "yakkamon.genesis.type.fire",
     prob: "68.2%",
     supply: 15000,
     circulating: 10316,
@@ -728,7 +734,12 @@ const unallocatedGenesisPercent = ((unallocatedGenesisCount / totalGenesisSupply
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="flex items-center justify-between gap-2">
-                        <h4 class="text-white font-semibold text-sm truncate">{t(m.nameKey as any)}</h4>
+                        <div class="flex items-center gap-1.5 min-w-0">
+                          <h4 class="text-white font-semibold text-sm truncate">{t(m.nameKey as any)}</h4>
+                          <span class="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/[0.08] text-white/60 shrink-0">
+                            {t(m.typeKey as any)}
+                          </span>
+                        </div>
                         <span class="text-[10px] font-mono text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded shrink-0">
                           {m.prob}
                         </span>
