@@ -1,0 +1,610 @@
+---
+import SflToolLayout from "../SflToolLayout.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import fishingData from "../../content/data/sfl/fishing.json"
+
+const fishList = fishingData.fish
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+const isEs = lang === "es"
+
+// Tiers con nombres y colores
+const tierConfig: Record<string, { label: string; badgeClass: string }> = {
+  basic: {
+    label: t("sfl.fishing.filter.basic"),
+    badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  },
+  advanced: {
+    label: t("sfl.fishing.filter.advanced"),
+    badgeClass: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+  },
+  expert: {
+    label: t("sfl.fishing.filter.expert"),
+    badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+  },
+  marvel: {
+    label: t("sfl.fishing.filter.marvel"),
+    badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  },
+  mutant: {
+    label: t("sfl.fishing.filter.mutant"),
+    badgeClass: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  },
+  crab: {
+    label: t("sfl.fishing.filter.crab"),
+    badgeClass: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+  },
+}
+
+// Estaciones con sus iconos
+const seasonsConfig: Record<string, { label: string; icon: string }> = {
+  spring: { label: t("sfl.fishing.season.spring"), icon: "/img/sunflowerland/123/primavera.webp" },
+  summer: { label: t("sfl.fishing.season.summer"), icon: "/img/sunflowerland/123/verano.webp" },
+  autumn: { label: t("sfl.fishing.season.autumn"), icon: "/img/sunflowerland/123/otono.webp" },
+  winter: { label: t("sfl.fishing.season.winter"), icon: "/img/sunflowerland/123/invierno.webp" },
+}
+
+// Conteo por tier para los badges de los filtros
+const tierCounts: Record<string, number> = {
+  all: fishList.length,
+  basic: fishList.filter((f) => f.tier === "basic").length,
+  advanced: fishList.filter((f) => f.tier === "advanced").length,
+  expert: fishList.filter((f) => f.tier === "expert").length,
+  marvel: fishList.filter((f) => f.tier === "marvel").length,
+  mutant: fishList.filter((f) => f.tier === "mutant").length,
+  crab: fishList.filter((f) => f.tier === "crab").length,
+}
+---
+
+<SflToolLayout activeTab="fishing">
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 1. ENCABEZADO PRINCIPAL                                   -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <div class="mb-6 relative z-10 text-center sm:text-left">
+    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[11px] font-mono uppercase tracking-wider font-semibold">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        {t("sfl.fishing.badge")}
+      </span>
+      <span class="text-white/40 text-xs font-mono">
+        · {fishList.length} {t("sfl.fishing.count")}
+      </span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
+      {t("sfl.fishing.heading")}
+      <span class="text-cyan-400"> {t("sfl.fishing.heading.accent")}</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm leading-relaxed max-w-3xl">
+      {t("sfl.fishing.intro")}
+    </p>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 2. DASHBOARD EN BLANCO (ESTRUCTURA PREVENTIVA ELEGANTE)    -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <div class="w-full mb-8 relative z-20">
+    <div class="bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md relative overflow-hidden">
+      <!-- Glow ambiental náutico sutil -->
+      <div class="absolute -right-20 -top-20 w-60 h-60 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header del Dashboard -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-white/5">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+            <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">
+              {t("sfl.fishing.dashboard.title")}
+            </h2>
+            <p class="text-xs text-white/50 font-light">
+              {t("sfl.fishing.dashboard.notice")}
+            </p>
+          </div>
+        </div>
+
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/60">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span>{t("sfl.fishing.dashboard.badge")}</span>
+        </div>
+      </div>
+
+      <!-- Grid de 4 Métricas (Placeholder en blanco) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Métrica 1 -->
+        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
+          <span class="text-[11px] font-mono text-white/40 block mb-1">
+            {t("sfl.fishing.dashboard.stat.catches")}
+          </span>
+          <div class="text-xl sm:text-2xl font-bold font-mono text-white/30 tracking-tight">
+            --
+          </div>
+          <span class="text-[10px] text-white/40 font-light block mt-1">
+            {t("sfl.fishing.dashboard.stat.catchesSub")}
+          </span>
+        </div>
+
+        <!-- Métrica 2 -->
+        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
+          <span class="text-[11px] font-mono text-white/40 block mb-1">
+            {t("sfl.fishing.dashboard.stat.successRate")}
+          </span>
+          <div class="text-xl sm:text-2xl font-bold font-mono text-white/30 tracking-tight">
+            --%
+          </div>
+          <span class="text-[10px] text-white/40 font-light block mt-1">
+            {t("sfl.fishing.dashboard.stat.successRateSub")}
+          </span>
+        </div>
+
+        <!-- Métrica 3 -->
+        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
+          <span class="text-[11px] font-mono text-white/40 block mb-1">
+            {t("sfl.fishing.dashboard.stat.bait")}
+          </span>
+          <div class="text-xl sm:text-2xl font-bold font-mono text-white/30 tracking-tight">
+            --
+          </div>
+          <span class="text-[10px] text-white/40 font-light block mt-1">
+            {t("sfl.fishing.dashboard.stat.baitSub")}
+          </span>
+        </div>
+
+        <!-- Métrica 4 -->
+        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
+          <span class="text-[11px] font-mono text-white/40 block mb-1">
+            {t("sfl.fishing.dashboard.stat.ocean")}
+          </span>
+          <div class="text-base sm:text-lg font-bold font-mono text-cyan-400/80 truncate">
+            {t("sfl.fishing.dashboard.stat.oceanVal")}
+          </div>
+          <span class="text-[10px] text-white/40 font-light block mt-1">
+            {t("sfl.fishing.dashboard.stat.oceanSub")}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 3. PANEL DE CONTROL: FILTROS & BÚSQUEDA                   -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <div class="mb-6 flex flex-col gap-4">
+    <!-- Fila 1: Filtro por Categoría / Tiers -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10">
+      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+        {t("sfl.fishing.filter.tier")}
+      </span>
+
+      <button
+        type="button"
+        class="filter-tier-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+        data-tier="all"
+      >
+        <span>{t("sfl.fishing.filter.all")}</span>
+        <span class="ml-1 text-[10px] text-white/50">({tierCounts.all})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="basic"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-emerald-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.basic")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.basic})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="advanced"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-sky-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.advanced")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.advanced})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="expert"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-purple-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.expert")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.expert})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="marvel"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.marvel")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.marvel})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="mutant"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-rose-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.mutant")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.mutant})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="crab"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-orange-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.crab")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.crab})</span>
+      </button>
+    </div>
+
+    <!-- Fila 2: Búsqueda rápida + Filtro de Estación -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <!-- Filtro de Estaciones -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+        <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden lg:inline">
+          {t("sfl.fishing.filter.season")}
+        </span>
+
+        <button
+          type="button"
+          class="filter-season-btn active px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 bg-white/10 text-white border border-white/10"
+          data-season="all"
+        >
+          {t("sfl.fishing.filter.season.all")}
+        </button>
+
+        <button
+          type="button"
+          class="filter-season-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border border-transparent hover:bg-white/5 hover:text-white"
+          data-season="spring"
+        >
+          <img src="/img/sunflowerland/123/primavera.webp" alt="Spring" class="w-3.5 h-3.5 object-contain" />
+          <span>{t("sfl.fishing.filter.season.spring")}</span>
+        </button>
+
+        <button
+          type="button"
+          class="filter-season-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border border-transparent hover:bg-white/5 hover:text-white"
+          data-season="summer"
+        >
+          <img src="/img/sunflowerland/123/verano.webp" alt="Summer" class="w-3.5 h-3.5 object-contain" />
+          <span>{t("sfl.fishing.filter.season.summer")}</span>
+        </button>
+
+        <button
+          type="button"
+          class="filter-season-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border border-transparent hover:bg-white/5 hover:text-white"
+          data-season="autumn"
+        >
+          <img src="/img/sunflowerland/123/otono.webp" alt="Autumn" class="w-3.5 h-3.5 object-contain" />
+          <span>{t("sfl.fishing.filter.season.autumn")}</span>
+        </button>
+
+        <button
+          type="button"
+          class="filter-season-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border border-transparent hover:bg-white/5 hover:text-white"
+          data-season="winter"
+        >
+          <img src="/img/sunflowerland/123/invierno.webp" alt="Winter" class="w-3.5 h-3.5 object-contain" />
+          <span>{t("sfl.fishing.filter.season.winter")}</span>
+        </button>
+      </div>
+
+      <!-- Barra de Búsqueda -->
+      <div class="relative w-full sm:w-72">
+        <input
+          type="text"
+          id="fishSearchInput"
+          placeholder={t("sfl.fishing.search.placeholder")}
+          class="w-full bg-[#18181b] border border-white/10 rounded-xl px-3.5 py-1.5 pl-9 text-xs text-white placeholder-white/30 focus:outline-none focus:border-cyan-400/50 transition-colors font-mono"
+        />
+        <svg class="w-4 h-4 text-white/30 absolute left-3 top-2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <button
+          id="clearSearchBtn"
+          type="button"
+          class="hidden absolute right-2.5 top-1.5 text-white/40 hover:text-white text-xs p-0.5"
+          title="Clear search"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 4. GRID DE TARJETAS DE PECES                              -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <div id="fishGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+    {
+      fishList.map((fish) => {
+        const tier = tierConfig[fish.tier] || tierConfig.basic
+        const displayName = isEs ? (fish.nameEs || fish.name) : fish.name
+        const subtitleName = isEs && fish.nameEs !== fish.name ? fish.name : null
+        const desc = isEs ? fish.descEs : fish.descEn
+        const seasonsList = fish.seasons.join(" ")
+        const isAllSeason = fish.seasons.length >= 4
+
+        return (
+          <div
+            class="fish-card group bg-[#18181b]/90 border border-white/10 hover:border-cyan-400/30 rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-black/60 relative overflow-hidden"
+            data-tier={fish.tier}
+            data-seasons={seasonsList}
+            data-name={displayName.toLowerCase()}
+            data-subname={subtitleName ? subtitleName.toLowerCase() : ""}
+            data-bait={fish.baits.map((b) => b.name).join(" ").toLowerCase()}
+            data-chum={fish.chum.toLowerCase()}
+          >
+            <!-- Glow temático según categoría -->
+            {fish.tier === "marvel" && (
+              <div class="absolute -right-8 -top-8 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+            )}
+            {fish.tier === "mutant" && (
+              <div class="absolute -right-8 -top-8 w-24 h-24 bg-rose-500/10 rounded-full blur-xl pointer-events-none"></div>
+            )}
+
+            <!-- Encabezado de la Tarjeta: Tier Badge + XP -->
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class:list={["text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded-md border", tier.badgeClass]}>
+                  {tier.label}
+                </span>
+
+                <span class="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                  +{fish.xp} XP
+                </span>
+              </div>
+
+              <!-- Imagen y Nombre -->
+              <div class="flex items-center gap-3.5 mb-3.5">
+                <div class="w-14 h-14 rounded-xl bg-black/40 border border-white/5 flex items-center justify-center p-1.5 shrink-0 group-hover:scale-105 transition-transform">
+                  <img
+                    src={fish.image}
+                    alt={displayName}
+                    loading="lazy"
+                    class="w-full h-full object-contain [image-rendering:pixelated] drop-shadow-md"
+                  />
+                </div>
+
+                <div class="min-w-0 flex-1">
+                  <h3 class="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
+                    {displayName}
+                  </h3>
+                  {subtitleName && (
+                    <span class="text-[11px] text-white/40 font-mono block truncate">
+                      {subtitleName}
+                    </span>
+                  )}
+                  <span class="text-[10px] font-mono text-white/30 block mt-0.5">
+                    {fish.method === "trap" ? t("sfl.fishing.card.method.trap") : t("sfl.fishing.card.method.rod")}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Probabilidad de Captura Highlight -->
+              <div class="mb-3 p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between">
+                <span class="text-[11px] font-mono text-white/50">
+                  {t("sfl.fishing.card.rate")}
+                </span>
+                <span class="text-xs font-mono font-bold text-cyan-400">
+                  {fish.catchRate}
+                </span>
+              </div>
+
+              <!-- Cebos Potenciales -->
+              <div class="mb-2.5">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
+                  {t("sfl.fishing.card.bait")}
+                </span>
+                <div class="flex flex-wrap gap-1.5">
+                  {fish.baits.map((b) => (
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/70">
+                      <img src={b.image} alt={b.name} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                      <span>{b.name}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Chum / Insumo preferido -->
+              <div class="mb-2.5">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-0.5">
+                  {t("sfl.fishing.card.chum")}
+                </span>
+                <span class="text-[11px] font-mono text-white/60">
+                  {fish.chum}
+                </span>
+              </div>
+
+              <!-- Bono Especial (si existe) -->
+              {fish.specialBoost && (
+                <div class="mb-2.5 px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                  <span>★</span>
+                  <span>{fish.specialBoost}</span>
+                </div>
+              )}
+            </div>
+
+            <!-- Footer de la tarjeta: Estaciones y descripción breve -->
+            <div class="pt-3 border-t border-white/5 mt-2">
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-[10px] font-mono text-white/40 uppercase tracking-wider">
+                  {t("sfl.fishing.card.seasons")}
+                </span>
+
+                <div class="flex items-center gap-1">
+                  {isAllSeason ? (
+                    <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                      {t("sfl.fishing.season.all")}
+                    </span>
+                  ) : (
+                    fish.seasons.map((s) => {
+                      const season = seasonsConfig[s]
+                      return (
+                        <span title={season?.label || s} class="inline-flex items-center">
+                          <img src={season?.icon} alt={season?.label || s} class="w-3.5 h-3.5 object-contain" />
+                        </span>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
+
+              <p class="text-[11px] text-white/50 leading-relaxed font-light line-clamp-2">
+                {desc}
+              </p>
+            </div>
+          </div>
+        )
+      })
+    }
+  </div>
+
+  <!-- Estado Vacío (Cuando la búsqueda o filtro no retorna resultados) -->
+  <div id="emptyResults" class="hidden p-12 text-center rounded-2xl border border-white/5 bg-[#18181b]/50 my-8">
+    <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3">
+      <svg class="w-6 h-6 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+    <h3 class="text-base font-bold text-white mb-1">
+      {t("sfl.fishing.empty.title")}
+    </h3>
+    <p class="text-xs text-white/50 max-w-sm mx-auto">
+      {t("sfl.fishing.empty.desc")}
+    </p>
+  </div>
+</SflToolLayout>
+
+<script>
+  function initFishingFilter() {
+    const tierButtons = document.querySelectorAll<HTMLButtonElement>(".filter-tier-btn")
+    const seasonButtons = document.querySelectorAll<HTMLButtonElement>(".filter-season-btn")
+    const searchInput = document.getElementById("fishSearchInput") as HTMLInputElement | null
+    const clearBtn = document.getElementById("clearSearchBtn") as HTMLButtonElement | null
+    const cards = document.querySelectorAll<HTMLElement>(".fish-card")
+    const emptyState = document.getElementById("emptyResults")
+
+    let activeTier = "all"
+    let activeSeason = "all"
+    let searchQuery = ""
+
+    function updateFilters() {
+      let visibleCount = 0
+
+      cards.forEach((card) => {
+        const cardTier = card.dataset.tier || ""
+        const cardSeasons = (card.dataset.seasons || "").split(" ")
+        const cardName = card.dataset.name || ""
+        const cardSubname = card.dataset.subname || ""
+        const cardBait = card.dataset.bait || ""
+        const cardChum = card.dataset.chum || ""
+
+        // Filtro por Tier
+        const matchesTier = activeTier === "all" || cardTier === activeTier
+
+        // Filtro por Estación
+        const matchesSeason =
+          activeSeason === "all" ||
+          cardSeasons.includes(activeSeason) ||
+          cardSeasons.length >= 4 // todo el año
+
+        // Filtro por Búsqueda de texto
+        const matchesSearch =
+          !searchQuery ||
+          cardName.includes(searchQuery) ||
+          cardSubname.includes(searchQuery) ||
+          cardBait.includes(searchQuery) ||
+          cardChum.includes(searchQuery)
+
+        if (matchesTier && matchesSeason && matchesSearch) {
+          card.classList.remove("hidden")
+          visibleCount++
+        } else {
+          card.classList.add("hidden")
+        }
+      })
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove("hidden")
+        } else {
+          emptyState.classList.add("hidden")
+        }
+      }
+    }
+
+    // Manejadores de Tier
+    tierButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tierButtons.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-white", "border-white/20", "active")
+          b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+        })
+        btn.classList.add("bg-white/10", "text-white", "border-white/20", "active")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+
+        activeTier = btn.dataset.tier || "all"
+        updateFilters()
+      })
+    })
+
+    // Manejadores de Estación
+    seasonButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        seasonButtons.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-white", "border-white/10", "active")
+          b.classList.add("bg-transparent", "text-white/60", "border-transparent")
+        })
+        btn.classList.add("bg-white/10", "text-white", "border-white/10", "active")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-transparent")
+
+        activeSeason = btn.dataset.season || "all"
+        updateFilters()
+      })
+    })
+
+    // Manejador de Búsqueda
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim()
+        if (clearBtn) {
+          if (searchQuery) {
+            clearBtn.classList.remove("hidden")
+          } else {
+            clearBtn.classList.add("hidden")
+          }
+        }
+        updateFilters()
+      })
+    }
+
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener("click", () => {
+        searchInput.value = ""
+        searchQuery = ""
+        clearBtn.classList.add("hidden")
+        updateFilters()
+        searchInput.focus()
+      })
+    }
+  }
+
+  // Inicializar en primera carga y tras navegación de Astro View Transitions
+  document.addEventListener("DOMContentLoaded", initFishingFilter)
+  document.addEventListener("astro:page-load", initFishingFilter)
+</script>

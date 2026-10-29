@@ -55,6 +55,16 @@ const tools = [
     badge: "Energy & Shrines",
     tagColor: "border-purple-500/20 text-purple-400 bg-purple-500/10",
   },
+  {
+    id: "fishing",
+    title: t("sfl.hub.tools.fishing.title"),
+    desc: t("sfl.hub.tools.fishing.desc"),
+    href: loc("/fishing"),
+    icon: "/img/sunflowerland/fish/Anchovy.png",
+    cta: t("sfl.hub.tools.fishing.cta"),
+    badge: "Fishing Codex",
+    tagColor: "border-cyan-500/20 text-cyan-400 bg-cyan-500/10",
+  },
 ]
 
 const guides = [
@@ -248,8 +258,8 @@ const faqItems = [
       </p>
     </div>
 
-    <!-- 4 Tarjetas de Herramientas (Grid 2x2) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Tarjetas de Herramientas (Grid responsive) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {
         tools.map((item) => (
           <a
