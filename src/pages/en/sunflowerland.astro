@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import SunflowerLandView from "../../components/views/SunflowerLandView.astro"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("sfl.hub.seo.title"),
+  description: t("sfl.hub.seo.description"),
+  image: "/img/meta/sunflowerland-og.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image} customSpacing>
+  <SunflowerLandView />
+</Layout>
+

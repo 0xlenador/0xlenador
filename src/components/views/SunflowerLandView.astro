@@ -1,0 +1,433 @@
+---
+// ============================================================================
+// src/components/views/SunflowerLandView.astro
+// Hub central y definición integral del ecosistema Sunflower Land en 0xLeñador
+// Integrado en SflToolLayout (full width + tabs + live ticker bar)
+// ============================================================================
+
+import SflToolLayout from "../SflToolLayout.astro"
+import FaqAccordion from "../FaqAccordion.astro"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+const loc = (path: string) => getLocalizedPath(path, lang)
+
+// Enlaces a herramientas y páginas internas
+const tools = [
+  {
+    id: "market",
+    title: t("sfl.hub.tools.market.title"),
+    desc: t("sfl.hub.tools.market.desc"),
+    href: loc("/sfl-mercado"),
+    icon: "/img/sunflowerland/123/exchange.png",
+    cta: t("sfl.hub.tools.market.cta"),
+    badge: "P2P Market",
+    tagColor: "border-sky-500/20 text-sky-400 bg-sky-500/10",
+  },
+  {
+    id: "cooking",
+    title: t("sfl.hub.tools.cooking.title"),
+    desc: t("sfl.hub.tools.cooking.desc"),
+    href: loc("/sfl-cocinando"),
+    icon: "/img/sunflowerland/food/Pizza Margherita.png",
+    cta: t("sfl.hub.tools.cooking.cta"),
+    badge: "XP & Boosts",
+    tagColor: "border-amber-500/20 text-amber-400 bg-amber-500/10",
+  },
+  {
+    id: "betty",
+    title: t("sfl.hub.tools.betty.title"),
+    desc: t("sfl.hub.tools.betty.desc"),
+    href: loc("/sfl-betty"),
+    icon: "/img/sunflowerland/123/coins.png",
+    cta: t("sfl.hub.tools.betty.cta"),
+    badge: "Coins Arbitrage",
+    tagColor: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+  },
+  {
+    id: "pets",
+    title: t("sfl.hub.tools.pets.title"),
+    desc: t("sfl.hub.tools.pets.desc"),
+    href: loc("/sfl-mascotas"),
+    icon: "/img/sunflowerland/123/ramsey.webp",
+    cta: t("sfl.hub.tools.pets.cta"),
+    badge: "Energy & Shrines",
+    tagColor: "border-purple-500/20 text-purple-400 bg-purple-500/10",
+  },
+]
+
+const guides = [
+  {
+    title: t("sfl.hub.guides.guide.title"),
+    desc: t("sfl.hub.guides.guide.desc"),
+    href: loc("/operaciones/sunflower-land"),
+    badge: t("sfl.hub.guides.guide.badge"),
+    cta: t("sfl.hub.guides.guide.cta"),
+    icon: "/img/sunflowerland/123/0xlenador-bumpkin.webp",
+  },
+  {
+    title: t("sfl.hub.guides.asset.title"),
+    desc: t("sfl.hub.guides.asset.desc"),
+    href: loc("/activos/sunflowerland"),
+    badge: t("sfl.hub.guides.asset.badge"),
+    cta: t("sfl.hub.guides.asset.cta"),
+    icon: "/img/sunflowerland/flower.jpg",
+  },
+]
+
+const pillars = [
+  {
+    title: t("sfl.hub.pillar1.title"),
+    desc: t("sfl.hub.pillar1.desc"),
+    icon: "/img/sunflowerland/Sunflower.png",
+  },
+  {
+    title: t("sfl.hub.pillar2.title"),
+    desc: t("sfl.hub.pillar2.desc"),
+    icon: "/img/sunflowerland/123/0xlenador-bumpkin.webp",
+  },
+  {
+    title: t("sfl.hub.pillar3.title"),
+    desc: t("sfl.hub.pillar3.desc"),
+    icon: "/img/sunflowerland/123/exchange.png",
+  },
+  {
+    title: t("sfl.hub.pillar4.title"),
+    desc: t("sfl.hub.pillar4.desc"),
+    icon: "/img/sunflowerland/cosmetics/collectibles/mini_floating_island.webp",
+  },
+]
+
+const faqItems = [
+  {
+    pregunta: t("sfl.hub.faq.q1"),
+    respuesta: t("sfl.hub.faq.a1"),
+  },
+  {
+    pregunta: t("sfl.hub.faq.q2"),
+    respuesta: t("sfl.hub.faq.a2"),
+  },
+  {
+    pregunta: t("sfl.hub.faq.q3"),
+    respuesta: t("sfl.hub.faq.a3"),
+  },
+  {
+    pregunta: t("sfl.hub.faq.q4"),
+    respuesta: t("sfl.hub.faq.a4"),
+  },
+  {
+    pregunta: t("sfl.hub.faq.q5"),
+    respuesta: t("sfl.hub.faq.a5"),
+  },
+]
+---
+
+<SflToolLayout activeTab="hub">
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 1. HERO BANNER: Definición y Acceso Rápido                -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <section class="relative rounded-3xl p-6 sm:p-8 md:p-10 mb-8 border border-white/10 bg-gradient-to-b from-white/[0.04] via-white/[0.015] to-transparent overflow-hidden shadow-2xl backdrop-blur-xl">
+    <!-- Luz cenital decorativa sutil -->
+    <div class="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-emerald-500/10 blur-3xl"></div>
+
+    <div class="relative z-10 max-w-4xl">
+      <!-- Badges de contexto -->
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-semibold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          {t("sfl.hub.badge")}
+        </span>
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium text-white/50 border border-white/10 bg-white/[0.02]">
+          Polygon PoS & Base
+        </span>
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium text-white/50 border border-white/10 bg-white/[0.02]">
+          Web3 Gaming
+        </span>
+      </div>
+
+      <!-- Título Principal -->
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-3">
+        {t("sfl.hub.heading")}
+        <span class="text-emerald-400"> {t("sfl.hub.heading.accent")}</span>
+      </h1>
+
+      <!-- Tagline / Subtítulo -->
+      <p class="text-sm sm:text-base md:text-lg text-white/70 leading-relaxed font-light mb-6">
+        {t("sfl.hub.tagline")}
+      </p>
+
+      <!-- Botones de Acción -->
+      <div class="flex flex-wrap items-center gap-3">
+        <a
+          href="https://sunflower-land.com/play/?ref=Oxlenador"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs sm:text-sm font-mono transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
+        >
+          <img
+            src="/img/sunflowerland/123/0xlenador-bumpkin.webp"
+            alt="Bumpkin"
+            class="w-4 h-4 object-contain"
+          />
+          <span>{t("sfl.hub.btn.play")}</span>
+          <span class="text-xs">↗</span>
+        </a>
+
+        <a
+          href="#herramientas"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/90 hover:text-white border border-white/10 font-mono text-xs sm:text-sm transition-all"
+        >
+          <span>{t("sfl.hub.btn.tools")}</span>
+          <span>↓</span>
+        </a>
+
+        <a
+          href={loc("/operaciones/sunflower-land")}
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] text-white/70 hover:text-white border border-white/5 font-mono text-xs sm:text-sm transition-all"
+        >
+          <span>{t("sfl.hub.btn.guide")}</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 2. ¿QUÉ ES SUNFLOWER LAND? & PILARES                      -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <section class="mb-12">
+    <div class="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/[0.02] mb-6">
+      <div class="max-w-3xl mb-8">
+        <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-2">
+          {t("sfl.hub.whatIs.badge")}
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-4">
+          {t("sfl.hub.whatIs.title")}
+        </h2>
+        <p class="text-sm sm:text-base text-white/60 leading-relaxed font-light mb-4">
+          {t("sfl.hub.whatIs.p1")}
+        </p>
+        <p class="text-sm sm:text-base text-white/60 leading-relaxed font-light">
+          {t("sfl.hub.whatIs.p2")}
+        </p>
+      </div>
+
+      <!-- 4 Pilares del Juego (Grid 2x2) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-white/5">
+        {
+          pillars.map((pillar) => (
+            <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">
+              <div class="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center mb-3">
+                <img src={pillar.icon} alt={pillar.title} class="w-6 h-6 object-contain" />
+              </div>
+              <h3 class="text-sm font-bold text-white mb-1.5">{pillar.title}</h3>
+              <p class="text-xs text-white/50 leading-relaxed font-light">{pillar.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 3. HUB DE HERRAMIENTAS OPERATIVAS (0xLeñador)             -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <section id="herramientas" class="mb-12 scroll-mt-6">
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 border-b border-white/10">
+      <div>
+        <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1">
+          {t("sfl.hub.tools.badge")}
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          {t("sfl.hub.tools.title")}
+        </h2>
+      </div>
+      <p class="text-xs sm:text-sm text-white/50 max-w-md font-light">
+        {t("sfl.hub.tools.desc")}
+      </p>
+    </div>
+
+    <!-- 4 Tarjetas de Herramientas (Grid 2x2) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {
+        tools.map((item) => (
+          <a
+            href={item.href}
+            data-astro-prefetch
+            class="group p-6 rounded-2xl border border-white/10 hover:border-emerald-500/30 bg-gradient-to-b from-white/[0.03] to-transparent hover:from-white/[0.05] transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <img src={item.icon} alt={item.title} class="w-7 h-7 object-contain" />
+                </div>
+                <span class:list={["text-[10px] font-mono uppercase px-2.5 py-1 rounded-full border font-semibold", item.tagColor]}>
+                  {item.badge}
+                </span>
+              </div>
+
+              <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
+                {item.title}
+              </h3>
+              <p class="text-xs sm:text-sm text-white/55 leading-relaxed font-light mb-6">
+                {item.desc}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono font-medium text-emerald-400">
+              <span>{item.cta}</span>
+              <span class="text-sm group-hover:translate-x-1 transition-transform">↗</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 4. GUÍAS Y ANÁLISIS DEL JUEGO                             -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <section class="mb-12">
+    <div class="mb-6 pb-4 border-b border-white/10">
+      <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1">
+        {t("sfl.hub.guides.badge")}
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+        {t("sfl.hub.guides.title")}
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {
+        guides.map((guide) => (
+          <a
+            href={guide.href}
+            data-astro-prefetch
+            class="group p-6 rounded-2xl border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04] transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center shrink-0">
+                  <img src={guide.icon} alt={guide.title} class="w-6 h-6 object-contain" />
+                </div>
+                <span class="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full border border-white/10 text-white/60 bg-white/[0.02]">
+                  {guide.badge}
+                </span>
+              </div>
+              <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
+                {guide.title}
+              </h3>
+              <p class="text-xs text-white/50 leading-relaxed font-light mb-5">
+                {guide.desc}
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/70 group-hover:text-white transition-colors">
+              <span>{guide.cta}</span>
+              <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 5. ECONOMÍA SFL & PROYECTO II (YAKKAMON)                  -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <section class="mb-14">
+    <div class="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/[0.02]">
+      <div class="mb-6">
+        <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1">
+          {t("sfl.hub.tokenomics.badge")}
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          {t("sfl.hub.tokenomics.title")}
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Token FLOWER -->
+        <div class="p-5 rounded-2xl bg-black/30 border border-white/5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <img
+                src="/img/sunflowerland/flower.jpg"
+                alt="FLOWER"
+                class="w-6 h-6 rounded-full object-contain border border-emerald-500/30 shadow-[0_0_10px_rgba(52,211,153,0.3)]"
+              />
+              <h3 class="text-lg font-bold text-white">{t("sfl.hub.tokenomics.flower.title")}</h3>
+            </div>
+            <span class="text-xs font-mono text-emerald-400/90 font-medium block mb-3">
+              {t("sfl.hub.tokenomics.flower.role")}
+            </span>
+            <p class="text-xs sm:text-sm text-white/55 leading-relaxed font-light mb-4">
+              {t("sfl.hub.tokenomics.flower.desc")}
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-emerald-400/90">
+            <span>Polygon PoS & Base</span>
+            <a
+              href={loc("/activos/sunflowerland")}
+              data-astro-prefetch
+              class="hover:text-emerald-300 transition-colors flex items-center gap-1 font-semibold"
+            >
+              <span>{t("sfl.hub.guides.asset.cta")}</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Proyecto II: Yakkamon -->
+        <a
+          href={loc("/yakkamon")}
+          data-astro-prefetch
+          class="group p-5 rounded-2xl bg-gradient-to-b from-purple-500/10 via-black/40 to-black/30 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex flex-col justify-between"
+        >
+          <div>
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+                  <img src="/img/cripto/yakkamon.webp" alt="Yakkamon" class="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
+                    {t("sfl.hub.tokenomics.yakka.title")}
+                  </h3>
+                  <span class="text-xs font-mono text-purple-400/90 font-medium block">
+                    {t("sfl.hub.tokenomics.yakka.role")}
+                  </span>
+                </div>
+              </div>
+              <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full border border-purple-500/30 text-purple-300 bg-purple-500/10 font-semibold shrink-0">
+                {t("sfl.hub.tokenomics.yakka.badge")}
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm text-white/60 leading-relaxed font-light mb-4">
+              {t("sfl.hub.tokenomics.yakka.desc")}
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-purple-300 group-hover:text-purple-200 transition-colors">
+            <span>{t("sfl.hub.tokenomics.yakka.cta")}</span>
+            <span class="text-sm group-hover:translate-x-1 transition-transform">↗</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <!-- 6. PREGUNTAS FRECUENTES (FAQ)                              -->
+  <!-- ═════════════════════════════════════════════════════════ -->
+  <div slot="footer">
+    <FaqAccordion
+      titulo={t("sfl.hub.faq.title")}
+      startId={700}
+      items={faqItems}
+    />
+  </div>
+</SflToolLayout>
+

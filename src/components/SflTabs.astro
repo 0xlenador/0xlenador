@@ -2,7 +2,7 @@
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../i18n/utils"
 
 interface Props {
-  activeTab: "mercado" | "mascotas" | "cocinando" | "betty"
+  activeTab: "hub" | "mercado" | "mascotas" | "cocinando" | "betty"
 }
 
 const { activeTab } = Astro.props
@@ -11,6 +11,12 @@ const t = useTranslations(lang)
 const loc = (path: string) => getLocalizedPath(path, lang)
 
 const tabs = [
+  {
+    id: "hub",
+    href: loc("/sunflowerland"),
+    label: t("sfl.tabs.hub"),
+    icon: "/img/sunflowerland/Sunflower.png",
+  },
   {
     id: "mercado",
     href: loc("/sfl-mercado"),

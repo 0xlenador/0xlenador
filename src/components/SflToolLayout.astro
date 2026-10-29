@@ -2,7 +2,7 @@
 import SflTabs from './SflTabs.astro';
 
 interface Props {
-  activeTab: string;
+  activeTab: "hub" | "mercado" | "mascotas" | "cocinando" | "betty" | string;
 }
 
 const { activeTab } = Astro.props;
