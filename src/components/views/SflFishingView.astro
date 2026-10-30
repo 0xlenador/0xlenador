@@ -354,9 +354,15 @@ const tierCounts: Record<string, number> = {
                   {tier.label}
                 </span>
 
-                <span class="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                  +{fish.xp} XP
-                </span>
+                {fish.tier === "marvel" || fish.tier === "mutant" ? (
+                  <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 uppercase tracking-wider">
+                    {t("sfl.fishing.card.collectible")}
+                  </span>
+                ) : fish.tier === "crab" ? null : (
+                  <span class="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                    +{fish.xp} XP
+                  </span>
+                )}
               </div>
 
               <!-- Imagen y Nombre -->
