@@ -54,6 +54,86 @@ const tierCounts: Record<string, number> = {
   mutant: fishList.filter((f) => f.tier === "mutant").length,
   crab: fishList.filter((f) => f.tier === "crab").length,
 }
+
+// Mapa de recursos e imágenes para Chum
+const chumImageMap: Record<string, string> = {
+  "Speed Chicken": "/img/sunflowerland/powerups/speed_chicken.webp",
+  "Rich Chicken": "/img/sunflowerland/powerups/rich_chicken.webp",
+  "Fat Chicken": "/img/sunflowerland/powerups/fat_chicken.webp",
+  "Wild Mushroom": "/img/sunflowerland/123/wild_mushroom.webp",
+  "Football fish": "/img/sunflowerland/fish/Football fish.png",
+  "Mahi Mahi": "/img/sunflowerland/fish/Mahi Mahi.png",
+  "Chewed Bone": "/img/sunflowerland/Chewed Bone.png",
+  "Frost Pebble": "/img/sunflowerland/Frost Pebble.png",
+  "Heart Leaf": "/img/sunflowerland/Heart Leaf.png",
+  "Wild Grass": "/img/sunflowerland/Wild Grass.png",
+  "Crab Stick": "/img/sunflowerland/fish/a/Crab Stick.png",
+  "Fish Flake": "/img/sunflowerland/fish/a/fish_flake.webp",
+  "Fish Stick": "/img/sunflowerland/fish/a/fish_stick.webp",
+  "Fish Oil": "/img/sunflowerland/fish/a/fish_oil.webp",
+  "Salt Awakening": "/img/sunflowerland/Salt.png",
+  "Map Pieces": "/img/sunflowerland/powerups/treasure_map.webp",
+  "Eggplant": "/img/sunflowerland/Eggplant.png",
+  "Carrot": "/img/sunflowerland/Carrot.png",
+  "Egg": "/img/sunflowerland/Egg.png",
+  "Potato": "/img/sunflowerland/Potato.png",
+  "Cabbage": "/img/sunflowerland/Cabbage.png",
+  "Sunflower": "/img/sunflowerland/Sunflower.png",
+  "Parsnip": "/img/sunflowerland/Parsnip.png",
+  "Beetroot": "/img/sunflowerland/Beetroot.png",
+  "Orange": "/img/sunflowerland/Orange.png",
+  "Pumpkin": "/img/sunflowerland/Pumpkin.png",
+  "Kale": "/img/sunflowerland/Kale.png",
+  "Seaweed": "/img/sunflowerland/fish/a/seaweed.webp",
+  "Blueberry": "/img/sunflowerland/Blueberry.png",
+  "Onion": "/img/sunflowerland/Onion.png",
+  "Radish": "/img/sunflowerland/Radish.png",
+  "Rhubarb": "/img/sunflowerland/Rhubarb.png",
+  "Corn": "/img/sunflowerland/Corn.png",
+  "Soybean": "/img/sunflowerland/Soybean.png",
+  "Soy": "/img/sunflowerland/Soybean.png",
+  "Iron": "/img/sunflowerland/Iron.png",
+  "Apple": "/img/sunflowerland/Apple.png",
+  "Honey": "/img/sunflowerland/Honey.png",
+  "Banana": "/img/sunflowerland/Banana.png",
+  "Gold": "/img/sunflowerland/Gold.png",
+  "Wheat": "/img/sunflowerland/Wheat.png",
+  "Artichoke": "/img/sunflowerland/Artichoke.png",
+  "Obsidian": "/img/sunflowerland/Obsidian.png",
+  "Crimstone": "/img/sunflowerland/Crimstone.png",
+  "Stone": "/img/sunflowerland/Stone.png",
+  "Truffle": "/img/sunflowerland/truffle.webp",
+  "Lemon": "/img/sunflowerland/Lemon.png",
+  "Ribbon": "/img/sunflowerland/Ribbon.png",
+  "Grape": "/img/sunflowerland/Grape.png",
+  "Rice": "/img/sunflowerland/Rice.png",
+  "Moonfur": "/img/sunflowerland/Moonfur.png",
+  "Ruffroot": "/img/sunflowerland/Ruffroot.png",
+  "Dewberry": "/img/sunflowerland/Dewberry.png",
+  "Duskberry": "/img/sunflowerland/Duskberry.png",
+  "Lunara": "/img/sunflowerland/Lunara.png",
+  "Acorn": "/img/sunflowerland/123/Acorn.webp",
+}
+
+function getChumIcons(chumText: string) {
+  if (!chumText) return []
+  const text = chumText
+  const detected: { name: string; image: string }[] = []
+  const seen = new Set<string>()
+
+  for (const [key, image] of Object.entries(chumImageMap)) {
+    if (key === "Soy" && /(?:^|[^a-zA-Z])soybean(?:[^a-zA-Z]|$)/i.test(text)) continue
+    const reg = new RegExp("(^|[^a-zA-Z])" + key + "([^a-zA-Z]|$)", "i")
+    if (reg.test(text)) {
+      if (!seen.has(image)) {
+        seen.add(image)
+        const displayName = key === "Map Pieces" ? "Map Piece" : key === "Salt Awakening" ? "Salt" : key
+        detected.push({ name: displayName, image })
+      }
+    }
+  }
+  return detected
+}
 ---
 
 <SflToolLayout activeTab="fishing">
@@ -328,6 +408,8 @@ const tierCounts: Record<string, number> = {
         const desc = isEs ? fish.descEs : fish.descEn
         const seasonsList = fish.seasons.join(" ")
         const isAllSeason = fish.seasons.length >= 4
+        const chumIcons = getChumIcons(fish.chum)
+        const hasChumNotes = fish.chum.includes("x") || fish.chum.includes("(") || fish.chum.includes("/") || fish.chum.includes("o ")
 
         return (
           <div
@@ -338,6 +420,7 @@ const tierCounts: Record<string, number> = {
             data-subname={subtitleName ? subtitleName.toLowerCase() : ""}
             data-bait={fish.baits.map((b) => b.name).join(" ").toLowerCase()}
             data-chum={fish.chum.toLowerCase()}
+            data-seasoncode={fish.seasonCode ? fish.seasonCode.toLowerCase() : ""}
           >
             <!-- Glow temático según categoría -->
             {fish.tier === "marvel" && (
@@ -347,16 +430,20 @@ const tierCounts: Record<string, number> = {
               <div class="absolute -right-8 -top-8 w-24 h-24 bg-rose-500/10 rounded-full blur-xl pointer-events-none"></div>
             )}
 
-            <!-- Encabezado de la Tarjeta: Tier Badge + XP -->
+            <!-- Encabezado de la Tarjeta: Tier Badge + XP / Temporada -->
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
                 <span class:list={["text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded-md border", tier.badgeClass]}>
                   {tier.label}
                 </span>
 
-                {fish.tier === "marvel" || fish.tier === "mutant" ? (
+                {fish.tier === "marvel" ? (
                   <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 uppercase tracking-wider">
                     {t("sfl.fishing.card.collectible")}
+                  </span>
+                ) : fish.tier === "mutant" ? (
+                  <span class="text-[10px] font-mono text-red-400 font-bold bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20 uppercase tracking-wider">
+                    {fish.seasonCode || "MUTANT"}
                   </span>
                 ) : fish.tier === "crab" ? null : (
                   <span class="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
@@ -419,12 +506,29 @@ const tierCounts: Record<string, number> = {
 
               <!-- Chum / Insumo preferido -->
               <div class="mb-2.5">
-                <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-0.5">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
                   {t("sfl.fishing.card.chum")}
                 </span>
-                <span class="text-[11px] font-mono text-white/60">
-                  {fish.chum}
-                </span>
+                {chumIcons.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mb-1.5">
+                    {chumIcons.map((c) => (
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/70">
+                        <img
+                          src={c.image}
+                          alt={c.name}
+                          class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+                          loading="lazy"
+                        />
+                        <span>{c.name}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {(!chumIcons.length || hasChumNotes) && (
+                  <span class="text-[11px] font-mono text-white/50 block leading-tight">
+                    {fish.chum}
+                  </span>
+                )}
               </div>
 
               <!-- Bono Especial (si existe) -->
@@ -510,6 +614,7 @@ const tierCounts: Record<string, number> = {
         const cardSubname = card.dataset.subname || ""
         const cardBait = card.dataset.bait || ""
         const cardChum = card.dataset.chum || ""
+        const cardSeasonCode = card.dataset.seasoncode || ""
 
         // Filtro por Tier
         const matchesTier = activeTier === "all" || cardTier === activeTier
@@ -526,7 +631,8 @@ const tierCounts: Record<string, number> = {
           cardName.includes(searchQuery) ||
           cardSubname.includes(searchQuery) ||
           cardBait.includes(searchQuery) ||
-          cardChum.includes(searchQuery)
+          cardChum.includes(searchQuery) ||
+          cardSeasonCode.includes(searchQuery)
 
         if (matchesTier && matchesSeason && matchesSearch) {
           card.classList.remove("hidden")
