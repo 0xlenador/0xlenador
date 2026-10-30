@@ -403,9 +403,7 @@ function getChumIcons(chumText: string) {
     {
       fishList.map((fish) => {
         const tier = tierConfig[fish.tier] || tierConfig.basic
-        const displayName = isEs ? (fish.nameEs || fish.name) : fish.name
-        const subtitleName = isEs && fish.nameEs !== fish.name ? fish.name : null
-        const desc = isEs ? fish.descEs : fish.descEn
+        const displayName = fish.name
         const seasonsList = fish.seasons.join(" ")
         const chumIcons = getChumIcons(fish.chum)
 
@@ -415,7 +413,6 @@ function getChumIcons(chumText: string) {
             data-tier={fish.tier}
             data-seasons={seasonsList}
             data-name={displayName.toLowerCase()}
-            data-subname={subtitleName ? subtitleName.toLowerCase() : ""}
             data-bait={fish.baits.map((b) => b.name).join(" ").toLowerCase()}
             data-chum={fish.chum.toLowerCase()}
             data-seasoncode={fish.seasonCode ? fish.seasonCode.toLowerCase() : ""}
@@ -466,11 +463,6 @@ function getChumIcons(chumText: string) {
                   <h3 class="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
                     {displayName}
                   </h3>
-                  {subtitleName && (
-                    <span class="text-[11px] text-white/40 font-mono block truncate">
-                      {subtitleName}
-                    </span>
-                  )}
                   <span class="text-[10px] font-mono text-white/30 block mt-0.5">
                     {fish.method === "trap" ? t("sfl.fishing.card.method.trap") : t("sfl.fishing.card.method.rod")}
                   </span>
@@ -555,10 +547,6 @@ function getChumIcons(chumText: string) {
                   })}
                 </div>
               </div>
-
-              <p class="text-[11px] text-white/50 leading-relaxed font-light line-clamp-2">
-                {desc}
-              </p>
             </div>
           </div>
         )
