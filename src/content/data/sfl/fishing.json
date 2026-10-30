@@ -1,896 +1,1385 @@
 {
   "fish": [
-  {
-    "id": "anchovy",
-    "name": "Anchovy",
-    "nameEs": "Anchoa",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Anchovy.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Carrot, Rhubarb",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "48%",
-    "xp": 80,
-    "method": "rod",
-    "descEs": "Pez costero común y muy abundante. Cebo básico o encurtido.",
-    "descEn": "Common coastal fish found all year round using basic baits."
-  },
-  {
-    "id": "horse-mackerel",
-    "name": "Horse Mackerel",
-    "nameEs": "Jurel",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Horse Mackerel.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Potato, Carrot",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "30%",
-    "xp": 90,
-    "method": "rod",
-    "descEs": "Pez rápido de cardumen. Se pesca con facilidad con lombrices estándar.",
-    "descEn": "Fast schooling fish commonly hooked with standard worms."
-  },
-  {
-    "id": "sea-bass",
-    "name": "Sea Bass",
-    "nameEs": "Lubina",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Sea Bass.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Cabbage, Sunflower",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "25%",
-    "xp": 110,
-    "method": "rod",
-    "descEs": "Pez versátil y robusto presente en cualquier estación del año.",
-    "descEn": "Versatile and sturdy fish present in all four seasons."
-  },
-  {
-    "id": "butterflyfish",
-    "name": "Butterflyfish",
-    "nameEs": "Pez Mariposa",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Butterflyfish.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Parsnip, Beetroot",
-    "seasons": ["spring", "summer", "autumn"],
-    "catchRate": "18%",
-    "xp": 130,
-    "method": "rod",
-    "descEs": "Colorido pez de aguas templadas que se resguarda en invierno.",
-    "descEn": "Warm water beauty absent during freezing winter temperatures."
-  },
-  {
-    "id": "clownfish",
-    "name": "Clownfish",
-    "nameEs": "Pez Payaso",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Clownfish.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Orange, Pumpkin",
-    "seasons": ["spring", "summer", "autumn"],
-    "catchRate": "16%",
-    "xp": 140,
-    "method": "rod",
-    "descEs": "Icono de arrecife. Atrae al pescador con señuelos naranjas y cítricos.",
-    "descEn": "Iconic reef dweller attracted by orange crops and warm weather."
-  },
-  {
-    "id": "sea-horse",
-    "name": "Sea Horse",
-    "nameEs": "Caballito de Mar",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Sea Horse.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Kale, Seaweed",
-    "seasons": ["spring", "summer", "autumn"],
-    "catchRate": "12%",
-    "xp": 160,
-    "method": "rod",
-    "descEs": "Criatura marina delicada. Requiere paciencia en zonas de algas.",
-    "descEn": "Delicate marine creature nestled among seaweed and calm waters."
-  },
-  {
-    "id": "blowfish",
-    "name": "Blowfish",
-    "nameEs": "Pez Globo",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Blowfish.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Eggplant, Blueberry, Onion",
-    "seasons": ["winter"],
-    "catchRate": "20%",
-    "xp": 170,
-    "method": "rod",
-    "descEs": "Exclusivo de invierno. Se infla al ser picado con cebos en aguas gélidas.",
-    "descEn": "Winter exclusive fish with defensive inflation capabilities."
-  },
-  {
-    "id": "halibut",
-    "name": "Halibut",
-    "nameEs": "Fletán",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Halibut.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Radish, Corn",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "14%",
-    "xp": 150,
-    "method": "rod",
-    "descEs": "Pez plano camuflado en el sustrato marino durante los meses fríos.",
-    "descEn": "Flat bottom feeder well camouflaged during cold months."
-  },
-  {
-    "id": "squid",
-    "name": "Squid",
-    "nameEs": "Calamar",
-    "tier": "basic",
-    "image": "/img/sunflowerland/fish/Squid.png",
-    "baits": [
-      { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
-    ],
-    "chum": "Soybean, Iron",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "15%",
-    "xp": 160,
-    "method": "rod",
-    "descEs": "Cefalópodo nocturno y veloz capturado en otoño e invierno.",
-    "descEn": "Swift nocturnal cephalopod hooked in autumn and winter tides."
-  },
-  {
-    "id": "red-snapper",
-    "name": "Red Snapper",
-    "nameEs": "Pargo Rojo",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Red Snapper.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Apple, Carrot",
-    "seasons": ["spring", "summer", "autumn"],
-    "catchRate": "30%",
-    "xp": 240,
-    "method": "rod",
-    "descEs": "Pez apreciado por su carne sabrosa. Responde al cebo de oruga.",
-    "descEn": "Prized gourmet fish easily lured by grub baits in warmer seasons."
-  },
-  {
-    "id": "tuna",
-    "name": "Tuna",
-    "nameEs": "Atún",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Tuna.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Cauliflower, Artichoke",
-    "seasons": ["summer", "autumn"],
-    "catchRate": "20%",
-    "xp": 280,
-    "method": "rod",
-    "descEs": "Poderoso y veloz nadador de mar abierto; da una gran pelea.",
-    "descEn": "Powerful open-water predator delivering immense line resistance."
-  },
-  {
-    "id": "angelfish",
-    "name": "Angelfish",
-    "nameEs": "Pez Ángel",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Angelfish.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Banana, Corn",
-    "seasons": ["summer", "winter"],
-    "catchRate": "18%",
-    "xp": 250,
-    "method": "rod",
-    "descEs": "Elegante habitante de arrecife; activo en las estaciones extremas.",
-    "descEn": "Graceful reef fish active in the extreme poles of summer and winter."
-  },
-  {
-    "id": "parrotfish",
-    "name": "Parrotfish",
-    "nameEs": "Pez Loro",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Parrotfish.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Orange, Blueberry",
-    "seasons": ["spring", "summer"],
-    "catchRate": "22%",
-    "xp": 260,
-    "method": "rod",
-    "descEs": "Pico córneo para romper corales; pesca fructífera en primavera y verano.",
-    "descEn": "Strong beak designed for coral grazing, active in spring and summer."
-  },
-  {
-    "id": "surgeonfish",
-    "name": "Surgeonfish",
-    "nameEs": "Pez Cirujano",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Surgeonfish.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Radish, Cabbage",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "20%",
-    "xp": 270,
-    "method": "rod",
-    "descEs": "Armado con una espina caudal afilada. Se captura en meses fríos.",
-    "descEn": "Equipped with a razor scalpel at its tail base. Cold season dweller."
-  },
-  {
-    "id": "zebra-turkeyfish",
-    "name": "Zebra Turkeyfish",
-    "nameEs": "Pez León Cebra",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Zebra Turkeyfish.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Eggplant, Wheat",
-    "seasons": ["spring", "winter"],
-    "catchRate": "15%",
-    "xp": 310,
-    "method": "rod",
-    "descEs": "Espinas vistosas pero venenosas. Muy codiciado por coleccionistas.",
-    "descEn": "Exotic striped lionfish variant with striking spines and high XP."
-  },
-  {
-    "id": "porgy",
-    "name": "Porgy",
-    "nameEs": "Besugo",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Porgy.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Sunflower, Parsnip",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "25%",
-    "xp": 220,
-    "method": "rod",
-    "descEs": "Captura constante y confiable con orugas en cualquier temporada.",
-    "descEn": "Reliable and steady catch using grub bait throughout the year."
-  },
-  {
-    "id": "ray",
-    "name": "Ray",
-    "nameEs": "Raya",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Ray.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Beetroot, Gold",
-    "seasons": ["spring", "autumn"],
-    "catchRate": "12%",
-    "xp": 350,
-    "method": "rod",
-    "descEs": "Se desliza suavemente sobre la arena; alto rendimiento en XP.",
-    "descEn": "Glides across seabed flats yielding substantial Bumpkin XP."
-  },
-  {
-    "id": "tilapia",
-    "name": "Tilapia",
-    "nameEs": "Tilapia",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Tilapia.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Wheat, Potato",
-    "seasons": ["spring", "summer"],
-    "catchRate": "28%",
-    "xp": 210,
-    "method": "rod",
-    "descEs": "Pez robusto y de rápido crecimiento en aguas templadas.",
-    "descEn": "Hardy warm water fish popular in rustic farm kitchen recipes."
-  },
-  {
-    "id": "trout",
-    "name": "Trout",
-    "nameEs": "Trucha",
-    "tier": "advanced",
-    "image": "/img/sunflowerland/fish/Trout.png",
-    "baits": [
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
-    ],
-    "chum": "Corn, Apple",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "24%",
-    "xp": 230,
-    "method": "rod",
-    "descEs": "Habitante veloz de aguas oxigenadas y frías de fin de año.",
-    "descEn": "Fast-swimming freshwater and estuarine native hooked in cool periods."
-  },
-  {
-    "id": "barred-knifejaw",
-    "name": "Barred Knifejaw",
-    "nameEs": "Pez Cuchillo Rayado",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Barred Knifejaw.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Gold, Banana",
-    "seasons": ["summer", "autumn"],
-    "catchRate": "10%",
-    "xp": 580,
-    "method": "rod",
-    "descEs": "Fuerte mandíbula que tritura conchas. Requiere cebo experto.",
-    "descEn": "Powerful jaw crushing shell organisms. High-tier expert catch."
-  },
-  {
-    "id": "blue-marlin",
-    "name": "Blue Marlin",
-    "nameEs": "Marlín Azul",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Blue Marlin.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Artichoke, Iron",
-    "seasons": ["spring", "summer"],
-    "catchRate": "12%",
-    "xp": 520,
-    "method": "rod",
-    "descEs": "Gigante de superficie. Famoso por saltos acrobáticos en aguas cálidas.",
-    "descEn": "Apex surface runner renowned for acrobatic leaps in offshore waters."
-  },
-  {
-    "id": "football-fish",
-    "name": "Football fish",
-    "nameEs": "Pez Balón de Profundidad",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Football fish.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Radish, Obsidian",
-    "seasons": ["winter"],
-    "catchRate": "8%",
-    "xp": 600,
-    "method": "rod",
-    "descEs": "Raro pez abisal con señuelo lumínico. Exclusivo de noches invernales.",
-    "descEn": "Bioluminescent deep sea angler variant active in freezing winter depth."
-  },
-  {
-    "id": "hammerhead-shark",
-    "name": "Hammerhead shark",
-    "nameEs": "Tiburón Martillo",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Hammerhead shark.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Iron, Gold",
-    "seasons": ["summer", "autumn"],
-    "catchRate": "9%",
-    "xp": 550,
-    "method": "rod",
-    "descEs": "Cabeza cefalofoil con sensores electromagnéticos de amplio rango.",
-    "descEn": "Apex sensory predator patrolling outer reefs in warm seasons."
-  },
-  {
-    "id": "saw-shark",
-    "name": "Saw Shark",
-    "nameEs": "Tiburón Sierra",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Saw Shark.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Stone, Gold",
-    "seasons": ["spring", "winter"],
-    "catchRate": "8%",
-    "xp": 620,
-    "method": "rod",
-    "descEs": "Hocico aserrado temible. Capturado en condiciones climáticas duras.",
-    "descEn": "Formidable serrated snout cutting deep waters in harsh weather."
-  },
-  {
-    "id": "white-shark",
-    "name": "White Shark",
-    "nameEs": "Tiburón Blanco",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/White Shark.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Fish Flake, Fish Stick",
-    "seasons": ["summer"],
-    "catchRate": "5%",
-    "xp": 750,
-    "method": "rod",
-    "descEs": "El mayor depredador del océano. Máximo trofeo de pesca y XP récord.",
-    "descEn": "The ultimate oceanic predator. Highest base XP among expert fish."
-  },
-  {
-    "id": "whale-shark",
-    "name": "Whale Shark",
-    "nameEs": "Tiburón Ballena",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Whale Shark.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Seaweed, Wood",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "6%",
-    "xp": 700,
-    "method": "rod",
-    "descEs": "Colosal y manso. Se alimenta de plancton en aguas abiertas todo el año.",
-    "descEn": "Gentle giant of immense size filtering plankton year-round."
-  },
-  {
-    "id": "coelacanth",
-    "name": "Coelacanth",
-    "nameEs": "Celacanto",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Coelacanth.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Stone, Obsidian",
-    "seasons": ["spring", "winter"],
-    "catchRate": "7%",
-    "xp": 680,
-    "method": "rod",
-    "descEs": "Fósil viviente considerado extinto. Joya de los pescadores veteranos.",
-    "descEn": "Living prehistoric fossil relic surfaced from ancient subterranean trenches."
-  },
-  {
-    "id": "mahi-mahi",
-    "name": "Mahi Mahi",
-    "nameEs": "Dorado",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Mahi Mahi.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Corn, Orange",
-    "seasons": ["spring", "summer"],
-    "catchRate": "14%",
-    "xp": 480,
-    "method": "rod",
-    "descEs": "Destello dorado y verdoso en el oleaje soleado primaveral.",
-    "descEn": "Dazzling iridescent gamefish striking baits in sunny surface swells."
-  },
-  {
-    "id": "oarfish",
-    "name": "Oarfish",
-    "nameEs": "Pez Remo",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Oarfish.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Eggplant, Gold",
-    "seasons": ["winter"],
-    "catchRate": "6%",
-    "xp": 650,
-    "method": "rod",
-    "descEs": "Pez mítico alargado que emerge de fosas marinas en pleno invierno.",
-    "descEn": "Mythical serpentine leviathan rising from abyssal trenches in winter."
-  },
-  {
-    "id": "napoleanfish",
-    "name": "Napoleanfish",
-    "nameEs": "Pez Napoleón",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Napoleanfish.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Banana, Apple",
-    "seasons": ["summer", "autumn"],
-    "catchRate": "11%",
-    "xp": 540,
-    "method": "rod",
-    "descEs": "Famoso por su giba frontal y llamativos patrones de arrecife.",
-    "descEn": "Humphead coral master recognized by its majestic forehead crest."
-  },
-  {
-    "id": "cobia",
-    "name": "Cobia",
-    "nameEs": "Cobia",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Cobia.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Potato, Parsnip",
-    "seasons": ["spring", "autumn"],
-    "catchRate": "15%",
-    "xp": 460,
-    "method": "rod",
-    "descEs": "Silueta aerodinámica similar a un escualo; patrullero solitario.",
-    "descEn": "Shark-like silhouette moving solitarily through continental shelves."
-  },
-  {
-    "id": "olive-flounder",
-    "name": "Olive Flounder",
-    "nameEs": "Lenguado Oliváceo",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Olive Flounder.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Radish, Beetroot",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "13%",
-    "xp": 490,
-    "method": "rod",
-    "descEs": "Camaleón de arena. Se pesca en fondos marinos con aguas heladas.",
-    "descEn": "Sand camouflage master waiting motionlessly along chilly shorebeds."
-  },
-  {
-    "id": "rock-blackfish",
-    "name": "Rock Blackfish",
-    "nameEs": "Pez Roca Negro",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Rock Blackfish.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Iron, Stone",
-    "seasons": ["winter", "spring"],
-    "catchRate": "10%",
-    "xp": 510,
-    "method": "rod",
-    "descEs": "Habitante de rompientes rocosas violentas. Clave para ciertas maravillas.",
-    "descEn": "Reef cliff inhabitant enduring rough swells. Key target for marvel maps."
-  },
-  {
-    "id": "walleye",
-    "name": "Walleye",
-    "nameEs": "Lucioperca",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Walleye.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Soybean, Corn",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "12%",
-    "xp": 470,
-    "method": "rod",
-    "descEs": "Ojos reflectantes para cazar en aguas turbias y nocturnas.",
-    "descEn": "Glossy reflective eyes suited for murky twilight and dark cold currents."
-  },
-  {
-    "id": "weakfish",
-    "name": "Weakfish",
-    "nameEs": "Corvina Débil",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Weakfish.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Wheat, Cabbage",
-    "seasons": ["spring", "summer"],
-    "catchRate": "14%",
-    "xp": 450,
-    "method": "rod",
-    "descEs": "Boca delicada pero cuerpo resistente en la costa estival.",
-    "descEn": "Fragile mouth structure requiring gentle reeling in summer tides."
-  },
-  {
-    "id": "sunfish",
-    "name": "Sunfish",
-    "nameEs": "Pez Luna",
-    "tier": "expert",
-    "image": "/img/sunflowerland/fish/Sunfish.png",
-    "baits": [
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
-    ],
-    "chum": "Seaweed, Sunflower",
-    "seasons": ["summer"],
-    "catchRate": "8%",
-    "xp": 630,
-    "method": "rod",
-    "descEs": "Criatura gigante y circular que toma el sol en la superficie veraniega.",
-    "descEn": "Bizarre disk-shaped giant sunbathing at the ocean surface on summer days."
-  },
-  {
-    "id": "twilight-anglerfish",
-    "name": "Twilight Anglerfish",
-    "nameEs": "Pez Rape Crepuscular",
-    "tier": "marvel",
-    "image": "/img/sunflowerland/fish/specials/Twilight Anglerfish.png",
-    "baits": [
-      { "name": "Red Wiggler + Sunfish", "type": "combo", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
-    ],
-    "chum": "Map Pieces (9x)",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "5% (10% Luna Llena)",
-    "xp": 1500,
-    "method": "rod",
-    "specialBoost": "Coleccionable místico de exhibición",
-    "descEs": "Maravilla Marina permanente. Su señuelo espectral ilumina las profundidades más oscuras.",
-    "descEn": "Permanent Marine Marvel. Spectral lure pierces through infinite abyssal gloom."
-  },
-  {
-    "id": "gilded-swordfish",
-    "name": "Gilded Swordfish",
-    "nameEs": "Pez Espada Dorado",
-    "tier": "marvel",
-    "image": "/img/sunflowerland/fish/specials/Gilded Swordfish.png",
-    "baits": [
-      { "name": "Red Wiggler + White Shark", "type": "combo", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
-    ],
-    "chum": "Map Pieces (9x)",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "5% (10% Luna Llena)",
-    "xp": 1800,
-    "method": "rod",
-    "specialBoost": "+0.1 Gold extra",
-    "descEs": "Maravilla Marina legendaria. Forjado en oro puro; otorga un boost permanente de +0.1 de Oro.",
-    "descEn": "Legendary Marine Marvel. Gilded in pure nautical myth; grants +0.1 passive Gold."
-  },
-  {
-    "id": "phantom-barracuda",
-    "name": "Phantom Barracuda",
-    "nameEs": "Barracuda Fantasma",
-    "tier": "marvel",
-    "image": "/img/sunflowerland/fish/Phantom Barracuda.png",
-    "baits": [
-      { "name": "Grub / Red Wiggler + Tuna", "type": "combo", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
-    ],
-    "chum": "Map Pieces (9x)",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "5% (10% Luna Llena)",
-    "xp": 1600,
-    "method": "rod",
-    "specialBoost": "Trofeo de velocidad espectral",
-    "descEs": "Maravilla Marina translúcida. Se mueve como un espectro entre corrientes en Luna Llena.",
-    "descEn": "Translucent Marine Marvel striking like a ghost through full-moon waves."
-  },
-  {
-    "id": "dollocaris",
-    "name": "Dollocaris",
-    "nameEs": "Dollocaris",
-    "tier": "marvel",
-    "image": "/img/sunflowerland/fish/specials/Dollocaris.png",
-    "baits": [
-      { "name": "Red Wiggler + Football fish", "type": "combo", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
-    ],
-    "chum": "Map Pieces (9x)",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "5% (10% Luna Llena)",
-    "xp": 1750,
-    "method": "rod",
-    "specialBoost": "Reliquia jurásica de gran valor",
-    "descEs": "Artrópodo prehistórico abisal de ojos gigantes rescatado de las profundidades marinas.",
-    "descEn": "Prehistoric jurassic arthropod with enormous eyes pulled from ocean depths."
-  },
-  {
-    "id": "longhorn-cowfish",
-    "name": "Longhorn Cowfish",
-    "nameEs": "Pez Cofre Cornudo",
-    "tier": "marvel",
-    "image": "/img/sunflowerland/fish/specials/Longhorn Cowfish.png",
-    "baits": [
-      { "name": "Red Wiggler + Mahi Mahi", "type": "combo", "image": "/img/sunflowerland/123/rod.webp" },
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
-    ],
-    "chum": "Map Pieces (9x)",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "5% (10% Luna Llena)",
-    "xp": 1650,
-    "method": "rod",
-    "specialBoost": "+0.2 Milk extra",
-    "descEs": "Curioso pez cofre con cornamenta. Otorga un bono pasivo de +0.2 de Leche en la granja.",
-    "descEn": "Bizarre horned boxfish marvel granting +0.2 passive Milk farm bonus."
-  },
-  {
-    "id": "garden-eel",
-    "name": "Garden Eel",
-    "nameEs": "Anguila de Jardín",
-    "tier": "mutant",
-    "image": "/img/sunflowerland/fish/specials/Garden Eel.png",
-    "baits": [
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
-      { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" }
-    ],
-    "chum": "Seaweed, Gold",
-    "seasons": ["spring", "summer"],
-    "catchRate": "3%",
-    "xp": 900,
-    "method": "rod",
-    "specialBoost": "Especie rara abisal",
-    "descEs": "Asoma tímidamente de la arena ondulando con la marea como hierba marina.",
-    "descEn": "Sways timidly from seabed sand burrows resembling garden sea sprouts."
-  },
-  {
-    "id": "nautilus",
-    "name": "Nautilus",
-    "nameEs": "Nautilo",
-    "tier": "mutant",
-    "image": "/img/sunflowerland/fish/specials/Nautilus.png",
-    "baits": [
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
-    ],
-    "chum": "Iron, Stone",
-    "seasons": ["autumn", "winter"],
-    "catchRate": "3%",
-    "xp": 1100,
-    "method": "rod",
-    "specialBoost": "Concha espiral milenaria",
-    "descEs": "Cefalópodo ancestral con cámaras de flotabilidad hidrostática perfecta.",
-    "descEn": "Ancient spiral-shelled cephalopod regulating hydrostatic buoyancy."
-  },
-  {
-    "id": "deep-sea-slug",
-    "name": "Deep Sea Slug",
-    "nameEs": "Babosa Abisal",
-    "tier": "mutant",
-    "image": "/img/sunflowerland/fish/specials/Deep Sea Slug.png",
-    "baits": [
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
-    ],
-    "chum": "Obsidian, Seaweed",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "2%",
-    "xp": 950,
-    "method": "rod",
-    "specialBoost": "Pigmentos bioluminiscentes",
-    "descEs": "Nudibranquio de aguas oscuras alimentado en ventilas hidrotermales.",
-    "descEn": "Deep sea nudibranch boasting neon hues around hydrothermal vents."
-  },
-  {
-    "id": "deep-sea-pig",
-    "name": "Deep Sea Pig",
-    "nameEs": "Cerdo Marino Abisal",
-    "tier": "mutant",
-    "image": "/img/sunflowerland/fish/specials/Deep Sea Pig.png",
-    "baits": [
-      { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
-      { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
-    ],
-    "chum": "Obsidian, Gold",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "2%",
-    "xp": 1200,
-    "method": "rod",
-    "specialBoost": "Criatura extraña del lecho abisal",
-    "descEs": "Peculiar holoturia translúcida con extremidades tubulares que caminan por el fondo.",
-    "descEn": "Unique translucent sea cucumber walking on ocean floor tube feet."
-  },
-  {
-    "id": "giant-isopod",
-    "name": "Giant Isopod",
-    "nameEs": "Isópodo Gigante",
-    "tier": "crab",
-    "image": "/img/sunflowerland/fish/specials/Giant Isopod.png",
-    "baits": [
-      { "name": "Crab Pot (Sin cebo)", "type": "trap", "image": "/img/sunflowerland/powerups/royal_crab_pot.webp" },
-      { "name": "Fish Stick", "type": "chum", "image": "/img/sunflowerland/fish/specials/fish_stick.webp" }
-    ],
-    "chum": "No Chum (Garantizado)",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "100% (Base)",
-    "xp": 250,
-    "method": "trap",
-    "descEs": "Crustáceo acorazado de profundidad. Se atrapa en Crab Pots sin necesidad de cebo.",
-    "descEn": "Armored deep-sea crustacean reliably caught in Crab Pots with no chum."
-  },
-  {
-    "id": "crystal-shrimp",
-    "name": "Crystal Shrimp",
-    "nameEs": "Camarón de Cristal",
-    "tier": "crab",
-    "image": "/img/sunflowerland/fish/specials/Crystal Shrimp.png",
-    "baits": [
-      { "name": "Crab Pot / Mariner", "type": "trap", "image": "/img/sunflowerland/powerups/royal_crab_pot.webp" },
-      { "name": "Fish Flake", "type": "chum", "image": "/img/sunflowerland/fish/specials/fish_flake.webp" }
-    ],
-    "chum": "Fish Flake",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "35%",
-    "xp": 400,
-    "method": "trap",
-    "descEs": "Camarón translúcido y cristalino. Atrae con escamas de pescado en trampas.",
-    "descEn": "Translucent glassy shrimp lured by fish flakes in tidal traps."
-  },
-  {
-    "id": "fat-crab",
-    "name": "Fat Crab",
-    "nameEs": "Cangrejo Gordo",
-    "tier": "crab",
-    "image": "/img/sunflowerland/cosmetics/collectibles/fat_crab.webp",
-    "baits": [
-      { "name": "Crab Pot / Mariner", "type": "trap", "image": "/img/sunflowerland/powerups/royal_crab_pot.webp" },
-      { "name": "Crab Stick", "type": "chum", "image": "/img/sunflowerland/fish/specials/crab_stick.webp" }
-    ],
-    "chum": "Crab Stick, Fish Oil",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "20%",
-    "xp": 500,
-    "method": "trap",
-    "descEs": "Cangrejo carnoso y pesado. Muy buscado para recetas de alta cocina y pedidos.",
-    "descEn": "Heavy succulent crab prized for gourmet kitchen cooking and deliveries."
-  },
-  {
-    "id": "crab-claw",
-    "name": "Crab Claw",
-    "nameEs": "Pinza de Cangrejo",
-    "tier": "crab",
-    "image": "/img/sunflowerland/cosmetics/wearables/Crab Claw.webp",
-    "baits": [
-      { "name": "Crab Pot Especial", "type": "trap", "image": "/img/sunflowerland/powerups/royal_crab_pot.webp" },
-      { "name": "Fish Oil", "type": "chum", "image": "/img/sunflowerland/fish/specials/fish_oil.webp" }
-    ],
-    "chum": "Fish Oil",
-    "seasons": ["spring", "summer", "autumn", "winter"],
-    "catchRate": "10%",
-    "xp": 300,
-    "method": "trap",
-    "specialBoost": "Material para crafteo de wearables",
-    "descEs": "Pinza resistente recuperada de trampas oceánicas. Útil para equipamiento.",
-    "descEn": "Sturdy claw salvaged from marine traps, essential for crafting wearables."
-  }
+    {
+      "id": "anchovy",
+      "name": "Anchovy",
+      "nameEs": "Anchoa",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Anchovy.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Carrot x10 o Egg x5 (Garantizado)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "15% - 25% (Base)",
+      "xp": 80,
+      "method": "rod",
+      "descEs": "Pez costero común de cardumen. Con 10 Zanahorias o 5 Huevos de chum se garantiza la captura.",
+      "descEn": "Common coastal schooling fish. Guaranteed catch with 10 Carrots or 5 Eggs as chum."
+    },
+    {
+      "id": "horse-mackerel",
+      "name": "Horse Mackerel",
+      "nameEs": "Jurel",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Horse Mackerel.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Potato, Carrot",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "20% - 30% (Base)",
+      "xp": 90,
+      "method": "rod",
+      "descEs": "Pez rápido de nado ágil activo todo el año. Otorga 36% base de soltar fragmento de Starlight Tuna.",
+      "descEn": "Fast year-round fish. Grants 36% base chance to drop a Starlight Tuna map piece."
+    },
+    {
+      "id": "sea-bass",
+      "name": "Sea Bass",
+      "nameEs": "Lubina",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Sea Bass.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Cabbage, Sunflower",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "18% - 25% (Base)",
+      "xp": 110,
+      "method": "rod",
+      "descEs": "Pez robusto de aguas templadas. Fuente de escamas de pescado en primavera y 3% de Crystal Shrimp.",
+      "descEn": "Hardy temperate fish. Spring source of Fish Flakes and 3% Crystal Shrimp map drop."
+    },
+    {
+      "id": "butterflyfish",
+      "name": "Butterflyfish",
+      "nameEs": "Pez Mariposa",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Butterflyfish.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Parsnip, Beetroot",
+      "seasons": ["spring", "summer", "autumn"],
+      "catchRate": "12% - 18% (Base)",
+      "xp": 130,
+      "method": "rod",
+      "descEs": "Pez tropical de colores vivos. Ingrediente clave para Fish Flakes en verano.",
+      "descEn": "Vibrant tropical reef beauty. Key ingredient for summer Fish Flake crafting."
+    },
+    {
+      "id": "clownfish",
+      "name": "Clownfish",
+      "nameEs": "Pez Payaso",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Clownfish.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Orange, Pumpkin",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "10% - 16% (Base)",
+      "xp": 140,
+      "method": "rod",
+      "descEs": "Habitante de anémonas. Otorga un 2.5% base de soltar mapa de Twilight Anglerfish.",
+      "descEn": "Anemone dweller granting a 2.5% base chance to drop a Twilight Anglerfish map piece."
+    },
+    {
+      "id": "sea-horse",
+      "name": "Sea Horse",
+      "nameEs": "Caballito de Mar",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Sea Horse.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Kale, Seaweed",
+      "seasons": ["spring", "summer", "autumn"],
+      "catchRate": "8% - 14% (Base)",
+      "xp": 160,
+      "method": "rod",
+      "descEs": "Delicada criatura que nada erguida en praderas de algas durante verano.",
+      "descEn": "Delicate creature swimming upright among summer kelp and seagrass beds."
+    },
+    {
+      "id": "blowfish",
+      "name": "Blowfish",
+      "nameEs": "Pez Globo",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Blowfish.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Eggplant, Blueberry, Onion",
+      "seasons": ["winter"],
+      "catchRate": "15% - 22% (Invierno)",
+      "xp": 170,
+      "method": "rod",
+      "descEs": "Especie invernal exclusiva. Requerido para recetas de Fish Flake en invierno.",
+      "descEn": "Winter exclusive species required for cold season Fish Flake recipes."
+    },
+    {
+      "id": "halibut",
+      "name": "Halibut",
+      "nameEs": "Fletán",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Halibut.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Radish, Corn",
+      "seasons": ["autumn", "winter"],
+      "catchRate": "10% - 15% (Base)",
+      "xp": 150,
+      "method": "rod",
+      "descEs": "Pez plano de fondo. En otoño e invierno otorga 2.5% de mapa de Starlight Tuna.",
+      "descEn": "Flat bottom dweller granting 2.5% Starlight Tuna map pieces in autumn and winter."
+    },
+    {
+      "id": "squid",
+      "name": "Squid",
+      "nameEs": "Calamar",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Squid.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Soybean, Iron",
+      "seasons": ["autumn", "winter"],
+      "catchRate": "10% - 15% (Base)",
+      "xp": 160,
+      "method": "rod",
+      "descEs": "Cefalópodo ágil de aguas frías. Otorga 5% base de soltar mapa de Phantom Barracuda.",
+      "descEn": "Agile cold water cephalopod granting 5% base chance of Phantom Barracuda map drops."
+    },
+    {
+      "id": "muskellunge",
+      "name": "Muskellunge",
+      "nameEs": "Lucio Listado",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Muskellunge.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Parsnip, Corn",
+      "seasons": ["autumn"],
+      "catchRate": "10% - 18% (Otoño)",
+      "xp": 140,
+      "method": "rod",
+      "descEs": "Depredador alargado y exclusivo de otoño. Requerido para Fish Flakes otoñales.",
+      "descEn": "Elongated autumn-exclusive predator needed for autumn Fish Flake production."
+    },
+    {
+      "id": "porgy",
+      "name": "Porgy",
+      "nameEs": "Besugo",
+      "tier": "basic",
+      "image": "/img/sunflowerland/fish/Porgy.png",
+      "baits": [
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Sunflower, Parsnip",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "15% - 20% (Base)",
+      "xp": 120,
+      "method": "rod",
+      "descEs": "Pez plateado clásico presente todo el año. Se usa en Fish Flakes de primavera.",
+      "descEn": "Silver coastal fish available year-round. Used for spring Fish Flakes."
+    },
+
+    {
+      "id": "red-snapper",
+      "name": "Red Snapper",
+      "nameEs": "Pargo Rojo",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Red Snapper.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" },
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Apple x3 o Honey x1 (Garantizado con Red Wiggler)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "20% - 28% (Base)",
+      "xp": 240,
+      "method": "rod",
+      "descEs": "Pez rojo gourmet de alto valor. Ingrediente universal obligatorio de Fish Stick.",
+      "descEn": "Prized culinary fish. Base ingredient required for all seasonal Fish Sticks."
+    },
+    {
+      "id": "tuna",
+      "name": "Tuna",
+      "nameEs": "Atún",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Tuna.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Orange x3 o Wild Mushroom x1 (Garantizado)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "16% - 22% (Base)",
+      "xp": 280,
+      "method": "rod",
+      "descEs": "Poderoso velocista oceánico. Base obligatoria (x8) para craftear Fish Oil en cualquier estación.",
+      "descEn": "Powerful open water runner. Essential base ingredient (x8) for all seasonal Fish Oil recipes."
+    },
+    {
+      "id": "angelfish",
+      "name": "Angelfish",
+      "nameEs": "Pez Ángel",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Angelfish.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Banana, Corn",
+      "seasons": ["summer", "winter"],
+      "catchRate": "14% - 20% (Base)",
+      "xp": 250,
+      "method": "rod",
+      "descEs": "Elegante habitante de arrecife activo en verano e invierno. Requerido para Fish Sticks en invierno.",
+      "descEn": "Graceful reef swimmer active in summer and winter. Required for winter Fish Sticks."
+    },
+    {
+      "id": "moray-eel",
+      "name": "Moray Eel",
+      "nameEs": "Morena",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Moray Eel.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Fish Flake, Soy",
+      "seasons": ["autumn"],
+      "catchRate": "12% - 18% (Otoño)",
+      "xp": 270,
+      "method": "rod",
+      "descEs": "Anguiliforme voraz de grietas rocosas. Requerida para fabricar Fish Sticks de otoño.",
+      "descEn": "Ambush predator lurking in rocky crevices. Autumn ingredient for Fish Sticks."
+    },
+    {
+      "id": "parrotfish",
+      "name": "Parrotfish",
+      "nameEs": "Pez Loro",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Parrotfish.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Orange, Blueberry",
+      "seasons": ["spring", "summer"],
+      "catchRate": "15% - 22% (Base)",
+      "xp": 260,
+      "method": "rod",
+      "descEs": "Pico triturador de corales. Otorga un impresionante 21% base de fragmento de Twilight Anglerfish.",
+      "descEn": "Coral grazer granting an outstanding 21% base chance of Twilight Anglerfish map pieces."
+    },
+    {
+      "id": "surgeonfish",
+      "name": "Surgeonfish",
+      "nameEs": "Pez Cirujano",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Surgeonfish.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Radish, Cabbage",
+      "seasons": ["summer", "autumn", "winter"],
+      "catchRate": "14% - 20% (Base)",
+      "xp": 270,
+      "method": "rod",
+      "descEs": "Armado con una espina caudal afilada. Requerido para Fish Sticks de verano.",
+      "descEn": "Armed with a razor spine. Required for summer seasonal Fish Sticks."
+    },
+    {
+      "id": "zebra-turkeyfish",
+      "name": "Zebra Turkeyfish",
+      "nameEs": "Pez León Cebra",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Zebra Turkeyfish.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Eggplant, Wheat",
+      "seasons": ["spring", "winter"],
+      "catchRate": "10% - 16% (Base)",
+      "xp": 310,
+      "method": "rod",
+      "descEs": "Espinas majestuosas pero venenosas. Requerido para Fish Sticks en primavera.",
+      "descEn": "Majestic venomous spines. Required for spring Fish Stick processing."
+    },
+    {
+      "id": "ray",
+      "name": "Ray",
+      "nameEs": "Raya",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Ray.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Beetroot, Gold",
+      "seasons": ["spring", "autumn"],
+      "catchRate": "8% - 14% (Base)",
+      "xp": 350,
+      "method": "rod",
+      "descEs": "Criatura alada de fondo arenoso. Otorga una de las mayores recompensas de XP de rango avanzado.",
+      "descEn": "Flat sandy seabed glider offering top-tier XP yield among advanced fish."
+    },
+    {
+      "id": "tilapia",
+      "name": "Tilapia",
+      "nameEs": "Tilapia",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Tilapia.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Wheat, Potato",
+      "seasons": ["spring", "summer"],
+      "catchRate": "18% - 26% (Base)",
+      "xp": 210,
+      "method": "rod",
+      "descEs": "Pez adaptable de agua cálida. Requerido para Fish Sticks de verano.",
+      "descEn": "Adaptable warm water species needed for summer Fish Sticks."
+    },
+    {
+      "id": "trout",
+      "name": "Trout",
+      "nameEs": "Trucha",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Trout.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Corn, Apple",
+      "seasons": ["autumn", "winter"],
+      "catchRate": "16% - 24% (Base)",
+      "xp": 230,
+      "method": "rod",
+      "descEs": "Habitante de corrientes rápidas. Otorga 2% base de soltar fragmento de Radiant Ray.",
+      "descEn": "Fast stream swimmer offering 2% base chance of Radiant Ray map piece drops."
+    },
+    {
+      "id": "olive-flounder",
+      "name": "Olive Flounder",
+      "nameEs": "Lenguado Oliváceo",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Olive Flounder.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Radish, Beetroot",
+      "seasons": ["spring", "autumn", "winter"],
+      "catchRate": "12% - 18% (Base)",
+      "xp": 260,
+      "method": "rod",
+      "descEs": "Camuflado en la arena. Requerido para los Fish Sticks de primavera.",
+      "descEn": "Sand camouflage master required for spring seasonal Fish Sticks."
+    },
+    {
+      "id": "walleye",
+      "name": "Walleye",
+      "nameEs": "Lucioperca",
+      "tier": "advanced",
+      "image": "/img/sunflowerland/fish/Walleye.png",
+      "baits": [
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Umbrella Bait", "type": "aged", "image": "/img/sunflowerland/Umbrella Bait.png" }
+      ],
+      "chum": "Soybean, Corn",
+      "seasons": ["autumn", "winter"],
+      "catchRate": "12% - 18% (Base)",
+      "xp": 270,
+      "method": "rod",
+      "descEs": "Ojos reflectantes para aguas oscuras. Se utiliza en Fish Sticks de invierno.",
+      "descEn": "Reflective nocturnal eyes. Ingredient for winter seasonal Fish Sticks."
+    },
+
+    {
+      "id": "barred-knifejaw",
+      "name": "Barred Knifejaw",
+      "nameEs": "Pez Cuchillo Rayado",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Barred Knifejaw.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Gold, Banana",
+      "seasons": ["summer", "autumn"],
+      "catchRate": "8% - 12% (Base)",
+      "xp": 580,
+      "method": "rod",
+      "descEs": "Mandíbula trituradora de conchas. Otorga 1% de fragmento de Deep Sea Slug.",
+      "descEn": "Crushing beak jaw granting 1% Deep Sea Slug map piece drops."
+    },
+    {
+      "id": "blue-marlin",
+      "name": "Blue Marlin",
+      "nameEs": "Marlín Azul",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Blue Marlin.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Artichoke, Iron",
+      "seasons": ["spring", "summer", "winter"],
+      "catchRate": "8% - 14% (Base)",
+      "xp": 520,
+      "method": "rod",
+      "descEs": "Acróbata veloz de alta mar. Requerido para Fish Oil en invierno.",
+      "descEn": "High seas acrobat required for winter seasonal Fish Oil processing."
+    },
+    {
+      "id": "football-fish",
+      "name": "Football fish",
+      "nameEs": "Pez Balón de Profundidad",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Football fish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Radish, Obsidian",
+      "seasons": ["winter"],
+      "catchRate": "6% - 10% (Invierno)",
+      "xp": 600,
+      "method": "rod",
+      "descEs": "Pez abisal globular con señuelo. Requerido para Fish Oil en invierno.",
+      "descEn": "Abyssal angler with glowing bulb. Required for winter Fish Oil crafting."
+    },
+    {
+      "id": "hammerhead-shark",
+      "name": "Hammerhead shark",
+      "nameEs": "Tiburón Martillo",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Hammerhead shark.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Iron, Gold",
+      "seasons": ["summer", "autumn"],
+      "catchRate": "6% - 10% (Base)",
+      "xp": 550,
+      "method": "rod",
+      "descEs": "Cefalofoil electromagnético. Otorga 5% base de fragmento de Radiant Ray.",
+      "descEn": "Sensory apex predator granting 5% base drop chance for Radiant Ray map pieces."
+    },
+    {
+      "id": "saw-shark",
+      "name": "Saw Shark",
+      "nameEs": "Tiburón Sierra",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Saw Shark.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Speed Chicken x3 (Garantizado)",
+      "seasons": ["spring", "winter"],
+      "catchRate": "5% - 9% (Base)",
+      "xp": 620,
+      "method": "rod",
+      "descEs": "Hocico aserrado temible. Con 3 Speed Chicken de chum se garantiza la captura.",
+      "descEn": "Serrated predatory snout. 100% guaranteed catch using 3 Speed Chickens as chum."
+    },
+    {
+      "id": "white-shark",
+      "name": "White Shark",
+      "nameEs": "Tiburón Blanco",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/White Shark.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Rich Chicken x3 (Garantizado)",
+      "seasons": ["summer"],
+      "catchRate": "3% - 6% (Verano)",
+      "xp": 750,
+      "method": "rod",
+      "descEs": "Rey del océano. Otorga un impresionante 30% base de fragmento de Gilded Swordfish.",
+      "descEn": "Apex oceanic titan granting a massive 30% base chance for Gilded Swordfish map pieces."
+    },
+    {
+      "id": "whale-shark",
+      "name": "Whale Shark",
+      "nameEs": "Tiburón Ballena",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Whale Shark.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Fat Chicken x3 (Garantizado)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "4% - 7% (Base)",
+      "xp": 700,
+      "method": "rod",
+      "descEs": "Gigante gentil filtrador. Con 3 Fat Chicken como chum se garantiza su captura.",
+      "descEn": "Gentle plankton filterer. Guaranteed catch when chummed with 3 Fat Chickens."
+    },
+    {
+      "id": "coelacanth",
+      "name": "Coelacanth",
+      "nameEs": "Celacanto",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Coelacanth.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Stone, Obsidian",
+      "seasons": ["spring", "winter"],
+      "catchRate": "5% - 8% (Base)",
+      "xp": 680,
+      "method": "rod",
+      "descEs": "Fósil viviente de las profundidades. Otorga 0.5% de fragmento de Deep Sea Pig.",
+      "descEn": "Living prehistoric fossil offering 0.5% Deep Sea Pig map piece drops."
+    },
+    {
+      "id": "mahi-mahi",
+      "name": "Mahi Mahi",
+      "nameEs": "Dorado",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Mahi Mahi.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Corn, Orange",
+      "seasons": ["spring", "summer", "autumn"],
+      "catchRate": "10% - 15% (Base)",
+      "xp": 480,
+      "method": "rod",
+      "descEs": "Destello dorado y turquesa. Requerido en grandes cantidades (x4) para Fish Oil de otoño.",
+      "descEn": "Iridescent gamefish needed in large volume (x4) for autumn Fish Oil crafting."
+    },
+    {
+      "id": "oarfish",
+      "name": "Oarfish",
+      "nameEs": "Pez Remo",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Oarfish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Eggplant, Gold",
+      "seasons": ["spring", "winter"],
+      "catchRate": "4% - 8% (Base)",
+      "xp": 650,
+      "method": "rod",
+      "descEs": "Criatura mítica de gran longitud. Requerido para Fish Oil de primavera.",
+      "descEn": "Mythical elongated deep sea dweller required for spring Fish Oil recipes."
+    },
+    {
+      "id": "napoleanfish",
+      "name": "Napoleanfish",
+      "nameEs": "Pez Napoleón",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Napoleanfish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Banana, Apple",
+      "seasons": ["summer", "autumn"],
+      "catchRate": "8% - 12% (Base)",
+      "xp": 540,
+      "method": "rod",
+      "descEs": "Giba frontal característica. Se utiliza para Fish Sticks de otoño.",
+      "descEn": "Humphead reef giant used for autumn seasonal Fish Sticks."
+    },
+    {
+      "id": "cobia",
+      "name": "Cobia",
+      "nameEs": "Cobia",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Cobia.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Potato, Parsnip",
+      "seasons": ["spring", "summer", "autumn"],
+      "catchRate": "10% - 16% (Base)",
+      "xp": 460,
+      "method": "rod",
+      "descEs": "Pez veloz con aspecto similar al tiburón. Se usa en Fish Oil de verano.",
+      "descEn": "Shark-like coastal swimmer used in summer seasonal Fish Oil recipes."
+    },
+    {
+      "id": "rock-blackfish",
+      "name": "Rock Blackfish",
+      "nameEs": "Pez Roca Negro",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Rock Blackfish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Iron, Stone",
+      "seasons": ["winter", "spring"],
+      "catchRate": "8% - 12% (Base)",
+      "xp": 510,
+      "method": "rod",
+      "descEs": "Resistente a rompientes marinas. Otorga 5% base de fragmento de Gilded Swordfish.",
+      "descEn": "Rough swell dweller granting 5% base chance of Gilded Swordfish map drops."
+    },
+    {
+      "id": "weakfish",
+      "name": "Weakfish",
+      "nameEs": "Corvina Débil",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Weakfish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Wheat, Cabbage",
+      "seasons": ["spring", "summer"],
+      "catchRate": "10% - 16% (Base)",
+      "xp": 450,
+      "method": "rod",
+      "descEs": "Boca delicada en aguas costeras. Ingrediente de Fish Oil en primavera.",
+      "descEn": "Tender-mouthed coastal gamefish required for spring Fish Oil crafting."
+    },
+    {
+      "id": "sunfish",
+      "name": "Sunfish",
+      "nameEs": "Pez Luna",
+      "tier": "expert",
+      "image": "/img/sunflowerland/fish/Sunfish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Crimson Baitfish", "type": "aged", "image": "/img/sunflowerland/Crimson Baitfish.png" }
+      ],
+      "chum": "Seaweed, Sunflower",
+      "seasons": ["summer"],
+      "catchRate": "6% - 10% (Verano)",
+      "xp": 630,
+      "method": "rod",
+      "descEs": "Disco colosal de superficie estival. Otorga 0.5% de fragmento de Deep Sea Pig.",
+      "descEn": "Colossal summer disk basking at surface. Grants 0.5% Deep Sea Pig map drops."
+    },
+
+    {
+      "id": "starlight-tuna",
+      "name": "Starlight Tuna",
+      "nameEs": "Atún Estelar",
+      "tier": "marvel",
+      "image": "/img/sunflowerland/fish/specials/Starlight Tuna.png",
+      "baits": [
+        { "name": "Horse Mackerel (36% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Horse Mackerel.png" },
+        { "name": "Halibut (2.5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Halibut.png" }
+      ],
+      "chum": "9x Map Pieces (Hasta 144% en Luna Llena + Helm)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "36% Mackerel / 2.5% Halibut",
+      "xp": 2000,
+      "method": "rod",
+      "specialBoost": "Maravilla Marina Permanente (1 de 5)",
+      "descEs": "1 de las 5 Maravillas Marinas oficiales. Se arma con 9 fragmentos obtenidos pescando Horse Mackerel (36%) o Halibut.",
+      "descEn": "1 of the 5 official Marine Marvels. Assembled with 9 map pieces from Horse Mackerel (36%) or Halibut."
+    },
+    {
+      "id": "twilight-anglerfish",
+      "name": "Twilight Anglerfish",
+      "nameEs": "Pez Rape Crepuscular",
+      "tier": "marvel",
+      "image": "/img/sunflowerland/fish/specials/Twilight Anglerfish.png",
+      "baits": [
+        { "name": "Parrotfish (21% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Parrotfish.png" },
+        { "name": "Clownfish (2.5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Clownfish.png" }
+      ],
+      "chum": "9x Map Pieces (Hasta 84% en Luna Llena + Helm)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "21% Parrotfish / 2.5% Clownfish",
+      "xp": 1800,
+      "method": "rod",
+      "specialBoost": "Maravilla Marina Permanente (2 de 5)",
+      "descEs": "1 de las 5 Maravillas Marinas oficiales. Sus fragmentos se obtienen con Parrotfish (21%) o Clownfish (2.5%).",
+      "descEn": "1 of the 5 official Marine Marvels. Map pieces collected via Parrotfish (21%) or Clownfish (2.5%)."
+    },
+    {
+      "id": "gilded-swordfish",
+      "name": "Gilded Swordfish",
+      "nameEs": "Pez Espada Dorado",
+      "tier": "marvel",
+      "image": "/img/sunflowerland/fish/specials/Gilded Swordfish.png",
+      "baits": [
+        { "name": "White Shark (30% drop)", "type": "combo", "image": "/img/sunflowerland/fish/White Shark.png" },
+        { "name": "Rock Blackfish (5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Rock Blackfish.png" }
+      ],
+      "chum": "9x Map Pieces (+0.1 Gold)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "30% White Shark / 5% Blackfish",
+      "xp": 2200,
+      "method": "rod",
+      "specialBoost": "+0.1 Gold extra pasivo",
+      "descEs": "1 de las 5 Maravillas Marinas oficiales. Otorga +0.1 de Oro pasivo. Fragmentos con White Shark (30%) o Rock Blackfish (5%).",
+      "descEn": "1 of the 5 official Marine Marvels granting +0.1 passive Gold. Maps from White Shark (30%) or Rock Blackfish (5%)."
+    },
+    {
+      "id": "radiant-ray",
+      "name": "Radiant Ray",
+      "nameEs": "Raya Radiante",
+      "tier": "marvel",
+      "image": "/img/sunflowerland/fish/specials/Radiant Ray.png",
+      "baits": [
+        { "name": "Hammerhead shark (5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Hammerhead shark.png" },
+        { "name": "Trout (2% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Trout.png" }
+      ],
+      "chum": "9x Map Pieces (Hasta 20% en Luna Llena + Helm)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "5% Hammerhead / 2% Trout",
+      "xp": 1900,
+      "method": "rod",
+      "specialBoost": "Maravilla Marina Permanente (4 de 5)",
+      "descEs": "1 de las 5 Maravillas Marinas oficiales. Brillo submarino místico con fragmentos de Hammerhead shark y Trout.",
+      "descEn": "1 of the 5 official Marine Marvels. Luminous undersea treasure found via Hammerhead and Trout."
+    },
+    {
+      "id": "phantom-barracuda",
+      "name": "Phantom Barracuda",
+      "nameEs": "Barracuda Fantasma",
+      "tier": "marvel",
+      "image": "/img/sunflowerland/fish/specials/Phantom Barracuda.png",
+      "baits": [
+        { "name": "Squid (5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Squid.png" },
+        { "name": "Mahi Mahi (0.18% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Mahi Mahi.png" }
+      ],
+      "chum": "9x Map Pieces (Hasta 20% en Luna Llena + Helm)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "5% Squid / 0.18% Mahi Mahi",
+      "xp": 1950,
+      "method": "rod",
+      "specialBoost": "Maravilla Marina Permanente (5 de 5)",
+      "descEs": "1 de las 5 Maravillas Marinas oficiales. Se mueve como un espectro. Fragmentos obtenidos pescando Calamar y Mahi Mahi.",
+      "descEn": "1 of the 5 official Marine Marvels striking like a ghost. Map pieces from Squid and Mahi Mahi."
+    },
+
+    {
+      "id": "dollocaris",
+      "name": "Dollocaris",
+      "nameEs": "Dollocaris",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Dollocaris.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
+      ],
+      "chum": "Football fish, Obsidian",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~1% - 3%",
+      "xp": 1750,
+      "method": "rod",
+      "specialBoost": "Mutante fósil jurásico",
+      "descEs": "Mutante crustáceo jurásico de enormes ojos abisales recuperado de fosas submarinas.",
+      "descEn": "Prehistoric jurassic arthropod mutant with oversized compound eyes from deep abyss."
+    },
+    {
+      "id": "longhorn-cowfish",
+      "name": "Longhorn Cowfish",
+      "nameEs": "Pez Cofre Cornudo",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Longhorn Cowfish.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
+      ],
+      "chum": "Mahi Mahi, Corn",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~1% - 3%",
+      "xp": 1650,
+      "method": "rod",
+      "specialBoost": "+0.2 Leche pasiva",
+      "descEs": "Mutante de cornamenta acorazada. Otorga un bono pasivo de producción de +0.2 de Leche.",
+      "descEn": "Horned boxfish mutant granting a permanent +0.2 passive Milk farm bonus."
+    },
+    {
+      "id": "deep-sea-pig",
+      "name": "Deep Sea Pig",
+      "nameEs": "Cerdo Marino Abisal",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Deep Sea Pig.png",
+      "baits": [
+        { "name": "Sunfish (0.5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Sunfish.png" },
+        { "name": "Coelacanth (0.5% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Coelacanth.png" }
+      ],
+      "chum": "Salt Awakening (0.5% base)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "0.5% (Sunfish / Coelacanth)",
+      "xp": 1600,
+      "method": "rod",
+      "specialBoost": "Mutante Abisal / Salt Awakening",
+      "descEs": "Mutante abisal translúcido que camina con patas tubulares. 0.5% de fragmento con Sunfish o Coelacanth.",
+      "descEn": "Translucent abyssal sea pig mutant. 0.5% map drop chance from Sunfish or Coelacanth."
+    },
+    {
+      "id": "deep-sea-slug",
+      "name": "Deep Sea Slug",
+      "nameEs": "Babosa Abisal",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Deep Sea Slug.png",
+      "baits": [
+        { "name": "Barred Knifejaw (1% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Barred Knifejaw.png" },
+        { "name": "Surgeonfish (0.1% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Surgeonfish.png" }
+      ],
+      "chum": "Salt Awakening (0.1% - 1%)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "1% Knifejaw / 0.1% Surgeon",
+      "xp": 1500,
+      "method": "rod",
+      "specialBoost": "Mutante Nudibranquio Abisal",
+      "descEs": "Mutante nudibranquio de fuentes hidrotermales. Fragmentos soltados por Knifejaw (1%) y Surgeonfish (0.1%).",
+      "descEn": "Hydrothermal vent nudibranch mutant. Map piece drops from Knifejaw (1%) and Surgeonfish (0.1%)."
+    },
+    {
+      "id": "crystal-shrimp-special",
+      "name": "Crystal Shrimp",
+      "nameEs": "Camarón de Cristal (Mutante)",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Crystal Shrimp.png",
+      "baits": [
+        { "name": "Sea Bass (3% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Sea Bass.png" },
+        { "name": "Tuna (0.8% drop)", "type": "combo", "image": "/img/sunflowerland/fish/Tuna.png" }
+      ],
+      "chum": "Salt Awakening (0.8% - 3%)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "3% Sea Bass / 0.8% Tuna",
+      "xp": 1400,
+      "method": "rod",
+      "specialBoost": "Mutante Vítreo Submarino",
+      "descEs": "Mutante camarón cristalino de exhibición mística. Soltado pescando Sea Bass (3%) o Tuna (0.8%).",
+      "descEn": "Glassy crystal shrimp mutant display relic. Dropped while catching Sea Bass (3%) or Tuna (0.8%)."
+    },
+    {
+      "id": "nautilus",
+      "name": "Nautilus",
+      "nameEs": "Nautilo",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Nautilus.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Iron, Stone",
+      "seasons": ["autumn", "winter"],
+      "catchRate": "~2% - 4%",
+      "xp": 1300,
+      "method": "rod",
+      "specialBoost": "Mutante cefalópodo con concha",
+      "descEs": "Mutante ancestral de concha helicoidal y cámaras de flotabilidad hidrostática.",
+      "descEn": "Spiral shelled ancient cephalopod mutant with chambers for buoyant depth drift."
+    },
+    {
+      "id": "betta",
+      "name": "Betta",
+      "nameEs": "Betta de Cueva",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/Betta.png",
+      "baits": [
+        { "name": "Cave Bait / Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Earthworm", "type": "basic", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Truffle / Mud Bait",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~5% - 8% (Estanque de Cueva)",
+      "xp": 1100,
+      "method": "rod",
+      "specialBoost": "Temporada 16: Cave Dwellers",
+      "descEs": "Pez mutante introducido en la Temporada 16 (Cave Dwellers). Habita en los estanques de agua subterránea de la Cueva.",
+      "descEn": "Season 16 (Cave Dwellers) mutant fish native to dark subterranean cave waters."
+    },
+    {
+      "id": "macropinna",
+      "name": "Macropinna",
+      "nameEs": "Macropinna (Ojos Tubulares)",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/Macropinna.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
+      ],
+      "chum": "Crimstone / Beetroot",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~2% - 4% (Fosas de Cueva)",
+      "xp": 1400,
+      "method": "rod",
+      "specialBoost": "Temporada 16: Cave Dwellers",
+      "descEs": "Pez de cabeza transparente y ojos tubulares abisales introducido en el Capítulo 16 (Cave Dwellers).",
+      "descEn": "Transparent domed barrel-eye cave mutant from Season 16 Cave Dwellers expansion."
+    },
+    {
+      "id": "manatee",
+      "name": "Manatee",
+      "nameEs": "Manatí de Cueva",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/Manatee.png",
+      "baits": [
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" }
+      ],
+      "chum": "Seaweed / Clover Coin",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~1% - 2% (Río Subterráneo)",
+      "xp": 1800,
+      "method": "rod",
+      "specialBoost": "Temporada 16: Cave Dwellers",
+      "descEs": "Coloso dulce y pacífico de caverna inundada. El mayor mutante acuático del Capítulo 16.",
+      "descEn": "Gentle giant mammal swimming through flooded caverns in Season 16 Cave Dwellers."
+    },
+    {
+      "id": "battle-fish",
+      "name": "Battle Fish",
+      "nameEs": "Pez de Batalla",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Battle Fish.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" },
+        { "name": "Capsule Bait", "type": "aged", "image": "/img/sunflowerland/Capsule Bait.png" }
+      ],
+      "chum": "Crimstone, Obsidian",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~2% - 5%",
+      "xp": 1400,
+      "method": "rod",
+      "specialBoost": "Especial de Combate",
+      "descEs": "Pez acorazado con espíritu guerrero codiciado en torneos y desafíos de pesca.",
+      "descEn": "Armored combat fish sought after during Bumpkin tournament fishing trials."
+    },
+    {
+      "id": "crimson-carp",
+      "name": "Crimson Carp",
+      "nameEs": "Carpa Carmesí",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Crimson Carp.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Beetroot, Crimstone",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~2% - 4%",
+      "xp": 1500,
+      "method": "rod",
+      "specialBoost": "Especial Carmesí",
+      "descEs": "Carpa mutante de escamas rojo carmesí que habita en profundidades ricas en minerales.",
+      "descEn": "Radiant crimson scaled carp inhabiting mineral-rich deep currents."
+    },
+    {
+      "id": "giant-isopod",
+      "name": "Giant Isopod",
+      "nameEs": "Isópodo Gigante",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Giant Isopod.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Fish Oil, Seaweed",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~1% - 3%",
+      "xp": 1700,
+      "method": "rod",
+      "specialBoost": "Mutante Bentónico Abisal",
+      "descEs": "Colosal crustáceo bentónico de aguas ultra profundas y exoesqueleto segmentado blindado.",
+      "descEn": "Colossal benthic crustacean from deepest trenches with heavy segmented armor."
+    },
+    {
+      "id": "jellyfish",
+      "name": "Jellyfish",
+      "nameEs": "Medusa",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Jellyfish.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Sunflower, Carrot",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~3% - 6%",
+      "xp": 1250,
+      "method": "rod",
+      "specialBoost": "Mutante Bioluminiscente",
+      "descEs": "Medusa translúcida bioluminiscente que flota plácidamente en las mareas nocturnas.",
+      "descEn": "Translucent bioluminescent jellyfish glowing in the deep ocean night tides."
+    },
+    {
+      "id": "lemon-shark",
+      "name": "Lemon Shark",
+      "nameEs": "Tiburón Limón",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Lemon Shark.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Lemon",
+      "seasons": ["spring", "summer"],
+      "catchRate": "~2% - 4%",
+      "xp": 1600,
+      "method": "rod",
+      "specialBoost": "+0.2 Limón pasivo",
+      "descEs": "Tiburón cítrico de tonalidad dorada. Otorga un bono permanente de +0.2 de limón al cosechar.",
+      "descEn": "Citrus-toned shark granting a permanent +0.2 boost to Lemon tree harvesting."
+    },
+    {
+      "id": "pink-dolphin",
+      "name": "Pink Dolphin",
+      "nameEs": "Delfín Rosado",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Pink Dolphin.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Apple, Melon",
+      "seasons": ["spring", "summer"],
+      "catchRate": "~1% - 2%",
+      "xp": 1900,
+      "method": "rod",
+      "specialBoost": "Capítulo Winds of Change",
+      "descEs": "Criatura mística y legendaria de nado rosado perlado. Muy difícil de avistar en alta mar.",
+      "descEn": "Legendary and graceful pink dolphin navigating tropical swells."
+    },
+    {
+      "id": "poseidon",
+      "name": "Poseidon",
+      "nameEs": "Poseidón",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Poseidon.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Red Wiggler", "type": "expert", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Gold, Iron",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~0.5% - 1.5%",
+      "xp": 2500,
+      "method": "rod",
+      "specialBoost": "Rey de los Mares Míticos",
+      "descEs": "Majestuoso pez legendario adornado como el soberano de las profundidades marinas.",
+      "descEn": "Regal mythological deep ruler fish cloaked in trident-like dorsal fins."
+    },
+    {
+      "id": "super-star",
+      "name": "Super Star",
+      "nameEs": "Súper Estrella",
+      "tier": "mutant",
+      "image": "/img/sunflowerland/fish/specials/Super Star.png",
+      "baits": [
+        { "name": "Fishing Lure", "type": "lure", "image": "/img/sunflowerland/fish/specials/Fishing Lure.png" },
+        { "name": "Grub", "type": "advanced", "image": "/img/sunflowerland/123/rod.webp" }
+      ],
+      "chum": "Starfruit, Acorn",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "~2% - 4%",
+      "xp": 1350,
+      "method": "rod",
+      "specialBoost": "Estrella Radiante Cósmica",
+      "descEs": "Equinodermo pentagonal con un brillo celestial que ilumina el lecho marino.",
+      "descEn": "Radiant starburst echinoderm shimmering with celestial glow along seabed."
+    },
+
+    {
+      "id": "blue-crab",
+      "name": "Blue Crab",
+      "nameEs": "Cangrejo Azul",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Blue Crab.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Heart Leaf x3 o Ribbon x3 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 250,
+      "method": "trap",
+      "descEs": "Cangrejo de pinzas zafiro. Se captura en Crab Pot (4h) con 3 Heart Leaf o 3 Ribbon.",
+      "descEn": "Sapphire clawed crustacean caught in 4-hour Crab Pots with 3 Heart Leaf or 3 Ribbon."
+    },
+    {
+      "id": "lobster",
+      "name": "Lobster",
+      "nameEs": "Langosta",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Lobster.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Wild Grass x3 o Frost Pebble x3 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 280,
+      "method": "trap",
+      "descEs": "Crustáceo bermellón gourmet. Captura garantizada en Crab Pot con 3 Wild Grass o 3 Frost Pebble.",
+      "descEn": "Gourmet crustacean reliably harvested from 4h Crab Pots with 3 Wild Grass or 3 Frost Pebble."
+    },
+    {
+      "id": "hermit-crab",
+      "name": "Hermit Crab",
+      "nameEs": "Cangrejo Ermitaño",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Hermit Crab.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Grape x5 o Rice x5 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 220,
+      "method": "trap",
+      "descEs": "Habitante de conchas marinas. Receta fija en Crab Pot cebado con 5 Uvas o 5 Arroz.",
+      "descEn": "Shell-dwelling crab. Guaranteed in 4h Crab Pots using 5 Grapes or 5 Rice."
+    },
+    {
+      "id": "shrimp",
+      "name": "Shrimp",
+      "nameEs": "Camarón",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Shrimp.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Crimstone x2 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 300,
+      "method": "trap",
+      "descEs": "Camarón costero de muelle. Se obtiene al cebar un Crab Pot de 4 horas con 2 Crimstone.",
+      "descEn": "Coastal shrimp harvested from 4h Crab Pots primed with 2 Crimstone."
+    },
+    {
+      "id": "mussel",
+      "name": "Mussel",
+      "nameEs": "Mejillón",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Mussel.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Moonfur x1 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 350,
+      "method": "trap",
+      "descEs": "Molusco bivalvo azulado oscuro. Receta exclusiva de Crab Pot con 1 Moonfur.",
+      "descEn": "Dark blue bivalve mollusc. Exclusive 4h Crab Pot recipe requiring 1 Moonfur."
+    },
+    {
+      "id": "oyster",
+      "name": "Oyster",
+      "nameEs": "Ostra",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Oyster.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Fish Stick x2 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 320,
+      "method": "trap",
+      "descEs": "Ostra perlífera de roca. Captura garantizada en Crab Pot cebado con 2 Fish Stick.",
+      "descEn": "Reef oyster harvested from 4h Crab Pots chummed with 2 Fish Sticks."
+    },
+    {
+      "id": "anemone",
+      "name": "Anemone",
+      "nameEs": "Anémona",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Anemone.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Fish Oil x2 o Crab Stick x2 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 340,
+      "method": "trap",
+      "descEs": "Pólipo marino de tentáculos ondulantes. Se atrapa con 2 Fish Oil o 2 Crab Stick en Crab Pot.",
+      "descEn": "Tentacled marine polyp collected in Crab Pots baited with 2 Fish Oil or 2 Crab Sticks."
+    },
+    {
+      "id": "isopod",
+      "name": "Isopod",
+      "nameEs": "Isópodo",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Isopod.png",
+      "baits": [
+        { "name": "Crab Pot (4h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Crab Pot.png" }
+      ],
+      "chum": "Sin Chum (Garantizado)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Sin Chum)",
+      "xp": 200,
+      "method": "trap",
+      "descEs": "Crustáceo acorazado de fondo. Es la captura estándar garantizada en Crab Pot al no poner ningún chum.",
+      "descEn": "Armored bottom feeder. Default guaranteed harvest from 4h Crab Pots with no chum."
+    },
+    {
+      "id": "sea-slug",
+      "name": "Sea Slug",
+      "nameEs": "Babosa Marina",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Sea Slug.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Crimstone x2 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 400,
+      "method": "trap",
+      "descEs": "Babosa marina de arrecife profundo. Se recolecta en Mariner Pot (8h) cebada con 2 Crimstone.",
+      "descEn": "Deep reef nudibranch slug. Harvested in 8h Mariner Pots primed with 2 Crimstone."
+    },
+    {
+      "id": "sea-snail",
+      "name": "Sea Snail",
+      "nameEs": "Caracol Marino",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Sea Snail.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Chewed Bone x3 o Ruffroot x3 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 380,
+      "method": "trap",
+      "descEs": "Gasterópodo acorazado con concha espiral. Receta de Mariner Pot (8h) con 3 Chewed Bone o 3 Ruffroot.",
+      "descEn": "Spiral shelled gastropod caught in 8h Mariner Pots with 3 Chewed Bones or 3 Ruffroot."
+    },
+    {
+      "id": "garden-eel-trap",
+      "name": "Garden Eel",
+      "nameEs": "Anguila de Jardín (Nasa)",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Garden Eel.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Dewberry x3 o Duskberry x3 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 450,
+      "method": "trap",
+      "descEs": "Anguila que asoma de la arena. Obtenida en Mariner Pot (8h) cebada con 3 Dewberry o 3 Duskberry.",
+      "descEn": "Sand burrowing eel secured in 8h Mariner Pots with 3 Dewberry or 3 Duskberry."
+    },
+    {
+      "id": "sea-grapes",
+      "name": "Sea Grapes",
+      "nameEs": "Uvas de Mar",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Sea Grapes.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Lunara x3 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 360,
+      "method": "trap",
+      "descEs": "Alga esférica de textura perlada. Cosechada en Mariner Pot (8h) cebada con 3 Lunara.",
+      "descEn": "Pearlescent green macroalgae harvested from 8h Mariner Pots with 3 Lunara."
+    },
+    {
+      "id": "octopus",
+      "name": "Octopus",
+      "nameEs": "Pulpo",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Octopus.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Moonfur x1 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 500,
+      "method": "trap",
+      "descEs": "Cefalópodo inteligente de ocho brazos. Captura garantizada en Mariner Pot (8h) con 1 Moonfur.",
+      "descEn": "Intelligent eight-armed cephalopod caught in 8h Mariner Pots primed with 1 Moonfur."
+    },
+    {
+      "id": "sea-urchin",
+      "name": "Sea Urchin",
+      "nameEs": "Erizo de Mar",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Sea Urchin.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Fish Stick x2 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 390,
+      "method": "trap",
+      "descEs": "Equinodermo esférico cubierto de púas. Se recolecta en Mariner Pot (8h) con 2 Fish Stick.",
+      "descEn": "Spiny spherical echinoderm harvested in 8h Mariner Pots with 2 Fish Sticks."
+    },
+    {
+      "id": "horseshoe-crab",
+      "name": "Horseshoe Crab",
+      "nameEs": "Cangrejo Herradura",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Horseshoe Crab.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Crab Stick x2 (Receta Exacta)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Con Receta)",
+      "xp": 420,
+      "method": "trap",
+      "descEs": "Quelicerado fósil viviente de caparazón curvo. Receta fija en Mariner Pot (8h) con 2 Crab Stick.",
+      "descEn": "Living fossil chelicerate harvested in 8h Mariner Pots primed with 2 Crab Sticks."
+    },
+    {
+      "id": "barnacle",
+      "name": "Barnacle",
+      "nameEs": "Bellota de Mar",
+      "tier": "crab",
+      "image": "/img/sunflowerland/fish/crabs/Barnacle.png",
+      "baits": [
+        { "name": "Mariner Pot (8h)", "type": "trap", "image": "/img/sunflowerland/fish/a/Mariner Pot.png" }
+      ],
+      "chum": "Sin Chum (Garantizado)",
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "catchRate": "100% (Sin Chum)",
+      "xp": 260,
+      "method": "trap",
+      "descEs": "Crustáceo sésil adherido a pilotes y rocas. Es la captura estándar garantizada de Mariner Pot sin chum.",
+      "descEn": "Sessile rock crustacean. Default guaranteed harvest from 8h Mariner Pots with no chum."
+    }
   ]
 }

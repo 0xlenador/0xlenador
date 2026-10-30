@@ -61,16 +61,6 @@ const tierCounts: Record<string, number> = {
   <!-- 1. ENCABEZADO PRINCIPAL                                   -->
   <!-- ═════════════════════════════════════════════════════════ -->
   <div class="mb-6 relative z-10 text-center sm:text-left">
-    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
-      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[11px] font-mono uppercase tracking-wider font-semibold">
-        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-        {t("sfl.fishing.badge")}
-      </span>
-      <span class="text-white/40 text-xs font-mono">
-        · {fishList.length} {t("sfl.fishing.count")}
-      </span>
-    </div>
-
     <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
       {t("sfl.fishing.heading")}
       <span class="text-cyan-400"> {t("sfl.fishing.heading.accent")}</span>
@@ -377,6 +367,7 @@ const tierCounts: Record<string, number> = {
                     alt={displayName}
                     loading="lazy"
                     class="w-full h-full object-contain [image-rendering:pixelated] drop-shadow-md"
+                    onerror="this.src='/img/sunflowerland/fish/Anchovy.png'; this.classList.add('opacity-30')"
                   />
                 </div>
 
