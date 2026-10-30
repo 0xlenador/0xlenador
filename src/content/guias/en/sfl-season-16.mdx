@@ -1,18 +1,18 @@
 ---
-title: "Sunflower Land — Season 16: Caves & Pigs (Operational Guide)"
-description: "Technical and operational guide for Sunflower Land Season 16 (Caves, Pigs & Weather): cave mining, pig breeding, truffles, dynamic weather, and resource optimization."
+title: "Sunflower Land — Season 16: Cave Dwellers (Operations Guide)"
+description: "Operational manual for Season 16 (Cave Dwellers): Stella's Megastore, underground caves, pig breeding, truffles, dynamic weather, mutants, and player focus strategies."
 categoria: "Gaming"
 estado: "activa"
-temporada: "Season 16: Caves & Pigs"
-fechaLimite: "2027-02-02"
+temporada: "Season 16: Cave Dwellers"
+fechaLimite: "2027-02-01"
 plataforma: "Polygon"
 imagen: "/img/sunflowerland/123/season-16.webp"
 ogImage: "/img/cripto/sunflowerland.webp"
-tags: ["gaming", "polygon", "sunflower-land", "caves-and-pigs", "season-16", "operation", "guide"]
+tags: ["gaming", "polygon", "sunflower-land", "cave-dwellers", "season-16", "operation", "guide", "beetle-wing"]
 dificultad: "media"
 tiempoEstimado: "15 min"
 date: "2026-10-12"
-updatedDate: "2026-10-12"
+updatedDate: "2026-10-30"
 prioridad: 25
 translationSlug: "sfl-temporada-16"
 ---
@@ -20,60 +20,69 @@ translationSlug: "sfl-temporada-16"
 import ResourceCard from "@components/buttons/ResourceCard.astro"
 import GuideSummary from "@components/guias/GuideSummary.astro"
 import GuideStep from "@components/guias/GuideStep.astro"
+import ZoomableImage from "@components/guias/ZoomableImage.astro"
+
+import duendeHatImg from "../../../assets/img/guias/sfl-season-16/duende_hat.png"
+import herculesBeetleHatImg from "../../../assets/img/guias/sfl-season-16/hercules_beetle_hat.png"
+import pigOnesieImg from "../../../assets/img/guias/sfl-season-16/pig_onesie.png"
+import caveBannerImg from "../../../assets/img/guias/sfl-season-16/cave_dwellers_banner.webp"
+import beetleWingImg from "../../../assets/img/guias/sfl-season-16/beetle_wing.webp"
+import duendeMonumentImg from "../../../assets/img/guias/sfl-season-16/duende_monument.webp"
+import minersBedImg from "../../../assets/img/guias/sfl-season-16/miners_bed.webp"
+import mushroomChickenImg from "../../../assets/img/guias/sfl-season-16/mushroom_chicken.webp"
+import ladybugCowImg from "../../../assets/img/guias/sfl-season-16/ladybug_cow.webp"
+import beetleSheepImg from "../../../assets/img/guias/sfl-season-16/beetle_sheep.webp"
+import cyclopsBloomImg from "../../../assets/img/guias/sfl-season-16/cyclops_bloom.webp"
+import giantTruffleImg from "../../../assets/img/guias/sfl-season-16/giant_truffle.webp"
+import piggyBankImg from "../../../assets/img/guias/sfl-season-16/piggy_bank.webp"
+import brickHouseImg from "../../../assets/img/guias/sfl-season-16/brick_house.webp"
+import bigBadWolfImg from "../../../assets/img/guias/sfl-season-16/big_bad_wolf.webp"
 
 <GuideSummary>
-  <GuideStep step="1" text="Stockpile basic resources and tools for cave entry">
-    <a href="#step-1-pre-season-stockpile-checklist-before-november-2nd" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Entry Checklist</span>
+  <GuideStep step="01" text="Season Pass & Stella's Megastore (Beetle Wings)">
+    <a href="#1-season-pass-and-stellas-megastore" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Megastore & Wings</span>
     </a>
   </GuideStep>
-  <GuideStep step="2" text="Unlock the Caves and run the Myco-Composter">
-    <a href="#step-2-the-underground-caves-and-the-myco-composter" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+  <GuideStep step="02" text="Underground Caves & Myco-Composter (Level 11+)">
+    <a href="#2-underground-caves-and-the-myco-composter-requirement-level-11" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
       <span>Caves & Recipes</span>
     </a>
   </GuideStep>
-  <GuideStep step="3" text="Build the Pigpen, raise Pigs, and harvest Truffles">
-    <a href="#step-3-pig-husbandry-truffles-and-pig-bristles" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Pigs & Mud Upkeep</span>
+  <GuideStep step="03" text="Pig Husbandry, Mud & Truffles (Level 30+)">
+    <a href="#3-pig-husbandry-pigs-pigpen-and-truffles-requirement-level-30" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Pigs & Mud</span>
     </a>
   </GuideStep>
-  <GuideStep step="4" text="Manage Global Weather and Craft Protection Gear">
-    <a href="#step-4-dynamic-global-weather-and-hazard-mitigation" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>9 Weather Events</span>
+  <GuideStep step="04" text="Truffle Cooking, Truffle Seasoning & Goblin Merchant">
+    <a href="#4-truffle-cooking-truffle-seasoning-and-goblin-cave-merchant" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Buffs & Market</span>
     </a>
   </GuideStep>
-  <GuideStep step="5" text="Cook Truffle Recipes, Spice Treats, and Visit Cave Merchant">
-    <a href="#step-5-advanced-cooking-truffle-seasoning-and-cave-merchant" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Buffs & Trade</span>
+  <GuideStep step="05" text="Dynamic Global Weather System (9 Events)">
+    <a href="#5-dynamic-global-weather-system-9-events" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>9 Global Weathers</span>
+    </a>
+  </GuideStep>
+  <GuideStep step="06" text="Visual Catalog: Mutants, Miner's Bed & Wearables">
+    <a href="#6-visual-catalog-collectibles-mutants-and-wearables" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Collectibles & NFTs</span>
+    </a>
+  </GuideStep>
+  <GuideStep step="07" text="Strategies & Routes by Player Profile">
+    <a href="#7-strategies-by-player-profile-what-to-focus-on" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Gameplay Routes</span>
     </a>
   </GuideStep>
 </GuideSummary>
 
-## Introduction to Season 16
+## Introduction to Season 16: Cave Dwellers
 
-**Season 16 (Chapter 16: Caves, Pigs & Weather)** officially begins on **November 2, 2026** in Sunflower Land. This major update shifts gameplay around three core interconnected economic pillars:
+Seasons in Sunflower Land are 90-day quarterly chapters centered around specific thematic updates and interconnected mechanics. **Season 16 (Chapter 16: Cave Dwellers)** officially runs from **November 2, 2026** until **February 1, 2027**.
 
-1. **The Caves:** Unlocked on Spring Island, featuring the new **Myco-Composter** processing machines, 25-tile excavation patches producing Wild Mushrooms, Magic Mushrooms, 4 tiers of Beetles, and Mud.
-2. **Pig Husbandry (Pigs & Pigpen):** Level 1 to 15 Pigs, recurring **Truffles** harvests, **Pig Bristles** trade-ins, and **Mud** health/XP management (+25% final XP).
-3. **Dynamic Global Weather System:** Non-stop rotation of 9 worldwide weather events (lasting 3 to 4 days each, completing cycles every ~27 to 36 days) with positive bonuses and seasonal threats mitigated through craftable protection gear.
-4. **Goblin Cave Merchant:** Visiting vendor offering exclusive items for 48-hour periods, unlocked starting at Cave Tier I.
+Sunflower Land **does not follow a single linear progression**: every farmer has a different Bumpkin level, distinct personal objectives, and unique resource allocations. While some players dedicate the entire 90 days to clearing out **Stella's Megastore** by collecting chapter tickets, others master the **pig husbandry and truffle supply chain**, some pursue **rare seasonal mutants**, and others trade high-demand materials across the **P2P Marketplace**.
 
----
-
-## Step 1: Pre-Season Stockpile Checklist before November 2nd
-
-To avoid early-game bottlenecks on launch day, stock up on these key farm assets:
-
-| Resource / Tool | Recommended Quantity | Immediate Operational Purpose |
-| :--- | :--- | :--- |
-| **Coins** | 500+ | 200 Coins for cave entrance + pig purchases (100 Coins each after 3 free starters). |
-| **Wood** | 100+ | 20 Wood for cave unlock + 10 Wood per Mushroom batch in the Myco-Composter. |
-| **Stone** | 30+ | 5 Stone for cave entrance + crafting reserves. |
-| **Eggs** | 50+ | 10 Eggs per Beetle batch in the Myco-Composter. |
-| **Crops (Carrots / Wheat)** | 100+ | 10 crops per batch for Mud production + feed supplies for Pigs. |
-| **Digging Tools (Sand Shovels / Drills)** | 30+ | Shared with Desert Digging, but **NO daily dig cap** in Caves. |
-| **Merino Wool** | 30+ | Required (10 each) for Thermal Stone, Shade Cloth, and Merino Wool Insulation. |
-| **Leather** | 10+ | Used to craft Sandbags and Balks for bad weather events. |
+Below is a detailed breakdown of each seasonal system: what it does, its required Bumpkin level, how to unlock it, and how to optimize it according to your playstyle.
 
 <div class="flex flex-wrap gap-2 my-4 not-prose">
   <ResourceCard id="polygon" label="Polygon Network" />
@@ -82,165 +91,361 @@ To avoid early-game bottlenecks on launch day, stock up on these key farm assets
 
 ---
 
-## Step 2: The Underground Caves and the Myco-Composter
+## 1. Season Pass and Stella's Megastore
 
-The Cave Entrance unlocks on **Spring Island**. Building the entrance gives access to the first subterranean chamber with one **Myco-Composter** machine and a dedicated 25-tile (5x5) digging grid.
+The economic centerpiece of any chapter in Sunflower Land revolves around task deliveries and seasonal exchanges at **Stella's Megastore** in the central Plaza.
 
-### Cave Access & Expansion Tiers
+### The Season Pass (Cave Dwellers Banner)
+The **Cave Dwellers Banner** is the official chapter pass available in the Plaza at launch.
+* **Core Passive Boost:** Placing the Banner on your farm awards **+1 extra Beetle Wing** on every single delivery (*Deliveries*) and Bounty completed throughout the 90-day period.
+* **Additional Perks:** Grants exclusive Megastore item discounts, priority access to seasonal crafting recipes, and complimentary seasonal raffle tickets.
 
-* **Entrance Cost (Tier I):** 200 Coins, 20 Wood, and 5 Stone.
-* **Expansion Path:** Up to 8 levels (Tier VIII). Each expansion adds 1 Myco-Composter and an independent 25-tile patch (reaching 8 machines and 200 tiles total).
-* **High-Tier Materials:** From **Tier V onward**, upgrades require **Pig Bristles** instead of Leather, along with accumulated Mud.
+### Seasonal Currency: Beetle Wings
+The official currency for this chapter is the **Beetle Wing (Token ID #3103)**.
+* **How to Obtain:**
+  1. **NPC Deliveries:** Fulfilling orders for crops, cooked kitchen dishes, and fish requested by Plaza characters.
+  2. **Bounties Board:** Completing weekly resource gathering and specialized delivery tasks.
+  3. **Chore List Quests:** Rotating daily and weekly farm chores.
+* **Purpose:** Non-transferable seasonal vouchers spent at **Stella's Megastore** for community monuments, wearables, decorations, and raffle tickets. **They expire when the chapter concludes**, so ensure they are spent before February 1, 2027.
 
-### Myco-Composter Batches (Base: 12 Hours)
-
-Each machine runs any of the three available recipes. Standard batch time is 12 hours:
-
-| Recipe | Required Input | 25-Tile Excavation Output |
-| :--- | :--- | :--- |
-| **Mushrooms** | 10 Wood | Wild Mushroom tiles. Each tile has a **10% chance** to yield a Magic Mushroom. |
-| **Beetles** | 10 Eggs | Beetle tiles across 4 rarity tiers (Brown, Blue, Pink, Amber). |
-| **Mud** | 10 Crops (Carrot equivalents) | Mud tiles used for pig baths and health maintenance. |
-
-### Excavation Tools
-
-* Digging uses standard **Sand Shovels** and **Sand Drills**.
-* **Key difference from Desert:** Caves have **NO daily dig cap**. Dig as many patches as your tool supply allows.
-* Cave patches do not contain prior chapter artifacts.
-* Cave Skill Tier 2 boosts purchasable stock of Shovels & Drills in the shop by **+50% / +100% / +200%**.
-
-### Beetles: Rarity & Direct Feeding
-
-All 4 beetle types are tradable on the P2P market and available from Cave Tier I:
-
-* **Brown Beetle:** **80 XP** direct animal feed.
-* **Blue Beetle:** **160 XP** direct animal feed.
-* **Pink Beetle:** **320 XP** direct animal feed.
-* **Amber Beetle:** **640 XP** direct animal feed.
-
-*Direct feeding note:* Beetles can be fed directly to **Pigs, Cows, Sheep, or Chickens**.
+### Chapter Raffle Tickets (Cave Dwellers Raffle Ticket - ID #3104)
+Players can convert excess Beetle Wings into chapter raffle tickets to enter periodic seasonal drawings featuring ultra-rare NFTs, high-value SFTs, and exclusive wearables.
 
 ---
 
-## Step 3: Pig Husbandry, Truffles, and Pig Bristles
+## 2. Underground Caves and the Myco-Composter (Requirement: Level 11+)
 
-Pigs introduce a full lifecycle with level-up milestones, nutrition preferences, and dual resource yields.
+The subterranean caves introduce underground organic farming and excavation on **Spring Island**.
 
-### Pigpen Capacity & Rules
+### Unlock Requirements
+* **Bumpkin Level Required:** **Level 11**.
+* **Initial Entrance Cost (Tier I):** 200 Coins, 20 Wood, and 5 Stone (takes 1 hour to construct).
+* **Initial Chamber:** Unlocks the first underground room equipped with 1 processing machine (*Myco-Composter*) and a dedicated 25-tile (5x5) digging grid.
 
-* **Housing Capacity:** 3 / 6 / 9 pigs based on Pigpen tier.
-* **Purchase Cost:** 100 Coins per pig (first **3 starting pigs are free**).
-* **Max Level:** Any pig can reach **Level 15** from Pigpen Level 1, following Cow XP progression curves.
-* **Target Farm Size:** Midrange farms aim to maintain 6 to 9 synchronized pigs through levels 0 to 8. Higher levels require significant feed stockpiling.
+### Myco-Composter Recipes (Base Duration: 12 Hours)
+The Myco-Composter processes surface resources into harvestable subterranean patches:
+* **Mushrooms:** Input: 10 Wood. Generates Wild Mushroom tiles. Each tile has a **10% chance** to become a Magic Mushroom. *(Note: The introductory test batch takes only 10 minutes).*
+* **Beetles:** Input: 10 Eggs. Generates tiles containing beetles across 4 rarity tiers.
+* **Mud:** Input: 10 Crops (Carrot equivalents). Generates Mud tiles essential for pigpen hygiene and maintenance.
 
-### Pig Feeding
+### No Daily Dig Cap
+Unlike Desert Digging, subterranean cave patches feature **NO daily digging limit**. You may excavate as many tiles as your available stock of **Sand Shovels** and **Sand Drills** permits.
 
-Pigs accept all eligible crops at any level with preferred-band efficiency. Crop weight follows the formula: `Weight = √(Seed Coin Cost × Base Grow Time in Minutes)`.
+### The 4 Beetle Tiers: Direct Animal Feed & Market
+Beetles can be traded on the P2P marketplace or fed directly to **Pigs, Cows, Sheep, or Chickens** for an immediate XP boost:
+* **Brown Beetle:** Grants **80 XP** direct animal feed.
+* **Blue Beetle:** Grants **160 XP** direct animal feed.
+* **Pink Beetle:** Grants **320 XP** direct animal feed.
+* **Amber Beetle:** Grants **640 XP** direct animal feed.
 
-* **Tier Anchors:** 10 Carrots / 3 Cauliflower / 1 Wheat.
-* Regular fish classify according to their standard fishing categories.
+### Cave Expansions (Tier I to VIII)
+Caves expand across 8 tiers, accommodating up to 8 Myco-Composters and 200 concurrent digging tiles. Starting at **Tier V onward**, expansions replace leather requirements with **Pig Bristles** and accumulated Mud.
 
-### Mud Upkeep: Protection & +25% Final XP
+---
 
-* Applying **10 Mud** to a pig grants **3 feeding charges**.
-* Each charge yields **+25% final feeding XP** (including direct Beetle feedings).
-* Charges persist across sleep cycles.
-* While charges remain, pigs are **immune to sickness** (does not cure an already sick pig).
+## 3. Pig Husbandry: Pigs, Pigpen, and Truffles (Requirement: Level 30+)
+
+Pigs introduce a high-tier animal husbandry cycle focused on truffles, bristle retirement, and mud hygiene.
+
+### Pigpen Unlock & Capacity Rules
+* **Bumpkin Level Required:** **Level 30**.
+* **Housing Capacity:** 3, 6, or 9 pigs depending on Pigpen upgrade level.
+* **Purchase Cost:** The first **3 starting pigs are free**; subsequent pigs cost 100 Coins each.
+* **Max Level:** Pigs progress from **Level 1 to Level 15**, mirroring cow XP progression curves.
+
+### Crop Weight Feeding Formula
+Pigs accept all eligible crops. The required feed weight scales according to the formula:
+`Weight = √(Seed Cost in Coins × Base Grow Time in Minutes)`
+* **Anchor Benchmarks:** 10 Carrots / 3 Cauliflower / 1 Wheat.
+
+### Mud Upkeep: Sickness Immunity & +25% Final XP
+Mud harvested from the Myco-Composter is crucial for swine health:
+* Applying **10 Mud** to a pig grants **3 bathing charges**.
+* Each charge yields a **+25% bonus to final feeding XP** (including direct beetle feedings).
+* As long as a pig holds active mud charges, it is **completely immune to sickness**.
 
 ### Truffle Production
+Truffles are collected automatically upon completing each 24-hour sleep cycle:
+* **Levels 1 to 3:** 1 Truffle per cycle (~3 cumulative truffles).
+* **Levels 4 to 7:** 2 Trufas per cycle (~8 cumulative truffles).
+* **Levels 8 to 14:** 3 Trufas per cycle (~21 cumulative truffles).
+* **Level 15:** 4 Trufas per cycle continuously (4 truffles/day per pig).
 
-Truffles are collected every 24-hour sleep cycle starting at Level 1 and are fully tradable:
-
-| Pig Level | Truffles per Claim | Cumulative Truffles Produced to Level 15 |
-| :--- | :--- | :--- |
-| **Levels 1 – 3** | 1 Truffle / cycle | ~3 Truffles |
-| **Levels 4 – 7** | 2 Truffles / cycle | ~8 Truffles |
-| **Levels 8 – 14** | 3 Truffles / cycle | ~21 Truffles |
-| **Level 15** | 4 Truffles / cycle (daily) | 4 Truffles / day continuously |
-
-A farm with 6 mature pigs generates **24 Truffles per day** before extra bonuses.
-
-### Pig Bristles
-
-Bristles are **NOT collected through daily sleep**; they are awarded solely upon **trading-in / retiring** pigs at the Pigpen or completing Bounty tasks:
-
-| Retirement Milestone | Base Bristles Awarded |
-| :--- | :--- |
-| **Level 3** | 1 Bristle |
-| **Level 6** | 3 Bristles |
-| **Level 10** | 6 Bristles |
-| **Level 15** | 12 Bristles |
-
-* **Sickness Penalty:** Sick pigs suffer a **-25% penalty** on awarded Bristles.
-* Bristles are tradable and essential for high-tier Cave expansions (Tier V–VIII) and Weather protection crafts.
+### Pig Bristles: Retirement Trade-In
+**Pig Bristles** are NOT awarded during daily sleep. They are earned exclusively when **retiring / trading in a pig at the Pigpen** or completing designated Bounties:
+* **Retire at Level 3:** 1 Pig Bristle.
+* **Retire at Level 6:** 3 Pig Bristles.
+* **Retire at Level 10:** 6 Pig Bristles.
+* **Retire at Level 15:** 12 Pig Bristles.
+* **Sickness Penalty:** Retiring a sick pig incurs a **-25% penalty** on awarded bristles.
+* **Utility:** Bristles are essential for high-tier Cave expansions (Tier V–VIII) and weather protection crafting.
 
 ---
 
-## Step 4: Dynamic Global Weather and Hazard Mitigation
+## 4. Truffle Cooking, Truffle Seasoning, and Goblin Cave Merchant
 
-Season 16 features **one active global weather event at all times**:
+Truffles enable major culinary XP leaps and high-efficiency animal acceleration:
 
-* **Continuous Cycle:** 9 global weather events, lasting **3 to 4 days** each (~27 to 36 days total cycle).
-* **Weather Forecast:** Upcoming events are previewed **72 hours in advance**.
-* **Overlays:** Full Moon and Double Delivery continue as separate 24-hour overlays.
+### New Truffle Kitchen Recipes
+* **Ember-Roasted Truffle Potatoes (Fire Pit):** 8 hours | Truffles + Potatoes | **15,000 XP**.
+* **Truffle & Honey Cake (Bakery):** 12 hours | 15 Truffles + 30 Wheat + 30 Eggs + 5 Honey | **25,000 XP**.
+* **Truffle Risotto (Kitchen):** 16 hours | Truffles + Rice / High-tier crops | **35,000 XP**.
 
-### Weather Events & Magnitudes
-
-| Weather Event | Normal Magnitude | Blessed Magnitude |
-| :--- | :--- | :--- |
-| **Bountiful Harvest** | +0.4 crop yield | +0.8 crop yield |
-| **Fish Frenzy** | +0.4 fish yield | +0.8 fish yield |
-| **Sun Shower** | 1.3x crop speed | 1.6x with Shade Cloth / Guardian (2.0x with both) |
-| **Heavy Rains** | Well speed & water recovery | Enhanced water bonuses |
-| **Bee Migration** | Honey production bonus | Substantial honey boost with Wildflower Lures |
-
-### Weather Protection Recipes
-
-* **Thermal Stone, Merino Wool Insulation, Shade Cloth:** Each requires **25 Pig Bristles + 10 Merino Wool**.
-* **Sandbag & Balk:** Each requires **2 Leather**.
-* **Wildflower Lure:** Consumes **1 Flower** (lasts 1 to 5 days based on flower tier). Adds **+125% to +150% Honey** (+187.5% to +225% during Blessed conditions).
-
----
-
-## Step 5: Advanced Cooking, Truffle Seasoning, and Cave Merchant
-
-Truffles unlock high-XP gourmet kitchen meals and animal cycle acceleration treats:
-
-### New Cooking Recipes
-
-| Recipe | Cook Location | Duration | Key Requirements | XP Awarded |
-| :--- | :--- | :--- | :--- | :--- |
-| **Ember-Roasted Truffle Potatoes** | Fire Pit | 8 hours | Truffles + Potatoes | 15,000 XP |
-| **Truffle & Honey Cake** | Bakery | 12 hours | 15 Truffles + 30 Wheat + 30 Eggs + 5 Honey | 25,000 XP |
-| **Truffle Risotto** | Kitchen | 16 hours | Truffles + Rice / High-tier crops | 35,000 XP |
-
-### Truffle Seasoning (Spice Rack / Aging Shed)
-
-* Crafted in batches of **5 units per 1 hour**.
-* **Effect:** Grants **-50% wake/sleep time** across **ALL four animal types** (Pigs, Cows, Sheep, Chickens).
-* **Duration:** 1 sleep cycle (2 with *Vibraphone*).
+### Truffle Seasoning (Animal Acceleration)
+Crafted at the Spice Rack / Aging Shed in batches of 5 units per 1 hour of processing:
+* **Operational Effect:** Reduces wake and sleep cycle durations by **-50% across ALL farm animals** (Pigs, Cows, Sheep, and Chickens).
+* **Duration:** Lasts 1 complete sleep cycle (or 2 cycles when holding the *Vibraphone* collectible). Highly prized by competitive livestock managers.
 
 ### Goblin Cave Merchant
-
-* Unlocked starting at **Cave Tier I**.
-* Features 1 exclusive offer at Tier I, adding **+1 offer per cave tier unlocked**.
-* Visits occur for **48 hours** with advance announcements and per-player quotas.
-
----
-
-## Recommended Strategy (0x Leñador)
-
-1. **Launch Day:** Claim the 3 free pigs right away and build the Cave Entrance on Spring Island. Start with a Mud batch (10 crops) to give your pigs the +25% XP mud bath boost without sickness risk.
-2. **Bristles Cycle:** Raise pigs to at least Level 3 or 6 before retiring them to secure Bristles for early weather protection (*Shade Cloth* / *Thermal Stone*).
-3. **Synergy with 0x Leñador Tools:**
-   * Track P2P market prices for Truffles, Beetles, and Merino Wool on the [SFL Market](/en/sfl-market).
-   * Compare crop sell values using [SFL Betty](/en/sfl-betty).
-   * Monitor animal stats with [SFL Pets](/en/sfl-pets) and plan kitchen queues with [SFL Cooking](/en/sfl-cooking).
+* Appears inside the cave for **48-hour scheduled visits**.
+* Offers rotating seasonal items at discounted bulk rates.
+* Starts with 1 offer at Cave Tier I, gaining **+1 concurrent offer per additional cave tier unlocked**.
 
 ---
 
-## Official Links and Resources
+## 5. Dynamic Global Weather System (9 Events)
 
-* [Play Sunflower Land](https://sunflower-land.com/play/?ref=Oxlenador)
-* [Official Chapter 16 Specification (GitHub Discussion #7721)](https://github.com/sunflower-land/sunflower-land/discussions/7721)
+Season 16 implements a continuous worldwide weather rotation affecting all farmers simultaneously:
+* **9 Global Weather Events:** Each event lasts **3 to 4 days** (~27 to 36 days per full cycle).
+* **Forecast:** An in-game meter displays upcoming conditions **72 hours in advance**.
+* **Normal vs "Blessed" Status:** Players who equip mitigation gear not only avoid penalties, but unlock high-tier blessed multipliers.
+
+| Weather Event | Normal Effect | "Blessed" Effect (Equipped with Mitigation) |
+| :--- | :--- | :--- |
+| **Bountiful Harvest** | +0.4 crop yield | **+0.8 crop yield** |
+| **Fish Frenzy** | +0.4 fish per catch | **+0.8 fish** per catch |
+| **Sun Shower** | 1.3x base crop growth speed | **1.6x to 2.0x growth speed** (with Shade Cloth & Guardian) |
+| **Heavy Rains** | Moderate well acceleration | Rapid well water recovery |
+| **Bee Migration** | Base honey boost | **+187.5% to +225% honey** with active Wildflower Lures |
+
+### Weather Protection Recipes
+* **Thermal Stone, Shade Cloth, and Merino Wool Insulation:** Each requires **25 Pig Bristles + 10 Merino Wool**.
+* **Sandbag and Balk:** Each requires **2 Leather**.
+* **Wildflower Lure:** Consumes 1 Flower (lasts 1 to 5 days based on flower tier) and maximizes honey output during favorable events.
+
+---
+
+## 6. Visual Catalog: Collectibles, Mutants, and Wearables
+
+Below is the verified registry of official assets integrated in the **Cave Dwellers** release (IDs 3102 through 3121 and bumpkin wearables 590 through 595). All items support **Instant Trade** across player markets:
+
+<div class="space-y-4 mb-8 mt-6">
+
+  {/* Block 1: Duende Hat & Wearables */}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+        <span>Subterranean Wearables (IDs #590 - #595)</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2">1. Duende Hat & Miner Outfits</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
+        The <strong>Duende Hat (ID #590)</strong> leads this chapter's initial cosmetics alongside the <strong>Duende Shirt (#591)</strong>, <strong>Duende Pants (#592)</strong>, and <strong>Duende Shoes (#593)</strong>. The line also features the imposing <strong>Hercules Beetle Hat (#594)</strong> and the cozy <strong>Pig Onesie (#595)</strong>.
+      </p>
+      <div class="p-3 bg-white/[0.03] rounded-xl border border-white/5 text-xs text-terminal-muted">
+        <strong class="text-emerald-400">⚡ P2P Marketplace:</strong> Fully tradable via Instant Trade on the official market.
+      </div>
+    </div>
+    <div class="flex justify-center md:justify-end gap-3">
+      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={duendeHatImg} alt="Duende Hat" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[11px] font-medium text-white/80">Duende Hat</span>
+      </div>
+      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={herculesBeetleHatImg} alt="Hercules Beetle Hat" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[11px] font-medium text-white/80">Beetle Hat</span>
+      </div>
+      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={pigOnesieImg} alt="Pig Onesie" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[11px] font-medium text-white/80">Pig Onesie</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Block 2: Beetle Wing & Banner */}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-2">
+        <span>Currency & Pass (IDs #3103 - #3105)</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2">2. Beetle Wings & Cave Dwellers Banner</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
+        The seasonal voucher is officially named <strong>Beetle Wing (ID #3103)</strong>. Placing the <strong>Cave Dwellers Banner (ID #3105)</strong> unlocks a passive <strong class="text-amber-400">+1 Beetle Wing</strong> boost on every NPC delivery. Wings redeem items in the Megastore or craft <strong>Cave Dwellers Raffle Tickets (ID #3104)</strong>.
+      </p>
+    </div>
+    <div class="flex justify-center md:justify-end gap-3">
+      <div class="w-full max-w-[130px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={caveBannerImg} alt="Cave Dwellers Banner" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[11px] font-medium text-white/80">Official Banner</span>
+      </div>
+      <div class="w-full max-w-[130px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={beetleWingImg} alt="Beetle Wing" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[11px] font-medium text-white/80">Beetle Wing</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Block 3: Chapter Mutants */}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold mb-2">
+        <span>Cave Mutants (IDs #3107 - #3110)</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2">3. Subterranean Mutants: Chicken, Cow, Sheep & Flower</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
+        Adapted to the dark underground: <strong>Mushroom Chicken (#3107)</strong> with a wild mushroom cap, <strong>Ladybug Cow (#3108)</strong> with a spotted shell, <strong>Beetle Sheep (#3109)</strong> with armored wool, and the one-eyed <strong>Cyclops Bloom (#3110)</strong> flower.
+      </p>
+    </div>
+    <div class="grid grid-cols-2 gap-2.5 max-w-[280px]">
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={mushroomChickenImg} alt="Mushroom Chicken" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Mushroom Chicken</span>
+      </div>
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={ladybugCowImg} alt="Ladybug Cow" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Ladybug Cow</span>
+      </div>
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={beetleSheepImg} alt="Beetle Sheep" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Beetle Sheep</span>
+      </div>
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={cyclopsBloomImg} alt="Cyclops Bloom" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Cyclops Bloom</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Block 4: Miner's Bed (Farmhand #14) */}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-2">
+        <span>Labor Force Expansion (ID #3112)</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2">4. Miner's Bed: 14th Farmhand Slot</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
+        The <strong>Miner's Bed</strong> unlocks the <strong>14th concurrent farmhand slot (Farmhand #14)</strong> in Sunflower Land. A critical craftable collectible that allows you to automate daily chores while you dig through cave chambers.
+      </p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[220px] bg-[#121212] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={minersBedImg} alt="Miner's Bed" class="w-20 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-xs font-semibold text-white">Miner's Bed (Farmhand #14)</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Block 5: Duende Monument */}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+        <span>Megastore Monument (ID #3111)</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2">5. Duende Monument: 1,000 Community Cheers</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
+        A 3x3 Megastore project erected in stages. Requires a collective contribution of <strong>1,000 community Cheers</strong> from players to unlock its final form celebrating the subterranean dwellers.
+      </p>
+    </div>
+    <div class="flex justify-center md:justify-end">
+      <div class="w-full max-w-[220px] bg-[#121212] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+        <ZoomableImage src={duendeMonumentImg} alt="Duende Monument" class="w-20 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-xs font-semibold text-white">Duende Monument (3x3)</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Block 6: Three Little Pigs Decorations */}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold mb-2">
+        <span>Thematic Decorations (IDs #3113 - #3121)</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2">6. The Three Little Pigs & Cave Relics</h3>
+      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
+        A decorative set celebrating the fairy tale with the <strong>Straw House (#3116)</strong>, <strong>Stick House (#3117)</strong>, and <strong>Brick House (#3118)</strong>, stalked by the <strong>Big Bad Wolf (#3119)</strong>, alongside the <strong>Giant Truffle (#3113)</strong>, <strong>Mining Drill (#3114)</strong>, and <strong>Piggy Bank (#3115)</strong>.
+      </p>
+    </div>
+    <div class="grid grid-cols-2 gap-2.5 max-w-[280px]">
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={giantTruffleImg} alt="Giant Truffle" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Giant Truffle</span>
+      </div>
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={piggyBankImg} alt="Piggy Bank" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Piggy Bank</span>
+      </div>
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={brickHouseImg} alt="Brick House" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Brick House</span>
+      </div>
+      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
+        <ZoomableImage src={bigBadWolfImg} alt="Big Bad Wolf" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
+        <span class="text-[10px] text-terminal-secondary font-medium">Big Bad Wolf</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+### Chapter Reference Tables (IDs 3102 through 3121)
+
+| Mutant | Type / ID | Dimensions | Technical Summary |
+| :--- | :--- | :--- | :--- |
+| **Mushroom Chicken** | Chicken / 3107 | 1x1 | Bearded fowl adapted to damp caverns with a mushroom cap. |
+| **Ladybug Cow** | Cow / 3108 | 2x1 | Spotted shell cow resting near the entrance of the cave. |
+| **Beetle Sheep** | Sheep / 3109 | 2x1 | Hardened armored fleece mimicking a beetle shell. |
+| **Cyclops Bloom** | Mutant Flower / 3110 | 1x1 | One-eyed mystical flower guarding the underground depths. |
+| **Cave Dwellers Fish** | Fish / 3102 | 2x2 | Exclusive subterranean fish caught through Season 16 fishing. |
+
+| Decoration / Collectible | ID | Dimensions | Concept & Utility |
+| :--- | :--- | :--- | :--- |
+| **Duende Monument** | 3111 | 3x3 | Megastore monument requiring 1,000 collective Cheers. |
+| **Miner's Bed** | 3112 | 1x1 | Unlocks the 14th farmhand slot (Farmhand #14). |
+| **Giant Truffle** | 3113 | 2x2 | Colossal truffle prized by every pig. |
+| **Mining Drill** | 3114 | 2x2 | Mechanical drill crafted for tunneling through solid bedrock. |
+| **Piggy Bank** | 3115 | 2x2 | Traditional coin bank to safeguard your Coin reserves. |
+| **Straw House** | 3116 | 2x2 | Lightweight straw house from the first pig. |
+| **Stick House** | 3117 | 2x2 | Stick cabin built by the second pig. |
+| **Brick House** | 3118 | 2x2 | Fortified brick sanctuary of the third pig. |
+| **Big Bad Wolf** | 3119 | 1x2 | The hungry wolf stalking around the pens. |
+| **Pig Plush** | 3120 | 1x1 | Soft decorative plush pig. |
+| **Pig Doll** | 3121 | 1x2 | Miniature ornamental pig statue mounted upon a pedestal. |
+
+---
+
+## 7. Strategies by Player Profile: What to Focus On?
+
+Because a 90-day season features multiple simultaneous paths, focus on the route that matches your Bumpkin level and personal goals:
+
+### Route A: Stella's Megastore Collector (Pass & Deliveries)
+* **Requirement:** Any Bumpkin level.
+* **Goal:** Collect the maximum number of **Beetle Wings** before the store closes on February 1st.
+* **Strategy:** Purchase the *Cave Dwellers Banner* on day one for the `+1 Beetle Wing` bonus on all orders. Direct crop and fish production toward fulfilling NPC Deliveries and Bounty tasks. Reserve wings for high-priority Megastore items (*Duende Monument* and *Miner's Bed*).
+
+### Route B: Swineherd & Truffle Master (Level 30+)
+* **Requirement:** Bumpkin Level 30.
+* **Goal:** Maximize Truffle yields, power-level Bumpkin XP via gourmet recipes, and accelerate animal breeding.
+* **Strategy:** Claim your 3 free starting pigs and feed them Carrot, Cauliflower, or Wheat batches. Keep the mud bath (10 Mud) permanently active for the +25% XP multiplier and sickness immunity. Craft **Truffle Seasoning** continuously to halve animal sleep times. Retire pigs at Level 6 or 10 when you need **Pig Bristles** for weather protections and high-tier cave upgrades.
+
+### Route C: Subterranean Prospector (Level 11+)
+* **Requirement:** Bumpkin Level 11.
+* **Goal:** Leverage the zero daily dig cap to farm Wild Mushrooms, Magic Mushrooms, and Beetles.
+* **Strategy:** Construct the Cave Entrance on Spring Island. Feed wood into mushroom batches and eggs into beetle batches. Use beetles for rapid animal XP boosts or sell them on the P2P marketplace. Stockpile Sand Shovels and Sand Drills to clear 25-tile patches as soon as Myco-Composters finish.
+
+### Route D: Mutant Collector
+* **Requirement:** Active livestock pens and flower gardens.
+* **Goal:** Acquire all 4 seasonal mutants (*Mushroom Chicken*, *Ladybug Cow*, *Beetle Sheep*, *Cyclops Bloom*).
+* **Strategy:** Maintain consistent breeding cycles and flower cross-pollination. Mutants serve as rare assets with permanent cosmetic value and secondary market demand.
+
+### Route E: P2P Market Arbitrageur / Trader
+* **Requirement:** Marketplace access.
+* **Goal:** Earn FLOWER and Coins by trading high-volatility seasonal commodities.
+* **Strategy:** Demand for **Merino Wool**, **Leather**, **Truffles**, **Mud**, and **Beetles** spikes around weather events and cave expansions. Monitor real-time prices using 0x Leñador tools and sell surpluses to players racing to upgrade.
+
+---
+
+## Official Links and Tools
+
+* [Play Sunflower Land (Official Portal)](https://sunflower-land.com/play/?ref=Oxlenador)
+* [Chapter 16 Specification & Balance (GitHub Discussion #7721)](https://github.com/sunflower-land/sunflower-land/discussions/7721)
+* [Cave Dwellers Art & Item Commit (GitHub #7840)](https://github.com/sunflower-land/sunflower-land/commit/2c92b66fa2bf04ff750c1f4be14c24f3e337fea5)
 * [0x Leñador Tools Directory](/en/directory)
