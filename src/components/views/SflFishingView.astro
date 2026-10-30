@@ -407,9 +407,7 @@ function getChumIcons(chumText: string) {
         const subtitleName = isEs && fish.nameEs !== fish.name ? fish.name : null
         const desc = isEs ? fish.descEs : fish.descEn
         const seasonsList = fish.seasons.join(" ")
-        const isAllSeason = fish.seasons.length >= 4
         const chumIcons = getChumIcons(fish.chum)
-        const hasChumNotes = fish.chum.includes("x") || fish.chum.includes("(") || fish.chum.includes("/") || fish.chum.includes("o ")
 
         return (
           <div
@@ -509,8 +507,8 @@ function getChumIcons(chumText: string) {
                 <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
                   {t("sfl.fishing.card.chum")}
                 </span>
-                {chumIcons.length > 0 && (
-                  <div class="flex flex-wrap gap-1.5 mb-1.5">
+                {chumIcons.length > 0 ? (
+                  <div class="flex flex-wrap gap-1.5">
                     {chumIcons.map((c) => (
                       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/70">
                         <img
@@ -523,8 +521,7 @@ function getChumIcons(chumText: string) {
                       </span>
                     ))}
                   </div>
-                )}
-                {(!chumIcons.length || hasChumNotes) && (
+                ) : (
                   <span class="text-[11px] font-mono text-white/50 block leading-tight">
                     {fish.chum}
                   </span>
@@ -548,20 +545,14 @@ function getChumIcons(chumText: string) {
                 </span>
 
                 <div class="flex items-center gap-1">
-                  {isAllSeason ? (
-                    <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
-                      {t("sfl.fishing.season.all")}
-                    </span>
-                  ) : (
-                    fish.seasons.map((s) => {
-                      const season = seasonsConfig[s]
-                      return (
-                        <span title={season?.label || s} class="inline-flex items-center">
-                          <img src={season?.icon} alt={season?.label || s} class="w-3.5 h-3.5 object-contain" />
-                        </span>
-                      )
-                    })
-                  )}
+                  {(fish.seasons && fish.seasons.length > 0 ? fish.seasons : ["spring", "summer", "autumn", "winter"]).map((s) => {
+                    const season = seasonsConfig[s]
+                    return (
+                      <span title={season?.label || s} class="inline-flex items-center">
+                        <img src={season?.icon} alt={season?.label || s} class="w-3.5 h-3.5 object-contain" />
+                      </span>
+                    )
+                  })}
                 </div>
               </div>
 
