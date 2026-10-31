@@ -1,0 +1,359 @@
+---
+import { Image } from "astro:assets"
+
+import caveBannerImg from "../../assets/img/guias/sfl-season-16/cave_dwellers_banner.webp"
+import pigOnesieImg from "../../assets/img/guias/sfl-season-16/pig_onesie.png"
+import minersBedImg from "../../assets/img/guias/sfl-season-16/miners_bed.webp"
+import herculesBeetleHatImg from "../../assets/img/guias/sfl-season-16/hercules_beetle_hat.png"
+import treasureChestImg from "../../assets/img/guias/sfl-season-16/treasure_chest.webp"
+import flowerImg from "../../assets/img/guias/sfl-season-16/flower.png"
+import beetleWingImg from "../../assets/img/guias/sfl-season-16/beetle_wing.webp"
+import coinImg from "../../assets/img/guias/sfl-season-16/coins.png"
+
+interface Props {
+  lang?: "es" | "en"
+}
+
+const { lang = "es" } = Astro.props
+
+const isEn = lang === "en"
+
+const keyRewards = [
+  {
+    name: isEn ? "Cave Dwellers Banner" : "Estandarte Cave Dwellers",
+    tag: isEn ? "Season Pass" : "Pase VIP",
+    tier: isEn ? "Pass Activation" : "Activación del Pase",
+    boost: isEn ? "Unlocks VIP track, +1 daily SFL delivery & 50% FLOWER discounts" : "Desbloquea ruta VIP, +1 entrega diaria de SFL y -50% descuento en tienda",
+    src: caveBannerImg,
+    badgeColor: "bg-[#2e1505] text-[#fbbf24] border-[#1a0c03]",
+  },
+  {
+    name: isEn ? "Pig Onesie" : "Skin de Cerdo (Pig Onesie)",
+    tag: isEn ? "Wearable #595" : "Wearable #595",
+    tier: isEn ? "VIP Mid Tier" : "Hito Intermedio VIP",
+    boost: isEn ? "Exclusive cave swine costume & cosmetic identity for your Bumpkin" : "Traje temático completo de cerdito exclusivo para tu Bumpkin",
+    src: pigOnesieImg,
+    badgeColor: "bg-[#2e1505] text-[#f472b6] border-[#1a0c03]",
+  },
+  {
+    name: isEn ? "Miner's Bed" : "Cama de Minero (Miner's Bed)",
+    tag: isEn ? "Key Functional NFT" : "NFT Funcional Clave",
+    tier: isEn ? "VIP Mid-Late Tier" : "Hito Avanzado VIP",
+    boost: isEn ? "Unlocks housing bed slot for your 14th Farmhand helper" : "Desbloquea la cama para alojar al 14º ayudante (Farmhand) en la granja",
+    src: minersBedImg,
+    badgeColor: "bg-[#2e1505] text-[#60a5fa] border-[#1a0c03]",
+  },
+  {
+    name: isEn ? "Hercules Beetle Hat" : "Sombrero Escarabajo Hércules",
+    tag: isEn ? "Wearable #594" : "Wearable #594",
+    tier: isEn ? "VIP Late Tier" : "Hito Superior VIP",
+    boost: isEn ? "Heavy horned subterranean beetle helmet for your Bumpkin" : "Casco con cuernos gigantes de escarabajo subterráneo",
+    src: herculesBeetleHatImg,
+    badgeColor: "bg-[#2e1505] text-[#c084fc] border-[#1a0c03]",
+  },
+  {
+    name: isEn ? "Grand FLOWER Chest" : "Gran Cofre con FLOWER",
+    tag: isEn ? "1,000 Points Cap" : "Meta 1,000 Puntos",
+    tier: isEn ? "Final Milestone" : "Hito Final del Pase",
+    boost: isEn ? "Massive package of FLOWER tokens, premium tickets and rare loot" : "Bolsa masiva de tokens FLOWER, tickets premium y recursos raros",
+    src: treasureChestImg,
+    hasFlowerOverlay: true,
+    badgeColor: "bg-[#2e1505] text-[#34d399] border-[#1a0c03]",
+  },
+]
+---
+
+<div class="my-6 not-prose max-w-3xl mx-auto select-none">
+  <!-- Pestañas Superiores Estilo Modal Stella -->
+  <div class="flex items-end justify-between px-2 sm:px-3">
+    <div class="flex items-end gap-1">
+      <!-- Pestaña Secundaria Inactiva (Tienda) -->
+      <a
+        href="#megastore"
+        class="bg-[#a6774a] border-t-2 border-l-2 border-r-2 border-[#3c200c] rounded-t-lg px-2.5 sm:px-3 py-1 flex items-center gap-1 opacity-80 hover:opacity-100 transition-opacity no-underline text-inherit mb-0"
+      >
+        <Image
+          src={beetleWingImg}
+          alt=""
+          class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+        />
+        <span class="font-mono text-xs font-bold text-[#f7e3cf]">
+          {isEn ? "Chapter Store" : "Tienda de Capítulo"}
+        </span>
+      </a>
+
+      <!-- Pestaña Activa (Rewards de Stella / Pase) -->
+      <div
+        class="bg-[#dfad7a] border-t-2 border-l-2 border-r-2 border-[#3c200c] rounded-t-lg px-2.5 sm:px-3 py-1 flex items-center gap-1.5 shadow-[0_-1px_0_rgba(255,255,255,0.2)] relative z-10"
+      >
+        <span class="text-xs">🎁</span>
+        <span
+          class="font-mono text-xs font-black text-[#3c200c] tracking-tight"
+          style="color: #3c200c !important;"
+        >
+          {isEn ? "Rewards (Season Pass)" : "Rewards (Pase de Temporada)"}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Caja Principal Compacta -->
+  <div
+    class="bg-[#dfad7a] border-[3px] border-[#3c200c] rounded-xl p-2.5 sm:p-3.5 shadow-[0_5px_0_#241205,inset_0_2px_0_rgba(255,255,255,0.3)] relative -mt-[2px]"
+  >
+    <!-- Cabecera Interior: Título y Pastillas -->
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+      <div class="flex items-center gap-1.5">
+        <div
+          class="bg-[#f0f0f4] border-2 border-[#2b2b36] rounded px-2 py-0.5 text-[11px] font-black text-[#2b2b36] shadow-[inset_0_1px_0_#fff,0_1.5px_0_#2b2b36]"
+        >
+          {isEn ? "Chapter Track" : "Pase de Capítulo"}
+        </div>
+        <div
+          class="bg-[#10b981] border-2 border-[#1e4e37] rounded px-2 py-0.5 text-[11px] font-black text-white shadow-[0_1.5px_0_#1e4e37]"
+        >
+          {isEn ? "1,000 Points Goal" : "Meta: 1,000 Puntos"}
+        </div>
+      </div>
+
+      <div
+        class="bg-[#e11d48] border-2 border-[#2b2b36] rounded px-2 py-0.5 text-[11px] font-black text-white shadow-[0_1.5px_0_#2b2b36] flex items-center gap-1"
+      >
+        <span>⏱️</span>
+        <span>{isEn ? "Nov 2, 2026 – Feb 1, 2027" : "2 Nov 2026 – 1 Feb 2027"}</span>
+      </div>
+    </div>
+
+    <!-- Descripción Oficial -->
+    <p
+      class="font-mono text-[11px] sm:text-xs font-bold leading-relaxed mb-3 !text-[#261306]"
+      style="color: #261306 !important;"
+    >
+      {
+        isEn
+          ? "Complete daily ticket deliveries, coin orders, bounties, and weekly chores to earn Chapter Points. The pass features two parallel paths: a Free Track for all farmers and a VIP Track unlocked with the Cave Dwellers Banner."
+          : "Completa entregas diarias de tickets, pedidos de monedas, bounties y tareas semanales para acumular Puntos de Capítulo. El pase cuenta con dos líneas paralelas: la Línea Gratuita para todos y la Línea VIP activada con el Banner de Temporada."
+      }
+    </p>
+
+    <!-- Comparativa de Líneas: Free vs VIP -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3.5">
+      <!-- Línea Gratuita (Free Track) -->
+      <div
+        class="bg-[#cb955f]/40 border-2 border-[#45230c] rounded-lg p-2.5 flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]"
+      >
+        <div class="flex items-center justify-between mb-1.5">
+          <span
+            class="font-mono text-xs font-black !text-[#261306] flex items-center gap-1.5"
+            style="color: #261306 !important;"
+          >
+            <span>🌱</span> {isEn ? "Free Track" : "Línea Gratuita"}
+          </span>
+          <span
+            class="text-[9.5px] font-mono font-black px-2 py-0.5 rounded bg-[#2e1505] text-[#34d399] border border-[#1a0c03] shadow-sm"
+          >
+            {isEn ? "All Players" : "100% Granja Libre"}
+          </span>
+        </div>
+        <p
+          class="font-mono text-[10.5px] sm:text-xs font-bold leading-snug !text-[#261306]"
+          style="color: #261306 !important;"
+        >
+          {
+            isEn
+              ? "Accessible to everyone without spending. Rewards include Coins, Beetle Wings, basic seeds, fertilizer packs, standard tools, and seasonal milestone chests."
+              : "Accesible para todos sin costo adicional. Otorga Monedas, Alas de Escarabajo, semillas básicas, fertilizantes, consumibles y cofres de progreso intermedio."
+          }
+        </p>
+      </div>
+
+      <!-- Línea VIP (Season Pass / Banner Track) -->
+      <div
+        class="bg-[#f6c343]/30 border-2 border-[#45230c] rounded-lg p-2.5 flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.4)]"
+      >
+        <div class="flex items-center justify-between mb-1.5">
+          <span
+            class="font-mono text-xs font-black !text-[#261306] flex items-center gap-1.5"
+            style="color: #261306 !important;"
+          >
+            <span>⭐</span> {isEn ? "VIP Track (Banner)" : "Línea VIP (Banner)"}
+          </span>
+          <span
+            class="text-[9.5px] font-mono font-black px-2 py-0.5 rounded bg-[#2e1505] text-[#fbbf24] border border-[#1a0c03] shadow-sm"
+          >
+            {isEn ? "Banner Required" : "Requiere Banner S16"}
+          </span>
+        </div>
+        <p
+          class="font-mono text-[10.5px] sm:text-xs font-bold leading-snug !text-[#261306]"
+          style="color: #261306 !important;"
+        >
+          {
+            isEn
+              ? "Unlocked by holding the Cave Dwellers Banner. Grants exclusive NFTs (Pig Onesie, Miner's Bed, Beetle Hat), +1 extra daily delivery, and the Grand FLOWER chest at 1,000 pts (retroactive claim)."
+              : "Desbloqueada con el Cave Dwellers Banner. Concede los NFTs exclusivos (Skin Cerdo, Cama Minero, Sombrero Hércules), +1 entrega diaria de SFL y el Gran Cofre de FLOWER a los 1,000 pts (reclamación retroactiva)."
+          }
+        </p>
+      </div>
+    </div>
+
+    <!-- Título de la Vitrina de NFTs Clave -->
+    <div class="flex items-center justify-between px-1 mb-1.5">
+      <span
+        class="font-mono text-[11px] sm:text-xs font-black !text-[#261306] uppercase tracking-wide"
+        style="color: #261306 !important;"
+      >
+        {isEn ? "Top Pass NFTs & Milestones" : "NFTs y Recompensas Clave del Pase"}
+      </span>
+      <span
+        class="font-mono text-[10px] font-black !text-[#45230c]"
+        style="color: #45230c !important;"
+      >
+        {isEn ? "0 → 1,000 Points Path" : "Ruta de 0 a 1,000 Puntos"}
+      </span>
+    </div>
+
+    <!-- Rejilla de NFTs Clave del Pase (5 Tarjetas) -->
+    <div
+      class="bg-[#b38050] border-2 border-[#45230c] rounded-lg p-1.5 sm:p-2 shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-2 mb-3"
+    >
+      {
+        keyRewards.map((reward) => (
+          <div
+            class="relative bg-[#dfad7a] border-2 border-[#45230c] rounded-lg p-1.5 flex flex-col items-center justify-between shadow-[inset_0_1.5px_0_rgba(255,255,255,0.4),0_2px_0_#45230c] hover:brightness-105 transition-all group min-h-[160px] sm:min-h-[170px]"
+            title={`${reward.name} — ${reward.boost}`}
+          >
+            {/* Tag Superior con Alto Contraste */}
+            <div
+              class={`w-full text-[9px] font-mono font-black text-center py-0.5 rounded border shadow-sm mb-0.5 ${reward.badgeColor}`}
+            >
+              {reward.tag}
+            </div>
+
+            {/* Imagen Centrada */}
+            <div class="relative w-full h-12 sm:h-14 flex items-center justify-center my-0.5">
+              <Image
+                src={reward.src}
+                alt={reward.name}
+                class="max-w-[42px] max-h-[42px] sm:max-w-[48px] sm:max-h-[48px] object-contain [image-rendering:pixelated] group-hover:scale-110 transition-transform select-none"
+              />
+              {/* Overlay especial si es el Cofre de FLOWER */}
+              {reward.hasFlowerOverlay && (
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#dfad7a] rounded-full border border-[#45230c] p-0.5 flex items-center justify-center shadow">
+                  <Image
+                    src={flowerImg}
+                    alt="FLOWER"
+                    class="w-full h-full object-contain [image-rendering:pixelated]"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Nombre del NFT */}
+            <div
+              class="font-mono text-[10.5px] sm:text-[11px] font-black !text-[#261306] text-center leading-tight line-clamp-2 w-full px-0.5"
+              style="color: #261306 !important;"
+            >
+              {reward.name}
+            </div>
+
+            {/* Potenciador / Utilidad */}
+            <div
+              class="w-full text-[9px] font-bold !text-[#261306] text-center leading-tight px-1 py-0.5 bg-[#cb955f]/40 rounded border border-[#8c5228]/35 my-1 min-h-[30px] flex items-center justify-center"
+              style="color: #261306 !important;"
+            >
+              {reward.boost}
+            </div>
+
+            {/* Pastilla de Nivel / Hito */}
+            <div class="bg-[#f6c343] border border-[#45230c] rounded px-1.5 py-0.5 flex items-center justify-center gap-1 w-full shadow-[0_1.5px_0_#45230c] mt-auto">
+              <span
+                class="font-mono text-[9.5px] sm:text-[10px] font-black !text-[#261306] tracking-tight"
+                style="color: #261306 !important;"
+              >
+                {reward.tier}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Guía de Obtención de Puntos de Capítulo (Cómo llegar a los 1,000 pts) -->
+    <div
+      class="bg-[#cb955f]/30 border-2 border-[#45230c] rounded-lg p-2 sm:p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+    >
+      <div class="flex items-center gap-1.5 mb-1.5">
+        <span class="text-xs">⚡</span>
+        <span
+          class="font-mono text-[11px] sm:text-xs font-black !text-[#261306]"
+          style="color: #261306 !important;"
+        >
+          {isEn ? "How to Earn Chapter Points (Road to 1,000)" : "¿Cómo acumular Puntos de Capítulo? (Ruta a los 1,000)"}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-center font-mono">
+        <div class="bg-[#dfad7a] border border-[#45230c] rounded p-1.5 shadow-[0_1px_0_#45230c]">
+          <div
+            class="text-xs font-black !text-[#261306]"
+            style="color: #261306 !important;"
+          >
+            5 pts / Ticket
+          </div>
+          <div
+            class="text-[9.5px] font-bold !text-[#4a2206]"
+            style="color: #4a2206 !important;"
+          >
+            {isEn ? "Ticket Orders" : "Entregas con Ticket"}
+          </div>
+        </div>
+
+        <div class="bg-[#dfad7a] border border-[#45230c] rounded p-1.5 shadow-[0_1px_0_#45230c]">
+          <div
+            class="text-xs font-black !text-[#261306]"
+            style="color: #261306 !important;"
+          >
+            10 pts / Pedido
+          </div>
+          <div
+            class="text-[9.5px] font-bold !text-[#4a2206]"
+            style="color: #4a2206 !important;"
+          >
+            {isEn ? "Coin Orders" : "Entregas de Coins"}
+          </div>
+        </div>
+
+        <div class="bg-[#dfad7a] border border-[#45230c] rounded p-1.5 shadow-[0_1px_0_#45230c]">
+          <div
+            class="text-xs font-black !text-[#261306]"
+            style="color: #261306 !important;"
+          >
+            3 pts / Ticket
+          </div>
+          <div
+            class="text-[9.5px] font-bold !text-[#4a2206]"
+            style="color: #4a2206 !important;"
+          >
+            {isEn ? "Bounties & Animals" : "Tablón y Ganado"}
+          </div>
+        </div>
+
+        <div class="bg-[#dfad7a] border border-[#45230c] rounded p-1.5 shadow-[0_1px_0_#45230c]">
+          <div
+            class="text-xs font-black !text-[#261306]"
+            style="color: #261306 !important;"
+          >
+            3 pts / Ticket
+          </div>
+          <div
+            class="text-[9.5px] font-bold !text-[#4a2206]"
+            style="color: #4a2206 !important;"
+          >
+            {isEn ? "Weekly Chores" : "Tareas Semanales"}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
