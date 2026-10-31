@@ -22,6 +22,9 @@ import GuideSummary from "@components/guias/GuideSummary.astro"
 import GuideStep from "@components/guias/GuideStep.astro"
 import ZoomableImage from "@components/guias/ZoomableImage.astro"
 
+import pigImg from "../../../assets/img/guias/sfl-season-16/pig.webp"
+import truffleImg from "../../../assets/img/guias/sfl-season-16/truffle.webp"
+import truffleSeasoningImg from "../../../assets/img/guias/sfl-season-16/truffle_seasoning.webp"
 import duendeHatImg from "../../../assets/img/guias/sfl-season-16/duende_hat.png"
 import herculesBeetleHatImg from "../../../assets/img/guias/sfl-season-16/hercules_beetle_hat.png"
 import pigOnesieImg from "../../../assets/img/guias/sfl-season-16/pig_onesie.png"
@@ -37,52 +40,51 @@ import giantTruffleImg from "../../../assets/img/guias/sfl-season-16/giant_truff
 import piggyBankImg from "../../../assets/img/guias/sfl-season-16/piggy_bank.webp"
 import brickHouseImg from "../../../assets/img/guias/sfl-season-16/brick_house.webp"
 import bigBadWolfImg from "../../../assets/img/guias/sfl-season-16/big_bad_wolf.webp"
+import miningDrillImg from "../../../assets/img/guias/sfl-season-16/mining_drill.webp"
+import raffleTicketImg from "../../../assets/img/guias/sfl-season-16/raffle_ticket.png"
+import wildMushroomImg from "../../../assets/img/guias/sfl-season-16/wild_mushroom.webp"
 
 <GuideSummary>
-  <GuideStep step="01" text="Pase de Temporada y Tienda de Stella (Beetle Wings)">
-    <a href="#1-el-pase-de-temporada-y-la-tienda-de-stella-megastore" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Megastore & Wings</span>
+  <GuideStep image={pigImg} text="Cerdos y Trufas">
+    <a href="#cerdos-y-trufas" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Cerdos & Trufas</span>
     </a>
   </GuideStep>
-  <GuideStep step="02" text="Cuevas Subterráneas y Myco-Composter (Nivel 11+)">
-    <a href="#2-las-cuevas-subterraneas-y-el-myco-composter-nivel-11" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Cuevas & Recetas</span>
+  <GuideStep image={miningDrillImg} text="Cueva y Minijuegos">
+    <a href="#cueva-y-minijuego" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Cueva & Minijuego</span>
     </a>
   </GuideStep>
-  <GuideStep step="03" text="Ganadería Porcina, Lodo y Trufas (Nivel 30+)">
-    <a href="#3-ganaderia-porcina-cerdos-pocilga-y-trufas-nivel-30" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Cerdos & Lodo</span>
+  <GuideStep image={beetleWingImg} text="Megastore de Stella">
+    <a href="#megastore" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Megastore</span>
     </a>
   </GuideStep>
-  <GuideStep step="04" text="Cocina de Trufas, Truffle Seasoning y Comerciante Goblin">
-    <a href="#4-cocina-de-trufas-truffle-seasoning-y-comerciante-goblin" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Buffs & Mercado</span>
+  <GuideStep image={caveBannerImg} text="Pase de Temporada">
+    <a href="#pase-de-temporada" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Pase Temporada</span>
     </a>
   </GuideStep>
-  <GuideStep step="05" text="Sistema de Clima Dinámico Global (9 Eventos)">
-    <a href="#5-sistema-de-clima-dinamico-global-9-eventos" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>9 Climas Globales</span>
+  <GuideStep image={mushroomChickenImg} text="Mutantes y Peces Marvels">
+    <a href="#mutantes-y-peces" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Mutantes & Peces</span>
     </a>
   </GuideStep>
-  <GuideStep step="06" text="Catálogo Visual: Mutantes, Cama de Minero y Wearables">
-    <a href="#6-catalogo-visual-de-coleccionables-mutantes-y-wearables" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Coleccionables & NFTs</span>
+  <GuideStep image={duendeHatImg} text="Subastas">
+    <a href="#subastas" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Subastas</span>
     </a>
   </GuideStep>
-  <GuideStep step="07" text="Estrategias y Rutas por Perfil de Jugador">
-    <a href="#7-estrategias-por-perfil-de-jugador-en-que-enfocarte" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
-      <span>Rutas de Juego</span>
+  <GuideStep image={raffleTicketImg} text="Rifas">
+    <a href="#rifas" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+      <span>Rifas</span>
     </a>
   </GuideStep>
 </GuideSummary>
 
-## Introducción a la Temporada 16: Cave Dwellers
+## Temporada 16: Cave Dwellers (2 Nov 2026 – 1 Feb 2027)
 
-Las temporadas en Sunflower Land son ciclos trimestrales de 90 días con una temática central e innovaciones mecánicas interconectadas. La **Temporada 16 (Chapter 16: Cave Dwellers)** arranca el **2 de noviembre de 2026** y se prolonga hasta el **1 de febrero de 2027**.
-
-En Sunflower Land **no existe una progresión lineal única**: cada granjero tiene un nivel de Bumpkin diferente, objetivos personales distintos y recursos limitados. Mientras algunos jugadores dedican la temporada entera a vaciar la **Tienda de Stella (Megastore)** acumulando la divisa del capítulo, otros se especializan en la **cadena de trufas y ganadería porcina**, otros buscan cazar los **mutantes estacionales raros**, y otros simplemente arbitran insumos en el **mercado P2P**.
-
-A continuación tienes desglosado cada sistema del capítulo: qué hace, qué nivel de Bumpkin requiere, cómo se consigue y cómo aprovecharlo según tu estilo de juego.
+La **Temporada 16 (Cave Dwellers)** llega a Sunflower Land introduciendo la cría de cerdos y cosecha de trufas, minería en cuevas con el Myco-Composter, clima dinámico global, mutantes subterráneos, la Megastore de Stella, el Pase de Temporada, rifas y subastas.
 
 <div class="flex flex-wrap gap-2 my-4 not-prose">
   <ResourceCard id="polygon" label="Red Polygon" />
@@ -91,94 +93,76 @@ A continuación tienes desglosado cada sistema del capítulo: qué hace, qué ni
 
 ---
 
-## 1. El Pase de Temporada y la Tienda de Stella (Megastore)
+<div id="cerdos-y-trufas" class="scroll-mt-24"></div>
 
-El corazón económico de cualquier capítulo en Sunflower Land es el ciclo de entregas y el canje en la **Megastore de Stella** en la Plaza central.
+## 1. Cerdos y Trufas (Nivel 30+)
 
-### El Pase de Temporada (Cave Dwellers Banner)
-El **Cave Dwellers Banner** es el pase de temporada oficial que se compra en la Plaza al arrancar el capítulo.
-* **Bono Pasivo Principal:** Colocar el Banner en tu granja otorga **+1 Beetle Wing adicional** en absolutamente todas las entregas de pedidos (*Deliveries*) y Bounties completados durante los 90 días.
-* **Beneficios Extra:** Proporciona descuentos exclusivos en la tienda de Stella, acceso prioritario a crafteos estacionales y boletos gratuitos para rifas.
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center my-6">
+  <div>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+      <span>Ganadería Porcina (Nivel 30+)</span>
+    </div>
+    <h3 class="text-base font-bold text-white mb-2">Cerdos, Baño de Lodo y Trufas</h3>
+    <ul class="text-sm text-terminal-secondary space-y-2 mb-3">
+      <li>• <strong class="text-white">Pocilga (Pigpen):</strong> Aloja de 3 a 9 cerdos (primeros 3 gratis, luego 100 Coins). Suben de nivel 1 a 15.</li>
+      <li>• <strong class="text-white">Baño de Lodo:</strong> 10 de Lodo = 3 cargas. Otorga <span class="text-emerald-400 font-bold">+25% XP</span> por comida y los hace <span class="text-emerald-400 font-bold">inmunes a enfermarse</span>.</li>
+      <li>• <strong class="text-white">Cosecha de Trufas:</strong> Se recogen diariamente al despertar el cerdo (1 a 4 trufas/día según su nivel).</li>
+      <li>• <strong class="text-white">Pig Bristles (Cerdas):</strong> Se ganan al jubilar/retirar al cerdo (1 a 12 cerdas). Claves para mejoras de cueva Tier V+.</li>
+    </ul>
+  </div>
 
-### Moneda de Temporada: Beetle Wings
-La divisa oficial de este capítulo se llama **Beetle Wing (Ala de Escarabajo - ID #3103)**.
-* **Cómo se consiguen:**
-  1. **Entregas a NPCs (Deliveries):** Cumpliendo pedidos de cultivos, comidas cocinadas y pescado para los personajes de la Plaza.
-  2. **Tablón de Cacería (Bounties):** Tareas semanales de entrega de recursos y pedidos especiales.
-  3. **Misiones del Chore List:** Tareas rotativas de la granja.
-* **Para qué sirven:** Son tokens no transferibles de temporada que se gastan en la **Megastore de Stella** para comprar monumentos, cosméticos, coleccionables y boletos de rifa. **Caducan al cerrar la temporada**, por lo que deben gastarse antes del 1 de febrero de 2027.
-
-### Boletos de Rifa (Cave Dwellers Raffle Ticket - ID #3104)
-Los jugadores pueden canjear sus Beetle Wings por boletos de rifa estacionales para participar en sorteos periódicos donde se reparten premios exclusivos, NFTs de alto valor y cosméticos únicos del capítulo.
-
----
-
-## 2. Las Cuevas Subterráneas y el Myco-Composter (Nivel 11+)
-
-Las cuevas introducen la mecánica de minería y excavación orgánica subterránea en **Spring Island**.
-
-### Desbloqueo y Requisitos
-* **Nivel de Bumpkin Requerido:** **Nivel 11**.
-* **Coste de la Entrada Inicial (Tier I):** 200 Coins, 20 Wood y 5 Stone. Tarda 1 hora en construirse.
-* **Contenido Inicial:** Desbloquea la primera cámara con 1 máquina procesadora (*Myco-Composter*) y una cuadrícula de excavación de 25 casillas (5x5).
-
-### Lotes del Myco-Composter (Base: 12 Horas)
-El Myco-Composter procesa materiales básicos para generar parches subterráneos listos para excavar:
-* **Setas (Mushrooms):** Insumo: 10 Madera (Wood). Genera casillas de Setas Silvestres (*Wild Mushroom*). Cada casilla tiene un **10% de probabilidad** de convertirse en Seta Mágica (*Magic Mushroom*). *(Nota: El primer lote inicial de prueba tarda solo 10 minutos).*
-* **Escarabajos (Beetles):** Insumo: 10 Huevos (Eggs). Genera casillas con escarabajos de 4 niveles de rareza.
-* **Lodo (Mud):** Insumo: 10 Cultivos (equivalente a Zanahorias). Genera casillas de Lodo para el baño de los cerdos.
-
-### Excavación sin Límite Diario (No Daily Dig Cap)
-A diferencia de la excavación en el Desierto, en las Cuevas **NO hay límite diario de intentos**. Puedes excavar tantas casillas como **Sand Shovels** (palas) y **Sand Drills** (taladros) tengas en inventario.
-
-### Los 4 Escarabajos: Alimento Directo y Mercado
-Los escarabajos son insectos comerciables en el mercado P2P y utilizables como comida rápida instantánea para **Cerdos, Vacas, Ovejas o Gallinas**:
-* **Brown Beetle (Marrón):** Otorga **80 XP** directa al animal.
-* **Blue Beetle (Azul):** Otorga **160 XP** directa al animal.
-* **Pink Beetle (Rosa):** Otorga **320 XP** directa al animal.
-* **Amber Beetle (Ámbar):** Otorga **640 XP** directa al animal.
-
-### Expansión de Cuevas (Tier I a VIII)
-Las cuevas se expanden hasta el Nivel 8, añadiendo hasta 8 máquinas Myco-Composter y 200 casillas de excavación. A partir de **Tier V en adelante**, las expansiones dejan de pedir cuero y exigen **Pig Bristles** (Cerdas de Cerdo) y Lodo acumulado.
+  <div class="flex justify-center md:justify-end gap-3">
+    <div class="w-full max-w-[120px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+      <ZoomableImage src={pigImg} alt="Cerdo (Pig)" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
+      <span class="text-[11px] font-medium text-white/80">Cerdo</span>
+    </div>
+    <div class="w-full max-w-[120px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+      <ZoomableImage src={truffleImg} alt="Trufa (Truffle)" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+      <span class="text-[11px] font-medium text-white/80">Trufa</span>
+    </div>
+    <div class="w-full max-w-[120px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+      <ZoomableImage src={truffleSeasoningImg} alt="Truffle Seasoning" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+      <span class="text-[11px] font-medium text-white/80">Seasoning (-50% Sueño)</span>
+    </div>
+  </div>
+</div>
 
 ---
 
-## 3. Ganadería Porcina: Cerdos, Pocilga y Trufas (Nivel 30+)
+<div id="cueva-y-minijuego" class="scroll-mt-24"></div>
 
-Los cerdos (*Pigs*) representan la nueva especie ganadera de nivel alto, clave para la producción de trufas y materiales de mejora avanzada.
+## 2. Cueva y Minijuegos (Nivel 11+)
 
-### Desbloqueo y Reglas de la Pocilga (Pigpen)
-* **Nivel de Bumpkin Requerido:** **Nivel 30**.
-* **Capacidad:** 3, 6 o 9 cerdos según el nivel de ampliación de la Pocilga.
-* **Coste:** Los primeros **3 cerdos iniciales son gratuitos**; cada cerdo adicional cuesta 100 Coins.
-* **Nivel Máximo:** Los cerdos progresan del **Nivel 1 al Nivel 15** siguiendo la misma curva de experiencia que las vacas.
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center my-6">
+  <div>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+      <span>Minería y Excavación (Nivel 11+)</span>
+    </div>
+    <h3 class="text-base font-bold text-white mb-2">Cuevas Subterráneas y Minijuego de Excavación</h3>
+    <ul class="text-sm text-terminal-secondary space-y-2 mb-3">
+      <li>• <strong class="text-white">Desbloqueo:</strong> Spring Island (Nivel 11, 200 Coins, 20 Wood, 5 Stone, 1h).</li>
+      <li>• <strong class="text-white">Myco-Composter (12h):</strong> 10 Madera ➔ Setas Silvestres (10% Seta Mágica) • 10 Huevos ➔ Escarabajos • 10 Cultivos ➔ Lodo.</li>
+      <li>• <strong class="text-white">Minijuego de Excavación:</strong> Cuadrícula de 25 casillas (5x5). <span class="text-emerald-400 font-bold">Sin límite diario de excavación</span> usando Sand Shovels y Sand Drills.</li>
+      <li>• <strong class="text-white">Escarabajos Comestibles:</strong> Marrón (80 XP) • Azul (160 XP) • Rosa (320 XP) • Ámbar (640 XP) para alimentar al instante cualquier animal.</li>
+      <li>• <strong class="text-white">Expansión (Tier I a VIII):</strong> Añade hasta 8 máquinas y 200 casillas. Desde Tier V pide Pig Bristles y Lodo.</li>
+    </ul>
+  </div>
 
-### Alimentación por Fórmula de Peso
-Los cerdos aceptan todos los cultivos del juego. La cantidad de cultivo necesaria se calcula con la fórmula oficial:
-`Peso = √(Coste de semilla en Coins × Tiempo de crecimiento en minutos)`
-* **Puntos de anclaje:** 10 Zanahorias / 3 Coliflores / 1 Trigo.
-
-### El Lodo (Mud Upkeep): Protección y +25% XP
-El Lodo producido en los Myco-Composters es el insumo de mantenimiento de los cerdos:
-* Suministrar **10 unidades de Lodo** a un cerdo le otorga **3 cargas de baño**.
-* Cada carga proporciona un **+25% de XP final** en la siguiente comida consumida (incluyendo la alimentación con escarabajos).
-* Mientras tenga cargas de lodo activas, el cerdo es **completamente inmune a contraer enfermedades**.
-
-### Cosecha de Trufas (Truffles)
-Las trufas se recolectan automáticamente cada vez que el cerdo completa su ciclo de sueño (cada 24 horas base):
-* **Niveles 1 a 3:** 1 Trufa por ciclo (~3 trufas acumuladas).
-* **Niveles 4 a 7:** 2 Trufas por ciclo (~8 trufas acumuladas).
-* **Niveles 8 a 14:** 3 Trufas por ciclo (~21 trufas acumuladas).
-* **Nivel 15:** 4 Trufas por ciclo de forma permanente (4 trufas/día por cerdo).
-
-### Cerdas de Cerdo (Pig Bristles): Mecánica de Retiro
-Las **Pig Bristles** NO se obtienen del ciclo de sueño diario. Se consiguen exclusivamente al **retirar o jubilar (*trade-in*) al cerdo en el Pigpen** o en Bounties específicos:
-* **Jubilar a Nivel 3:** 1 Pig Bristle.
-* **Jubilar a Nivel 6:** 3 Pig Bristles.
-* **Jubilar a Nivel 10:** 6 Pig Bristles.
-* **Jubilar a Nivel 15:** 12 Pig Bristles.
-* **Penalización por Enfermedad:** Si el cerdo se jubila estando enfermo, se aplica un **-25% de penalización** sobre las cerdas obtenidas.
-* **Utilidad:** Las cerdas son necesarias para las expansiones de Cueva de nivel alto (Tier V a VIII) y para craftear protecciones contra el clima.
+  <div class="flex justify-center md:justify-end gap-3">
+    <div class="w-full max-w-[120px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+      <ZoomableImage src={miningDrillImg} alt="Taladro Minero (Mining Drill)" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+      <span class="text-[11px] font-medium text-white/80">Sand Drill</span>
+    </div>
+    <div class="w-full max-w-[120px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+      <ZoomableImage src={wildMushroomImg} alt="Seta Silvestre (Wild Mushroom)" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+      <span class="text-[11px] font-medium text-white/80">Seta Cueva</span>
+    </div>
+    <div class="w-full max-w-[120px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
+      <ZoomableImage src={beetleWingImg} alt="Escarabajo" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
+      <span class="text-[11px] font-medium text-white/80">Escarabajos XP</span>
+    </div>
+  </div>
+</div>
 
 ---
 

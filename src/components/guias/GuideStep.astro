@@ -1,18 +1,30 @@
 ---
+import { Image } from "astro:assets"
+import type { ImageMetadata } from "astro"
+
 interface Props {
-  step: string
+  step?: string
   text: string
+  image?: ImageMetadata | string
 }
-const { step, text } = Astro.props
+const { step, text, image } = Astro.props
 ---
 
 <div
   class="flex items-center gap-3 bg-terminal-surface/50 hover:bg-terminal-surface border border-terminal-border/40 hover:border-terminal-border rounded-xl p-2.5 transition-colors"
 >
   <div
-    class="flex-shrink-0 w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-mono text-[10px] font-bold"
+    class="flex-shrink-0 w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center p-0.5 overflow-hidden text-emerald-400 font-mono text-[10px] font-bold"
   >
-    {step}
+    {image ? (
+      typeof image === "string" ? (
+        <img src={image} alt="" class="w-full h-full object-contain [image-rendering:pixelated]" />
+      ) : (
+        <Image src={image} alt="" class="w-full h-full object-contain [image-rendering:pixelated]" />
+      )
+    ) : (
+      step
+    )}
   </div>
   <div class="flex-grow text-sm text-terminal-secondary font-medium">
     {text}
