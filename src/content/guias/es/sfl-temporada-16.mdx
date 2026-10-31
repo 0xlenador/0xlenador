@@ -21,6 +21,7 @@ import ResourceCard from "@components/buttons/ResourceCard.astro"
 import GuideSummary from "@components/guias/GuideSummary.astro"
 import GuideStep from "@components/guias/GuideStep.astro"
 import ZoomableImage from "@components/guias/ZoomableImage.astro"
+import MegastoreModal from "@components/guias/MegastoreModal.astro"
 
 import pigImg from "../../../assets/img/guias/sfl-season-16/pig.webp"
 import truffleImg from "../../../assets/img/guias/sfl-season-16/truffle.webp"
@@ -43,6 +44,11 @@ import bigBadWolfImg from "../../../assets/img/guias/sfl-season-16/big_bad_wolf.
 import miningDrillImg from "../../../assets/img/guias/sfl-season-16/mining_drill.webp"
 import raffleTicketImg from "../../../assets/img/guias/sfl-season-16/raffle_ticket.png"
 import wildMushroomImg from "../../../assets/img/guias/sfl-season-16/wild_mushroom.webp"
+import duendeShirtImg from "../../../assets/img/guias/sfl-season-16/duende_shirt.png"
+import duendePantsImg from "../../../assets/img/guias/sfl-season-16/duende_pants.png"
+import duendeShoesImg from "../../../assets/img/guias/sfl-season-16/duende_shoes.png"
+import strawHouseImg from "../../../assets/img/guias/sfl-season-16/straw_house.webp"
+import gourmetHourglassImg from "../../../assets/img/guias/sfl-season-16/gourmet_hourglass.webp"
 
 <GuideSummary>
   <GuideStep image={pigImg} text="Cerdos y Trufas">
@@ -163,6 +169,14 @@ La **Temporada 16 (Cave Dwellers)** llega a Sunflower Land introduciendo la crí
     </div>
   </div>
 </div>
+
+---
+
+<div id="megastore" class="scroll-mt-24"></div>
+
+## 3. Megastore de Stella
+
+<MegastoreModal lang="es" />
 
 ---
 

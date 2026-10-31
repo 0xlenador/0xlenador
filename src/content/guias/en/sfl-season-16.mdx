@@ -21,6 +21,7 @@ import ResourceCard from "@components/buttons/ResourceCard.astro"
 import GuideSummary from "@components/guias/GuideSummary.astro"
 import GuideStep from "@components/guias/GuideStep.astro"
 import ZoomableImage from "@components/guias/ZoomableImage.astro"
+import MegastoreModal from "@components/guias/MegastoreModal.astro"
 
 import duendeHatImg from "../../../assets/img/guias/sfl-season-16/duende_hat.png"
 import herculesBeetleHatImg from "../../../assets/img/guias/sfl-season-16/hercules_beetle_hat.png"
@@ -40,6 +41,11 @@ import bigBadWolfImg from "../../../assets/img/guias/sfl-season-16/big_bad_wolf.
 import miningDrillImg from "../../../assets/img/guias/sfl-season-16/mining_drill.webp"
 import raffleTicketImg from "../../../assets/img/guias/sfl-season-16/raffle_ticket.png"
 import wildMushroomImg from "../../../assets/img/guias/sfl-season-16/wild_mushroom.webp"
+import duendeShirtImg from "../../../assets/img/guias/sfl-season-16/duende_shirt.png"
+import duendePantsImg from "../../../assets/img/guias/sfl-season-16/duende_pants.png"
+import duendeShoesImg from "../../../assets/img/guias/sfl-season-16/duende_shoes.png"
+import strawHouseImg from "../../../assets/img/guias/sfl-season-16/straw_house.webp"
+import gourmetHourglassImg from "../../../assets/img/guias/sfl-season-16/gourmet_hourglass.webp"
 
 <GuideSummary>
   <GuideStep image={pigImg} text="Pigs & Truffles">
@@ -160,6 +166,14 @@ import wildMushroomImg from "../../../assets/img/guias/sfl-season-16/wild_mushro
     </div>
   </div>
 </div>
+
+---
+
+<div id="megastore" class="scroll-mt-24"></div>
+
+## 3. Stella's Megastore
+
+<MegastoreModal lang="en" />
 
 ---
 
