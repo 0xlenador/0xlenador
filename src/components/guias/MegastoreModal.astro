@@ -1,12 +1,19 @@
 ---
-import ZoomableImage from "./ZoomableImage.astro"
 import { Image } from "astro:assets"
 
 import duendeShoesImg from "../../assets/img/guias/sfl-season-16/duende_shoes.png"
 import duendePantsImg from "../../assets/img/guias/sfl-season-16/duende_pants.png"
 import duendeShirtImg from "../../assets/img/guias/sfl-season-16/duende_shirt.png"
 import duendeHatImg from "../../assets/img/guias/sfl-season-16/duende_hat.png"
+
 import gourmetHourglassImg from "../../assets/img/guias/sfl-season-16/gourmet_hourglass.webp"
+import harvestHourglassImg from "../../assets/img/guias/sfl-season-16/harvest_hourglass.webp"
+import timberHourglassImg from "../../assets/img/guias/sfl-season-16/timber_hourglass.webp"
+import blossomHourglassImg from "../../assets/img/guias/sfl-season-16/blossom_hourglass.webp"
+import fisherHourglassImg from "../../assets/img/guias/sfl-season-16/fisher_hourglass.webp"
+import orchardHourglassImg from "../../assets/img/guias/sfl-season-16/orchard_hourglass.webp"
+import oreHourglassImg from "../../assets/img/guias/sfl-season-16/ore_hourglass.webp"
+
 import duendeMonumentImg from "../../assets/img/guias/sfl-season-16/duende_monument.webp"
 import strawHouseImg from "../../assets/img/guias/sfl-season-16/straw_house.webp"
 import raffleTicketImg from "../../assets/img/guias/sfl-season-16/raffle_ticket.png"
@@ -14,7 +21,7 @@ import miningDrillImg from "../../assets/img/guias/sfl-season-16/mining_drill.we
 import cloverCoinImg from "../../assets/img/guias/sfl-season-16/clover_coin.webp"
 
 import coinImg from "../../assets/img/guias/sfl-season-16/coins.png"
-import sflCoinImg from "../../assets/img/guias/sfl-season-16/sunflower_coin.webp"
+import flowerImg from "../../assets/img/guias/sfl-season-16/flower.png"
 import beetleWingImg from "../../assets/img/guias/sfl-season-16/beetle_wing.webp"
 
 interface Props {
@@ -28,6 +35,7 @@ const isEn = lang === "en"
 const items = [
   {
     name: isEn ? "Duende Shoes" : "Zapatos Duende",
+    boost: isEn ? "+1 Wing / delivery" : "+1 Ala por entrega",
     src: duendeShoesImg,
     cost: "5,000",
     currency: coinImg,
@@ -35,20 +43,31 @@ const items = [
   },
   {
     name: isEn ? "Duende Pants" : "Pantalón Duende",
+    boost: isEn ? "+1 Wing / delivery" : "+1 Ala por entrega",
     src: duendePantsImg,
     cost: "10",
-    currency: sflCoinImg,
+    currency: flowerImg,
     isBoost: true,
   },
   {
     name: isEn ? "Duende Shirt" : "Camisa Duende",
+    boost: isEn ? "+1 Wing / delivery" : "+1 Ala por entrega",
     src: duendeShirtImg,
     cost: "50",
-    currency: sflCoinImg,
+    currency: flowerImg,
+    isBoost: true,
+  },
+  {
+    name: isEn ? "Duende Hat" : "Sombrero Duende",
+    boost: isEn ? "-10% crops & fruit time" : "-10% cultivos y frutas",
+    src: duendeHatImg,
+    cost: "9,000",
+    currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Gourmet Hourglass" : "Reloj Gourmet",
+    boost: isEn ? "-50% cooking time" : "-50% tiempo cocción",
     src: gourmetHourglassImg,
     cost: "100",
     currency: beetleWingImg,
@@ -56,62 +75,63 @@ const items = [
   },
   {
     name: isEn ? "Harvest Hourglass" : "Reloj Cosecha",
-    src: gourmetHourglassImg,
+    boost: isEn ? "-25% crop growth" : "-25% tiempo cultivos",
+    src: harvestHourglassImg,
     cost: "200",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Timber Hourglass" : "Reloj Madera",
-    src: gourmetHourglassImg,
+    boost: isEn ? "-25% tree recovery" : "-25% tiempo árboles",
+    src: timberHourglassImg,
     cost: "200",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Blossom Hourglass" : "Reloj Flores",
-    src: gourmetHourglassImg,
+    boost: isEn ? "-25% flower growth" : "-25% tiempo flores",
+    src: blossomHourglassImg,
     cost: "200",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Fisher's Hourglass" : "Reloj Pesca",
-    src: gourmetHourglassImg,
+    boost: isEn ? "-25% fish recovery" : "-25% tiempo pesca",
+    src: fisherHourglassImg,
     cost: "200",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Orchard Hourglass" : "Reloj Frutas",
-    src: gourmetHourglassImg,
+    boost: isEn ? "-25% fruit growth" : "-25% tiempo frutales",
+    src: orchardHourglassImg,
     cost: "200",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Ore Hourglass" : "Reloj Minería",
-    src: gourmetHourglassImg,
+    boost: isEn ? "-50% mineral recovery" : "-50% tiempo minerales",
+    src: oreHourglassImg,
     cost: "400",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
     name: isEn ? "Duende Monument" : "Monumento Duende",
+    boost: isEn ? "-10% expansion cost/time" : "-10% tiempo y costo exp.",
     src: duendeMonumentImg,
     cost: "4,000",
     currency: beetleWingImg,
     isBoost: true,
   },
   {
-    name: isEn ? "Duende Hat" : "Sombrero Duende",
-    src: duendeHatImg,
-    cost: "9,000",
-    currency: beetleWingImg,
-    isBoost: true,
-  },
-  {
     name: isEn ? "Straw House" : "Casa de Paja",
+    boost: isEn ? "-10% compost & 3x worms" : "-10% compost y 3x gusanos",
     src: strawHouseImg,
     cost: "9,000",
     currency: beetleWingImg,
@@ -119,6 +139,7 @@ const items = [
   },
   {
     name: isEn ? "Mining Drill" : "Taladro Minero",
+    boost: isEn ? "1/3 chance +1 digging" : "1/3 prob. +1 excavación",
     src: miningDrillImg,
     cost: "2,500",
     currency: beetleWingImg,
@@ -126,6 +147,7 @@ const items = [
   },
   {
     name: isEn ? "Pot of Luck" : "Olla de la Suerte",
+    boost: isEn ? "+Luck in desert digging" : "+Suerte excavación arena",
     src: cloverCoinImg,
     cost: "250",
     currency: cloverCoinImg,
@@ -133,6 +155,7 @@ const items = [
   },
   {
     name: isEn ? "Raffle Ticket" : "Boleto de Rifa",
+    boost: isEn ? "1 entry seasonal raffle" : "1 entrada sorteo quincenal",
     src: raffleTicketImg,
     cost: "100",
     currency: beetleWingImg,
@@ -141,21 +164,21 @@ const items = [
 ]
 ---
 
-<div class="my-8 not-prose max-w-4xl mx-auto select-none">
+<div class="my-6 not-prose max-w-3xl mx-auto select-none">
   <!-- Pestañas Superiores (Tabs) -->
-  <div class="flex items-end justify-between px-2 sm:px-4">
-    <div class="flex items-end gap-1.5">
+  <div class="flex items-end justify-between px-2 sm:px-3">
+    <div class="flex items-end gap-1">
       <!-- Pestaña Activa -->
       <div
-        class="bg-[#dfad7a] border-t-[3px] border-l-[3px] border-r-[3px] border-[#3c200c] rounded-t-xl px-3 sm:px-4 py-2 flex items-center gap-2 shadow-[0_-2px_0_rgba(255,255,255,0.2)] relative z-10"
+        class="bg-[#dfad7a] border-t-2 border-l-2 border-r-2 border-[#3c200c] rounded-t-lg px-2.5 sm:px-3 py-1 flex items-center gap-1.5 shadow-[0_-1px_0_rgba(255,255,255,0.2)] relative z-10"
       >
         <Image
           src={beetleWingImg}
           alt=""
-          class="w-4 h-4 object-contain [image-rendering:pixelated]"
+          class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
         />
         <span
-          class="font-mono text-xs sm:text-sm font-black text-[#3c200c] tracking-tight"
+          class="font-mono text-xs font-black text-[#3c200c] tracking-tight"
           style="color: #3c200c !important;"
         >
           {isEn ? "Cave Dwellers Store" : "Tienda Cave Dwellers"}
@@ -164,7 +187,7 @@ const items = [
 
       <!-- Pestaña Inactiva -->
       <div
-        class="bg-[#a6774a] border-t-[3px] border-l-[3px] border-r-[3px] border-[#3c200c] rounded-t-xl px-3 sm:px-4 py-1.5 flex items-center gap-1.5 opacity-75 hover:opacity-90 transition-opacity cursor-default mb-0"
+        class="bg-[#a6774a] border-t-2 border-l-2 border-r-2 border-[#3c200c] rounded-t-lg px-2.5 sm:px-3 py-1 flex items-center gap-1 opacity-75 hover:opacity-90 transition-opacity cursor-default mb-0"
       >
         <span class="text-xs">🎁</span>
         <span class="font-mono text-xs font-bold text-[#f7e3cf]">
@@ -174,20 +197,20 @@ const items = [
     </div>
   </div>
 
-  <!-- Caja Principal Estilo Modal Sunflower Land -->
+  <!-- Caja Principal Compacta Estilo Modal Sunflower Land -->
   <div
-    class="bg-[#dfad7a] border-[4px] border-[#3c200c] rounded-2xl p-3 sm:p-5 shadow-[0_8px_0_#241205,inset_0_3px_0_rgba(255,255,255,0.3)] relative -mt-[3px]"
+    class="bg-[#dfad7a] border-[3px] border-[#3c200c] rounded-xl p-2 sm:p-3 shadow-[0_5px_0_#241205,inset_0_2px_0_rgba(255,255,255,0.3)] relative -mt-[2px]"
   >
-    <!-- Cabecera Interior: Pills y Mensaje -->
-    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+    <!-- Cabecera Interior: Pills y Mensaje Compacto -->
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
       <div
-        class="bg-[#f0f0f4] border-2 border-[#2b2b36] rounded-md px-2.5 py-0.5 text-xs font-black text-[#2b2b36] shadow-[inset_0_1px_0_#fff,0_2px_0_#2b2b36]"
+        class="bg-[#f0f0f4] border-2 border-[#2b2b36] rounded px-2 py-0.5 text-[11px] font-black text-[#2b2b36] shadow-[inset_0_1px_0_#fff,0_1.5px_0_#2b2b36]"
       >
         {isEn ? "Stella's Megastore" : "Megastore de Stella"}
       </div>
 
       <div
-        class="bg-[#e11d48] border-2 border-[#2b2b36] rounded-md px-2.5 py-0.5 text-xs font-black text-white shadow-[0_2px_0_#2b2b36] flex items-center gap-1.5"
+        class="bg-[#e11d48] border-2 border-[#2b2b36] rounded px-2 py-0.5 text-[11px] font-black text-white shadow-[0_1.5px_0_#2b2b36] flex items-center gap-1"
       >
         <span>⏱️</span>
         <span>{isEn ? "Nov 2, 2026 – Feb 1, 2027" : "2 Nov 2026 – 1 Feb 2027"}</span>
@@ -196,7 +219,7 @@ const items = [
 
     <!-- Subtítulo oficial del juego -->
     <p
-      class="font-mono text-xs sm:text-[13px] font-bold leading-relaxed mb-4 !text-[#261306]"
+      class="font-mono text-[11px] sm:text-xs font-bold leading-normal mb-2.5 !text-[#261306]"
       style="color: #261306 !important;"
     >
       {
@@ -206,37 +229,62 @@ const items = [
       }
     </p>
 
-    <!-- Rejilla Interior de Slots (Huecos de Tienda) -->
+    <!-- Rejilla Interior de Slots (Huecos de Tienda Compactos) -->
     <div
-      class="bg-[#b38050] border-2 border-[#45230c] rounded-xl p-2.5 sm:p-3.5 shadow-[inset_0_3px_6px_rgba(0,0,0,0.35)] grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-2 sm:gap-2.5"
+      class="bg-[#b38050] border-2 border-[#45230c] rounded-lg p-1.5 sm:p-2 shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2"
     >
       {
         items.map((item) => (
-          <div class="relative bg-[#dfad7a] border-2 border-[#45230c] rounded-lg p-1.5 flex flex-col items-center justify-between min-h-[110px] sm:min-h-[120px] shadow-[inset_0_2px_0_rgba(255,255,255,0.4),0_2px_0_#45230c] hover:brightness-105 transition-all group">
-            {/* Rayo de Boost (Utility) en esquina superior izquierda */}
+          <div
+            class="relative bg-[#dfad7a] border-2 border-[#45230c] rounded-lg p-1.5 flex flex-col items-center justify-between shadow-[inset_0_1.5px_0_rgba(255,255,255,0.4),0_2px_0_#45230c] hover:brightness-105 transition-all group min-h-[142px] sm:min-h-[148px]"
+            title={`${item.name} — ${item.boost}`}
+          >
+            {/* Rayo de Boost Oficial de SFL */}
             {item.isBoost && (
-              <span class="absolute top-1 left-1.5 text-xs text-amber-500 font-bold select-none leading-none drop-shadow-[0_1px_0_#45230c]">
-                ⚡
-              </span>
+              <div
+                class="absolute -top-1 -left-1 z-10 w-5 h-5 flex items-center justify-center filter drop-shadow-[0_1.5px_0_#2e1505]"
+                title={isEn ? "Active utility boost" : "Potenciador activo"}
+              >
+                <svg
+                  class="w-4.5 h-4.5 text-amber-300 fill-amber-300 stroke-[#2e1505] stroke-[1.5]"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                  />
+                </svg>
+              </div>
             )}
 
             {/* Sprite Pixel Art Centrado */}
-            <div class="flex-1 flex items-center justify-center py-1 w-full">
-              <ZoomableImage
+            <div class="w-full h-10 sm:h-11 flex items-center justify-center my-0.5">
+              <Image
                 src={item.src}
                 alt={item.name}
-                class="w-12 h-12 sm:w-13 sm:h-13 object-contain [image-rendering:pixelated] group-hover:scale-110 transition-transform"
+                class="max-w-[40px] max-h-[40px] sm:max-w-[44px] sm:max-h-[44px] object-contain [image-rendering:pixelated] group-hover:scale-110 transition-transform select-none"
               />
             </div>
 
-            {/* Barra / Pastilla de Precio anclada abajo */}
-            <div class="bg-[#f6c343] border-2 border-[#45230c] rounded-md px-1.5 py-0.5 flex items-center justify-center gap-1 w-[92%] shadow-[0_2px_0_#45230c] -mb-1">
+            {/* Nombre del Artículo */}
+            <div class="font-mono text-[11px] sm:text-xs font-black text-[#2e1505] text-center leading-tight truncate w-full px-0.5">
+              {item.name}
+            </div>
+
+            {/* Potenciador / Utilidad Compacto */}
+            <div class="w-full text-[9px] sm:text-[10px] font-bold text-[#45230c] text-center leading-tight px-1 py-0.5 bg-[#cb955f]/40 rounded border border-[#8c5228]/30 my-1 min-h-[24px] sm:min-h-[26px] flex items-center justify-center">
+              {item.boost}
+            </div>
+
+            {/* Barra / Pastilla de Precio Anclada Abajo */}
+            <div class="bg-[#f6c343] border border-[#45230c] rounded px-1.5 py-0.5 flex items-center justify-center gap-1 w-full shadow-[0_1.5px_0_#45230c] mt-auto">
               <Image
                 src={item.currency}
                 alt=""
-                class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] -ml-0.5"
+                class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain [image-rendering:pixelated]"
               />
-              <span class="font-mono text-[11px] sm:text-xs font-black text-[#2e1505] tracking-tight">
+              <span class="font-mono text-[10px] sm:text-[11px] font-black text-[#2e1505] tracking-tight">
                 {item.cost}
               </span>
             </div>
@@ -246,4 +294,3 @@ const items = [
     </div>
   </div>
 </div>
-

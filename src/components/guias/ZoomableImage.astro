@@ -11,7 +11,7 @@ const modalId = `modal-${Math.random().toString(36).substring(2, 11)}`;
   <!-- Imagen miniatura (con botón invisible para accesibilidad y click) -->
   <button 
     type="button" 
-    class="w-full text-left outline-none p-0 m-0 bg-transparent border-none block cursor-zoom-in"
+    class="w-full flex items-center justify-center text-center outline-none p-0 m-0 bg-transparent border-none cursor-zoom-in"
     onclick={`document.getElementById('${modalId}').showModal()`}
     aria-label={`Ampliar imagen: ${alt}`}
   >
