@@ -9,6 +9,7 @@ import cyclopsBloomImg from "../../assets/img/guias/sfl-season-16/cyclops_bloom.
 import macropinnaImg from "../../assets/img/guias/sfl-season-16/macropinna.png"
 import manateeImg from "../../assets/img/guias/sfl-season-16/manatee.png"
 import bettaImg from "../../assets/img/guias/sfl-season-16/betta.png"
+import mapPieceImg from "../../assets/img/guias/sfl-season-16/map_piece.webp"
 
 interface Props {
   lang?: "es" | "en"
@@ -20,161 +21,166 @@ const isEn = lang === "en"
 
 const mutants = [
   {
-    name: isEn ? "Mushroom Chicken" : "Gallina Seta (Mushroom Chicken)",
+    name: "Mushroom Chicken",
     id: "#3107",
-    category: isEn ? "Animal Mutant" : "Mutante Ganadero",
-    origin: isEn ? "Chickens: ~1/1,000 egg collections" : "Gallinas: ~1/1,000 recolectas de huevos",
-    boost: isEn ? "+0.5 Crimstone on every 5th mine" : "+0.5 Crimstone cada 5ª mina",
-    desc: isEn
-      ? "Boosts rare mineral yield passively. Crucial for advanced forge and tool crafting without spending extra tools."
-      : "Multiplica el rendimiento de minerales raros. Imprescindible para forjas avanzadas sin consumir picos extra.",
+    category: isEn ? "Livestock Mutant" : "Mutante Ganadero",
+    howToGet: isEn
+      ? "Breeding & feeding chickens in Hen House (~1/1,000 drop chance on egg collection)."
+      : "Alimentar y recolectar en el Gallinero (~1/1,000 de probabilidad al recoger huevos).",
+    boost: isEn ? "+0.5 Crimstone every 5th Crimstone rock mined" : "+0.5 Crimstone cada 5ª roca de Crimstone minada",
+    hasBoost: true,
     src: mushroomChickenImg,
-    glow: "border-rose-500/30 bg-rose-500/5 hover:border-rose-500/50",
+    glow: "border-rose-500/30 bg-rose-500/5",
     badge: "bg-rose-500/15 text-rose-300 border-rose-500/30",
     statColor: "text-rose-400",
   },
   {
-    name: isEn ? "Ladybug Cow" : "Vaca Mariquita (Ladybug Cow)",
+    name: "Ladybug Cow",
     id: "#3108",
-    category: isEn ? "Animal Mutant" : "Mutante Ganadero",
-    origin: isEn ? "Cows: ~1/1,000 milking buckets" : "Vacas: ~1/1,000 ordeños con balde",
-    boost: isEn ? "+1 Oil per Oil Drill use" : "+1 Petróleo por perforación de Oil Drill",
-    desc: isEn
-      ? "Doubles oil extraction output. One of the highest economic value mutants for fueling industrial machinery."
-      : "Duplica la extracción de crudo. Uno de los mutantes más valiosos económicamente para abastecer maquinaria.",
+    category: isEn ? "Livestock Mutant" : "Mutante Ganadero",
+    howToGet: isEn
+      ? "Breeding & feeding cows in the Barn (~1/1,000 drop chance on bucket milking)."
+      : "Alimentar y ordeñar vacas en el Establo (~1/1,000 de probabilidad al ordeñar con balde).",
+    boost: isEn ? "+1 Oil per Oil Drill use" : "+1 Petróleo (Oil) por cada perforación de Oil Drill",
+    hasBoost: true,
     src: ladybugCowImg,
-    glow: "border-amber-500/30 bg-amber-500/5 hover:border-amber-500/50",
+    glow: "border-amber-500/30 bg-amber-500/5",
     badge: "bg-amber-500/15 text-amber-300 border-amber-500/30",
     statColor: "text-amber-400",
   },
   {
-    name: isEn ? "Beetle Sheep" : "Oveja Escarabajo (Beetle Sheep)",
+    name: "Beetle Sheep",
     id: "#3109",
-    category: isEn ? "Animal Mutant" : "Mutante Ganadero",
-    origin: isEn ? "Sheep: ~1/1,000 wool shearings" : "Ovejas: ~1/1,000 esquilados de lana",
-    boost: isEn ? "-7.5% Sheep sleep duration" : "-7.5% tiempo de sueño en ovejas",
-    desc: isEn
-      ? "Stacks with Truffle Seasoning (-50%) to accelerate wool production needed for seasonal weather craftings."
-      : "Se acumula con Truffle Seasoning (-50%) para acelerar lana esencial en protecciones climáticas.",
+    category: isEn ? "Livestock Mutant" : "Mutante Ganadero",
+    howToGet: isEn
+      ? "Breeding & feeding sheep in the Pen (~1/1,000 drop chance on wool shearing)."
+      : "Alimentar y esquilar ovejas en el Redil (~1/1,000 de probabilidad al esquilar lana).",
+    boost: isEn ? "-7.5% Sheep sleep duration" : "-7.5% en la duración del sueño de ovejas",
+    hasBoost: true,
     src: beetleSheepImg,
-    glow: "border-blue-500/30 bg-blue-500/5 hover:border-blue-500/50",
+    glow: "border-blue-500/30 bg-blue-500/5",
     badge: "bg-blue-500/15 text-blue-300 border-blue-500/30",
     statColor: "text-blue-400",
   },
   {
-    name: isEn ? "Cyclops Bloom" : "Flor Cíclope (Cyclops Bloom)",
+    name: "Cyclops Bloom",
     id: "#3110",
     category: isEn ? "Flower Mutant" : "Mutante Floral",
-    origin: isEn ? "Flower beds: Rare cross-breeding" : "Bancales: Polinización floral rara",
-    boost: isEn ? "-20% Fish Market processing time" : "-20% tiempo en Mercado de Pescado",
-    desc: isEn
-      ? "Speeds up smoked fish, fish oil production, and high-tier culinary preparation deliveries."
-      : "Acelera ahumado de pescado, elaboración de aceite y despachos culinarios de alta ganancia.",
+    howToGet: isEn
+      ? "Cross-breeding & harvesting flower seeds in the Flower Bed."
+      : "Polinización cruzada y cosecha en los Bancales de Flores (Flower Bed).",
+    boost: isEn ? "Seasonal floral collectible" : "Coleccionable botánico de temporada (Sin boost)",
+    hasBoost: false,
     src: cyclopsBloomImg,
-    glow: "border-purple-500/30 bg-purple-500/5 hover:border-purple-500/50",
+    glow: "border-purple-500/30 bg-purple-500/5",
     badge: "bg-purple-500/15 text-purple-300 border-purple-500/30",
-    statColor: "text-purple-400",
+    statColor: "text-purple-300",
   },
 ]
 
-const fishes = [
+const s16Fish = [
   {
-    name: isEn ? "Macropinna (Chapter Marvel)" : "Macropinna (Pez Maravilla S16)",
-    type: isEn ? "⭐ CHAPTER MARVEL" : "⭐ PEZ MARAVILLA S16",
-    habitat: isEn ? "Deep Cave waters & ocean trenches" : "Aguas de cueva y fosas profundas",
-    bait: isEn ? "Advanced Fishing Rod + Grubs / Lures" : "Caña avanzada + Grubs / Señuelos",
-    boost: isEn ? "+0.1 Obsidian per Lava Pit harvest" : "+0.1 Obsidiana al cosechar Pozo de Lava",
-    desc: isEn
-      ? "The ultimate seasonal aquatic discovery. Transparent bioluminescent skull provides steady passive obsidian income."
-      : "El hallazgo acuático cumbre de la temporada. Su cráneo transparente bioluminiscente genera obsidiana pasiva constante.",
+    name: "Macropinna",
+    tier: isEn ? "Chapter 16 Marine Species" : "Especie Marina S16",
+    requirement: isEn ? "9x Map Pieces (Chapter 16)" : "9x Fragmentos de Mapa (Cap. 16)",
+    boost: isEn ? "+0.1 Obsidian per Lava Pit harvest" : "+0.1 Obsidiana por Pozo de Lava cosechado",
     src: macropinnaImg,
-    isMarvel: true,
-    glow: "border-cyan-500/40 bg-cyan-950/20 hover:border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.15)]",
-    badge: "bg-cyan-500/20 text-cyan-300 border-cyan-400/40",
+    glow: "border-cyan-500/30 bg-cyan-950/20",
+    badge: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
     statColor: "text-cyan-300",
   },
   {
-    name: isEn ? "Manatee (Cave Manatee)" : "Manatí de Cueva (Manatee)",
-    type: isEn ? "Seasonal Rare Fish" : "Pez Raro de Temporada",
-    habitat: isEn ? "Cave streams & quiet freshwater" : "Arroyos cavernarios y aguas mansas",
-    bait: isEn ? "Red Wiggler / Earthworm" : "Red Wiggler / Lombriz común",
-    boost: isEn ? "Codex completion + High NPC delivery XP" : "Registro en Codex + Alta XP en entregas",
-    desc: isEn
-      ? "Gentle subterranean aquatic giant. Unlocks fish codex milestone tiers and high-yield NPC recipes."
-      : "Gigante acuático apacible de las profundidades. Otorga hitos en el codex y recetas culinarias de alto valor.",
+    name: "Manatee",
+    tier: isEn ? "Chapter 16 Marine Species" : "Especie Marina S16",
+    requirement: isEn ? "9x Map Pieces (Chapter 16)" : "9x Fragmentos de Mapa (Cap. 16)",
+    boost: isEn ? "Seasonal decorative collectible" : "Coleccionable decorativo de temporada",
     src: manateeImg,
-    isMarvel: false,
-    glow: "border-emerald-500/30 bg-emerald-950/15 hover:border-emerald-500/50",
+    glow: "border-emerald-500/30 bg-emerald-950/20",
     badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-    statColor: "text-emerald-400",
+    statColor: "text-emerald-300",
   },
   {
-    name: isEn ? "Betta (Cave Fighting Fish)" : "Betta de Caverna",
-    type: isEn ? "Seasonal Fish" : "Pez Estacional de Caverna",
-    habitat: isEn ? "Shallow underground pools" : "Pozas subterráneas de baja cota",
-    bait: isEn ? "Fishing Rod + Standard Bait" : "Caña de pescar + Cebo común",
-    boost: isEn ? "Aquarium exhibition & delivery bounties" : "Exhibición en acuario y bounties de pesca",
-    desc: isEn
-      ? "Vibrant finned cave fish. Used in weekly bounties and ornamental aquarium decorations."
-      : "Pez de aletas vistosas adaptado a la oscuridad. Utilizado en bounties semanales y acuarios ornamentales.",
+    name: "Betta",
+    tier: isEn ? "Chapter 16 Marine Species" : "Especie Marina S16",
+    requirement: isEn ? "9x Map Pieces (Chapter 16)" : "9x Fragmentos de Mapa (Cap. 16)",
+    boost: isEn ? "Seasonal decorative collectible" : "Coleccionable decorativo de temporada",
     src: bettaImg,
-    isMarvel: false,
-    glow: "border-sky-500/30 bg-sky-950/15 hover:border-sky-500/50",
+    glow: "border-sky-500/30 bg-sky-950/20",
     badge: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-    statColor: "text-sky-400",
+    statColor: "text-sky-300",
+  },
+]
+
+const marvelDropsTable = [
+  {
+    marvel: "Starlight Tuna",
+    sources: isEn ? "Horse Mackerel (36% map drop) · Halibut (2.5%)" : "Horse Mackerel (36% drop mapa) · Halibut (2.5%)",
+    chum: "9x Map Pieces",
+    boost: isEn ? "Permanent Marine Marvel (1/5)" : "Maravilla Marina Permanente (1 de 5)",
+  },
+  {
+    marvel: "Twilight Anglerfish",
+    sources: isEn ? "Parrotfish (21% map drop) · Clownfish (2.5%)" : "Parrotfish (21% drop mapa) · Clownfish (2.5%)",
+    chum: "9x Map Pieces",
+    boost: isEn ? "Permanent Marine Marvel (2/5)" : "Maravilla Marina Permanente (2 de 5)",
+  },
+  {
+    marvel: "Gilded Swordfish",
+    sources: isEn ? "White Shark (30% map drop) · Rock Blackfish (5%)" : "White Shark (30% drop mapa) · Rock Blackfish (5%)",
+    chum: "9x Map Pieces",
+    boost: isEn ? "+0.1 Gold extra passive" : "+0.1 Oro (Gold) extra pasivo",
+  },
+  {
+    marvel: "Radiant Ray",
+    sources: isEn ? "Hammerhead Shark (5% map drop) · Trout (2%)" : "Hammerhead Shark (5% drop mapa) · Trout (2%)",
+    chum: "9x Map Pieces",
+    boost: isEn ? "Permanent Marine Marvel (4/5)" : "Maravilla Marina Permanente (4 de 5)",
+  },
+  {
+    marvel: "Phantom Barracuda",
+    sources: isEn ? "Squid (5% map drop) · Mahi Mahi (0.18%)" : "Squid (5% drop mapa) · Mahi Mahi (0.18%)",
+    chum: "9x Map Pieces",
+    boost: isEn ? "Permanent Marine Marvel (5/5)" : "Maravilla Marina Permanente (5 de 5)",
   },
 ]
 ---
 
 <div class="my-8 not-prose space-y-6">
-  <!-- Cabecera de la Sección con Estilo Terminal / Bioluminiscente -->
-  <div class="bg-gradient-to-r from-purple-950/30 via-[#18181b] to-cyan-950/30 border border-white/10 rounded-2xl p-4 sm:p-6 shadow-xl">
-    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-      <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/25 text-purple-300 text-xs font-mono font-bold uppercase tracking-wider">
-        <span>🧬</span>
-        <span>{isEn ? "Subterranean Bioluminescence & Marvels" : "Bioluminiscencia Subterránea & Marvels"}</span>
-      </div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-terminal-secondary text-xs font-mono">
-        <span>✨</span>
-        <span>{isEn ? "Permanent Passive Multipliers" : "Multiplicadores Pasivos Permanentes"}</span>
-      </div>
+  <!-- Cabecera de Sección -->
+  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+    <div class="flex items-center gap-2">
+      <span class="text-base">🧬</span>
+      <h3 class="text-base sm:text-lg font-bold text-white tracking-tight">
+        {isEn ? "5. Mutants & Marine Marvels" : "5. Mutantes y Peces Maravilla"}
+      </h3>
     </div>
-
-    <h3 class="text-lg sm:text-xl font-bold text-white tracking-tight mb-2">
-      {isEn ? "Cave Mutants & Seasonal Marvel Fish" : "Mutantes de Cueva y Peces Maravilla (Temporada 16)"}
-    </h3>
-
-    <p class="text-sm text-terminal-secondary leading-relaxed max-w-3xl">
-      {
-        isEn
-          ? "Chapter 16 introduces 4 underground mutant drops from regular farming tasks and 3 new fish species, spearheaded by the Macropinna Marvel. Mutants provide permanent production multipliers on your land without requiring extra upkeep."
-          : "La Temporada 16 introduce 4 mutantes subterráneos como drops raros de tareas ganaderas y 3 nuevos peces encabezados por el Marvel Macropinna. Los mutantes otorgan multiplicadores de producción permanentes en tu granja sin requerir mantenimiento adicional."
-      }
-    </p>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[11px] font-mono text-terminal-secondary">
+      <span>⚙️</span>
+      <span>{isEn ? "Verified In-Game Mechanics" : "Mecánicas Reales de Juego"}</span>
+    </div>
   </div>
 
-  <!-- PARTE 1: Los 4 Mutantes Subterráneos -->
+  <!-- BLOQUE 1: Los 4 Mutantes Subterráneos -->
   <div>
     <div class="flex items-center justify-between mb-3 px-1">
       <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse"></span>
-        <span class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
-          {isEn ? "1. Subterranean Mutants (IDs #3107 – #3110)" : "1. Mutantes Subterráneos (IDs #3107 – #3110)"}
-        </span>
+        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+        <h4 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+          {isEn ? "Chapter 16 Mutants (IDs #3107 – #3110)" : "Mutantes de Temporada 16 (IDs #3107 – #3110)"}
+        </h4>
       </div>
-      <span class="font-mono text-[11px] text-terminal-muted hidden sm:inline">
-        {isEn ? "Drop Rate: ~1 in 1,000 interactions" : "Probabilidad: ~1 en 1,000 interacciones"}
+      <span class="font-mono text-[10.5px] text-terminal-muted hidden sm:inline">
+        {isEn ? "Base chance: ~1 in 1,000 animal collections" : "Probabilidad base: ~1 en 1,000 recolectas"}
       </span>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       {
         mutants.map((m) => (
-          <div class={`rounded-xl border p-4 flex flex-col justify-between transition-all duration-300 backdrop-blur-sm ${m.glow}`}>
-            {/* Cabecera de la Tarjeta */}
+          <div class={`rounded-xl border p-3.5 sm:p-4 flex flex-col justify-between ${m.glow}`}>
             <div>
-              <div class="flex items-center justify-between gap-1 mb-2">
-                <span class={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${m.badge}`}>
+              <div class="flex items-center justify-between mb-2">
+                <span class={`text-[9.5px] font-mono font-bold px-2 py-0.5 rounded border ${m.badge}`}>
                   {m.category}
                 </span>
                 <span class="text-[10px] font-mono text-terminal-muted">
@@ -182,156 +188,161 @@ const fishes = [
                 </span>
               </div>
 
-              {/* Sprite Pixel Art Centrado */}
-              <div class="h-20 w-full flex items-center justify-center my-2">
+              <!-- Sprite Pixel Art Centrado -->
+              <div class="h-16 w-full flex items-center justify-center my-2">
                 <Image
                   src={m.src}
                   alt={m.name}
-                  class="max-w-[64px] max-h-[64px] object-contain [image-rendering:pixelated] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform"
+                  class="max-w-[56px] max-h-[56px] object-contain [image-rendering:pixelated] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
                 />
               </div>
 
-              {/* Nombre del Mutante */}
-              <h4 class="font-bold text-sm text-white text-center leading-snug mb-1">
+              <!-- Nombre -->
+              <h5 class="font-bold text-sm text-white text-center mb-2">
                 {m.name}
-              </h4>
+              </h5>
 
-              {/* Origen / Cómo dropea */}
-              <div class="text-[11px] font-mono text-terminal-muted text-center mb-2.5">
-                {m.origin}
-              </div>
-
-              {/* Pastilla de Potenciador Clave */}
-              <div class="bg-black/40 border border-white/10 rounded-lg p-2 mb-2 text-center">
-                <div class="text-[10px] font-mono uppercase text-terminal-muted mb-0.5">
-                  {isEn ? "Passive Boost" : "Potenciador Pasivo"}
+              <!-- Cómo se consigue (Exacto) -->
+              <div class="bg-black/40 border border-white/5 rounded-lg p-2 mb-2 text-left">
+                <div class="text-[9.5px] font-mono uppercase text-terminal-muted mb-0.5">
+                  {isEn ? "How to obtain:" : "Cómo se obtiene:"}
                 </div>
-                <div class={`text-xs font-mono font-bold ${m.statColor}`}>
-                  {m.boost}
+                <div class="text-[11px] text-terminal-secondary leading-tight">
+                  {m.howToGet}
                 </div>
               </div>
             </div>
 
-            {/* Descripción Operativa */}
-            <p class="text-[11px] text-terminal-secondary leading-relaxed mt-1">
-              {m.desc}
-            </p>
+            <!-- Potenciador (Exacto) -->
+            <div class="bg-black/60 border border-white/10 rounded-lg p-2 text-center mt-1">
+              <div class="text-[9.5px] font-mono uppercase text-terminal-muted mb-0.5">
+                {isEn ? "In-Game Boost:" : "Potenciador:"}
+              </div>
+              <div class={`text-[11px] font-mono font-bold ${m.statColor}`}>
+                {m.boost}
+              </div>
+            </div>
           </div>
         ))
       }
     </div>
   </div>
 
-  <!-- PARTE 2: Peces de Temporada y Pez Maravilla (Marvel Fish) -->
+  <!-- BLOQUE 2: Peces de Temporada 16 -->
   <div>
     <div class="flex items-center justify-between mb-3 px-1">
       <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
-          {isEn ? "2. Cave Marine Life & Chapter Marvel" : "2. Fauna Marina de Cueva y Pez Maravilla"}
-        </span>
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+        <h4 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+          {isEn ? "Chapter 16 Marine Species" : "Especies Marinas de Temporada 16"}
+        </h4>
       </div>
-      <span class="font-mono text-[11px] text-cyan-400 font-bold hidden sm:inline">
-        {isEn ? "Macropinna: +0.1 Obsidian per Lava Pit" : "Macropinna: +0.1 Obsidiana por Pozo de Lava"}
+      <span class="font-mono text-[10.5px] text-cyan-400">
+        {isEn ? "Requires: 9x Map Pieces each" : "Requieren: 9x Fragmentos de Mapa c/u"}
       </span>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
       {
-        fishes.map((f) => (
-          <div class={`rounded-xl border p-4 flex flex-col justify-between transition-all duration-300 backdrop-blur-sm relative overflow-hidden ${f.glow}`}>
-            {/* Indicador de Marvel de Fondo */}
-            {f.isMarvel && (
-              <div class="absolute -right-8 -top-8 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl pointer-events-none" />
-            )}
-
+        s16Fish.map((f) => (
+          <div class={`rounded-xl border p-4 flex flex-col justify-between ${f.glow}`}>
             <div>
-              <div class="flex items-center justify-between gap-1 mb-2">
-                <span class={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${f.badge}`}>
-                  {f.type}
+              <div class="flex items-center justify-between mb-2">
+                <span class={`text-[9.5px] font-mono font-bold px-2 py-0.5 rounded border ${f.badge}`}>
+                  {f.tier}
                 </span>
-                {f.isMarvel && (
-                  <span class="text-[10px] font-mono font-black text-cyan-300 animate-pulse">
-                    MARVEL
-                  </span>
-                )}
+                <span class="text-[10px] font-mono text-terminal-muted">
+                  Cap. 16
+                </span>
               </div>
 
-              {/* Sprite del Pez Centrado */}
-              <div class="h-20 w-full flex items-center justify-center my-2">
+              <!-- Sprite Centrado -->
+              <div class="h-16 w-full flex items-center justify-center my-2">
                 <Image
                   src={f.src}
                   alt={f.name}
-                  class="max-w-[64px] max-h-[64px] object-contain [image-rendering:pixelated] drop-shadow-[0_4px_16px_rgba(6,182,212,0.3)] group-hover:scale-110 transition-transform"
+                  class="max-w-[56px] max-h-[56px] object-contain [image-rendering:pixelated] drop-shadow-[0_4px_12px_rgba(6,182,212,0.3)]"
                 />
               </div>
 
-              {/* Nombre */}
-              <h4 class="font-bold text-sm text-white text-center leading-snug mb-1">
+              <h5 class="font-bold text-sm text-white text-center mb-2">
                 {f.name}
-              </h4>
+              </h5>
 
-              {/* Hábitat y Cebo */}
-              <div class="space-y-1 mb-3 text-[11px] font-mono text-terminal-muted bg-black/30 p-2 rounded-lg border border-white/5">
-                <div class="flex items-center justify-between">
-                  <span>{isEn ? "Habitat:" : "Hábitat:"}</span>
-                  <span class="text-white text-right truncate ml-1">{f.habitat}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span>{isEn ? "Bait:" : "Cebo:"}</span>
-                  <span class="text-terminal-secondary text-right truncate ml-1">{f.bait}</span>
-                </div>
-              </div>
-
-              {/* Potenciador */}
-              <div class="bg-black/50 border border-white/10 rounded-lg p-2.5 mb-2 text-center">
-                <div class="text-[10px] font-mono uppercase text-terminal-muted mb-0.5">
-                  {isEn ? "Utility & Effect" : "Utilidad & Efecto"}
-                </div>
-                <div class={`text-xs font-mono font-bold ${f.statColor}`}>
-                  {f.boost}
-                </div>
+              <!-- Requisito de Mapa -->
+              <div class="bg-black/40 border border-white/5 rounded-lg p-2 mb-2 text-center flex items-center justify-center gap-2">
+                <Image
+                  src={mapPieceImg}
+                  alt="Map Piece"
+                  class="w-4 h-auto object-contain [image-rendering:pixelated]"
+                />
+                <span class="text-[11px] font-mono text-[#f5d77f] font-bold">
+                  {f.requirement}
+                </span>
               </div>
             </div>
 
-            {/* Descripción */}
-            <p class="text-[11px] text-terminal-secondary leading-relaxed mt-1">
-              {f.desc}
-            </p>
+            <!-- Potenciador -->
+            <div class="bg-black/60 border border-white/10 rounded-lg p-2 text-center mt-1">
+              <div class="text-[9.5px] font-mono uppercase text-terminal-muted mb-0.5">
+                {isEn ? "Utility / Boost:" : "Utilidad / Potenciador:"}
+              </div>
+              <div class={`text-[11px] font-mono font-bold ${f.statColor}`}>
+                {f.boost}
+              </div>
+            </div>
           </div>
         ))
       }
     </div>
   </div>
 
-  <!-- Cuadro Táctico de Caza y Optimización -->
-  <div class="bg-[#121318] border border-white/10 rounded-xl p-3.5 sm:p-4 text-xs font-mono text-terminal-secondary">
-    <div class="flex items-center gap-2 mb-2 text-white font-bold">
-      <span class="text-emerald-400">⚡</span>
-      <span>{isEn ? "Hunting Strategy & Yield Maximization" : "Estrategia Operativa de Caza y Rendimiento"}</span>
+  <!-- BLOQUE 3: Mecánica de Map Pieces para Peces Maravilla (Marine Marvels) -->
+  <div class="bg-[#121215] border border-white/10 rounded-2xl p-4 sm:p-5 space-y-3">
+    <div class="flex items-center justify-between border-b border-white/5 pb-2.5">
+      <div class="flex items-center gap-2">
+        <Image
+          src={mapPieceImg}
+          alt="Map Piece"
+          class="w-5 h-auto object-contain [image-rendering:pixelated]"
+        />
+        <h4 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-wider">
+          {isEn ? "How to Get Marine Marvel Map Pieces" : "Cómo Obtener los Fragmentos de Mapa (Map Pieces)"}
+        </h4>
+      </div>
+      <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
+        {isEn ? "9 Pieces = 1 Marvel" : "9 Fragmentos = 1 Maravilla"}
+      </span>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] leading-relaxed">
-      <div class="bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
-        <strong class="text-purple-300 block mb-1">
-          {isEn ? "• Farming Mutants:" : "• Caza de Mutantes Ganaderos:"}
-        </strong>
-        {
-          isEn
-            ? "Apply Truffle Seasoning to cut animal sleep times by 50%. This effectively doubles your daily interaction attempts to reach the 1/1,000 threshold without increasing feed costs."
-            : "Aplica Truffle Seasoning para reducir el sueño de los animales un 50%. Esto duplica tus intentos diarios para alcanzar el umbral de 1/1,000 recolectas sin incrementar costos de alimento."
-        }
-      </div>
-      <div class="bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
-        <strong class="text-cyan-300 block mb-1">
-          {isEn ? "• Fishing the Macropinna Marvel:" : "• Pesca del Macropinna Marvel:"}
-        </strong>
-        {
-          isEn
-            ? "Wait for the Fish Frenzy weather event (+0.8 catch rate) and use Ore Hourglasses or Fisher's Hourglasses to rapidly cycle fishing casts in deep cave pools."
-            : "Espera al evento climático Fish Frenzy (+0.8 capturas) y combina Relojes de Minería o Pesca para ciclar cañazos en pozas profundas con el máximo retorno de intentos."
-        }
-      </div>
+
+    <p class="text-xs text-terminal-secondary leading-relaxed">
+      {isEn
+        ? "Marine Marvels cannot be hooked directly with standard bait. Instead, catching specific combo fish gives a percentage drop to trigger a water sparkle and minigame for their Map Piece. Gather 9 Map Pieces to claim the Marvel:"
+        : "Los Peces Maravilla no se pescan directamente con cebo común. Al pescar los peces específicos de cada combinación, hay una probabilidad de que aparezca un destello en el agua y el minijuego para desenterrar su Fragmento de Mapa. Reúne 9 fragmentos para reclamar la Maravilla:"}
+    </p>
+
+    <!-- Tabla Limpia de Fuentes y Probabilidades de Map Pieces -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-mono border-collapse">
+        <thead>
+          <tr class="border-b border-white/10 text-terminal-muted text-[10.5px]">
+            <th class="py-2 px-2.5">{isEn ? "Marine Marvel" : "Pez Maravilla"}</th>
+            <th class="py-2 px-2.5">{isEn ? "Fish / Bait Needed for Map Drop" : "Peces y Cebos que Dropean el Mapa"}</th>
+            <th class="py-2 px-2.5">{isEn ? "Chum Required" : "Chum / Entrega"}</th>
+            <th class="py-2 px-2.5">{isEn ? "Verified Boost / Effect" : "Potenciador Real"}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5 text-[11px]">
+          {marvelDropsTable.map((row) => (
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-2 px-2.5 font-bold text-white whitespace-nowrap">{row.marvel}</td>
+              <td class="py-2 px-2.5 text-terminal-secondary">{row.sources}</td>
+              <td class="py-2 px-2.5 text-[#f5d77f] font-bold whitespace-nowrap">{row.chum}</td>
+              <td class="py-2 px-2.5 text-cyan-300">{row.boost}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
-

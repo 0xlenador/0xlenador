@@ -1,0 +1,362 @@
+---
+import { Image } from "astro:assets"
+
+import raffleTicketImg from "../../assets/img/guias/sfl-season-16/raffle_ticket.png"
+import beetleWingImg from "../../assets/img/guias/sfl-season-16/beetle_wing.webp"
+import piggyBankImg from "../../assets/img/guias/sfl-season-16/piggy_bank.webp"
+import budImg from "../../assets/img/guias/sfl-season-16/bud.png"
+import gemImg from "../../assets/img/guias/sfl-season-16/gem.png"
+import coinsImg from "../../assets/img/guias/sfl-season-16/coins.png"
+import treasureChestImg from "../../assets/img/guias/sfl-season-16/treasure_chest.webp"
+
+interface Props {
+  lang?: "es" | "en"
+}
+
+const { lang = "es" } = Astro.props
+
+const isEn = lang === "en"
+---
+
+<div class="my-8 not-prose space-y-6">
+  <!-- Cabecera de la Sección de Rifas -->
+  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+    <div class="flex items-center gap-2">
+      <span class="text-base">🎟️</span>
+      <h3 class="text-base sm:text-lg font-bold text-white tracking-tight">
+        {isEn ? "Chapter Raffles (Auctioneer Plaza)" : "Rifas de Temporada (Plaza del Subastador)"}
+      </h3>
+    </div>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-400">
+      <span>🎲</span>
+      <span>{isEn ? "3 Monthly Draws · Provably Fair (VRF)" : "3 Sorteos Mensuales · Verificable On-Chain (VRF)"}</span>
+    </div>
+  </div>
+
+  <!-- Puntos Clave de Cómo Funciona el Sistema -->
+  <p class="text-xs sm:text-sm text-terminal-secondary leading-relaxed">
+    {isEn
+      ? "Sunflower Land's raffle system democratizes access to high-tier chapter NFTs. Unlike blind auctions where whales dominate by capital, raffles allow any participant submitting tickets a provably fair cryptographic chance to win exclusive collectibles."
+      : "El sistema de rifas de Sunflower Land democratiza el acceso a los NFTs de mayor valor de la temporada. A diferencia de las subastas a ciegas donde las ballenas dominan por volumen de capital, las rifas otorgan a cualquier participante una probabilidad justa y criptográficamente certificada de ganar."}
+  </p>
+
+  <!-- Matriz de Conversión de Boletos y Multiplicadores de Entrada -->
+  <div>
+    <h4 class="text-xs font-mono font-bold text-terminal-muted uppercase tracking-wider mb-3">
+      {isEn ? "1. Ticket Types & Entry Weights" : "1. Tipos de Boletos y Multiplicadores de Entrada"}
+    </h4>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <!-- Boleto 1: Raffle Ticket -->
+      <div class="bg-[#151515] border border-white/10 rounded-xl p-3.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono text-terminal-muted">ID #3104</span>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              1 Ticket = 1 {isEn ? "Entry" : "Entrada"}
+            </span>
+          </div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center shrink-0">
+              <Image
+                src={raffleTicketImg}
+                alt="Raffle Ticket"
+                class="w-6 h-auto object-contain [image-rendering:pixelated]"
+              />
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white leading-tight">
+                {isEn ? "Cave Dwellers Raffle Ticket" : "Boleto de Rifa Cave Dwellers"}
+              </div>
+              <div class="text-[11px] text-terminal-muted font-mono">
+                {isEn ? "Free & Pass Reward" : "Recompensa del Pase"}
+              </div>
+            </div>
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Passive tickets earned directly through Season Pass progression and milestones. Ideal for casual and F2P players."
+              : "Boletos obtenidos sin coste en las metas del Pase de Temporada y entregas. Diseñados para participar sin quemar divisas."}
+          </p>
+        </div>
+      </div>
+
+      <!-- Boleto 2: Beetle Wing -->
+      <div class="bg-[#151515] border border-amber-500/20 rounded-xl p-3.5 flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -right-6 -top-6 w-16 h-16 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono text-terminal-muted">ID #3103</span>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              1 Wing = 10 {isEn ? "Entries" : "Entradas"} (x10)
+            </span>
+          </div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-lg bg-amber-950/20 border border-amber-500/20 flex items-center justify-center shrink-0">
+              <Image
+                src={beetleWingImg}
+                alt="Beetle Wing"
+                class="w-5 h-auto object-contain [image-rendering:pixelated]"
+              />
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white leading-tight">
+                {isEn ? "Seasonal Beetle Wing" : "Ala de Escarabajo (Divisa)"}
+              </div>
+              <div class="text-[11px] text-amber-400 font-mono">
+                {isEn ? "10x Entry Value" : "Multiplicador x10"}
+              </div>
+            </div>
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Convert surplus season currency into raffle entries. Highest probability booster once you finish your Megastore buys."
+              : "Convierte el excedente estacional en entradas masivas. La vía óptima de quema tras haber completado la Megastore."}
+          </p>
+        </div>
+      </div>
+
+      <!-- Boleto 3: Prize Ticket -->
+      <div class="bg-[#151515] border border-purple-500/20 rounded-xl p-3.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono text-terminal-muted">{isEn ? "Rare Drop" : "Drop Raro"}</span>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              1 Ticket = 200 {isEn ? "Entries" : "Entradas"} (x200)
+            </span>
+          </div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-lg bg-purple-950/20 border border-purple-500/20 flex items-center justify-center shrink-0">
+              <Image
+                src={treasureChestImg}
+                alt="Prize Ticket Chest"
+                class="w-6 h-auto object-contain [image-rendering:pixelated]"
+              />
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white leading-tight">
+                {isEn ? "Legendary Prize Ticket" : "Ticket de Gran Premio"}
+              </div>
+              <div class="text-[11px] text-purple-400 font-mono">
+                {isEn ? "200x Super Entry" : "Multiplicador x200"}
+              </div>
+            </div>
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Obtained from rare plaza chests and community grand events. Delivers an instant massive boost into the current pool."
+              : "Proveniente de cofres legendarios de la plaza y eventos especiales. Otorga una inyección masiva e instantánea de entradas."}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pirámide de Premios de la Temporada 16 -->
+  <div>
+    <h4 class="text-xs font-mono font-bold text-terminal-muted uppercase tracking-wider mb-3">
+      {isEn ? "2. Season 16 Prize Pool Tiers" : "2. Pirámide de Premios de la Temporada 16"}
+    </h4>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <!-- Tier 1: Grand Prize NFTs -->
+      <div class="bg-[#12121e] border border-amber-500/30 rounded-xl p-3 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-bold text-amber-400">TIER 1</span>
+            <span class="text-[9.5px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
+              NFTs Únicos
+            </span>
+          </div>
+          <!-- Mini preview de items -->
+          <div class="flex items-center justify-center gap-3 py-2 bg-black/40 rounded-lg border border-white/5 mb-2.5">
+            <div class="flex flex-col items-center">
+              <Image
+                src={piggyBankImg}
+                alt="Piggy Bank"
+                class="w-7 h-auto object-contain [image-rendering:pixelated]"
+              />
+              <span class="text-[9px] font-mono text-terminal-secondary mt-1">Piggy Bank</span>
+            </div>
+            <div class="w-px h-6 bg-white/10"></div>
+            <div class="flex flex-col items-center">
+              <Image
+                src={budImg}
+                alt="Bud NFT"
+                class="w-5 h-auto object-contain [image-rendering:pixelated]"
+              />
+              <span class="text-[9px] font-mono text-terminal-secondary mt-1">Bud NFT</span>
+            </div>
+          </div>
+          <div class="text-xs font-bold text-white mb-1">
+            {isEn ? "Piggy Bank & Stick House" : "Piggy Bank y Stick House"}
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Exclusive fairy tale structural collectibles (IDs #3115 & #3117) plus official Gen 1 Bud NFTs with permanent farm perks."
+              : "Coleccionables temáticos de la fábula (IDs #3115 y #3117) junto con codiciados Bud NFTs de Polygon con perks pasivos."}
+          </p>
+        </div>
+      </div>
+
+      <!-- Tier 2: Gem Packs -->
+      <div class="bg-[#151515] border border-cyan-500/20 rounded-xl p-3 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-bold text-cyan-400">TIER 2</span>
+            <span class="text-[9.5px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-mono">
+              Gemas
+            </span>
+          </div>
+          <div class="flex items-center justify-center py-2 bg-black/40 rounded-lg border border-white/5 mb-2.5">
+            <Image
+              src={gemImg}
+              alt="Gems"
+              class="w-7 h-auto object-contain [image-rendering:pixelated]"
+            />
+          </div>
+          <div class="text-xs font-bold text-white mb-1">
+            {isEn ? "250 to 500 Gems Packs" : "Packs de 250 a 500 Gemas"}
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Direct premium currency to purchase rare outfits, banners, or instant boosters across the Plaza stores."
+              : "Divisa premium directa para adquirir trajes de temporada, banners o aceleradores en las tiendas de la Plaza."}
+          </p>
+        </div>
+      </div>
+
+      <!-- Tier 3: Supply Boxes -->
+      <div class="bg-[#151515] border border-emerald-500/20 rounded-xl p-3 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-bold text-emerald-400">TIER 3</span>
+            <span class="text-[9.5px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">
+              Gourmet XP
+            </span>
+          </div>
+          <div class="flex items-center justify-center py-2 bg-black/40 rounded-lg border border-white/5 mb-2.5">
+            <Image
+              src={treasureChestImg}
+              alt="Mega Truffle Box"
+              class="w-7 h-auto object-contain [image-rendering:pixelated]"
+            />
+          </div>
+          <div class="text-xs font-bold text-white mb-1">
+            {isEn ? "Truffle & Cave Supply Boxes" : "Cajas Gourmet de Trufas"}
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Bundles packed with high-XP roasted dishes, truffle cakes, and advanced subterranean digging tools."
+              : "Lotes con platos de alta XP, tartas de trufa, condimentos y herramientas de arena para excavar cueva."}
+          </p>
+        </div>
+      </div>
+
+      <!-- Tier 4: Resources & Coins -->
+      <div class="bg-[#151515] border border-white/10 rounded-xl p-3 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-bold text-terminal-secondary">TIER 4</span>
+            <span class="text-[9.5px] px-1.5 py-0.5 rounded bg-white/5 text-terminal-secondary border border-white/10 font-mono">
+              Recursos
+            </span>
+          </div>
+          <div class="flex items-center justify-center py-2 bg-black/40 rounded-lg border border-white/5 mb-2.5">
+            <Image
+              src={coinsImg}
+              alt="Coins & Wings"
+              class="w-7 h-auto object-contain [image-rendering:pixelated]"
+            />
+          </div>
+          <div class="text-xs font-bold text-white mb-1">
+            {isEn ? "Coins & Beetle Wing Bundles" : "Lotes de Monedas y Alas"}
+          </div>
+          <p class="text-[11px] text-terminal-secondary leading-tight">
+            {isEn
+              ? "Substantial drops of SFL Coins and seasonal Beetle Wings to reinforce immediate farm operations."
+              : "Inyecciones de Monedas (Coins) y Alas de Escarabajo para acelerar expansiones y desbloqueos inmediatos."}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cronograma Mensual de Sorteos (3 Rondas) -->
+  <div>
+    <h4 class="text-xs font-mono font-bold text-terminal-muted uppercase tracking-wider mb-3">
+      {isEn ? "3. Season 16 Monthly Draw Schedule" : "3. Cronograma de los 3 Sorteos Mensuales"}
+    </h4>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-xs">
+      <!-- Ronda 1 -->
+      <div class="bg-[#121212] border border-white/10 rounded-xl p-3.5 space-y-2">
+        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+          <span class="font-bold text-white">{isEn ? "Round 1 (November)" : "Ronda 1 (Noviembre)"}</span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-white/5 text-[#f5d77f] font-bold">30 Nov 2026</span>
+        </div>
+        <div class="text-[11px] text-terminal-secondary font-sans leading-tight">
+          <strong class="text-white">{isEn ? "Headliner NFT:" : "Premio Principal:"}</strong> Piggy Bank (Hucha de Cerdito ID #3115) + Lote de Bud NFTs y Gemas.
+        </div>
+        <div class="text-[10.5px] text-terminal-muted">
+          {isEn ? "Best for: Early Pass raffle ticket holders" : "Ideal para: Primeros boletos gratuitos del Pase"}
+        </div>
+      </div>
+
+      <!-- Ronda 2 -->
+      <div class="bg-[#121212] border border-white/10 rounded-xl p-3.5 space-y-2">
+        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+          <span class="font-bold text-white">{isEn ? "Round 2 (December)" : "Ronda 2 (Diciembre)"}</span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-white/5 text-[#f5d77f] font-bold">31 Dec 2026</span>
+        </div>
+        <div class="text-[11px] text-terminal-secondary font-sans leading-tight">
+          <strong class="text-white">{isEn ? "Headliner NFT:" : "Premio Principal:"}</strong> Stick House (Casa de Madera ID #3117) + Bud NFTs + 500 Gemas.
+        </div>
+        <div class="text-[10.5px] text-terminal-muted">
+          {isEn ? "Best for: Mid-season active producers" : "Ideal para: Granjas activas con entregas al día"}
+        </div>
+      </div>
+
+      <!-- Ronda 3 -->
+      <div class="bg-[#121212] border border-amber-500/20 rounded-xl p-3.5 space-y-2">
+        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+          <span class="font-bold text-amber-400">{isEn ? "Round 3 (Final Draw)" : "Ronda 3 (Gran Final)"}</span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-[#f5d77f] font-bold">31 Jan 2027</span>
+        </div>
+        <div class="text-[11px] text-terminal-secondary font-sans leading-tight">
+          <strong class="text-white">{isEn ? "Headliner NFT:" : "Premio Principal:"}</strong> Pozo Mayor de Coleccionables acumulados + Gran Quema de Beetle Wings.
+        </div>
+        <div class="text-[10.5px] text-terminal-muted">
+          {isEn ? "Best for: Burning surplus seasonal currency" : "Ideal para: Quemar todo el remanente de alas"}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reglas Operativas Críticas y Estrategia Táctica 0xLeñador -->
+  <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3">
+    <div class="flex items-center gap-2">
+      <span class="text-emerald-400 font-mono text-xs">⚡</span>
+      <h4 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider font-mono">
+        {isEn ? "Operational Rules & Strategic Alpha" : "Reglas Operativas y Estrategia Táctica 0xLeñador"}
+      </h4>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+      <div class="bg-[#101010] p-3 rounded-xl border border-white/5 space-y-1.5">
+        <div class="font-bold text-amber-400">🛡️ {isEn ? "Anti-Whale Cap (1 Grand Prize / Farm)" : "Regla Anti-Monopolio (1 Premio Mayor / Granja)"}</div>
+        <p class="text-terminal-secondary leading-relaxed text-[11.5px]">
+          {isEn
+            ? "A single farm cannot win multiple Tier 1 NFTs in the same monthly draw. Even if a whale deposits tens of thousands of wings, once they secure 1 grand prize, their remaining entries do not crowd out other winners."
+            : "Ninguna granja puede ganar más de 1 NFT de Tier 1 en el mismo sorteo. Si una ballena ingresa miles de alas y gana un premio principal, sus boletos restantes quedan inhabilitados para los otros premios mayores del mismo sorteo."}
+        </p>
+      </div>
+
+      <div class="bg-[#101010] p-3 rounded-xl border border-white/5 space-y-1.5">
+        <div class="font-bold text-emerald-400">📊 {isEn ? "Smart Burning: Megastore First" : "Estrategia Inteligente: Megastore Primero"}</div>
+        <p class="text-terminal-secondary leading-relaxed text-[11.5px]">
+          {isEn
+            ? "Never burn Beetle Wings in the raffle if you haven't bought guaranteed Megastore essentials (Mining Drill, Duende Monument, Straw House). Rely solely on free Pass tickets until your final surplus week."
+            : "Nunca quemes Alas de Escarabajo en la rifa si aún no has comprado los ítems garantizados de la Megastore (Taladro, Monumento, Casa de Paja). Usa sólo los tickets gratuitos del Pase hasta la última semana."}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

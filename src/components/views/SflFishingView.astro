@@ -463,9 +463,11 @@ function getChumIcons(chumText: string) {
                   <h3 class="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
                     {displayName}
                   </h3>
-                  <span class="text-[10px] font-mono text-white/30 block mt-0.5">
-                    {fish.method === "trap" ? t("sfl.fishing.card.method.trap") : t("sfl.fishing.card.method.rod")}
-                  </span>
+                  {fish.method === "trap" && (
+                    <span class="text-[10px] font-mono text-white/40 block mt-0.5">
+                      {t("sfl.fishing.card.method.trap")}
+                    </span>
+                  )}
                 </div>
               </div>
 

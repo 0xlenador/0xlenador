@@ -24,6 +24,10 @@ import ZoomableImage from "@components/guias/ZoomableImage.astro"
 import MegastoreModal from "@components/guias/MegastoreModal.astro"
 import SeasonPassTrack from "@components/guias/SeasonPassTrack.astro"
 import MutantsAndMarvels from "@components/guias/MutantsAndMarvels.astro"
+import AuctionsBlock from "@components/guias/AuctionsBlock.astro"
+import RafflesBlock from "@components/guias/RafflesBlock.astro"
+
+import brickHouseImg from "../../../assets/img/guias/sfl-season-16/brick_house.webp"
 
 import duendeHatImg from "../../../assets/img/guias/sfl-season-16/duende_hat.png"
 import herculesBeetleHatImg from "../../../assets/img/guias/sfl-season-16/hercules_beetle_hat.png"
@@ -75,8 +79,8 @@ import gourmetHourglassImg from "../../../assets/img/guias/sfl-season-16/gourmet
       <span>Mutants & Fish</span>
     </a>
   </GuideStep>
-  <GuideStep image={duendeHatImg} text="Auctions">
-    <a href="#auctions" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
+  <GuideStep image={brickHouseImg} text="Auctions">
+    <a href="#subastas" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
       <span>Auctions</span>
     </a>
   </GuideStep>
@@ -238,166 +242,24 @@ Season 16 implements a continuous worldwide weather rotation affecting all farme
 
 ---
 
-## 6. Visual Catalog: Collectibles, Mutants, and Wearables
+<div id="subastas" class="scroll-mt-24"></div>
 
-Below is the verified registry of official assets integrated in the **Cave Dwellers** release (IDs 3102 through 3121 and bumpkin wearables 590 through 595). All items support **Instant Trade** across player markets:
+## 6. Auctions
 
-<div class="space-y-4 mb-8 mt-6">
+<AuctionsBlock lang="en" />
 
-  {/* Block 1: Duende Hat & Wearables */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
-        <span>Subterranean Wearables (IDs #590 - #595)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">1. Duende Hat & Miner Outfits</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        The <strong>Duende Hat (ID #590)</strong> leads this chapter's initial cosmetics alongside the <strong>Duende Shirt (#591)</strong>, <strong>Duende Pants (#592)</strong>, and <strong>Duende Shoes (#593)</strong>. The line also features the imposing <strong>Hercules Beetle Hat (#594)</strong> and the cozy <strong>Pig Onesie (#595)</strong>.
-      </p>
-      <div class="p-3 bg-white/[0.03] rounded-xl border border-white/5 text-xs text-terminal-muted">
-        <strong class="text-emerald-400">⚡ P2P Marketplace:</strong> Fully tradable via Instant Trade on the official market.
-      </div>
-    </div>
-    <div class="flex justify-center md:justify-end gap-3">
-      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={duendeHatImg} alt="Duende Hat" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Duende Hat</span>
-      </div>
-      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={herculesBeetleHatImg} alt="Hercules Beetle Hat" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Beetle Hat</span>
-      </div>
-      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={pigOnesieImg} alt="Pig Onesie" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Pig Onesie</span>
-      </div>
-    </div>
-  </div>
+---
 
-  {/* Block 2: Beetle Wing & Banner */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-2">
-        <span>Currency & Pass (IDs #3103 - #3105)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">2. Beetle Wings & Cave Dwellers Banner</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        The seasonal voucher is officially named <strong>Beetle Wing (ID #3103)</strong>. Placing the <strong>Cave Dwellers Banner (ID #3105)</strong> unlocks a passive <strong class="text-amber-400">+1 Beetle Wing</strong> boost on every NPC delivery. Wings redeem items in the Megastore or craft <strong>Cave Dwellers Raffle Tickets (ID #3104)</strong>.
-      </p>
-    </div>
-    <div class="flex justify-center md:justify-end gap-3">
-      <div class="w-full max-w-[130px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={caveBannerImg} alt="Cave Dwellers Banner" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Official Banner</span>
-      </div>
-      <div class="w-full max-w-[130px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={beetleWingImg} alt="Beetle Wing" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Beetle Wing</span>
-      </div>
-    </div>
-  </div>
+<div id="raffles" class="scroll-mt-24"></div>
+<div id="rifas" class="scroll-mt-24"></div>
 
-  {/* Block 3: Chapter Mutants */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold mb-2">
-        <span>Cave Mutants (IDs #3107 - #3110)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">3. Subterranean Mutants: Chicken, Cow, Sheep & Flower</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        Adapted to the dark underground: <strong>Mushroom Chicken (#3107)</strong> with a wild mushroom cap, <strong>Ladybug Cow (#3108)</strong> with a spotted shell, <strong>Beetle Sheep (#3109)</strong> with armored wool, and the one-eyed <strong>Cyclops Bloom (#3110)</strong> flower.
-      </p>
-    </div>
-    <div class="grid grid-cols-2 gap-2.5 max-w-[280px]">
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={mushroomChickenImg} alt="Mushroom Chicken" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Mushroom Chicken</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={ladybugCowImg} alt="Ladybug Cow" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Ladybug Cow</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={beetleSheepImg} alt="Beetle Sheep" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Beetle Sheep</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={cyclopsBloomImg} alt="Cyclops Bloom" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Cyclops Bloom</span>
-      </div>
-    </div>
-  </div>
+## 7. Raffles
 
-  {/* Block 4: Miner's Bed (Farmhand #14) */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-2">
-        <span>Labor Force Expansion (ID #3112)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">4. Miner's Bed: 14th Farmhand Slot</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        The <strong>Miner's Bed</strong> unlocks the <strong>14th concurrent farmhand slot (Farmhand #14)</strong> in Sunflower Land. A critical craftable collectible that allows you to automate daily chores while you dig through cave chambers.
-      </p>
-    </div>
-    <div class="flex justify-center md:justify-end">
-      <div class="w-full max-w-[220px] bg-[#121212] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={minersBedImg} alt="Miner's Bed" class="w-20 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-xs font-semibold text-white">Miner's Bed (Farmhand #14)</span>
-      </div>
-    </div>
-  </div>
+<RafflesBlock lang="en" />
 
-  {/* Block 5: Duende Monument */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
-        <span>Megastore Monument (ID #3111)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">5. Duende Monument: 1,000 Community Cheers</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        A 3x3 Megastore project erected in stages. Requires a collective contribution of <strong>1,000 community Cheers</strong> from players to unlock its final form celebrating the subterranean dwellers.
-      </p>
-    </div>
-    <div class="flex justify-center md:justify-end">
-      <div class="w-full max-w-[220px] bg-[#121212] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={duendeMonumentImg} alt="Duende Monument" class="w-20 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-xs font-semibold text-white">Duende Monument (3x3)</span>
-      </div>
-    </div>
-  </div>
+---
 
-  {/* Block 6: Three Little Pigs Decorations */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold mb-2">
-        <span>Thematic Decorations (IDs #3113 - #3121)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">6. The Three Little Pigs & Cave Relics</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        A decorative set celebrating the fairy tale with the <strong>Straw House (#3116)</strong>, <strong>Stick House (#3117)</strong>, and <strong>Brick House (#3118)</strong>, stalked by the <strong>Big Bad Wolf (#3119)</strong>, alongside the <strong>Giant Truffle (#3113)</strong>, <strong>Mining Drill (#3114)</strong>, and <strong>Piggy Bank (#3115)</strong>.
-      </p>
-    </div>
-    <div class="grid grid-cols-2 gap-2.5 max-w-[280px]">
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={giantTruffleImg} alt="Giant Truffle" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Giant Truffle</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={piggyBankImg} alt="Piggy Bank" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Piggy Bank</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={brickHouseImg} alt="Brick House" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Brick House</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={bigBadWolfImg} alt="Big Bad Wolf" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Big Bad Wolf</span>
-      </div>
-    </div>
-  </div>
 
-</div>
 
 ### Chapter Reference Tables (IDs 3102 through 3121)
 
@@ -425,7 +287,7 @@ Below is the verified registry of official assets integrated in the **Cave Dwell
 
 ---
 
-## 7. Strategies by Player Profile: What to Focus On?
+## 8. Strategies by Player Profile: What to Focus On?
 
 Because a 90-day season features multiple simultaneous paths, focus on the route that matches your Bumpkin level and personal goals:
 

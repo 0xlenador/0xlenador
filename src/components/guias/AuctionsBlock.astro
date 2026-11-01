@@ -1,0 +1,176 @@
+---
+import { Image } from "astro:assets"
+
+import brickHouseImg from "../../assets/img/guias/sfl-season-16/brick_house.webp"
+import giantTruffleImg from "../../assets/img/guias/sfl-season-16/giant_truffle.webp"
+import bigBadWolfImg from "../../assets/img/guias/sfl-season-16/big_bad_wolf.webp"
+import flowerImg from "../../assets/img/guias/sfl-season-16/flower.png"
+import gemImg from "../../assets/img/guias/sfl-season-16/gem.png"
+import beetleWingImg from "../../assets/img/guias/sfl-season-16/beetle_wing.webp"
+
+interface Props {
+  lang?: "es" | "en"
+}
+
+const { lang = "es" } = Astro.props
+
+const isEn = lang === "en"
+
+const auctionCollectibles = [
+  {
+    id: "brick-house",
+    name: "Brick House",
+    lots: isEn ? "Collectible · 120 auction lots" : "Coleccionable · 120 lotes de subasta",
+    boostLines: isEn
+      ? ["-25% Crimstone expansion cost", "-5% expansion Coins"]
+      : ["-25% coste de Crimstone en expansiones", "-5% coste de Coins en expansiones"],
+    img: brickHouseImg,
+    r1Date: isEn ? "30 Nov" : "30 Nov",
+    r2Date: isEn ? "16 Dec" : "16 Dic",
+    r3Date: isEn ? "8 Jan" : "8 Ene",
+  },
+  {
+    id: "giant-truffle",
+    name: "Giant Truffle",
+    lots: isEn ? "Collectible · 120 auction lots" : "Coleccionable · 120 lotes de subasta",
+    boostLines: isEn
+      ? ["+30% Bumpkin XP (non-fish food)", "+60% XP from Smoothie Shack & Deli"]
+      : ["+30% XP en comida (excl. pescado)", "+60% XP en Smoothie Shack y Deli"],
+    img: giantTruffleImg,
+    r1Date: isEn ? "7 Dec" : "7 Dic",
+    r2Date: isEn ? "23 Dec" : "23 Dic",
+    r3Date: isEn ? "15 Jan" : "15 Ene",
+  },
+  {
+    id: "big-bad-wolf",
+    name: "Big Bad Wolf",
+    lots: isEn ? "Collectible · 100 auction lots" : "Coleccionable · 100 lotes de subasta",
+    boostLines: isEn
+      ? ["Fairytale adversary & village trophy", "Exclusive Cave Dwellers ornament"]
+      : ["Trofeo de aldea y adversario de fábula", "Ornamento exclusivo de Cave Dwellers"],
+    img: bigBadWolfImg,
+    r1Date: isEn ? "14 Dec" : "14 Dic",
+    r2Date: isEn ? "30 Dec" : "30 Dic",
+    r3Date: isEn ? "22 Jan" : "22 Ene",
+  },
+]
+---
+
+<div class="my-8 not-prose space-y-6">
+  <!-- Cabecera Minimalista -->
+  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+    <div class="flex items-center gap-2">
+      <span class="text-base">🔨</span>
+      <h3 class="text-base sm:text-lg font-bold text-white tracking-tight">
+        {isEn ? "Plaza Auction House (Hammerin' Harry)" : "Casa de Subastas de la Plaza (Hammerin' Harry)"}
+      </h3>
+    </div>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[11px] font-mono text-terminal-secondary">
+      <span>⏱️</span>
+      <span>{isEn ? "Blind Auction Format" : "Formato Subasta Ciega"}</span>
+    </div>
+  </div>
+
+  <!-- Showcase Minimalista: Todas las Tarjetas de Subasta de Temporada 16 -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 justify-center items-stretch max-w-4xl mx-auto py-2">
+    {auctionCollectibles.map((item, idx) => (
+      <div
+        class={`w-full bg-[#171626] border border-[#2d2b45] rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-[0_8px_24px_rgba(0,0,0,0.5)] transition-transform hover:scale-[1.02] duration-200 ${
+          idx === 2 ? "sm:col-span-2 lg:col-span-1 sm:max-w-[280px] sm:mx-auto lg:max-w-none lg:mx-0" : ""
+        }`}
+      >
+        <!-- Top: Sprite + Título + Lotes + Potenciador -->
+        <div class="flex flex-col items-center flex-1">
+          <!-- Sprite Centrado del Ítem -->
+          <div class="w-full h-18 sm:h-20 flex items-center justify-center mb-1">
+            <Image
+              src={item.img}
+              alt={item.name}
+              class="max-w-[56px] max-h-[56px] sm:max-w-[64px] sm:max-h-[64px] object-contain [image-rendering:pixelated] drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+            />
+          </div>
+
+          <!-- Título del Ítem -->
+          <h4 class="font-bold text-sm sm:text-base text-white text-center tracking-tight mb-0.5">
+            {item.name}
+          </h4>
+
+          <!-- Subtítulo de Lotes -->
+          <div class="text-[11px] font-medium text-[#9a99b4] text-center mb-2.5 font-mono">
+            {item.lots}
+          </div>
+
+          <!-- Potenciador / Utilidad Limpia sin Relleno -->
+          <div class="text-[11px] sm:text-[11.5px] text-[#cfcee3] text-center leading-tight mb-4 font-sans space-y-0.5 min-h-[34px] flex flex-col justify-center">
+            {item.boostLines.map((line) => (
+              <div>{line}</div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Barra Inferior de Fechas y Monedas de Puja (El Formato Minimalista de la Web) -->
+        <div
+          class="bg-[#101018] border border-[#5a3818] rounded-xl px-2.5 py-1.5 flex items-center justify-between gap-1 w-full shadow-inner mt-2"
+        >
+          <!-- Ronda 1: FLOWER -->
+          <div class="flex items-center gap-1" title={isEn ? "Round 1: FLOWER" : "Ronda 1: FLOWER"}>
+            <Image
+              src={flowerImg}
+              alt="FLOWER"
+              class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+            />
+            <span class="font-mono text-[10.5px] font-bold text-[#f5d77f]">{item.r1Date}</span>
+          </div>
+
+          <span class="text-white/20 text-[10px]">|</span>
+
+          <!-- Ronda 2: GEMS -->
+          <div class="flex items-center gap-1" title={isEn ? "Round 2: Gems" : "Ronda 2: Gemas"}>
+            <Image
+              src={gemImg}
+              alt="Gems"
+              class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+            />
+            <span class="font-mono text-[10.5px] font-bold text-[#f5d77f]">{item.r2Date}</span>
+          </div>
+
+          <span class="text-white/20 text-[10px]">|</span>
+
+          <!-- Ronda 3: BEETLE WINGS -->
+          <div class="flex items-center gap-1" title={isEn ? "Round 3: Beetle Wings" : "Ronda 3: Beetle Wings"}>
+            <Image
+              src={beetleWingImg}
+              alt="Beetle Wing"
+              class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+            />
+            <span class="font-mono text-[10.5px] font-bold text-[#f5d77f]">{item.r3Date}</span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Reglas Operativas Clave de Subasta (Sin Relleno) -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs font-mono max-w-4xl mx-auto">
+    <div class="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 text-terminal-secondary">
+      <div class="font-bold text-white mb-0.5">👁️ {isEn ? "Blind Bidding" : "Puja Secreta"}</div>
+      <div class="text-[10.5px] text-terminal-muted leading-tight">
+        {isEn ? "Submit 1 private bid; top offers win the lot" : "Pujas a ciegas; las mejores ofertas ganan el lote"}
+      </div>
+    </div>
+
+    <div class="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 text-terminal-secondary">
+      <div class="font-bold text-emerald-400 mb-0.5">🛡️ {isEn ? "100% Refundable" : "100% Reembolsable"}</div>
+      <div class="text-[10.5px] text-terminal-muted leading-tight">
+        {isEn ? "Tokens returned immediately if you don't win" : "Recuperas tus tokens al instante si no resultas ganador"}
+      </div>
+    </div>
+
+    <div class="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 text-terminal-secondary">
+      <div class="font-bold text-amber-400 mb-0.5">🏷️ {isEn ? "1 Item / Farm" : "1 Ítem / Granja"}</div>
+      <div class="text-[10.5px] text-terminal-muted leading-tight">
+        {isEn ? "Limit of 1 win per farm across all rounds" : "Límite de 1 unidad por granja entre todas las rondas"}
+      </div>
+    </div>
+  </div>
+</div>

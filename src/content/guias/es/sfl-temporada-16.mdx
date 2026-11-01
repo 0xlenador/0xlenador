@@ -24,6 +24,8 @@ import ZoomableImage from "@components/guias/ZoomableImage.astro"
 import MegastoreModal from "@components/guias/MegastoreModal.astro"
 import SeasonPassTrack from "@components/guias/SeasonPassTrack.astro"
 import MutantsAndMarvels from "@components/guias/MutantsAndMarvels.astro"
+import AuctionsBlock from "@components/guias/AuctionsBlock.astro"
+import RafflesBlock from "@components/guias/RafflesBlock.astro"
 
 import pigImg from "../../../assets/img/guias/sfl-season-16/pig.webp"
 import truffleImg from "../../../assets/img/guias/sfl-season-16/truffle.webp"
@@ -78,7 +80,7 @@ import gourmetHourglassImg from "../../../assets/img/guias/sfl-season-16/gourmet
       <span>Mutantes & Peces</span>
     </a>
   </GuideStep>
-  <GuideStep image={duendeHatImg} text="Subastas">
+  <GuideStep image={brickHouseImg} text="Subastas">
     <a href="#subastas" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-medium text-xs hover:bg-emerald-500/20 hover:border-emerald-300 transition-all no-underline">
       <span>Subastas</span>
     </a>
@@ -93,12 +95,6 @@ import gourmetHourglassImg from "../../../assets/img/guias/sfl-season-16/gourmet
 ## Temporada 16: Cave Dwellers (2 Nov 2026 – 1 Feb 2027)
 
 La **Temporada 16 (Cave Dwellers)** llega a Sunflower Land introduciendo la cría de cerdos y cosecha de trufas, minería en cuevas con el Myco-Composter, clima dinámico global, mutantes subterráneos, la Megastore de Stella, el Pase de Temporada, rifas y subastas.
-
-<div class="flex flex-wrap gap-2 my-4 not-prose">
-  <ResourceCard id="polygon" label="Red Polygon" />
-  <ResourceCard id="metamask" label="Wallet Web3" />
-</div>
-
 ---
 
 <div id="cerdos-y-trufas" class="scroll-mt-24"></div>
@@ -190,26 +186,6 @@ La **Temporada 16 (Cave Dwellers)** llega a Sunflower Land introduciendo la crí
 
 ---
 
-### Cocina de Trufas, Truffle Seasoning y Comerciante Goblin
-
-Las trufas desbloquean un salto significativo en la generación de XP culinaria y aceleración de animales:
-
-### Nuevas Recetas Gourmet con Trufas
-* **Ember-Roasted Truffle Potatoes (Fire Pit):** 8 horas | Trufas + Patatas | **15,000 XP**.
-* **Truffle & Honey Cake (Bakery):** 12 horas | 15 Trufas + 30 Trigo + 30 Huevos + 5 Miel | **25,000 XP**.
-* **Truffle Risotto (Kitchen):** 16 horas | Trufas + Arroz / Cultivos avanzados | **35,000 XP**.
-
-### Truffle Seasoning (Potenciador Animal)
-Se fabrica en el Spice Rack / Aging Shed en lotes de 5 unidades por cada 1 hora de elaboración:
-* **Efecto Operativo:** Reduce en un **-50% el tiempo de sueño y vigilia de TODOS los animales de la granja** (Cerdos, Vacas, Ovejas y Gallinas).
-* **Duración:** Aplica durante 1 ciclo completo de sueño (o 2 ciclos si tienes el coleccionable *Vibraphone*). Es el potenciador más codiciado por granjas ganaderas competitivas.
-
-### Comerciante Goblin de la Cueva (Goblin Cave Merchant)
-* Aparece en la Cueva en visitas programadas de **48 horas**.
-* Ofrece ofertas rotativas exclusivas a precios de oportunidad.
-* En Cueva Tier I tiene 1 oferta disponible, sumando **+1 oferta simultánea por cada nivel de cueva desbloqueado**.
-
----
 
 <div id="mutantes-y-peces" class="scroll-mt-24"></div>
 
@@ -219,188 +195,21 @@ Se fabrica en el Spice Rack / Aging Shed en lotes de 5 unidades por cada 1 hora 
 
 ---
 
-### Mecánica Operativa: Sistema de Clima Dinámico Global (9 Eventos)
+<div id="subastas" class="scroll-mt-24"></div>
 
-La Temporada 16 activa un clima global ininterrumpido que afecta simultáneamente a todos los jugadores del mundo:
-* **9 Eventos Climáticos:** Cada evento dura entre **3 y 4 días**. Una rotación completa toma entre **27 y 36 días**.
-* **Pronóstico:** La interfaz muestra qué clima vendrá con **72 horas de anticipación**.
-* **Condición Normal vs "Blessed" (Bendecida):** Los jugadores que cuenten con el equipamiento de protección estacional no solo evitan penalizaciones, sino que activan el multiplicador bendecido.
+## 6. Subastas
 
-| Evento Climático | Efecto Normal | Efecto "Blessed" (Bendecido con Protección) |
-| :--- | :--- | :--- |
-| **Bountiful Harvest** | +0.4 rendimiento en cultivos | **+0.8 rendimiento** en cultivos |
-| **Fish Frenzy** | +0.4 peces por intento de pesca | **+0.8 peces** por intento |
-| **Sun Shower** | 1.3x velocidad de crecimiento base | **1.6x a 2.0x velocidad** (con Shade Cloth y Guardián) |
-| **Heavy Rains** | Aceleración moderada de pozos | Recuperación masiva de agua en pozos |
-| **Bee Migration** | Rendimiento base de miel incrementado | **+187.5% a +225% miel** con Wildflower Lures activos |
-
-### Crafteo de Protección y Mitigación Climática
-* **Thermal Stone, Shade Cloth y Merino Wool Insulation:** Requieren **25 Pig Bristles + 10 Merino Wool** cada uno.
-* **Sandbag y Balk:** Requieren **2 Leather** cada uno.
-* **Wildflower Lure (Cebo de Flores):** Consume 1 Flor (duración de 1 a 5 días según tier de la flor) y maximiza la producción de miel durante eventos climáticos favorables.
+<AuctionsBlock lang="es" />
 
 ---
 
-## 6. Catálogo Visual de Coleccionables, Mutantes y Wearables
+<div id="rifas" class="scroll-mt-24"></div>
 
-A continuación se presentan los activos oficiales integrados en el código de **Cave Dwellers** (IDs 3102 al 3121 y wearables 590 al 595). Todos ellos cuentan con soporte de **Instant Trade** en el mercado P2P:
+## 7. Rifas
 
-<div class="space-y-4 mb-8 mt-6">
+<RafflesBlock lang="es" />
 
-  {/* Bloque 1: Duende Hat & Wearables */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
-        <span>Wearables Subterráneos (IDs #590 - #595)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">1. Duende Hat y Trajes Mineros</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        El <strong>Duende Hat (ID #590)</strong> encabeza los cosméticos temáticos junto con la <strong>Duende Shirt (#591)</strong>, <strong>Duende Pants (#592)</strong> y <strong>Duende Shoes (#593)</strong>. La colección se completa con el <strong>Hercules Beetle Hat (#594)</strong> con cornamenta de escarabajo y el <strong>Pig Onesie (#595)</strong>.
-      </p>
-      <div class="p-3 bg-white/[0.03] rounded-xl border border-white/5 text-xs text-terminal-muted">
-        <strong class="text-emerald-400">⚡ Comercio P2P:</strong> Disponibles con intercambio instantáneo en el Marketplace de Sunflower Land.
-      </div>
-    </div>
-    <div class="flex justify-center md:justify-end gap-3">
-      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={duendeHatImg} alt="Duende Hat" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Duende Hat</span>
-      </div>
-      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={herculesBeetleHatImg} alt="Hercules Beetle Hat" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Beetle Hat</span>
-      </div>
-      <div class="w-full max-w-[110px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={pigOnesieImg} alt="Pig Onesie" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Pig Onesie</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Bloque 2: Beetle Wing & Banner */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-2">
-        <span>Moneda y Pase (IDs #3103 - #3105)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">2. Beetle Wings y Cave Dwellers Banner</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        La divisa de temporada es <strong>Beetle Wing (ID #3103)</strong>. El <strong>Cave Dwellers Banner (ID #3105)</strong> otorga un bono pasivo de <strong class="text-amber-400">+1 Beetle Wing</strong> en cada entrega a NPCs. Las alas se utilizan en la Megastore o para craftear <strong>Cave Dwellers Raffle Tickets (ID #3104)</strong>.
-      </p>
-    </div>
-    <div class="flex justify-center md:justify-end gap-3">
-      <div class="w-full max-w-[130px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={caveBannerImg} alt="Cave Dwellers Banner" class="w-16 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Banner Oficial</span>
-      </div>
-      <div class="w-full max-w-[130px] bg-[#121212] border border-white/10 p-3 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={beetleWingImg} alt="Beetle Wing" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[11px] font-medium text-white/80">Beetle Wing</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Bloque 3: Mutantes del Capítulo */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold mb-2">
-        <span>Mutantes Subterráneos (IDs #3107 - #3110)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">3. Mutantes de Cueva: Gallina, Vaca, Oveja y Flor</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        Adaptados a la penumbra y humedad: <strong>Mushroom Chicken (#3107)</strong> con cresta de seta, <strong>Ladybug Cow (#3108)</strong> con caparazón punteado de mariquita, <strong>Beetle Sheep (#3109)</strong> con lana cristalizada y la flor mística <strong>Cyclops Bloom (#3110)</strong> de un solo ojo.
-      </p>
-    </div>
-    <div class="grid grid-cols-2 gap-2.5 max-w-[280px]">
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={mushroomChickenImg} alt="Mushroom Chicken" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Mushroom Chicken</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={ladybugCowImg} alt="Ladybug Cow" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Ladybug Cow</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={beetleSheepImg} alt="Beetle Sheep" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Beetle Sheep</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={cyclopsBloomImg} alt="Cyclops Bloom" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Cyclops Bloom</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Bloque 4: Miner's Bed (Cama 14) */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-2">
-        <span>Expansión de Mano de Obra (ID #3112)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">4. Miner's Bed: La 14ª Cama de Peón</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        La <strong>Miner's Bed (Cama de Minero)</strong> desbloquea la ranura para el <strong>14º peón simultáneo (Farmhand #14)</strong> de Sunflower Land. Es un coleccionable crafteable clave para automatizar parcelas mientras estás ocupado en las galerías subterráneas.
-      </p>
-    </div>
-    <div class="flex justify-center md:justify-end">
-      <div class="w-full max-w-[220px] bg-[#121212] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={minersBedImg} alt="Miner's Bed" class="w-20 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-xs font-semibold text-white">Miner's Bed (Farmhand #14)</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Bloque 5: Duende Monument */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
-        <span>Monumento Megastore (ID #3111)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">5. Duende Monument: 1,000 Cheers Comunitarios</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        Monumento de 3x3 de la Megastore construido por fases. Requiere la aportación colectiva de <strong>1,000 Cheers (ánimos)</strong> de la comunidad para erigir su estructura final en homenaje a los habitantes de las cavernas.
-      </p>
-    </div>
-    <div class="flex justify-center md:justify-end">
-      <div class="w-full max-w-[220px] bg-[#121212] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center gap-2 shadow-lg text-center">
-        <ZoomableImage src={duendeMonumentImg} alt="Duende Monument" class="w-20 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-xs font-semibold text-white">Duende Monument (3x3)</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Bloque 6: Decoraciones de los Cerditos y Minas */}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl items-center">
-    <div>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold mb-2">
-        <span>Decoraciones Temáticas (IDs #3113 - #3121)</span>
-      </div>
-      <h3 class="text-base font-bold text-white mb-2">6. La Fábula de los Tres Cerditos y Minas</h3>
-      <p class="text-sm text-terminal-secondary leading-relaxed mb-3">
-        Colección decorativa que recrea el cuento de los tres cerditos con las casas de <strong>Paja (#3116)</strong>, <strong>Madera (#3117)</strong> y <strong>Ladrillo (#3118)</strong>, junto con el <strong>Big Bad Wolf (#3119)</strong>, la <strong>Giant Truffle (#3113)</strong>, el <strong>Mining Drill (#3114)</strong> y la <strong>Piggy Bank (#3115)</strong>.
-      </p>
-    </div>
-    <div class="grid grid-cols-2 gap-2.5 max-w-[280px]">
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={giantTruffleImg} alt="Giant Truffle" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Giant Truffle</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={piggyBankImg} alt="Piggy Bank" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Piggy Bank</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={brickHouseImg} alt="Brick House" class="w-14 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Brick House</span>
-      </div>
-      <div class="bg-[#121212] border border-white/10 p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 text-center shadow-md">
-        <ZoomableImage src={bigBadWolfImg} alt="Big Bad Wolf" class="w-12 h-auto object-contain [image-rendering:pixelated]" />
-        <span class="text-[10px] text-terminal-secondary font-medium">Big Bad Wolf</span>
-      </div>
-    </div>
-  </div>
-
-</div>
+---
 
 ### Tablas de Referencia de Identificadores (IDs 3102 al 3121)
 
@@ -428,7 +237,7 @@ A continuación se presentan los activos oficiales integrados en el código de *
 
 ---
 
-## 7. Estrategias por Perfil de Jugador: ¿En Qué Enfocarte?
+## 8. Estrategias por Perfil de Jugador: ¿En Qué Enfocarte?
 
 Dado que los 90 días de temporada ofrecen demasiadas ramas simultáneas, selecciona la ruta que mejor encaje con tu nivel de Bumpkin y tus objetivos:
 
