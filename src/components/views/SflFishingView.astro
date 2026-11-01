@@ -2,6 +2,8 @@
 import SflToolLayout from "../SflToolLayout.astro"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 import fishingData from "../../content/data/sfl/fishing.json"
+import resourcesData from "../../content/data/sfl/resources.json"
+import bettyPricesData from "../../content/data/sfl/betty_prices.json"
 
 const fishList = fishingData.fish
 const lang = getLangFromUrl(Astro.url)
@@ -115,10 +117,76 @@ const chumImageMap: Record<string, string> = {
   "Acorn": "/img/sunflowerland/123/Acorn.webp",
 }
 
+// Cantidades estándar requeridas para cada recurso al usarse como Chum en SFL
+const defaultChumAmounts: Record<string, number> = {
+  Sunflower: 50,
+  Potato: 20,
+  Pumpkin: 20,
+  Yam: 20,
+  Rhubarb: 20,
+  Carrot: 10,
+  Cabbage: 10,
+  Beetroot: 10,
+  Cauliflower: 5,
+  Parsnip: 5,
+  Eggplant: 5,
+  Radish: 5,
+  Corn: 5,
+  Wheat: 5,
+  Soybean: 5,
+  Soy: 5,
+  Onion: 5,
+  Turnip: 5,
+  Kale: 5,
+  Artichoke: 5,
+  Starfruit: 5,
+  Apple: 3,
+  Orange: 3,
+  Blueberry: 3,
+  Banana: 3,
+  Lemon: 3,
+  Egg: 5,
+  "Heart Leaf": 3,
+  Ribbon: 3,
+  "Wild Grass": 3,
+  "Frost Pebble": 3,
+  Grape: 5,
+  Rice: 5,
+  "Chewed Bone": 3,
+  Ruffroot: 3,
+  Dewberry: 3,
+  Duskberry: 3,
+  Acorn: 2,
+  Crimstone: 2,
+  "Fish Stick": 2,
+  "Fish Oil": 2,
+  "Crab Stick": 2,
+  Stone: 5,
+  Iron: 5,
+  Gold: 1,
+  Obsidian: 1,
+  "Wild Mushroom": 1,
+  Honey: 1,
+  Truffle: 1,
+  "Map Pieces": 9,
+  "Map Piece": 9,
+  Moonfur: 1,
+  Lunara: 1,
+  Seaweed: 1,
+  "Fish Flake": 1,
+  "Football fish": 1,
+  "Mahi Mahi": 1,
+  "Salt Awakening": 1,
+  Salt: 1,
+  "Speed Chicken": 1,
+  "Rich Chicken": 1,
+  "Fat Chicken": 1,
+}
+
 function getChumIcons(chumText: string) {
   if (!chumText) return []
   const text = chumText
-  const detected: { name: string; image: string }[] = []
+  const detected: { name: string; p2pName: string; image: string; amount: number }[] = []
   const seen = new Set<string>()
 
   for (const [key, image] of Object.entries(chumImageMap)) {
@@ -128,7 +196,19 @@ function getChumIcons(chumText: string) {
       if (!seen.has(image)) {
         seen.add(image)
         const displayName = key === "Map Pieces" ? "Map Piece" : key === "Salt Awakening" ? "Salt" : key
-        detected.push({ name: displayName, image })
+        const p2pName = key === "Soy" ? "Soybean" : key === "Salt Awakening" ? "Salt" : key
+
+        // Detectar si el texto especifica una cantidad explícita (ej. "Carrot x10", "9x Map Pieces", "Egg x5")
+        let amount = defaultChumAmounts[key] || 1
+        const prefixMatch = text.match(new RegExp("(\\d+)\\s*x\\s*" + key, "i"))
+        const suffixMatch = text.match(new RegExp(key + "\\s*x\\s*(\\d+)", "i"))
+        if (prefixMatch && prefixMatch[1]) {
+          amount = parseInt(prefixMatch[1], 10)
+        } else if (suffixMatch && suffixMatch[1]) {
+          amount = parseInt(suffixMatch[1], 10)
+        }
+
+        detected.push({ name: displayName, p2pName, image, amount })
       }
     }
   }
@@ -176,63 +256,69 @@ function getChumIcons(chumText: string) {
           </div>
         </div>
 
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/60">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-          <span>{t("sfl.fishing.dashboard.badge")}</span>
+        <div class="flex items-center gap-3">
+          <label class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/70 hover:text-white cursor-pointer select-none">
+            <input type="checkbox" id="globalChumToggle" class="accent-cyan-400 w-3.5 h-3.5 rounded cursor-pointer" />
+            <span>{t("sfl.fishing.dashboard.globalChum")}</span>
+          </label>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 text-[11px] font-mono text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>{t("sfl.fishing.dashboard.badge")}</span>
+          </div>
         </div>
       </div>
 
-      <!-- Grid de 4 Métricas (Placeholder en blanco) -->
+      <!-- Grid de 4 Métricas Económicas en Vivo -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-        <!-- Métrica 1 -->
+        <!-- Métrica 1: Costo Caña (Base) -->
         <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
           <span class="text-[11px] font-mono text-white/40 block mb-1">
-            {t("sfl.fishing.dashboard.stat.catches")}
+            {t("sfl.fishing.dashboard.stat.rodCost")}
           </span>
-          <div class="text-xl sm:text-2xl font-bold font-mono text-white/30 tracking-tight">
+          <div id="statRodCost" class="text-xl sm:text-2xl font-bold font-mono text-amber-400 tracking-tight">
             --
           </div>
           <span class="text-[10px] text-white/40 font-light block mt-1">
-            {t("sfl.fishing.dashboard.stat.catchesSub")}
+            {t("sfl.fishing.dashboard.stat.rodCostSub")}
           </span>
         </div>
 
-        <!-- Métrica 2 -->
+        <!-- Métrica 2: Costo Cebo (Ref) -->
         <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
           <span class="text-[11px] font-mono text-white/40 block mb-1">
-            {t("sfl.fishing.dashboard.stat.successRate")}
+            {t("sfl.fishing.dashboard.stat.baitCost")}
           </span>
-          <div class="text-xl sm:text-2xl font-bold font-mono text-white/30 tracking-tight">
-            --%
-          </div>
-          <span class="text-[10px] text-white/40 font-light block mt-1">
-            {t("sfl.fishing.dashboard.stat.successRateSub")}
-          </span>
-        </div>
-
-        <!-- Métrica 3 -->
-        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
-          <span class="text-[11px] font-mono text-white/40 block mb-1">
-            {t("sfl.fishing.dashboard.stat.bait")}
-          </span>
-          <div class="text-xl sm:text-2xl font-bold font-mono text-white/30 tracking-tight">
+          <div id="statBaitCost" class="text-xl sm:text-2xl font-bold font-mono text-cyan-400 tracking-tight">
             --
           </div>
           <span class="text-[10px] text-white/40 font-light block mt-1">
-            {t("sfl.fishing.dashboard.stat.baitSub")}
+            {t("sfl.fishing.dashboard.stat.baitCostSub")}
           </span>
         </div>
 
-        <!-- Métrica 4 -->
+        <!-- Métrica 3: Intento Base (Caña + Cebo) -->
         <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
           <span class="text-[11px] font-mono text-white/40 block mb-1">
-            {t("sfl.fishing.dashboard.stat.ocean")}
+            {t("sfl.fishing.dashboard.stat.baseCost")}
           </span>
-          <div class="text-base sm:text-lg font-bold font-mono text-cyan-400/80 truncate">
-            {t("sfl.fishing.dashboard.stat.oceanVal")}
+          <div id="statBaseCost" class="text-xl sm:text-2xl font-bold font-mono text-emerald-400 tracking-tight">
+            --
+          </div>
+          <span id="statBaseCostUsd" class="text-[10px] text-white/40 font-light block mt-1">
+            {t("sfl.fishing.dashboard.stat.baseCostSub")}
+          </span>
+        </div>
+
+        <!-- Métrica 4: Precio $FLOWER -->
+        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/10 transition-colors">
+          <span class="text-[11px] font-mono text-white/40 block mb-1">
+            {t("sfl.fishing.dashboard.stat.flowerPrice")}
+          </span>
+          <div id="statFlowerPrice" class="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">
+            --
           </div>
           <span class="text-[10px] text-white/40 font-light block mt-1">
-            {t("sfl.fishing.dashboard.stat.oceanSub")}
+            {t("sfl.fishing.dashboard.stat.flowerPriceSub")}
           </span>
         </div>
       </div>
@@ -416,6 +502,7 @@ function getChumIcons(chumText: string) {
             data-bait={fish.baits.map((b) => b.name).join(" ").toLowerCase()}
             data-chum={fish.chum.toLowerCase()}
             data-seasoncode={fish.seasonCode ? fish.seasonCode.toLowerCase() : ""}
+            data-method={fish.method || "rod"}
           >
             <!-- Glow temático según categoría -->
             {fish.tier === "marvel" && (
@@ -463,6 +550,17 @@ function getChumIcons(chumText: string) {
                   <h3 class="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
                     {displayName}
                   </h3>
+                  <!-- Iconos de Estaciones -->
+                  <div class="flex items-center gap-1 mt-1">
+                    {(fish.seasons && fish.seasons.length > 0 ? fish.seasons : ["spring", "summer", "autumn", "winter"]).map((s) => {
+                      const season = seasonsConfig[s]
+                      return (
+                        <span title={season?.label || s} class="inline-flex items-center">
+                          <img src={season?.icon} alt={season?.label || s} class="w-3.5 h-3.5 object-contain" />
+                        </span>
+                      )
+                    })}
+                  </div>
                   {fish.method === "trap" && (
                     <span class="text-[10px] font-mono text-white/40 block mt-0.5">
                       {t("sfl.fishing.card.method.trap")}
@@ -471,15 +569,40 @@ function getChumIcons(chumText: string) {
                 </div>
               </div>
 
-              <!-- Probabilidad de Captura Highlight -->
-              <div class="mb-3 p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between">
-                <span class="text-[11px] font-mono text-white/50">
-                  {t("sfl.fishing.card.rate")}
-                </span>
-                <span class="text-xs font-mono font-bold text-cyan-400">
-                  {fish.catchRate}
-                </span>
+              <!-- Costo Estimado de Intento (Calculadora Dinámica) -->
+              <div class="mb-3 p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex flex-col gap-1.5 transition-colors">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-white/50">
+                    {t("sfl.fishing.card.cost")}
+                  </span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="cost-flower-val text-xs font-mono font-bold text-amber-400">
+                      -- FLOWER
+                    </span>
+                    <span class="cost-usd-val text-[10px] font-mono text-white/40">
+                      (--)
+                    </span>
+                  </div>
+                </div>
+
+                <div class="pt-1 border-t border-white/[0.04] text-[10px] font-mono">
+                  <span class="cost-breakdown-label text-white/70 block truncate">
+                    {fish.method === "trap" ? t("sfl.fishing.card.breakdownTrap") : t("sfl.fishing.card.breakdownBase")}
+                  </span>
+                </div>
               </div>
+
+              <!-- Probabilidad de Captura Highlight (solo Marvels, Mutantes y Cangrejos) -->
+              {!["basic", "advanced", "expert"].includes(fish.tier) && fish.catchRate && (
+                <div class="mb-3 p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-white/50">
+                    {t("sfl.fishing.card.rate")}
+                  </span>
+                  <span class="text-xs font-mono font-bold text-cyan-400">
+                    {fish.catchRate}
+                  </span>
+                </div>
+              )}
 
               <!-- Cebos Potenciales -->
               <div class="mb-2.5">
@@ -496,7 +619,7 @@ function getChumIcons(chumText: string) {
                 </div>
               </div>
 
-              <!-- Chum / Insumo preferido -->
+              <!-- Chum / Insumo preferido (Botones Interactivos de Cálculo) -->
               <div class="mb-2.5">
                 <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
                   {t("sfl.fishing.card.chum")}
@@ -504,15 +627,25 @@ function getChumIcons(chumText: string) {
                 {chumIcons.length > 0 ? (
                   <div class="flex flex-wrap gap-1.5">
                     {chumIcons.map((c) => (
-                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/70">
+                      <button
+                        type="button"
+                        class="chum-badge group/chum inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/5 hover:border-cyan-400/40 hover:bg-white/[0.06] text-[11px] font-mono text-white/70 transition-all cursor-pointer select-none"
+                        data-chum-name={c.name}
+                        data-p2p-name={c.p2pName}
+                        data-chum-amount={c.amount.toString()}
+                        title={`${c.amount}x ${c.name}`}
+                      >
                         <img
                           src={c.image}
                           alt={c.name}
-                          class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+                          class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0"
                           loading="lazy"
                         />
-                        <span>{c.name}</span>
-                      </span>
+                        <span class="chum-label font-medium text-white/90">
+                          {c.amount}x {c.name}
+                        </span>
+                        <span class="chum-check text-[10px] text-cyan-400 hidden ml-0.5">✓</span>
+                      </button>
                     ))}
                   </div>
                 ) : (
@@ -529,26 +662,6 @@ function getChumIcons(chumText: string) {
                   <span>{fish.specialBoost}</span>
                 </div>
               )}
-            </div>
-
-            <!-- Footer de la tarjeta: Estaciones y descripción breve -->
-            <div class="pt-3 border-t border-white/5 mt-2">
-              <div class="flex items-center justify-between gap-2 mb-2">
-                <span class="text-[10px] font-mono text-white/40 uppercase tracking-wider">
-                  {t("sfl.fishing.card.seasons")}
-                </span>
-
-                <div class="flex items-center gap-1">
-                  {(fish.seasons && fish.seasons.length > 0 ? fish.seasons : ["spring", "summer", "autumn", "winter"]).map((s) => {
-                    const season = seasonsConfig[s]
-                    return (
-                      <span title={season?.label || s} class="inline-flex items-center">
-                        <img src={season?.icon} alt={season?.label || s} class="w-3.5 h-3.5 object-contain" />
-                      </span>
-                    )
-                  })}
-                </div>
-              </div>
             </div>
           </div>
         )
@@ -572,13 +685,22 @@ function getChumIcons(chumText: string) {
   </div>
 </SflToolLayout>
 
-<script>
-  function initFishingFilter() {
-    const tierButtons = document.querySelectorAll<HTMLButtonElement>(".filter-tier-btn")
-    const seasonButtons = document.querySelectorAll<HTMLButtonElement>(".filter-season-btn")
-    const searchInput = document.getElementById("fishSearchInput") as HTMLInputElement | null
-    const clearBtn = document.getElementById("clearSearchBtn") as HTMLButtonElement | null
-    const cards = document.querySelectorAll<HTMLElement>(".fish-card")
+<script
+  define:vars={{
+    resourcesData,
+    bettyPricesData,
+    textBase: t("sfl.fishing.card.breakdownBase"),
+    textTrap: t("sfl.fishing.card.breakdownTrap"),
+    textChumLabel: t("sfl.fishing.card.chumLabel"),
+  }}
+>
+  function initFishing() {
+    // 1. Filtros y Búsqueda
+    const tierButtons = document.querySelectorAll(".filter-tier-btn")
+    const seasonButtons = document.querySelectorAll(".filter-season-btn")
+    const searchInput = document.getElementById("fishSearchInput")
+    const clearBtn = document.getElementById("clearSearchBtn")
+    const cards = document.querySelectorAll(".fish-card")
     const emptyState = document.getElementById("emptyResults")
 
     let activeTier = "all"
@@ -592,7 +714,6 @@ function getChumIcons(chumText: string) {
         const cardTier = card.dataset.tier || ""
         const cardSeasons = (card.dataset.seasons || "").split(" ")
         const cardName = card.dataset.name || ""
-        const cardSubname = card.dataset.subname || ""
         const cardBait = card.dataset.bait || ""
         const cardChum = card.dataset.chum || ""
         const cardSeasonCode = card.dataset.seasoncode || ""
@@ -604,13 +725,12 @@ function getChumIcons(chumText: string) {
         const matchesSeason =
           activeSeason === "all" ||
           cardSeasons.includes(activeSeason) ||
-          cardSeasons.length >= 4 // todo el año
+          cardSeasons.length >= 4
 
         // Filtro por Búsqueda de texto
         const matchesSearch =
           !searchQuery ||
           cardName.includes(searchQuery) ||
-          cardSubname.includes(searchQuery) ||
           cardBait.includes(searchQuery) ||
           cardChum.includes(searchQuery) ||
           cardSeasonCode.includes(searchQuery)
@@ -632,7 +752,6 @@ function getChumIcons(chumText: string) {
       }
     }
 
-    // Manejadores de Tier
     tierButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         tierButtons.forEach((b) => {
@@ -647,7 +766,6 @@ function getChumIcons(chumText: string) {
       })
     })
 
-    // Manejadores de Estación
     seasonButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         seasonButtons.forEach((b) => {
@@ -662,16 +780,12 @@ function getChumIcons(chumText: string) {
       })
     })
 
-    // Manejador de Búsqueda
     if (searchInput) {
       searchInput.addEventListener("input", (e) => {
-        searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim()
+        searchQuery = e.target.value.toLowerCase().trim()
         if (clearBtn) {
-          if (searchQuery) {
-            clearBtn.classList.remove("hidden")
-          } else {
-            clearBtn.classList.add("hidden")
-          }
+          if (searchQuery) clearBtn.classList.remove("hidden")
+          else clearBtn.classList.add("hidden")
         }
         updateFilters()
       })
@@ -686,9 +800,215 @@ function getChumIcons(chumText: string) {
         searchInput.focus()
       })
     }
+
+    // 2. Motor de Calculadora Económica de Pesca
+    const priceDict = {}
+    let baseAttemptCost = 0
+    let flowerPrice = 0.0854
+
+    function updateCardCost(card) {
+      const isTrap = card.dataset.method === "trap"
+      const baseLabel = isTrap ? textTrap : textBase
+      const activeBadge = card.querySelector(".chum-badge.active")
+      let totalCost = baseAttemptCost
+      let breakdownHtml = baseLabel
+
+      if (activeBadge) {
+        const p2pName = activeBadge.dataset.p2pName || activeBadge.dataset.chumName
+        const displayName = activeBadge.dataset.chumName
+        const amount = parseFloat(activeBadge.dataset.chumAmount) || 1
+        const unitPrice = priceDict[p2pName] || 0
+        const chumCost = unitPrice * amount
+        totalCost += chumCost
+        breakdownHtml = `${baseLabel} + <span class="text-cyan-400 font-bold">${textChumLabel} (${amount}x ${displayName})</span>`
+      }
+
+      const flowerEl = card.querySelector(".cost-flower-val")
+      if (flowerEl) {
+        flowerEl.textContent = baseAttemptCost > 0 ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
+      }
+
+      const usdEl = card.querySelector(".cost-usd-val")
+      if (usdEl) {
+        usdEl.textContent = baseAttemptCost > 0 ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
+      }
+
+      const breakdownEl = card.querySelector(".cost-breakdown-label")
+      if (breakdownEl) breakdownEl.innerHTML = breakdownHtml
+    }
+
+    function updateAllCards() {
+      cards.forEach((card) => updateCardCost(card))
+    }
+
+    // Interacción: Clic en cualquier badge de Chum para seleccionarlo o deseleccionarlo
+    cards.forEach((card) => {
+      const badges = card.querySelectorAll(".chum-badge")
+      badges.forEach((badge) => {
+        badge.addEventListener("click", (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          const isAlreadyActive = badge.classList.contains("active")
+
+          // Desactivar todos los badges de esta tarjeta
+          badges.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-cyan-300",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+            const check = b.querySelector(".chum-check")
+            if (check) check.classList.add("hidden")
+          })
+
+          // Si no estaba activo, activar el seleccionado
+          if (!isAlreadyActive) {
+            badge.classList.add(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-cyan-300",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            badge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+            const check = badge.querySelector(".chum-check")
+            if (check) check.classList.remove("hidden")
+          }
+
+          updateCardCost(card)
+        })
+      })
+    })
+
+    // Toggle Global de Chum desde el Dashboard
+    const globalChumToggle = document.getElementById("globalChumToggle")
+    if (globalChumToggle) {
+      globalChumToggle.addEventListener("change", (e) => {
+        const enableAll = e.target.checked
+        cards.forEach((card) => {
+          const badges = card.querySelectorAll(".chum-badge")
+          badges.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-cyan-300",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+            const check = b.querySelector(".chum-check")
+            if (check) check.classList.add("hidden")
+          })
+
+          if (enableAll && badges.length > 0) {
+            const first = badges[0]
+            first.classList.add(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-cyan-300",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            first.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+            const check = first.querySelector(".chum-check")
+            if (check) check.classList.remove("hidden")
+          }
+
+          updateCardCost(card)
+        })
+      })
+    }
+
+    // Carga de precios en vivo desde API
+    async function loadPrices() {
+      try {
+        const res = await fetch("/api/sfl_data.json")
+        if (!res.ok) return
+        const json = await res.json()
+
+        if (json.items) {
+          Object.values(json.items).forEach((item) => {
+            const idMatch = item.key.match(/(?:collectibles|resources)-(\d+)$/)
+            if (idMatch) {
+              const id = idMatch[1]
+              const name = resourcesData[id]
+              if (name) {
+                priceDict[name] = item.currentPrice
+              }
+            }
+          })
+        }
+
+        if (json.flowerPrice) {
+          flowerPrice = parseFloat(json.flowerPrice)
+        }
+
+        // Ratio Coins/FLOWER (Betty)
+        let bestCoinsPerFlower = 0
+        if (json.items && bettyPricesData) {
+          Object.keys(bettyPricesData).forEach((name) => {
+            const itemConfig = bettyPricesData[name]
+            const itemId = Object.keys(resourcesData).find((key) => resourcesData[key] === name)
+            if (!itemId) return
+            const internalKey = `collectibles-${itemId}`
+            const marketItem = json.items[internalKey]
+            const bettyPriceCoins = itemConfig.sellPrice
+            const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
+            if (p2pPriceFlower > 0) {
+              const ratio = bettyPriceCoins / p2pPriceFlower
+              if (ratio > bestCoinsPerFlower) bestCoinsPerFlower = ratio
+            }
+          })
+        }
+        if (bestCoinsPerFlower <= 0) bestCoinsPerFlower = 1330
+
+        // Costo de Caña Base (1 Stone + 3 Wood + 20 Coins)
+        const stonePrice = priceDict["Stone"] || json.items?.["collectibles-602"]?.currentPrice || 0
+        const woodPrice = priceDict["Wood"] || json.items?.["collectibles-601"]?.currentPrice || 0
+        const rodCost = (1 * stonePrice) + (3 * woodPrice) + (20 / bestCoinsPerFlower)
+
+        // Costo de Cebo Base (Capsule Bait)
+        const capsuleBaitCost = priceDict["Capsule Bait"] || json.items?.["collectibles-2986"]?.currentPrice || 0
+
+        baseAttemptCost = rodCost + capsuleBaitCost
+
+        // Actualizar Dashboard
+        const statRod = document.getElementById("statRodCost")
+        if (statRod) statRod.innerText = `${rodCost.toFixed(4)} FLOWER`
+
+        const statBait = document.getElementById("statBaitCost")
+        if (statBait) statBait.innerText = `${capsuleBaitCost.toFixed(4)} FLOWER`
+
+        const statBase = document.getElementById("statBaseCost")
+        if (statBase) statBase.innerText = `${baseAttemptCost.toFixed(4)} FLOWER`
+
+        const statBaseUsd = document.getElementById("statBaseCostUsd")
+        if (statBaseUsd) statBaseUsd.innerText = `≈ $${(baseAttemptCost * flowerPrice).toFixed(3)} USD`
+
+        const statFlower = document.getElementById("statFlowerPrice")
+        if (statFlower) statFlower.innerText = `$${flowerPrice.toFixed(4)}`
+
+        // Actualizar todas las tarjetas con los precios reales
+        updateAllCards()
+      } catch (err) {
+        console.warn("Error cargando precios de pesca:", err)
+      }
+    }
+
+    loadPrices()
   }
 
-  // Inicializar en primera carga y tras navegación de Astro View Transitions
-  document.addEventListener("DOMContentLoaded", initFishingFilter)
-  document.addEventListener("astro:page-load", initFishingFilter)
+  document.addEventListener("DOMContentLoaded", initFishing)
+  document.addEventListener("astro:page-load", initFishing)
 </script>
