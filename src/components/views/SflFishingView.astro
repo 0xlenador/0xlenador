@@ -24,6 +24,10 @@ const tierConfig: Record<string, { label: string; badgeClass: string }> = {
     label: t("sfl.fishing.filter.expert"),
     badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   },
+  market: {
+    label: t("sfl.fishing.filter.market"),
+    badgeClass: "bg-teal-500/10 text-teal-300 border-teal-500/20",
+  },
   marvel: {
     label: t("sfl.fishing.filter.marvel"),
     badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
@@ -52,6 +56,7 @@ const tierCounts: Record<string, number> = {
   basic: fishList.filter((f) => f.tier === "basic").length,
   advanced: fishList.filter((f) => f.tier === "advanced").length,
   expert: fishList.filter((f) => f.tier === "expert").length,
+  market: fishList.filter((f) => f.tier === "market").length,
   marvel: fishList.filter((f) => f.tier === "marvel").length,
   mutant: fishList.filter((f) => f.tier === "mutant").length,
   crab: fishList.filter((f) => f.tier === "crab").length,
@@ -59,6 +64,18 @@ const tierCounts: Record<string, number> = {
 
 // Mapa de recursos e imágenes para Chum
 const chumImageMap: Record<string, string> = {
+  "Anchovy": "/img/sunflowerland/fish/Anchovy.png",
+  "Porgy": "/img/sunflowerland/fish/Porgy.png",
+  "Sea Bass": "/img/sunflowerland/fish/Sea Bass.png",
+  "Red Snapper": "/img/sunflowerland/fish/Red Snapper.png",
+  "Olive Flounder": "/img/sunflowerland/fish/Olive Flounder.png",
+  "Zebra Turkeyfish": "/img/sunflowerland/fish/Zebra Turkeyfish.png",
+  "Blue Crab": "/img/sunflowerland/fish/crabs/Blue Crab.png",
+  "Hermit Crab": "/img/sunflowerland/fish/crabs/Hermit Crab.png",
+  "Sea Slug": "/img/sunflowerland/fish/crabs/Sea Slug.png",
+  "Tuna": "/img/sunflowerland/fish/Tuna.png",
+  "Weakfish": "/img/sunflowerland/fish/Weakfish.png",
+  "Oarfish": "/img/sunflowerland/fish/Oarfish.png",
   "Speed Chicken": "/img/sunflowerland/powerups/speed_chicken.webp",
   "Rich Chicken": "/img/sunflowerland/powerups/rich_chicken.webp",
   "Fat Chicken": "/img/sunflowerland/powerups/fat_chicken.webp",
@@ -377,6 +394,16 @@ function getChumIcons(chumText: string) {
       <button
         type="button"
         class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-tier="market"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-teal-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.market")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({tierCounts.market})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
         data-tier="marvel"
       >
         <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
@@ -527,6 +554,10 @@ function getChumIcons(chumText: string) {
                   <span class="text-[10px] font-mono text-red-400 font-bold bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20 uppercase tracking-wider">
                     {fish.seasonCode || "MUTANT"}
                   </span>
+                ) : fish.tier === "market" ? (
+                  <span class="text-[10px] font-mono text-teal-300 font-bold bg-teal-500/10 px-2 py-0.5 rounded-md border border-teal-500/20 uppercase tracking-wider">
+                    {t("sfl.fishing.card.processed")}
+                  </span>
                 ) : fish.tier === "crab" ? null : (
                   <span class="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
                     +{fish.xp} XP
@@ -561,11 +592,15 @@ function getChumIcons(chumText: string) {
                       )
                     })}
                   </div>
-                  {fish.method === "trap" && (
+                  {fish.method === "trap" ? (
                     <span class="text-[10px] font-mono text-white/40 block mt-0.5">
                       {t("sfl.fishing.card.method.trap")}
                     </span>
-                  )}
+                  ) : fish.method === "market" ? (
+                    <span class="text-[10px] font-mono text-teal-400/80 block mt-0.5">
+                      {t("sfl.fishing.card.method.market")}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
@@ -587,13 +622,13 @@ function getChumIcons(chumText: string) {
 
                 <div class="pt-1 border-t border-white/[0.04] text-[10px] font-mono">
                   <span class="cost-breakdown-label text-white/70 block truncate">
-                    {fish.method === "trap" ? t("sfl.fishing.card.breakdownTrap") : t("sfl.fishing.card.breakdownBase")}
+                    {fish.method === "trap" ? t("sfl.fishing.card.breakdownTrap") : fish.method === "market" ? t("sfl.fishing.card.breakdownMarket") : t("sfl.fishing.card.breakdownBase")}
                   </span>
                 </div>
               </div>
 
               <!-- Probabilidad de Captura Highlight (solo Marvels, Mutantes y Cangrejos) -->
-              {!["basic", "advanced", "expert"].includes(fish.tier) && fish.catchRate && (
+              {!["basic", "advanced", "expert", "market"].includes(fish.tier) && fish.catchRate && (
                 <div class="mb-3 p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between">
                   <span class="text-[11px] font-mono text-white/50">
                     {t("sfl.fishing.card.rate")}
@@ -607,7 +642,7 @@ function getChumIcons(chumText: string) {
               <!-- Cebos Potenciales -->
               <div class="mb-2.5">
                 <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
-                  {t("sfl.fishing.card.bait")}
+                  {fish.tier === "market" ? t("sfl.fishing.card.bait") : t("sfl.fishing.card.bait")}
                 </span>
                 <div class="flex flex-wrap gap-1.5">
                   {fish.baits.map((b) => (
@@ -622,7 +657,7 @@ function getChumIcons(chumText: string) {
               <!-- Chum / Insumo preferido (Botones Interactivos de Cálculo) -->
               <div class="mb-2.5">
                 <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
-                  {t("sfl.fishing.card.chum")}
+                  {fish.tier === "market" ? t("sfl.fishing.card.ingredients") : t("sfl.fishing.card.chum")}
                 </span>
                 {chumIcons.length > 0 ? (
                   <div class="flex flex-wrap gap-1.5">
@@ -691,6 +726,7 @@ function getChumIcons(chumText: string) {
     bettyPricesData,
     textBase: t("sfl.fishing.card.breakdownBase"),
     textTrap: t("sfl.fishing.card.breakdownTrap"),
+    textMarket: t("sfl.fishing.card.breakdownMarket"),
     textChumLabel: t("sfl.fishing.card.chumLabel"),
   }}
 >
@@ -808,9 +844,10 @@ function getChumIcons(chumText: string) {
 
     function updateCardCost(card) {
       const isTrap = card.dataset.method === "trap"
-      const baseLabel = isTrap ? textTrap : textBase
+      const isMarket = card.dataset.method === "market"
+      const baseLabel = isTrap ? textTrap : isMarket ? textMarket : textBase
       const activeBadge = card.querySelector(".chum-badge.active")
-      let totalCost = baseAttemptCost
+      let totalCost = isMarket ? 0 : baseAttemptCost
       let breakdownHtml = baseLabel
 
       if (activeBadge) {
