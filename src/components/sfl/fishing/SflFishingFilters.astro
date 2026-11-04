@@ -1,0 +1,158 @@
+---
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+
+interface Props {
+  counts: {
+    all: number
+    rod: number
+    basic: number
+    advanced: number
+    expert: number
+    trap: number
+    marvel: number
+    market: number
+  }
+}
+
+const { counts } = Astro.props
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seasons = [
+  { key: "all", label: t("sfl.fishing.filter.season.all"), icon: null },
+  { key: "spring", label: t("sfl.fishing.filter.season.spring"), icon: "/img/sunflowerland/123/primavera.webp" },
+  { key: "summer", label: t("sfl.fishing.filter.season.summer"), icon: "/img/sunflowerland/123/verano.webp" },
+  { key: "autumn", label: t("sfl.fishing.filter.season.autumn"), icon: "/img/sunflowerland/123/otono.webp" },
+  { key: "winter", label: t("sfl.fishing.filter.season.winter"), icon: "/img/sunflowerland/123/invierno.webp" },
+]
+---
+
+<div class="mb-6 flex flex-col gap-4">
+  <!-- Fila 1: Filtro por Categorías Reales -->
+  <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10">
+    <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+      {t("sfl.fishing.filter.tier")}
+    </span>
+
+    <button
+      type="button"
+      class="filter-tier-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+      data-tier="all"
+    >
+      <span>{t("sfl.fishing.filter.all")}</span>
+      <span class="ml-1 text-[10px] text-white/50">({counts.all})</span>
+    </button>
+
+    <button
+      type="button"
+      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+      data-tier="basic"
+    >
+      <span class="w-2 h-2 rounded-full inline-block bg-emerald-400 mr-1.5"></span>
+      <span>{t("sfl.fishing.filter.basic")}</span>
+      <span class="ml-1 text-[10px] text-white/40">({counts.basic})</span>
+    </button>
+
+    <button
+      type="button"
+      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+      data-tier="advanced"
+    >
+      <span class="w-2 h-2 rounded-full inline-block bg-sky-400 mr-1.5"></span>
+      <span>{t("sfl.fishing.filter.advanced")}</span>
+      <span class="ml-1 text-[10px] text-white/40">({counts.advanced})</span>
+    </button>
+
+    <button
+      type="button"
+      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+      data-tier="expert"
+    >
+      <span class="w-2 h-2 rounded-full inline-block bg-purple-400 mr-1.5"></span>
+      <span>{t("sfl.fishing.filter.expert")}</span>
+      <span class="ml-1 text-[10px] text-white/40">({counts.expert})</span>
+    </button>
+
+    <button
+      type="button"
+      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+      data-tier="trap"
+    >
+      <span class="w-2 h-2 rounded-full inline-block bg-orange-400 mr-1.5"></span>
+      <span>{t("sfl.fishing.filter.trap")}</span>
+      <span class="ml-1 text-[10px] text-white/40">({counts.trap})</span>
+    </button>
+
+    <button
+      type="button"
+      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+      data-tier="marvel"
+    >
+      <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
+      <span>{t("sfl.fishing.filter.marvel")}</span>
+      <span class="ml-1 text-[10px] text-white/40">({counts.marvel})</span>
+    </button>
+
+    <button
+      type="button"
+      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+      data-tier="market"
+    >
+      <span class="w-2 h-2 rounded-full inline-block bg-teal-400 mr-1.5"></span>
+      <span>{t("sfl.fishing.filter.market")}</span>
+      <span class="ml-1 text-[10px] text-white/40">({counts.market})</span>
+    </button>
+  </div>
+
+  <!-- Fila 2: Filtro por Estación y Buscador -->
+  <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+    <!-- Botones de Estación -->
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+        {t("sfl.fishing.filter.season")}
+      </span>
+      {
+        seasons.map((s, idx) => (
+          <button
+            type="button"
+            class:list={[
+              "filter-season-btn px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 flex items-center gap-1.5 border",
+              idx === 0
+                ? "active bg-white/10 text-white border-white/10"
+                : "bg-transparent text-white/60 border-transparent hover:bg-white/5 hover:text-white",
+            ]}
+            data-season={s.key}
+          >
+            {s.icon && <img src={s.icon} alt={s.label} class="w-3.5 h-3.5 object-contain" />}
+            <span>{s.label}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <!-- Buscador en tiempo real -->
+    <div class="relative w-full sm:w-72">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="w-3.5 h-3.5 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+      </div>
+      <input
+        type="text"
+        id="fishSearchInput"
+        placeholder={t("sfl.fishing.search.placeholder")}
+        class="w-full bg-[#18181b]/80 border border-white/10 focus:border-cyan-400/50 rounded-xl pl-9 pr-8 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none transition-colors font-mono"
+      />
+      <button
+        id="clearSearchBtn"
+        type="button"
+        class="hidden absolute right-2.5 top-1.5 text-white/40 hover:text-white text-xs p-0.5 cursor-pointer"
+        title="Clear search"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+</div>
+
