@@ -39,6 +39,10 @@ Plataforma de **herramientas, dashboards y contenido educativo** sobre crypto/fi
 
 1. **No commits ni deploy** a menos que se pida explícitamente.
 2. **Cero deuda técnica:** No proponer hacks, injertos ni soluciones de fuerza bruta.
-3. **DRY estricto:** Si detectas código duplicado o un archivo creciendo a monolito (>300 líneas sin justificación), detente y propón refactorización.
+3. DRY y Responsabilidad Única:
+
+- Cero duplicación: Si una lógica o bloque se repite en más de un lugar, extráelo a una utilidad o componente reutilizable.
+- Evitar componentes "Dios": No acumules múltiples responsabilidades dispares en un solo archivo (ej. lógica de cálculo/APIs + UI compleja + scripts pesados de cliente). Separa solo cuando mejore la legibilidad y el mantenimiento, evitando la sobre-fragmentación innecesaria.
+
 4. **Auditoría previa:** Si la arquitectura existente no es escalable para lo que se pide, advierte ANTES de escribir código nuevo.
 5. **No crear clases CSS ad-hoc** si ya existe una equivalente en `main.css`.
