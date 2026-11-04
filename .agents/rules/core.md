@@ -4,6 +4,8 @@ trigger: always_on
 
 # 0xLeñador — Reglas Fundamentales
 
+Responde en el chat siempre en español.
+
 ## Identidad
 
 Plataforma de **herramientas, dashboards y contenido educativo** sobre crypto/finanzas.
