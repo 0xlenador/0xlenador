@@ -899,6 +899,39 @@ const t = useTranslations(lang)
   const errorMsg = document.getElementById("errorMsg")
   const dataContainer = document.getElementById("dataContainer")
 
+  const getItemImageSrc = (item) => {
+    if (!item) return "/img/sunflowerland/123/bear.png"
+    let basePath = "/img/sunflowerland/"
+    if (item.category === "powerups") {
+      return encodeURI(basePath + "powerups/" + (item.isWearable ? "wearables/" : "") + (item.image || item.name + ".png"))
+    }
+    if (item.category === "cosmetics") {
+      const isCollectible = !item.isWearable
+      let fn = item.image || item.name + ".png"
+      if (isCollectible) {
+        fn = fn.replace(/\.png$/i, ".webp")
+      }
+      return encodeURI(basePath + "cosmetics/" + (item.isWearable ? "wearables/" : "collectibles/") + fn)
+    }
+    // Resources: soporta tanto legacy .png como nuevos .webp en snake_case
+    const name = item.name || ""
+    const webpResources = new Set([
+      "green beetle",
+      "blue beetle",
+      "pink beetle",
+      "amber beetle",
+      "pig bristle",
+      "pig bristles",
+      "truffle"
+    ])
+    const lower = name.toLowerCase()
+    if (webpResources.has(lower)) {
+      const snake = lower.replace(/\s+/g, "_").replace(/^pig_bristle$/, "pig_bristles")
+      return encodeURI(basePath + snake + ".webp")
+    }
+    return encodeURI(basePath + name + ".png")
+  }
+
   let marketData = []
   let dashboardData = null
   let currentCategory = "resources"
@@ -1753,19 +1786,7 @@ const t = useTranslations(lang)
               const changeColor = isPos ? "text-emerald-400" : "text-red-400";
               const changeSign = isPos ? "+" : "";
               
-              let basePath = "/img/sunflowerland/";
-              let isCollectible = false;
-              if (topItem.category === "powerups") {
-                 basePath += "powerups/" + (topItem.isWearable ? "wearables/" : "");
-              } else if (topItem.category === "cosmetics") {
-                 basePath += "cosmetics/" + (topItem.isWearable ? "wearables/" : "collectibles/");
-                 if (!topItem.isWearable) isCollectible = true;
-              }
-              let filename = topItem.image || topItem.name + ".png";
-              if (isCollectible) {
-                 filename = filename.replace(/\.png$/i, ".webp");
-              }
-              let itemImgSrc = encodeURI(basePath + filename);
+              let itemImgSrc = getItemImageSrc(topItem);
               let safeName = topItem.name.replace(/'/g, "\\'");
               
               return `
@@ -1912,23 +1933,8 @@ const t = useTranslations(lang)
                  let itemName = Object.keys(trade.items)[0] || "Unknown";
                  
                  // Get NFT image logic
-                 let itemImgSrc = '/img/sunflowerland/123/bear.png'; // default fallback
                  let itemObj = marketData.find(m => m.name === itemName);
-                 if (itemObj) {
-                    let basePath = "/img/sunflowerland/";
-                    let isCollectible = false;
-                    if (itemObj.category === "powerups") {
-                       basePath += "powerups/" + (itemObj.isWearable ? "wearables/" : "");
-                    } else if (itemObj.category === "cosmetics") {
-                       basePath += "cosmetics/" + (itemObj.isWearable ? "wearables/" : "collectibles/");
-                       if (!itemObj.isWearable) isCollectible = true;
-                    }
-                    let filename = itemObj.image || itemObj.name + ".png";
-                    if (isCollectible) {
-                       filename = filename.replace(/\\.png$/i, ".webp");
-                    }
-                    itemImgSrc = encodeURI(basePath + filename);
-                 }
+                 let itemImgSrc = getItemImageSrc(itemObj);
                  
                  let bumpkinImg = trade.buyer.bumpkinUri ? 'https://animations.sunflower-land.com/bumpkin_image/' + trade.buyer.bumpkinUri + '/100' : '/img/sunflowerland/123/bear.png';
                  let safeItemNameForHtml = itemName.replace(/"/g, '&quot;');
@@ -2171,19 +2177,7 @@ const t = useTranslations(lang)
 
     const renderDashItem = (item, subtitle) => {
       if (!item) return ""
-      let basePath = "/img/sunflowerland/"
-      let isCollectible = false
-      if (item.category === "powerups") {
-        basePath += "powerups/" + (item.isWearable ? "wearables/" : "")
-      } else if (item.category === "cosmetics") {
-        basePath += "cosmetics/" + (item.isWearable ? "wearables/" : "collectibles/")
-        if (!item.isWearable) isCollectible = true
-      }
-      let filename = item.image || item.name + ".png"
-      if (isCollectible) {
-        filename = filename.replace(/\.png$/i, ".webp")
-      }
-      const imgSrc = encodeURI(basePath + filename)
+      const imgSrc = getItemImageSrc(item)
       const imgSize = item.category !== "resources" ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"
       return `
         <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.scrollToItem('${item.name}', event)" title="${item.name}">
@@ -2328,19 +2322,7 @@ const t = useTranslations(lang)
       const renderMiniIcons = (items, isNotRes) => {
         return items
           .map((item) => {
-            let basePath = "/img/sunflowerland/"
-            let isCollectible = false
-            if (item.category === "powerups")
-              basePath += "powerups/" + (item.isWearable ? "wearables/" : "")
-            else if (item.category === "cosmetics") {
-              basePath += "cosmetics/" + (item.isWearable ? "wearables/" : "collectibles/")
-              if (!item.isWearable) isCollectible = true
-            }
-            let filename = item.image || item.name + ".png"
-            if (isCollectible) {
-              filename = filename.replace(/\.png$/i, ".webp")
-            }
-            const imgSrc = encodeURI(basePath + filename)
+            const imgSrc = getItemImageSrc(item)
             return `
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" onclick="window.scrollToItem('${item.name}', event)">
             <img src="${imgSrc}" class="${isNotRes ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
@@ -2683,7 +2665,7 @@ const t = useTranslations(lang)
         <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full cursor-pointer lg:cursor-default mobile-row-toggle">
           <div class="flex items-center gap-4 lg:gap-3">
             <div class="relative w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="${encodeURI("/img/sunflowerland/" + (item.category === "resources" ? item.name + ".png" : item.category === "cosmetics" ? "cosmetics/" + (item.isWearable ? "wearables/" + (item.image || item.name + ".png") : "collectibles/" + (item.image ? item.image.replace(/\.png$/i, ".webp") : item.name + ".webp")) : "powerups/" + (item.isWearable ? "wearables/" : "") + (item.image || item.name + ".png")))}" alt="${item.name}" class="${item.category !== "resources" ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm" onerror="this.onerror=null; this.parentElement.innerHTML='📦';" />
+              <img src="${getItemImageSrc(item)}" alt="${item.name}" class="${item.category !== "resources" ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm" onerror="if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = '/img/sunflowerland/' + encodeURIComponent(this.alt.toLowerCase().replace(/\\s+/g, '_') + '.webp'); } else { this.onerror=null; this.parentElement.innerHTML='📦'; }" />
               ${newBadgeHTML}
             </div>
             <div>
