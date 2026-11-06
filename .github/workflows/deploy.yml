@@ -57,6 +57,11 @@ jobs:
         env:
           SFL_API_KEY: ${{ secrets.SFL_API_KEY }}
 
+      - name: Sincronizar catálogo KV en producción
+        run: |
+          sleep 5
+          curl -s -f "https://0xlenador.xyz/api/admin/refresh-sfl" || true
+
       - name: Subir artefacto compilado
         uses: actions/upload-pages-artifact@v3
         with:

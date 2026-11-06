@@ -36,6 +36,12 @@ export default {
 
     // 1. Interceptar /api/sfl_data.json
     if (url.pathname === "/api/sfl_data.json") {
+      // Parámetro para forzar purga de caché bajo demanda (?purge=1)
+      if (url.searchParams.get("purge") === "1") {
+        await env.SFL_KV.delete("sfl_data")
+        return env.ASSETS.fetch(request)
+      }
+
       const cached = await env.SFL_KV.get("sfl_data")
       if (cached) {
         return new Response(cached, {
@@ -47,12 +53,17 @@ export default {
           },
         })
       }
-      // Fallback al archivo estático en dist si KV aún no se ha inicializado
+      // Fallback al archivo estático en dist si KV aún no se ha inicializado o fue purgado
       return env.ASSETS.fetch(request)
     }
 
     // 2. Interceptar /api/sfl_dashboard.json
     if (url.pathname === "/api/sfl_dashboard.json") {
+      if (url.searchParams.get("purge") === "1") {
+        await env.SFL_KV.delete("sfl_dashboard")
+        return env.ASSETS.fetch(request)
+      }
+
       const cached = await env.SFL_KV.get("sfl_dashboard")
       if (cached) {
         return new Response(cached, {
@@ -69,6 +80,11 @@ export default {
 
     // 3. Endpoint manual para forzar actualización inmediata (testing o webhook)
     if (url.pathname === "/api/admin/refresh-sfl") {
+      const purge = url.searchParams.get("purge") === "1"
+      if (purge) {
+        await env.SFL_KV.delete("sfl_data")
+        await env.SFL_KV.delete("sfl_dashboard")
+      }
       const result = await refreshSflData(env)
       return new Response(JSON.stringify(result, null, 2), {
         headers: {
@@ -122,20 +138,44 @@ async function refreshSflData(env) {
           const totals = report.totals
 
           // 1. Actualizar sfl_data.json en KV
+          // Siempre cargar primero el archivo base desde ASSETS (dist/api/sfl_data.json)
+          // Esto garantiza que cualquier ítem nuevo (recursos, coleccionables, wearables)
+          // añadido al repositorio se integre automáticamente a la KV.
           let baseData = null
-          const cachedData = await env.SFL_KV.get("sfl_data")
-          if (cachedData) {
-            try {
-              baseData = JSON.parse(cachedData)
-            } catch (_) {}
-          }
-
-          if (!baseData) {
+          try {
             const assetRes = await env.ASSETS.fetch(
               new Request("https://0xlenador.xyz/api/sfl_data.json"),
             )
             if (assetRes.ok) {
               baseData = await assetRes.json()
+            }
+          } catch (_) {}
+
+          // Fallback a KV si ASSETS no responde
+          if (!baseData) {
+            const cachedData = await env.SFL_KV.get("sfl_data")
+            if (cachedData) {
+              try {
+                baseData = JSON.parse(cachedData)
+              } catch (_) {}
+            }
+          } else {
+            // Si ASSETS cargó correctamente pero KV ya tenía cotizaciones previas,
+            // conservar las métricas más recientes de KV para los ítems existentes
+            const cachedData = await env.SFL_KV.get("sfl_data")
+            if (cachedData) {
+              try {
+                const kvJson = JSON.parse(cachedData)
+                if (kvJson?.items) {
+                  for (const [key, kvItem] of Object.entries(kvJson.items)) {
+                    if (baseData.items[key] && kvItem.currentPrice) {
+                      baseData.items[key].currentPrice = kvItem.currentPrice
+                      if (kvItem.volume24h !== undefined) baseData.items[key].volume24h = kvItem.volume24h
+                      if (kvItem.trades24h !== undefined) baseData.items[key].trades24h = kvItem.trades24h
+                    }
+                  }
+                }
+              } catch (_) {}
             }
           }
 
@@ -167,19 +207,21 @@ async function refreshSflData(env) {
 
           // 2. Actualizar sfl_dashboard.json en KV (volumen y trades oficiales)
           let baseDashboard = null
-          const cachedDash = await env.SFL_KV.get("sfl_dashboard")
-          if (cachedDash) {
-            try {
-              baseDashboard = JSON.parse(cachedDash)
-            } catch (_) {}
-          }
-
-          if (!baseDashboard) {
+          try {
             const assetDashRes = await env.ASSETS.fetch(
               new Request("https://0xlenador.xyz/api/sfl_dashboard.json"),
             )
             if (assetDashRes.ok) {
               baseDashboard = await assetDashRes.json()
+            }
+          } catch (_) {}
+
+          if (!baseDashboard) {
+            const cachedDash = await env.SFL_KV.get("sfl_dashboard")
+            if (cachedDash) {
+              try {
+                baseDashboard = JSON.parse(cachedDash)
+              } catch (_) {}
             }
           }
 
