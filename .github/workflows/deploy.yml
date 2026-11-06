@@ -57,10 +57,11 @@ jobs:
         env:
           SFL_API_KEY: ${{ secrets.SFL_API_KEY }}
 
-      - name: Sincronizar catálogo KV en producción
+      - name: Purgar caché KV post-deploy
         run: |
           sleep 5
-          curl -s -f "https://0xlenador.xyz/api/admin/refresh-sfl" || true
+          curl -s "https://0xlenador.xyz/api/sfl_data.json?purge=1" || true
+          curl -s "https://0xlenador.xyz/api/sfl_dashboard.json?purge=1" || true
 
       - name: Subir artefacto compilado
         uses: actions/upload-pages-artifact@v3
