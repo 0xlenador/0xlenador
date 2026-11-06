@@ -41,7 +41,7 @@ Protecting your capital doesn't mean becoming rich overnight. It means that your
 
 Inflation is the general increase in prices. If annual inflation is 8%, something that used to cost 100 might now cost 108. If your money sat idle during that period, you still have the same nominal amount, but you can buy less.
 
-That is why it is not enough to look at how much money you have in your account. You must also look at how much that money can buy.
+That is why it is not enough to look at how much money you have in your account, you must also look at how much that money can buy.
 
 ## Saving vs. investing: two different functions
 
