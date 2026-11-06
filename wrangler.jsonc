@@ -6,15 +6,19 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": [
+      "/api/*"
+    ]
   },
   "kv_namespaces": [
     {
       "binding": "SFL_KV",
-      "id": "24b64a276ee8423fb532b561305fede7"
+      "id": "f013f0117bbf4b9d9c16c77031f181db"
     }
   ],
   "triggers": {
-    "crons": ["*/15 * * * *"]
+    "crons": [
+      "*/15 * * * *"
+    ]
   }
 }
