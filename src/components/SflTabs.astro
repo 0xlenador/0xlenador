@@ -444,6 +444,8 @@ const tabs = [
 
         const tabBettyBestEls = document.querySelectorAll(".tabBettyBest")
         if (tabBettyBestEls.length > 0 && bestCoinsPerFlower > 0) {
+          window.__bestCoinsPerFlower = bestCoinsPerFlower
+          window.dispatchEvent(new CustomEvent("sfl:bettyBestUpdated", { detail: bestCoinsPerFlower }))
           const displayValue = `1:${Math.round(bestCoinsPerFlower)}`
           tabBettyBestEls.forEach((el) => {
             el.innerText = displayValue
