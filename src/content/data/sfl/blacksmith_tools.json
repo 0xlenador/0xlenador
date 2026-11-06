@@ -1,0 +1,189 @@
+{
+  "buildings": {
+    "blacksmith": {
+      "id": "blacksmith",
+      "name": "Blacksmith",
+      "icon": "/img/sunflowerland/123/Hammer.png",
+      "tabs": [
+        {
+          "id": "tools",
+          "name": "Tools",
+          "categories": [
+            {
+              "id": "land",
+              "name": "Land Tools",
+              "items": [
+                {
+                  "id": "axe",
+                  "name": "Axe",
+                  "description": "Used to chop wood",
+                  "coins": 20,
+                  "stock": 300,
+                  "image": "/img/sunflowerland/tools/Axe.png",
+                  "ingredients": []
+                },
+                {
+                  "id": "pickaxe",
+                  "name": "Pickaxe",
+                  "description": "Used to mine stone",
+                  "coins": 20,
+                  "stock": 60,
+                  "image": "/img/sunflowerland/tools/Pickaxe.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 3, "image": "/img/sunflowerland/Wood.png" }
+                  ]
+                },
+                {
+                  "id": "stone_pickaxe",
+                  "name": "Stone Pickaxe",
+                  "description": "Used to mine iron",
+                  "coins": 20,
+                  "stock": 20,
+                  "image": "/img/sunflowerland/tools/Stone Pickaxe.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 3, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 5, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "iron_pickaxe",
+                  "name": "Iron Pickaxe",
+                  "description": "Used to mine gold",
+                  "coins": 80,
+                  "stock": 5,
+                  "image": "/img/sunflowerland/tools/Iron Pickaxe.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 3, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 5, "image": "/img/sunflowerland/Iron.png" }
+                  ]
+                },
+                {
+                  "id": "gold_pickaxe",
+                  "name": "Gold Pickaxe",
+                  "description": "Used to mine sunstone and crimstone",
+                  "coins": 100,
+                  "stock": 5,
+                  "image": "/img/sunflowerland/tools/Gold Pickaxe.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 3, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Gold", "amount": 3, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "oil_drill",
+                  "name": "Oil Drill",
+                  "description": "Used to drill oil",
+                  "coins": 100,
+                  "stock": 5,
+                  "image": "/img/sunflowerland/tools/Oil Drill.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 20, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 9, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Leather", "amount": 10, "image": "/img/sunflowerland/Leather.png" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "water",
+              "name": "Water Tools",
+              "items": [
+                {
+                  "id": "rod",
+                  "name": "Rod",
+                  "description": "Used to catch fish",
+                  "coins": 20,
+                  "stock": 50,
+                  "image": "/img/sunflowerland/tools/Rod.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 3, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 1, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "crab_pot",
+                  "name": "Crab Pot",
+                  "description": "Used to trap crustaceans",
+                  "coins": 250,
+                  "stock": 15,
+                  "image": "/img/sunflowerland/tools/Crab Pot.png",
+                  "ingredients": [
+                    { "name": "Feather", "amount": 5, "image": "/img/sunflowerland/Feather.png" },
+                    { "name": "Wool", "amount": 3, "image": "/img/sunflowerland/Wool.png" }
+                  ]
+                },
+                {
+                  "id": "mariner_pot",
+                  "name": "Mariner Pot",
+                  "description": "Advanced pot used to trap rare crustaceans",
+                  "coins": 500,
+                  "stock": 10,
+                  "image": "/img/sunflowerland/tools/Mariner Pot.png",
+                  "ingredients": [
+                    { "name": "Feather", "amount": 10, "image": "/img/sunflowerland/Feather.png" },
+                    { "name": "Merino Wool", "amount": 10, "image": "/img/sunflowerland/Merino Wool.png" }
+                  ]
+                },
+                {
+                  "id": "salt_rake",
+                  "name": "Salt Rake",
+                  "description": "Used to harvest salt from salt nodes",
+                  "coins": 20,
+                  "stock": 50,
+                  "image": "/img/sunflowerland/tools/Salt Rake.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 3, "image": "/img/sunflowerland/Wood.png" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "animal",
+              "name": "Animal Tools",
+              "items": [
+                {
+                  "id": "petting_hand",
+                  "name": "Petting Hand",
+                  "description": "Used to pet and love farm animals",
+                  "coins": 0,
+                  "stock": 1,
+                  "image": "/img/sunflowerland/tools/Petting Hand.png",
+                  "ingredients": []
+                },
+                {
+                  "id": "brush",
+                  "name": "Brush",
+                  "description": "Used to brush and groom farm animals",
+                  "coins": 2000,
+                  "stock": 1,
+                  "image": "/img/sunflowerland/tools/Brush.png",
+                  "ingredients": []
+                },
+                {
+                  "id": "music_box",
+                  "name": "Music Box",
+                  "description": "Plays soothing tunes to boost animal happiness",
+                  "coins": 50000,
+                  "stock": 1,
+                  "image": "/img/sunflowerland/tools/Music Box.png",
+                  "ingredients": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "boosts",
+          "name": "Boosts",
+          "categories": []
+        },
+        {
+          "id": "build",
+          "name": "Build",
+          "categories": []
+        }
+      ]
+    }
+  }
+}
+

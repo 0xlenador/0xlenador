@@ -1,0 +1,589 @@
+---
+import SflToolLayout from "../SflToolLayout.astro"
+import blacksmithData from "../../content/data/sfl/blacksmith_tools.json"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const blacksmith = blacksmithData.buildings.blacksmith
+const toolsTab = blacksmith.tabs.find((tab) => tab.id === "tools")
+const categories = toolsTab ? toolsTab.categories : []
+const firstTool = categories[0]?.items[0]
+---
+
+<SflToolLayout activeTab="constantes">
+  <!-- Encabezado Principal -->
+  <div class="mb-5 relative z-10 text-center sm:text-left">
+    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
+      {t("sfl.constants.heading")}
+      <span class="text-emerald-500"> {t("sfl.constants.heading.accent")}</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm leading-relaxed max-w-3xl">
+      {t("sfl.constants.intro")}
+    </p>
+  </div>
+
+  <!-- 1. Bloque Superior: Dashboard Placeholder (Ancho Completo) -->
+  <div
+    class="w-full mb-8 bg-[#18181b]/90 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md relative overflow-hidden"
+  >
+    <!-- Fondo decorativo sutil -->
+    <div
+      class="absolute -right-20 -top-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+    <div
+      class="absolute -left-20 -bottom-20 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+
+    <div class="relative z-10 flex flex-col gap-3">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <span class="relative flex h-2.5 w-2.5">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+            ></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <h2 class="text-base sm:text-lg font-mono font-bold tracking-tight text-white">
+            {t("sfl.constants.dashboard.title")}
+          </h2>
+        </div>
+
+        <!-- Indicador de precio de FLOWER en vivo -->
+        <div
+          class="flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-mono"
+        >
+          <img
+            src="/img/sunflowerland/Sunflower.png"
+            class="w-4 h-4 object-contain"
+            alt="FLOWER"
+          />
+          <span class="text-terminal-muted">1 FLOWER = 320 Coins</span>
+          <span class="text-white/30">•</span>
+          <span class="text-terminal-muted">FLOWER:</span>
+          <span id="liveFlowerPriceDisplay" class="text-emerald-400 font-bold">$0.14 USD</span>
+        </div>
+      </div>
+
+      <!-- Área de contenido placeholder para futuro dashboard -->
+      <div
+        class="border border-dashed border-white/10 rounded-xl p-6 sm:p-8 flex flex-col items-center justify-center text-center bg-black/20 my-2"
+      >
+        <div
+          class="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center mb-3"
+        >
+          <svg
+            class="w-6 h-6 text-emerald-400/80"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            ></path>
+          </svg>
+        </div>
+        <p class="text-terminal-muted text-xs sm:text-sm font-mono max-w-lg">
+          {t("sfl.constants.dashboard.placeholder")}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Bloques por Categorías: Grid 50% en PC -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+    <!-- BLOQUE 1: BLACKSMITH (Ocupa 50% en escritorio) -->
+    <div
+      class="bg-[#18181b]/95 border border-white/10 rounded-2xl shadow-xl backdrop-blur-md overflow-hidden flex flex-col"
+    >
+      <!-- Cabecera del Edificio con Icono y Tabs -->
+      <div class="p-4 sm:p-5 border-b border-white/10 bg-black/20">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-1.5"
+            >
+              <img
+                src={blacksmith.icon}
+                alt={blacksmith.name}
+                class="w-full h-full object-contain [image-rendering:pixelated]"
+              />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                {t("sfl.constants.building.blacksmith")}
+                <span
+                  class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-normal"
+                >
+                  13 items
+                </span>
+              </h3>
+              <p class="text-xs text-terminal-muted">
+                {t("sfl.constants.building.blacksmith.desc")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Pestañas del Edificio (Tools, Boosts, Build) -->
+        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5">
+          <button
+            type="button"
+            class="blacksmith-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 bg-white/10 text-amber-400 border border-amber-500/30 shadow-sm"
+            data-target="tab-tools"
+          >
+            <span>⛏️</span>
+            <span>{t("sfl.constants.tab.tools")}</span>
+          </button>
+          <button
+            type="button"
+            class="blacksmith-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+            data-target="tab-boosts"
+          >
+            <span>⚡</span>
+            <span>{t("sfl.constants.tab.boosts")}</span>
+          </button>
+          <button
+            type="button"
+            class="blacksmith-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+            data-target="tab-build"
+          >
+            <span>🔨</span>
+            <span>{t("sfl.constants.tab.build")}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PESTAÑA: TOOLS (Activa) -->
+      <div id="tab-tools" class="blacksmith-tab-panel p-4 sm:p-5">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
+          <!-- Columna Izquierda: Grid de Herramientas por Subcategorías (md:col-span-7) -->
+          <div class="md:col-span-7 flex flex-col gap-4">
+            {
+              categories.map((cat) => (
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-mono font-bold tracking-wider uppercase text-terminal-muted px-2 py-0.5 rounded bg-white/[0.03] border border-white/5">
+                      {cat.name}
+                    </span>
+                  </div>
+
+                  <!-- Grid de Slots idéntica a la UI del juego -->
+                  <div class="grid grid-cols-6 sm:grid-cols-6 gap-2">
+                    {cat.items.map((tool) => (
+                      <button
+                        type="button"
+                        class={`tool-slot relative w-full aspect-square rounded-xl bg-black/60 border-2 transition-all cursor-pointer flex items-center justify-center p-1.5 group select-none ${
+                          tool.id === firstTool?.id
+                            ? "border-amber-400 bg-amber-400/10 shadow-[0_0_15px_rgba(251,191,36,0.2)]"
+                            : "border-white/10 hover:border-white/30 hover:bg-white/[0.04]"
+                        }`}
+                        data-tool-id={tool.id}
+                        data-tool-data={JSON.stringify(tool)}
+                        title={tool.name}
+                      >
+                        <!-- Esquinas de selección estilo juego -->
+                        <div
+                          class={`slot-corner-bracket absolute inset-0 rounded-xl pointer-events-none transition-opacity ${
+                            tool.id === firstTool?.id ? "opacity-100" : "opacity-0 group-hover:opacity-40"
+                          }`}
+                        >
+                          <span class="absolute -top-0.5 -left-0.5 w-2 h-2 border-t-2 border-l-2 border-amber-400" />
+                          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 border-t-2 border-r-2 border-amber-400" />
+                          <span class="absolute -bottom-0.5 -left-0.5 w-2 h-2 border-b-2 border-l-2 border-amber-400" />
+                          <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 border-b-2 border-r-2 border-amber-400" />
+                        </div>
+
+                        <!-- Badge con stock (estilo juego) -->
+                        <span class="absolute top-0.5 right-1 text-[9px] font-mono font-bold text-white/70 pointer-events-none">
+                          {tool.stock}
+                        </span>
+
+                        <!-- Sprite del ítem -->
+                        <img
+                          src={tool.image}
+                          alt={tool.name}
+                          class="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] [image-rendering:pixelated] group-hover:scale-110 transition-transform"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+
+          <!-- Columna Derecha: Panel de Detalle & Conversión (md:col-span-5) -->
+          <div
+            class="md:col-span-5 bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col justify-between"
+          >
+            <div>
+              <!-- Stock Badge -->
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  id="detailStockBadge"
+                  class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-mono font-bold tracking-wide"
+                >
+                  {firstTool?.stock} in stock
+                </span>
+                <span class="text-[10px] font-mono text-terminal-muted">Blacksmith Tool</span>
+              </div>
+
+              <!-- Nombre del Ítem -->
+              <h4 id="detailTitle" class="text-base sm:text-lg font-bold text-white tracking-tight">
+                {firstTool?.name}
+              </h4>
+
+              <!-- Sprite grande centrado -->
+              <div class="my-3 flex items-center justify-center p-3 rounded-xl bg-white/[0.02]">
+                <img
+                  id="detailImg"
+                  src={firstTool?.image}
+                  alt={firstTool?.name}
+                  class="w-14 h-14 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
+                />
+              </div>
+
+              <!-- Descripción -->
+              <p id="detailDesc" class="text-xs text-terminal-secondary leading-relaxed mb-3">
+                {firstTool?.description}
+              </p>
+
+              <!-- Separador -->
+              <div class="border-t border-white/10 my-3"></div>
+
+              <!-- Sección de Precios y Conversión -->
+              <div class="flex flex-col gap-2">
+                <!-- Costo en Monedas -->
+                <div
+                  class="flex items-center justify-between p-2 rounded-lg bg-amber-500/[0.05] border border-amber-500/20"
+                >
+                  <span class="text-xs font-mono text-terminal-muted flex items-center gap-1.5">
+                    <img
+                      src="/img/sunflowerland/123/coins.png"
+                      class="w-3.5 h-3.5 object-contain"
+                      alt="Coins"
+                    />
+                    {t("sfl.constants.detail.cost")}:
+                  </span>
+                  <span id="detailCoins" class="text-sm font-mono font-bold text-amber-400">
+                    {firstTool?.coins} Coins
+                  </span>
+                </div>
+
+                <!-- Costo en FLOWER -->
+                <div
+                  class="flex items-center justify-between p-2 rounded-lg bg-emerald-500/[0.05] border border-emerald-500/20"
+                >
+                  <span class="text-xs font-mono text-terminal-muted flex items-center gap-1.5">
+                    <img
+                      src="/img/sunflowerland/Sunflower.png"
+                      class="w-3.5 h-3.5 object-contain"
+                      alt="FLOWER"
+                    />
+                    {t("sfl.constants.detail.flowerCost")}:
+                  </span>
+                  <span id="detailFlower" class="text-xs font-mono font-bold text-emerald-400">
+                    {(firstTool ? firstTool.coins / 320 : 0).toFixed(4)} FLOWER
+                  </span>
+                </div>
+
+                <!-- Costo en USD -->
+                <div
+                  class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5"
+                >
+                  <span class="text-xs font-mono text-terminal-muted">
+                    {t("sfl.constants.detail.usdCost")}:
+                  </span>
+                  <span id="detailUsd" class="text-xs font-mono font-bold text-white">
+                    $... USD
+                  </span>
+                </div>
+              </div>
+
+              <!-- Materiales Requeridos -->
+              <div class="mt-3">
+                <span
+                  class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted block mb-1.5"
+                >
+                  {t("sfl.constants.detail.ingredients")}
+                </span>
+                <div id="detailIngredients" class="flex flex-wrap gap-1.5">
+                  <!-- Se inyecta dinámicamente con JS -->
+                  <span class="text-[11px] font-mono text-white/40 italic">
+                    {t("sfl.constants.detail.noIngredients")}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Simulador de Crafteo (x1, x10, xMax) -->
+            <div class="mt-4 pt-3 border-t border-white/10 flex flex-col gap-1.5">
+              <span class="text-[10px] font-mono text-terminal-muted">Simulador de Fabricación</span>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button
+                  type="button"
+                  class="craft-multiplier-btn active py-1.5 px-2 rounded-lg text-[11px] font-mono font-bold bg-white/10 text-white border border-white/20 transition-all cursor-pointer hover:bg-white/20"
+                  data-multiplier="1"
+                >
+                  x1
+                </button>
+                <button
+                  type="button"
+                  class="craft-multiplier-btn py-1.5 px-2 rounded-lg text-[11px] font-mono font-bold bg-black/40 text-white/50 border border-white/5 transition-all cursor-pointer hover:bg-white/10 hover:text-white"
+                  data-multiplier="10"
+                >
+                  x10
+                </button>
+                <button
+                  type="button"
+                  id="craftMaxBtn"
+                  class="craft-multiplier-btn py-1.5 px-2 rounded-lg text-[11px] font-mono font-bold bg-black/40 text-white/50 border border-white/5 transition-all cursor-pointer hover:bg-white/10 hover:text-white"
+                  data-multiplier="max"
+                >
+                  Max
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PESTAÑA: BOOSTS (Vacía por ahora) -->
+      <div id="tab-boosts" class="blacksmith-tab-panel p-8 hidden text-center">
+        <div class="flex flex-col items-center justify-center py-6">
+          <div
+            class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-3 text-2xl"
+          >
+            ⚡
+          </div>
+          <h4 class="text-base font-bold text-white mb-1">
+            {t("sfl.constants.comingSoon.title")}
+          </h4>
+          <p class="text-xs text-terminal-muted max-w-sm">
+            {t("sfl.constants.comingSoon.desc").replace("{tab}", "Boosts")}
+          </p>
+        </div>
+      </div>
+
+      <!-- PESTAÑA: BUILD (Vacía por ahora) -->
+      <div id="tab-build" class="blacksmith-tab-panel p-8 hidden text-center">
+        <div class="flex flex-col items-center justify-center py-6">
+          <div
+            class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-3 text-2xl"
+          >
+            🔨
+          </div>
+          <h4 class="text-base font-bold text-white mb-1">
+            {t("sfl.constants.comingSoon.title")}
+          </h4>
+          <p class="text-xs text-terminal-muted max-w-sm">
+            {t("sfl.constants.comingSoon.desc").replace("{tab}", "Build")}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 2 (Columna Derecha Libre para el siguiente edificio) -->
+    <div
+      class="border border-dashed border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-black/10 min-h-[400px]"
+    >
+      <div
+        class="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center mb-3 text-xl text-white/30"
+      >
+        +
+      </div>
+      <h4 class="text-sm font-mono font-bold text-white/60 mb-1">Próximo Bloque de Constantes</h4>
+      <p class="text-xs text-terminal-muted max-w-xs font-mono">
+        Espacio reservado para las siguientes categorías del juego (Barn, Kitchen, Hen House, etc.).
+      </p>
+    </div>
+  </div>
+</SflToolLayout>
+
+<!-- Script interactivo de cliente -->
+<script is:inline>
+  ;(function () {
+    let currentMultiplier = 1
+    let selectedTool = null
+    let liveFlowerPrice = 0.144
+
+    // Inicializar el primer ítem
+    const firstSlot = document.querySelector(".tool-slot")
+    if (firstSlot && firstSlot.dataset.toolData) {
+      try {
+        selectedTool = JSON.parse(firstSlot.dataset.toolData)
+      } catch (e) {}
+    }
+
+    // Elementos del DOM
+    const liveFlowerDisplay = document.getElementById("liveFlowerPriceDisplay")
+    const detailTitle = document.getElementById("detailTitle")
+    const detailDesc = document.getElementById("detailDesc")
+    const detailImg = document.getElementById("detailImg")
+    const detailStockBadge = document.getElementById("detailStockBadge")
+    const detailCoins = document.getElementById("detailCoins")
+    const detailFlower = document.getElementById("detailFlower")
+    const detailUsd = document.getElementById("detailUsd")
+    const detailIngredients = document.getElementById("detailIngredients")
+    const craftMaxBtn = document.getElementById("craftMaxBtn")
+
+    // Función para actualizar vista de detalle
+    function updateDetailView() {
+      if (!selectedTool) return
+
+      const qty = currentMultiplier === "max" ? selectedTool.stock || 1 : currentMultiplier
+      const totalCoins = selectedTool.coins * qty
+      const totalFlower = totalCoins / 320
+      const totalUsd = totalFlower * liveFlowerPrice
+
+      if (detailTitle) detailTitle.innerText = selectedTool.name
+      if (detailDesc) detailDesc.innerText = selectedTool.description
+      if (detailImg) {
+        detailImg.src = selectedTool.image
+        detailImg.alt = selectedTool.name
+      }
+      if (detailStockBadge) {
+        detailStockBadge.innerText = `${selectedTool.stock} in stock`
+      }
+
+      // Precios
+      if (detailCoins) {
+        detailCoins.innerText = `${totalCoins.toLocaleString()} Coins ${qty > 1 ? `(${qty}x)` : ""}`
+      }
+      if (detailFlower) {
+        detailFlower.innerText = `${totalFlower.toFixed(4)} FLOWER`
+      }
+      if (detailUsd) {
+        detailUsd.innerText = `$${totalUsd.toFixed(4)} USD`
+      }
+
+      // Actualizar botón de Max
+      if (craftMaxBtn) {
+        craftMaxBtn.innerText = `x${selectedTool.stock}`
+      }
+
+      // Ingredientes
+      if (detailIngredients) {
+        if (!selectedTool.ingredients || selectedTool.ingredients.length === 0) {
+          detailIngredients.innerHTML = `<span class="text-[11px] font-mono text-white/40 italic">Sin materiales adicionales (solo monedas)</span>`
+        } else {
+          detailIngredients.innerHTML = selectedTool.ingredients
+            .map((ing) => {
+              const reqQty = ing.amount * qty
+              return `
+                <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 text-xs font-mono">
+                  <img src="${ing.image}" class="w-3.5 h-3.5 object-contain" alt="${ing.name}" />
+                  <span class="text-white font-bold">${reqQty.toLocaleString()}</span>
+                  <span class="text-terminal-muted">${ing.name}</span>
+                </div>
+              `
+            })
+            .join("")
+        }
+      }
+    }
+
+    // Manejar selección de slots de herramientas
+    const slots = document.querySelectorAll(".tool-slot")
+    slots.forEach((slot) => {
+      slot.addEventListener("click", () => {
+        slots.forEach((s) => {
+          s.classList.remove(
+            "border-amber-400",
+            "bg-amber-400/10",
+            "shadow-[0_0_15px_rgba(251,191,36,0.2)]",
+          )
+          s.classList.add("border-white/10")
+          const bracket = s.querySelector(".slot-corner-bracket")
+          if (bracket) bracket.classList.remove("opacity-100")
+        })
+
+        slot.classList.add(
+          "border-amber-400",
+          "bg-amber-400/10",
+          "shadow-[0_0_15px_rgba(251,191,36,0.2)]",
+        )
+        slot.classList.remove("border-white/10")
+        const activeBracket = slot.querySelector(".slot-corner-bracket")
+        if (activeBracket) activeBracket.classList.add("opacity-100")
+
+        try {
+          selectedTool = JSON.parse(slot.dataset.toolData)
+          updateDetailView()
+        } catch (e) {}
+      })
+    })
+
+    // Manejar botones de multiplicador de crafteo
+    const multiplierBtns = document.querySelectorAll(".craft-multiplier-btn")
+    multiplierBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        multiplierBtns.forEach((b) => {
+          b.classList.remove("bg-white/10", "border-white/20", "text-white")
+          b.classList.add("bg-black/40", "border-white/5", "text-white/50")
+        })
+        btn.classList.add("bg-white/10", "border-white/20", "text-white")
+        btn.classList.remove("bg-black/40", "border-white/5", "text-white/50")
+
+        const multVal = btn.dataset.multiplier
+        currentMultiplier = multVal === "max" ? "max" : parseInt(multVal, 10) || 1
+        updateDetailView()
+      })
+    })
+
+    // Manejar pestañas del Blacksmith (Tools, Boosts, Build)
+    const tabBtns = document.querySelectorAll(".blacksmith-tab-btn")
+    const tabPanels = document.querySelectorAll(".blacksmith-tab-panel")
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.target
+
+        tabBtns.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-amber-400", "border-amber-500/30", "shadow-sm")
+          b.classList.add("text-white/50", "border-transparent")
+        })
+        btn.classList.add("bg-white/10", "text-amber-400", "border-amber-500/30", "shadow-sm")
+        btn.classList.remove("text-white/50", "border-transparent")
+
+        tabPanels.forEach((p) => {
+          if (p.id === targetId) {
+            p.classList.remove("hidden")
+          } else {
+            p.classList.add("hidden")
+          }
+        })
+      })
+    })
+
+    // Consultar precio en vivo de FLOWER desde nuestra API local/producción
+    async function fetchLivePrice() {
+      try {
+        const res = await fetch("/api/sfl_data.json?t=" + Date.now())
+        if (res.ok) {
+          const data = await res.json()
+          if (data && data.flowerPrice) {
+            liveFlowerPrice = parseFloat(data.flowerPrice)
+            if (liveFlowerDisplay) {
+              liveFlowerDisplay.innerText = `$${liveFlowerPrice.toFixed(4)} USD`
+            }
+            updateDetailView()
+          }
+        }
+      } catch (err) {
+        console.error("Error al obtener precio de Flower:", err)
+      }
+    }
+
+    fetchLivePrice()
+    updateDetailView()
+  })()
+</script>
+

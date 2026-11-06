@@ -74,6 +74,7 @@ export const routeMap: Record<string, Record<Lang, string>> = {
   "/sfl-cocinando": { es: "/sfl-cocinando/", en: "/en/sfl-cooking/" },
   "/sfl-mascotas": { es: "/sfl-mascotas/", en: "/en/sfl-pets/" },
   "/sfl-betty": { es: "/sfl-betty/", en: "/en/sfl-betty/" },
+  "/sfl-constantes": { es: "/sfl-constantes/", en: "/en/sfl-constants/" },
   "/fishing": { es: "/fishing/", en: "/en/fishing/" },
   "/privacidad": { es: "/privacidad/", en: "/en/privacy/" },
   "/terminos": { es: "/terminos/", en: "/en/terms/" },

@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import SflConstantsView from "../../components/views/SflConstantsView.astro"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const seo = {
+  title: t("sfl.constants.seo.title"),
+  description: t("sfl.constants.seo.description"),
+  image: "/img/meta/sunflowerland-og.webp",
+}
+---
+
+<Layout title={seo.title} description={seo.description} image={seo.image} customSpacing>
+  <SflConstantsView />
+</Layout>
+
