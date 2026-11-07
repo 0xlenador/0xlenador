@@ -22,6 +22,10 @@ const jafar = jafarData.npc
 const jafarBuyTab = jafar.tabs.find((tab) => tab.id === "buy")
 const jafarCategories = jafarBuyTab ? jafarBuyTab.categories : []
 const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
+
+const jafarSellTab = jafar.tabs.find((tab) => tab.id === "sell")
+const jafarSellCategories = jafarSellTab ? jafarSellTab.categories : []
+const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
 ---
 
 <SflToolLayout activeTab="constantes">
@@ -874,20 +878,218 @@ const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.l
         </div>
       </div>
 
-      <!-- Panel Pestaña: Sell (Preparado para el futuro) -->
-      <div id="jafar-tab-sell" class="jafar-tab-panel p-8 hidden text-center">
-        <div class="flex flex-col items-center justify-center py-6">
-          <div
-            class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-3 text-2xl"
-          >
-            💰
+      <!-- Panel Pestaña: Sell -->
+      <div id="jafar-tab-sell" class="jafar-tab-panel p-3.5 sm:p-4 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5">
+          <!-- Columna Izquierda: Grilla de Tesoros (md:col-span-8) -->
+          <div class="md:col-span-8 flex flex-col gap-3">
+            {
+              jafarSellCategories.map((cat) => (
+                <div class="flex flex-col gap-1.5">
+                  <div class="flex items-center justify-between gap-1.5">
+                    <span class="text-[10px] font-mono font-bold tracking-wider uppercase text-terminal-muted px-1.5 py-0.5 rounded bg-white/[0.03] border border-white/5">
+                      {t(`sfl.constants.cat.${cat.id}`) || cat.name}
+                    </span>
+                    <span class="text-[10px] font-mono text-terminal-muted">
+                      {cat.items?.length || 0} items
+                    </span>
+                  </div>
+
+                  <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-1.5">
+                    {cat.items && cat.items.length > 0 ? (
+                      cat.items.map((treasure) => (
+                        <button
+                          type="button"
+                          class="jafar-sell-slot relative w-full rounded-xl bg-black/60 border-2 border-white/10 hover:border-white/30 hover:bg-white/[0.04] transition-all cursor-pointer flex flex-col items-center justify-between p-1 pt-1 pb-1 group select-none min-h-[66px]"
+                          data-tool-id={treasure.id}
+                          data-tool-data={JSON.stringify(treasure)}
+                          title={treasure.name}
+                        >
+                          <!-- Indicador de Selección (esquinas doradas estilo Sunflower Land) -->
+                          <div class="slot-corner-bracket hidden absolute inset-0 pointer-events-none">
+                            <span class="absolute top-0.5 left-0.5 w-1.5 h-1.5 border-t-2 border-l-2 border-amber-400" />
+                            <span class="absolute top-0.5 right-0.5 w-1.5 h-1.5 border-t-2 border-r-2 border-amber-400" />
+                            <span class="absolute bottom-0.5 left-0.5 w-1.5 h-1.5 border-b-2 border-l-2 border-amber-400" />
+                            <span class="absolute bottom-0.5 right-0.5 w-1.5 h-1.5 border-b-2 border-r-2 border-amber-400" />
+                          </div>
+
+                          <!-- Icono del Tesoro Centrado -->
+                          <div class="w-8 h-8 flex items-center justify-center my-auto">
+                            <img
+                              src={treasure.image}
+                              alt={treasure.name}
+                              class="max-w-[28px] max-h-[28px] object-contain group-hover:scale-110 transition-transform [image-rendering:pixelated]"
+                              loading="lazy"
+                            />
+                          </div>
+
+                          <!-- Valor en FLOWER al vender 1 -->
+                          <div class="w-full flex items-center justify-center gap-1 mt-0.5 bg-black/40 rounded py-0.5 px-1 border border-white/5">
+                            <img
+                              src="/img/sunflowerland/flower.jpg"
+                              class="w-2.5 h-2.5 rounded-full object-cover shrink-0"
+                              alt="FLOWER"
+                            />
+                            <span
+                              class="jafar-sell-flower-cost text-[10px] font-mono font-bold leading-none text-emerald-400 group-hover:text-emerald-300"
+                              data-coins={treasure.coins}
+                            >
+                              --
+                            </span>
+                          </div>
+                        </button>
+                      ))
+                    ) : (
+                      <div class="col-span-full py-4 text-center text-xs text-white/40 italic">
+                        {t("sfl.constants.emptyCategory")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            }
           </div>
-          <h4 class="text-base font-bold text-white mb-1">
-            {t("sfl.constants.comingSoon.title")}
-          </h4>
-          <p class="text-xs text-terminal-muted max-w-sm">
-            {t("sfl.constants.comingSoon.desc").replace("{tab}", "Sell")}
-          </p>
+
+          <!-- Columna Derecha: Tarjeta de Detalle del Tesoro (md:col-span-4) -->
+          <div class="md:col-span-4">
+            <div
+              class="sticky top-20 bg-black/40 border border-white/10 rounded-xl p-3 sm:p-3.5 flex flex-col gap-2.5"
+            >
+              <!-- Estado Placeholder (Sin Selección) -->
+              <div
+                id="jafarSellDetailPlaceholder"
+                class="py-8 px-4 flex flex-col items-center justify-center text-center"
+              >
+                <div
+                  class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-2.5 text-lg"
+                >
+                  💎
+                </div>
+                <p class="text-xs font-mono font-bold text-white mb-1">
+                  {t("sfl.constants.sell.selectTreasure.title")}
+                </p>
+                <p class="text-[11px] text-terminal-muted leading-relaxed max-w-[200px]">
+                  {t("sfl.constants.sell.selectTreasure.desc")}
+                </p>
+              </div>
+
+              <!-- Estado Activo: Información del Tesoro Seleccionado -->
+              <div id="jafarSellDetailContent" class="hidden flex flex-col gap-2">
+                <!-- Encabezado del ítem seleccionado -->
+                <div class="flex items-start gap-2.5 pb-2.5 border-b border-white/10">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center shrink-0 p-1"
+                  >
+                    <img
+                      id="jafarSellDetailImage"
+                      src=""
+                      alt=""
+                      class="max-w-[36px] max-h-[36px] object-contain [image-rendering:pixelated]"
+                    />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-1">
+                      <h4 id="jafarSellDetailTitle" class="text-sm font-bold text-white truncate">
+                        --
+                      </h4>
+                      <span
+                        class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0"
+                      >
+                        {t("sfl.constants.sell.unlimited")}
+                      </span>
+                    </div>
+                    <p
+                      id="jafarSellDetailDescription"
+                      class="text-[11px] text-terminal-muted line-clamp-2 mt-0.5 leading-snug"
+                    >
+                      --
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Desglose de Ganancia -->
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[10px] font-mono font-bold tracking-wider uppercase text-terminal-muted">
+                    {t("sfl.constants.sell.reward")}
+                  </span>
+                  <div class="flex flex-col gap-1 rounded-lg bg-black/30 border border-white/5 p-2">
+                    <div class="flex items-center justify-between text-xs font-mono">
+                      <div class="flex items-center gap-2">
+                        <img
+                          src="/img/sunflowerland/123/coins.png"
+                          class="w-4 h-4 object-contain"
+                          alt="Coins"
+                        />
+                        <span id="jafarSellDetailCoins" class="font-bold text-amber-400">--</span>
+                      </div>
+                      <div class="flex flex-col items-end leading-tight">
+                        <div class="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
+                          <img
+                            src="/img/sunflowerland/flower.jpg"
+                            class="w-3 h-3 rounded-full object-cover shrink-0"
+                            alt="FLOWER"
+                          />
+                          <span id="jafarSellDetailCoinsFlower">--</span>
+                        </div>
+                        <span id="jafarSellDetailCoinsUsd" class="text-[10px] font-mono text-white/50 pt-0.5">
+                          ~$0.0000
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Simulador de Venta -->
+                <div class="mt-2.5 pt-2 border-t border-white/10 flex flex-col gap-2">
+                  <span class="text-[10px] font-mono text-terminal-muted">
+                    {t("sfl.constants.sell.simulation")}
+                  </span>
+                  <div class="grid grid-cols-3 gap-1.5">
+                    <button
+                      type="button"
+                      id="jafarSellBtn1"
+                      class="jafar-sell-multiplier-btn active py-1 px-2 rounded-lg text-[11px] font-mono font-bold bg-white/10 text-white border border-white/20 transition-all cursor-pointer hover:bg-white/20"
+                      data-multiplier="1"
+                    >
+                      {t("sfl.constants.sell.btn1")}
+                    </button>
+                    <button
+                      type="button"
+                      id="jafarSellBtn10"
+                      class="jafar-sell-multiplier-btn py-1 px-2 rounded-lg text-[11px] font-mono font-bold bg-black/40 text-white/50 border border-white/5 transition-all cursor-pointer hover:bg-white/10 hover:text-white"
+                      data-multiplier="10"
+                    >
+                      {t("sfl.constants.sell.btn10")}
+                    </button>
+                    <button
+                      type="button"
+                      id="jafarSellBtnBulk"
+                      class="jafar-sell-multiplier-btn py-1 px-2 rounded-lg text-[11px] font-mono font-bold bg-black/40 text-white/50 border border-white/5 transition-all cursor-pointer hover:bg-white/10 hover:text-white"
+                      data-multiplier="100"
+                    >
+                      {t("sfl.constants.sell.btnBulk")}
+                    </button>
+                  </div>
+
+                  <!-- Input para cantidad personalizada (Custom Quantity) -->
+                  <div class="relative flex items-center">
+                    <input
+                      type="number"
+                      id="jafarSellCustomQty"
+                      min="1"
+                      step="1"
+                      value="1"
+                      placeholder={t("sfl.constants.sell.customPlaceholder")}
+                      class="w-full bg-black/50 border border-white/10 focus:border-amber-400/60 focus:bg-white/[0.03] text-white font-mono text-xs rounded-lg pl-3 pr-10 py-1.5 outline-none transition-all placeholder:text-white/30 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    <span class="absolute right-2.5 text-[10px] font-mono text-terminal-muted pointer-events-none select-none">
+                      {t("sfl.constants.sell.customUnits")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1319,12 +1521,194 @@ const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.l
       tabPanelSelector: ".jafar-tab-panel"
     })
 
+    // Controlador para la Pestaña de Sell de Jafar (Tesoros acumulables sin límite de stock)
+    function createSellController() {
+      const placeholder = document.getElementById("jafarSellDetailPlaceholder")
+      const content = document.getElementById("jafarSellDetailContent")
+      const title = document.getElementById("jafarSellDetailTitle")
+      const desc = document.getElementById("jafarSellDetailDescription")
+      const img = document.getElementById("jafarSellDetailImage")
+      const coinsDisplay = document.getElementById("jafarSellDetailCoins")
+      const coinsFlowerDisplay = document.getElementById("jafarSellDetailCoinsFlower")
+      const coinsUsdDisplay = document.getElementById("jafarSellDetailCoinsUsd")
+      const customQtyInput = document.getElementById("jafarSellCustomQty")
+      const multiplierBtns = document.querySelectorAll(".jafar-sell-multiplier-btn")
+      const slots = document.querySelectorAll(".jafar-sell-slot")
+      const flowerCosts = document.querySelectorAll(".jafar-sell-flower-cost")
+
+      let selectedTreasure = null
+      let currentMultiplier = 1
+
+      // Auto-seleccionar el primer tesoro por defecto
+      if (slots.length > 0) {
+        const firstSlot = slots[0]
+        try {
+          selectedTreasure = JSON.parse(firstSlot.dataset.toolData)
+          firstSlot.classList.add(
+            "border-amber-400",
+            "bg-amber-400/10",
+            "shadow-[0_0_15px_rgba(251,191,36,0.2)]"
+          )
+          firstSlot.classList.remove("border-white/10")
+          const bracket = firstSlot.querySelector(".slot-corner-bracket")
+          if (bracket) bracket.classList.remove("hidden")
+          if (placeholder) placeholder.classList.add("hidden")
+          if (content) content.classList.remove("hidden")
+        } catch (e) {}
+      }
+
+      function updateSlots() {
+        flowerCosts.forEach((span) => {
+          const coins = parseFloat(span.dataset.coins) || 0
+          if (activeCoinsPerFlower > 0) {
+            const flowerValue = coins / activeCoinsPerFlower
+            span.innerText = flowerValue.toFixed(4)
+          } else {
+            span.innerText = "--"
+          }
+        })
+      }
+
+      function updateDetail() {
+        if (!selectedTreasure) return
+
+        if (title) title.innerText = selectedTreasure.name || ""
+        if (desc) desc.innerText = selectedTreasure.description || ""
+        if (img) {
+          img.src = selectedTreasure.image || ""
+          img.alt = selectedTreasure.name || ""
+        }
+
+        const unitCoins = selectedTreasure.coins || 0
+        const totalCoins = unitCoins * currentMultiplier
+        const totalFlower = activeCoinsPerFlower > 0 ? totalCoins / activeCoinsPerFlower : 0
+        const totalUsd = totalFlower * liveFlowerPrice
+
+        if (coinsDisplay) {
+          coinsDisplay.innerText = `${totalCoins.toLocaleString()} Coins`
+        }
+        if (coinsFlowerDisplay) {
+          coinsFlowerDisplay.innerText = totalFlower.toFixed(4)
+        }
+        if (coinsUsdDisplay) {
+          coinsUsdDisplay.innerText = `~$${totalUsd.toFixed(4)}`
+        }
+      }
+
+      // Manejo de clic en slots de tesoros
+      slots.forEach((slot) => {
+        slot.addEventListener("click", () => {
+          slots.forEach((s) => {
+            s.classList.remove(
+              "border-amber-400",
+              "bg-amber-400/10",
+              "shadow-[0_0_15px_rgba(251,191,36,0.2)]"
+            )
+            s.classList.add("border-white/10")
+            const b = s.querySelector(".slot-corner-bracket")
+            if (b) b.classList.add("hidden")
+          })
+
+          slot.classList.add(
+            "border-amber-400",
+            "bg-amber-400/10",
+            "shadow-[0_0_15px_rgba(251,191,36,0.2)]"
+          )
+          slot.classList.remove("border-white/10")
+          const activeBracket = slot.querySelector(".slot-corner-bracket")
+          if (activeBracket) activeBracket.classList.remove("hidden")
+
+          try {
+            selectedTreasure = JSON.parse(slot.dataset.toolData)
+            if (placeholder) placeholder.classList.add("hidden")
+            if (content) content.classList.remove("hidden")
+            updateDetail()
+          } catch (e) {}
+        })
+      })
+
+      // Multiplicadores de venta predefinidos (x1, x10, x100)
+      multiplierBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          multiplierBtns.forEach((b) => {
+            b.classList.remove("active", "bg-white/10", "text-white", "border-white/20")
+            b.classList.add("bg-black/40", "text-white/50", "border-white/5")
+          })
+          btn.classList.add("active", "bg-white/10", "text-white", "border-white/20")
+          btn.classList.remove("bg-black/40", "text-white/50", "border-white/5")
+
+          const mult = parseInt(btn.dataset.multiplier, 10) || 1
+          currentMultiplier = mult
+          if (customQtyInput) {
+            customQtyInput.value = mult
+          }
+          updateDetail()
+        })
+      })
+
+      // Manejo del input de cantidad personalizada
+      if (customQtyInput) {
+        customQtyInput.addEventListener("input", () => {
+          let val = parseInt(customQtyInput.value, 10)
+          if (isNaN(val) || val < 1) {
+            val = 0
+          }
+          currentMultiplier = val
+
+          // Sincronizar estado visual de los botones predefinidos
+          multiplierBtns.forEach((b) => {
+            const m = parseInt(b.dataset.multiplier, 10)
+            if (m === val) {
+              b.classList.add("active", "bg-white/10", "text-white", "border-white/20")
+              b.classList.remove("bg-black/40", "text-white/50", "border-white/5")
+            } else {
+              b.classList.remove("active", "bg-white/10", "text-white", "border-white/20")
+              b.classList.add("bg-black/40", "text-white/50", "border-white/5")
+            }
+          })
+
+          updateDetail()
+        })
+
+        customQtyInput.addEventListener("blur", () => {
+          if (!customQtyInput.value || parseInt(customQtyInput.value, 10) < 1) {
+            customQtyInput.value = 1
+            currentMultiplier = 1
+            multiplierBtns.forEach((b) => {
+              if (b.dataset.multiplier === "1") {
+                b.classList.add("active", "bg-white/10", "text-white", "border-white/20")
+                b.classList.remove("bg-black/40", "text-white/50", "border-white/5")
+              } else {
+                b.classList.remove("active", "bg-white/10", "text-white", "border-white/20")
+                b.classList.add("bg-black/40", "text-white/50", "border-white/5")
+              }
+            })
+            updateDetail()
+          }
+        })
+      }
+
+      updateSlots()
+      updateDetail()
+
+      return {
+        updateSlots,
+        updateDetail
+      }
+    }
+
+    const jafarSellManager = createSellController()
+
     function updateAll() {
       updateOilPriceDisplay()
       blacksmithManager.updateSlots()
       blacksmithManager.updateDetail()
       jafarManager.updateSlots()
       jafarManager.updateDetail()
+      if (jafarSellManager) {
+        jafarSellManager.updateSlots()
+        jafarSellManager.updateDetail()
+      }
     }
 
     // Actualiza la tasa y los textos
