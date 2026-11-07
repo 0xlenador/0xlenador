@@ -135,7 +135,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
               alt="Oil"
             />
             <span class="text-terminal-muted">1 Oil:</span>
-            <span id="liveOilPriceDisplay" class="text-amber-400 font-bold">~0.1257 FLW</span>
+            <span id="liveOilPriceDisplay" class="text-amber-400 font-bold">~0.1257 FLOWER</span>
 
             <!-- Tooltip Popup para Oil -->
             <div class="relative inline-flex items-center group/tooltip ml-0.5">
@@ -1113,9 +1113,13 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       <div class="p-3.5 sm:p-4 border-b border-white/10 bg-black/20">
         <div class="flex items-center gap-2.5 mb-2.5">
           <div
-            class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-xl"
+            class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 p-1"
           >
-            🍄
+            <img
+              src="/img/sunflowerland/build/cave_entrance.webp"
+              alt="Cave Entrance"
+              class="w-8 h-8 object-contain [image-rendering:pixelated]"
+            />
           </div>
           <div>
             <h3 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
@@ -1181,15 +1185,74 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                     </div>
                   </div>
 
-                  <!-- Requisito del Mix (Madera, Huevos, etc.) -->
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                      <img id="caveBatchReqImg" src="/img/sunflowerland/Wood.png" class="w-3.5 h-3.5 object-contain" alt="Requirement" />
-                      <span id="caveBatchReqText" class="text-white text-[11px]">10x Wood</span>
+                  <!-- Requisito Estándar (para Mushroom Mix y Beetle Mix) -->
+                  <div id="caveBatchReqStandardRow" class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                      <img id="caveBatchReqImg" src="/img/sunflowerland/Wood.png" class="w-3.5 h-3.5 object-contain shrink-0" alt="Requirement" />
+                      <span id="caveBatchReqText" class="text-white text-[11px] truncate">10x Wood</span>
                     </div>
-                    <div class="flex items-center gap-1 text-emerald-400 font-bold text-[11px]">
+                    <div class="flex items-center gap-1 text-emerald-400 font-bold text-[11px] shrink-0">
                       <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
                       <span id="caveBatchReqFlower">0.0000</span>
+                    </div>
+                  </div>
+
+                  <!-- Selector Custom Estilizado para Mud Mix (25 Cultivos) -->
+                  <div id="caveCropSelectContainer" class="hidden relative">
+                    <!-- Botón Trigger Custom -->
+                    <button
+                      type="button"
+                      id="caveCropDropdownTrigger"
+                      class="w-full py-1.5 px-2 rounded-lg bg-black/60 hover:bg-white/[0.04] border border-white/10 hover:border-amber-500/40 text-left flex items-center justify-between transition-all cursor-pointer group"
+                    >
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <img
+                          id="caveCropTriggerImg"
+                          src="/img/sunflowerland/Sunflower.png"
+                          class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]"
+                          alt=""
+                        />
+                        <span id="caveCropTriggerLabel" class="text-[11px] font-mono font-bold text-white truncate">
+                          500x Sunflower
+                        </span>
+                        <span
+                          id="caveCropTriggerBadge"
+                          class="text-[8.5px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                        >
+                          {t("sfl.constants.cave.optimalBadge")}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-2 shrink-0">
+                        <div class="flex items-center gap-1 font-mono text-[11px] font-bold text-emerald-400">
+                          <img
+                            src="/img/sunflowerland/flower.jpg"
+                            class="w-3 h-3 rounded-full object-cover shrink-0"
+                            alt="FLOWER"
+                          />
+                          <span id="caveCropTriggerFlower">0.0000</span>
+                        </div>
+                        <svg
+                          id="caveCropTriggerArrow"
+                          class="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-transform duration-200"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </button>
+
+                    <!-- Menú Flotante Desplegable con Lista Estilizada -->
+                    <div
+                      id="caveCropDropdownMenu"
+                      class="hidden absolute left-0 right-0 top-full mt-1.5 p-1 bg-[#121214] border border-white/15 rounded-xl shadow-2xl z-[95] max-h-56 overflow-y-auto flex flex-col gap-0.5 backdrop-blur-md"
+                    >
+                      <!-- Cultivos inyectados dinámicamente con estética Leñador -->
                     </div>
                   </div>
 
@@ -1245,9 +1308,20 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 
               <!-- Sección 3: Costo Residual / Valor Intrínseco de Producción -->
               <div class="flex flex-col gap-1">
-                <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
-                  {t("sfl.constants.cave.residualCost")}
-                </span>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
+                    {t("sfl.constants.cave.residualCost")}
+                  </span>
+
+                  <!-- Badge Informativo x2 Mud (Siempre activo en Mud Mix) -->
+                  <div
+                    id="caveMudBoostBadge"
+                    class="hidden items-center gap-1 py-0.5 px-2 rounded-md text-[9.5px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm"
+                  >
+                    <span>⚡</span>
+                    <span>x2 Mud</span>
+                  </div>
+                </div>
 
                 <div class="rounded-xl bg-gradient-to-br from-amber-500/[0.08] to-emerald-500/[0.04] border border-amber-500/20 p-2 flex flex-col gap-1.5">
                   <!-- Estado del Balance -->
@@ -1270,7 +1344,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                       />
                       <span class="text-[9.5px] font-mono text-terminal-muted">1 Mushroom</span>
                       <div class="flex items-center gap-1 text-amber-400 font-mono font-bold text-[11px] mt-0.5">
-                        <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 rounded-full object-cover" alt="FLW" />
+                        <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 rounded-full object-cover" alt="FLOWER" />
                         <span id="caveMushroomUnitFlower">0.0000</span>
                       </div>
                       <span id="caveMushroomUnitUsd" class="text-[9px] font-mono text-white/40">~$0.0000</span>
@@ -1279,13 +1353,13 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                     <!-- 1 Mud -->
                     <div class="bg-black/40 border border-white/5 rounded-lg p-1.5 flex flex-col items-center text-center">
                       <img
-                        src="/img/sunflowerland/build/mud.webp"
+                        src="/img/sunflowerland/123/mud.webp"
                         alt="Mud"
                         class="w-5 h-5 object-contain mb-0.5 [image-rendering:pixelated]"
                       />
                       <span class="text-[9.5px] font-mono text-terminal-muted">1 Mud</span>
                       <div class="flex items-center gap-1 text-amber-600 font-mono font-bold text-[11px] mt-0.5">
-                        <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 rounded-full object-cover" alt="FLW" />
+                        <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 rounded-full object-cover" alt="FLOWER" />
                         <span id="caveMudUnitFlower">0.0000</span>
                       </div>
                       <span id="caveMudUnitUsd" class="text-[9px] font-mono text-white/40">~$0.0000</span>
@@ -1350,7 +1424,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                 <!-- Mud -->
                 <div class="flex flex-col items-center justify-center bg-black/40 p-1 rounded-lg border border-white/5 text-center">
                   <img
-                    src="/img/sunflowerland/build/mud.webp"
+                    src="/img/sunflowerland/123/mud.webp"
                     alt="Mud"
                     class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
                   />
@@ -1504,9 +1578,9 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       calculatedOilPriceFlower = calculateOilUnitPrice()
       if (liveOilPriceDisplay) {
         if (calculatedOilPriceFlower > 0) {
-          liveOilPriceDisplay.innerText = `${calculatedOilPriceFlower.toFixed(4)} FLW`
+          liveOilPriceDisplay.innerText = `${calculatedOilPriceFlower.toFixed(4)} FLOWER`
         } else {
-          liveOilPriceDisplay.innerText = `-- FLW`
+          liveOilPriceDisplay.innerText = `-- FLOWER`
         }
       }
     }
@@ -2155,6 +2229,10 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       let discoveredMushrooms = 0
       let discoveredMud = 0
 
+      // Estado para Mud Mix
+      let selectedCropIndex = -1 // -1 = automático / óptimo
+      let optimalCropIndex = 0
+
       // Estado del Modo Simulación en Vivo
       let isSimulationActive = false
       let simShovelsUsed = 0
@@ -2165,6 +2243,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       // Elementos DOM
       const simulateToggleBtn = document.getElementById("caveSimulateToggleBtn")
       const simulateStatusText = document.getElementById("caveSimulateStatusText")
+      const mudBoostBadge = document.getElementById("caveMudBoostBadge")
       const beetlesCountDisplay = document.getElementById("caveBeetlesCount")
       const beetlesGoalDisplay = document.getElementById("caveBeetlesGoal")
       const mushroomsCountDisplay = document.getElementById("caveMushroomsCount")
@@ -2182,6 +2261,15 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       const batchReqImg = document.getElementById("caveBatchReqImg")
       const batchReqText = document.getElementById("caveBatchReqText")
       const batchReqFlower = document.getElementById("caveBatchReqFlower")
+      const cropStandardRow = document.getElementById("caveBatchReqStandardRow")
+      const cropSelectContainer = document.getElementById("caveCropSelectContainer")
+      const cropDropdownTrigger = document.getElementById("caveCropDropdownTrigger")
+      const cropTriggerImg = document.getElementById("caveCropTriggerImg")
+      const cropTriggerLabel = document.getElementById("caveCropTriggerLabel")
+      const cropTriggerBadge = document.getElementById("caveCropTriggerBadge")
+      const cropTriggerFlower = document.getElementById("caveCropTriggerFlower")
+      const cropTriggerArrow = document.getElementById("caveCropTriggerArrow")
+      const cropDropdownMenu = document.getElementById("caveCropDropdownMenu")
       const beetlesPerBatchBadge = document.getElementById("caveBeetlesPerBatchBadge")
       const totalCostFlower = document.getElementById("caveTotalCostFlower")
       const totalCostUsd = document.getElementById("caveTotalCostUsd")
@@ -2214,14 +2302,140 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         return 0
       }
 
+      function getCropUnitFlowerPrice(crop) {
+        if (marketDataCache && marketDataCache.items) {
+          const item = marketDataCache.items[`collectibles-${crop.sflId}`]
+          if (item && (item.currentPrice || item.price)) {
+            const p = parseFloat(item.currentPrice || item.price)
+            if (p > 0) return p
+          }
+        }
+        const betty = (typeof bettyPrices !== "undefined" && bettyPrices) ? bettyPrices[crop.name] : null
+        const sellPrice = betty ? betty.sellPrice : 0.02
+        const coinsFlw = activeCoinsPerFlower > 0 ? 1 / activeCoinsPerFlower : 0.005
+        return sellPrice * coinsFlw
+      }
+
+      function getActiveCropRequirement() {
+        const reqConfig = activeMix.requirement || { name: "Wood", amount: 10, image: "/img/sunflowerland/Wood.png" }
+        if (!reqConfig.options || reqConfig.options.length === 0) {
+          if (cropSelectContainer) cropSelectContainer.classList.add("hidden")
+          if (cropStandardRow) cropStandardRow.classList.remove("hidden")
+          if (mudBoostBadge) {
+            mudBoostBadge.classList.add("hidden")
+            mudBoostBadge.classList.remove("flex")
+          }
+          return {
+            name: reqConfig.name,
+            amount: reqConfig.amount,
+            image: reqConfig.image,
+            unitPriceFlw: getBaseMaterialUnitPrice(reqConfig.name),
+            isOptimal: false
+          }
+        }
+
+        if (cropSelectContainer) cropSelectContainer.classList.remove("hidden")
+        if (cropStandardRow) cropStandardRow.classList.add("hidden")
+        if (mudBoostBadge) {
+          mudBoostBadge.classList.remove("hidden")
+          mudBoostBadge.classList.add("flex")
+        }
+
+        let lowestCost = Infinity
+        optimalCropIndex = 0
+
+        const optionsWithCost = reqConfig.options.map((opt, idx) => {
+          const unitP = getCropUnitFlowerPrice(opt)
+          const totalCost = unitP * opt.amount
+          if (totalCost < lowestCost) {
+            lowestCost = totalCost
+            optimalCropIndex = idx
+          }
+          return {
+            ...opt,
+            unitP,
+            totalCost,
+            index: idx
+          }
+        })
+
+        const chosenIndex = selectedCropIndex >= 0 && selectedCropIndex < reqConfig.options.length
+          ? selectedCropIndex
+          : optimalCropIndex
+
+        const chosenOpt = optionsWithCost[chosenIndex] || optionsWithCost[0]
+        const isOptimal = chosenIndex === optimalCropIndex
+
+        // Actualizar visual del botón Trigger Custom
+        if (cropTriggerImg) cropTriggerImg.src = chosenOpt.image
+        if (cropTriggerLabel) cropTriggerLabel.innerText = `${chosenOpt.amount}x ${chosenOpt.name}`
+        if (cropTriggerFlower) cropTriggerFlower.innerText = chosenOpt.totalCost.toFixed(4)
+        if (cropTriggerBadge) {
+          if (isOptimal) {
+            cropTriggerBadge.classList.remove("hidden")
+          } else {
+            cropTriggerBadge.classList.add("hidden")
+          }
+        }
+
+        // Renderizar opciones estilizadas en el menú desplegable
+        if (cropDropdownMenu) {
+          const currentPopulatedKey = `${activeMix.id}-${activeCoinsPerFlower}-${chosenIndex}`
+          if (cropDropdownMenu.dataset.populatedKey !== currentPopulatedKey) {
+            cropDropdownMenu.dataset.populatedKey = currentPopulatedKey
+            cropDropdownMenu.innerHTML = ""
+
+            optionsWithCost.forEach((opt) => {
+              const btn = document.createElement("button")
+              btn.type = "button"
+              const isOpt = opt.index === optimalCropIndex
+              const isSelected = opt.index === chosenIndex
+              btn.className = `w-full py-1.5 px-2 rounded-lg text-left flex items-center justify-between transition-all cursor-pointer ${
+                isSelected
+                  ? "bg-amber-500/15 border border-amber-500/40 text-amber-200"
+                  : "hover:bg-white/[0.06] border border-transparent text-white/80 hover:text-white"
+              }`
+              btn.innerHTML = `
+                <div class="flex items-center gap-2 min-w-0">
+                  <img src="${opt.image}" class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" alt="${opt.name}" />
+                  <span class="text-[11px] font-mono font-medium truncate">${opt.amount}x ${opt.name}</span>
+                  ${isOpt ? `<span class="text-[8px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Óptimo</span>` : ""}
+                </div>
+                <div class="flex items-center gap-1 font-mono text-[10.5px] font-bold text-emerald-400 shrink-0">
+                  <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                  <span>${opt.totalCost.toFixed(4)}</span>
+                </div>
+              `
+              btn.addEventListener("click", () => {
+                selectedCropIndex = opt.index
+                if (cropDropdownMenu) cropDropdownMenu.classList.add("hidden")
+                if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+                updateEconomics()
+              })
+              cropDropdownMenu.appendChild(btn)
+            })
+          }
+        }
+
+        return {
+          name: chosenOpt.name,
+          amount: chosenOpt.amount,
+          image: chosenOpt.image,
+          unitPriceFlw: chosenOpt.unitP,
+          isOptimal
+        }
+      }
+
       function generateBoard() {
         discoveredBeetles = 0
         discoveredMushrooms = 0
         discoveredMud = 0
 
+        const isMudMix = activeMix.id === "mud_mix"
         const beetlesCount = activeMix.rewards.beetles || 2
-        const mushroomsCount = activeMix.rewards.mushrooms || 6
-        const mudCount = activeMix.rewards.mud || 17
+        const mushroomsCount = activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)
+        const mudCellsCount = isMudMix ? 20 : (activeMix.rewards.mud || 17)
+        const mudPerCell = isMudMix ? 2 : 1
 
         const beetleItems = []
         for (let i = 0; i < beetlesCount; i++) {
@@ -2246,12 +2460,12 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         }
 
         const mudItems = []
-        for (let i = 0; i < mudCount; i++) {
+        for (let i = 0; i < mudCellsCount; i++) {
           mudItems.push({
             type: "mud",
             name: "Mud",
-            image: "/img/sunflowerland/build/mud.webp",
-            amount: 1
+            image: "/img/sunflowerland/123/mud.webp",
+            amount: mudPerCell
           })
         }
 
@@ -2288,12 +2502,17 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       }
 
       function updateCounters() {
+        const isMudMix = activeMix.id === "mud_mix"
+        const mudGoal = isMudMix
+          ? (activeMix.rewards.mudBoosted || 40)
+          : (activeMix.rewards.mud || 17)
+
         if (beetlesCountDisplay) beetlesCountDisplay.innerText = discoveredBeetles.toString()
         if (beetlesGoalDisplay) beetlesGoalDisplay.innerText = (activeMix.rewards.beetles || 2).toString()
         if (mushroomsCountDisplay) mushroomsCountDisplay.innerText = discoveredMushrooms.toString()
-        if (mushroomsGoalDisplay) mushroomsGoalDisplay.innerText = (activeMix.rewards.mushrooms || 6).toString()
+        if (mushroomsGoalDisplay) mushroomsGoalDisplay.innerText = (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)).toString()
         if (mudCountDisplay) mudCountDisplay.innerText = discoveredMud.toString()
-        if (mudGoalDisplay) mudGoalDisplay.innerText = (activeMix.rewards.mud || 17).toString()
+        if (mudGoalDisplay) mudGoalDisplay.innerText = mudGoal.toString()
       }
 
       function revealCell(idx) {
@@ -2373,23 +2592,27 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       function updateEconomics() {
         if (!activeMix) return
 
+        const isMudMix = activeMix.id === "mud_mix"
         const coinsFlw = activeCoinsPerFlower > 0 ? 20 / activeCoinsPerFlower : 0
         const woodUnitFlw = getBaseMaterialUnitPrice("Wood")
         const stoneUnitFlw = getBaseMaterialUnitPrice("Stone")
         const shovelUnitCost = coinsFlw + (2 * woodUnitFlw) + (1 * stoneUnitFlw)
 
-        // Requerimiento dinámico del Mix activo (Wood, Egg, etc.)
-        const reqConfig = activeMix.requirement || { name: "Wood", amount: 10, image: "/img/sunflowerland/Wood.png" }
-        const reqUnitFlw = getBaseMaterialUnitPrice(reqConfig.name)
-        const totalReqCost = reqConfig.amount * reqUnitFlw
+        // Requerimiento dinámico (evaluando opciones si es mud_mix)
+        const req = getActiveCropRequirement()
+        const totalReqCost = req.amount * req.unitPriceFlw
 
-        if (batchReqImg) batchReqImg.src = reqConfig.image
-        if (batchReqText) batchReqText.innerText = `${reqConfig.amount}x ${reqConfig.name}`
+        if (batchReqImg) batchReqImg.src = req.image
+        if (batchReqText) batchReqText.innerText = `${req.amount}x ${req.name}`
         if (batchReqFlower) batchReqFlower.innerText = totalReqCost.toFixed(4)
 
         if (beetlesPerBatchBadge) {
           beetlesPerBatchBadge.innerText = `${activeMix.rewards.beetles || 2} Escarabajos / Lote`
         }
+
+        const mudTheoreticalGoal = isMudMix
+          ? (activeMix.rewards.mudBoosted || 40)
+          : (activeMix.rewards.mud || 17)
 
         if (isSimulationActive) {
           // MODO SIMULACIÓN EN TIEMPO REAL
@@ -2422,7 +2645,10 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                     <img src="${b.image}" class="w-3.5 h-3.5 object-contain" alt="${b.name}" />
                     <span class="truncate">${b.name}</span>
                   </div>
-                  <span class="text-right text-emerald-400 font-bold col-span-2">${b.price > 0 ? b.price.toFixed(4) : "--"} FLW</span>
+                  <div class="flex items-center justify-end gap-1 col-span-2 text-emerald-400 font-bold">
+                    <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                    <span>${b.price > 0 ? b.price.toFixed(4) : "--"}</span>
+                  </div>
                 </div>
               `
             })
@@ -2495,7 +2721,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           const deficitUsd = deficit * liveFlowerPrice
           if (deficitFlower) deficitFlower.innerText = deficit.toFixed(4)
 
-          const totalHarvestItems = (activeMix.rewards.mushrooms || 6) + (activeMix.rewards.mud || 17)
+          const totalHarvestItems = (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)) + mudTheoreticalGoal
           const residualUnitCost = totalHarvestItems > 0 ? deficit / totalHarvestItems : 0
           const residualUnitCostUsd = residualUnitCost * liveFlowerPrice
 
@@ -2537,6 +2763,34 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         })
       }
 
+      // Control del Dropdown Custom de Cultivos (Mud Mix)
+      if (cropDropdownTrigger) {
+        cropDropdownTrigger.addEventListener("click", (e) => {
+          e.stopPropagation()
+          if (cropDropdownMenu) {
+            const isClosed = cropDropdownMenu.classList.contains("hidden")
+            if (isClosed) {
+              cropDropdownMenu.classList.remove("hidden")
+              if (cropTriggerArrow) cropTriggerArrow.classList.add("rotate-180")
+            } else {
+              cropDropdownMenu.classList.add("hidden")
+              if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+            }
+          }
+        })
+      }
+
+      // Cerrar dropdown al hacer click fuera
+      document.addEventListener("click", (e) => {
+        if (cropDropdownMenu && !cropDropdownMenu.classList.contains("hidden")) {
+          const target = e.target
+          if (cropDropdownTrigger && cropDropdownTrigger.contains(target)) return
+          if (cropDropdownMenu.contains(target)) return
+          cropDropdownMenu.classList.add("hidden")
+          if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+        }
+      })
+
       mixBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
           mixBtns.forEach((b) => {
@@ -2548,6 +2802,12 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 
           try {
             activeMix = JSON.parse(btn.dataset.mixData)
+            selectedCropIndex = -1 // Resetear al óptimo automáticamente
+            if (cropDropdownMenu) {
+              cropDropdownMenu.dataset.populatedKey = ""
+              cropDropdownMenu.classList.add("hidden")
+            }
+            if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
             if (isSimulationActive) {
               simShovelsUsed = 0
               simDiscoveredBeetles = []
