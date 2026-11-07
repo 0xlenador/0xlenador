@@ -1162,37 +1162,11 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           <!-- Columna Izquierda: Desglose de Inversión, Retorno y Costo Residual (md:col-span-8) -->
           <div class="md:col-span-8 flex flex-col gap-2.5">
             <div class="bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col gap-2.5">
-              <!-- Sección 1: Costo Total Invertido con Selector de Multiplicador -->
+              <!-- Sección 1: Costo Total Invertido -->
               <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
-                    {t("sfl.constants.cave.investedCosts")}
-                  </span>
-                  <!-- Selector de Multiplicador de Lotes (1x, 5x, 10x) -->
-                  <div class="flex items-center gap-1 bg-black/60 p-0.5 rounded-lg border border-white/5">
-                    <button
-                      type="button"
-                      class="cave-batch-multiplier-btn active py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-white/10 text-white border border-white/20 transition-all cursor-pointer"
-                      data-batch-multiplier="1"
-                    >
-                      1x
-                    </button>
-                    <button
-                      type="button"
-                      class="cave-batch-multiplier-btn py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-transparent text-white/50 border border-transparent hover:text-white transition-all cursor-pointer"
-                      data-batch-multiplier="5"
-                    >
-                      5x
-                    </button>
-                    <button
-                      type="button"
-                      class="cave-batch-multiplier-btn py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-transparent text-white/50 border border-transparent hover:text-white transition-all cursor-pointer"
-                      data-batch-multiplier="10"
-                    >
-                      10x
-                    </button>
-                  </div>
-                </div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
+                  {t("sfl.constants.cave.investedCosts")}
+                </span>
 
                 <div class="bg-black/30 border border-white/5 rounded-lg p-2 flex flex-col gap-1 text-xs font-mono">
                   <!-- Palas requeridas -->
@@ -1207,15 +1181,15 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                     </div>
                   </div>
 
-                  <!-- Madera requerida -->
+                  <!-- Requisito del Mix (Madera, Huevos, etc.) -->
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-1.5">
-                      <img src="/img/sunflowerland/Wood.png" class="w-3.5 h-3.5 object-contain" alt="Wood" />
-                      <span id="caveBatchWoodText" class="text-white text-[11px]">10x Wood</span>
+                      <img id="caveBatchReqImg" src="/img/sunflowerland/Wood.png" class="w-3.5 h-3.5 object-contain" alt="Requirement" />
+                      <span id="caveBatchReqText" class="text-white text-[11px]">10x Wood</span>
                     </div>
                     <div class="flex items-center gap-1 text-emerald-400 font-bold text-[11px]">
                       <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
-                      <span id="caveBatchWoodFlower">0.0000</span>
+                      <span id="caveBatchReqFlower">0.0000</span>
                     </div>
                   </div>
 
@@ -1239,7 +1213,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                   <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
                     {t("sfl.constants.cave.beetleRevenue")}
                   </span>
-                  <span class="text-[9px] font-mono text-cyan-400 font-semibold">2 Escarabajos / Lote</span>
+                  <span id="caveBeetlesPerBatchBadge" class="text-[9px] font-mono text-cyan-400 font-semibold">2 Escarabajos / Lote</span>
                 </div>
 
                 <!-- Tabla de Odds de Escarabajos -->
@@ -2176,7 +2150,6 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       if (!caveData || !caveData.mixes || caveData.mixes.length === 0) return null
 
       let activeMix = caveData.mixes[0]
-      let batchMultiplier = 1
       let board = []
       let discoveredBeetles = 0
       let discoveredMushrooms = 0
@@ -2201,14 +2174,15 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       const digAllBtn = document.getElementById("caveDigAllBtn")
       const resetBtn = document.getElementById("caveResetBtn")
       const mixBtns = document.querySelectorAll(".cave-mix-tab-btn")
-      const batchBtns = document.querySelectorAll(".cave-batch-multiplier-btn")
       const cells = document.querySelectorAll(".cave-cell")
 
       // Elementos de economía
       const batchShovelsText = document.getElementById("caveBatchShovelsText")
       const batchShovelsFlower = document.getElementById("caveBatchShovelsFlower")
-      const batchWoodText = document.getElementById("caveBatchWoodText")
-      const batchWoodFlower = document.getElementById("caveBatchWoodFlower")
+      const batchReqImg = document.getElementById("caveBatchReqImg")
+      const batchReqText = document.getElementById("caveBatchReqText")
+      const batchReqFlower = document.getElementById("caveBatchReqFlower")
+      const beetlesPerBatchBadge = document.getElementById("caveBeetlesPerBatchBadge")
       const totalCostFlower = document.getElementById("caveTotalCostFlower")
       const totalCostUsd = document.getElementById("caveTotalCostUsd")
       const beetleOddsRows = document.getElementById("caveBeetleOddsRows")
@@ -2245,8 +2219,12 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         discoveredMushrooms = 0
         discoveredMud = 0
 
+        const beetlesCount = activeMix.rewards.beetles || 2
+        const mushroomsCount = activeMix.rewards.mushrooms || 6
+        const mudCount = activeMix.rewards.mud || 17
+
         const beetleItems = []
-        for (let i = 0; i < (activeMix.rewards.beetles || 2); i++) {
+        for (let i = 0; i < beetlesCount; i++) {
           const beetle = pickRandomBeetle(activeMix.beetleOdds)
           beetleItems.push({
             type: "beetle",
@@ -2258,7 +2236,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         }
 
         const mushroomItems = []
-        for (let i = 0; i < (activeMix.rewards.mushrooms || 6); i++) {
+        for (let i = 0; i < mushroomsCount; i++) {
           mushroomItems.push({
             type: "mushroom",
             name: "Mushroom",
@@ -2268,8 +2246,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         }
 
         const mudItems = []
-        const mudTotal = activeMix.rewards.mud || 17
-        for (let i = 0; i < mudTotal; i++) {
+        for (let i = 0; i < mudCount; i++) {
           mudItems.push({
             type: "mud",
             name: "Mud",
@@ -2401,19 +2378,28 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         const stoneUnitFlw = getBaseMaterialUnitPrice("Stone")
         const shovelUnitCost = coinsFlw + (2 * woodUnitFlw) + (1 * stoneUnitFlw)
 
+        // Requerimiento dinámico del Mix activo (Wood, Egg, etc.)
+        const reqConfig = activeMix.requirement || { name: "Wood", amount: 10, image: "/img/sunflowerland/Wood.png" }
+        const reqUnitFlw = getBaseMaterialUnitPrice(reqConfig.name)
+        const totalReqCost = reqConfig.amount * reqUnitFlw
+
+        if (batchReqImg) batchReqImg.src = reqConfig.image
+        if (batchReqText) batchReqText.innerText = `${reqConfig.amount}x ${reqConfig.name}`
+        if (batchReqFlower) batchReqFlower.innerText = totalReqCost.toFixed(4)
+
+        if (beetlesPerBatchBadge) {
+          beetlesPerBatchBadge.innerText = `${activeMix.rewards.beetles || 2} Escarabajos / Lote`
+        }
+
         if (isSimulationActive) {
           // MODO SIMULACIÓN EN TIEMPO REAL
           const shovelsCount = simShovelsUsed
           const totalShovelsCost = shovelsCount * shovelUnitCost
-          const reqWood = activeMix.requirements.wood || 0
-          const totalWoodCost = reqWood * woodUnitFlw
-          const grandTotalInvested = totalShovelsCost + totalWoodCost
+          const grandTotalInvested = totalShovelsCost + totalReqCost
           const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
 
           if (batchShovelsText) batchShovelsText.innerText = `${shovelsCount}x Sand Shovel`
           if (batchShovelsFlower) batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
-          if (batchWoodText) batchWoodText.innerText = `${reqWood}x Wood`
-          if (batchWoodFlower) batchWoodFlower.innerText = totalWoodCost.toFixed(4)
           if (totalCostFlower) totalCostFlower.innerText = grandTotalInvested.toFixed(4)
           if (totalCostUsd) totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
 
@@ -2462,18 +2448,14 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           if (mudUnitUsd) mudUnitUsd.innerText = `~$${unitResidualUsd.toFixed(4)}`
 
         } else {
-          // MODO TEÓRICO COMPLETO POR LOTE
-          const totalShovels = 25 * batchMultiplier
+          // MODO TEÓRICO COMPLETO POR LOTE (1 Lote = 25 Palas)
+          const totalShovels = 25
           const totalShovelsCost = totalShovels * shovelUnitCost
-          const reqWood = (activeMix.requirements.wood || 0) * batchMultiplier
-          const totalWoodCost = reqWood * woodUnitFlw
-          const grandTotalInvested = totalShovelsCost + totalWoodCost
+          const grandTotalInvested = totalShovelsCost + totalReqCost
           const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
 
           if (batchShovelsText) batchShovelsText.innerText = `${totalShovels}x Sand Shovel`
           if (batchShovelsFlower) batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
-          if (batchWoodText) batchWoodText.innerText = `${reqWood}x Wood`
-          if (batchWoodFlower) batchWoodFlower.innerText = totalWoodCost.toFixed(4)
           if (totalCostFlower) totalCostFlower.innerText = grandTotalInvested.toFixed(4)
           if (totalCostUsd) totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
 
@@ -2502,7 +2484,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 
           if (beetleOddsRows) beetleOddsRows.innerHTML = oddsHtml
 
-          const totalBeetlesPerBatch = (activeMix.rewards.beetles || 2) * batchMultiplier
+          const totalBeetlesPerBatch = activeMix.rewards.beetles || 2
           const grandTotalBeetleRev = totalBeetlesPerBatch * expectedBeetleUnitValue
           const grandTotalBeetleRevUsd = grandTotalBeetleRev * liveFlowerPrice
 
@@ -2513,7 +2495,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           const deficitUsd = deficit * liveFlowerPrice
           if (deficitFlower) deficitFlower.innerText = deficit.toFixed(4)
 
-          const totalHarvestItems = ((activeMix.rewards.mushrooms || 6) + (activeMix.rewards.mud || 17)) * batchMultiplier
+          const totalHarvestItems = (activeMix.rewards.mushrooms || 6) + (activeMix.rewards.mud || 17)
           const residualUnitCost = totalHarvestItems > 0 ? deficit / totalHarvestItems : 0
           const residualUnitCostUsd = residualUnitCost * liveFlowerPrice
 
@@ -2575,20 +2557,6 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
             generateBoard()
             updateEconomics()
           } catch (e) {}
-        })
-      })
-
-      batchBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          batchBtns.forEach((b) => {
-            b.classList.remove("active", "bg-white/10", "text-white", "border-white/20")
-            b.classList.add("bg-transparent", "text-white/50", "border-transparent")
-          })
-          btn.classList.add("active", "bg-white/10", "text-white", "border-white/20")
-          btn.classList.remove("bg-transparent", "text-white/50", "border-transparent")
-
-          batchMultiplier = parseInt(btn.dataset.batchMultiplier, 10) || 1
-          updateEconomics()
         })
       })
 

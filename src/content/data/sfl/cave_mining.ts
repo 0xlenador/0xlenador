@@ -6,10 +6,10 @@ export interface BeetleOdd {
   chance: number // e.g. 0.40 = 40%
 }
 
-export interface CaveMixRequirements {
-  wood?: number
-  iron?: number
-  stone?: number
+export interface CaveRequirement {
+  name: string
+  amount: number
+  image: string
 }
 
 export interface CaveMixRewards {
@@ -23,7 +23,7 @@ export interface CaveMix {
   name: string
   description: string
   durationHours: number
-  requirements: CaveMixRequirements
+  requirement: CaveRequirement
   rewards: CaveMixRewards
   beetleOdds: BeetleOdd[]
   image: string
@@ -66,8 +66,10 @@ export const caveData: CaveData = {
       name: "Mushroom Mix",
       description: "The most Wild Mushrooms of any mix.",
       durationHours: 12,
-      requirements: {
-        wood: 10
+      requirement: {
+        name: "Wood",
+        amount: 10,
+        image: "/img/sunflowerland/Wood.png"
       },
       rewards: {
         mushrooms: 6,
@@ -111,13 +113,15 @@ export const caveData: CaveData = {
       name: "Beetle Mix",
       description: "High concentration of rare beetles.",
       durationHours: 12,
-      requirements: {
-        wood: 15
+      requirement: {
+        name: "Egg",
+        amount: 30,
+        image: "/img/sunflowerland/Egg.png"
       },
       rewards: {
-        mushrooms: 2,
-        beetles: 4,
-        mud: 15
+        mushrooms: 3,
+        beetles: 5,
+        mud: 17
       },
       beetleOdds: [
         {
@@ -156,8 +160,10 @@ export const caveData: CaveData = {
       name: "Mud Mix",
       description: "Dense mud concentration with rich compost organic matter.",
       durationHours: 12,
-      requirements: {
-        wood: 5
+      requirement: {
+        name: "Wood",
+        amount: 5,
+        image: "/img/sunflowerland/Wood.png"
       },
       rewards: {
         mushrooms: 3,
