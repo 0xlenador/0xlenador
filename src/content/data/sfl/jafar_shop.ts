@@ -319,11 +319,11 @@ export const jafarData: JafarData = {
                 image: "/img/sunflowerland/treasure/hieroglyph.png"
               },
               {
-                id: "scarab",
-                name: "Scarab",
-                description: "A golden beetle relic sacred to the desert",
+                id: "pipi",
+                name: "Pipi",
+                description: "An edible beach clam found on the shore",
                 coins: 250,
-                image: "/img/sunflowerland/treasure/scarab.png"
+                image: "/img/sunflowerland/treasure/pipi.png"
               },
               {
                 id: "coral",
