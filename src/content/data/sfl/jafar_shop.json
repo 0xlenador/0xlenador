@@ -1,0 +1,135 @@
+{
+  "npc": {
+    "id": "jafar",
+    "name": "Jafar",
+    "icon": "/img/sunflowerland/NPCs/jafar.webp",
+    "tabs": [
+      {
+        "id": "buy",
+        "name": "Buy",
+        "categories": [
+          {
+            "id": "tools",
+            "name": "Tools",
+            "items": [
+              {
+                "id": "sand_shovel",
+                "name": "Sand Shovel",
+                "description": "Used for digging treasure",
+                "coins": 20,
+                "stock": 125,
+                "image": "/img/sunflowerland/tools/sand_shovel.png",
+                "ingredients": [
+                  { "name": "Wood", "amount": 2, "image": "/img/sunflowerland/123/wood.png" },
+                  { "name": "Stone", "amount": 1, "image": "/img/sunflowerland/123/stone.png" }
+                ]
+              },
+              {
+                "id": "sand_drill",
+                "name": "Sand Drill",
+                "description": "Used for digging 2x2 treasure areas",
+                "coins": 40,
+                "stock": 25,
+                "image": "/img/sunflowerland/tools/sand_drill.png",
+                "ingredients": [
+                  { "name": "Wood", "amount": 5, "image": "/img/sunflowerland/123/wood.png" },
+                  { "name": "Oil", "amount": 1, "image": "/img/sunflowerland/123/oil.png" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "collectibles",
+            "name": "Collectibles",
+            "items": [
+              {
+                "id": "treasure_map",
+                "name": "Treasure Map",
+                "description": "A mysterious map indicating buried treasures",
+                "coins": 0,
+                "stock": 1,
+                "isPermanent": true,
+                "image": "/img/sunflowerland/collectible/treasure_map.webp",
+                "ingredients": []
+              },
+              {
+                "id": "adrift_ark",
+                "name": "Adrift Ark",
+                "description": "A rare shiny chicken found in desert sands",
+                "coins": 0,
+                "stock": 1,
+                "isPermanent": true,
+                "image": "/img/sunflowerland/collectible/adrift_ark.webp",
+                "ingredients": []
+              },
+              {
+                "id": "castellan",
+                "name": "Castellan",
+                "description": "An ancient regal companion from desert ruins",
+                "coins": 0,
+                "stock": 1,
+                "isPermanent": true,
+                "image": "/img/sunflowerland/collectible/castellan.webp",
+                "ingredients": []
+              }
+            ]
+          },
+          {
+            "id": "wearables",
+            "name": "Wearables",
+            "items": [
+              {
+                "id": "bionic_drill",
+                "name": "Bionic Drill",
+                "description": "Protective eyewear against desert sandstorms",
+                "coins": 0,
+                "stock": 1,
+                "isPermanent": true,
+                "image": "/img/sunflowerland/wearables/bionic_drill.webp",
+                "ingredients": []
+              }
+            ]
+          },
+          {
+            "id": "keys",
+            "name": "Keys",
+            "items": [
+              {
+                "id": "treasure_key",
+                "name": "Treasure Key",
+                "description": "Used to open standard treasure chests",
+                "coins": 0,
+                "stock": 1,
+                "image": "/img/sunflowerland/123/Treasure Key.png",
+                "ingredients": []
+              },
+              {
+                "id": "rare_key",
+                "name": "Rare Key",
+                "description": "Used to unlock rare desert chest vaults",
+                "coins": 0,
+                "stock": 1,
+                "image": "/img/sunflowerland/123/key_rare.png",
+                "ingredients": []
+              },
+              {
+                "id": "luxury_key",
+                "name": "Luxury Key",
+                "description": "An ornate key for ancient opulent treasure chests",
+                "coins": 0,
+                "stock": 1,
+                "image": "/img/sunflowerland/123/key_luxury.png",
+                "ingredients": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sell",
+        "name": "Sell",
+        "categories": []
+      }
+    ]
+  }
+}
