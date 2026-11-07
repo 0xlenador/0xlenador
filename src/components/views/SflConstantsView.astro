@@ -1,7 +1,7 @@
 ---
 import SflToolLayout from "../SflToolLayout.astro"
 import blacksmithData from "../../content/data/sfl/blacksmith_tools.json"
-import jafarData from "../../content/data/sfl/jafar_shop.json"
+import jafarData from "../../content/data/sfl/jafar_shop"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
 import sflIds from "../../content/data/sfl/resources.json"
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
@@ -26,6 +26,7 @@ const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.l
 const jafarSellTab = jafar.tabs.find((tab) => tab.id === "sell")
 const jafarSellCategories = jafarSellTab ? jafarSellTab.categories : []
 const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
+const jafarSellItems = jafarSellCategories[0]?.items || []
 ---
 
 <SflToolLayout activeTab="constantes">
@@ -988,16 +989,9 @@ const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.
                     />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="flex items-center justify-between gap-1">
-                      <h4 id="jafarSellDetailTitle" class="text-sm font-bold text-white truncate">
-                        --
-                      </h4>
-                      <span
-                        class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0"
-                      >
-                        {t("sfl.constants.sell.unlimited")}
-                      </span>
-                    </div>
+                    <h4 id="jafarSellDetailTitle" class="text-sm font-bold text-white truncate">
+                      --
+                    </h4>
                     <p
                       id="jafarSellDetailDescription"
                       class="text-[11px] text-terminal-muted line-clamp-2 mt-0.5 leading-snug"
@@ -1097,7 +1091,7 @@ const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.
 </SflToolLayout>
 
 <!-- Script interactivo de cliente -->
-<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, tPermanent: t("sfl.constants.detail.permanent"), tFree: t("sfl.constants.detail.free") }}>
+<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, tPermanent: t("sfl.constants.detail.permanent"), tFree: t("sfl.constants.detail.free") }}>
   ;(function () {
     let liveFlowerPrice = 0.144
     let activeCoinsPerFlower = 320 // Paridad inicial fallback
@@ -1136,10 +1130,43 @@ const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.
       return totalDrillCost > 0 ? totalDrillCost / 16.67 : 0
     }
 
-    // Helper general para resolver cualquier material (incluyendo la constante de Oil calculada)
+    // Helper para obtener el precio en FLOWER de un tesoro según su valor en Coins y la tasa Betty
+    function getTreasureUnitPrice(materialName) {
+      // 1. Intentar obtener el valor dinámico desde los slots activos en el DOM
+      const sellSlots = document.querySelectorAll(".jafar-sell-slot")
+      for (const slot of sellSlots) {
+        try {
+          const item = JSON.parse(slot.dataset.toolData)
+          if (item && item.name && item.name.toLowerCase() === materialName.toLowerCase()) {
+            const coins = parseFloat(item.coins) || 0
+            if (coins > 0 && activeCoinsPerFlower > 0) {
+              return coins / activeCoinsPerFlower
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 2. Fallback al listado importado jafarSellItems
+      if (jafarSellItems && Array.isArray(jafarSellItems)) {
+        const treasure = jafarSellItems.find(
+          (t) => t.name.toLowerCase() === materialName.toLowerCase()
+        )
+        if (treasure && treasure.coins > 0 && activeCoinsPerFlower > 0) {
+          return treasure.coins / activeCoinsPerFlower
+        }
+      }
+
+      return 0
+    }
+
+    // Helper general para resolver cualquier material (Oil calculado, Tesoros de Jafar, o recursos base P2P)
     function getMaterialUnitPrice(materialName) {
       if (materialName === "Oil") {
         return calculatedOilPriceFlower
+      }
+      const treasurePrice = getTreasureUnitPrice(materialName)
+      if (treasurePrice > 0) {
+        return treasurePrice
       }
       return getBaseMaterialUnitPrice(materialName)
     }
@@ -1703,12 +1730,12 @@ const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.
       updateOilPriceDisplay()
       blacksmithManager.updateSlots()
       blacksmithManager.updateDetail()
-      jafarManager.updateSlots()
-      jafarManager.updateDetail()
       if (jafarSellManager) {
         jafarSellManager.updateSlots()
         jafarSellManager.updateDetail()
       }
+      jafarManager.updateSlots()
+      jafarManager.updateDetail()
     }
 
     // Actualiza la tasa y los textos
