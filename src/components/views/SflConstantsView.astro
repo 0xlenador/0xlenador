@@ -15,6 +15,8 @@ const blacksmith = blacksmithData.buildings.blacksmith
 const toolsTab = blacksmith.tabs.find((tab) => tab.id === "tools")
 const categories = toolsTab ? toolsTab.categories : []
 const firstTool = categories[0]?.items[0]
+const landCat = categories.find((cat) => cat.id === "land")
+const oilDrillItem = landCat?.items.find((item) => item.id === "oil_drill")
 
 const jafar = jafarData.npc
 const jafarBuyTab = jafar.tabs.find((tab) => tab.id === "buy")
@@ -116,6 +118,56 @@ const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.l
                 >
                   {t("sfl.constants.tooltip.link")}
                 </a>
+              </div>
+            </div>
+
+            <span class="text-white/20">•</span>
+            <!-- Indicador de Constante: 1 Oil -->
+            <img
+              src="/img/sunflowerland/123/Oil.png"
+              class="w-3.5 h-3.5 object-contain"
+              alt="Oil"
+            />
+            <span class="text-terminal-muted">1 Oil:</span>
+            <span id="liveOilPriceDisplay" class="text-amber-400 font-bold">~0.1257 FLW</span>
+
+            <!-- Tooltip Popup para Oil -->
+            <div class="relative inline-flex items-center group/tooltip ml-0.5">
+              <button
+                type="button"
+                class="text-terminal-muted hover:text-white transition-colors focus:outline-none cursor-pointer p-0.5 flex items-center justify-center"
+                aria-label={t("sfl.constants.oilTooltip.title")}
+              >
+                <svg
+                  class="w-[11px] h-[11px]"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 16v-4"></path>
+                  <path d="M12 8h.01"></path>
+                </svg>
+              </button>
+              <div
+                class="absolute right-0 sm:left-1/2 sm:-translate-x-1/2 top-full mt-2 w-64 p-3 bg-[#0c1015] border border-white/10 rounded-lg shadow-2xl text-[9.5px] text-white/70 font-sans text-left leading-relaxed opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible group-focus-within/tooltip:opacity-100 group-focus-within/tooltip:visible transition-all z-[80] pointer-events-auto"
+              >
+                <span class="block text-white font-bold mb-1 text-[11px]">
+                  {t("sfl.constants.oilTooltip.title")}
+                </span>
+                <div set:html={t("sfl.constants.oilTooltip.desc")} />
+                <div
+                  class="mt-2 pt-1.5 border-t border-white/5 flex items-center justify-between text-[10px] font-mono"
+                >
+                  <span class="text-terminal-muted">Fórmula:</span>
+                  <span class="text-amber-400 font-bold">Oil Drill ÷ 16.67</span>
+                </div>
               </div>
             </div>
           </div>
@@ -843,23 +895,63 @@ const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.l
 </SflToolLayout>
 
 <!-- Script interactivo de cliente -->
-<script is:inline define:vars={{ bettyPrices, sflIds, tPermanent: t("sfl.constants.detail.permanent"), tFree: t("sfl.constants.detail.free") }}>
+<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, tPermanent: t("sfl.constants.detail.permanent"), tFree: t("sfl.constants.detail.free") }}>
   ;(function () {
     let liveFlowerPrice = 0.144
     let activeCoinsPerFlower = 320 // Paridad inicial fallback
     let marketDataCache = null
+    let calculatedOilPriceFlower = 0
 
     // Elementos compartidos del Dashboard superior
     const liveFlowerDisplay = document.getElementById("liveFlowerPriceDisplay")
     const liveBettyRatioDisplay = document.getElementById("liveBettyRatioDisplay")
+    const liveOilPriceDisplay = document.getElementById("liveOilPriceDisplay")
 
-    // Helper para obtener el precio en FLOWER de un material desde sfl_data.json
-    function getMaterialUnitPrice(materialName) {
+    // Helper para obtener el precio en FLOWER de un material base desde sfl_data.json
+    function getBaseMaterialUnitPrice(materialName) {
       if (!marketDataCache || !marketDataCache.items || !sflIds) return 0
       const itemId = Object.keys(sflIds).find((k) => sflIds[k] === materialName)
       if (!itemId) return 0
       const item = marketDataCache.items[`collectibles-${itemId}`]
       return item && item.currentPrice ? parseFloat(item.currentPrice) : 0
+    }
+
+    // Calcula el costo de 1 unidad de Oil dividiendo el costo total de 1 Oil Drill entre 16.67
+    function calculateOilUnitPrice() {
+      if (!oilDrillItem) return 0
+      const coins = oilDrillItem.coins || 0
+      const coinsFlower = activeCoinsPerFlower > 0 ? coins / activeCoinsPerFlower : 0
+
+      let ingredientsFlower = 0
+      if (oilDrillItem.ingredients && oilDrillItem.ingredients.length > 0) {
+        oilDrillItem.ingredients.forEach((ing) => {
+          const unitPrice = getBaseMaterialUnitPrice(ing.name)
+          ingredientsFlower += unitPrice * ing.amount
+        })
+      }
+
+      const totalDrillCost = coinsFlower + ingredientsFlower
+      return totalDrillCost > 0 ? totalDrillCost / 16.67 : 0
+    }
+
+    // Helper general para resolver cualquier material (incluyendo la constante de Oil calculada)
+    function getMaterialUnitPrice(materialName) {
+      if (materialName === "Oil") {
+        return calculatedOilPriceFlower
+      }
+      return getBaseMaterialUnitPrice(materialName)
+    }
+
+    // Actualiza el indicador visual de 1 Oil en el Dashboard superior
+    function updateOilPriceDisplay() {
+      calculatedOilPriceFlower = calculateOilUnitPrice()
+      if (liveOilPriceDisplay) {
+        if (calculatedOilPriceFlower > 0) {
+          liveOilPriceDisplay.innerText = `${calculatedOilPriceFlower.toFixed(4)} FLW`
+        } else {
+          liveOilPriceDisplay.innerText = `-- FLW`
+        }
+      }
     }
 
     // Actualiza los badges de FLOWER de 1 unidad en cada slot (Coins + Materiales)
@@ -1228,6 +1320,7 @@ const totalJafarItems = jafarCategories.reduce((acc, cat) => acc + (cat.items?.l
     })
 
     function updateAll() {
+      updateOilPriceDisplay()
       blacksmithManager.updateSlots()
       blacksmithManager.updateDetail()
       jafarManager.updateSlots()
