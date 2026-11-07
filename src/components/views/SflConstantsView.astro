@@ -868,10 +868,26 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                     type="button"
                     id="jafarCraftMaxBtn"
                     class="jafar-craft-multiplier-btn py-1 px-2 rounded-lg text-[11px] font-mono font-bold bg-black/40 text-white/50 border border-white/5 transition-all cursor-pointer hover:bg-white/10 hover:text-white"
-                    data-multiplier="max"
+                    data-multiplier="50"
                   >
-                    Max
+                    x50
                   </button>
+                </div>
+
+                <!-- Input para cantidad personalizada (Custom Quantity) -->
+                <div class="relative flex items-center mt-1.5">
+                  <input
+                    type="number"
+                    id="jafarCraftCustomQty"
+                    min="1"
+                    step="1"
+                    value="1"
+                    placeholder={t("sfl.constants.sell.customPlaceholder")}
+                    class="w-full bg-black/50 border border-white/10 focus:border-amber-400/60 focus:bg-white/[0.03] text-white font-mono text-xs rounded-lg pl-3 pr-10 py-1.5 outline-none transition-all placeholder:text-white/30 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <span class="absolute right-2.5 text-[10px] font-mono text-terminal-muted pointer-events-none select-none">
+                    {t("sfl.constants.sell.customUnits")}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1091,7 +1107,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 </SflToolLayout>
 
 <!-- Script interactivo de cliente -->
-<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, tPermanent: t("sfl.constants.detail.permanent"), tFree: t("sfl.constants.detail.free") }}>
+<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free") }}>
   ;(function () {
     let liveFlowerPrice = 0.144
     let activeCoinsPerFlower = 320 // Paridad inicial fallback
@@ -1239,6 +1255,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       const popupModal = document.getElementById(config.stockPopupModalId)
       const popupCloseBtn = document.getElementById(config.stockPopupCloseBtnId)
       const popupQty = document.getElementById(config.stockPopupQtyId)
+      const customQtyInput = config.customQtyInputId ? document.getElementById(config.customQtyInputId) : null
       const slots = document.querySelectorAll(config.slotSelector)
       const multiplierBtns = document.querySelectorAll(config.multiplierBtnSelector)
       const tabBtns = document.querySelectorAll(config.tabBtnSelector)
@@ -1293,8 +1310,9 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       function updateDetail() {
         if (!selectedTool) return
 
-        const stock = selectedTool.stock || 1
-        const isSingleOnly = selectedTool.isPermanent || stock <= 1
+        const isUnlimited = !selectedTool.isPermanent && (selectedTool.stock === undefined || selectedTool.stock === null || selectedTool.stock <= 0)
+        const stock = isUnlimited ? null : (selectedTool.stock || 1)
+        const isSingleOnly = selectedTool.isPermanent || (!isUnlimited && stock <= 1)
 
         if (simulatorSection) {
           if (isSingleOnly) {
@@ -1303,36 +1321,51 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           } else {
             simulatorSection.classList.remove("hidden")
 
-            let step2 = 10
-            if (stock <= 5) {
-              step2 = Math.ceil(stock / 2)
-            } else if (stock <= 10) {
-              step2 = Math.floor(stock / 2)
+            if (isUnlimited) {
+              if (craftBtn1) {
+                craftBtn1.innerText = "x1"
+                craftBtn1.dataset.multiplier = "1"
+              }
+              if (craftMidBtn) {
+                craftMidBtn.innerText = "x10"
+                craftMidBtn.dataset.multiplier = "10"
+              }
+              if (craftMaxBtn) {
+                craftMaxBtn.innerText = "x50"
+                craftMaxBtn.dataset.multiplier = "50"
+              }
             } else {
-              step2 = 10
-            }
+              let step2 = 10
+              if (stock <= 5) {
+                step2 = Math.ceil(stock / 2)
+              } else if (stock <= 10) {
+                step2 = Math.floor(stock / 2)
+              } else {
+                step2 = 10
+              }
 
-            if (craftBtn1) {
-              craftBtn1.innerText = "x1"
-              craftBtn1.dataset.multiplier = "1"
-            }
-            if (craftMidBtn) {
-              craftMidBtn.innerText = `x${step2}`
-              craftMidBtn.dataset.multiplier = step2.toString()
-            }
-            if (craftMaxBtn) {
-              craftMaxBtn.innerText = `x${stock}`
-              craftMaxBtn.dataset.multiplier = "max"
-            }
+              if (craftBtn1) {
+                craftBtn1.innerText = "x1"
+                craftBtn1.dataset.multiplier = "1"
+              }
+              if (craftMidBtn) {
+                craftMidBtn.innerText = `x${step2}`
+                craftMidBtn.dataset.multiplier = step2.toString()
+              }
+              if (craftMaxBtn) {
+                craftMaxBtn.innerText = `x${stock}`
+                craftMaxBtn.dataset.multiplier = "max"
+              }
 
-            if (currentMultiplier !== "max" && currentMultiplier > stock) {
-              currentMultiplier = "max"
+              if (currentMultiplier !== "max" && currentMultiplier > stock) {
+                currentMultiplier = "max"
+              }
             }
 
             multiplierBtns.forEach((b) => {
               const m = b.dataset.multiplier
-              const isActive = (m === "max" && currentMultiplier === "max") ||
-                               (m !== "max" && parseInt(m, 10) === currentMultiplier)
+              const isActive = (!isUnlimited && m === "max" && currentMultiplier === "max") ||
+                               (parseInt(m, 10) === currentMultiplier)
               if (isActive) {
                 b.classList.add("bg-white/10", "border-white/20", "text-white")
                 b.classList.remove("bg-black/40", "border-white/5", "text-white/50")
@@ -1341,12 +1374,27 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                 b.classList.add("bg-black/40", "border-white/5", "text-white/50")
               }
             })
+
+            if (customQtyInput) {
+              if (!isUnlimited && currentMultiplier === "max") {
+                customQtyInput.value = stock
+              } else if (typeof currentMultiplier === "number" && currentMultiplier > 0) {
+                customQtyInput.value = currentMultiplier
+              }
+            }
           }
         }
 
-        const qty = isSingleOnly
-          ? 1
-          : (currentMultiplier === "max" ? stock : Math.min(currentMultiplier, stock))
+        let qty = 1
+        if (isSingleOnly) {
+          qty = 1
+        } else if (isUnlimited) {
+          qty = typeof currentMultiplier === "number" && currentMultiplier > 0
+            ? currentMultiplier
+            : (parseInt(currentMultiplier, 10) || 1)
+        } else {
+          qty = currentMultiplier === "max" ? stock : Math.min(parseInt(currentMultiplier, 10) || 1, stock)
+        }
         const totalCoins = selectedTool.coins * qty
         const coinsFlower = activeCoinsPerFlower > 0 ? totalCoins / activeCoinsPerFlower : 0
 
@@ -1361,6 +1409,9 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           if (selectedTool.isPermanent) {
             popupQty.innerText = `${tPermanent} (1x)`
             popupQty.className = "text-amber-400 font-bold"
+          } else if (isUnlimited) {
+            popupQty.innerText = tUnlimited
+            popupQty.className = "text-emerald-400 font-bold"
           } else {
             popupQty.innerText = `${selectedTool.stock} uds`
             popupQty.className = "text-cyan-400 font-bold"
@@ -1471,6 +1522,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           try {
             selectedTool = JSON.parse(slot.dataset.toolData)
             currentMultiplier = 1
+            if (customQtyInput) customQtyInput.value = 1
             if (placeholder) placeholder.classList.add("hidden")
             if (content) content.classList.remove("hidden")
             if (popupModal) popupModal.classList.add("hidden")
@@ -1491,9 +1543,63 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 
           const multVal = btn.dataset.multiplier
           currentMultiplier = multVal === "max" ? "max" : parseInt(multVal, 10) || 1
+          if (customQtyInput) {
+            if (multVal === "max" && selectedTool && selectedTool.stock) {
+              customQtyInput.value = selectedTool.stock
+            } else {
+              customQtyInput.value = currentMultiplier
+            }
+          }
           updateDetail()
         })
       })
+
+      // Manejo de entrada manual personalizada (Custom Quantity)
+      if (customQtyInput) {
+        customQtyInput.addEventListener("input", () => {
+          let val = parseInt(customQtyInput.value, 10)
+          if (isNaN(val) || val < 1) {
+            val = 0
+          }
+          if (selectedTool && selectedTool.stock && !selectedTool.isPermanent && val > selectedTool.stock) {
+            val = selectedTool.stock
+            customQtyInput.value = val
+          }
+          currentMultiplier = val
+
+          multiplierBtns.forEach((b) => {
+            const m = b.dataset.multiplier
+            const isMatch = (m === "max" && selectedTool && selectedTool.stock && val === selectedTool.stock) ||
+                            (parseInt(m, 10) === val)
+            if (isMatch) {
+              b.classList.add("bg-white/10", "border-white/20", "text-white")
+              b.classList.remove("bg-black/40", "border-white/5", "text-white/50")
+            } else {
+              b.classList.remove("bg-white/10", "border-white/20", "text-white")
+              b.classList.add("bg-black/40", "border-white/5", "text-white/50")
+            }
+          })
+
+          updateDetail()
+        })
+
+        customQtyInput.addEventListener("blur", () => {
+          if (!customQtyInput.value || parseInt(customQtyInput.value, 10) < 1) {
+            customQtyInput.value = 1
+            currentMultiplier = 1
+            multiplierBtns.forEach((b) => {
+              if (b.dataset.multiplier === "1") {
+                b.classList.add("bg-white/10", "border-white/20", "text-white")
+                b.classList.remove("bg-black/40", "border-white/5", "text-white/50")
+              } else {
+                b.classList.remove("bg-white/10", "border-white/20", "text-white")
+                b.classList.add("bg-black/40", "border-white/5", "text-white/50")
+              }
+            })
+            updateDetail()
+          }
+        })
+      }
 
       return {
         updateDetail,
@@ -1542,6 +1648,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       stockPopupModalId: "jafarStockPopupModal",
       stockPopupCloseBtnId: "jafarStockPopupCloseBtn",
       stockPopupQtyId: "jafarStockPopupQty",
+      customQtyInputId: "jafarCraftCustomQty",
       slotSelector: ".jafar-tool-slot",
       multiplierBtnSelector: ".jafar-craft-multiplier-btn",
       tabBtnSelector: ".jafar-tab-btn",

@@ -120,8 +120,6 @@ export const jafarData: JafarData = {
                 name: "Adrift Ark",
                 description: "A rare shiny chicken found in desert sands",
                 coins: 0,
-                stock: 1,
-                isPermanent: true,
                 image: "/img/sunflowerland/collectible/adrift_ark.webp",
                 ingredients: [
                   { name: "Sand", amount: 125, image: "/img/sunflowerland/treasure/sand.png" }
@@ -132,8 +130,6 @@ export const jafarData: JafarData = {
                 name: "Castellan",
                 description: "An ancient regal companion from desert ruins",
                 coins: 0,
-                stock: 1,
-                isPermanent: true,
                 image: "/img/sunflowerland/collectible/castellan.webp",
                 ingredients: [
                   { name: "Sand", amount: 750, image: "/img/sunflowerland/treasure/sand.png" }
@@ -169,7 +165,6 @@ export const jafarData: JafarData = {
                 name: "Treasure Key",
                 description: "Used to open standard treasure chests",
                 coins: 0,
-                stock: 1,
                 image: "/img/sunflowerland/123/Treasure Key.png",
                 ingredients: [
                   { name: "Sand", amount: 10, image: "/img/sunflowerland/treasure/sand.png" },
@@ -181,7 +176,6 @@ export const jafarData: JafarData = {
                 name: "Rare Key",
                 description: "Used to unlock rare desert chest vaults",
                 coins: 0,
-                stock: 1,
                 image: "/img/sunflowerland/123/key_rare.png",
                 ingredients: [
                   { name: "Sand", amount: 30, image: "/img/sunflowerland/treasure/sand.png" },
@@ -193,7 +187,6 @@ export const jafarData: JafarData = {
                 name: "Luxury Key",
                 description: "An ornate key for ancient opulent treasure chests",
                 coins: 0,
-                stock: 1,
                 image: "/img/sunflowerland/123/key_luxury.png",
                 ingredients: [
                   { name: "Sand", amount: 100, image: "/img/sunflowerland/treasure/sand.png" },
