@@ -1109,97 +1109,91 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     <div
       class="bg-[#18181b]/95 border border-white/10 rounded-2xl shadow-xl backdrop-blur-md overflow-hidden flex flex-col"
     >
-      <!-- Cabecera del Edificio con Icono y Selector de Mix -->
+      <!-- Cabecera del Edificio con Icono y Selector de Mix debajo del texto -->
       <div class="p-3.5 sm:p-4 border-b border-white/10 bg-black/20">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
-          <div class="flex items-center gap-2.5">
-            <div
-              class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-xl"
-            >
-              🍄
-            </div>
-            <div>
-              <h3 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                <span>{t("sfl.constants.building.cave")}</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-terminal-muted font-normal">
-                  5x5 Grid (25 Shovels)
-                </span>
-              </h3>
-              <p class="text-xs text-terminal-muted">
-                {t("sfl.constants.building.cave.desc")}
-              </p>
-            </div>
+        <div class="flex items-center gap-2.5 mb-2.5">
+          <div
+            class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-xl"
+          >
+            🍄
           </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
+              <span>{t("sfl.constants.building.cave")}</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-terminal-muted font-normal">
+                5x5 Grid (25 Shovels)
+              </span>
+            </h3>
+            <p class="text-xs text-terminal-muted">
+              {t("sfl.constants.building.cave.desc")}
+            </p>
+          </div>
+        </div>
 
-          <!-- Selector de Mix de Cultivo -->
-          <div class="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5 self-start sm:self-auto">
-            {
-              caveData.mixes.map((mix, idx) => (
-                <button
-                  type="button"
-                  class={`cave-mix-tab-btn py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    idx === 0
-                      ? "bg-white/10 text-amber-400 border border-amber-500/30 shadow-sm"
-                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
-                  }`}
-                  data-mix-id={mix.id}
-                  data-mix-data={JSON.stringify(mix)}
-                >
-                  <img
-                    src={mix.image}
-                    alt={mix.name}
-                    class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
-                  />
-                  <span>{mix.name.split(" ")[0]}</span>
-                </button>
-              ))
-            }
-          </div>
+        <!-- Selector de Mix de Cultivo (debajo del párrafo) -->
+        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5">
+          {
+            caveData.mixes.map((mix, idx) => (
+              <button
+                type="button"
+                class={`cave-mix-tab-btn flex-1 py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  idx === 0
+                    ? "bg-white/10 text-amber-400 border border-amber-500/30 shadow-sm"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+                }`}
+                data-mix-id={mix.id}
+                data-mix-data={JSON.stringify(mix)}
+              >
+                <img
+                  src={mix.image}
+                  alt={mix.name}
+                  class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+                />
+                <span>{mix.name}</span>
+              </button>
+            ))
+          }
         </div>
       </div>
 
-      <!-- Contenido en 2 Columnas: Izquierda = Economía & Rentabilidad, Derecha = Minijuego Visual -->
+      <!-- Contenido en 2 Columnas: Izquierda (md:col-span-8) = Desglose de Costos, Derecha (md:col-span-4) = Minijuego Compacto -->
       <div class="p-3.5 sm:p-4">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5">
-          <!-- Columna Izquierda: Análisis Económico, Ingresos y Costo Residual (md:col-span-7) -->
-          <div class="md:col-span-7 flex flex-col gap-3">
-            <div class="bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col gap-3">
-              <div class="flex items-center justify-between border-b border-white/10 pb-2">
-                <span class="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span>📊</span>
-                  <span>{t("sfl.constants.cave.batchEconomics")}</span>
-                </span>
-                <!-- Selector de Multiplicador de Lotes (x1, x5, x10) -->
-                <div class="flex items-center gap-1 bg-black/60 p-0.5 rounded-lg border border-white/5">
-                  <button
-                    type="button"
-                    class="cave-batch-multiplier-btn active py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-white/10 text-white border border-white/20 transition-all cursor-pointer"
-                    data-batch-multiplier="1"
-                  >
-                    1x
-                  </button>
-                  <button
-                    type="button"
-                    class="cave-batch-multiplier-btn py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-transparent text-white/50 border border-transparent hover:text-white transition-all cursor-pointer"
-                    data-batch-multiplier="5"
-                  >
-                    5x
-                  </button>
-                  <button
-                    type="button"
-                    class="cave-batch-multiplier-btn py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-transparent text-white/50 border border-transparent hover:text-white transition-all cursor-pointer"
-                    data-batch-multiplier="10"
-                  >
-                    10x
-                  </button>
-                </div>
-              </div>
-
-              <!-- Sección 1: Costo Total Invertido -->
+          <!-- Columna Izquierda: Desglose de Inversión, Retorno y Costo Residual (md:col-span-8) -->
+          <div class="md:col-span-8 flex flex-col gap-2.5">
+            <div class="bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col gap-2.5">
+              <!-- Sección 1: Costo Total Invertido con Selector de Multiplicador -->
               <div class="flex flex-col gap-1.5">
-                <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
-                  {t("sfl.constants.cave.investedCosts")}
-                </span>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
+                    {t("sfl.constants.cave.investedCosts")}
+                  </span>
+                  <!-- Selector de Multiplicador de Lotes (1x, 5x, 10x) -->
+                  <div class="flex items-center gap-1 bg-black/60 p-0.5 rounded-lg border border-white/5">
+                    <button
+                      type="button"
+                      class="cave-batch-multiplier-btn active py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-white/10 text-white border border-white/20 transition-all cursor-pointer"
+                      data-batch-multiplier="1"
+                    >
+                      1x
+                    </button>
+                    <button
+                      type="button"
+                      class="cave-batch-multiplier-btn py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-transparent text-white/50 border border-transparent hover:text-white transition-all cursor-pointer"
+                      data-batch-multiplier="5"
+                    >
+                      5x
+                    </button>
+                    <button
+                      type="button"
+                      class="cave-batch-multiplier-btn py-0.5 px-2 rounded text-[10px] font-mono font-bold bg-transparent text-white/50 border border-transparent hover:text-white transition-all cursor-pointer"
+                      data-batch-multiplier="10"
+                    >
+                      10x
+                    </button>
+                  </div>
+                </div>
+
                 <div class="bg-black/30 border border-white/5 rounded-lg p-2 flex flex-col gap-1 text-xs font-mono">
                   <!-- Palas requeridas -->
                   <div class="flex items-center justify-between">
@@ -1240,7 +1234,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
               </div>
 
               <!-- Sección 2: Ingreso Esperado por Escarabajos (P2P Odds) -->
-              <div class="flex flex-col gap-1.5">
+              <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">
                   <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
                     {t("sfl.constants.cave.beetleRevenue")}
@@ -1276,7 +1270,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
               </div>
 
               <!-- Sección 3: Costo Residual / Valor Intrínseco de Producción -->
-              <div class="flex flex-col gap-1.5">
+              <div class="flex flex-col gap-1">
                 <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
                   {t("sfl.constants.cave.residualCost")}
                 </span>
@@ -1328,46 +1322,40 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
             </div>
           </div>
 
-          <!-- Columna Derecha: Minijuego Visual de Excavación Compacto (md:col-span-5) -->
-          <div class="md:col-span-5 flex flex-col gap-2.5">
-            <!-- Cabecera del Minijuego & Contadores de Progreso -->
-            <div class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex flex-col gap-2">
-              <div class="flex items-center justify-between gap-1">
-                <span
-                  id="caveStatusBadge"
-                  class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                >
-                  {t("sfl.constants.cave.readyToDig")}
-                </span>
-                <span class="text-[9.5px] font-mono text-white/40">
-                  1 Pala / Hoyo
-                </span>
-              </div>
-
-              <!-- Requisitos del Mix Activo -->
-              <div class="flex items-center justify-between text-[10.5px] font-mono text-terminal-muted bg-white/[0.02] px-2 py-1 rounded border border-white/5">
-                <span>{t("sfl.constants.cave.requirements")}:</span>
-                <div class="flex items-center gap-1.5 text-white font-bold">
-                  <div class="flex items-center gap-1">
-                    <img src="/img/sunflowerland/Wood.png" class="w-3 h-3 object-contain" alt="Wood" />
-                    <span id="caveReqWoodDisplay">10 Wood</span>
-                  </div>
-                  <span class="text-white/30">•</span>
-                  <span class="text-white/70">12 hrs</span>
+          <!-- Columna Derecha: Minijuego Visual Angostado y Compactado (md:col-span-4) -->
+          <div class="md:col-span-4 flex flex-col gap-2">
+            <!-- Requisitos y Contadores de Progreso Compactos -->
+            <div class="bg-black/40 border border-white/10 rounded-xl p-2 flex flex-col gap-1.5">
+              <!-- Botón Toggle de Modo Simulación (OFF por defecto) -->
+              <button
+                type="button"
+                id="caveSimulateToggleBtn"
+                class="w-full py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-between border bg-black/50 text-white/50 border-white/10 hover:border-white/20 hover:text-white"
+                data-active="false"
+              >
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs">🎮</span>
+                  <span class="text-[11px]">{t("sfl.constants.cave.simulateBtn")}</span>
                 </div>
-              </div>
+                <span
+                  id="caveSimulateStatusText"
+                  class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5"
+                >
+                  OFF
+                </span>
+              </button>
 
               <!-- Contadores de Recompensas -->
-              <div class="grid grid-cols-3 gap-1 pt-1 border-t border-white/5">
+              <div class="grid grid-cols-3 gap-1 pt-0.5 border-t border-white/5">
                 <!-- Escarabajos -->
                 <div class="flex flex-col items-center justify-center bg-black/40 p-1 rounded-lg border border-white/5 text-center">
                   <img
                     src="/img/sunflowerland/green_beetle.webp"
                     alt="Beetle"
-                    class="w-4 h-4 object-contain mb-0.5 [image-rendering:pixelated]"
+                    class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
                   />
-                  <span class="text-[8.5px] font-mono text-terminal-muted">Beetles</span>
-                  <span class="text-[10px] font-mono font-bold text-amber-400">
+                  <span class="text-[8px] font-mono text-terminal-muted">Beetles</span>
+                  <span class="text-[9.5px] font-mono font-bold text-amber-400 leading-tight">
                     <span id="caveBeetlesCount">0</span>/<span id="caveBeetlesGoal">2</span>
                   </span>
                 </div>
@@ -1377,10 +1365,10 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                   <img
                     src="/img/sunflowerland/123/wild_mushroom.webp"
                     alt="Mushroom"
-                    class="w-4 h-4 object-contain mb-0.5 [image-rendering:pixelated]"
+                    class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
                   />
-                  <span class="text-[8.5px] font-mono text-terminal-muted">Mushrooms</span>
-                  <span class="text-[10px] font-mono font-bold text-red-400">
+                  <span class="text-[8px] font-mono text-terminal-muted">Mushrooms</span>
+                  <span class="text-[9.5px] font-mono font-bold text-red-400 leading-tight">
                     <span id="caveMushroomsCount">0</span>/<span id="caveMushroomsGoal">6</span>
                   </span>
                 </div>
@@ -1390,29 +1378,29 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                   <img
                     src="/img/sunflowerland/build/mud.webp"
                     alt="Mud"
-                    class="w-4 h-4 object-contain mb-0.5 [image-rendering:pixelated]"
+                    class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
                   />
-                  <span class="text-[8.5px] font-mono text-terminal-muted">Mud</span>
-                  <span class="text-[10px] font-mono font-bold text-amber-600">
+                  <span class="text-[8px] font-mono text-terminal-muted">Mud</span>
+                  <span class="text-[9.5px] font-mono font-bold text-amber-600 leading-tight">
                     <span id="caveMudCount">0</span>/<span id="caveMudGoal">17</span>
                   </span>
                 </div>
               </div>
             </div>
 
-            <!-- Cuadrícula 5x5 de Excavación Adaptada a la Columna -->
+            <!-- Cuadrícula 5x5 de Excavación Ajustada al Ancho Lateral -->
             <div
               class="relative rounded-xl bg-[#231815] border-2 border-[#4a342c] p-2 shadow-inner flex flex-col items-center justify-center select-none"
             >
-              <div id="caveDigGrid" class="grid grid-cols-5 gap-1.5 w-full max-w-[240px]">
+              <div id="caveDigGrid" class="grid grid-cols-5 gap-1 w-full max-w-[190px]">
                 {Array.from({ length: 25 }).map((_, idx) => (
                   <button
                     type="button"
-                    class="cave-cell relative aspect-square rounded-lg bg-[#3d2720] border border-[#5c3e34] hover:border-amber-500/60 hover:bg-[#4d3229] active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center p-0.5 group shadow-sm"
+                    class="cave-cell relative aspect-square rounded-md bg-[#3d2720] border border-[#5c3e34] hover:border-amber-500/60 hover:bg-[#4d3229] active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center p-0.5 group shadow-sm"
                     data-cell-index={idx}
                   >
                     <!-- Textura de montículo inicial -->
-                    <div class="cell-mound w-4 h-4 rounded-full bg-[#52372d] border border-[#6b483c] flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="cell-mound w-3.5 h-3.5 rounded-full bg-[#52372d] border border-[#6b483c] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <span class="w-1 h-1 rounded-full bg-[#2e1d17]" />
                     </div>
 
@@ -1421,20 +1409,20 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                       <img
                         src=""
                         alt=""
-                        class="cell-revealed-img w-5 h-5 object-contain [image-rendering:pixelated] drop-shadow-sm"
+                        class="cell-revealed-img w-4 h-4 object-contain [image-rendering:pixelated] drop-shadow-sm"
                       />
-                      <span class="cell-revealed-label text-[8px] font-mono font-bold text-white leading-none mt-0.5" />
+                      <span class="cell-revealed-label text-[7.5px] font-mono font-bold text-white leading-none mt-0.5" />
                     </div>
                   </button>
                 ))}
               </div>
 
               <!-- Botones de Acción del Tablero -->
-              <div class="flex items-center gap-1.5 mt-2.5 w-full max-w-[240px]">
+              <div class="flex items-center gap-1 mt-2 w-full max-w-[190px]">
                 <button
                   type="button"
                   id="caveDigAllBtn"
-                  class="flex-1 py-1 px-2 rounded-lg text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 transition-all cursor-pointer flex items-center justify-center gap-1 shadow-sm active:scale-98"
+                  class="flex-1 py-1 px-1.5 rounded-lg text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 transition-all cursor-pointer flex items-center justify-center gap-1 shadow-sm active:scale-98"
                 >
                   <span>⛏️</span>
                   <span>{t("sfl.constants.cave.digAll")}</span>
@@ -1442,7 +1430,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                 <button
                   type="button"
                   id="caveResetBtn"
-                  class="py-1 px-2 rounded-lg text-[11px] font-mono text-white/60 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-98"
+                  class="py-1 px-1.5 rounded-lg text-[10px] font-mono text-white/60 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer flex items-center justify-center gap-0.5 active:scale-98"
                   title={t("sfl.constants.cave.reset")}
                 >
                   <span>🔄</span>
@@ -2194,9 +2182,16 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       let discoveredMushrooms = 0
       let discoveredMud = 0
 
+      // Estado del Modo Simulación en Vivo
+      let isSimulationActive = false
+      let simShovelsUsed = 0
+      let simDiscoveredBeetles = []
+      let simMushrooms = 0
+      let simMud = 0
+
       // Elementos DOM
-      const statusBadge = document.getElementById("caveStatusBadge")
-      const reqWoodDisplay = document.getElementById("caveReqWoodDisplay")
+      const simulateToggleBtn = document.getElementById("caveSimulateToggleBtn")
+      const simulateStatusText = document.getElementById("caveSimulateStatusText")
       const beetlesCountDisplay = document.getElementById("caveBeetlesCount")
       const beetlesGoalDisplay = document.getElementById("caveBeetlesGoal")
       const mushroomsCountDisplay = document.getElementById("caveMushroomsCount")
@@ -2235,15 +2230,20 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         return odds[0]
       }
 
+      function getBeetleP2PPrice(sflId) {
+        if (marketDataCache && marketDataCache.items) {
+          const item = marketDataCache.items[`collectibles-${sflId}`]
+          if (item && item.currentPrice) {
+            return parseFloat(item.currentPrice)
+          }
+        }
+        return 0
+      }
+
       function generateBoard() {
         discoveredBeetles = 0
         discoveredMushrooms = 0
         discoveredMud = 0
-
-        if (statusBadge) {
-          statusBadge.innerText = tReadyToDig
-          statusBadge.className = "text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-        }
 
         const beetleItems = []
         for (let i = 0; i < (activeMix.rewards.beetles || 2); i++) {
@@ -2251,6 +2251,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           beetleItems.push({
             type: "beetle",
             name: beetle.name,
+            sflId: beetle.sflId,
             image: beetle.image,
             amount: 1
           })
@@ -2344,28 +2345,44 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         if (revealedLabel) {
           if (data.type === "mud") {
             revealedLabel.innerText = `+${data.amount}`
-            revealedLabel.className = "cell-revealed-label text-[9px] font-mono font-bold text-amber-600 leading-none mt-0.5"
+            revealedLabel.className = "cell-revealed-label text-[8px] font-mono font-bold text-amber-600 leading-none mt-0.5"
           } else if (data.type === "beetle") {
             revealedLabel.innerText = "★"
-            revealedLabel.className = "cell-revealed-label text-[9px] font-mono font-bold text-amber-400 leading-none mt-0.5"
+            revealedLabel.className = "cell-revealed-label text-[8px] font-mono font-bold text-amber-400 leading-none mt-0.5"
           } else if (data.type === "mushroom") {
             revealedLabel.innerText = "🍄"
-            revealedLabel.className = "cell-revealed-label text-[9px] font-mono font-bold text-red-400 leading-none mt-0.5"
+            revealedLabel.className = "cell-revealed-label text-[8px] font-mono font-bold text-red-400 leading-none mt-0.5"
           } else {
             revealedLabel.innerText = ""
           }
         }
 
-        if (data.type === "beetle") discoveredBeetles++
-        if (data.type === "mushroom") discoveredMushrooms++
-        if (data.type === "mud") discoveredMud += data.amount
+        if (data.type === "beetle") {
+          discoveredBeetles++
+          if (isSimulationActive) {
+            const p2pPrice = getBeetleP2PPrice(data.sflId)
+            simDiscoveredBeetles.push({
+              name: data.name,
+              image: data.image,
+              price: p2pPrice
+            })
+          }
+        }
+        if (data.type === "mushroom") {
+          discoveredMushrooms++
+          if (isSimulationActive) simMushrooms++
+        }
+        if (data.type === "mud") {
+          discoveredMud += data.amount
+          if (isSimulationActive) simMud += data.amount
+        }
+
+        if (isSimulationActive) {
+          simShovelsUsed++
+          updateEconomics()
+        }
 
         updateCounters()
-
-        if (discoveredBeetles >= (activeMix.rewards.beetles || 2) && statusBadge) {
-          statusBadge.innerText = tAllBeetlesFound
-          statusBadge.className = "text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400"
-        }
       }
 
       function digAll() {
@@ -2384,104 +2401,158 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         const stoneUnitFlw = getBaseMaterialUnitPrice("Stone")
         const shovelUnitCost = coinsFlw + (2 * woodUnitFlw) + (1 * stoneUnitFlw)
 
-        const totalShovels = 25 * batchMultiplier
-        const totalShovelsCost = totalShovels * shovelUnitCost
+        if (isSimulationActive) {
+          // MODO SIMULACIÓN EN TIEMPO REAL
+          const shovelsCount = simShovelsUsed
+          const totalShovelsCost = shovelsCount * shovelUnitCost
+          const reqWood = activeMix.requirements.wood || 0
+          const totalWoodCost = reqWood * woodUnitFlw
+          const grandTotalInvested = totalShovelsCost + totalWoodCost
+          const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
 
-        const reqWood = (activeMix.requirements.wood || 0) * batchMultiplier
-        const totalWoodCost = reqWood * woodUnitFlw
+          if (batchShovelsText) batchShovelsText.innerText = `${shovelsCount}x Sand Shovel`
+          if (batchShovelsFlower) batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
+          if (batchWoodText) batchWoodText.innerText = `${reqWood}x Wood`
+          if (batchWoodFlower) batchWoodFlower.innerText = totalWoodCost.toFixed(4)
+          if (totalCostFlower) totalCostFlower.innerText = grandTotalInvested.toFixed(4)
+          if (totalCostUsd) totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
 
-        const grandTotalInvested = totalShovelsCost + totalWoodCost
-        const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
+          // Escarabajos reales encontrados
+          let simBeetleRev = 0
+          let simRowsHtml = ""
 
-        if (reqWoodDisplay) {
-          reqWoodDisplay.innerText = `${activeMix.requirements.wood || 0} Wood`
-        }
-        if (batchShovelsText) {
-          batchShovelsText.innerText = `${totalShovels}x Sand Shovel`
-        }
-        if (batchShovelsFlower) {
-          batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
-        }
-        if (batchWoodText) {
-          batchWoodText.innerText = `${reqWood}x Wood`
-        }
-        if (batchWoodFlower) {
-          batchWoodFlower.innerText = totalWoodCost.toFixed(4)
-        }
-        if (totalCostFlower) {
-          totalCostFlower.innerText = grandTotalInvested.toFixed(4)
-        }
-        if (totalCostUsd) {
-          totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
-        }
-
-        let expectedBeetleUnitValue = 0
-        let oddsHtml = ""
-
-        if (activeMix.beetleOdds && Array.isArray(activeMix.beetleOdds)) {
-          activeMix.beetleOdds.forEach((odd) => {
-            let p2pPrice = 0
-            if (marketDataCache && marketDataCache.items) {
-              const item = marketDataCache.items[`collectibles-${odd.sflId}`]
-              if (item && item.currentPrice) {
-                p2pPrice = parseFloat(item.currentPrice)
-              }
-            }
-            const expectedContribution = p2pPrice * odd.chance
-            expectedBeetleUnitValue += expectedContribution
-
-            oddsHtml += `
-              <div class="grid grid-cols-4 gap-1 items-center py-0.5 text-white/90">
-                <div class="flex items-center gap-1 truncate">
-                  <img src="${odd.image}" class="w-3.5 h-3.5 object-contain" alt="${odd.name}" />
-                  <span class="truncate">${odd.name.replace(" Beetle", "")}</span>
-                </div>
-                <span class="text-center text-terminal-muted">${Math.round(odd.chance * 100)}%</span>
-                <span class="text-right text-emerald-400 font-bold">${p2pPrice > 0 ? p2pPrice.toFixed(4) : "--"}</span>
-                <span class="text-right text-cyan-400 font-bold">${expectedContribution > 0 ? expectedContribution.toFixed(4) : "--"}</span>
+          if (simDiscoveredBeetles.length === 0) {
+            simRowsHtml = `
+              <div class="py-1 text-center text-white/40 text-[10px] italic">
+                Excava casillas para encontrar escarabajos...
               </div>
             `
-          })
-        }
+          } else {
+            simDiscoveredBeetles.forEach((b) => {
+              simBeetleRev += b.price || 0
+              simRowsHtml += `
+                <div class="grid grid-cols-4 gap-1 items-center py-0.5 text-white/90">
+                  <div class="flex items-center gap-1 truncate col-span-2">
+                    <img src="${b.image}" class="w-3.5 h-3.5 object-contain" alt="${b.name}" />
+                    <span class="truncate">${b.name}</span>
+                  </div>
+                  <span class="text-right text-emerald-400 font-bold col-span-2">${b.price > 0 ? b.price.toFixed(4) : "--"} FLW</span>
+                </div>
+              `
+            })
+          }
 
-        if (beetleOddsRows) {
-          beetleOddsRows.innerHTML = oddsHtml
-        }
+          if (beetleOddsRows) beetleOddsRows.innerHTML = simRowsHtml
 
-        const totalBeetlesPerBatch = (activeMix.rewards.beetles || 2) * batchMultiplier
-        const grandTotalBeetleRev = totalBeetlesPerBatch * expectedBeetleUnitValue
-        const grandTotalBeetleRevUsd = grandTotalBeetleRev * liveFlowerPrice
+          const simBeetleRevUsd = simBeetleRev * liveFlowerPrice
+          if (totalBeetleRevFlower) totalBeetleRevFlower.innerText = simBeetleRev.toFixed(4)
+          if (totalBeetleRevUsd) totalBeetleRevUsd.innerText = `~$${simBeetleRevUsd.toFixed(4)}`
 
-        if (totalBeetleRevFlower) {
-          totalBeetleRevFlower.innerText = grandTotalBeetleRev.toFixed(4)
-        }
-        if (totalBeetleRevUsd) {
-          totalBeetleRevUsd.innerText = `~$${grandTotalBeetleRevUsd.toFixed(4)}`
-        }
+          const deficit = Math.max(0, grandTotalInvested - simBeetleRev)
+          const deficitUsd = deficit * liveFlowerPrice
+          if (deficitFlower) deficitFlower.innerText = deficit.toFixed(4)
 
-        const deficit = Math.max(0, grandTotalInvested - grandTotalBeetleRev)
-        const deficitUsd = deficit * liveFlowerPrice
+          const harvestedCount = simMushrooms + simMud
+          const unitResidual = harvestedCount > 0 ? deficit / harvestedCount : 0
+          const unitResidualUsd = unitResidual * liveFlowerPrice
 
-        if (deficitFlower) {
-          deficitFlower.innerText = deficit.toFixed(4)
-        }
+          if (mushroomUnitFlower) mushroomUnitFlower.innerText = unitResidual.toFixed(4)
+          if (mushroomUnitUsd) mushroomUnitUsd.innerText = `~$${unitResidualUsd.toFixed(4)}`
+          if (mudUnitFlower) mudUnitFlower.innerText = unitResidual.toFixed(4)
+          if (mudUnitUsd) mudUnitUsd.innerText = `~$${unitResidualUsd.toFixed(4)}`
 
-        const totalHarvestItems = ((activeMix.rewards.mushrooms || 6) + (activeMix.rewards.mud || 17)) * batchMultiplier
-        const residualUnitCost = totalHarvestItems > 0 ? deficit / totalHarvestItems : 0
-        const residualUnitCostUsd = residualUnitCost * liveFlowerPrice
+        } else {
+          // MODO TEÓRICO COMPLETO POR LOTE
+          const totalShovels = 25 * batchMultiplier
+          const totalShovelsCost = totalShovels * shovelUnitCost
+          const reqWood = (activeMix.requirements.wood || 0) * batchMultiplier
+          const totalWoodCost = reqWood * woodUnitFlw
+          const grandTotalInvested = totalShovelsCost + totalWoodCost
+          const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
 
-        if (mushroomUnitFlower) {
-          mushroomUnitFlower.innerText = residualUnitCost.toFixed(4)
+          if (batchShovelsText) batchShovelsText.innerText = `${totalShovels}x Sand Shovel`
+          if (batchShovelsFlower) batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
+          if (batchWoodText) batchWoodText.innerText = `${reqWood}x Wood`
+          if (batchWoodFlower) batchWoodFlower.innerText = totalWoodCost.toFixed(4)
+          if (totalCostFlower) totalCostFlower.innerText = grandTotalInvested.toFixed(4)
+          if (totalCostUsd) totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
+
+          let expectedBeetleUnitValue = 0
+          let oddsHtml = ""
+
+          if (activeMix.beetleOdds && Array.isArray(activeMix.beetleOdds)) {
+            activeMix.beetleOdds.forEach((odd) => {
+              const p2pPrice = getBeetleP2PPrice(odd.sflId)
+              const expectedContribution = p2pPrice * odd.chance
+              expectedBeetleUnitValue += expectedContribution
+
+              oddsHtml += `
+                <div class="grid grid-cols-4 gap-1 items-center py-0.5 text-white/90">
+                  <div class="flex items-center gap-1 truncate">
+                    <img src="${odd.image}" class="w-3.5 h-3.5 object-contain" alt="${odd.name}" />
+                    <span class="truncate">${odd.name.replace(" Beetle", "")}</span>
+                  </div>
+                  <span class="text-center text-terminal-muted">${Math.round(odd.chance * 100)}%</span>
+                  <span class="text-right text-emerald-400 font-bold">${p2pPrice > 0 ? p2pPrice.toFixed(4) : "--"}</span>
+                  <span class="text-right text-cyan-400 font-bold">${expectedContribution > 0 ? expectedContribution.toFixed(4) : "--"}</span>
+                </div>
+              `
+            })
+          }
+
+          if (beetleOddsRows) beetleOddsRows.innerHTML = oddsHtml
+
+          const totalBeetlesPerBatch = (activeMix.rewards.beetles || 2) * batchMultiplier
+          const grandTotalBeetleRev = totalBeetlesPerBatch * expectedBeetleUnitValue
+          const grandTotalBeetleRevUsd = grandTotalBeetleRev * liveFlowerPrice
+
+          if (totalBeetleRevFlower) totalBeetleRevFlower.innerText = grandTotalBeetleRev.toFixed(4)
+          if (totalBeetleRevUsd) totalBeetleRevUsd.innerText = `~$${grandTotalBeetleRevUsd.toFixed(4)}`
+
+          const deficit = Math.max(0, grandTotalInvested - grandTotalBeetleRev)
+          const deficitUsd = deficit * liveFlowerPrice
+          if (deficitFlower) deficitFlower.innerText = deficit.toFixed(4)
+
+          const totalHarvestItems = ((activeMix.rewards.mushrooms || 6) + (activeMix.rewards.mud || 17)) * batchMultiplier
+          const residualUnitCost = totalHarvestItems > 0 ? deficit / totalHarvestItems : 0
+          const residualUnitCostUsd = residualUnitCost * liveFlowerPrice
+
+          if (mushroomUnitFlower) mushroomUnitFlower.innerText = residualUnitCost.toFixed(4)
+          if (mushroomUnitUsd) mushroomUnitUsd.innerText = `~$${residualUnitCostUsd.toFixed(4)}`
+          if (mudUnitFlower) mudUnitFlower.innerText = residualUnitCost.toFixed(4)
+          if (mudUnitUsd) mudUnitUsd.innerText = `~$${residualUnitCostUsd.toFixed(4)}`
         }
-        if (mushroomUnitUsd) {
-          mushroomUnitUsd.innerText = `~$${residualUnitCostUsd.toFixed(4)}`
-        }
-        if (mudUnitFlower) {
-          mudUnitFlower.innerText = residualUnitCost.toFixed(4)
-        }
-        if (mudUnitUsd) {
-          mudUnitUsd.innerText = `~$${residualUnitCostUsd.toFixed(4)}`
-        }
+      }
+
+      // Manejo del botón toggle de simulación
+      if (simulateToggleBtn) {
+        simulateToggleBtn.addEventListener("click", () => {
+          isSimulationActive = !isSimulationActive
+          simulateToggleBtn.dataset.active = isSimulationActive ? "true" : "false"
+
+          if (isSimulationActive) {
+            simulateToggleBtn.classList.remove("bg-black/50", "text-white/50", "border-white/10")
+            simulateToggleBtn.classList.add("bg-amber-500/15", "text-amber-300", "border-amber-500/40", "shadow-sm")
+            if (simulateStatusText) {
+              simulateStatusText.innerText = "ON"
+              simulateStatusText.className = "text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30"
+            }
+            simShovelsUsed = 0
+            simDiscoveredBeetles = []
+            simMushrooms = 0
+            simMud = 0
+            generateBoard()
+            updateEconomics()
+          } else {
+            simulateToggleBtn.classList.add("bg-black/50", "text-white/50", "border-white/10")
+            simulateToggleBtn.classList.remove("bg-amber-500/15", "text-amber-300", "border-amber-500/40", "shadow-sm")
+            if (simulateStatusText) {
+              simulateStatusText.innerText = "OFF"
+              simulateStatusText.className = "text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5"
+            }
+            updateEconomics()
+          }
+        })
       }
 
       mixBtns.forEach((btn) => {
@@ -2495,6 +2566,12 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 
           try {
             activeMix = JSON.parse(btn.dataset.mixData)
+            if (isSimulationActive) {
+              simShovelsUsed = 0
+              simDiscoveredBeetles = []
+              simMushrooms = 0
+              simMud = 0
+            }
             generateBoard()
             updateEconomics()
           } catch (e) {}
@@ -2526,7 +2603,16 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       }
 
       if (resetBtn) {
-        resetBtn.addEventListener("click", generateBoard)
+        resetBtn.addEventListener("click", () => {
+          if (isSimulationActive) {
+            simShovelsUsed = 0
+            simDiscoveredBeetles = []
+            simMushrooms = 0
+            simMud = 0
+          }
+          generateBoard()
+          updateEconomics()
+        })
       }
 
       generateBoard()
