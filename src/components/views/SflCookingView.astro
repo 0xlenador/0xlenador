@@ -8,6 +8,7 @@
 import { getEntry } from "astro:content"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 import SflToolLayout from "../SflToolLayout.astro"
+import FaqAccordion from "../FaqAccordion.astro"
 
 const sflRecipesEntry = await getEntry("sfl", "recipes")
 const sflIdsEntry = await getEntry("sfl", "resources")
@@ -31,6 +32,16 @@ import bettyPrices from "../../content/data/sfl/betty_prices.json"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
+
+const faqItems = [
+  { pregunta: t("sfl.cooking.faq.q1"), respuesta: t("sfl.cooking.faq.a1") },
+  { pregunta: t("sfl.cooking.faq.q2"), respuesta: t("sfl.cooking.faq.a2") },
+  { pregunta: t("sfl.cooking.faq.q3"), respuesta: t("sfl.cooking.faq.a3") },
+  { pregunta: t("sfl.cooking.faq.q4"), respuesta: t("sfl.cooking.faq.a4") },
+  { pregunta: t("sfl.cooking.faq.q5"), respuesta: t("sfl.cooking.faq.a5") },
+  { pregunta: t("sfl.cooking.faq.q6"), respuesta: t("sfl.cooking.faq.a6") },
+  { pregunta: t("sfl.cooking.faq.q7"), respuesta: t("sfl.cooking.faq.a7") },
+]
 
 
 const getCompactText = (data, formattedDesc, typeName) => {
@@ -115,9 +126,9 @@ const formatAstroDescription = (skill) => {
         <div class="md:col-span-7 xl:col-span-8 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-20">
           <div>
             <!-- Header sutil -->
-            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-4">
+            <h2 class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-4">
               {t("sfl.cooking.dash.bestFoodTitle")}
-            </span>
+            </h2>
 
             <!-- Hero: Imagen del Plato + Métrica Gigante con Glow Esmeralda -->
             <div class="relative flex items-center gap-4 sm:gap-6 my-2">
@@ -270,9 +281,9 @@ const formatAstroDescription = (skill) => {
         <div class="md:col-span-5 xl:col-span-4 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md">
           <div>
             <!-- Header sutil -->
-            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-3">
+            <h2 class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-3">
               {t("sfl.cooking.dash.skillTitle")}
-            </span>
+            </h2>
 
             <!-- Fila: Lvl [100] + Slider -->
             <div class="flex items-center justify-between gap-3 mb-3">
@@ -556,7 +567,7 @@ const formatAstroDescription = (skill) => {
            <svg class="w-2.5 h-2.5 text-emerald-500 transition-transform duration-200 group-open:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
              <path d="M8 5v14l11-7z" />
            </svg>
-           <span class="text-sm font-bold text-white uppercase tracking-wider">✨ Configure Boosts & Buffs</span>
+           <h2 class="text-sm font-bold text-white uppercase tracking-wider inline-flex items-center">✨ Configure Boosts & Buffs</h2>
         </div>
         
         <div class="text-[10px] text-white/40 font-mono group-open:hidden uppercase tracking-widest border border-white/10 px-2 py-1 rounded-md xl:ml-auto w-max">Tap to expand</div>
@@ -618,7 +629,7 @@ const formatAstroDescription = (skill) => {
               return (
               <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
                 <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
-                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${errorFallback}';`} alt={buff.name} title={buff.boost} />
+                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${errorFallback}';`} alt={buff.name} title={buff.boost} width="24" height="24" loading="lazy" decoding="async" />
                 <div class="flex flex-col normal-view">
                   <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors">{buff.name}</span>
                   <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
@@ -652,7 +663,7 @@ const formatAstroDescription = (skill) => {
 
               <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                 <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                  <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
+                  <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} width="24" height="24" loading="lazy" decoding="async" />
                   <div class="flex flex-col normal-view">
                     <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors">{skillName}</span>
                     <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
@@ -696,7 +707,7 @@ const formatAstroDescription = (skill) => {
                 return (
                 <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                   <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} width="24" height="24" loading="lazy" decoding="async" />
                     <div class="flex flex-col normal-view">
                       <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 transition-colors">{skillName}</span>
                       <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
@@ -746,7 +757,7 @@ const formatAstroDescription = (skill) => {
                 return (
                 <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
                   <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} width="24" height="24" loading="lazy" decoding="async" />
                     <div class="flex flex-col normal-view">
                       <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 transition-colors">{skillName}</span>
                       <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
@@ -766,7 +777,7 @@ const formatAstroDescription = (skill) => {
                   return (
                   <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
                     <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50" data-buff-id={id} />
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={buff.boost} />
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={buff.boost} width="24" height="24" loading="lazy" decoding="async" />
                     <div class="flex flex-col normal-view">
                       <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 group-hover:text-orange-400 transition-colors">{buff.name}</span>
                       <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
@@ -975,6 +986,18 @@ const formatAstroDescription = (skill) => {
       >
         <!-- JS inyectará filas aquí -->
       </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <!-- PREGUNTAS FRECUENTES (FAQ)                              -->
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <div slot="footer">
+      <FaqAccordion
+        titulo={t("sfl.cooking.faq.title")}
+        subtitulo={t("sfl.cooking.faq.subtitle")}
+        startId={750}
+        items={faqItems}
+      />
     </div>
 </SflToolLayout>
 
@@ -1627,7 +1650,7 @@ const formatAstroDescription = (skill) => {
                 <span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>
                 ${
                   item.instant
-                    ? `<span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 ml-2"><img src="/img/Gem.png" class="w-3 h-3" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>`
+                    ? `<span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 ml-2"><img src="/img/sunflowerland/123/Gem.png" class="w-3 h-3 object-contain" alt="Gem" width="12" height="12" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>`
                     : ""
                 }
               </div>
@@ -2254,7 +2277,7 @@ const formatAstroDescription = (skill) => {
             class="w-full px-3 py-2 text-left flex items-center gap-2.5 hover:bg-white/10 transition-colors cursor-pointer ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/90'}"
             onclick="window.selectManualDish('${safeName}')"
           >
-            <img src="${dish.image || `/img/sunflowerland/food/${dish.name}.png`}" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="window.handleImgError(this)" />
+            <img src="${dish.image || `/img/sunflowerland/food/${dish.name}.png`}" class="w-6 h-6 object-contain shrink-0 drop-shadow" alt="${safeName}" width="24" height="24" onerror="window.handleImgError(this)" />
             <div class="flex flex-col min-w-0 flex-1">
               <div class="flex items-center justify-between gap-1">
                 <span class="text-xs truncate font-medium ${isSelected ? 'text-emerald-400 font-bold' : 'text-white'} flex items-center gap-1.5">
