@@ -76,6 +76,34 @@
                 "target_food": "Cheese Recipes",
                 "mathematics_operation": "add"
             }
+        },
+        "161": {
+            "name": "Luna's Hat",
+            "boost": "x0.5 Cooking Time",
+            "type": "wearable",
+            "mathematics_1": {
+                "calc": 0.5,
+                "category": "cooking_time",
+                "target_food": "all",
+                "mathematics_operation": "multiply"
+            }
+        },
+        "500": {
+            "name": "Master Chef's Cleaver",
+            "boost": "x0.85 Cooking Time, 10% chance of +1 Food from cooking",
+            "type": "wearable",
+            "mathematics_1": {
+                "calc": 0.85,
+                "category": "cooking_time",
+                "target_food": "all",
+                "mathematics_operation": "multiply"
+            },
+            "mathematics_2": {
+                "calc": 1.1,
+                "category": "bumpkin_xp",
+                "target_food": "all",
+                "mathematics_operation": "multiply"
+            }
         }
     },
     "shrines": {

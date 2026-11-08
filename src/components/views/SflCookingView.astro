@@ -72,9 +72,10 @@ const getCompactText = (data, formattedDesc, typeName) => {
 const getEffectType = (desc) => {
   if (!desc) return "other";
   const descLower = desc.toLowerCase();
-  if (descLower.includes("xp") || descLower.includes("yield") || (descLower.includes("food") && !descLower.includes("revenue"))) return "xp";
-  if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) return "time";
-  return "other";
+  const effects = [];
+  if (descLower.includes("xp") || descLower.includes("yield") || (descLower.includes("food") && !descLower.includes("revenue"))) effects.push("xp");
+  if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) effects.push("time");
+  return effects.length > 0 ? effects.join(" ") : "other";
 };
 
 const formatAstroDescription = (skill) => {
@@ -438,7 +439,7 @@ const formatAstroDescription = (skill) => {
           <!-- 3. Fish Flake (Clic para editar costo) -->
           <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="8 Rods">
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/fish/specials/fish_flake.webp" class="w-full h-full object-contain" alt="Fish Flake" />
+              <img src="/img/sunflowerland/fish/a/fish_flake.webp" class="w-full h-full object-contain" alt="Fish Flake" onerror="window.handleImgError(this)" />
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishFlakeName")}</span>
@@ -465,7 +466,7 @@ const formatAstroDescription = (skill) => {
           <!-- 4. Fish Stick (Clic para editar costo) -->
           <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="10 Rods">
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/fish/specials/fish_stick.webp" class="w-full h-full object-contain" alt="Fish Stick" />
+              <img src="/img/sunflowerland/fish/a/fish_stick.webp" class="w-full h-full object-contain" alt="Fish Stick" onerror="window.handleImgError(this)" />
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishStickName")}</span>
@@ -492,7 +493,7 @@ const formatAstroDescription = (skill) => {
           <!-- 5. Crab Stick (Clic para editar costo) -->
           <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="Promedio: 5.9 FLOWER">
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/fish/specials/crab_stick.webp" class="w-full h-full object-contain" alt="Crab Stick" />
+              <img src="/img/sunflowerland/fish/a/Crab Stick.png" class="w-full h-full object-contain" alt="Crab Stick" onerror="window.handleImgError(this)" />
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.crabStickName")}</span>
@@ -519,7 +520,7 @@ const formatAstroDescription = (skill) => {
           <!-- 6. Fish Oil (Clic para editar costo) -->
           <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="14 Rods">
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-              <img src="/img/sunflowerland/fish/specials/fish_oil.webp" class="w-full h-full object-contain" alt="Fish Oil" />
+              <img src="/img/sunflowerland/fish/a/fish_oil.webp" class="w-full h-full object-contain" alt="Fish Oil" />
             </div>
             <div class="flex flex-col">
               <span class="text-[11px] font-mono text-white/60 leading-none mb-1">{t("sfl.cooking.dash.fishOilName")}</span>
@@ -1074,6 +1075,8 @@ const formatAstroDescription = (skill) => {
     tError: t("sfl.cooking.error"),
     tTime: t("sfl.cooking.col.time"),
     tInstant: t("sfl.cooking.col.instant"),
+    tEvent: t("sfl.cooking.badge.event"),
+    tEventEnded: t("sfl.cooking.badge.eventEnded"),
   }}
 >
   window.handleImgError = function(img) {
@@ -1081,23 +1084,39 @@ const formatAstroDescription = (skill) => {
     img.src = "/img/cripto/sunflowerland.webp";
   };
 
+  const isEventEnded = (recipe) => {
+    if (!recipe || !recipe.event) return false;
+    if (!recipe.eventDate) return true;
+    const parts = recipe.eventDate.split(/[-–—/]|to/).map((s) => s.trim()).filter(Boolean);
+    const endStr = parts[parts.length - 1];
+    const endDate = new Date(endStr);
+    if (!isNaN(endDate.getTime())) {
+      endDate.setHours(23, 59, 59, 999);
+      return Date.now() > endDate.getTime();
+    }
+    return true;
+  };
+
   const fishList = [
     'Anchovy', 'Angelfish', 'Blowfish', 'Butterflyfish', 'Halibut', 
     'Horse Mackerel', 'Napoleanfish', 'Olive Flounder', 'Red Snapper', 
     'Squid', 'Sunfish', 'Surgeonfish', 'Tuna'
   ];
-  const fishSpecialsWebp = ['Fish Flake', 'Fish Stick', 'Crab Stick'];
 
-  function getIngredientImg(name) {
-    if (recipesData.some(r => r.name === name)) {
-      return `/img/sunflowerland/food/${name}.png`;
-    }
+  function getIngredientImg(ing) {
+    if (ing && typeof ing === 'object' && ing.image) return ing.image;
+    const name = typeof ing === 'string' ? ing : (ing?.name || '');
+    const recipeMatch = recipesData.find(r => r.name === name);
+    if (recipeMatch && recipeMatch.image) return recipeMatch.image;
     if (name === 'Magic Mushroom') return '/img/sunflowerland/123/magic_mushroom.webp';
     if (name === 'Wild Mushroom') return '/img/sunflowerland/123/wild_mushroom.webp';
-    if (name === 'Seaweed') return '/img/sunflowerland/123/seaweed.webp';
+    if (name === 'Seaweed') return '/img/sunflowerland/fish/a/seaweed.webp';
+    if (name === 'Fish Flake') return '/img/sunflowerland/fish/a/fish_flake.webp';
+    if (name === 'Fish Stick') return '/img/sunflowerland/fish/a/fish_stick.webp';
+    if (name === 'Crab Stick') return '/img/sunflowerland/fish/a/Crab Stick.png';
+    if (name === 'Fish Oil') return '/img/sunflowerland/fish/a/fish_oil.webp';
+    if (name === 'Truffle') return '/img/sunflowerland/truffle.webp';
     if (fishList.includes(name)) return `/img/sunflowerland/fish/${name}.png`;
-    if (fishSpecialsWebp.includes(name)) return `/img/sunflowerland/fish/specials/${name.toLowerCase().replace(/\s+/g, '_')}.webp`;
-    if (name === 'Fish Oil') return '/img/sunflowerland/fish/specials/Fish Oil.png';
     return `/img/sunflowerland/${name}.png`;
   }
 
@@ -1198,15 +1217,16 @@ const formatAstroDescription = (skill) => {
     
     activeBuffs.forEach(id => {
       const buff = sflBuffs[id];
-      if (buff && buff.mathematics_1) {
-         const math = buff.mathematics_1;
-         if (math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
-           if (math.mathematics_operation === "multiply") {
-             boostedExp *= math.calc;
-           } else if (math.mathematics_operation === "add") {
-             additions += math.calc;
-           }
-         }
+      if (buff) {
+        [buff.mathematics_1, buff.mathematics_2].forEach(math => {
+          if (math && math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
+            if (math.mathematics_operation === "multiply") {
+              boostedExp *= math.calc;
+            } else if (math.mathematics_operation === "add") {
+              additions += math.calc;
+            }
+          }
+        });
       }
     });
     
@@ -1308,13 +1328,14 @@ const formatAstroDescription = (skill) => {
     }
       activeBuffs.forEach(id => {
         const buff = sflBuffs[id];
-        if (buff && buff.mathematics_1) {
-           const math = buff.mathematics_1;
-           if (math.category === "cooking_time" && isTargetMatch(item, math.target_food)) {
-             if (math.mathematics_operation === "multiply") {
-               timeMultiplier *= math.calc;
-             }
-           }
+        if (buff) {
+          [buff.mathematics_1, buff.mathematics_2].forEach(math => {
+            if (math && math.category === "cooking_time" && isTargetMatch(item, math.target_food)) {
+              if (math.mathematics_operation === "multiply") {
+                timeMultiplier *= math.calc;
+              }
+            }
+          });
         }
       });
     
@@ -1489,90 +1510,93 @@ const formatAstroDescription = (skill) => {
   }
 
   window.renderTable = (searchTerm = "") => {
-    let filtered = recipesData.filter((item) => {
-      const nameMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    let doubleNomMultiplier = 1;
+    if (activeSkills && activeSkills["Double Nom"]) {
+      const rank = activeSkills["Double Nom"];
+      const math1 = sflSkills["Double Nom"]?.mathematics_1?.calc_by_rank[`rank_${rank}`] || 0;
+      doubleNomMultiplier = 1 + math1;
+    }
+
+    const term = searchTerm.toLowerCase();
+    const prepared = [];
+
+    for (const item of recipesData) {
+      const nameMatch = item.name.toLowerCase().includes(term);
       const ingMatch = item.ingredients.some((ing) =>
-        ing.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-      const matchesSearch = nameMatch || ingMatch
+        ing.name.toLowerCase().includes(term)
+      );
+      if (!nameMatch && !ingMatch) continue;
+      if (currentCategory !== "all" && item.building !== currentCategory) continue;
 
-      const matchesCategory = currentCategory === "all" || item.building === currentCategory
-      
-      const xp = getCalculatedXp(item);
-      const matchesXpLimit = window.currentHideXpLimit > 0 ? xp >= window.currentHideXpLimit : true;
+      const finalXp = getCalculatedXp(item);
+      if (window.currentHideXpLimit > 0 && finalXp < window.currentHideXpLimit) continue;
 
-      return matchesSearch && matchesCategory && matchesXpLimit;
-    })
+      const costObj = calculateRecipeCost(item.ingredients);
+      const timeSeconds = getCalculatedTime(item);
+      const xpPerSfl = costObj.total > 0 ? finalXp / costObj.total : 0;
+      const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * finalXp : 0;
+
+      prepared.push({
+        item,
+        finalXp,
+        costObj,
+        timeSeconds,
+        xpPerSfl,
+        xpPerDay
+      });
+    }
 
     if (
       window.currentSort &&
       window.currentSort.column &&
       window.currentSort.direction !== "none"
     ) {
-      const { column, direction } = window.currentSort
-      filtered.sort((a, b) => {
-        let valA, valB
+      const { column, direction } = window.currentSort;
+      prepared.sort((a, b) => {
+        let valA, valB;
         if (column === "name") {
-          valA = a.name.toLowerCase()
-          valB = b.name.toLowerCase()
+          valA = a.item.name.toLowerCase();
+          valB = b.item.name.toLowerCase();
         } else if (column === "xp") {
-          valA = getCalculatedXp(a)
-          valB = getCalculatedXp(b)
+          valA = a.finalXp;
+          valB = b.finalXp;
         } else if (column === "cost") {
-          const costA = calculateRecipeCost(a.ingredients)
-          const costB = calculateRecipeCost(b.ingredients)
-          valA = costA.total
-          valB = costB.total
+          valA = a.costObj.total;
+          valB = b.costObj.total;
         } else if (column === "xpsfl") {
-          const costA = calculateRecipeCost(a.ingredients)
-          const costB = calculateRecipeCost(b.ingredients)
-          valA = costA.total > 0 ? getCalculatedXp(a) / costA.total : 0
-          valB = costB.total > 0 ? getCalculatedXp(b) / costB.total : 0
+          valA = a.xpPerSfl;
+          valB = b.xpPerSfl;
         } else if (column === "xpday") {
-          const timeA = parseTime(a.time)
-          const timeB = parseTime(b.time)
-          valA = timeA > 0 ? (86400 / timeA) * getCalculatedXp(a) : 0
-          valB = timeB > 0 ? (86400 / timeB) * getCalculatedXp(b) : 0
+          valA = a.xpPerDay;
+          valB = b.xpPerDay;
         }
 
-        if (valA < valB) return direction === "asc" ? -1 : 1
-        if (valA > valB) return direction === "asc" ? 1 : -1
-        return 0
-      })
+        if (valA < valB) return direction === "asc" ? -1 : 1;
+        if (valA > valB) return direction === "asc" ? 1 : -1;
+        return 0;
+      });
     }
 
-    tableBody.innerHTML = ""
+    tableBody.innerHTML = "";
 
-    if (filtered.length === 0) {
-      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmpty}</div>`
-      return
+    if (prepared.length === 0) {
+      tableBody.innerHTML = `<div class="py-8 text-center text-terminal-muted text-sm">${tEmpty}</div>`;
+      return;
     }
 
-    filtered.forEach((item) => {
-      let doubleNomMultiplier = 1;
-      if (activeSkills && activeSkills["Double Nom"]) {
-        const rank = activeSkills["Double Nom"];
-        const math1 = sflSkills["Double Nom"]?.mathematics_1?.calc_by_rank[`rank_${rank}`] || 0;
-        doubleNomMultiplier = 1 + math1;
-      }
-      
-      const costObj = calculateRecipeCost(item.ingredients)
-      const timeSeconds = getCalculatedTime(item)
-      const finalXp = getCalculatedXp(item);
-      const xpPerSfl = costObj.total > 0 ? finalXp / costObj.total : 0
-      const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * finalXp : 0
-
+    prepared.forEach(({ item, finalXp, costObj, timeSeconds, xpPerSfl, xpPerDay }) => {
       // Format visual time
       const displayTime = formatSeconds(timeSeconds);
       const displayName = doubleNomMultiplier > 1 ? `${item.name} x${doubleNomMultiplier}` : item.name;
+      const dishImg = item.image || `/img/sunflowerland/food/${item.name}.png`;
 
-      const row = document.createElement("div")
+      const row = document.createElement("div");
       row.className =
-        "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_15%_15%_15%_20%] lg:items-center lg:py-3"
+        "hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_15%_15%_15%_20%] lg:items-center lg:py-3";
 
       const ingredientsHtml = item.ingredients
         .map((ing) => {
-          const imgSrc = getIngredientImg(ing.name);
+          const imgSrc = getIngredientImg(ing);
           const safeName = ing.name.replace(/'/g, "\\'");
 
           return `
@@ -1580,18 +1604,25 @@ const formatAstroDescription = (skill) => {
             <img src="${imgSrc}" alt="${safeName}" class="w-4 h-4 object-contain drop-shadow-sm" onerror="window.handleImgError(this)" />
             <span class="text-[11px] lg:text-xs text-white/80">${ing.name} <span class="text-white/40 font-mono ml-0.5">x${ing.amount * doubleNomMultiplier}</span></span>
           </div>
-        `
+        `;
         })
-        .join("")
+        .join("");
 
       row.innerHTML = `
         <div class="lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start h-full mb-3 lg:mb-0">
           <div class="flex items-center gap-3 lg:gap-3 w-full">
             <div class="w-12 h-12 lg:w-8 lg:h-8 flex items-center justify-center shrink-0 bg-white/5 rounded-xl lg:bg-transparent lg:rounded-none p-1 lg:p-0">
-              <img src="/img/sunflowerland/food/${item.name}.png" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="window.handleImgError(this)" />
+              <img src="${dishImg}" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="window.handleImgError(this)" />
             </div>
             <div class="flex flex-col flex-1">
-              <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${displayName}</span>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${displayName}</span>
+                ${
+                  item.event
+                    ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium ${isEventEnded(item) ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30' : 'bg-purple-500/20 text-purple-300 border border-purple-500/40'}" title="${item.eventDate ? `${item.event} • ${item.eventDate}` : item.event}">✨ ${item.event}${isEventEnded(item) ? ` (${item.eventDate || tEventEnded})` : ''}</span>`
+                    : ""
+                }
+              </div>
               <div class="flex items-center justify-between lg:justify-start w-full">
                 <span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>
                 ${
@@ -1689,6 +1720,7 @@ const formatAstroDescription = (skill) => {
     const minXp = window.currentHideXpLimit || 0;
 
     for (const recipe of recipesData) {
+      if (isEventEnded(recipe)) continue;
       const calcXp = getCalculatedXp(recipe);
       if (!calcXp || calcXp <= 0) continue;
       if (calcXp < minXp) continue;
@@ -1705,6 +1737,7 @@ const formatAstroDescription = (skill) => {
 
     if (!best) {
       for (const recipe of recipesData) {
+        if (isEventEnded(recipe)) continue;
         const calcXp = getCalculatedXp(recipe);
         if (!calcXp || calcXp <= 0) continue;
         if (calcXp < minXp) continue;
@@ -1810,7 +1843,7 @@ const formatAstroDescription = (skill) => {
     const avgXpPerSkill = currentLevelXp / skillsEarned;
 
     const safeDishName = best.name.replace(/'/g, "\\'");
-    const dishImgSrc = `/img/sunflowerland/food/${best.name}.png`;
+    const dishImgSrc = best.image || `/img/sunflowerland/food/${best.name}.png`;
 
     // Tarjeta 1: Skill Calculator
     // Métrica Hero: Promedio por Skill (La que prima)
@@ -1821,6 +1854,22 @@ const formatAstroDescription = (skill) => {
     if (skillAvgXpDisplay) {
       skillAvgXpDisplay.innerText = `~${formatCompactXp(avgXpPerSkill, false)}`;
       skillAvgXpDisplay.title = `Promedio: ${formatNumber(avgXpPerSkill, 0)} XP`;
+    }
+
+    if (skillReachDishImg) {
+      skillReachDishImg.src = dishImgSrc;
+      skillReachDishImg.alt = best.name;
+      skillReachDishImg.onerror = function() { window.handleImgError(this); };
+    }
+    if (skillNextDishImg) {
+      skillNextDishImg.src = dishImgSrc;
+      skillNextDishImg.alt = best.name;
+      skillNextDishImg.onerror = function() { window.handleImgError(this); };
+    }
+    if (skillTotalDishImg) {
+      skillTotalDishImg.src = dishImgSrc;
+      skillTotalDishImg.alt = best.name;
+      skillTotalDishImg.onerror = function() { window.handleImgError(this); };
     }
 
     // Col 1: Llegar a este nivel
@@ -1920,7 +1969,7 @@ const formatAstroDescription = (skill) => {
     }
 
     if (bestFoodImg) {
-      bestFoodImg.src = `/img/sunflowerland/food/${best.name}.png`;
+      bestFoodImg.src = best.image || `/img/sunflowerland/food/${best.name}.png`;
       bestFoodImg.alt = best.name;
       bestFoodImg.onerror = function() { window.handleImgError(this); };
     }
@@ -2205,10 +2254,13 @@ const formatAstroDescription = (skill) => {
             class="w-full px-3 py-2 text-left flex items-center gap-2.5 hover:bg-white/10 transition-colors cursor-pointer ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/90'}"
             onclick="window.selectManualDish('${safeName}')"
           >
-            <img src="/img/sunflowerland/food/${dish.name}.png" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="window.handleImgError(this)" />
+            <img src="${dish.image || `/img/sunflowerland/food/${dish.name}.png`}" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="window.handleImgError(this)" />
             <div class="flex flex-col min-w-0 flex-1">
               <div class="flex items-center justify-between gap-1">
-                <span class="text-xs truncate font-medium ${isSelected ? 'text-emerald-400 font-bold' : 'text-white'}">${dish.name}</span>
+                <span class="text-xs truncate font-medium ${isSelected ? 'text-emerald-400 font-bold' : 'text-white'} flex items-center gap-1.5">
+                  ${dish.name}
+                  ${dish.event ? `<span class="px-1 py-0.5 rounded text-[9px] font-mono ${isEventEnded(dish) ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-purple-500/20 text-purple-300 border border-purple-500/40'} shrink-0">✨ ${dish.event}</span>` : ''}
+                </span>
                 <span class="text-xs font-mono font-bold ${isSelected ? 'text-emerald-300' : 'text-emerald-400'} shrink-0">${formatNumber(dish.efficiency, effDecimals)} <span class="text-[9px] text-white/50 font-normal">XP/FLOWER</span></span>
               </div>
               <div class="flex items-center gap-2 text-[10px] text-white/40 font-mono mt-0.5">
