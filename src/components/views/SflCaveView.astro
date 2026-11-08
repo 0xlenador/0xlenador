@@ -20,6 +20,30 @@ const sflSkills = sflSkillsEntry?.data?.Cave || {}
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
+const cavePowerUps = [
+  {
+    id: "mushroom_hat",
+    name: "Mushroom Hat",
+    boost: "+0.1 Wild Mushroom",
+    image: "/img/sunflowerland/powerups/wearables/Mushroom Hat.webp",
+  },
+  {
+    id: "mushroom_house",
+    name: "Mushroom House",
+    boost: "+0.2 Wild Mushroom",
+    image: "/img/sunflowerland/powerups/mushroom_house.png",
+  },
+]
+
+const caveOthers = [
+  {
+    id: "fairy_circle",
+    name: "Fairy Circle",
+    boost: "+0.2 Wild Mushroom",
+    image: "/img/sunflowerland/collectible/fairy_circle.webp",
+  },
+]
+
 const formatAstroDescription = (skill: any) => {
   let desc = skill.description || ""
   if (skill.mathematics_1?.calc_by_rank?.rank_1 !== undefined) {
@@ -38,6 +62,22 @@ const formatAstroDescription = (skill: any) => {
   }
   return desc
 }
+
+const getCompactSkillText = (skillData: any, formattedDesc: string) => {
+  let value = "?"
+  const match = formattedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i)
+  if (match) {
+    value = match[1].trim()
+    if (value.toLowerCase().endsWith("x")) {
+      value = "x" + value.slice(0, -1)
+    }
+  }
+  return `${value} ${skillData.name || ""}`
+}
+
+const getCompactText = (name: string, boost: string) => {
+  return `${boost} ${name}`
+}
 ---
 
 <SflToolLayout activeTab="cueva">
@@ -52,85 +92,139 @@ const formatAstroDescription = (skill: any) => {
     </p>
   </div>
 
-  <!-- Primer Bloque: Cave Skills (Ancho completo en contenedor superior) -->
-  <div class="w-full mb-8 relative z-10 bg-[#18181b]/95 border border-white/10 rounded-2xl p-4 sm:p-5 shadow-xl backdrop-blur-md">
-    <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2.5">
-      <div class="flex items-center gap-2">
-        <img
-          src="/img/sunflowerland/tools/sand_shovel.png"
-          alt="Cave Skills"
-          class="w-5 h-5 object-contain"
-        />
-        <h2 class="text-base sm:text-lg font-black text-white tracking-wide">
-          {t("sfl.cave.skills.title")}
-        </h2>
+  <!-- Boosts (PowerUps, Skills & Others) -->
+  <details class="group w-full mb-8 bg-white/[0.02] border border-white/5 rounded-2xl" open>
+    <summary class="flex flex-col xl:flex-row xl:items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors rounded-2xl list-none gap-4">
+      <div class="flex items-center gap-2 shrink-0">
+        <svg class="w-2.5 h-2.5 text-emerald-500 transition-transform duration-200 group-open:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        <span class="text-sm font-bold text-white uppercase tracking-wider">✨ Configure Boosts & Buffs</span>
       </div>
-      <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
-        Sunflower Land Cave
-      </span>
-    </div>
-    <p class="text-xs text-terminal-muted mb-4">
-      {t("sfl.cave.skills.subtitle")}
-    </p>
 
-    {Object.keys(sflSkills).length > 0 ? (
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2.5 w-full">
-        {Object.entries(sflSkills).map(([skillName, skillData]: [string, any]) => {
-          const formattedDesc = formatAstroDescription(skillData)
-          return (
-            <div class="skill-card flex flex-col bg-white/5 border border-white/5 rounded-xl p-2 transition-all hover:border-emerald-500/30 hover:bg-emerald-500/5">
-              <div class="flex items-start gap-2 mb-1.5">
-                <img
-                  src={skillData.image || "/img/sunflowerland/123/Hammer.png"}
-                  class="w-6 h-6 object-contain shrink-0"
-                  alt={skillName}
-                />
-                <div class="flex flex-col min-w-0">
-                  <span class="text-[11px] font-bold text-white truncate">{skillName}</span>
-                  <span class="text-[9.5px] text-terminal-muted leading-tight line-clamp-2">{formattedDesc}</span>
-                </div>
+      <div class="text-[10px] text-white/40 font-mono group-open:hidden uppercase tracking-widest border border-white/10 px-2 py-1 rounded-md xl:ml-auto w-max">Tap to expand</div>
+
+      <!-- Filters (Desktop Only) -->
+      <div class="hidden group-open:xl:flex overflow-x-auto no-scrollbar w-full xl:w-auto pb-2 xl:pb-0 -mx-4 px-4 xl:mx-0 xl:px-0" onclick="event.preventDefault();">
+        <div class="flex items-center gap-3 w-max shrink-0 mx-auto xl:mx-0 xl:ml-auto">
+          <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
+            <button class="view-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="detailed" onclick="window.setViewStyle('detailed'); event.stopPropagation();">Detailed</button>
+            <button class="view-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="compact" onclick="window.setViewStyle('compact'); event.stopPropagation();">Compact</button>
+          </div>
+        </div>
+      </div>
+    </summary>
+
+    <div class="p-4 pt-0 relative">
+      <div id="boosts-peek-wrapper" class="relative">
+        <div id="boosts-container" class="relative z-10">
+          <!-- Filters (Mobile Only) -->
+          <div class="flex items-center justify-end mb-5 xl:hidden">
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
+                <button class="view-switch-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="detailed" onclick="window.setViewStyle('detailed')">Detailed</button>
+                <button class="view-switch-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="compact" onclick="window.setViewStyle('compact')">Compact</button>
               </div>
-              {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
-                <div class="flex items-center gap-2 mt-auto pt-1.5 border-t border-white/10">
-                  {Object.keys(skillData.cost_by_rank).map((_, idx) => (
-                    <label class="flex items-center gap-1 cursor-pointer">
-                      <input type="checkbox" class="w-2.5 h-2.5 rounded text-emerald-500" />
-                      <span class="text-[8px] font-mono text-white/50">R{idx + 1}</span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
-    ) : (
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-black/30 border border-dashed border-white/10 rounded-xl p-4 sm:p-5">
-        <div class="md:col-span-8 flex flex-col gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              Tier 1 • Tier 2 • Tier 3
-            </span>
-            <span class="text-[11px] font-mono text-white/50">
-              {t("sfl.cave.skills.pending")}
-            </span>
-          </div>
-          <p class="text-xs text-white/70 leading-relaxed">
-            Árbol de talentos de la Cueva: Lean Compost, Myco Bin Ingredients, Shovel Boosters y optimizaciones de expedición subterránea.
-          </p>
-        </div>
-        <div class="md:col-span-4 flex items-center justify-center md:justify-end gap-2">
-          <div class="flex items-center gap-2 bg-black/40 border border-white/10 p-2.5 rounded-xl">
-            <img src="/img/sunflowerland/123/Hammer.png" class="w-7 h-7 object-contain opacity-70" alt="Skills" />
-            <div class="flex flex-col">
-              <span class="text-[10.5px] font-mono text-white/80 font-bold">src/content/data/sfl/skills.json</span>
-              <span class="text-[9.5px] font-mono text-emerald-400">{'"Cave": { ... }'}</span>
             </div>
           </div>
+
+          <div class="flex flex-col items-start w-full mt-2">
+            <!-- PowerUps Sub-group -->
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-emerald-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg class="w-2.5 h-2.5 mr-2 text-emerald-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                PowerUps
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {cavePowerUps.map((buff) => (
+                  <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all" data-buff-id={buff.id}>
+                    <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={buff.id} />
+                    <img src={buff.image} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" alt={buff.name} title={buff.boost} />
+                    <div class="flex flex-col normal-view">
+                      <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors">{buff.name}</span>
+                      <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
+                    </div>
+                    <div class="hidden compact-view w-full">
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-emerald-400 transition-colors" title={buff.boost}>{getCompactText(buff.name, buff.boost)}</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </details>
+
+            <!-- Skills Sub-group -->
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-blue-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg class="w-2.5 h-2.5 mr-2 text-blue-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Skills
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {Object.entries(sflSkills).map(([skillName, skillData]: [string, any]) => {
+                  const mainSrc = skillData.image || "/img/sunflowerland/123/Hammer.png";
+                  const fallbackSrc = "/img/cripto/sunflowerland.webp";
+                  const formattedDesc = formatAstroDescription(skillData);
+                  return (
+                    <div class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
+                      <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                        <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} />
+                        <div class="flex flex-col normal-view">
+                          <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors">{skillName}</span>
+                          <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
+                        </div>
+                        <div class="hidden compact-view w-full mr-2">
+                          <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors" title={formattedDesc}>{getCompactSkillText(skillData, formattedDesc)}</span>
+                        </div>
+                      </div>
+
+                      {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
+                        <div class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10" onclick="event.stopPropagation()">
+                          {Object.keys(skillData.cost_by_rank).map((_, idx) => (
+                            <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+                              <input type="checkbox" value={idx + 1} class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500/50 rank-input-${skillName.replace(/\s+/g, '_')}`} data-skill-id={skillName} data-rank={idx + 1} />
+                              <span class="text-[8px] font-mono font-bold text-white/50">R{idx + 1}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </details>
+
+            <!-- Others Sub-group -->
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-purple-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg class="w-2.5 h-2.5 mr-2 text-purple-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Others
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {caveOthers.map((item) => (
+                  <label class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-purple-500/30 hover:bg-purple-500/10 rounded-lg p-1.5 transition-all" data-buff-id={item.id}>
+                    <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-purple-500/50" data-buff-id={item.id} />
+                    <img src={item.image} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" alt={item.name} title={item.boost} />
+                    <div class="flex flex-col normal-view">
+                      <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 group-hover:text-purple-400 transition-colors">{item.name}</span>
+                      <span class="text-[9px] text-terminal-muted leading-tight" title={item.boost}>{item.boost}</span>
+                    </div>
+                    <div class="hidden compact-view w-full">
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-purple-400 transition-colors" title={item.boost}>{getCompactText(item.name, item.boost)}</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </details>
+          </div>
         </div>
       </div>
-    )}
-  </div>
+    </div>
+  </details>
 
   <!-- Segundo Bloque: Cueva Subterránea (Centrado en PC: max-w-4xl mx-auto) -->
 
@@ -581,8 +675,237 @@ const formatAstroDescription = (skill: any) => {
   </div>
 </SflToolLayout>
 
-<script is:inline define:vars={{ bettyPrices, sflIds, caveData, tFree: t("sfl.constants.detail.free"), tAllBeetlesFound: t("sfl.constants.cave.allBeetlesFound"), tAllMushroomsFound: t("sfl.constants.cave.allMushroomsFound"), tBeetlesFound: t("sfl.constants.cave.beetlesFound"), tMushroomsFound: t("sfl.constants.cave.mushroomsFound") }}>
+<script is:inline define:vars={{ bettyPrices, sflIds, caveData, sflSkills, tFree: t("sfl.constants.detail.free"), tAllBeetlesFound: t("sfl.constants.cave.allBeetlesFound"), tAllMushroomsFound: t("sfl.constants.cave.allMushroomsFound"), tBeetlesFound: t("sfl.constants.cave.beetlesFound"), tMushroomsFound: t("sfl.constants.cave.mushroomsFound") }}>
   ;(function () {
+    // -------------------------------------------------------------
+    // Gestión de Boosts & Buffs (PowerUps, Skills, Others)
+    // -------------------------------------------------------------
+    window.setViewStyle = function (style) {
+      const container = document.getElementById("boosts-container")
+      if (!container) return
+      if (style === "compact") {
+        container.classList.add("is-compact")
+      } else {
+        container.classList.remove("is-compact")
+      }
+
+      document.querySelectorAll(".view-switch-btn").forEach((b) => b.classList.remove("active"))
+      document.querySelectorAll('.view-switch-btn[data-action="' + style + '"]').forEach((btn) => btn.classList.add("active"))
+    }
+
+    const activeSkills = {}
+    const activeBuffs = new Set()
+    let caveManager = null
+
+    function triggerCaveUpdate() {
+      if (caveManager && typeof caveManager.update === "function") {
+        caveManager.update()
+        if (typeof caveManager.checkBuffsBoardSync === "function") {
+          caveManager.checkBuffsBoardSync()
+        }
+      }
+    }
+
+    function getBuffsModifiers() {
+      // 1. Lean Compost: reduce ingredientes del compost en Myco Bin
+      // R1: x0.95 (-5%), R2: x0.90 (-10%), R3: x0.85 (-15%)
+      const leanCompostRank = activeSkills["Lean Compost"] || 0
+      let leanCompostMultiplier = 1.0
+      if (leanCompostRank === 1) leanCompostMultiplier = 0.95
+      else if (leanCompostRank === 2) leanCompostMultiplier = 0.90
+      else if (leanCompostRank === 3) leanCompostMultiplier = 0.85
+
+      // 2. Sturdy Shovel: probabilidad de no gastar pala => descuento directo al costo de Sand Shovel
+      // R1: 10% (-10%), R2: 20% (-20%), R3: 30% (-30%)
+      const sturdyShovelRank = activeSkills["Sturdy Shovel"] || 0
+      let sturdyShovelDiscount = 0
+      if (sturdyShovelRank === 1) sturdyShovelDiscount = 0.10
+      else if (sturdyShovelRank === 2) sturdyShovelDiscount = 0.20
+      else if (sturdyShovelRank === 3) sturdyShovelDiscount = 0.30
+
+      // 3. Beetle Nest: +1, +2, +3 baldosas de escarabajos por lote
+      const beetleNestRank = activeSkills["Beetle Nest"] || 0
+      let beetleNestBonus = 0
+      if (beetleNestRank === 1) beetleNestBonus = 1
+      else if (beetleNestRank === 2) beetleNestBonus = 2
+      else if (beetleNestRank === 3) beetleNestBonus = 3
+
+      // 4. Twin Beetles: 5%, 10%, 15% chance de escarabajo extra al excavar
+      const twinBeetlesRank = activeSkills["Twin Beetles"] || 0
+      let twinBeetlesMultiplier = 1.0
+      if (twinBeetlesRank === 1) twinBeetlesMultiplier = 1.05
+      else if (twinBeetlesRank === 2) twinBeetlesMultiplier = 1.10
+      else if (twinBeetlesRank === 3) twinBeetlesMultiplier = 1.15
+
+      // 5. Mushroom Bloom: +1, +2, +3 baldosas de hongo por lote
+      const mushroomBloomRank = activeSkills["Mushroom Bloom"] || 0
+      let mushroomBloomBonus = 0
+      if (mushroomBloomRank === 1) mushroomBloomBonus = 1
+      else if (mushroomBloomRank === 2) mushroomBloomBonus = 2
+      else if (mushroomBloomRank === 3) mushroomBloomBonus = 3
+
+      // 6. Fungal Harvest: +0.2, +0.3, +0.4 Mushrooms por casilla de hongo excavada
+      const fungalHarvestRank = activeSkills["Fungal Harvest"] || 0
+      let fungalHarvestBonus = 0
+      if (fungalHarvestRank === 1) fungalHarvestBonus = 0.2
+      else if (fungalHarvestRank === 2) fungalHarvestBonus = 0.3
+      else if (fungalHarvestRank === 3) fungalHarvestBonus = 0.4
+
+      // 7. PowerUps & Others (Yield de Mushrooms por baldosa)
+      // Mushroom Hat (+0.1), Mushroom House (+0.2), Fairy Circle (+0.2)
+      let mushroomPowerUpBonus = 0
+      if (activeBuffs.has("mushroom_hat")) mushroomPowerUpBonus += 0.1
+      if (activeBuffs.has("mushroom_house")) mushroomPowerUpBonus += 0.2
+      if (activeBuffs.has("fairy_circle")) mushroomPowerUpBonus += 0.2
+
+      const totalMushroomYieldPerTile = 1 + fungalHarvestBonus + mushroomPowerUpBonus
+
+      // 8. Muddy Bounty: +10%, +20%, +30% Mud obtenido
+      const muddyBountyRank = activeSkills["Muddy Bounty"] || 0
+      let muddyBountyMultiplier = 1.0
+      if (muddyBountyRank === 1) muddyBountyMultiplier = 1.10
+      else if (muddyBountyRank === 2) muddyBountyMultiplier = 1.20
+      else if (muddyBountyRank === 3) muddyBountyMultiplier = 1.30
+
+      // 9. Rapid Mycelium: x0.95, x0.90, x0.85 tiempo de compostaje
+      const rapidMyceliumRank = activeSkills["Rapid Mycelium"] || 0
+      let rapidMyceliumMultiplier = 1.0
+      if (rapidMyceliumRank === 1) rapidMyceliumMultiplier = 0.95
+      else if (rapidMyceliumRank === 2) rapidMyceliumMultiplier = 0.90
+      else if (rapidMyceliumRank === 3) rapidMyceliumMultiplier = 0.85
+
+      return {
+        leanCompostMultiplier,
+        sturdyShovelDiscount,
+        beetleNestBonus,
+        twinBeetlesMultiplier,
+        mushroomBloomBonus,
+        fungalHarvestBonus,
+        mushroomPowerUpBonus,
+        totalMushroomYieldPerTile,
+        muddyBountyMultiplier,
+        rapidMyceliumMultiplier
+      }
+    }
+
+    const formatSkillDescription = (skillName, rank, originalDesc) => {
+      const skill = sflSkills?.[skillName]
+      if (!skill) return originalDesc
+
+      const effectiveRank = rank === 0 ? 1 : rank
+      let updatedDesc = originalDesc
+
+      if (skill.mathematics_1 && skill.mathematics_1.calc_by_rank) {
+        const m1 = skill.mathematics_1.calc_by_rank[`rank_${effectiveRank}`]
+        if (m1 !== undefined) {
+          updatedDesc = updatedDesc.replace("{math1}", m1)
+          updatedDesc = updatedDesc.replace("{math1_pct}", parseFloat((m1 * 100).toFixed(2)))
+          updatedDesc = updatedDesc.replace("{math1_days}", parseFloat((m1 / 86400000).toFixed(2)))
+        }
+      }
+
+      if (skill.mathematics_2 && skill.mathematics_2.calc_by_rank) {
+        const m2 = skill.mathematics_2.calc_by_rank[`rank_${effectiveRank}`]
+        if (m2 !== undefined) {
+          updatedDesc = updatedDesc.replace("{math2}", m2)
+          updatedDesc = updatedDesc.replace("{math2_pct}", parseFloat((m2 * 100).toFixed(2)))
+          updatedDesc = updatedDesc.replace("{math2_days}", parseFloat((m2 / 86400000).toFixed(2)))
+        }
+      }
+
+      return updatedDesc
+    }
+
+    const updateSkillUI = (skillId) => {
+      const rank = activeSkills[skillId] || 0
+      const card = document.querySelector(`.skill-card[data-skill-id="${skillId}"]`)
+      if (card) {
+        if (rank > 0) {
+          card.classList.add("border-blue-500/50", "bg-blue-500/10", "active")
+          card.classList.remove("border-white/5", "bg-white/5")
+        } else {
+          card.classList.remove("border-blue-500/50", "bg-blue-500/10", "active")
+          card.classList.add("border-white/5", "bg-white/5")
+        }
+
+        const descSpan = card.querySelector(".skill-description-text")
+        if (descSpan) {
+          descSpan.textContent = formatSkillDescription(skillId, rank, descSpan.dataset.original)
+        }
+
+        const checkboxes = card.querySelectorAll(".skill-rank-checkbox")
+        checkboxes.forEach((cb) => {
+          const cbRank = parseInt(cb.value)
+          cb.checked = cbRank <= rank
+        })
+      }
+    }
+
+    // Buffs listeners (PowerUps y Others)
+    document.querySelectorAll(".buff-card").forEach((card) => {
+      const checkbox = card.querySelector(".buff-checkbox")
+      if (!checkbox) return
+
+      checkbox.addEventListener("change", () => {
+        const buffId = checkbox.dataset.buffId
+        const isPurple = card.classList.contains("hover:border-purple-500/30")
+        if (checkbox.checked) {
+          activeBuffs.add(buffId)
+          card.classList.add("active")
+          if (isPurple) {
+            card.classList.add("border-purple-500/50", "bg-purple-500/10")
+          } else {
+            card.classList.add("border-emerald-500/50", "bg-emerald-500/10")
+          }
+          card.classList.remove("border-white/5", "bg-white/5")
+        } else {
+          activeBuffs.delete(buffId)
+          card.classList.remove("active")
+          if (isPurple) {
+            card.classList.remove("border-purple-500/50", "bg-purple-500/10")
+          } else {
+            card.classList.remove("border-emerald-500/50", "bg-emerald-500/10")
+          }
+          card.classList.add("border-white/5", "bg-white/5")
+        }
+        triggerCaveUpdate()
+      })
+    })
+
+    // Skills listeners (Card click y Rank checkboxes)
+    document.querySelectorAll(".skill-card").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        if (e.target.closest(".skill-rank-checkbox") || e.target.closest("label")) return
+        const skillId = card.dataset.skillId
+        const currentRank = activeSkills[skillId] || 0
+        if (currentRank > 0) {
+          delete activeSkills[skillId]
+        } else {
+          activeSkills[skillId] = 1
+        }
+        updateSkillUI(skillId)
+        triggerCaveUpdate()
+      })
+    })
+
+    document.querySelectorAll(".skill-rank-checkbox").forEach((cb) => {
+      cb.addEventListener("change", (e) => {
+        const skillId = e.target.dataset.skillId
+        const rank = parseInt(e.target.value)
+        if (e.target.checked) {
+          activeSkills[skillId] = rank
+        } else {
+          if (rank - 1 > 0) {
+            activeSkills[skillId] = rank - 1
+          } else {
+            delete activeSkills[skillId]
+          }
+        }
+        updateSkillUI(skillId)
+        triggerCaveUpdate()
+      })
+    })
+
     let liveFlowerPrice = 0.144
     let activeCoinsPerFlower = 320 // Paridad inicial fallback
     let marketDataCache = null
@@ -670,6 +993,45 @@ const formatAstroDescription = (skill: any) => {
       const mudUnitFlower = document.getElementById("caveMudUnitFlower")
       const mudUnitUsd = document.getElementById("caveMudUnitUsd")
 
+      function getActiveBeetleOdds(baseOdds) {
+        if (!baseOdds || baseOdds.length === 0) return []
+        const rareBreedsRank = activeSkills["Rare Breeds"] || 0
+
+        let chances = null
+        if (rareBreedsRank === 1) {
+          // Rank 1: Green 35%, Blue 35%, Pink 15%, Amber 15%
+          chances = {
+            green_beetle: 0.35,
+            blue_beetle: 0.35,
+            pink_beetle: 0.15,
+            amber_beetle: 0.15
+          }
+        } else if (rareBreedsRank === 2) {
+          // Rank 2: Green 30%, Blue 30%, Pink 20%, Amber 20%
+          chances = {
+            green_beetle: 0.30,
+            blue_beetle: 0.30,
+            pink_beetle: 0.20,
+            amber_beetle: 0.20
+          }
+        } else if (rareBreedsRank === 3) {
+          // Rank 3: Todos 25% (Green 25%, Blue 25%, Pink 25%, Amber 25%)
+          chances = {
+            green_beetle: 0.25,
+            blue_beetle: 0.25,
+            pink_beetle: 0.25,
+            amber_beetle: 0.25
+          }
+        }
+
+        if (!chances) return baseOdds
+
+        return baseOdds.map((odd) => ({
+          ...odd,
+          chance: chances[odd.id] !== undefined ? chances[odd.id] : odd.chance
+        }))
+      }
+
       function pickRandomBeetle(odds) {
         const rnd = Math.random()
         let acc = 0
@@ -705,6 +1067,9 @@ const formatAstroDescription = (skill: any) => {
       }
 
       function getActiveCropRequirement() {
+        const modifiers = getBuffsModifiers()
+        const leanMult = modifiers.leanCompostMultiplier
+
         const reqConfig = activeMix.requirement || { name: "Wood", amount: 10, image: "/img/sunflowerland/Wood.png" }
         if (!reqConfig.options || reqConfig.options.length === 0) {
           if (cropSelectContainer) cropSelectContainer.classList.add("hidden")
@@ -713,9 +1078,11 @@ const formatAstroDescription = (skill: any) => {
             mudBoostBadge.classList.add("hidden")
             mudBoostBadge.classList.remove("flex")
           }
+          const effectiveAmount = Math.round((reqConfig.amount * leanMult) * 100) / 100
           return {
             name: reqConfig.name,
-            amount: reqConfig.amount,
+            amount: effectiveAmount,
+            baseAmount: reqConfig.amount,
             image: reqConfig.image,
             unitPriceFlw: getBaseMaterialUnitPrice(reqConfig.name),
             isOptimal: false
@@ -734,13 +1101,16 @@ const formatAstroDescription = (skill: any) => {
 
         const optionsWithCost = reqConfig.options.map((opt, idx) => {
           const unitP = getCropUnitFlowerPrice(opt)
-          const totalCost = unitP * opt.amount
+          const effectiveAmount = Math.round((opt.amount * leanMult) * 100) / 100
+          const totalCost = unitP * effectiveAmount
           if (totalCost < lowestCost) {
             lowestCost = totalCost
             optimalCropIndex = idx
           }
           return {
             ...opt,
+            amount: effectiveAmount,
+            baseAmount: opt.amount,
             unitP,
             totalCost,
             index: idx
@@ -768,7 +1138,7 @@ const formatAstroDescription = (skill: any) => {
 
         // Renderizar opciones estilizadas en el menú desplegable
         if (cropDropdownMenu) {
-          const currentPopulatedKey = `${activeMix.id}-${activeCoinsPerFlower}-${chosenIndex}`
+          const currentPopulatedKey = `${activeMix.id}-${activeCoinsPerFlower}-${chosenIndex}-${leanMult}`
           if (cropDropdownMenu.dataset.populatedKey !== currentPopulatedKey) {
             cropDropdownMenu.dataset.populatedKey = currentPopulatedKey
             cropDropdownMenu.innerHTML = ""
@@ -834,15 +1204,17 @@ const formatAstroDescription = (skill: any) => {
           successBanner.classList.add("hidden")
         }
 
+        const modifiers = getBuffsModifiers()
         const isMudMix = activeMix.id === "mud_mix"
-        const beetlesCount = activeMix.rewards.beetles || 2
-        const mushroomsCount = activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)
-        const mudCellsCount = isMudMix ? 20 : (activeMix.rewards.mud || 17)
+        const beetlesCount = (activeMix.rewards.beetles || 2) + modifiers.beetleNestBonus
+        const mushroomsCount = (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)) + modifiers.mushroomBloomBonus
+        const mudCellsCount = isMudMix ? 20 : Math.max(0, 25 - beetlesCount - mushroomsCount)
         const mudPerCell = isMudMix ? 2 : 1
 
+        const effectiveOdds = getActiveBeetleOdds(activeMix.beetleOdds)
         const beetleItems = []
         for (let i = 0; i < beetlesCount; i++) {
-          const beetle = pickRandomBeetle(activeMix.beetleOdds)
+          const beetle = pickRandomBeetle(effectiveOdds)
           beetleItems.push({
             type: "beetle",
             name: beetle.name,
@@ -928,9 +1300,10 @@ const formatAstroDescription = (skill: any) => {
       }
 
       function updateCounters() {
+        const modifiers = getBuffsModifiers()
         const isMudMix = activeMix.id === "mud_mix"
-        const beetlesGoal = activeMix.rewards.beetles || 2
-        const mushroomsGoal = activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)
+        const beetlesGoal = (activeMix.rewards.beetles || 2) + modifiers.beetleNestBonus
+        const mushroomsGoal = (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)) + modifiers.mushroomBloomBonus
         const mudGoal = isMudMix
           ? (activeMix.rewards.mudBoosted || 40)
           : (activeMix.rewards.mud || 17)
@@ -980,12 +1353,13 @@ const formatAstroDescription = (skill: any) => {
           return
         }
 
-        const isMudMix = activeMix.id === "mud_mix"
-        const totalValuable = (activeMix.rewards.beetles || 2) + (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6))
-
+        let totalValuable = 0
         let foundValuable = 0
         const unrevealed = []
         for (let i = 0; i < 25; i++) {
+          if (board[i].type === "beetle" || board[i].type === "mushroom") {
+            totalValuable++
+          }
           if (board[i].revealed) {
             if (board[i].type === "beetle" || board[i].type === "mushroom") {
               foundValuable++
@@ -1317,13 +1691,14 @@ const formatAstroDescription = (skill: any) => {
           if (beetleCheck) beetleCheck.classList.remove("hidden")
           if (clueNumber) clueNumber.classList.add("hidden")
 
+          const modifiers = getBuffsModifiers()
           discoveredBeetles++
           if (isSimulationActive) {
             const p2pPrice = getBeetleP2PPrice(data.sflId)
             simDiscoveredBeetles.push({
               name: data.name,
               image: data.image,
-              price: p2pPrice
+              price: p2pPrice * modifiers.twinBeetlesMultiplier
             })
           }
         } else if (data.type === "mushroom") {
@@ -1341,8 +1716,9 @@ const formatAstroDescription = (skill: any) => {
           if (beetleCheck) beetleCheck.classList.add("hidden")
           applyClueNumber(clueNumber, clue, data.isMagic ? "+1 Magic Mushroom" : "+1 Hongo")
 
+          const modifiers = getBuffsModifiers()
           discoveredMushrooms++
-          if (isSimulationActive) simMushrooms++
+          if (isSimulationActive) simMushrooms += modifiers.totalMushroomYieldPerTile
         } else {
           // Lodo (Mud): sprite de mud + número de pista debajo (0 a 4)
           if (revealedImg) {
@@ -1353,8 +1729,9 @@ const formatAstroDescription = (skill: any) => {
           if (beetleCheck) beetleCheck.classList.add("hidden")
           applyClueNumber(clueNumber, clue, `+${data.amount} Mud`)
 
+          const modifiers = getBuffsModifiers()
           discoveredMud += data.amount
-          if (isSimulationActive) simMud += data.amount
+          if (isSimulationActive) simMud += data.amount * modifiers.muddyBountyMultiplier
         }
 
         if (isSimulationActive) {
@@ -1380,13 +1757,15 @@ const formatAstroDescription = (skill: any) => {
       function updateEconomics() {
         if (!activeMix) return
 
+        const modifiers = getBuffsModifiers()
         const isMudMix = activeMix.id === "mud_mix"
         const coinsFlw = activeCoinsPerFlower > 0 ? 20 / activeCoinsPerFlower : 0
         const woodUnitFlw = getBaseMaterialUnitPrice("Wood")
         const stoneUnitFlw = getBaseMaterialUnitPrice("Stone")
-        const shovelUnitCost = coinsFlw + (2 * woodUnitFlw) + (1 * stoneUnitFlw)
+        const baseShovelUnitCost = coinsFlw + (2 * woodUnitFlw) + (1 * stoneUnitFlw)
+        const shovelUnitCost = baseShovelUnitCost * (1 - modifiers.sturdyShovelDiscount)
 
-        // Requerimiento dinámico (evaluando opciones si es mud_mix)
+        // Requerimiento dinámico (evaluando opciones si es mud_mix y aplicando Lean Compost)
         const req = getActiveCropRequirement()
         const totalReqCost = req.amount * req.unitPriceFlw
 
@@ -1394,8 +1773,12 @@ const formatAstroDescription = (skill: any) => {
         if (batchReqText) batchReqText.innerText = `${req.amount}x ${req.name}`
         if (batchReqFlower) batchReqFlower.innerText = totalReqCost.toFixed(4)
 
+        const totalBeetlesPerBatch = (activeMix.rewards.beetles || 2) + modifiers.beetleNestBonus
+        const effectiveBeetlesPerBatch = totalBeetlesPerBatch * modifiers.twinBeetlesMultiplier
+
         if (beetlesPerBatchBadge) {
-          beetlesPerBatchBadge.innerText = `${activeMix.rewards.beetles || 2} Escarabajos / Lote`
+          const displayBeetles = Number(effectiveBeetlesPerBatch.toFixed(2))
+          beetlesPerBatchBadge.innerText = `${displayBeetles} Escarabajos / Lote`
         }
 
         const mudTheoreticalGoal = isMudMix
@@ -1410,7 +1793,7 @@ const formatAstroDescription = (skill: any) => {
           const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
 
           if (batchShovelsText) {
-            const beetlesGoal = activeMix.rewards.beetles || 2
+            const beetlesGoal = (activeMix.rewards.beetles || 2) + modifiers.beetleNestBonus
             const savedShovels = Math.max(0, 25 - shovelsCount)
             if (shovelsCount > 0 && discoveredBeetles >= beetlesGoal && savedShovels > 0) {
               batchShovelsText.innerHTML = `${shovelsCount}x Shovel <span class="text-emerald-400 text-[9.5px] font-bold">(-${savedShovels} palas)</span>`
@@ -1527,8 +1910,9 @@ const formatAstroDescription = (skill: any) => {
           let expectedBeetleUnitValue = 0
           let oddsHtml = ""
 
-          if (activeMix.beetleOdds && Array.isArray(activeMix.beetleOdds)) {
-            activeMix.beetleOdds.forEach((odd) => {
+          const effectiveOdds = getActiveBeetleOdds(activeMix.beetleOdds)
+          if (effectiveOdds && Array.isArray(effectiveOdds)) {
+            effectiveOdds.forEach((odd) => {
               const p2pPrice = getBeetleP2PPrice(odd.sflId)
               const expectedContribution = p2pPrice * odd.chance
               expectedBeetleUnitValue += expectedContribution
@@ -1549,8 +1933,7 @@ const formatAstroDescription = (skill: any) => {
 
           if (beetleOddsRows) beetleOddsRows.innerHTML = oddsHtml
 
-          const totalBeetlesPerBatch = activeMix.rewards.beetles || 2
-          const grandTotalBeetleRev = totalBeetlesPerBatch * expectedBeetleUnitValue
+          const grandTotalBeetleRev = effectiveBeetlesPerBatch * expectedBeetleUnitValue
           const grandTotalBeetleRevUsd = grandTotalBeetleRev * liveFlowerPrice
 
           if (totalBeetleRevFlower) totalBeetleRevFlower.innerText = grandTotalBeetleRev.toFixed(4)
@@ -1596,7 +1979,10 @@ const formatAstroDescription = (skill: any) => {
             if (mushroomFreeBadge) mushroomFreeBadge.classList.add("hidden")
             if (mudFreeBadge) mudFreeBadge.classList.add("hidden")
 
-            const totalHarvestItems = (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)) + mudTheoreticalGoal
+            const baseMushrooms = activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)
+            const effectiveMushroomsHarvested = (baseMushrooms + modifiers.mushroomBloomBonus) * modifiers.totalMushroomYieldPerTile
+            const effectiveMudHarvested = mudTheoreticalGoal * modifiers.muddyBountyMultiplier
+            const totalHarvestItems = effectiveMushroomsHarvested + effectiveMudHarvested
             const residualUnitCost = totalHarvestItems > 0 ? deficit / totalHarvestItems : 0
             const residualUnitCostUsd = residualUnitCost * liveFlowerPrice
 
@@ -1720,12 +2106,19 @@ const formatAstroDescription = (skill: any) => {
 
       return {
         update: updateEconomics,
-        reset: generateBoard
+        reset: generateBoard,
+        checkBuffsBoardSync: () => {
+          if (simShovelsUsed === 0 && !isSimulationActive) {
+            generateBoard()
+          } else {
+            updateCounters()
+          }
+        }
       }
     }
 
 
-    const caveManager = createCaveController()
+    caveManager = createCaveController()
 
     function applyBettyRatio(ratio) {
       if (!ratio || ratio <= 0) return
@@ -1789,5 +2182,77 @@ const formatAstroDescription = (skill: any) => {
 <style>
   .cursor-shovel {
     cursor: url('/img/sunflowerland/tools/sand_shovel_cursor.png') 12 2, url('/img/sunflowerland/tools/sand_shovel_cursor.png'), pointer !important;
+  }
+
+  .view-switch-btn.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  }
+
+  #boosts-container.is-compact .normal-view {
+    display: none !important;
+  }
+  #boosts-container.is-compact img {
+    display: block !important;
+    width: 14px !important;
+    height: 14px !important;
+    margin-right: 0 !important;
+  }
+  #boosts-container.is-compact details {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    margin-bottom: 8px !important;
+  }
+  #boosts-container.is-compact details summary {
+    margin-bottom: 0 !important;
+    margin-right: 12px !important;
+    padding-top: 6px !important;
+    white-space: nowrap !important;
+  }
+  #boosts-container.is-compact details > div.grid {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    width: auto !important;
+    padding-left: 0 !important;
+  }
+  #boosts-container.is-compact .grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  #boosts-container.is-compact .skill-card,
+  #boosts-container.is-compact .buff-card {
+    padding: 4px 8px !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    min-height: 28px !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+  }
+  #boosts-container.is-compact .skill-card > div:first-child {
+    margin-bottom: 0 !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+  #boosts-container.is-compact .compact-view {
+    display: flex !important;
+    width: auto !important;
+    margin-right: 0 !important;
+  }
+  #boosts-container.is-compact .compact-view span {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+  #boosts-container.is-compact .skill-card .mt-auto {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+    margin-left: 8px !important;
   }
 </style>
