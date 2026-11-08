@@ -1,0 +1,1793 @@
+---
+// ============================================================
+// src/components/views/SflCaveView.astro
+// View puro para la herramienta de Cueva & Excavación Subterránea SFL.
+// Fuente única de verdad: consumido por sfl-cueva.astro y en/sfl-cave.astro.
+// El idioma se detecta desde la URL vía getLangFromUrl.
+// ============================================================
+import { getEntry } from "astro:content"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import SflToolLayout from "../SflToolLayout.astro"
+import { caveData } from "../../content/data/sfl/cave_mining"
+import bettyPrices from "../../content/data/sfl/betty_prices.json"
+
+const sflIdsEntry = await getEntry("sfl", "resources")
+const sflIds = sflIdsEntry?.data || {}
+
+const sflSkillsEntry = await getEntry("sfl", "skills")
+const sflSkills = sflSkillsEntry?.data?.Cave || {}
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const formatAstroDescription = (skill: any) => {
+  let desc = skill.description || ""
+  if (skill.mathematics_1?.calc_by_rank?.rank_1 !== undefined) {
+    const m1 = skill.mathematics_1.calc_by_rank.rank_1
+    desc = desc
+      .replace("{math1}", m1)
+      .replace("{math1_pct}", parseFloat((m1 * 100).toFixed(2)).toString())
+      .replace("{math1_days}", parseFloat((m1 / 86400000).toFixed(2)).toString())
+  }
+  if (skill.mathematics_2?.calc_by_rank?.rank_1 !== undefined) {
+    const m2 = skill.mathematics_2.calc_by_rank.rank_1
+    desc = desc
+      .replace("{math2}", m2)
+      .replace("{math2_pct}", parseFloat((m2 * 100).toFixed(2)).toString())
+      .replace("{math2_days}", parseFloat((m2 / 86400000).toFixed(2)).toString())
+  }
+  return desc
+}
+---
+
+<SflToolLayout activeTab="cueva">
+  <!-- Encabezado Principal -->
+  <div class="mb-5 relative z-10 text-center sm:text-left">
+    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
+      {t("sfl.cave.heading")}
+      <span class="text-emerald-500"> {t("sfl.cave.heading.accent")}</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm leading-relaxed max-w-3xl">
+      {t("sfl.cave.intro")}
+    </p>
+  </div>
+
+  <!-- Primer Bloque: Cave Skills (Ancho completo en contenedor superior) -->
+  <div class="w-full mb-8 relative z-10 bg-[#18181b]/95 border border-white/10 rounded-2xl p-4 sm:p-5 shadow-xl backdrop-blur-md">
+    <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2.5">
+      <div class="flex items-center gap-2">
+        <img
+          src="/img/sunflowerland/tools/sand_shovel.png"
+          alt="Cave Skills"
+          class="w-5 h-5 object-contain"
+        />
+        <h2 class="text-base sm:text-lg font-black text-white tracking-wide">
+          {t("sfl.cave.skills.title")}
+        </h2>
+      </div>
+      <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+        Sunflower Land Cave
+      </span>
+    </div>
+    <p class="text-xs text-terminal-muted mb-4">
+      {t("sfl.cave.skills.subtitle")}
+    </p>
+
+    {Object.keys(sflSkills).length > 0 ? (
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2.5 w-full">
+        {Object.entries(sflSkills).map(([skillName, skillData]: [string, any]) => {
+          const formattedDesc = formatAstroDescription(skillData)
+          return (
+            <div class="skill-card flex flex-col bg-white/5 border border-white/5 rounded-xl p-2 transition-all hover:border-emerald-500/30 hover:bg-emerald-500/5">
+              <div class="flex items-start gap-2 mb-1.5">
+                <img
+                  src={skillData.image || "/img/sunflowerland/123/Hammer.png"}
+                  class="w-6 h-6 object-contain shrink-0"
+                  alt={skillName}
+                />
+                <div class="flex flex-col min-w-0">
+                  <span class="text-[11px] font-bold text-white truncate">{skillName}</span>
+                  <span class="text-[9.5px] text-terminal-muted leading-tight line-clamp-2">{formattedDesc}</span>
+                </div>
+              </div>
+              {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
+                <div class="flex items-center gap-2 mt-auto pt-1.5 border-t border-white/10">
+                  {Object.keys(skillData.cost_by_rank).map((_, idx) => (
+                    <label class="flex items-center gap-1 cursor-pointer">
+                      <input type="checkbox" class="w-2.5 h-2.5 rounded text-emerald-500" />
+                      <span class="text-[8px] font-mono text-white/50">R{idx + 1}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-black/30 border border-dashed border-white/10 rounded-xl p-4 sm:p-5">
+        <div class="md:col-span-8 flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Tier 1 • Tier 2 • Tier 3
+            </span>
+            <span class="text-[11px] font-mono text-white/50">
+              {t("sfl.cave.skills.pending")}
+            </span>
+          </div>
+          <p class="text-xs text-white/70 leading-relaxed">
+            Árbol de talentos de la Cueva: Lean Compost, Myco Bin Ingredients, Shovel Boosters y optimizaciones de expedición subterránea.
+          </p>
+        </div>
+        <div class="md:col-span-4 flex items-center justify-center md:justify-end gap-2">
+          <div class="flex items-center gap-2 bg-black/40 border border-white/10 p-2.5 rounded-xl">
+            <img src="/img/sunflowerland/123/Hammer.png" class="w-7 h-7 object-contain opacity-70" alt="Skills" />
+            <div class="flex flex-col">
+              <span class="text-[10.5px] font-mono text-white/80 font-bold">src/content/data/sfl/skills.json</span>
+              <span class="text-[9.5px] font-mono text-emerald-400">{'"Cave": { ... }'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- Segundo Bloque: Cueva Subterránea (Centrado en PC: max-w-4xl mx-auto) -->
+
+  <!-- Segundo Bloque: Cueva Subterránea (Centrado en PC: max-w-4xl mx-auto) -->
+  <div class="max-w-4xl mx-auto w-full mb-8 relative z-10">
+    <!-- BLOQUE 3: CUEVA & MINIJUEGO DE COMPOSTAJE (Ocupa 50% en escritorio) -->
+    <div
+      class="bg-[#18181b]/95 border border-white/10 rounded-2xl shadow-xl backdrop-blur-md overflow-hidden flex flex-col"
+    >
+      <!-- Cabecera del Edificio con Icono y Selector de Mix debajo del texto -->
+      <div class="p-3.5 sm:p-4 border-b border-white/10 bg-black/20">
+        <div class="flex items-center gap-2.5 mb-2.5">
+          <div
+            class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 p-1"
+          >
+            <img
+              src="/img/sunflowerland/build/cave_entrance.webp"
+              alt="Cave Entrance"
+              class="w-8 h-8 object-contain [image-rendering:pixelated]"
+            />
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
+              <span>{t("sfl.constants.building.cave")}</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-terminal-muted font-normal">
+                5x5 Grid (25 Shovels)
+              </span>
+            </h3>
+            <p class="text-xs text-terminal-muted">
+              {t("sfl.constants.building.cave.desc")}
+            </p>
+          </div>
+        </div>
+
+        <!-- Selector de Mix de Cultivo (debajo del párrafo) -->
+        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5">
+          {
+            caveData.mixes.map((mix, idx) => (
+              <button
+                type="button"
+                class={`cave-mix-tab-btn flex-1 py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  idx === 0
+                    ? "bg-white/10 text-amber-400 border border-amber-500/30 shadow-sm"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+                }`}
+                data-mix-id={mix.id}
+                data-mix-data={JSON.stringify(mix)}
+              >
+                <img
+                  src={mix.image}
+                  alt={mix.name}
+                  class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+                />
+                <span>{mix.name}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Contenido en 2 Columnas: Izquierda (md:col-span-8) = Desglose de Costos, Derecha (md:col-span-4) = Minijuego Compacto -->
+      <div class="p-3.5 sm:p-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5">
+          <!-- Columna Izquierda: Desglose de Inversión, Retorno y Costo Residual (md:col-span-8) -->
+          <div class="md:col-span-8 flex flex-col gap-2.5">
+            <div class="bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col gap-2.5">
+              <!-- Sección 1: Costo Total Invertido -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
+                  {t("sfl.constants.cave.investedCosts")}
+                </span>
+
+                <div class="bg-black/30 border border-white/5 rounded-lg p-2 flex flex-col gap-1 text-xs font-mono">
+                  <!-- Palas requeridas -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5">
+                      <img src="/img/sunflowerland/tools/sand_shovel.png" class="w-3.5 h-3.5 object-contain" alt="Sand Shovel" />
+                      <span id="caveBatchShovelsText" class="text-white text-[11px]">25x Sand Shovel</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-emerald-400 font-bold text-[11px]">
+                      <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                      <span id="caveBatchShovelsFlower">0.0000</span>
+                    </div>
+                  </div>
+
+                  <!-- Requisito Estándar (para Mushroom Mix y Beetle Mix) -->
+                  <div id="caveBatchReqStandardRow" class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                      <img id="caveBatchReqImg" src="/img/sunflowerland/Wood.png" class="w-3.5 h-3.5 object-contain shrink-0" alt="Requirement" />
+                      <span id="caveBatchReqText" class="text-white text-[11px] truncate">10x Wood</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-emerald-400 font-bold text-[11px] shrink-0">
+                      <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                      <span id="caveBatchReqFlower">0.0000</span>
+                    </div>
+                  </div>
+
+                  <!-- Selector Custom Estilizado para Mud Mix (25 Cultivos) -->
+                  <div id="caveCropSelectContainer" class="hidden relative">
+                    <!-- Botón Trigger Custom -->
+                    <button
+                      type="button"
+                      id="caveCropDropdownTrigger"
+                      class="w-full py-1.5 px-2 rounded-lg bg-black/60 hover:bg-white/[0.04] border border-white/10 hover:border-amber-500/40 text-left flex items-center justify-between transition-all cursor-pointer group"
+                    >
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <img
+                          id="caveCropTriggerImg"
+                          src="/img/sunflowerland/Sunflower.png"
+                          class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]"
+                          alt=""
+                        />
+                        <span id="caveCropTriggerLabel" class="text-[11px] font-mono font-bold text-white truncate">
+                          500x Sunflower
+                        </span>
+                        <span
+                          id="caveCropTriggerBadge"
+                          class="text-[8.5px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                        >
+                          {t("sfl.constants.cave.optimalBadge")}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-2 shrink-0">
+                        <div class="flex items-center gap-1 font-mono text-[11px] font-bold text-emerald-400">
+                          <img
+                            src="/img/sunflowerland/flower.jpg"
+                            class="w-3 h-3 rounded-full object-cover shrink-0"
+                            alt="FLOWER"
+                          />
+                          <span id="caveCropTriggerFlower">0.0000</span>
+                        </div>
+                        <svg
+                          id="caveCropTriggerArrow"
+                          class="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-transform duration-200"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </button>
+
+                    <!-- Menú Flotante Desplegable con Lista Estilizada -->
+                    <div
+                      id="caveCropDropdownMenu"
+                      class="hidden absolute left-0 right-0 top-full mt-1.5 p-1 bg-[#121214] border border-white/15 rounded-xl shadow-2xl z-[95] max-h-56 overflow-y-auto flex flex-col gap-0.5 backdrop-blur-md"
+                    >
+                      <!-- Cultivos inyectados dinámicamente con estética Leñador -->
+                    </div>
+                  </div>
+
+                  <!-- Subtotal Inversión -->
+                  <div class="border-t border-white/5 pt-1 mt-0.5 flex items-center justify-between font-bold">
+                    <span class="text-terminal-secondary text-[10.5px]">Total Inversión:</span>
+                    <div class="flex flex-col items-end leading-tight">
+                      <div class="flex items-center gap-1 text-emerald-400 text-xs">
+                        <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                        <span id="caveTotalCostFlower">0.0000</span>
+                      </div>
+                      <span id="caveTotalCostUsd" class="text-[9.5px] text-white/50 font-normal">~$0.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sección 2: Ingreso Esperado por Escarabajos (P2P Odds) -->
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
+                    {t("sfl.constants.cave.beetleRevenue")}
+                  </span>
+                  <span id="caveBeetlesPerBatchBadge" class="text-[9px] font-mono text-cyan-400 font-semibold">2 Escarabajos / Lote</span>
+                </div>
+
+                <!-- Tabla de Odds de Escarabajos -->
+                <div class="bg-black/30 border border-white/5 rounded-lg p-2 flex flex-col gap-0.5 text-[10.5px] font-mono">
+                  <div class="grid grid-cols-4 gap-1 pb-1 border-b border-white/5 text-[9px] text-terminal-muted font-bold">
+                    <span>Tipo</span>
+                    <span class="text-center">Prob</span>
+                    <span class="text-right">P2P Uni</span>
+                    <span class="text-right">Exp</span>
+                  </div>
+
+                  <div id="caveBeetleOddsRows" class="flex flex-col gap-0.5">
+                    <!-- Inyectado dinámicamente -->
+                  </div>
+
+                  <!-- Total Retorno Escarabajos -->
+                  <div class="border-t border-white/5 pt-1 mt-0.5 flex items-center justify-between font-bold">
+                    <span class="text-terminal-secondary text-[10.5px]">Retorno Escarabajos:</span>
+                    <div class="flex flex-col items-end leading-tight">
+                      <div class="flex items-center gap-1 text-cyan-400 text-xs">
+                        <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                        <span id="caveTotalBeetleRevFlower">0.0000</span>
+                      </div>
+                      <span id="caveTotalBeetleRevUsd" class="text-[9.5px] text-white/50 font-normal">~$0.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sección 3: Costo Residual / Valor Intrínseco de Producción -->
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted font-bold">
+                    {t("sfl.constants.cave.residualCost")}
+                  </span>
+
+                  <!-- Badge Informativo x2 Mud (Siempre activo en Mud Mix) -->
+                  <div
+                    id="caveMudBoostBadge"
+                    class="hidden items-center gap-1 py-0.5 px-2 rounded-md text-[9.5px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm"
+                  >
+                    <span>⚡</span>
+                    <span>x2 Mud</span>
+                  </div>
+                </div>
+
+                <div
+                  id="caveResidualCard"
+                  class="rounded-xl bg-gradient-to-br from-amber-500/[0.08] to-emerald-500/[0.04] border border-amber-500/20 p-2 flex flex-col gap-1.5 transition-colors"
+                  data-label-profit={t("sfl.constants.cave.netProfit")}
+                  data-label-deficit={t("sfl.constants.cave.netLoss")}
+                  data-badge-free={t("sfl.constants.cave.freeHarvest")}
+                  data-text-freeprofit={t("sfl.constants.cave.freeWithProfit")}
+                >
+                  <!-- Estado del Balance -->
+                  <div class="flex items-center justify-between text-xs font-mono pb-1 border-b border-white/10">
+                    <div class="flex items-center gap-1.5">
+                      <span id="caveBalanceLabel" class="text-terminal-secondary text-[11px]">{t("sfl.constants.cave.netLoss")}</span>
+                      <span id="caveBalanceBadge" class="hidden px-1.5 py-0.2 text-[8.5px] font-bold rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse">¡PROFIT!</span>
+                    </div>
+                    <div id="caveBalanceContainer" class="flex items-center gap-1 font-bold text-amber-400">
+                      <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                      <span id="caveDeficitFlower">0.0000</span>
+                      <span id="caveDeficitUsd" class="text-[9.5px] font-normal text-white/50 ml-0.5">~$0.0000</span>
+                    </div>
+                  </div>
+
+                  <!-- Costo unitario por recurso no comerciable -->
+                  <div class="grid grid-cols-2 gap-1.5">
+                    <!-- 1 Wild Mushroom -->
+                    <div class="relative bg-black/40 border border-white/5 rounded-lg p-1.5 flex flex-col items-center text-center overflow-hidden">
+                      <span id="caveMushroomFreeBadge" class="hidden absolute top-1 right-1 px-1 py-0.2 text-[8px] font-bold rounded bg-emerald-500/25 text-emerald-300 border border-emerald-500/40">
+                        {t("sfl.constants.cave.freeHarvest")}
+                      </span>
+                      <img
+                        src="/img/sunflowerland/123/wild_mushroom.webp"
+                        alt="Wild Mushroom"
+                        class="w-5 h-5 object-contain mb-0.5 [image-rendering:pixelated]"
+                      />
+                      <span class="text-[9.5px] font-mono text-terminal-muted">1 Mushroom</span>
+                      <div class="flex items-center gap-1 text-amber-400 font-mono font-bold text-[11px] mt-0.5" id="caveMushroomPriceWrap">
+                        <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 rounded-full object-cover" alt="FLOWER" />
+                        <span id="caveMushroomUnitFlower">0.0000</span>
+                      </div>
+                      <span id="caveMushroomUnitUsd" class="text-[9px] font-mono text-white/40">~$0.0000</span>
+                    </div>
+
+                    <!-- 1 Mud -->
+                    <div class="relative bg-black/40 border border-white/5 rounded-lg p-1.5 flex flex-col items-center text-center overflow-hidden">
+                      <span id="caveMudFreeBadge" class="hidden absolute top-1 right-1 px-1 py-0.2 text-[8px] font-bold rounded bg-emerald-500/25 text-emerald-300 border border-emerald-500/40">
+                        {t("sfl.constants.cave.freeHarvest")}
+                      </span>
+                      <img
+                        src="/img/sunflowerland/123/mud.webp"
+                        alt="Mud"
+                        class="w-5 h-5 object-contain mb-0.5 [image-rendering:pixelated]"
+                      />
+                      <span class="text-[9.5px] font-mono text-terminal-muted">1 Mud</span>
+                      <div class="flex items-center gap-1 text-amber-600 font-mono font-bold text-[11px] mt-0.5" id="caveMudPriceWrap">
+                        <img src="/img/sunflowerland/flower.jpg" class="w-2.5 h-2.5 rounded-full object-cover" alt="FLOWER" />
+                        <span id="caveMudUnitFlower">0.0000</span>
+                      </div>
+                      <span id="caveMudUnitUsd" class="text-[9px] font-mono text-white/40">~$0.0000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Minijuego Visual Angostado y Compactado (md:col-span-4) -->
+          <div class="md:col-span-4 flex flex-col gap-2">
+            <!-- Requisitos y Contadores de Progreso Compactos -->
+            <div class="bg-black/40 border border-white/10 rounded-xl p-2 flex flex-col gap-1.5">
+              <!-- Control: Modo Simulación en Vivo -->
+              <button
+                type="button"
+                id="caveSimulateToggleBtn"
+                class="w-full py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-between border bg-black/50 text-white/50 border-white/10 hover:border-white/20 hover:text-white"
+                data-active="false"
+              >
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="text-xs shrink-0">🎮</span>
+                  <span class="text-[10px] truncate">{t("sfl.constants.cave.simulateBtn")}</span>
+                </div>
+                <span
+                  id="caveSimulateStatusText"
+                  class="text-[8.5px] px-1.5 py-0.2 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5 shrink-0"
+                >
+                  OFF
+                </span>
+              </button>
+
+              <!-- Contadores de Recompensas -->
+              <div class="grid grid-cols-3 gap-1 pt-0.5 border-t border-white/5">
+                <!-- Escarabajos -->
+                <div class="flex flex-col items-center justify-center bg-black/40 p-1 rounded-lg border border-white/5 text-center">
+                  <img
+                    src="/img/sunflowerland/green_beetle.webp"
+                    alt="Beetle"
+                    class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
+                  />
+                  <span class="text-[8px] font-mono text-terminal-muted">Beetles</span>
+                  <span class="text-[9.5px] font-mono font-bold text-amber-400 leading-tight">
+                    <span id="caveBeetlesCount">0</span>/<span id="caveBeetlesGoal">2</span>
+                  </span>
+                </div>
+
+                <!-- Hongos -->
+                <div class="flex flex-col items-center justify-center bg-black/40 p-1 rounded-lg border border-white/5 text-center">
+                  <img
+                    src="/img/sunflowerland/123/wild_mushroom.webp"
+                    alt="Mushroom"
+                    class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
+                  />
+                  <span class="text-[8px] font-mono text-terminal-muted">Mushrooms</span>
+                  <span class="text-[9.5px] font-mono font-bold text-red-400 leading-tight">
+                    <span id="caveMushroomsCount">0</span>/<span id="caveMushroomsGoal">6</span>
+                  </span>
+                </div>
+
+                <!-- Mud -->
+                <div class="flex flex-col items-center justify-center bg-black/40 p-1 rounded-lg border border-white/5 text-center">
+                  <img
+                    src="/img/sunflowerland/123/mud.webp"
+                    alt="Mud"
+                    class="w-3.5 h-3.5 object-contain mb-0.5 [image-rendering:pixelated]"
+                  />
+                  <span class="text-[8px] font-mono text-terminal-muted">Mud</span>
+                  <span class="text-[9.5px] font-mono font-bold text-amber-600 leading-tight">
+                    <span id="caveMudCount">0</span>/<span id="caveMudGoal">17</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cuadrícula 5x5 de Excavación con Estilo Oficial de Parche Subterráneo SFL -->
+            <div
+              class="relative rounded-2xl bg-[#5c3a23]/30 border-2 border-dashed border-[#8a5d3b]/50 p-2.5 shadow-inner flex flex-col items-center justify-center select-none"
+            >
+              <div id="caveDigGrid" class="grid grid-cols-5 gap-1.5 w-full max-w-[195px]">
+                {Array.from({ length: 25 }).map((_, idx) => (
+                  <button
+                    type="button"
+                    class="cave-cell cursor-shovel relative aspect-square rounded-full bg-[#dfbe99] hover:bg-[#ebd1b0] border border-[#c49c71] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.25)] active:scale-95 transition-all flex items-center justify-center p-0.5 group select-none"
+                    data-cell-index={idx}
+                  >
+                    <!-- Textura de montículo arenoso inicial con Indicador de Probabilidad Solver -->
+                    <div class="cell-mound w-full h-full flex flex-col items-center justify-center relative">
+                      <div class="cell-mound-dot w-2 h-2 rounded-full bg-[#cfa47c]/60 group-hover:scale-110 transition-transform shadow-inner" />
+                      <!-- Porcentaje calculado del Solver -->
+                      <span class="cell-prob-badge hidden absolute inset-0 flex items-center justify-center font-mono font-black text-[10px] sm:text-[10.5px] leading-none pointer-events-none select-none text-stone-950 tracking-tight">
+                        --%
+                      </span>
+                    </div>
+
+                    <!-- Contenedor descubierto (Hoyo excavado) -->
+                    <div class="cell-revealed hidden w-full h-full flex flex-col items-center justify-center animate-fade-in relative">
+                      <!-- Imagen del item (Escarabajo, Hongo o Mud) -->
+                      <img
+                        src=""
+                        alt=""
+                        class="cell-revealed-img w-3.5 h-3.5 object-contain [image-rendering:pixelated] drop-shadow-sm select-none pointer-events-none"
+                      />
+
+                      <!-- Checkmark oficial para Escarabajos en la orilla exterior del círculo -->
+                      <span class="cell-beetle-check hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border border-emerald-300 text-white flex items-center justify-center text-[7.5px] font-black shadow-sm z-20">
+                        ✓
+                      </span>
+
+                      <!-- Número de pista (para Hongos y Mud: 0 a 4; oculto en Escarabajos) -->
+                      <span class="cell-clue-number hidden relative z-10 font-mono font-black text-[11px] sm:text-xs leading-none drop-shadow-[0_1.5px_2px_rgba(0,0,0,1)] text-white mt-0.5 select-none pointer-events-none">
+                        0
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <!-- Píldoras oficiales de estado del parche con Alto Contraste -->
+              <div class="flex flex-col gap-1.5 w-full max-w-[195px] mt-2.5 select-none">
+                <div class="w-full py-1 px-2 rounded-full bg-emerald-500 border border-emerald-300 text-stone-950 text-[10px] font-mono font-black text-center shadow-md">
+                  {t("sfl.constants.cave.readyToDig")}
+                </div>
+
+                <div
+                  id="caveBeetlesStatusPill"
+                  class="w-full py-1 px-2 rounded-full bg-black/80 border border-white/20 text-white text-[9.5px] font-mono font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                >
+                  <img src="/img/sunflowerland/green_beetle.webp" class="w-3.5 h-3.5 object-contain shrink-0" alt="" />
+                  <span id="caveBeetlesStatusText">{t("sfl.constants.cave.beetlesFound")}: 0/2</span>
+                </div>
+
+                <div
+                  id="caveMushroomsStatusPill"
+                  class="w-full py-1 px-2 rounded-full bg-black/80 border border-white/20 text-white text-[9.5px] font-mono font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                >
+                  <img src="/img/sunflowerland/123/wild_mushroom.webp" class="w-3.5 h-3.5 object-contain shrink-0" alt="" />
+                  <span id="caveMushroomsStatusText">{t("sfl.constants.cave.mushroomsFound")}: 0/6</span>
+                </div>
+              </div>
+
+              <!-- Botones de Acción del Tablero con Alto Contraste -->
+              <div class="flex items-center gap-1.5 mt-2.5 w-full max-w-[195px]">
+                <button
+                  type="button"
+                  id="caveDigAllBtn"
+                  class="flex-1 py-1.5 px-2 rounded-xl text-[10.5px] font-mono font-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 border border-amber-300 transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md active:scale-98"
+                >
+                  <img
+                    src="/img/sunflowerland/tools/sand_shovel.png"
+                    class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated] drop-shadow-sm"
+                    alt="Sand Shovel"
+                  />
+                  <span>{t("sfl.constants.cave.digAll")}</span>
+                </button>
+                <button
+                  type="button"
+                  id="caveResetBtn"
+                  class="py-1.5 px-2 rounded-xl text-xs font-mono font-bold text-white bg-white/10 hover:bg-white/20 border border-white/25 transition-all cursor-pointer flex items-center justify-center shadow-sm active:scale-95"
+                  title={t("sfl.constants.cave.reset")}
+                >
+                  <span>🔄</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</SflToolLayout>
+
+<script is:inline define:vars={{ bettyPrices, sflIds, caveData, tFree: t("sfl.constants.detail.free"), tAllBeetlesFound: t("sfl.constants.cave.allBeetlesFound"), tAllMushroomsFound: t("sfl.constants.cave.allMushroomsFound"), tBeetlesFound: t("sfl.constants.cave.beetlesFound"), tMushroomsFound: t("sfl.constants.cave.mushroomsFound") }}>
+  ;(function () {
+    let liveFlowerPrice = 0.144
+    let activeCoinsPerFlower = 320 // Paridad inicial fallback
+    let marketDataCache = null
+
+    function getBaseMaterialUnitPrice(materialName) {
+      if (!marketDataCache || !marketDataCache.items || !sflIds) return 0
+      const itemId = Object.keys(sflIds).find((k) => sflIds[k] === materialName)
+      if (!itemId) return 0
+      const item = marketDataCache.items[`collectibles-${itemId}`]
+      return item && item.currentPrice ? parseFloat(item.currentPrice) : 0
+    }
+
+    function createCaveController() {
+      if (!caveData || !caveData.mixes || caveData.mixes.length === 0) return null
+
+      let activeMix = caveData.mixes[0]
+      let board = []
+      let discoveredBeetles = 0
+      let discoveredMushrooms = 0
+      let discoveredMud = 0
+
+      // Estado para Mud Mix
+      let selectedCropIndex = -1 // -1 = automático / óptimo
+      let optimalCropIndex = 0
+
+      // Estado del Modo Simulación en Vivo y Asistente Solver
+      let isSimulationActive = false
+      let isSolverActive = true
+      let simShovelsUsed = 0
+      let simDiscoveredBeetles = []
+      let simMushrooms = 0
+      let simMud = 0
+
+      // Elementos DOM
+      const simulateToggleBtn = document.getElementById("caveSimulateToggleBtn")
+      const simulateStatusText = document.getElementById("caveSimulateStatusText")
+      const mudBoostBadge = document.getElementById("caveMudBoostBadge")
+      const beetlesCountDisplay = document.getElementById("caveBeetlesCount")
+      const beetlesGoalDisplay = document.getElementById("caveBeetlesGoal")
+      const mushroomsCountDisplay = document.getElementById("caveMushroomsCount")
+      const mushroomsGoalDisplay = document.getElementById("caveMushroomsGoal")
+      const mudCountDisplay = document.getElementById("caveMudCount")
+      const mudGoalDisplay = document.getElementById("caveMudGoal")
+      const beetlesStatusPill = document.getElementById("caveBeetlesStatusPill")
+      const beetlesStatusText = document.getElementById("caveBeetlesStatusText")
+      const mushroomsStatusPill = document.getElementById("caveMushroomsStatusPill")
+      const mushroomsStatusText = document.getElementById("caveMushroomsStatusText")
+      const digAllBtn = document.getElementById("caveDigAllBtn")
+      const resetBtn = document.getElementById("caveResetBtn")
+      const successBanner = document.getElementById("caveSuccessBanner")
+      const mixBtns = document.querySelectorAll(".cave-mix-tab-btn")
+      const cells = document.querySelectorAll(".cave-cell")
+
+      // Elementos de economía
+      const batchShovelsText = document.getElementById("caveBatchShovelsText")
+      const batchShovelsFlower = document.getElementById("caveBatchShovelsFlower")
+      const batchReqImg = document.getElementById("caveBatchReqImg")
+      const batchReqText = document.getElementById("caveBatchReqText")
+      const batchReqFlower = document.getElementById("caveBatchReqFlower")
+      const cropStandardRow = document.getElementById("caveBatchReqStandardRow")
+      const cropSelectContainer = document.getElementById("caveCropSelectContainer")
+      const cropDropdownTrigger = document.getElementById("caveCropDropdownTrigger")
+      const cropTriggerImg = document.getElementById("caveCropTriggerImg")
+      const cropTriggerLabel = document.getElementById("caveCropTriggerLabel")
+      const cropTriggerBadge = document.getElementById("caveCropTriggerBadge")
+      const cropTriggerFlower = document.getElementById("caveCropTriggerFlower")
+      const cropTriggerArrow = document.getElementById("caveCropTriggerArrow")
+      const cropDropdownMenu = document.getElementById("caveCropDropdownMenu")
+      const beetlesPerBatchBadge = document.getElementById("caveBeetlesPerBatchBadge")
+      const totalCostFlower = document.getElementById("caveTotalCostFlower")
+      const totalCostUsd = document.getElementById("caveTotalCostUsd")
+      const beetleOddsRows = document.getElementById("caveBeetleOddsRows")
+      const totalBeetleRevFlower = document.getElementById("caveTotalBeetleRevFlower")
+      const totalBeetleRevUsd = document.getElementById("caveTotalBeetleRevUsd")
+      const residualCard = document.getElementById("caveResidualCard")
+      const balanceLabel = document.getElementById("caveBalanceLabel")
+      const balanceBadge = document.getElementById("caveBalanceBadge")
+      const balanceContainer = document.getElementById("caveBalanceContainer")
+      const deficitFlower = document.getElementById("caveDeficitFlower")
+      const deficitUsd = document.getElementById("caveDeficitUsd")
+      const mushroomFreeBadge = document.getElementById("caveMushroomFreeBadge")
+      const mudFreeBadge = document.getElementById("caveMudFreeBadge")
+      const mushroomUnitFlower = document.getElementById("caveMushroomUnitFlower")
+      const mushroomUnitUsd = document.getElementById("caveMushroomUnitUsd")
+      const mudUnitFlower = document.getElementById("caveMudUnitFlower")
+      const mudUnitUsd = document.getElementById("caveMudUnitUsd")
+
+      function pickRandomBeetle(odds) {
+        const rnd = Math.random()
+        let acc = 0
+        for (const item of odds) {
+          acc += item.chance
+          if (rnd <= acc) return item
+        }
+        return odds[0]
+      }
+
+      function getBeetleP2PPrice(sflId) {
+        if (marketDataCache && marketDataCache.items) {
+          const item = marketDataCache.items[`collectibles-${sflId}`]
+          if (item && item.currentPrice) {
+            return parseFloat(item.currentPrice)
+          }
+        }
+        return 0
+      }
+
+      function getCropUnitFlowerPrice(crop) {
+        if (marketDataCache && marketDataCache.items) {
+          const item = marketDataCache.items[`collectibles-${crop.sflId}`]
+          if (item && (item.currentPrice || item.price)) {
+            const p = parseFloat(item.currentPrice || item.price)
+            if (p > 0) return p
+          }
+        }
+        const betty = (typeof bettyPrices !== "undefined" && bettyPrices) ? bettyPrices[crop.name] : null
+        const sellPrice = betty ? betty.sellPrice : 0.02
+        const coinsFlw = activeCoinsPerFlower > 0 ? 1 / activeCoinsPerFlower : 0.005
+        return sellPrice * coinsFlw
+      }
+
+      function getActiveCropRequirement() {
+        const reqConfig = activeMix.requirement || { name: "Wood", amount: 10, image: "/img/sunflowerland/Wood.png" }
+        if (!reqConfig.options || reqConfig.options.length === 0) {
+          if (cropSelectContainer) cropSelectContainer.classList.add("hidden")
+          if (cropStandardRow) cropStandardRow.classList.remove("hidden")
+          if (mudBoostBadge) {
+            mudBoostBadge.classList.add("hidden")
+            mudBoostBadge.classList.remove("flex")
+          }
+          return {
+            name: reqConfig.name,
+            amount: reqConfig.amount,
+            image: reqConfig.image,
+            unitPriceFlw: getBaseMaterialUnitPrice(reqConfig.name),
+            isOptimal: false
+          }
+        }
+
+        if (cropSelectContainer) cropSelectContainer.classList.remove("hidden")
+        if (cropStandardRow) cropStandardRow.classList.add("hidden")
+        if (mudBoostBadge) {
+          mudBoostBadge.classList.remove("hidden")
+          mudBoostBadge.classList.add("flex")
+        }
+
+        let lowestCost = Infinity
+        optimalCropIndex = 0
+
+        const optionsWithCost = reqConfig.options.map((opt, idx) => {
+          const unitP = getCropUnitFlowerPrice(opt)
+          const totalCost = unitP * opt.amount
+          if (totalCost < lowestCost) {
+            lowestCost = totalCost
+            optimalCropIndex = idx
+          }
+          return {
+            ...opt,
+            unitP,
+            totalCost,
+            index: idx
+          }
+        })
+
+        const chosenIndex = selectedCropIndex >= 0 && selectedCropIndex < reqConfig.options.length
+          ? selectedCropIndex
+          : optimalCropIndex
+
+        const chosenOpt = optionsWithCost[chosenIndex] || optionsWithCost[0]
+        const isOptimal = chosenIndex === optimalCropIndex
+
+        // Actualizar visual del botón Trigger Custom
+        if (cropTriggerImg) cropTriggerImg.src = chosenOpt.image
+        if (cropTriggerLabel) cropTriggerLabel.innerText = `${chosenOpt.amount}x ${chosenOpt.name}`
+        if (cropTriggerFlower) cropTriggerFlower.innerText = chosenOpt.totalCost.toFixed(4)
+        if (cropTriggerBadge) {
+          if (isOptimal) {
+            cropTriggerBadge.classList.remove("hidden")
+          } else {
+            cropTriggerBadge.classList.add("hidden")
+          }
+        }
+
+        // Renderizar opciones estilizadas en el menú desplegable
+        if (cropDropdownMenu) {
+          const currentPopulatedKey = `${activeMix.id}-${activeCoinsPerFlower}-${chosenIndex}`
+          if (cropDropdownMenu.dataset.populatedKey !== currentPopulatedKey) {
+            cropDropdownMenu.dataset.populatedKey = currentPopulatedKey
+            cropDropdownMenu.innerHTML = ""
+
+            optionsWithCost.forEach((opt) => {
+              const btn = document.createElement("button")
+              btn.type = "button"
+              const isOpt = opt.index === optimalCropIndex
+              const isSelected = opt.index === chosenIndex
+              btn.className = `w-full py-1.5 px-2 rounded-lg text-left flex items-center justify-between transition-all cursor-pointer ${
+                isSelected
+                  ? "bg-amber-500/15 border border-amber-500/40 text-amber-200"
+                  : "hover:bg-white/[0.06] border border-transparent text-white/80 hover:text-white"
+              }`
+              btn.innerHTML = `
+                <div class="flex items-center gap-2 min-w-0">
+                  <img src="${opt.image}" class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" alt="${opt.name}" />
+                  <span class="text-[11px] font-mono font-medium truncate">${opt.amount}x ${opt.name}</span>
+                  ${isOpt ? `<span class="text-[8px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Óptimo</span>` : ""}
+                </div>
+                <div class="flex items-center gap-1 font-mono text-[10.5px] font-bold text-emerald-400 shrink-0">
+                  <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                  <span>${opt.totalCost.toFixed(4)}</span>
+                </div>
+              `
+              btn.addEventListener("click", () => {
+                selectedCropIndex = opt.index
+                if (cropDropdownMenu) cropDropdownMenu.classList.add("hidden")
+                if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+                updateEconomics()
+              })
+              cropDropdownMenu.appendChild(btn)
+            })
+          }
+        }
+
+        return {
+          name: chosenOpt.name,
+          amount: chosenOpt.amount,
+          image: chosenOpt.image,
+          unitPriceFlw: chosenOpt.unitP,
+          isOptimal
+        }
+      }
+
+      function getOrthogonalNeighbors(idx) {
+        const row = Math.floor(idx / 5)
+        const col = idx % 5
+        const n = []
+        if (row > 0) n.push((row - 1) * 5 + col) // Arriba (Norte)
+        if (row < 4) n.push((row + 1) * 5 + col) // Abajo (Sur)
+        if (col > 0) n.push(row * 5 + (col - 1)) // Izquierda (Oeste)
+        if (col < 4) n.push(row * 5 + (col + 1)) // Derecha (Este)
+        return n
+      }
+
+      function generateBoard() {
+        discoveredBeetles = 0
+        discoveredMushrooms = 0
+        discoveredMud = 0
+
+        if (successBanner) {
+          successBanner.classList.add("hidden")
+        }
+
+        const isMudMix = activeMix.id === "mud_mix"
+        const beetlesCount = activeMix.rewards.beetles || 2
+        const mushroomsCount = activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)
+        const mudCellsCount = isMudMix ? 20 : (activeMix.rewards.mud || 17)
+        const mudPerCell = isMudMix ? 2 : 1
+
+        const beetleItems = []
+        for (let i = 0; i < beetlesCount; i++) {
+          const beetle = pickRandomBeetle(activeMix.beetleOdds)
+          beetleItems.push({
+            type: "beetle",
+            name: beetle.name,
+            sflId: beetle.sflId,
+            image: beetle.image,
+            amount: 1
+          })
+        }
+
+        const mushroomItems = []
+        for (let i = 0; i < mushroomsCount; i++) {
+          const isMagic = Math.random() < 0.10 // 10% probabilidad oficial de Magic Mushroom
+          mushroomItems.push({
+            type: "mushroom",
+            name: isMagic ? "Magic Mushroom" : "Wild Mushroom",
+            image: isMagic
+              ? "/img/sunflowerland/123/magic_mushroom.webp"
+              : "/img/sunflowerland/123/wild_mushroom.webp",
+            amount: 1,
+            isMagic
+          })
+        }
+
+        const mudItems = []
+        for (let i = 0; i < mudCellsCount; i++) {
+          mudItems.push({
+            type: "mud",
+            name: "Mud",
+            image: "/img/sunflowerland/123/mud.webp",
+            amount: mudPerCell
+          })
+        }
+
+        const allItems = [...beetleItems, ...mushroomItems, ...mudItems]
+        while (allItems.length < 25) {
+          allItems.push({
+            type: "empty",
+            name: "Empty",
+            image: "",
+            amount: 0
+          })
+        }
+
+        // Barajado aleatorio Fisher-Yates
+        for (let i = allItems.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [allItems[i], allItems[j]] = [allItems[j], allItems[i]]
+        }
+
+        board = allItems.map((item, idx) => ({
+          ...item,
+          index: idx,
+          revealed: false,
+          flagged: false,
+          clue: 0
+        }))
+
+        // Cálculo de pistas Buscaminas (Cruz ortogonal: Arriba, Abajo, Izquierda, Derecha)
+        for (let i = 0; i < board.length; i++) {
+          const neighbors = getOrthogonalNeighbors(i)
+          const targetCount = neighbors.filter(
+            (nIdx) => board[nIdx].type === "beetle" || board[nIdx].type === "mushroom"
+          ).length
+          board[i].clue = targetCount
+        }
+
+        cells.forEach((cell) => {
+          cell.className = "cave-cell cursor-shovel relative aspect-square rounded-full bg-[#dfbe99] hover:bg-[#ebd1b0] border border-[#c49c71] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.25)] active:scale-95 transition-all flex items-center justify-center p-0.5 group select-none"
+
+          const mound = cell.querySelector(".cell-mound")
+          const revealed = cell.querySelector(".cell-revealed")
+          const beetleCheck = cell.querySelector(".cell-beetle-check")
+          const clueNumber = cell.querySelector(".cell-clue-number")
+
+          if (mound) mound.classList.remove("hidden")
+          if (revealed) revealed.classList.add("hidden")
+          if (beetleCheck) beetleCheck.classList.add("hidden")
+          if (clueNumber) clueNumber.classList.add("hidden")
+        })
+
+        updateCounters()
+        updateSolverProbabilities()
+      }
+
+      function updateCounters() {
+        const isMudMix = activeMix.id === "mud_mix"
+        const beetlesGoal = activeMix.rewards.beetles || 2
+        const mushroomsGoal = activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)
+        const mudGoal = isMudMix
+          ? (activeMix.rewards.mudBoosted || 40)
+          : (activeMix.rewards.mud || 17)
+
+        if (beetlesCountDisplay) beetlesCountDisplay.innerText = discoveredBeetles.toString()
+        if (beetlesGoalDisplay) beetlesGoalDisplay.innerText = beetlesGoal.toString()
+        if (mushroomsCountDisplay) mushroomsCountDisplay.innerText = discoveredMushrooms.toString()
+        if (mushroomsGoalDisplay) mushroomsGoalDisplay.innerText = mushroomsGoal.toString()
+        if (mudCountDisplay) mudCountDisplay.innerText = discoveredMud.toString()
+        if (mudGoalDisplay) mudGoalDisplay.innerText = mudGoal.toString()
+
+        // Píldoras oficiales de estado estilo Sunflower Land con Alto Contraste
+        if (beetlesStatusPill && beetlesStatusText) {
+          if (discoveredBeetles >= beetlesGoal) {
+            beetlesStatusPill.className = "w-full py-1 px-2 rounded-full bg-emerald-500 border border-emerald-300 text-stone-950 text-[10px] font-mono font-black text-center flex items-center justify-center gap-1.5 shadow-md"
+            if (isSimulationActive && simShovelsUsed > 0 && 25 - simShovelsUsed > 0) {
+              beetlesStatusText.innerText = `¡${discoveredBeetles}/${beetlesGoal} Escarabajos! (Ahorro: -${25 - simShovelsUsed} palas)`
+            } else {
+              beetlesStatusText.innerText = tAllBeetlesFound
+            }
+          } else {
+            beetlesStatusPill.className = "w-full py-1 px-2 rounded-full bg-black/80 border border-white/20 text-white text-[9.5px] font-mono font-bold text-center flex items-center justify-center gap-1.5 shadow-sm"
+            beetlesStatusText.innerText = `${tBeetlesFound}: ${discoveredBeetles}/${beetlesGoal}`
+          }
+        }
+
+        if (mushroomsStatusPill && mushroomsStatusText) {
+          if (discoveredMushrooms >= mushroomsGoal) {
+            mushroomsStatusPill.className = "w-full py-1 px-2 rounded-full bg-emerald-500 border border-emerald-300 text-stone-950 text-[10px] font-mono font-black text-center flex items-center justify-center gap-1.5 shadow-md"
+            mushroomsStatusText.innerText = tAllMushroomsFound
+          } else {
+            mushroomsStatusPill.className = "w-full py-1 px-2 rounded-full bg-black/80 border border-white/20 text-white text-[9.5px] font-mono font-bold text-center flex items-center justify-center gap-1.5 shadow-sm"
+            mushroomsStatusText.innerText = `${tMushroomsFound}: ${discoveredMushrooms}/${mushroomsGoal}`
+          }
+        }
+      }
+
+      function updateSolverProbabilities() {
+        if (!isSolverActive) {
+          cells.forEach((cell) => {
+            const probBadge = cell.querySelector(".cell-prob-badge")
+            const moundDot = cell.querySelector(".cell-mound-dot")
+            if (probBadge) probBadge.classList.add("hidden")
+            if (moundDot) moundDot.classList.remove("hidden")
+            cell.classList.remove("ring-2", "ring-emerald-400", "shadow-[0_0_8px_rgba(52,211,153,0.7)]")
+          })
+          return
+        }
+
+        const isMudMix = activeMix.id === "mud_mix"
+        const totalValuable = (activeMix.rewards.beetles || 2) + (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6))
+
+        let foundValuable = 0
+        const unrevealed = []
+        for (let i = 0; i < 25; i++) {
+          if (board[i].revealed) {
+            if (board[i].type === "beetle" || board[i].type === "mushroom") {
+              foundValuable++
+            }
+          } else {
+            unrevealed.push(i)
+          }
+        }
+
+        const remainingValuable = Math.max(0, totalValuable - foundValuable)
+
+        // Si ya se encontraron todos los objetivos de valor, todas las celdas ocultas son 0%
+        if (remainingValuable === 0) {
+          cells.forEach((cell, idx) => {
+            if (!board[idx].revealed) {
+              renderCellProb(cell, 0)
+            }
+          })
+          return
+        }
+
+        // Si las celdas ocultas restantes son exactamente iguales a los objetivos restantes: 100%
+        if (unrevealed.length === remainingValuable) {
+          cells.forEach((cell, idx) => {
+            if (!board[idx].revealed) {
+              renderCellProb(cell, 100)
+            }
+          })
+          return
+        }
+
+        // Si no se ha excavado ninguna celda: probabilidad base uniforme
+        if (unrevealed.length === 25) {
+          const baseProb = Math.round((totalValuable / 25) * 100)
+          cells.forEach((cell) => {
+            renderCellProb(cell, baseProb)
+          })
+          return
+        }
+
+        // Recolectar restricciones de celdas reveladas que tienen pista
+        const constraints = []
+        const constrainedVarsSet = new Set()
+
+        for (let i = 0; i < 25; i++) {
+          if (board[i].revealed) {
+            const clue = board[i].clue
+            const neighbors = getOrthogonalNeighbors(i)
+
+            let valInRevealed = 0
+            const unrevealedNeighbors = []
+
+            neighbors.forEach((nIdx) => {
+              if (board[nIdx].revealed) {
+                if (board[nIdx].type === "beetle" || board[nIdx].type === "mushroom") {
+                  valInRevealed++
+                }
+              } else {
+                unrevealedNeighbors.push(nIdx)
+              }
+            })
+
+            const remForNeighbors = clue - valInRevealed
+            if (unrevealedNeighbors.length > 0) {
+              constraints.push({
+                cellIndex: i,
+                vars: unrevealedNeighbors,
+                sum: Math.max(0, remForNeighbors)
+              })
+              unrevealedNeighbors.forEach((v) => constrainedVarsSet.add(v))
+            }
+          }
+        }
+
+        // Si no hay restricciones activas, probabilidad homogénea restante
+        if (constraints.length === 0 || constrainedVarsSet.size === 0) {
+          const prob = Math.round((remainingValuable / unrevealed.length) * 100)
+          cells.forEach((cell, idx) => {
+            if (!board[idx].revealed) {
+              renderCellProb(cell, prob)
+            }
+          })
+          return
+        }
+
+        // Solver CSP por enumeración exacta de mundos posibles
+        const varList = Array.from(constrainedVarsSet)
+        const varIndexMap = new Map()
+        varList.forEach((v, idx) => varIndexMap.set(v, idx))
+
+        const compiledConstraints = constraints.map((c) => ({
+          indices: c.vars.map((v) => varIndexMap.get(v)),
+          sum: c.sum
+        }))
+
+        const unconstrainedCount = unrevealed.length - varList.length
+        function nCr(n, r) {
+          if (r < 0 || r > n) return 0
+          if (r === 0 || r === n) return 1
+          if (r > n / 2) r = n - r
+          let res = 1
+          for (let i = 1; i <= r; i++) {
+            res = (res * (n - i + 1)) / i
+          }
+          return res
+        }
+
+        let totalValidWeight = 0
+        const varTrueWeight = new Array(varList.length).fill(0)
+        let unconstrainedTrueWeightSum = 0
+
+        const currentAssignment = new Array(varList.length).fill(0)
+
+        function backtrack(varIdx, currentSum) {
+          if (currentSum > remainingValuable) return
+
+          // Poda rápida de restricciones parciales
+          for (let ci = 0; ci < compiledConstraints.length; ci++) {
+            const c = compiledConstraints[ci]
+            let partialSum = 0
+            let unassignedCount = 0
+
+            for (let j = 0; j < c.indices.length; j++) {
+              const vi = c.indices[j]
+              if (vi < varIdx) {
+                partialSum += currentAssignment[vi]
+              } else {
+                unassignedCount++
+              }
+            }
+
+            if (partialSum > c.sum) return
+            if (partialSum + unassignedCount < c.sum) return
+          }
+
+          if (varIdx === varList.length) {
+            for (let ci = 0; ci < compiledConstraints.length; ci++) {
+              const c = compiledConstraints[ci]
+              let s = 0
+              for (let j = 0; j < c.indices.length; j++) {
+                s += currentAssignment[c.indices[j]]
+              }
+              if (s !== c.sum) return
+            }
+
+            const neededInUnconstrained = remainingValuable - currentSum
+            if (neededInUnconstrained < 0 || neededInUnconstrained > unconstrainedCount) return
+
+            const weight = nCr(unconstrainedCount, neededInUnconstrained)
+            if (weight > 0) {
+              totalValidWeight += weight
+              for (let i = 0; i < varList.length; i++) {
+                if (currentAssignment[i] === 1) {
+                  varTrueWeight[i] += weight
+                }
+              }
+              unconstrainedTrueWeightSum += weight * neededInUnconstrained
+            }
+            return
+          }
+
+          // Probar 1 (tiene objetivo valioso)
+          currentAssignment[varIdx] = 1
+          backtrack(varIdx + 1, currentSum + 1)
+
+          // Probar 0 (no tiene objetivo valioso)
+          currentAssignment[varIdx] = 0
+          backtrack(varIdx + 1, currentSum)
+        }
+
+        backtrack(0, 0)
+
+        const probs = new Map()
+
+        if (totalValidWeight > 0) {
+          varList.forEach((vIdx, i) => {
+            const p = Math.round((varTrueWeight[i] / totalValidWeight) * 100)
+            probs.set(vIdx, p)
+          })
+
+          const unconstrainedProb = unconstrainedCount > 0
+            ? Math.round((unconstrainedTrueWeightSum / (totalValidWeight * unconstrainedCount)) * 100)
+            : 0
+
+          unrevealed.forEach((cellIdx) => {
+            if (!probs.has(cellIdx)) {
+              probs.set(cellIdx, unconstrainedProb)
+            }
+          })
+        } else {
+          const fallbackProb = Math.round((remainingValuable / unrevealed.length) * 100)
+          unrevealed.forEach((cellIdx) => {
+            probs.set(cellIdx, fallbackProb)
+          })
+        }
+
+        cells.forEach((cell, idx) => {
+          if (!board[idx].revealed) {
+            const p = probs.get(idx) ?? 0
+            renderCellProb(cell, p)
+          }
+        })
+      }
+
+      function renderCellProb(cell, p) {
+        const probBadge = cell.querySelector(".cell-prob-badge")
+        const moundDot = cell.querySelector(".cell-mound-dot")
+        if (!probBadge) return
+
+        probBadge.classList.remove("hidden")
+        if (moundDot) moundDot.classList.add("hidden")
+
+        probBadge.innerText = `${p}%`
+        probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-black text-[10px] sm:text-[10.5px] leading-none pointer-events-none select-none text-stone-950 tracking-tight"
+
+        // Limpiar clases previas de borde y efectos de la celda
+        cell.classList.remove(
+          "border",
+          "border-2",
+          "border-[#c49c71]",
+          "border-[#a87f54]",
+          "border-emerald-500",
+          "border-rose-500/80",
+          "border-amber-500",
+          "border-yellow-500",
+          "ring-2",
+          "ring-emerald-400",
+          "shadow-[0_0_10px_rgba(16,185,129,0.8)]",
+          "shadow-[0_0_6px_rgba(245,158,11,0.4)]",
+          "animate-pulse"
+        )
+
+        // El borde del campo se colorea según el porcentaje (100% verde)
+        if (p === 100) {
+          cell.classList.add("border-2", "border-emerald-500", "ring-2", "ring-emerald-400", "shadow-[0_0_10px_rgba(16,185,129,0.8)]", "animate-pulse")
+          cell.title = "¡100% Certeza de Objetivo Valioso! (Borde verde - Excavación recomendada)"
+        } else if (p === 0) {
+          cell.classList.add("border-2", "border-rose-500/80")
+          cell.title = "0% Probabilidad (100% Mud seguro - Ahorra tu pala)"
+        } else if (p >= 65) {
+          cell.classList.add("border-2", "border-amber-500", "shadow-[0_0_6px_rgba(245,158,11,0.4)]")
+          cell.title = `${p}% de Probabilidad de Objetivo Valioso`
+        } else if (p >= 40) {
+          cell.classList.add("border-2", "border-yellow-500")
+          cell.title = `${p}% de Probabilidad de Objetivo Valioso`
+        } else {
+          cell.classList.add("border-2", "border-[#a87f54]")
+          cell.title = `${p}% de Probabilidad de Objetivo Valioso`
+        }
+      }
+
+      function setSimulationActive(active) {
+        isSimulationActive = active
+        if (simulateToggleBtn) {
+          simulateToggleBtn.dataset.active = isSimulationActive ? "true" : "false"
+          if (isSimulationActive) {
+            simulateToggleBtn.classList.remove("bg-black/50", "text-white/50", "border-white/10")
+            simulateToggleBtn.classList.add("bg-amber-500/15", "text-amber-300", "border-amber-500/40", "shadow-sm")
+            if (simulateStatusText) {
+              simulateStatusText.innerText = "ON"
+              simulateStatusText.className = "text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30"
+            }
+          } else {
+            simulateToggleBtn.classList.add("bg-black/50", "text-white/50", "border-white/10")
+            simulateToggleBtn.classList.remove("bg-amber-500/15", "text-amber-300", "border-amber-500/40", "shadow-sm")
+            if (simulateStatusText) {
+              simulateStatusText.innerText = "OFF"
+              simulateStatusText.className = "text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5"
+            }
+          }
+        }
+      }
+
+      function revealCell(idx) {
+        if (!board[idx] || board[idx].revealed) return
+        board[idx].revealed = true
+
+        if (!isSimulationActive) {
+          setSimulationActive(true)
+        }
+
+        const cell = cells[idx]
+        if (!cell) return
+
+        cell.className = "cave-cell relative aspect-square rounded-full bg-[#26150c] border border-[#1b0d06] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center p-0.5 group select-none cursor-default"
+
+        const mound = cell.querySelector(".cell-mound")
+        const revealed = cell.querySelector(".cell-revealed")
+        const revealedImg = cell.querySelector(".cell-revealed-img")
+        const beetleCheck = cell.querySelector(".cell-beetle-check")
+        const clueNumber = cell.querySelector(".cell-clue-number")
+
+        if (mound) mound.classList.add("hidden")
+        if (revealed) revealed.classList.remove("hidden")
+
+        const data = board[idx]
+        const clue = data.clue || 0
+
+        function applyClueNumber(el, val, itemLabel) {
+          if (!el) return
+          el.innerText = val.toString()
+          el.classList.remove("hidden")
+          if (val === 0) {
+            el.className = "cell-clue-number relative z-10 font-mono font-black text-[11px] sm:text-xs leading-none drop-shadow-[0_1.5px_2px_rgba(0,0,0,1)] text-white/70"
+            cell.title = `0: Ningún objetivo contiguo (${itemLabel})`
+          } else if (val === 1) {
+            el.className = "cell-clue-number relative z-10 font-mono font-black text-[11px] sm:text-xs leading-none drop-shadow-[0_1.5px_2px_rgba(0,0,0,1)] text-sky-300"
+            cell.title = `1: 1 objetivo en cruz (${itemLabel})`
+          } else if (val === 2) {
+            el.className = "cell-clue-number relative z-10 font-mono font-black text-[11px] sm:text-xs leading-none drop-shadow-[0_1.5px_2px_rgba(0,0,0,1)] text-amber-300 animate-pulse"
+            cell.title = `2: ¡2 objetivos en cruz! (${itemLabel})`
+          } else if (val === 3) {
+            el.className = "cell-clue-number relative z-10 font-mono font-black text-[11px] sm:text-xs leading-none drop-shadow-[0_1.5px_2px_rgba(0,0,0,1)] text-rose-400"
+            cell.title = `3: ¡3 objetivos en cruz! (${itemLabel})`
+          } else {
+            el.className = "cell-clue-number relative z-10 font-mono font-black text-[11px] sm:text-xs leading-none drop-shadow-[0_1.5px_2px_rgba(0,0,0,1)] text-purple-300"
+            cell.title = `4: ¡4 objetivos en cruz! (${itemLabel})`
+          }
+        }
+
+        if (data.type === "beetle") {
+          // Escarabajo: sprite + checkmark verde. NUNCA lleva número (lógica oficial SFL)
+          cell.classList.add("border-amber-400/80")
+          if (revealedImg) {
+            revealedImg.src = data.image || ""
+            revealedImg.alt = data.name || ""
+            revealedImg.className = "cell-revealed-img w-4 h-4 object-contain [image-rendering:pixelated] drop-shadow-sm select-none pointer-events-none"
+          }
+          if (beetleCheck) beetleCheck.classList.remove("hidden")
+          if (clueNumber) clueNumber.classList.add("hidden")
+
+          discoveredBeetles++
+          if (isSimulationActive) {
+            const p2pPrice = getBeetleP2PPrice(data.sflId)
+            simDiscoveredBeetles.push({
+              name: data.name,
+              image: data.image,
+              price: p2pPrice
+            })
+          }
+        } else if (data.type === "mushroom") {
+          // Hongo: sprite (Wild Mushroom o Magic Mushroom) + número de pista debajo (0 a 4)
+          if (data.isMagic) {
+            cell.classList.add("border-cyan-400/80")
+          } else {
+            cell.classList.add("border-red-400/60")
+          }
+          if (revealedImg) {
+            revealedImg.src = data.image || (data.isMagic ? "/img/sunflowerland/123/magic_mushroom.webp" : "/img/sunflowerland/123/wild_mushroom.webp")
+            revealedImg.alt = data.name || (data.isMagic ? "Magic Mushroom" : "Wild Mushroom")
+            revealedImg.className = "cell-revealed-img w-3.5 h-3.5 object-contain [image-rendering:pixelated] drop-shadow-sm select-none pointer-events-none"
+          }
+          if (beetleCheck) beetleCheck.classList.add("hidden")
+          applyClueNumber(clueNumber, clue, data.isMagic ? "+1 Magic Mushroom" : "+1 Hongo")
+
+          discoveredMushrooms++
+          if (isSimulationActive) simMushrooms++
+        } else {
+          // Lodo (Mud): sprite de mud + número de pista debajo (0 a 4)
+          if (revealedImg) {
+            revealedImg.src = "/img/sunflowerland/123/mud.webp"
+            revealedImg.alt = "Mud"
+            revealedImg.className = "cell-revealed-img w-3.5 h-3.5 object-contain [image-rendering:pixelated] opacity-75 select-none pointer-events-none"
+          }
+          if (beetleCheck) beetleCheck.classList.add("hidden")
+          applyClueNumber(clueNumber, clue, `+${data.amount} Mud`)
+
+          discoveredMud += data.amount
+          if (isSimulationActive) simMud += data.amount
+        }
+
+        if (isSimulationActive) {
+          simShovelsUsed++
+          updateEconomics()
+        }
+
+        updateCounters()
+        updateSolverProbabilities()
+      }
+
+      function digAll() {
+        if (!isSimulationActive) {
+          setSimulationActive(true)
+        }
+        for (let i = 0; i < board.length; i++) {
+          if (!board[i].revealed) {
+            revealCell(i)
+          }
+        }
+      }
+
+      function updateEconomics() {
+        if (!activeMix) return
+
+        const isMudMix = activeMix.id === "mud_mix"
+        const coinsFlw = activeCoinsPerFlower > 0 ? 20 / activeCoinsPerFlower : 0
+        const woodUnitFlw = getBaseMaterialUnitPrice("Wood")
+        const stoneUnitFlw = getBaseMaterialUnitPrice("Stone")
+        const shovelUnitCost = coinsFlw + (2 * woodUnitFlw) + (1 * stoneUnitFlw)
+
+        // Requerimiento dinámico (evaluando opciones si es mud_mix)
+        const req = getActiveCropRequirement()
+        const totalReqCost = req.amount * req.unitPriceFlw
+
+        if (batchReqImg) batchReqImg.src = req.image
+        if (batchReqText) batchReqText.innerText = `${req.amount}x ${req.name}`
+        if (batchReqFlower) batchReqFlower.innerText = totalReqCost.toFixed(4)
+
+        if (beetlesPerBatchBadge) {
+          beetlesPerBatchBadge.innerText = `${activeMix.rewards.beetles || 2} Escarabajos / Lote`
+        }
+
+        const mudTheoreticalGoal = isMudMix
+          ? (activeMix.rewards.mudBoosted || 40)
+          : (activeMix.rewards.mud || 17)
+
+        if (isSimulationActive) {
+          // MODO SIMULACIÓN EN TIEMPO REAL
+          const shovelsCount = simShovelsUsed
+          const totalShovelsCost = shovelsCount * shovelUnitCost
+          const grandTotalInvested = totalShovelsCost + totalReqCost
+          const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
+
+          if (batchShovelsText) {
+            const beetlesGoal = activeMix.rewards.beetles || 2
+            const savedShovels = Math.max(0, 25 - shovelsCount)
+            if (shovelsCount > 0 && discoveredBeetles >= beetlesGoal && savedShovels > 0) {
+              batchShovelsText.innerHTML = `${shovelsCount}x Shovel <span class="text-emerald-400 text-[9.5px] font-bold">(-${savedShovels} palas)</span>`
+            } else {
+              batchShovelsText.innerText = `${shovelsCount}x Sand Shovel`
+            }
+          }
+          if (batchShovelsFlower) batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
+          if (totalCostFlower) totalCostFlower.innerText = grandTotalInvested.toFixed(4)
+          if (totalCostUsd) totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
+
+          // Escarabajos reales encontrados
+          let simBeetleRev = 0
+          let simRowsHtml = ""
+
+          if (simDiscoveredBeetles.length === 0) {
+            simRowsHtml = `
+              <div class="py-1 text-center text-white/40 text-[10px] italic">
+                Excava casillas para encontrar escarabajos...
+              </div>
+            `
+          } else {
+            simDiscoveredBeetles.forEach((b) => {
+              simBeetleRev += b.price || 0
+              simRowsHtml += `
+                <div class="grid grid-cols-4 gap-1 items-center py-0.5 text-white/90">
+                  <div class="flex items-center gap-1 truncate col-span-2">
+                    <img src="${b.image}" class="w-3.5 h-3.5 object-contain" alt="${b.name}" />
+                    <span class="truncate">${b.name}</span>
+                  </div>
+                  <div class="flex items-center justify-end gap-1 col-span-2 text-emerald-400 font-bold">
+                    <img src="/img/sunflowerland/flower.jpg" class="w-3 h-3 rounded-full object-cover shrink-0" alt="FLOWER" />
+                    <span>${b.price > 0 ? b.price.toFixed(4) : "--"}</span>
+                  </div>
+                </div>
+              `
+            })
+          }
+
+          if (beetleOddsRows) beetleOddsRows.innerHTML = simRowsHtml
+
+          const simBeetleRevUsd = simBeetleRev * liveFlowerPrice
+          if (totalBeetleRevFlower) totalBeetleRevFlower.innerText = simBeetleRev.toFixed(4)
+          if (totalBeetleRevUsd) totalBeetleRevUsd.innerText = `~$${simBeetleRevUsd.toFixed(4)}`
+
+          const netBalance = simBeetleRev - grandTotalInvested
+          const labelProfit = residualCard?.dataset?.labelProfit || "¡Ganancia Neta Directa!:"
+          const labelDeficit = residualCard?.dataset?.labelDeficit || "Déficit cubierto con cosecha:"
+          const textFreeProfit = residualCard?.dataset?.textFreeprofit || "(¡Gratis con Ganancia!)"
+
+          if (netBalance > 0) {
+            if (balanceLabel) balanceLabel.innerText = labelProfit
+            if (balanceBadge) balanceBadge.classList.remove("hidden")
+            if (balanceContainer) {
+              balanceContainer.className = "flex items-center gap-1 font-bold text-emerald-400"
+            }
+            if (deficitFlower) deficitFlower.innerText = `+${netBalance.toFixed(4)}`
+            if (deficitUsd) deficitUsd.innerText = `(~+$${(netBalance * liveFlowerPrice).toFixed(4)})`
+
+            if (mushroomFreeBadge) mushroomFreeBadge.classList.remove("hidden")
+            if (mudFreeBadge) mudFreeBadge.classList.remove("hidden")
+            if (mushroomUnitFlower) mushroomUnitFlower.innerText = "0.0000"
+            if (mushroomUnitUsd) {
+              mushroomUnitUsd.innerText = textFreeProfit
+              mushroomUnitUsd.className = "text-[9px] font-mono text-emerald-400 font-bold"
+            }
+            if (mudUnitFlower) mudUnitFlower.innerText = "0.0000"
+            if (mudUnitUsd) {
+              mudUnitUsd.innerText = textFreeProfit
+              mudUnitUsd.className = "text-[9px] font-mono text-emerald-400 font-bold"
+            }
+          } else {
+            const deficit = Math.abs(netBalance)
+            const deficitUsdVal = deficit * liveFlowerPrice
+            if (balanceLabel) balanceLabel.innerText = labelDeficit
+            if (balanceBadge) balanceBadge.classList.add("hidden")
+            if (balanceContainer) {
+              balanceContainer.className = "flex items-center gap-1 font-bold text-amber-400"
+            }
+            if (deficitFlower) deficitFlower.innerText = deficit.toFixed(4)
+            if (deficitUsd) deficitUsd.innerText = `(~$${deficitUsdVal.toFixed(4)})`
+
+            if (mushroomFreeBadge) mushroomFreeBadge.classList.add("hidden")
+            if (mudFreeBadge) mudFreeBadge.classList.add("hidden")
+
+            const harvestedCount = simMushrooms + simMud
+            const unitResidual = harvestedCount > 0 ? deficit / harvestedCount : 0
+            const unitResidualUsd = unitResidual * liveFlowerPrice
+
+            if (mushroomUnitFlower) mushroomUnitFlower.innerText = unitResidual.toFixed(4)
+            if (mushroomUnitUsd) {
+              mushroomUnitUsd.innerText = `~$${unitResidualUsd.toFixed(4)}`
+              mushroomUnitUsd.className = "text-[9px] font-mono text-white/40"
+            }
+            if (mudUnitFlower) mudUnitFlower.innerText = unitResidual.toFixed(4)
+            if (mudUnitUsd) {
+              mudUnitUsd.innerText = `~$${unitResidualUsd.toFixed(4)}`
+              mudUnitUsd.className = "text-[9px] font-mono text-white/40"
+            }
+          }
+
+        } else {
+          // MODO TEÓRICO COMPLETO POR LOTE (1 Lote = 25 Palas)
+          const totalShovels = 25
+          const totalShovelsCost = totalShovels * shovelUnitCost
+          const grandTotalInvested = totalShovelsCost + totalReqCost
+          const grandTotalInvestedUsd = grandTotalInvested * liveFlowerPrice
+
+          if (batchShovelsText) batchShovelsText.innerText = `${totalShovels}x Sand Shovel`
+          if (batchShovelsFlower) batchShovelsFlower.innerText = totalShovelsCost.toFixed(4)
+          if (totalCostFlower) totalCostFlower.innerText = grandTotalInvested.toFixed(4)
+          if (totalCostUsd) totalCostUsd.innerText = `~$${grandTotalInvestedUsd.toFixed(4)}`
+
+          let expectedBeetleUnitValue = 0
+          let oddsHtml = ""
+
+          if (activeMix.beetleOdds && Array.isArray(activeMix.beetleOdds)) {
+            activeMix.beetleOdds.forEach((odd) => {
+              const p2pPrice = getBeetleP2PPrice(odd.sflId)
+              const expectedContribution = p2pPrice * odd.chance
+              expectedBeetleUnitValue += expectedContribution
+
+              oddsHtml += `
+                <div class="grid grid-cols-4 gap-1 items-center py-0.5 text-white/90">
+                  <div class="flex items-center gap-1 truncate">
+                    <img src="${odd.image}" class="w-3.5 h-3.5 object-contain" alt="${odd.name}" />
+                    <span class="truncate">${odd.name.replace(" Beetle", "")}</span>
+                  </div>
+                  <span class="text-center text-terminal-muted">${Math.round(odd.chance * 100)}%</span>
+                  <span class="text-right text-emerald-400 font-bold">${p2pPrice > 0 ? p2pPrice.toFixed(4) : "--"}</span>
+                  <span class="text-right text-cyan-400 font-bold">${expectedContribution > 0 ? expectedContribution.toFixed(4) : "--"}</span>
+                </div>
+              `
+            })
+          }
+
+          if (beetleOddsRows) beetleOddsRows.innerHTML = oddsHtml
+
+          const totalBeetlesPerBatch = activeMix.rewards.beetles || 2
+          const grandTotalBeetleRev = totalBeetlesPerBatch * expectedBeetleUnitValue
+          const grandTotalBeetleRevUsd = grandTotalBeetleRev * liveFlowerPrice
+
+          if (totalBeetleRevFlower) totalBeetleRevFlower.innerText = grandTotalBeetleRev.toFixed(4)
+          if (totalBeetleRevUsd) totalBeetleRevUsd.innerText = `~$${grandTotalBeetleRevUsd.toFixed(4)}`
+
+          const netBalance = grandTotalBeetleRev - grandTotalInvested
+          const labelProfit = residualCard?.dataset?.labelProfit || "¡Ganancia Neta Directa!:"
+          const labelDeficit = residualCard?.dataset?.labelDeficit || "Déficit cubierto con cosecha:"
+          const textFreeProfit = residualCard?.dataset?.textFreeprofit || "(¡Gratis con Ganancia!)"
+
+          if (netBalance > 0) {
+            if (balanceLabel) balanceLabel.innerText = labelProfit
+            if (balanceBadge) balanceBadge.classList.remove("hidden")
+            if (balanceContainer) {
+              balanceContainer.className = "flex items-center gap-1 font-bold text-emerald-400"
+            }
+            if (deficitFlower) deficitFlower.innerText = `+${netBalance.toFixed(4)}`
+            if (deficitUsd) deficitUsd.innerText = `(~+$${(netBalance * liveFlowerPrice).toFixed(4)})`
+
+            if (mushroomFreeBadge) mushroomFreeBadge.classList.remove("hidden")
+            if (mudFreeBadge) mudFreeBadge.classList.remove("hidden")
+            if (mushroomUnitFlower) mushroomUnitFlower.innerText = "0.0000"
+            if (mushroomUnitUsd) {
+              mushroomUnitUsd.innerText = textFreeProfit
+              mushroomUnitUsd.className = "text-[9px] font-mono text-emerald-400 font-bold"
+            }
+            if (mudUnitFlower) mudUnitFlower.innerText = "0.0000"
+            if (mudUnitUsd) {
+              mudUnitUsd.innerText = textFreeProfit
+              mudUnitUsd.className = "text-[9px] font-mono text-emerald-400 font-bold"
+            }
+          } else {
+            const deficit = Math.abs(netBalance)
+            const deficitUsdVal = deficit * liveFlowerPrice
+            if (balanceLabel) balanceLabel.innerText = labelDeficit
+            if (balanceBadge) balanceBadge.classList.add("hidden")
+            if (balanceContainer) {
+              balanceContainer.className = "flex items-center gap-1 font-bold text-amber-400"
+            }
+            if (deficitFlower) deficitFlower.innerText = deficit.toFixed(4)
+            if (deficitUsd) deficitUsd.innerText = `(~$${deficitUsdVal.toFixed(4)})`
+
+            if (mushroomFreeBadge) mushroomFreeBadge.classList.add("hidden")
+            if (mudFreeBadge) mudFreeBadge.classList.add("hidden")
+
+            const totalHarvestItems = (activeMix.rewards.mushrooms || (isMudMix ? 3 : 6)) + mudTheoreticalGoal
+            const residualUnitCost = totalHarvestItems > 0 ? deficit / totalHarvestItems : 0
+            const residualUnitCostUsd = residualUnitCost * liveFlowerPrice
+
+            if (mushroomUnitFlower) mushroomUnitFlower.innerText = residualUnitCost.toFixed(4)
+            if (mushroomUnitUsd) {
+              mushroomUnitUsd.innerText = `~$${residualUnitCostUsd.toFixed(4)}`
+              mushroomUnitUsd.className = "text-[9px] font-mono text-white/40"
+            }
+            if (mudUnitFlower) mudUnitFlower.innerText = residualUnitCost.toFixed(4)
+            if (mudUnitUsd) {
+              mudUnitUsd.innerText = `~$${residualUnitCostUsd.toFixed(4)}`
+              mudUnitUsd.className = "text-[9px] font-mono text-white/40"
+            }
+          }
+        }
+      }
+
+      // Manejo del botón toggle de simulación
+      if (simulateToggleBtn) {
+        simulateToggleBtn.addEventListener("click", () => {
+          if (!isSimulationActive) {
+            setSimulationActive(true)
+            simShovelsUsed = 0
+            simDiscoveredBeetles = []
+            simMushrooms = 0
+            simMud = 0
+            generateBoard()
+            updateEconomics()
+          } else {
+            setSimulationActive(false)
+            simShovelsUsed = 0
+            simDiscoveredBeetles = []
+            simMushrooms = 0
+            simMud = 0
+            generateBoard()
+            updateEconomics()
+          }
+        })
+      }
+
+      // Control del Dropdown Custom de Cultivos (Mud Mix)
+      if (cropDropdownTrigger) {
+        cropDropdownTrigger.addEventListener("click", (e) => {
+          e.stopPropagation()
+          if (cropDropdownMenu) {
+            const isClosed = cropDropdownMenu.classList.contains("hidden")
+            if (isClosed) {
+              cropDropdownMenu.classList.remove("hidden")
+              if (cropTriggerArrow) cropTriggerArrow.classList.add("rotate-180")
+            } else {
+              cropDropdownMenu.classList.add("hidden")
+              if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+            }
+          }
+        })
+      }
+
+      // Cerrar dropdown al hacer click fuera
+      document.addEventListener("click", (e) => {
+        if (cropDropdownMenu && !cropDropdownMenu.classList.contains("hidden")) {
+          const target = e.target
+          if (cropDropdownTrigger && cropDropdownTrigger.contains(target)) return
+          if (cropDropdownMenu.contains(target)) return
+          cropDropdownMenu.classList.add("hidden")
+          if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+        }
+      })
+
+      mixBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          mixBtns.forEach((b) => {
+            b.classList.remove("bg-white/10", "text-amber-400", "border-amber-500/30", "shadow-sm")
+            b.classList.add("text-white/50", "border-transparent")
+          })
+          btn.classList.add("bg-white/10", "text-amber-400", "border-amber-500/30", "shadow-sm")
+          btn.classList.remove("text-white/50", "border-transparent")
+
+          try {
+            activeMix = JSON.parse(btn.dataset.mixData)
+            selectedCropIndex = -1 // Resetear al óptimo automáticamente
+            if (cropDropdownMenu) {
+              cropDropdownMenu.dataset.populatedKey = ""
+              cropDropdownMenu.classList.add("hidden")
+            }
+            if (cropTriggerArrow) cropTriggerArrow.classList.remove("rotate-180")
+            if (isSimulationActive) {
+              simShovelsUsed = 0
+              simDiscoveredBeetles = []
+              simMushrooms = 0
+              simMud = 0
+            }
+            generateBoard()
+            updateEconomics()
+          } catch (e) {}
+        })
+      })
+
+      cells.forEach((cell, idx) => {
+        cell.addEventListener("click", () => {
+          revealCell(idx)
+        })
+      })
+
+      if (digAllBtn) {
+        digAllBtn.addEventListener("click", digAll)
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          simShovelsUsed = 0
+          simDiscoveredBeetles = []
+          simMushrooms = 0
+          simMud = 0
+          generateBoard()
+          updateEconomics()
+        })
+      }
+
+      generateBoard()
+      updateEconomics()
+
+      return {
+        update: updateEconomics,
+        reset: generateBoard
+      }
+    }
+
+
+    const caveManager = createCaveController()
+
+    function applyBettyRatio(ratio) {
+      if (!ratio || ratio <= 0) return
+      activeCoinsPerFlower = ratio
+      if (caveManager) {
+        caveManager.update()
+      }
+    }
+
+    function updateAll() {
+      if (caveManager) {
+        caveManager.update()
+      }
+    }
+
+    async function fetchLiveMarketData() {
+      try {
+        const res = await fetch("/api/sfl_data.json?t=" + Date.now())
+        if (res.ok) {
+          const data = await res.json()
+          marketDataCache = data
+
+          if (data && data.flowerPrice) {
+            liveFlowerPrice = parseFloat(data.flowerPrice)
+          }
+
+          if (data && data.items && bettyPrices && sflIds) {
+            let bestRatio = 0
+            Object.keys(bettyPrices).forEach((name) => {
+              const itemConfig = bettyPrices[name]
+              const itemId = Object.keys(sflIds).find((key) => sflIds[key] === name)
+              const internalKey = `collectibles-${itemId}`
+              const marketItem = data.items[internalKey]
+
+              const bettyPriceCoins = itemConfig.sellPrice
+              const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
+              if (p2pPriceFlower > 0) {
+                const ratio = bettyPriceCoins / p2pPriceFlower
+                if (ratio > bestRatio) {
+                  bestRatio = ratio
+                }
+              }
+            })
+
+            if (bestRatio > 0) {
+              applyBettyRatio(bestRatio)
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error al obtener datos de mercado SFL:", err)
+      }
+      updateAll()
+    }
+
+    updateAll()
+    fetchLiveMarketData()
+  })()
+</script>
+
+<style>
+  .cursor-shovel {
+    cursor: url('/img/sunflowerland/tools/sand_shovel_cursor.png') 12 2, url('/img/sunflowerland/tools/sand_shovel_cursor.png'), pointer !important;
+  }
+</style>
