@@ -1391,47 +1391,24 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           <div class="md:col-span-4 flex flex-col gap-2">
             <!-- Requisitos y Contadores de Progreso Compactos -->
             <div class="bg-black/40 border border-white/10 rounded-xl p-2 flex flex-col gap-1.5">
-              <!-- Fila de Controles: Simulación y Asistente Predictivo -->
-              <div class="grid grid-cols-2 gap-1.5">
-                <!-- Botón Toggle de Modo Simulación -->
-                <button
-                  type="button"
-                  id="caveSimulateToggleBtn"
-                  class="py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-between border bg-black/50 text-white/50 border-white/10 hover:border-white/20 hover:text-white"
-                  data-active="false"
+              <!-- Control: Modo Simulación en Vivo -->
+              <button
+                type="button"
+                id="caveSimulateToggleBtn"
+                class="w-full py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-between border bg-black/50 text-white/50 border-white/10 hover:border-white/20 hover:text-white"
+                data-active="false"
+              >
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="text-xs shrink-0">🎮</span>
+                  <span class="text-[10px] truncate">{t("sfl.constants.cave.simulateBtn")}</span>
+                </div>
+                <span
+                  id="caveSimulateStatusText"
+                  class="text-[8.5px] px-1.5 py-0.2 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5 shrink-0"
                 >
-                  <div class="flex items-center gap-1 min-w-0">
-                    <span class="text-xs shrink-0">🎮</span>
-                    <span class="text-[10px] truncate">{t("sfl.constants.cave.simulateBtn")}</span>
-                  </div>
-                  <span
-                    id="caveSimulateStatusText"
-                    class="text-[8.5px] px-1 py-0.2 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5 shrink-0"
-                  >
-                    OFF
-                  </span>
-                </button>
-
-                <!-- Botón Toggle de Asistente Solver -->
-                <button
-                  type="button"
-                  id="caveSolverToggleBtn"
-                  class="py-1 px-2 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-between border bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-sm"
-                  data-active="true"
-                  title={t("sfl.constants.cave.solverTooltip")}
-                >
-                  <div class="flex items-center gap-1 min-w-0">
-                    <span class="text-xs shrink-0">🎯</span>
-                    <span class="text-[10px] truncate">{t("sfl.constants.cave.solverBtn")}</span>
-                  </div>
-                  <span
-                    id="caveSolverStatusText"
-                    class="text-[8.5px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 shrink-0"
-                  >
-                    ON
-                  </span>
-                </button>
-              </div>
+                  OFF
+                </span>
+              </button>
 
               <!-- Contadores de Recompensas -->
               <div class="grid grid-cols-3 gap-1 pt-0.5 border-t border-white/5">
@@ -1484,14 +1461,14 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
                 {Array.from({ length: 25 }).map((_, idx) => (
                   <button
                     type="button"
-                    class="cave-cell relative aspect-square rounded-full bg-[#dfbe99] hover:bg-[#ebd1b0] border border-[#c49c71] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.25)] active:scale-95 transition-all cursor-pointer flex items-center justify-center p-0.5 group select-none"
+                    class="cave-cell cursor-shovel relative aspect-square rounded-full bg-[#dfbe99] hover:bg-[#ebd1b0] border border-[#c49c71] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.25)] active:scale-95 transition-all flex items-center justify-center p-0.5 group select-none"
                     data-cell-index={idx}
                   >
                     <!-- Textura de montículo arenoso inicial con Indicador de Probabilidad Solver -->
                     <div class="cell-mound w-full h-full flex flex-col items-center justify-center relative">
                       <div class="cell-mound-dot w-2 h-2 rounded-full bg-[#cfa47c]/60 group-hover:scale-110 transition-transform shadow-inner" />
                       <!-- Porcentaje calculado del Solver -->
-                      <span class="cell-prob-badge hidden absolute inset-0 flex items-center justify-center font-mono font-black text-[9.5px] sm:text-[10px] leading-none pointer-events-none drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.9)] select-none">
+                      <span class="cell-prob-badge hidden absolute inset-0 flex items-center justify-center font-mono font-black text-[10px] sm:text-[10.5px] leading-none pointer-events-none select-none text-stone-950 tracking-tight">
                         --%
                       </span>
                     </div>
@@ -2325,8 +2302,6 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       // Elementos DOM
       const simulateToggleBtn = document.getElementById("caveSimulateToggleBtn")
       const simulateStatusText = document.getElementById("caveSimulateStatusText")
-      const solverToggleBtn = document.getElementById("caveSolverToggleBtn")
-      const solverStatusText = document.getElementById("caveSolverStatusText")
       const mudBoostBadge = document.getElementById("caveMudBoostBadge")
       const beetlesCountDisplay = document.getElementById("caveBeetlesCount")
       const beetlesGoalDisplay = document.getElementById("caveBeetlesGoal")
@@ -2618,7 +2593,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         }
 
         cells.forEach((cell) => {
-          cell.className = "cave-cell relative aspect-square rounded-full bg-[#dfbe99] hover:bg-[#ebd1b0] border border-[#c49c71] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.25)] active:scale-95 transition-all cursor-pointer flex items-center justify-center p-0.5 group select-none"
+          cell.className = "cave-cell cursor-shovel relative aspect-square rounded-full bg-[#dfbe99] hover:bg-[#ebd1b0] border border-[#c49c71] shadow-[inset_0_-2px_3px_rgba(0,0,0,0.25)] active:scale-95 transition-all flex items-center justify-center p-0.5 group select-none"
 
           const mound = cell.querySelector(".cell-mound")
           const revealed = cell.querySelector(".cell-revealed")
@@ -2907,23 +2882,40 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         if (moundDot) moundDot.classList.add("hidden")
 
         probBadge.innerText = `${p}%`
-        cell.classList.remove("ring-2", "ring-emerald-400", "shadow-[0_0_8px_rgba(52,211,153,0.7)]")
+        probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-black text-[10px] sm:text-[10.5px] leading-none pointer-events-none select-none text-stone-950 tracking-tight"
 
+        // Limpiar clases previas de borde y efectos de la celda
+        cell.classList.remove(
+          "border",
+          "border-2",
+          "border-[#c49c71]",
+          "border-[#a87f54]",
+          "border-emerald-500",
+          "border-rose-500/80",
+          "border-amber-500",
+          "border-yellow-500",
+          "ring-2",
+          "ring-emerald-400",
+          "shadow-[0_0_10px_rgba(16,185,129,0.8)]",
+          "shadow-[0_0_6px_rgba(245,158,11,0.4)]",
+          "animate-pulse"
+        )
+
+        // El borde del campo se colorea según el porcentaje (100% verde)
         if (p === 100) {
-          probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-black text-[9.5px] sm:text-[10px] leading-none pointer-events-none drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.9)] text-emerald-300 animate-pulse select-none"
-          cell.classList.add("ring-2", "ring-emerald-400", "shadow-[0_0_8px_rgba(52,211,153,0.7)]")
-          cell.title = "¡100% Certeza de Objetivo Valioso! (Excavación recomendada)"
+          cell.classList.add("border-2", "border-emerald-500", "ring-2", "ring-emerald-400", "shadow-[0_0_10px_rgba(16,185,129,0.8)]", "animate-pulse")
+          cell.title = "¡100% Certeza de Objetivo Valioso! (Borde verde - Excavación recomendada)"
         } else if (p === 0) {
-          probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-bold text-[9px] sm:text-[9.5px] leading-none pointer-events-none drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.9)] text-rose-300/80 select-none"
-          cell.title = "0% Probabilidad de Objetivo (100% Mud seguro - Ahorra tu pala)"
+          cell.classList.add("border-2", "border-rose-500/80")
+          cell.title = "0% Probabilidad (100% Mud seguro - Ahorra tu pala)"
         } else if (p >= 65) {
-          probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-black text-[9.5px] sm:text-[10px] leading-none pointer-events-none drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.9)] text-amber-300 select-none"
+          cell.classList.add("border-2", "border-amber-500", "shadow-[0_0_6px_rgba(245,158,11,0.4)]")
           cell.title = `${p}% de Probabilidad de Objetivo Valioso`
         } else if (p >= 40) {
-          probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-bold text-[9px] sm:text-[9.5px] leading-none pointer-events-none drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.9)] text-amber-100/90 select-none"
+          cell.classList.add("border-2", "border-yellow-500")
           cell.title = `${p}% de Probabilidad de Objetivo Valioso`
         } else {
-          probBadge.className = "cell-prob-badge absolute inset-0 flex items-center justify-center font-mono font-medium text-[8.5px] sm:text-[9px] leading-none pointer-events-none drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.9)] text-white/70 select-none"
+          cell.classList.add("border-2", "border-[#a87f54]")
           cell.title = `${p}% de Probabilidad de Objetivo Valioso`
         }
       }
@@ -2961,7 +2953,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         const cell = cells[idx]
         if (!cell) return
 
-        cell.className = "cave-cell relative aspect-square rounded-full bg-[#26150c] border border-[#1b0d06] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center p-0.5 group select-none"
+        cell.className = "cave-cell relative aspect-square rounded-full bg-[#26150c] border border-[#1b0d06] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center p-0.5 group select-none cursor-default"
 
         const mound = cell.querySelector(".cell-mound")
         const revealed = cell.querySelector(".cell-revealed")
@@ -3328,30 +3320,6 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         })
       }
 
-      // Manejo del botón toggle del Asistente Solver
-      if (solverToggleBtn) {
-        solverToggleBtn.addEventListener("click", () => {
-          isSolverActive = !isSolverActive
-          solverToggleBtn.dataset.active = isSolverActive ? "true" : "false"
-          if (isSolverActive) {
-            solverToggleBtn.classList.remove("bg-black/50", "text-white/50", "border-white/10")
-            solverToggleBtn.classList.add("bg-emerald-500/15", "text-emerald-300", "border-emerald-500/40", "shadow-sm")
-            if (solverStatusText) {
-              solverStatusText.innerText = "ON"
-              solverStatusText.className = "text-[8.5px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 shrink-0"
-            }
-          } else {
-            solverToggleBtn.classList.remove("bg-emerald-500/15", "text-emerald-300", "border-emerald-500/40", "shadow-sm")
-            solverToggleBtn.classList.add("bg-black/50", "text-white/50", "border-white/10")
-            if (solverStatusText) {
-              solverStatusText.innerText = "OFF"
-              solverStatusText.className = "text-[8.5px] px-1 py-0.2 rounded font-mono font-bold bg-white/5 text-white/40 border border-white/5 shrink-0"
-            }
-          }
-          updateSolverProbabilities()
-        })
-      }
-
       // Control del Dropdown Custom de Cultivos (Mud Mix)
       if (cropDropdownTrigger) {
         cropDropdownTrigger.addEventListener("click", (e) => {
@@ -3527,3 +3495,9 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     fetchLiveMarketData()
   })()
 </script>
+
+<style>
+  .cursor-shovel {
+    cursor: url('/img/sunflowerland/tools/sand_shovel_cursor.png') 12 2, url('/img/sunflowerland/tools/sand_shovel_cursor.png'), pointer !important;
+  }
+</style>
