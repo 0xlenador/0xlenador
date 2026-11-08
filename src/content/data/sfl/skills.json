@@ -4539,7 +4539,7 @@
         "Sea Blessed": {
             "id": 148,
             "name": "Sea Blessed",
-            "description": "5% chance to restore 1 charge to 4 Salt Nodes on harvest | ?? 2\u00d7 Aging Shed inputs (ingredients, fish & salt)",
+            "description": "5% chance to restore 1 charge to 4 Salt Nodes on harvest | ?? 2× Aging Shed inputs (ingredients, fish & salt)",
             "image": "/img/sunflowerland/skills/sea_blessed.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -4569,7 +4569,7 @@
         "Ager": {
             "id": 149,
             "name": "Ager",
-            "description": "2\u00d7 output from Aging Shed Racks | ?? 2\u00d7 Aging Shed inputs (ingredients, fish & salt)",
+            "description": "2× output from Aging Shed Racks | ?? 2× Aging Shed inputs (ingredients, fish & salt)",
             "image": "/img/sunflowerland/skills/ager.webp",
             "cost_by_rank": {
                 "rank_1": {
@@ -4627,5 +4627,357 @@
             }
         }
     },
-    "Cave": {}
+    "Cave": {
+        "Lean Compost": {
+            "id": 151,
+            "name": "Lean Compost",
+            "tier": 1,
+            "description": "x{math1} Myco Bin ingredients",
+            "image": "/img/sunflowerland/skills/lean_compost.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 1
+                },
+                "rank_2": {
+                    "shards": 1,
+                    "skills": 1
+                },
+                "rank_3": {
+                    "shards": 1,
+                    "skills": 1
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "myco_bin",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.95,
+                    "rank_2": 0.9,
+                    "rank_3": 0.85
+                }
+            }
+        },
+        "Rapid Mycelium": {
+            "id": 152,
+            "name": "Rapid Mycelium",
+            "tier": 1,
+            "description": "x{math1} Myco Bin growth time",
+            "image": "/img/sunflowerland/skills/rapid_mycelium.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 1
+                },
+                "rank_2": {
+                    "shards": 1,
+                    "skills": 1
+                },
+                "rank_3": {
+                    "shards": 1,
+                    "skills": 1
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "myco_bin",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.95,
+                    "rank_2": 0.9,
+                    "rank_3": 0.85
+                }
+            }
+        },
+        "Mushroom Bloom": {
+            "id": 153,
+            "name": "Mushroom Bloom",
+            "tier": 1,
+            "description": "+{math1} Mushroom tiles per Cave patch",
+            "image": "/img/sunflowerland/skills/mushroom_bloom.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 1
+                },
+                "rank_2": {
+                    "shards": 1,
+                    "skills": 1
+                },
+                "rank_3": {
+                    "shards": 1,
+                    "skills": 1
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "patch",
+                "mathematics_operation": "add",
+                "calc_by_rank": {
+                    "rank_1": 1,
+                    "rank_2": 2,
+                    "rank_3": 3
+                }
+            }
+        },
+        "Muddy Bounty": {
+            "id": 154,
+            "name": "Muddy Bounty",
+            "tier": 1,
+            "description": "+{math1_pct}% Mud from Cave Mud tiles",
+            "image": "/img/sunflowerland/skills/muddy_bounty.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 1
+                },
+                "rank_2": {
+                    "shards": 1,
+                    "skills": 1
+                },
+                "rank_3": {
+                    "shards": 1,
+                    "skills": 1
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "mud",
+                "mathematics_operation": "multiply",
+                "calc_by_rank": {
+                    "rank_1": 0.1,
+                    "rank_2": 0.2,
+                    "rank_3": 0.3
+                }
+            }
+        },
+        "Sturdy Shovel": {
+            "id": 155,
+            "name": "Sturdy Shovel",
+            "tier": 1,
+            "description": "{math1}% chance Cave dig does not consume Sand Shovel",
+            "image": "/img/sunflowerland/skills/sturdy_shovel.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 1
+                },
+                "rank_2": {
+                    "shards": 1,
+                    "skills": 1
+                },
+                "rank_3": {
+                    "shards": 1,
+                    "skills": 1
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "shovel",
+                "mathematics_operation": "chance",
+                "calc_by_rank": {
+                    "rank_1": 10,
+                    "rank_2": 20,
+                    "rank_3": 30
+                }
+            }
+        },
+        "Fungal Harvest": {
+            "id": 156,
+            "name": "Fungal Harvest",
+            "tier": 2,
+            "description": "+{math1} Mushrooms from Cave Mushroom tiles",
+            "image": "/img/sunflowerland/skills/fungal_harvest.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 2
+                },
+                "rank_2": {
+                    "shards": 2,
+                    "skills": 3
+                },
+                "rank_3": {
+                    "shards": 2,
+                    "skills": 3
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "mushrooms",
+                "mathematics_operation": "add",
+                "calc_by_rank": {
+                    "rank_1": 0.2,
+                    "rank_2": 0.3,
+                    "rank_3": 0.4
+                }
+            }
+        },
+        "Beetle Nest": {
+            "id": 157,
+            "name": "Beetle Nest",
+            "tier": 2,
+            "description": "+{math1} Beetle tiles per Cave patch",
+            "image": "/img/sunflowerland/skills/beetle_nest.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 2
+                },
+                "rank_2": {
+                    "shards": 2,
+                    "skills": 3
+                },
+                "rank_3": {
+                    "shards": 2,
+                    "skills": 3
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "beetles",
+                "mathematics_operation": "add",
+                "calc_by_rank": {
+                    "rank_1": 1,
+                    "rank_2": 2,
+                    "rank_3": 3
+                }
+            }
+        },
+        "Sturdy Drill": {
+            "id": 158,
+            "name": "Sturdy Drill",
+            "tier": 2,
+            "description": "{math1}% chance Cave drill does not consume Sand Drill",
+            "image": "/img/sunflowerland/skills/sturdy_drill.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 2
+                },
+                "rank_2": {
+                    "shards": 2,
+                    "skills": 3
+                },
+                "rank_3": {
+                    "shards": 2,
+                    "skills": 3
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "drill",
+                "mathematics_operation": "chance",
+                "calc_by_rank": {
+                    "rank_1": 20,
+                    "rank_2": 30,
+                    "rank_3": 40
+                }
+            }
+        },
+        "Tool Hoarder": {
+            "id": 159,
+            "name": "Tool Hoarder",
+            "tier": 2,
+            "description": "+{math1} Sand Shovel and +{math2} Sand Drill stock",
+            "image": "/img/sunflowerland/skills/tool_hoarder.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 2
+                },
+                "rank_2": {
+                    "shards": 2,
+                    "skills": 3
+                },
+                "rank_3": {
+                    "shards": 2,
+                    "skills": 3
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "Sand Shovel",
+                "mathematics_operation": "add",
+                "calc_by_rank": {
+                    "rank_1": 25,
+                    "rank_2": 50,
+                    "rank_3": 100
+                }
+            },
+            "mathematics_2": {
+                "category": "cave",
+                "target": "Sand Drill",
+                "mathematics_operation": "add",
+                "calc_by_rank": {
+                    "rank_1": 5,
+                    "rank_2": 10,
+                    "rank_3": 20
+                }
+            }
+        },
+        "Rare Breeds": {
+            "id": 160,
+            "name": "Rare Breeds",
+            "tier": 3,
+            "description": "+{math1}% odds of finding rarer Beetles in Cave",
+            "image": "/img/sunflowerland/skills/rare_breeds.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 3
+                },
+                "rank_2": {
+                    "shards": 3,
+                    "skills": 6
+                },
+                "rank_3": {
+                    "shards": 3,
+                    "skills": 6
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "beetle_rarity",
+                "mathematics_operation": "add",
+                "calc_by_rank": {
+                    "rank_1": 10,
+                    "rank_2": 20,
+                    "rank_3": 30
+                }
+            }
+        },
+        "Twin Beetles": {
+            "id": 161,
+            "name": "Twin Beetles",
+            "tier": 3,
+            "description": "{math1}% chance of an extra Beetle when dug",
+            "image": "/img/sunflowerland/skills/twin_beetles.webp",
+            "cost_by_rank": {
+                "rank_1": {
+                    "shards": 0,
+                    "skills": 3
+                },
+                "rank_2": {
+                    "shards": 3,
+                    "skills": 6
+                },
+                "rank_3": {
+                    "shards": 3,
+                    "skills": 6
+                }
+            },
+            "mathematics_1": {
+                "category": "cave",
+                "target": "beetles",
+                "mathematics_operation": "chance",
+                "calc_by_rank": {
+                    "rank_1": 5,
+                    "rank_2": 10,
+                    "rank_3": 15
+                }
+            }
+        }
+    }
 }
