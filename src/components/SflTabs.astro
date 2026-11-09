@@ -458,6 +458,29 @@ const tabs = [
             el.classList.remove("animate-pulse")
           })
         }
+
+        // Calcular costo del Oil Drill en FLOWER de forma transversal
+        // Receta oficial: 20 Wood (601) + 9 Iron (603) + 10 Leather (641) + 100 Coins
+        const woodItem = marketData["collectibles-601"] || marketData["resources-601"]
+        const ironItem = marketData["collectibles-603"] || marketData["resources-603"]
+        const leatherItem = marketData["collectibles-641"] || marketData["resources-641"]
+
+        const woodPrice = woodItem ? (woodItem.currentPrice || 0) : 0
+        const ironPrice = ironItem ? (ironItem.currentPrice || 0) : 0
+        const leatherPrice = leatherItem ? (leatherItem.currentPrice || 0) : 0
+        const coinsCost = bestCoinsPerFlower > 0 ? (100 / bestCoinsPerFlower) : (100 / 1330)
+
+        const oilDrillCost = (20 * woodPrice) + (9 * ironPrice) + (10 * leatherPrice) + coinsCost
+        if (oilDrillCost > 0) {
+          window.sflOilDrillCost = oilDrillCost
+        }
+
+        // Actualizar Oil inmediatamente con el nuevo costo del drill
+        const oilInputs = document.querySelectorAll(".tab-oil-input")
+        const currentOilVal = oilInputs.length > 0 ? oilInputs[0].value : (window.sflOilMultiplier || 16.67)
+        if (window.updateTabOil) {
+          window.updateTabOil(currentOilVal)
+        }
       }
     } catch (e) {
       console.error("Error fetching SFL tab prices", e)
@@ -490,80 +513,129 @@ const tabs = [
   }
 
   window.updateTabGems = (amount) => {
-     let val = parseFloat(amount);
-     if (isNaN(val)) val = 0;
-     
-     document.querySelectorAll('.tab-gem-input').forEach(input => {
-        if (input.value !== amount.toString()) {
-           input.value = amount;
-        }
-     });
-     
-     const sflPrice = window.sflInternalPrice || 0.136;
-     const gemBaseUsd = 0.0103;
-     const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29;
-     const gemCostUsd = gemBaseUsd / (1 + gemBonus);
-     const gemCostFlower = gemCostUsd / sflPrice;
-     
-     const totalFlower = val * gemCostFlower;
-     const totalUsd = totalFlower * sflPrice;
-     
-     const formatUsd = (num) => {
-        if (num === 0) return "0.00";
-        if (num < 0.1) return num.toFixed(4);
-        const rounded = Math.round(num * 100) / 100;
-        return Number.isInteger(rounded) ? rounded.toFixed(2) : rounded.toString();
-     };
-     
-     document.querySelectorAll('.tab-gem-flower-amount').forEach(el => {
-        el.innerText = totalFlower.toFixed(2);
-     });
-     
-     document.querySelectorAll('.tabGemFlowerUsd').forEach(el => {
-        el.innerText = "$" + formatUsd(totalUsd);
-        el.classList.remove("animate-pulse");
-     });
-  };
+    const rawStr = amount !== undefined && amount !== null ? amount.toString().trim().replace(",", ".") : ""
+    let val = parseFloat(rawStr)
+    if (isNaN(val)) val = 0
+
+    try {
+      localStorage.setItem("sfl_gem_amount", val.toString())
+    } catch (_) {}
+
+    document.querySelectorAll(".tab-gem-input").forEach((input) => {
+      if (document.activeElement !== input && input.value !== amount.toString()) {
+        input.value = amount
+      }
+    })
+
+    const sflPrice = window.sflInternalPrice || 0.136
+    const gemBaseUsd = 0.0103
+    const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29
+    const gemCostUsd = gemBaseUsd / (1 + gemBonus)
+    const gemCostFlower = gemCostUsd / sflPrice
+
+    const totalFlower = val * gemCostFlower
+    const totalUsd = totalFlower * sflPrice
+
+    const formatUsd = (num) => {
+      if (num === 0) return "0.00"
+      if (num < 0.1) return num.toFixed(4)
+      const rounded = Math.round(num * 100) / 100
+      return Number.isInteger(rounded) ? rounded.toFixed(2) : rounded.toString()
+    }
+
+    document.querySelectorAll(".tab-gem-flower-amount").forEach((el) => {
+      el.innerText = totalFlower.toFixed(2)
+    })
+
+    document.querySelectorAll(".tabGemFlowerUsd").forEach((el) => {
+      el.innerText = "$" + formatUsd(totalUsd)
+      el.classList.remove("animate-pulse")
+    })
+  }
 
   window.updateTabOil = (mult) => {
-     let m = parseFloat(mult);
-     if (isNaN(m) || m <= 0) m = 16.67;
-     
-     document.querySelectorAll('.tab-oil-input').forEach(input => {
-        if (input.value !== mult.toString()) {
-           input.value = mult;
-        }
-     });
-     
-     let oilFlower = 0.107;
-     if (window.sflOilDrillCost && window.sflOilDrillCost > 0) {
-        oilFlower = window.sflOilDrillCost / m;
-     } else if (window.sflBestOilPriceFlower) {
-        oilFlower = window.sflBestOilPriceFlower * (16.67 / m);
-     }
-     
-     document.querySelectorAll('.tab-oil-flower-amount').forEach(el => {
-        el.innerText = oilFlower.toFixed(4);
-        el.classList.remove("animate-pulse");
-     });
-  };
+    const rawStr = mult !== undefined && mult !== null ? mult.toString().trim().replace(",", ".") : ""
+    let m = parseFloat(rawStr)
+    if (isNaN(m) || m <= 0) m = 16.67
+
+    window.sflOilMultiplier = m
+    try {
+      localStorage.setItem("sfl_oil_multiplier", m.toString())
+    } catch (_) {}
+
+    document.querySelectorAll(".tab-oil-input").forEach((input) => {
+      if (document.activeElement !== input && input.value !== mult.toString()) {
+        input.value = mult
+      }
+    })
+
+    // Costo total de 1 Oil Drill en FLOWER (dinámico si la API cargó, o fallback 1.7838 FLOWER)
+    const drillCost = (window.sflOilDrillCost && window.sflOilDrillCost > 0)
+      ? window.sflOilDrillCost
+      : (0.107 * 16.67)
+
+    const oilFlower = drillCost / m
+    window.sflBestOilPriceFlower = oilFlower
+
+    document.querySelectorAll(".tab-oil-flower-amount").forEach((el) => {
+      el.innerText = oilFlower.toFixed(4)
+      el.classList.remove("animate-pulse")
+    })
+
+    window.dispatchEvent(new CustomEvent("sfl:oilUpdated", { detail: { multiplier: m, oilFlower, drillCost } }))
+  }
 
   const initSflTabs = () => {
+    let savedGems = null
+    let savedOil = null
+    try {
+      savedGems = localStorage.getItem("sfl_gem_amount")
+      savedOil = localStorage.getItem("sfl_oil_multiplier")
+    } catch (_) {}
+
+    if (savedGems && !isNaN(parseFloat(savedGems))) {
+      document.querySelectorAll(".tab-gem-input").forEach((input) => {
+        input.value = savedGems
+      })
+    }
+
+    if (savedOil && !isNaN(parseFloat(savedOil))) {
+      document.querySelectorAll(".tab-oil-input").forEach((input) => {
+        input.value = savedOil
+      })
+    }
+
     applyFlowerPrice(window.sflInternalPrice || 0.1501)
     updateTabPrices()
     setupCopyButtons()
-    
-    document.querySelectorAll('.tab-gem-input').forEach(input => {
-       input.addEventListener('input', (e) => {
-          window.updateTabGems(e.target.value);
-       });
-    });
 
-    document.querySelectorAll('.tab-oil-input').forEach(input => {
-       input.addEventListener('input', (e) => {
-          window.updateTabOil(e.target.value);
-       });
-    });
+    document.querySelectorAll(".tab-gem-input").forEach((input) => {
+      if (input.hasAttribute("data-init-tab-gem")) return
+      input.setAttribute("data-init-tab-gem", "true")
+      input.addEventListener("focus", (e) => {
+        if (e.target && typeof e.target.select === "function") e.target.select()
+      })
+      input.addEventListener("input", (e) => {
+        window.updateTabGems(e.target.value)
+      })
+      input.addEventListener("change", (e) => {
+        window.updateTabGems(e.target.value)
+      })
+    })
+
+    document.querySelectorAll(".tab-oil-input").forEach((input) => {
+      if (input.hasAttribute("data-init-tab-oil")) return
+      input.setAttribute("data-init-tab-oil", "true")
+      input.addEventListener("focus", (e) => {
+        if (e.target && typeof e.target.select === "function") e.target.select()
+      })
+      input.addEventListener("input", (e) => {
+        window.updateTabOil(e.target.value)
+      })
+      input.addEventListener("change", (e) => {
+        window.updateTabOil(e.target.value)
+      })
+    })
   }
 
   document.addEventListener("astro:page-load", initSflTabs)
