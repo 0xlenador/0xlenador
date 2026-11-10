@@ -15,6 +15,7 @@ const tabs = [
     id: "hub",
     href: loc("/sunflowerland"),
     label: t("sfl.tabs.hub"),
+    mobileLabel: t("sfl.tabs.hubMobile"),
     icon: "/img/sunflowerland/Sunflower.png",
   },
   {
@@ -64,7 +65,7 @@ const tabs = [
 
 <div class="relative z-20 w-full">
   <span class="price-value hidden" data-coin-id="flower-2"></span>
-  <div class="bg-black/30 border border-white/[0.03] rounded-xl p-1 flex items-center w-full">
+  <div class="sfl-tabs-bar bg-black/30 border border-white/[0.03] rounded-xl p-1 flex items-center w-full overflow-x-auto scrollbar-none gap-1 sm:gap-0">
     {
       tabs.map((tab) => {
         const isActive = tab.id === activeTab
@@ -73,9 +74,9 @@ const tabs = [
             href={tab.href}
             data-astro-prefetch
             class:list={[
-              "flex-1 flex items-center justify-center gap-1.5 px-2 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300 group",
+              "shrink-0 sm:shrink sm:flex-1 flex items-center justify-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all duration-300 group whitespace-nowrap select-none",
               isActive
-                ? "bg-white/5 text-emerald-400 shadow-sm border border-white/5"
+                ? "bg-white/5 text-emerald-400 shadow-sm border border-white/5 active-sfl-tab"
                 : "text-white/40 hover:text-white/80 hover:bg-white/[0.02] border border-transparent",
             ]}
           >
@@ -83,14 +84,15 @@ const tabs = [
               src={tab.icon}
               alt={tab.label}
               class:list={[
-                "w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow-md",
+                "w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow-md shrink-0",
                 isActive
                   ? "opacity-100 scale-110"
                   : "opacity-50 grayscale-[80%] transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100",
               ]}
               loading="lazy"
             />
-            <span class="tracking-wide uppercase whitespace-nowrap">{tab.label}</span>
+            <span class="tracking-wide uppercase hidden sm:inline">{tab.label}</span>
+            <span class="tracking-wide uppercase inline sm:hidden">{tab.mobileLabel || tab.label}</span>
           </a>
         )
       })
@@ -98,40 +100,77 @@ const tabs = [
   </div>
 </div>
 <style>
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-100%);
-    }
+  .sfl-tabs-bar {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .sfl-tabs-bar::-webkit-scrollbar {
+    display: none;
   }
   .marquee-container {
     display: flex;
     overflow: hidden;
     width: 100%;
     position: relative;
+    user-select: none;
+    touch-action: pan-y;
+    cursor: grab;
+  }
+  .marquee-container:active {
+    cursor: grabbing;
+  }
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    will-change: transform;
   }
   .marquee-content {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    animation: marquee 12s linear infinite;
     padding-right: 0.375rem; /* Equivalent to gap-1.5 */
   }
   @media (min-width: 640px) {
     .marquee-container {
-      width: auto;
+      width: 100%;
       overflow: visible;
       mask-image: none !important;
       -webkit-mask-image: none !important;
+      cursor: default;
+    }
+    .marquee-track {
+      width: 100%;
+      transform: none !important;
     }
     .marquee-content {
-      animation: none !important;
+      width: 100%;
+      display: flex;
+      align-items: center;
       padding-right: 0;
+    }
+    .marquee-content > * {
+      flex: 1 1 auto;
+      justify-content: center;
     }
     .marquee-duplicate {
       display: none !important;
+    }
+  }
+  @media (min-width: 1024px) {
+    .marquee-container {
+      width: auto;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .sfl-links-bar {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .sfl-links-bar > * {
+      flex: 1 1 auto;
+      justify-content: center;
     }
   }
 </style>
@@ -143,174 +182,256 @@ const tabs = [
     class="marquee-container"
     style="-webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);"
   >
-    <div class="marquee-content gap-1.5 sm:gap-2">
-      <a
-        href={loc("/sfl-betty")}
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
-      >
-        <img
-          src="/img/sunflowerland/123/coins.png"
-          alt="Coins"
-          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
-          loading="lazy"
-        />
-        <span class="tabBettyBest text-white/80 font-bold tracking-wide">
-          <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
-        </span>
-      </a>
+    <div class="marquee-track flex items-center">
+      <!-- Bloque 1: Original -->
+      <div class="marquee-content gap-1.5 sm:gap-2">
+        <a
+          href={loc("/sfl-betty")}
+          class="flex items-center justify-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
+        >
+          <img
+            src="/img/sunflowerland/123/coins.png"
+            alt="Coins"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="tabBettyBest text-white/80 font-bold tracking-wide">
+            <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
+          </span>
+        </a>
 
-      <div
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
-      >
-        <img
-          src="/img/sunflowerland/123/Gem.png"
-          alt="Gem"
-          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
-          loading="lazy"
-        />
-        <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
-          <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
+        <div
+          class="flex items-center justify-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
+          <img
+            src="/img/sunflowerland/123/Gem.png"
+            alt="Gem"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
+            <img
+              src="/img/sunflowerland/flower.jpg"
+              alt="logo de FLOWER"
+              class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+            />
+            <span class="tab-gem-flower-amount">1.97</span>
+            <span class="text-white/30 mx-0.5">|</span>
+            <span class="tabGemFlowerUsd"
+              ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
+              </div></span
+            >
+          </span>
+        </div>
+
+        <div
+          class="flex items-center justify-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
+          <img
+            src="/img/sunflowerland/123/Oil.png"
+            alt="Oil"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            1:
+            <img
+              src="/img/sunflowerland/flower.jpg"
+              alt="logo de FLOWER"
+              class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+            />
+            <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+            <span class="text-white/30 mx-0.5">|</span>
+            <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
+          </span>
+        </div>
+
+        <div
+          class="flex items-center justify-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
           <img
             src="/img/sunflowerland/flower.jpg"
-            alt="logo de FLOWER"
+            alt="FLOWER"
             class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
           />
-          <span class="tab-gem-flower-amount">1.97</span>
-          <span class="text-white/30 mx-0.5">|</span>
-          <span class="tabGemFlowerUsd"
+          <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"
             ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
             </div></span
           >
-        </span>
+        </div>
       </div>
 
-      <div
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
-      >
-        <img
-          src="/img/sunflowerland/123/Oil.png"
-          alt="Oil"
-          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
-          loading="lazy"
-        />
-        <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
-          1:
-          <img
-            src="/img/sunflowerland/flower.jpg"
-            alt="logo de FLOWER"
-            class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
-          />
-          <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
-          <span class="text-white/30 mx-0.5">|</span>
-          <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
-        </span>
-      </div>
-
-      <div
-        class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
-      >
-        <img
-          src="/img/sunflowerland/flower.jpg"
-          alt="FLOWER"
-          class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
-        />
-        <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"
-          ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
-          </div></span
+      <!-- Bloque 2: Duplicado móvil A -->
+      <div class="marquee-content marquee-duplicate gap-1.5" aria-hidden="true">
+        <a
+          href={loc("/sfl-betty")}
+          class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
         >
-      </div>
-    </div>
+          <img
+            src="/img/sunflowerland/123/coins.png"
+            alt="Coins"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="tabBettyBest text-white/80 font-bold tracking-wide">
+            <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
+          </span>
+        </a>
 
-    <!-- Duplicado solo visible en moviles -->
-    <div class="marquee-content marquee-duplicate gap-1.5" aria-hidden="true">
-      <a
-        href={loc("/sfl-betty")}
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
-      >
-        <img
-          src="/img/sunflowerland/123/coins.png"
-          alt="Coins"
-          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
-          loading="lazy"
-        />
-        <span class="tabBettyBest text-white/80 font-bold tracking-wide">
-          <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
-        </span>
-      </a>
+        <div
+          class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
+          <img
+            src="/img/sunflowerland/123/Gem.png"
+            alt="Gem"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
+            <img
+              src="/img/sunflowerland/flower.jpg"
+              alt="logo de FLOWER"
+              class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+            />
+            <span class="tab-gem-flower-amount">1.97</span>
+            <span class="text-white/30 mx-0.5">|</span>
+            <span class="tabGemFlowerUsd"
+              ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
+              </div></span
+            >
+          </span>
+        </div>
 
-      <div
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
-      >
-        <img
-          src="/img/sunflowerland/123/Gem.png"
-          alt="Gem"
-          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
-          loading="lazy"
-        />
-        <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
-          <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
+        <div
+          class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
+          <img
+            src="/img/sunflowerland/123/Oil.png"
+            alt="Oil"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            1:
+            <img
+              src="/img/sunflowerland/flower.jpg"
+              alt="logo de FLOWER"
+              class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+            />
+            <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+            <span class="text-white/30 mx-0.5">|</span>
+            <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
+          </span>
+        </div>
+
+        <div
+          class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
           <img
             src="/img/sunflowerland/flower.jpg"
-            alt="logo de FLOWER"
+            alt="FLOWER"
             class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
           />
-          <span class="tab-gem-flower-amount">1.97</span>
-          <span class="text-white/30 mx-0.5">|</span>
-          <span class="tabGemFlowerUsd"
+          <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"
             ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
             </div></span
           >
-        </span>
+        </div>
       </div>
 
-      <div
-        class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
-      >
-        <img
-          src="/img/sunflowerland/123/Oil.png"
-          alt="Oil"
-          class="w-3.5 h-3.5 object-contain drop-shadow-sm"
-          loading="lazy"
-        />
-        <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
-          1:
+      <!-- Bloque 3: Duplicado móvil B (para scroll infinito bidireccional suave) -->
+      <div class="marquee-content marquee-duplicate gap-1.5" aria-hidden="true">
+        <a
+          href={loc("/sfl-betty")}
+          class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0 cursor-pointer"
+        >
+          <img
+            src="/img/sunflowerland/123/coins.png"
+            alt="Coins"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="tabBettyBest text-white/80 font-bold tracking-wide">
+            <div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div>
+          </span>
+        </a>
+
+        <div
+          class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
+          <img
+            src="/img/sunflowerland/123/Gem.png"
+            alt="Gem"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            <input type="number" class="tab-gem-input w-7 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="20" />:
+            <img
+              src="/img/sunflowerland/flower.jpg"
+              alt="logo de FLOWER"
+              class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+            />
+            <span class="tab-gem-flower-amount">1.97</span>
+            <span class="text-white/30 mx-0.5">|</span>
+            <span class="tabGemFlowerUsd"
+              ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
+              </div></span
+            >
+          </span>
+        </div>
+
+        <div
+          class="flex items-center gap-1.5 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
+          <img
+            src="/img/sunflowerland/123/Oil.png"
+            alt="Oil"
+            class="w-3.5 h-3.5 object-contain drop-shadow-sm"
+            loading="lazy"
+          />
+          <span class="text-white/80 font-bold tracking-wide flex items-center gap-1">
+            1:
+            <img
+              src="/img/sunflowerland/flower.jpg"
+              alt="logo de FLOWER"
+              class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
+            />
+            <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
+            <span class="text-white/30 mx-0.5">|</span>
+            <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
+          </span>
+        </div>
+
+        <div
+          class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
+        >
           <img
             src="/img/sunflowerland/flower.jpg"
-            alt="logo de FLOWER"
+            alt="FLOWER"
             class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
           />
-          <span class="tab-oil-flower-amount"><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle"></div></span>
-          <span class="text-white/30 mx-0.5">|</span>
-          <input type="number" class="tab-oil-input w-12 bg-black/40 rounded text-center text-white outline-none mx-0.5 appearance-none focus:bg-black/60 transition-colors" value="16.67" step="any" title="Cantidad de Oil extraído por el Drill" />
-        </span>
-      </div>
-
-      <div
-        class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 shrink-0"
-      >
-        <img
-          src="/img/sunflowerland/flower.jpg"
-          alt="FLOWER"
-          class="w-2.5 h-2.5 object-contain rounded-full drop-shadow-sm"
-        />
-        <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"
-          ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
-          </div></span
-        >
+          <span class="tabFlowerUsd text-white/80 font-bold tracking-wide"
+            ><div class="w-8 h-2.5 bg-white/10 rounded animate-pulse inline-block align-middle">
+            </div></span
+          >
+        </div>
       </div>
     </div>
   </div>
 
   <div
-    class="flex flex-row items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto mt-1 lg:mt-0 shrink-0"
+    class="sfl-links-bar flex flex-row items-center justify-between gap-1.5 sm:gap-2 w-full lg:w-auto mt-1 lg:mt-0 shrink-0"
   >
     <div
-      class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 whitespace-nowrap"
+      class="flex-1 min-w-0 flex items-center justify-center gap-1 bg-black/20 px-1.5 sm:px-2 py-1 rounded-md border border-white/5 whitespace-nowrap"
     >
       <img
         src="/img/sunflowerland/123/0xlenador-bumpkin.webp"
         alt="Bumpkin"
-        class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm"
+        class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm shrink-0"
         loading="lazy"
       />
       <span class="hidden sm:inline">{t("sfl.tabs.visit")}</span>
@@ -318,7 +439,7 @@ const tabs = [
         href="https://sunflower-land.com/play/#/visit/2749608757913285"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-bold"
+        class="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-bold truncate"
       >
         <span class="hidden sm:inline">{t("sfl.tabs.myLand")}</span>
         <span class="inline sm:hidden">{t("sfl.tabs.myLandMobile")}</span>
@@ -326,15 +447,15 @@ const tabs = [
     </div>
 
     <div
-      class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-emerald-500/10 whitespace-nowrap"
+      class="flex-1 min-w-0 flex items-center justify-center gap-1 bg-black/20 px-1.5 sm:px-2 py-1 rounded-md border border-emerald-500/10 whitespace-nowrap"
     >
       <img
         src="/img/sunflowerland/cosmetics/collectibles/mini_floating_island.webp"
         alt="Island"
-        class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm"
+        class="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain drop-shadow-sm shrink-0"
         loading="lazy"
       />
-      <span>
+      <span class="truncate">
         <span class="hidden sm:inline">{t("sfl.tabs.noLand")}</span>
         <span class="inline sm:hidden">{t("sfl.tabs.noLandMobile")}</span>
         <span class="hidden sm:inline"> {t("sfl.tabs.startHere")}</span>
@@ -343,7 +464,7 @@ const tabs = [
         href="https://sunflower-land.com/play/?ref=Oxlenador"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-bold"
+        class="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-bold shrink-0"
       >
         <span class="hidden sm:inline">{t("sfl.tabs.clickHere")}</span>
         <span class="inline sm:hidden">{t("sfl.tabs.clickHereMobile")}</span>
@@ -351,14 +472,14 @@ const tabs = [
     </div>
 
     <div
-      class="flex items-center gap-1 bg-black/20 px-2 py-1 rounded-md border border-white/5 whitespace-nowrap"
+      class="flex-1 min-w-0 flex items-center justify-center gap-1 bg-black/20 px-1.5 sm:px-2 py-1 rounded-md border border-white/5 whitespace-nowrap"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60 fill-white/20 drop-shadow-sm"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60 fill-white/20 drop-shadow-sm shrink-0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
       <span class="hidden sm:inline text-white/70">{t("sfl.tabs.donations")}</span>
       <span class="inline sm:hidden text-white/70">{t("sfl.tabs.donateMobile")}</span>
       <button 
         type="button"
-        class="copy-donation-btn group flex items-center gap-1 cursor-pointer"
+        class="copy-donation-btn group flex items-center gap-1 cursor-pointer shrink-0"
         data-address="0xef6EbD32d53285710345DF899B3A6758F037c313"
         aria-label="Copiar dirección"
         title="Copiar dirección"
@@ -636,6 +757,187 @@ const tabs = [
         window.updateTabOil(e.target.value)
       })
     })
+
+    // Centrar suavemente la pestaña activa en móviles si hay desbordamiento horizontal
+    const activeTabEl = document.querySelector(".sfl-tabs-bar .active-sfl-tab")
+    const tabBar = document.querySelector(".sfl-tabs-bar")
+    if (activeTabEl && tabBar && tabBar.scrollWidth > tabBar.clientWidth) {
+      const targetScroll = activeTabEl.offsetLeft - (tabBar.clientWidth / 2) + (activeTabEl.clientWidth / 2)
+      tabBar.scrollTo({ left: Math.max(0, targetScroll), behavior: "smooth" })
+    }
+
+    // Inicializar ticker interactivo infinito con pausa en clic y arrastre con el dedo
+    setupInteractiveMarquee()
+  }
+
+  let marqueeAnimationId = null
+  const setupInteractiveMarquee = () => {
+    if (marqueeAnimationId) {
+      cancelAnimationFrame(marqueeAnimationId)
+      marqueeAnimationId = null
+    }
+
+    const container = document.querySelector(".marquee-container")
+    const track = document.querySelector(".marquee-track")
+    if (!container || !track) return
+
+    if (window.innerWidth >= 640) {
+      track.style.transform = "none"
+      return
+    }
+
+    const firstBlock = track.querySelector(".marquee-content")
+    if (!firstBlock) return
+
+    let blockWidth = firstBlock.offsetWidth || 450
+    let currentX = 0
+    let speed = 25
+    let isPaused = false
+    let isDragging = false
+    let touchStartX = 0
+    let dragStartX = 0
+    let didDrag = false
+    let resumeTimer = null
+    let lastTime = performance.now()
+
+    const updateBlockWidth = () => {
+      const w = firstBlock.offsetWidth
+      if (w > 50) blockWidth = w
+    }
+    setTimeout(updateBlockWidth, 300)
+
+    const keepInBounds = () => {
+      if (blockWidth <= 0) return
+      while (currentX <= -blockWidth) {
+        currentX += blockWidth
+        dragStartX += blockWidth
+      }
+      while (currentX > 0) {
+        currentX -= blockWidth
+        dragStartX -= blockWidth
+      }
+    }
+
+    const requestResume = (delay = 1200) => {
+      if (resumeTimer) clearTimeout(resumeTimer)
+      resumeTimer = setTimeout(() => {
+        const active = document.activeElement
+        const isEditing =
+          active &&
+          (active.classList.contains("tab-gem-input") || active.classList.contains("tab-oil-input"))
+        if (!isEditing && !isDragging) {
+          isPaused = false
+          lastTime = performance.now()
+        }
+      }, delay)
+    }
+
+    // Congelar inmediatamente la animación cuando cualquier cajita recibe clic, foco o toque
+    container.querySelectorAll(".tab-gem-input, .tab-oil-input").forEach((input) => {
+      if (input.hasAttribute("data-marquee-paused")) return
+      input.setAttribute("data-marquee-paused", "true")
+
+      const pauseTicker = () => {
+        isPaused = true
+        if (resumeTimer) clearTimeout(resumeTimer)
+      }
+
+      input.addEventListener("focus", pauseTicker)
+      input.addEventListener("click", pauseTicker)
+      input.addEventListener("touchstart", pauseTicker, { passive: true })
+
+      input.addEventListener("blur", () => {
+        requestResume(1500)
+      })
+    })
+
+    // Arrastre con el dedo (desplazamiento infinito a izquierda o derecha en móviles)
+    container.addEventListener(
+      "touchstart",
+      (e) => {
+        if (window.innerWidth >= 640) return
+        if (e.target && e.target.closest("input")) {
+          isPaused = true
+          isDragging = false
+          if (resumeTimer) clearTimeout(resumeTimer)
+          return
+        }
+        updateBlockWidth()
+        isDragging = true
+        isPaused = true
+        didDrag = false
+        touchStartX = e.touches[0].clientX
+        dragStartX = currentX
+        if (resumeTimer) clearTimeout(resumeTimer)
+      },
+      { passive: true }
+    )
+
+    container.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!isDragging || window.innerWidth >= 640) return
+        const deltaX = e.touches[0].clientX - touchStartX
+        if (Math.abs(deltaX) > 4) {
+          didDrag = true
+        }
+        currentX = dragStartX + deltaX
+        keepInBounds()
+        track.style.transform = `translate3d(${currentX}px, 0, 0)`
+      },
+      { passive: true }
+    )
+
+    const handleTouchEnd = () => {
+      if (!isDragging) return
+      isDragging = false
+      requestResume(1200)
+    }
+
+    container.addEventListener("touchend", handleTouchEnd, { passive: true })
+    container.addEventListener("touchcancel", handleTouchEnd, { passive: true })
+
+    // Evitar click accidental en enlaces de Betty si se arrastró con el dedo
+    container.addEventListener(
+      "click",
+      (e) => {
+        if (didDrag) {
+          e.preventDefault()
+          e.stopPropagation()
+          didDrag = false
+        }
+      },
+      true
+    )
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 640) {
+        track.style.transform = "none"
+      } else {
+        updateBlockWidth()
+      }
+    })
+
+    // Bucle continuo suave con requestAnimationFrame
+    const step = (now) => {
+      if (window.innerWidth < 640) {
+        const dt = (now - lastTime) / 1000
+        lastTime = now
+
+        if (!isPaused && !isDragging && dt < 0.2) {
+          currentX -= speed * dt
+          keepInBounds()
+          track.style.transform = `translate3d(${currentX}px, 0, 0)`
+        }
+        marqueeAnimationId = requestAnimationFrame(step)
+      } else {
+        track.style.transform = "none"
+        marqueeAnimationId = requestAnimationFrame(step)
+      }
+    }
+
+    lastTime = performance.now()
+    marqueeAnimationId = requestAnimationFrame(step)
   }
 
   document.addEventListener("astro:page-load", initSflTabs)
