@@ -246,7 +246,7 @@ const uiStrings = {
     if (modal.getAttribute("data-initialized") === "true") return
     modal.setAttribute("data-initialized", "true")
 
-    const RECENT_SEARCHES_KEY = "0x_recent_searches_v1"
+    const RECENT_SEARCHES_KEY = "0x_recent_searches_v2"
 
     let catalog: any[] = []
     let ui: any = {}
@@ -257,6 +257,31 @@ const uiStrings = {
       catalog = []
       ui = {}
     }
+
+    // Migración transparente de esquema: preserva el historial del usuario adaptándolo al catálogo dinámico
+    try {
+      const oldV1 = localStorage.getItem("0x_recent_searches_v1")
+      if (oldV1 && !localStorage.getItem(RECENT_SEARCHES_KEY)) {
+        const parsed = JSON.parse(oldV1)
+        if (Array.isArray(parsed)) {
+          const migrated = parsed
+            .map((item: any) => {
+              const rawId = item?.id || item
+              // Mapeo retrocompatible de IDs manuales anteriores
+              if (rawId === "blog-fomo") return "blog-que-es-fomo"
+              return rawId
+            })
+            .filter((id: string) => catalog.some((c: any) => c.id === id))
+            .slice(0, 5)
+            .map((id: string) => ({ id }))
+
+          if (migrated.length > 0) {
+            localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(migrated))
+          }
+        }
+      }
+      localStorage.removeItem("0x_recent_searches_v1")
+    } catch {}
 
     let activeItemIndex = -1
     let visibleItems: HTMLElement[] = []
@@ -299,10 +324,14 @@ const uiStrings = {
     }
 
     // --- Persistencia de Búsquedas Recientes (localStorage) ---
+    // Siempre sincronizada con el catálogo real para evitar datos cacheados obsoletos
     function getRecentSearches(): any[] {
       try {
         const stored = localStorage.getItem(RECENT_SEARCHES_KEY)
-        return stored ? JSON.parse(stored) : []
+        if (!stored) return []
+        const parsed = JSON.parse(stored)
+        if (!Array.isArray(parsed)) return []
+        return parsed.map((r: any) => catalog.find((c) => c.id === (r.id || r))).filter(Boolean)
       } catch {
         return []
       }
@@ -311,24 +340,17 @@ const uiStrings = {
     function saveRecentSearch(item: any) {
       try {
         let recents = getRecentSearches().filter((r: any) => r.id !== item.id)
-        recents.unshift({
-          id: item.id,
-          name: item.name,
-          description: item.description,
-          url: item.url,
-          category: item.category,
-          categoryLabel: item.categoryLabel,
-          icon: item.icon,
-          iconName: item.iconName,
-        })
+        recents.unshift(item)
         recents = recents.slice(0, 5)
-        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recents))
+        const idsToStore = recents.map((r: any) => ({ id: r.id }))
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(idsToStore))
       } catch {}
     }
 
     function clearRecentSearches() {
       try {
         localStorage.removeItem(RECENT_SEARCHES_KEY)
+        localStorage.removeItem("0x_recent_searches_v1")
       } catch {}
       renderResults("")
     }
