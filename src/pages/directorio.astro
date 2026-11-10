@@ -2,21 +2,26 @@
 import Layout from "../layouts/Layout.astro"
 import { Icon } from "astro-icon/components"
 import Slider from "../components/Slider.astro"
+import { getEcosystemCatalog } from "../data/ecosystem"
+
+const ecosystemItems = await getEcosystemCatalog("es")
 
 const heroSlides = [
   {
     tag: "Gaming",
     title: "Yakkamon Hub",
-    description: "Calculadoras, guías y herramientas de cría para maximizar tus rendimientos en el ecosistema de Yakkamon.",
+    description:
+      "Calculadoras, guías y herramientas de cría para maximizar tus rendimientos en el ecosistema de Yakkamon.",
     url: "/yakkamon/",
     urlText: "Visitar Hub",
     icon: "lucide:swords",
-    image: "/img/cripto/yakkamon.webp"
+    image: "/img/cripto/yakkamon.webp",
   },
   {
     tag: "Recursos",
     title: "Directorio de Faucets",
-    description: "Lista curada de sitios web (faucets). Consigue tokens testnet para desarrollo y algunos en mainnet.",
+    description:
+      "Lista curada de sitios web (faucets). Consigue tokens testnet para desarrollo y algunos en mainnet.",
     url: "/faucets/",
     urlText: "Obtener Tokens",
     icon: "lucide:droplet",
@@ -26,51 +31,56 @@ const heroSlides = [
       "/img/cripto/alchemy.webp",
       "/img/cripto/bitcoin.webp",
       "/img/cripto/google.webp",
-      "/img/cripto/quicknode.webp"
-    ]
+      "/img/cripto/quicknode.webp",
+    ],
   },
   {
     tag: "Guías",
     title: "Operaciones Activas",
-    description: "Descubre en qué proyectos estamos operando y cómo hacerlo. Sigue nuestras guías paso a paso y estrategias para interactuar on-chain.",
+    description:
+      "Descubre en qué proyectos estamos operando y cómo hacerlo. Sigue nuestras guías paso a paso y estrategias para interactuar on-chain.",
     url: "/operaciones/",
     urlText: "Explorar Guías",
     icon: "lucide:book-open",
     guides: [
       { logo: "/img/cripto/arc.webp" },
       { logo: "/img/cripto/polymarket.webp" },
-      { logo: "/img/cripto/yakkamon.webp" }
-    ]
-  }
-];
+      { logo: "/img/cripto/yakkamon.webp" },
+    ],
+  },
+]
 
 const seo = {
   title: "Directorio | 0x Leñador",
-  description: "Tu puerta de entrada al ecosistema. Explora calculadoras, análisis profundos y todas las herramientas para tu operativa on-chain.",
+  description:
+    "Tu puerta de entrada al ecosistema. Explora calculadoras, análisis profundos y todas las herramientas para tu operativa on-chain.",
   image: "/img/meta/home.webp",
 }
 
 const pageSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": seo.title,
-  "description": seo.description,
-  "url": "https://0xlenador.xyz/directorio/",
-  "publisher": {
+  name: seo.title,
+  description: seo.description,
+  url: "https://0xlenador.xyz/directorio/",
+  publisher: {
     "@type": "Organization",
-    "name": "0x Leñador",
-    "logo": {
+    name: "0x Leñador",
+    logo: {
       "@type": "ImageObject",
-      "url": "https://0xlenador.xyz/img/logo.png"
-    }
-  }
+      url: "https://0xlenador.xyz/img/logo.png",
+    },
+  },
 }
 ---
 
 <Layout title={seo.title} description={seo.description} image={seo.image} schema={pageSchema}>
   <main class="relative max-w-6xl mx-auto px-6 pt-12 pb-32">
     <!-- Ambient Background Glow -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none -z-10"
+    >
+    </div>
 
     <!-- Hero Section -->
     <header class="flex flex-col items-center text-center mb-10">
@@ -88,41 +98,78 @@ const pageSchema = {
     <!-- Descripción del Directorio -->
     <div class="text-center mb-16">
       <p class="text-sm text-terminal-secondary leading-relaxed max-w-2xl mx-auto">
-        Tu puerta de entrada al ecosistema. Explora calculadoras diseñadas para darte ventaja estadística, análisis profundos para tus inversiones y un ecosistema completo para potenciar tu operativa. ¡Adéntrate y descubre todo lo que hemos construido!
+        Tu puerta de entrada al ecosistema. Explora calculadoras diseñadas para darte ventaja
+        estadística, análisis profundos para tus inversiones y un ecosistema completo para potenciar
+        tu operativa. ¡Adéntrate y descubre todo lo que hemos construido!
       </p>
     </div>
 
     <!-- Bento Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
       <!-- Card 1: Operaciones (Spans 2 columns) -->
-      <a href="/operaciones/" class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-2 min-h-[300px] flex flex-col justify-end p-6 md:p-8">
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
+      <a
+        href="/operaciones/"
+        class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-2 min-h-[300px] flex flex-col justify-end p-6 md:p-8"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        >
+        </div>
+
         <!-- Abstract Decoration -->
-        <div class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-50 transition-opacity duration-700">
-          <svg width="160" height="120" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 100 Q 40 80, 80 110 T 160 60 T 200 20" stroke="url(#paint0_linear)" stroke-width="4" stroke-linecap="round"/>
-            <path d="M0 130 Q 40 110, 80 140 T 160 90 T 200 50" stroke="#ffffff" stroke-opacity="0.1" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+        <div
+          class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-50 transition-opacity duration-700"
+        >
+          <svg
+            width="160"
+            height="120"
+            viewBox="0 0 200 150"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 100 Q 40 80, 80 110 T 160 60 T 200 20"
+              stroke="url(#paint0_linear)"
+              stroke-width="4"
+              stroke-linecap="round"></path>
+            <path
+              d="M0 130 Q 40 110, 80 140 T 160 90 T 200 50"
+              stroke="#ffffff"
+              stroke-opacity="0.1"
+              stroke-width="2"
+              stroke-dasharray="4 4"
+              stroke-linecap="round"></path>
             <defs>
-              <linearGradient id="paint0_linear" x1="0" y1="100" x2="200" y2="20" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#10B981" />
-                <stop offset="1" stop-color="#047857" stop-opacity="0" />
+              <linearGradient
+                id="paint0_linear"
+                x1="0"
+                y1="100"
+                x2="200"
+                y2="20"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#10B981"></stop>
+                <stop offset="1" stop-color="#047857" stop-opacity="0"></stop>
               </linearGradient>
             </defs>
           </svg>
         </div>
 
         <div class="relative z-10 w-full md:w-3/4">
-          <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-4 group-hover:-translate-y-1 transition-transform duration-300">
+          <div
+            class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-4 group-hover:-translate-y-1 transition-transform duration-300"
+          >
             <Icon name="lucide:activity" class="w-5 h-5" />
           </div>
           <!-- H2 aplicando regla de jerarquía estricta -->
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Operaciones & Diario</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            El campo de batalla. Descubre nuestras estrategias, guías de interacción y bitácora para operar on-chain con ventaja estadística.
+            El campo de batalla. Descubre nuestras estrategias, guías de interacción y bitácora para
+            operar on-chain con ventaja estadística.
           </p>
-          <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
+          <div
+            class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all"
+          >
             <span>Acceder al Dashboard</span>
             <Icon name="lucide:arrow-right" class="w-3 h-3" />
           </div>
@@ -130,19 +177,30 @@ const pageSchema = {
       </a>
 
       <!-- Card 2: Activos (Spans 1 column) -->
-      <a href="/activos/" class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-1 min-h-[300px] flex flex-col p-6 md:p-8">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-auto group-hover:scale-110 transition-transform duration-300">
+      <a
+        href="/activos/"
+        class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-1 min-h-[300px] flex flex-col p-6 md:p-8"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        >
+        </div>
+
+        <div
+          class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-auto group-hover:scale-110 transition-transform duration-300"
+        >
           <Icon name="lucide:coins" class="w-5 h-5" />
         </div>
 
         <div class="relative z-10 mt-8">
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Tesis de Activos</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            No compramos por fe. Análisis fundamental sólido, métricas on-chain y evaluación de riesgo para filtrar el ruido del mercado.
+            No compramos por fe. Análisis fundamental sólido, métricas on-chain y evaluación de
+            riesgo para filtrar el ruido del mercado.
           </p>
-          <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
+          <div
+            class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all"
+          >
             <span>Explorar Tokens</span>
             <Icon name="lucide:arrow-right" class="w-3 h-3" />
           </div>
@@ -150,27 +208,40 @@ const pageSchema = {
       </a>
 
       <!-- Card 3: Herramientas (Spans 1 column) -->
-      <a href="/herramientas/" class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-1 min-h-[300px] flex flex-col p-6 md:p-8">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.15),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <a
+        href="/herramientas/"
+        class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-1 min-h-[300px] flex flex-col p-6 md:p-8"
+      >
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.15),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        >
+        </div>
 
         <!-- Abstract Decoration -->
-        <div class="absolute top-6 right-6 grid grid-cols-2 gap-1.5 opacity-20 group-hover:opacity-50 transition-opacity duration-500">
+        <div
+          class="absolute top-6 right-6 grid grid-cols-2 gap-1.5 opacity-20 group-hover:opacity-50 transition-opacity duration-500"
+        >
           <div class="w-5 h-5 rounded-[4px] border border-white/20"></div>
           <div class="w-5 h-5 rounded-[4px] bg-white/20"></div>
           <div class="w-5 h-5 rounded-[4px] bg-white/10"></div>
           <div class="w-5 h-5 rounded-[4px] border border-emerald-500/40"></div>
         </div>
 
-        <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-auto group-hover:rotate-12 transition-transform duration-300">
+        <div
+          class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-auto group-hover:rotate-12 transition-transform duration-300"
+        >
           <Icon name="lucide:wrench" class="w-5 h-5" />
         </div>
 
         <div class="relative z-10 mt-8">
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Herramientas</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Deja de operar a ciegas. Simuladores de impermanent loss, calculadoras de yields y utilidades clave para tu supervivencia on-chain.
+            Deja de operar a ciegas. Simuladores de impermanent loss, calculadoras de yields y
+            utilidades clave para tu supervivencia on-chain.
           </p>
-          <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
+          <div
+            class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all"
+          >
             <span>Usar Utilidades</span>
             <Icon name="lucide:arrow-right" class="w-3 h-3" />
           </div>
@@ -178,32 +249,57 @@ const pageSchema = {
       </a>
 
       <!-- Card 4: Lista Web3 (Spans 2 columns) -->
-      <a href="/lista-web3/" class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-2 min-h-[300px] flex flex-col md:flex-row items-end md:items-center p-6 md:p-8">
-        <div class="absolute inset-0 bg-gradient-to-l from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
+      <a
+        href="/lista-web3/"
+        class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-2 min-h-[300px] flex flex-col md:flex-row items-end md:items-center p-6 md:p-8"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-l from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        >
+        </div>
+
         <!-- Abstract Nodes -->
-        <div class="absolute top-1/2 -translate-y-1/2 right-12 opacity-20 group-hover:opacity-60 transition-opacity duration-700 hidden md:block">
-           <svg width="140" height="140" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <circle cx="90" cy="90" r="89.5" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4"/>
-             <circle cx="90" cy="90" r="60" stroke="#10B981" stroke-opacity="0.4"/>
-             <circle cx="90" cy="90" r="30" fill="#10B981" fill-opacity="0.1"/>
-             <circle cx="30" cy="90" r="4" fill="white"/>
-             <circle cx="150" cy="90" r="4" fill="#10B981"/>
-             <circle cx="90" cy="30" r="4" fill="white"/>
-             <circle cx="90" cy="150" r="4" fill="#10B981"/>
-             <path d="M30 90H150 M90 30V150" stroke="white" stroke-opacity="0.1"/>
-           </svg>
+        <div
+          class="absolute top-1/2 -translate-y-1/2 right-12 opacity-20 group-hover:opacity-60 transition-opacity duration-700 hidden md:block"
+        >
+          <svg
+            width="140"
+            height="140"
+            viewBox="0 0 180 180"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="90"
+              cy="90"
+              r="89.5"
+              stroke="white"
+              stroke-opacity="0.1"
+              stroke-dasharray="4 4"></circle>
+            <circle cx="90" cy="90" r="60" stroke="#10B981" stroke-opacity="0.4"></circle>
+            <circle cx="90" cy="90" r="30" fill="#10B981" fill-opacity="0.1"></circle>
+            <circle cx="30" cy="90" r="4" fill="white"></circle>
+            <circle cx="150" cy="90" r="4" fill="#10B981"></circle>
+            <circle cx="90" cy="30" r="4" fill="white"></circle>
+            <circle cx="90" cy="150" r="4" fill="#10B981"></circle>
+            <path d="M30 90H150 M90 30V150" stroke="white" stroke-opacity="0.1"></path>
+          </svg>
         </div>
 
         <div class="relative z-10 w-full md:w-3/5">
-          <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-white/[0.08] transition-colors duration-300">
+          <div
+            class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-4 group-hover:bg-white/[0.08] transition-colors duration-300"
+          >
             <Icon name="lucide:globe" class="w-5 h-5" />
           </div>
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Recursos Web3</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Nuestro arsenal curado. Links a faucets, exchanges, infraestructura y todas las plataformas de análisis que conforman nuestro stack.
+            Nuestro arsenal curado. Links a faucets, exchanges, infraestructura y todas las
+            plataformas de análisis que conforman nuestro stack.
           </p>
-          <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
+          <div
+            class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all"
+          >
             <span>Explorar Stack</span>
             <Icon name="lucide:arrow-right" class="w-3 h-3" />
           </div>
@@ -211,34 +307,47 @@ const pageSchema = {
       </a>
 
       <!-- Card 5: Blog (Spans 3 columns, Banner Style) -->
-      <a href="/blog/" class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-3 min-h-[200px] flex flex-col md:flex-row items-center p-6 md:p-8">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <a
+        href="/blog/"
+        class="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 md:col-span-3 min-h-[200px] flex flex-col md:flex-row items-center p-6 md:p-8"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        >
+        </div>
 
         <div class="w-full md:w-1/2 relative z-10 pr-0 md:pr-10 mb-6 md:mb-0">
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 text-white text-[10px] font-mono mb-3">
+          <div
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 text-white text-[10px] font-mono mb-3"
+          >
             <Icon name="lucide:book-open" class="w-3 h-3 text-emerald-400" />
             Educación y Análisis
           </div>
           <h2 class="text-lg md:text-xl font-bold text-white mb-2">Diario del Leñador</h2>
           <p class="text-sm text-terminal-secondary mb-5">
-            Reflexiones profundas sobre el mercado, narrativas, seguridad y tutoriales paso a paso para dominar el ecosistema DeFi como un experto.
+            Reflexiones profundas sobre el mercado, narrativas, seguridad y tutoriales paso a paso
+            para dominar el ecosistema DeFi como un experto.
           </p>
-          <div class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all">
+          <div
+            class="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 uppercase tracking-widest group-hover:gap-2 transition-all"
+          >
             <span>Leer el Blog</span>
             <Icon name="lucide:arrow-right" class="w-3 h-3" />
           </div>
         </div>
 
         <div class="w-full md:w-1/2 relative z-10 flex justify-end">
-          <div class="w-full max-w-sm rounded-xl border border-white/5 bg-white/[0.01] p-4 opacity-50 group-hover:opacity-100 group-hover:bg-white/[0.03] transition-all duration-500">
-             <div class="h-2 rounded bg-white/10 w-1/3 mb-4"></div>
-             <div class="h-1.5 rounded bg-white/5 w-full mb-2"></div>
-             <div class="h-1.5 rounded bg-white/5 w-5/6 mb-2"></div>
-             <div class="h-1.5 rounded bg-white/5 w-4/5"></div>
-             <div class="mt-4 pt-4 border-t border-white/5 flex gap-2">
-                <div class="h-4 w-4 rounded-full bg-white/10"></div>
-                <div class="h-2 w-16 rounded bg-white/5 mt-1"></div>
-             </div>
+          <div
+            class="w-full max-w-sm rounded-xl border border-white/5 bg-white/[0.01] p-4 opacity-50 group-hover:opacity-100 group-hover:bg-white/[0.03] transition-all duration-500"
+          >
+            <div class="h-2 rounded bg-white/10 w-1/3 mb-4"></div>
+            <div class="h-1.5 rounded bg-white/5 w-full mb-2"></div>
+            <div class="h-1.5 rounded bg-white/5 w-5/6 mb-2"></div>
+            <div class="h-1.5 rounded bg-white/5 w-4/5"></div>
+            <div class="mt-4 pt-4 border-t border-white/5 flex gap-2">
+              <div class="h-4 w-4 rounded-full bg-white/10"></div>
+              <div class="h-2 w-16 rounded bg-white/5 mt-1"></div>
+            </div>
           </div>
         </div>
       </a>
@@ -260,24 +369,57 @@ const pageSchema = {
               placeholder="Buscar por nombre, categoría o descripción..."
               class="w-full bg-[#0a0a0a] border border-white/5 rounded-lg py-2 pl-9 pr-9 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
             />
-            <button type="button" id="clearSearch" class="absolute inset-y-0 right-0 pr-3 flex items-center text-terminal-muted hover:text-white transition-colors hidden">
+            <button
+              type="button"
+              id="clearSearch"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-terminal-muted hover:text-white transition-colors hidden"
+            >
               <Icon name="lucide:x" class="w-4 h-4" />
             </button>
           </div>
           <!-- Filtros -->
-          <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 hide-scrollbar">
-            <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap transition-colors">Todos</button>
-            <button data-filter="activos" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Activos</button>
-            <button data-filter="guias" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Guías</button>
-            <button data-filter="herramientas" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Herramientas</button>
-            <button data-filter="directorio" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors">Directorio</button>
+          <div
+            class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 hide-scrollbar"
+          >
+            <button
+              data-filter="all"
+              class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap transition-colors"
+              >Todos</button
+            >
+            <button
+              data-filter="herramientas"
+              class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors"
+              >Herramientas</button
+            >
+            <button
+              data-filter="activos"
+              class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors"
+              >Activos</button
+            >
+            <button
+              data-filter="guias"
+              class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors"
+              >Guías</button
+            >
+            <button
+              data-filter="blog"
+              class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors"
+              >Educación</button
+            >
+            <button
+              data-filter="directorio"
+              class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0a0a0a] text-terminal-muted border border-white/5 hover:border-white/10 hover:text-white whitespace-nowrap transition-colors"
+              >Directorio</button
+            >
           </div>
         </div>
       </div>
       <div class="overflow-hidden rounded-xl border border-white/5 bg-[#0a0a0a]">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto custom-scrollbar">
           <table id="directoryTable" class="w-full text-left text-sm text-terminal-secondary">
-            <thead class="bg-white/[0.02] border-b border-white/5 text-emerald-500 font-mono text-xs uppercase tracking-wider">
+            <thead
+              class="bg-white/[0.02] border-b border-white/5 text-emerald-500 font-mono text-xs uppercase tracking-wider"
+            >
               <tr>
                 <th scope="col" class="px-6 py-4 w-1/3">Página</th>
                 <th scope="col" class="px-6 py-4">Categoría</th>
@@ -285,270 +427,89 @@ const pageSchema = {
               </tr>
             </thead>
             <tbody class="divide-y divide-white/5">
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/activos/bitcoin/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/bitcoin.webp" alt="Bitcoin" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Bitcoin
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/activos/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de BTC.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/activos/ethereum/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/ethereum.webp" alt="Ethereum" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Ethereum
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/activos/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de ETH.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/activos/hyperliquid/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/hyperliquid.webp" alt="Hyperliquid" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Hyperliquid
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/activos/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de HYPE.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/activos/runestone/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/runestone.webp" alt="Runestone" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Runestone
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/activos/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de Runestone.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/activos/sunflowerland/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/sunflowerland/123/flower.jpg" alt="Sunflower Land" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Sunflower Land
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/activos/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Activos</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Tesis de inversión y métricas on-chain de SFL.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/operaciones/arc-circle/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/arc.webp" alt="Arc Testnet" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Arc Testnet
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/operaciones/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía operativa para interactuar con Arc Testnet.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/operaciones/polymarket/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/polymarket.webp" alt="Polymarket" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Polymarket
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/operaciones/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía paso a paso para operar en Polymarket.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/operaciones/soneium-portal/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/soneium.webp" alt="Soneium" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Soneium
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/operaciones/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía paso a paso para el portal de Soneium.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/operaciones/yakkamon/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/yakkamon.webp" alt="Yakkamon" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Yakkamon
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/operaciones/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Guías</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Guía operativa optimizada para el ecosistema Yakkamon.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/contenido-social/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.75 19.5v-.75a7.5 7.5 0 00-7.5-7.5H4.5m0-6.75h.75c7.87 0 14.25 6.38 14.25 14.25v.75M6 18.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                      </svg>
-                    </div>
-                    Contenido Social
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Feed de nuestra actividad, videos y análisis en YouTube y X.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/faucets/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
-                      </svg>
-                    </div>
-                    Directorio Faucets
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Directorio de grifos para reclamar tokens de prueba y mainnet.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/infravalorados/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
-                    </div>
-                    Activos Infravalorados
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Explorador de oportunidades y tokens por debajo de su valor real.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/intrinseco/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    Valor Intrínseco
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/herramientas/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Calculadora para estimar el precio justo de un token.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/lista-web3/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                      </svg>
-                    </div>
-                    Recursos Web3
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Colección de exchanges, puentes, exploradores y herramientas útiles.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/riskfolio/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                      </svg>
-                    </div>
-                    Riskfolio
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/herramientas/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Evaluación y gestión de riesgo para la distribución de portafolios.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/sfl-betty/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/sunflowerland/123/coins.png" alt="SFL Betty" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    SFL Betty
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/herramientas/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Calculadora y optimizador de riego y cultivos en Sunflower Land.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/sfl-cocinando/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/sunflowerland/food/Pizza%20Margherita.png" alt="SFL Cocinando" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    SFL Cocinando
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/herramientas/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Optimizador para las recetas y consumibles de Sunflower Land.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/sfl-mascotas/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/sunflowerland/123/ramsey.webp" alt="SFL Mascotas" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    SFL Mascotas
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/herramientas/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Gestor de recursos y estadísticas de mascotas en Sunflower Land.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/sfl-mercado/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/sunflowerland/123/exchange.png" alt="SFL Mercado" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    SFL Mercado
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <a href="/herramientas/" class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors">Herramientas</a>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Análisis de precios del mercado interno y P2P de Sunflower Land.</td>
-              </tr>
-              <tr class="hover:bg-white/[0.02] transition-colors group">
-                <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  <a href="/yakkamon/" class="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                    <img src="/img/cripto/yakkamon.webp" alt="Yakkamon Hub" class="w-6 h-6 rounded-md object-cover bg-white/5" onerror="this.style.display='none'" />
-                    Yakkamon Hub
-                  </a>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">Directorio</span>
-                </td>
-                <td class="px-6 py-4 group-hover:text-white/80 transition-colors">Herramientas de cría y optimización de recursos para Yakkamon.</td>
-              </tr>
+              {
+                ecosystemItems
+                  .filter((item) => item.inDirectoryTable !== false)
+                  .map((item) => (
+                    <tr
+                      data-category={item.category}
+                      class="hover:bg-white/[0.02] transition-colors group"
+                    >
+                      <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                        <a
+                          href={item.url}
+                          class="flex items-center gap-3 hover:text-emerald-400 transition-colors"
+                        >
+                          {item.icon ? (
+                            <img
+                              src={item.icon}
+                              alt={item.name}
+                              class="w-6 h-6 rounded-md object-cover bg-white/5"
+                              onerror="this.style.display='none'"
+                            />
+                          ) : (
+                            <div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                              <Icon
+                                name={
+                                  item.iconName ||
+                                  (item.category === "blog"
+                                    ? "lucide:book-open"
+                                    : item.category === "directorio"
+                                      ? "lucide:folder"
+                                      : item.category === "herramientas"
+                                        ? "lucide:calculator"
+                                        : item.category === "guias"
+                                          ? "lucide:compass"
+                                          : "lucide:link")
+                                }
+                                class="w-4 h-4"
+                              />
+                            </div>
+                          )}
+                          {item.name}
+                        </a>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        {item.category === "activos" ? (
+                          <a
+                            href="/activos/"
+                            class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+                          >
+                            Activos
+                          </a>
+                        ) : item.category === "guias" ? (
+                          <a
+                            href="/operaciones/"
+                            class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+                          >
+                            Guías
+                          </a>
+                        ) : item.category === "herramientas" ? (
+                          <a
+                            href="/herramientas/"
+                            class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+                          >
+                            Herramientas
+                          </a>
+                        ) : item.category === "blog" ? (
+                          <a
+                            href="/blog/"
+                            class="inline-flex items-center px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+                          >
+                            Educación
+                          </a>
+                        ) : (
+                          <span class="inline-flex items-center px-2 py-1 rounded-md bg-white/5 text-white/50 text-xs font-medium">
+                            Directorio
+                          </span>
+                        )}
+                      </td>
+                      <td class="px-6 py-4 group-hover:text-white/80 transition-colors">
+                        {item.description}
+                      </td>
+                    </tr>
+                  ))
+              }
               <!-- Fila de Sin Resultados -->
               <tr id="noResultsRow" class="hidden">
                 <td colspan="3" class="px-6 py-12 text-center">
@@ -568,110 +529,125 @@ const pageSchema = {
 
 <script>
   function initDirectoryFilter() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const directorySearch = document.getElementById('directorySearch') as HTMLInputElement;
-    const clearSearch = document.getElementById('clearSearch');
-    const table = document.getElementById('directoryTable');
-    const noResultsRow = document.getElementById('noResultsRow');
-    
-    if (!table || !directorySearch) return;
-    if (table.hasAttribute('data-initialized')) return;
-    table.setAttribute('data-initialized', 'true');
-    
+    const filterBtns = document.querySelectorAll(".filter-btn")
+    const directorySearch = document.getElementById("directorySearch") as HTMLInputElement
+    const clearSearch = document.getElementById("clearSearch")
+    const table = document.getElementById("directoryTable")
+    const noResultsRow = document.getElementById("noResultsRow")
+
+    if (!table || !directorySearch) return
+    if (table.hasAttribute("data-initialized")) return
+    table.setAttribute("data-initialized", "true")
+
     // Seleccionar solo las filas de datos, excluyendo la de "no encontrados"
-    const rows = Array.from(table.querySelectorAll('tbody tr')).filter(r => r.id !== 'noResultsRow');
+    const rows = Array.from(table.querySelectorAll("tbody tr")).filter(
+      (r) => r.id !== "noResultsRow",
+    )
 
     function filterTable() {
       // 1. Quitar espacios al inicio y final
-      const rawSearch = directorySearch.value.trim().toLowerCase();
+      const rawSearch = directorySearch.value.trim().toLowerCase()
       // 2. Filtrar solo si tiene 3 o más caracteres
-      const searchTerm = rawSearch.length >= 3 ? rawSearch : '';
-      
+      const searchTerm = rawSearch.length >= 3 ? rawSearch : ""
+
       if (clearSearch) {
         if (directorySearch.value.length > 0) {
-          clearSearch.classList.remove('hidden');
+          clearSearch.classList.remove("hidden")
         } else {
-          clearSearch.classList.add('hidden');
+          clearSearch.classList.add("hidden")
         }
       }
 
-      const activeBtn = document.querySelector('.filter-btn.active') as HTMLElement;
-      const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
+      const activeBtn = document.querySelector(".filter-btn.active") as HTMLElement
+      const activeFilter = activeBtn ? activeBtn.dataset.filter : "all"
 
-      let visibleCount = 0;
+      let visibleCount = 0
 
-      rows.forEach(r => {
-        const row = r as HTMLElement;
-        const text = row.textContent?.toLowerCase() || '';
+      rows.forEach((r) => {
+        const row = r as HTMLElement
+        const text = row.textContent?.toLowerCase() || ""
         // Categoria is in the second cell
-        const cell = row.querySelectorAll('td')[1];
-        const category = cell ? cell.textContent?.trim().toLowerCase() || '' : '';
-        
+        const cell = row.querySelectorAll("td")[1]
+        const category = cell ? cell.textContent?.trim().toLowerCase() || "" : ""
+
         // Match Search (solo filtra si hay al menos 3 caracteres, sino asume true)
-        const matchesSearch = searchTerm === '' ? true : text.includes(searchTerm);
-        
+        const matchesSearch = searchTerm === "" ? true : text.includes(searchTerm)
+
         // Match Filter
-        let matchesFilter = true;
-        if (activeFilter !== 'all') {
-          // Normalize to remove accents like 'í' in guías
-          const normalizedCategory = category.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-          matchesFilter = normalizedCategory === activeFilter;
+        let matchesFilter = true
+        if (activeFilter !== "all") {
+          const rowCat = row.dataset.category || ""
+          const normalizedCategory = category.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          matchesFilter =
+            rowCat === activeFilter ||
+            normalizedCategory === activeFilter ||
+            (activeFilter === "blog" && (rowCat === "blog" || normalizedCategory === "educacion"))
         }
 
         if (matchesSearch && matchesFilter) {
-          row.style.display = '';
-          visibleCount++;
+          row.style.display = ""
+          visibleCount++
         } else {
-          row.style.display = 'none';
+          row.style.display = "none"
         }
-      });
+      })
 
       // Mostrar mensaje de no resultados si corresponde
       if (noResultsRow) {
         if (visibleCount === 0) {
-          noResultsRow.classList.remove('hidden');
+          noResultsRow.classList.remove("hidden")
         } else {
-          noResultsRow.classList.add('hidden');
+          noResultsRow.classList.add("hidden")
         }
       }
     }
 
     // Retardo (Debounce)
-    let timeout: ReturnType<typeof setTimeout>;
+    let timeout: ReturnType<typeof setTimeout>
     function debouncedFilter() {
-      clearTimeout(timeout);
-      timeout = setTimeout(filterTable, 300);
+      clearTimeout(timeout)
+      timeout = setTimeout(filterTable, 300)
     }
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const clickedBtn = e.currentTarget as HTMLElement;
-        document.querySelectorAll('.filter-btn').forEach(b => {
-          b.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20', 'active');
-          b.classList.add('bg-[#0a0a0a]', 'text-terminal-muted', 'border-white/5');
-        });
-        clickedBtn.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/20', 'active');
-        clickedBtn.classList.remove('bg-[#0a0a0a]', 'text-terminal-muted', 'border-white/5');
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const clickedBtn = e.currentTarget as HTMLElement
+        document.querySelectorAll(".filter-btn").forEach((b) => {
+          b.classList.remove(
+            "bg-emerald-500/10",
+            "text-emerald-400",
+            "border-emerald-500/20",
+            "active",
+          )
+          b.classList.add("bg-[#0a0a0a]", "text-terminal-muted", "border-white/5")
+        })
+        clickedBtn.classList.add(
+          "bg-emerald-500/10",
+          "text-emerald-400",
+          "border-emerald-500/20",
+          "active",
+        )
+        clickedBtn.classList.remove("bg-[#0a0a0a]", "text-terminal-muted", "border-white/5")
         // Filtro inmediato al cambiar categoría
-        filterTable();
-      });
-    });
+        filterTable()
+      })
+    })
 
-    directorySearch.addEventListener('input', debouncedFilter);
-    
+    directorySearch.addEventListener("input", debouncedFilter)
+
     if (clearSearch) {
-      clearSearch.addEventListener('click', () => {
-        directorySearch.value = '';
+      clearSearch.addEventListener("click", () => {
+        directorySearch.value = ""
         // Filtro inmediato al limpiar
-        filterTable();
-        directorySearch.focus();
-      });
+        filterTable()
+        directorySearch.focus()
+      })
     }
   }
 
   // Ejecutar script
-  initDirectoryFilter();
-  document.addEventListener('astro:page-load', initDirectoryFilter);
+  initDirectoryFilter()
+  document.addEventListener("astro:page-load", initDirectoryFilter)
 </script>
 
 <style>

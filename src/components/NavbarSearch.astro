@@ -1,0 +1,850 @@
+---
+import { Icon } from "astro-icon/components"
+import { getEcosystemCatalog } from "../data/ecosystem"
+import type { Lang } from "../i18n/ui"
+
+interface Props {
+  lang: Lang
+  t: (key: any) => string
+}
+
+const { lang, t } = Astro.props
+
+// Obtenemos el catálogo dinámico unificado en tiempo de compilación (SSG)
+const catalogItems = await getEcosystemCatalog(lang)
+
+const searchData = catalogItems.map((item) => ({
+  id: item.id,
+  name: item.name,
+  description: item.description,
+  url: item.url,
+  category: item.category,
+  categoryLabel: item.categoryLabel,
+  ecosystem: item.ecosystem,
+  ecosystemLabel: item.ecosystemLabel,
+  tags: item.tags,
+  icon: item.icon,
+  iconName: item.iconName,
+  featured: item.featured ?? false,
+}))
+
+// Textos de UI localizados para el script de cliente
+const uiStrings = {
+  recentSearches: t("nav.search.recentSearches"),
+  clearHistory: t("nav.search.clearHistory"),
+  exploreTitle: t("nav.search.exploreTitle"),
+  groupGames: t("nav.search.groupGames"),
+  groupSfl: t("nav.search.groupSfl"),
+  groupTools: t("nav.search.groupTools"),
+  groupOps: t("nav.search.groupOps"),
+  groupAssets: t("nav.search.groupAssets"),
+  groupDirectory: t("nav.search.groupDirectory"),
+  groupBlog: t("nav.search.groupBlog"),
+  groupGeneral: t("nav.search.groupGeneral"),
+  noResults: t("nav.search.noResults"),
+  kbdHint: t("nav.search.kbdHint"),
+  visit: lang === "es" ? "Visitar ↵" : "Visit ↵",
+  itemsLabel: lang === "es" ? "items" : "items",
+  noResultsTip:
+    lang === "es"
+      ? "Prueba con términos como 'btc', 'perpetuos', 'juegos', 'riskfolio' o 'faucets'."
+      : "Try terms like 'btc', 'perps', 'games', 'riskfolio' or 'faucets'.",
+}
+---
+
+<!-- Trigger Desktop embebido en Navbar (ocupa el espacio entre Operaciones y Blog) -->
+<div class="relative flex-1 max-w-xs xl:max-w-sm 2xl:max-w-md mx-3 xl:mx-6 hidden lg:block">
+  <button
+    id="nav-search-trigger"
+    type="button"
+    class="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-terminal-surface/70 hover:bg-terminal-surface border border-terminal-border/80 hover:border-emerald-500/40 text-terminal-muted hover:text-white transition-all text-xs group cursor-pointer shadow-inner"
+    aria-label={t("nav.search.placeholder")}
+  >
+    <span class="flex items-center gap-2 truncate">
+      <svg
+        class="w-4 h-4 text-terminal-muted group-hover:text-emerald-400 transition-colors shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <span class="truncate">{t("nav.search.placeholder")}</span>
+    </span>
+    <!-- Badge visual de la tecla / -->
+    <kbd
+      class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[11px] font-mono font-semibold text-terminal-muted/90 bg-white/5 border border-white/10 rounded-md group-hover:border-emerald-500/40 group-hover:text-emerald-400 transition-colors shrink-0 shadow-sm"
+      title="Presiona / para buscar"
+    >
+      /
+    </kbd>
+  </button>
+</div>
+
+<!-- Modal / Command Palette Dialog -->
+<div
+  id="search-palette-modal"
+  class="fixed inset-0 z-[100] bg-black/75 backdrop-blur-md flex items-start justify-center pt-16 md:pt-24 px-4 hidden transition-opacity duration-200"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    id="search-palette-box"
+    class="w-full max-w-2xl bg-[#0e0e0e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] ring-1 ring-emerald-500/20 transform transition-all duration-200 scale-95 opacity-0"
+  >
+    <!-- Header del Buscador -->
+    <div class="p-4 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
+      <svg
+        class="w-5 h-5 text-emerald-400 shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input
+        id="search-palette-input"
+        type="text"
+        placeholder={t("nav.search.modalPlaceholder")}
+        class="w-full bg-transparent text-sm md:text-base text-white placeholder:text-terminal-muted focus:outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button
+        id="search-palette-close"
+        type="button"
+        class="text-xs font-mono text-terminal-muted hover:text-white px-2 py-1 rounded bg-white/5 border border-white/10 hover:border-white/20 transition-colors cursor-pointer"
+      >
+        ESC
+      </button>
+    </div>
+
+    <!-- Sugerencias rápidas / Chips (visibles cuando el input está vacío) -->
+    <div
+      id="search-quick-tags"
+      class="px-4 py-2.5 border-b border-white/5 bg-white/[0.02] flex items-center gap-2 overflow-x-auto hide-scrollbar text-xs"
+    >
+      <span class="text-terminal-muted text-[11px] font-mono shrink-0 mr-1"
+        >{t("nav.search.quickSuggestions")}:</span
+      >
+      <button
+        type="button"
+        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+        data-query="herramienta"
+      >
+        <Icon name="lucide:zap" class="w-3.5 h-3.5 text-emerald-400" />
+        <span>{lang === "es" ? "Herramientas" : "Tools"}</span>
+      </button>
+      <button
+        type="button"
+        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+        data-query="activo"
+      >
+        <Icon name="lucide:trending-up" class="w-3.5 h-3.5 text-emerald-400" />
+        <span>{lang === "es" ? "Activos" : "Assets"}</span>
+      </button>
+      <button
+        type="button"
+        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+        data-query="guia"
+      >
+        <Icon name="lucide:compass" class="w-3.5 h-3.5 text-emerald-400" />
+        <span>{lang === "es" ? "Guías" : "Guides"}</span>
+      </button>
+      <button
+        type="button"
+        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+        data-query="educacion"
+      >
+        <Icon name="lucide:book-open" class="w-3.5 h-3.5 text-emerald-400" />
+        <span>{lang === "es" ? "Educación" : "Articles"}</span>
+      </button>
+      <button
+        type="button"
+        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+        data-query="juegos"
+      >
+        <Icon name="lucide:gamepad-2" class="w-3.5 h-3.5 text-emerald-400" />
+        <span>{lang === "es" ? "Juegos" : "Games"}</span>
+      </button>
+    </div>
+
+    <!-- Lista de Resultados Agrupados -->
+    <div
+      id="search-palette-results"
+      class="overflow-y-auto p-3 space-y-4 max-h-[50vh] divide-y divide-white/5 custom-scrollbar"
+    >
+      <!-- Se puebla dinámicamente con JS -->
+    </div>
+
+    <!-- Footer informativo con atajos -->
+    <div
+      class="px-4 py-2.5 bg-white/[0.02] border-t border-white/5 flex items-center justify-between text-[11px] text-terminal-muted font-mono"
+    >
+      <span>{uiStrings.kbdHint}</span>
+      <span class="text-emerald-400 font-semibold">0xLeñador Search</span>
+    </div>
+  </div>
+</div>
+
+<!-- Plantillas de iconos de astro-icon renderizados en build para el cliente -->
+<div id="search-icon-templates" class="hidden" aria-hidden="true">
+  <div data-icon-id="lucide:clock"><Icon name="lucide:clock" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:zap"><Icon name="lucide:zap" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:trending-up">
+    <Icon name="lucide:trending-up" class="w-3.5 h-3.5" />
+  </div>
+  <div data-icon-id="lucide:compass"><Icon name="lucide:compass" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:book-open"><Icon name="lucide:book-open" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:folder"><Icon name="lucide:folder" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:gamepad-2"><Icon name="lucide:gamepad-2" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:sprout"><Icon name="lucide:sprout" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:search"><Icon name="lucide:search" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:calculator"><Icon name="lucide:calculator" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:pie-chart"><Icon name="lucide:pie-chart" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:coins"><Icon name="lucide:coins" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:shield-check">
+    <Icon name="lucide:shield-check" class="w-3.5 h-3.5" />
+  </div>
+  <div data-icon-id="lucide:brain"><Icon name="lucide:brain" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:droplet"><Icon name="lucide:droplet" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:globe"><Icon name="lucide:globe" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:gem"><Icon name="lucide:gem" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:share-2"><Icon name="lucide:share-2" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:file-text"><Icon name="lucide:file-text" class="w-3.5 h-3.5" /></div>
+  <div data-icon-id="lucide:link"><Icon name="lucide:link" class="w-3.5 h-3.5" /></div>
+</div>
+
+<!-- Datos inyectados en JSON compacto -->
+<script id="search-data-json" type="application/json" set:html={JSON.stringify(searchData)} />
+<script id="search-ui-json" type="application/json" set:html={JSON.stringify(uiStrings)} />
+
+<script>
+  function initNavbarSearch() {
+    const modal = document.getElementById("search-palette-modal")
+    const box = document.getElementById("search-palette-box")
+    const input = document.getElementById("search-palette-input") as HTMLInputElement
+    const resultsContainer = document.getElementById("search-palette-results")
+    const closeBtn = document.getElementById("search-palette-close")
+    const triggerDesktop = document.getElementById("nav-search-trigger")
+    const triggerMobile = document.getElementById("nav-mobile-search-trigger")
+    const quickChips = document.querySelectorAll(".quick-chip")
+    const dataElement = document.getElementById("search-data-json")
+    const uiElement = document.getElementById("search-ui-json")
+
+    if (!modal || !box || !input || !resultsContainer || !dataElement || !uiElement) return
+
+    // Evitar multi-listener si ya está inicializado
+    if (modal.getAttribute("data-initialized") === "true") return
+    modal.setAttribute("data-initialized", "true")
+
+    const RECENT_SEARCHES_KEY = "0x_recent_searches_v1"
+
+    let catalog: any[] = []
+    let ui: any = {}
+    try {
+      catalog = JSON.parse(dataElement.textContent || "[]")
+      ui = JSON.parse(uiElement.textContent || "{}")
+    } catch (e) {
+      catalog = []
+      ui = {}
+    }
+
+    let activeItemIndex = -1
+    let visibleItems: HTMLElement[] = []
+
+    // Carga de plantillas de iconos astro-icon renderizados en compilación
+    const iconTemplates: Record<string, string> = {}
+    document.querySelectorAll("#search-icon-templates [data-icon-id]").forEach((el) => {
+      const id = el.getAttribute("data-icon-id")
+      if (id) {
+        iconTemplates[id] = el.innerHTML.trim()
+      }
+    })
+
+    function getIconMarkup(item: any): string {
+      if (item.icon) {
+        return `<img src="${item.icon}" alt="${item.name}" class="w-6 h-6 rounded-md object-cover bg-white/5 shrink-0" onerror="this.style.display='none'" />`
+      }
+      const iconKey =
+        item.iconName ||
+        (item.category === "blog"
+          ? "lucide:book-open"
+          : item.category === "directorio"
+            ? "lucide:folder"
+            : item.category === "herramientas"
+              ? "lucide:calculator"
+              : item.category === "guias"
+                ? "lucide:compass"
+                : "lucide:link")
+
+      const innerSvg = iconTemplates[iconKey] || iconTemplates["lucide:link"] || ""
+      return `<div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors shrink-0">${innerSvg}</div>`
+    }
+
+    function normalizeText(text: string) {
+      return (text || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+    }
+
+    // --- Persistencia de Búsquedas Recientes (localStorage) ---
+    function getRecentSearches(): any[] {
+      try {
+        const stored = localStorage.getItem(RECENT_SEARCHES_KEY)
+        return stored ? JSON.parse(stored) : []
+      } catch {
+        return []
+      }
+    }
+
+    function saveRecentSearch(item: any) {
+      try {
+        let recents = getRecentSearches().filter((r: any) => r.id !== item.id)
+        recents.unshift({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          url: item.url,
+          category: item.category,
+          categoryLabel: item.categoryLabel,
+          icon: item.icon,
+          iconName: item.iconName,
+        })
+        recents = recents.slice(0, 5)
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recents))
+      } catch {}
+    }
+
+    function clearRecentSearches() {
+      try {
+        localStorage.removeItem(RECENT_SEARCHES_KEY)
+      } catch {}
+      renderResults("")
+    }
+
+    function openModal() {
+      modal.classList.remove("hidden")
+      document.body.style.overflow = "hidden"
+      requestAnimationFrame(() => {
+        box.classList.remove("scale-95", "opacity-0")
+        box.classList.add("scale-100", "opacity-100")
+        input.focus()
+      })
+      renderResults(input.value)
+    }
+
+    function closeModal() {
+      box.classList.remove("scale-100", "opacity-100")
+      box.classList.add("scale-95", "opacity-0")
+      setTimeout(() => {
+        modal.classList.add("hidden")
+        document.body.style.overflow = ""
+        input.value = ""
+        activeItemIndex = -1
+      }, 150)
+    }
+
+    // Clasificación y puntuación inteligente
+    function performSearch(query: string) {
+      const q = normalizeText(query)
+      if (!q) {
+        // Estado vacío: devolvemos solo la selección balanceada y destacada (featured)
+        return catalog.filter((item) => item.featured)
+      }
+
+      // Sistema de puntuación (Scoring)
+      const scored = catalog
+        .map((item) => {
+          let score = 0
+          const nameNorm = normalizeText(item.name)
+          const descNorm = normalizeText(item.description)
+          const ecoNorm = normalizeText(item.ecosystem)
+          const ecoLabelNorm = normalizeText(item.ecosystemLabel)
+          const catNorm = normalizeText(item.category)
+          const catLabelNorm = normalizeText(item.categoryLabel)
+          const tagsNorm = (item.tags || []).map(normalizeText)
+
+          // Match exacto en nombre
+          if (nameNorm === q) score += 120
+          else if (nameNorm.startsWith(q)) score += 70
+          else if (nameNorm.includes(q)) score += 45
+
+          // Match en tags
+          if (tagsNorm.includes(q)) score += 55
+          else if (tagsNorm.some((t: string) => t.includes(q) || q.includes(t))) score += 35
+
+          // Match en ecosistema
+          if (ecoNorm.includes(q) || ecoLabelNorm.includes(q)) score += 40
+
+          // Match en categoría
+          if (catNorm.includes(q) || catLabelNorm.includes(q)) score += 25
+
+          // Match en descripción
+          if (descNorm.includes(q)) score += 15
+
+          return { ...item, score }
+        })
+        .filter((item) => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+
+      return scored
+    }
+
+    // Agrupación balanceada y anti-saturación
+    function groupResults(items: any[], query: string) {
+      const q = normalizeText(query)
+      const groups: {
+        id: string
+        iconName: string
+        title: string
+        items: any[]
+        canClear?: boolean
+      }[] = []
+
+      // Si el input está vacío, incluir Búsquedas Recientes arriba (si existen)
+      if (!q) {
+        const recents = getRecentSearches()
+        if (recents.length > 0) {
+          groups.push({
+            id: "recents",
+            iconName: "lucide:clock",
+            title: ui.recentSearches || "Búsquedas recientes",
+            items: recents,
+            canClear: true,
+          })
+        }
+
+        // Showcase equilibrado con HERRAMIENTAS PRIMERO:
+        const showcaseMap: Record<
+          string,
+          { id: string; iconName: string; title: string; items: any[] }
+        > = {
+          herramientas: {
+            id: "herramientas",
+            iconName: "lucide:zap",
+            title: ui.groupTools || "Herramientas",
+            items: [],
+          },
+          activos: {
+            id: "activos",
+            iconName: "lucide:trending-up",
+            title: ui.groupAssets || "Activos y Tesis",
+            items: [],
+          },
+          guias: {
+            id: "guias",
+            iconName: "lucide:compass",
+            title: ui.groupOps || "Guías y Operaciones",
+            items: [],
+          },
+          blog: {
+            id: "blog",
+            iconName: "lucide:book-open",
+            title: ui.groupBlog || "Artículos y Educación",
+            items: [],
+          },
+          directorio: {
+            id: "directorio",
+            iconName: "lucide:folder",
+            title: ui.groupDirectory || "Directorio y Recursos",
+            items: [],
+          },
+        }
+
+        items.forEach((item) => {
+          if (showcaseMap[item.category]) {
+            showcaseMap[item.category].items.push(item)
+          }
+        })
+
+        Object.values(showcaseMap).forEach((g) => {
+          if (g.items.length > 0) {
+            groups.push(g)
+          }
+        })
+
+        return groups
+      }
+
+      // Caso 1: Búsqueda explícita de "JUEGOS" / "GAMING"
+      const isGamingSearch = ["juego", "juegos", "game", "games", "gaming"].some((k) =>
+        q.includes(k),
+      )
+      if (isGamingSearch) {
+        const gamingItems = items.filter((item) =>
+          (item.tags || []).some((t: string) =>
+            ["juego", "juegos", "game", "gaming"].includes(normalizeText(t)),
+          ),
+        )
+        const otherItems = items.filter((item) => !gamingItems.includes(item))
+
+        if (gamingItems.length > 0) {
+          groups.push({
+            id: "games",
+            iconName: "lucide:gamepad-2",
+            title: ui.groupGames || "Juegos & Gaming Web3",
+            items: gamingItems,
+          })
+        }
+        if (otherItems.length > 0) {
+          groups.push({
+            id: "general",
+            iconName: "lucide:search",
+            title: ui.groupGeneral || "Resultados Relacionados",
+            items: otherItems,
+          })
+        }
+        return groups
+      }
+
+      // Caso 2: Búsqueda explícita de un ecosistema específico (ej: Sunflower Land)
+      const isSflSearch = ["sunflower", "sfl"].some((k) => q.includes(k))
+      if (isSflSearch) {
+        const sflItems = items.filter((i) => i.ecosystem === "sunflowerland")
+        const otherItems = items.filter((i) => i.ecosystem !== "sunflowerland")
+
+        if (sflItems.length > 0) {
+          groups.push({
+            id: "sfl",
+            iconName: "lucide:sprout",
+            title: ui.groupSfl || "Ecosistema Sunflower Land",
+            items: sflItems,
+          })
+        }
+        if (otherItems.length > 0) {
+          groups.push({
+            id: "general",
+            iconName: "lucide:search",
+            title: ui.groupGeneral || "Otros Resultados",
+            items: otherItems,
+          })
+        }
+        return groups
+      }
+
+      // Caso 3: Búsqueda general equilibrada con HERRAMIENTAS PRIMERO (anti-saturación de un mismo proyecto)
+      const catMap: Record<string, { id: string; iconName: string; title: string; items: any[] }> =
+        {
+          herramientas: {
+            id: "herramientas",
+            iconName: "lucide:zap",
+            title: ui.groupTools || "Herramientas",
+            items: [],
+          },
+          activos: {
+            id: "activos",
+            iconName: "lucide:trending-up",
+            title: ui.groupAssets || "Activos y Tesis",
+            items: [],
+          },
+          guias: {
+            id: "guias",
+            iconName: "lucide:compass",
+            title: ui.groupOps || "Guías y Operaciones",
+            items: [],
+          },
+          blog: {
+            id: "blog",
+            iconName: "lucide:book-open",
+            title: ui.groupBlog || "Artículos y Educación",
+            items: [],
+          },
+          directorio: {
+            id: "directorio",
+            iconName: "lucide:folder",
+            title: ui.groupDirectory || "Directorio y Recursos",
+            items: [],
+          },
+        }
+
+      // Agrupamos limitando la saturación de un mismo ecosistema a un máximo equilibrado
+      const ecoCountPerCategory: Record<string, number> = {}
+
+      items.forEach((item) => {
+        const catKey = item.category || "directorio"
+        const target = catMap[catKey] || catMap.directorio
+        const countKey = `${catKey}_${item.ecosystem}`
+        ecoCountPerCategory[countKey] = (ecoCountPerCategory[countKey] || 0) + 1
+
+        // Si la búsqueda no fue específicamente por ese ecosistema, limitamos a max 3 por categoría
+        if (ecoCountPerCategory[countKey] <= 3) {
+          target.items.push(item)
+        }
+      })
+
+      Object.values(catMap).forEach((g) => {
+        if (g.items.length > 0) {
+          groups.push(g)
+        }
+      })
+
+      return groups
+    }
+
+    function renderResults(query: string) {
+      const items = performSearch(query)
+      activeItemIndex = -1
+      visibleItems = []
+
+      if (items.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="py-12 px-4 text-center">
+            <svg class="w-10 h-10 mx-auto text-terminal-muted/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-sm text-terminal-secondary">${ui.noResults || "No se encontraron resultados para"} "<span class="text-white font-medium">${query}</span>"</p>
+            <p class="text-xs text-terminal-muted mt-1.5">${ui.noResultsTip || "Prueba con palabras como 'btc', 'perpetuos', 'juegos', 'riskfolio' o 'faucets'."}</p>
+          </div>
+        `
+        return
+      }
+
+      const groups = groupResults(items, query)
+
+      let html = ""
+      let globalIndex = 0
+
+      groups.forEach((group) => {
+        const clearButtonHtml = group.canClear
+          ? `<button id="clear-recents-btn" type="button" class="text-[10px] font-mono text-terminal-muted hover:text-red-400 transition-colors cursor-pointer px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/10">${ui.clearHistory || "Limpiar"}</button>`
+          : `<span class="text-[10px] font-mono text-terminal-muted">${group.items.length} ${ui.itemsLabel || "items"}</span>`
+
+        html += `
+          <div class="pt-3 first:pt-0">
+            <div class="px-2 py-1.5 mb-1.5 flex items-center justify-between">
+              <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5">
+                <span class="w-3.5 h-3.5 inline-flex items-center justify-center shrink-0 text-emerald-400">
+                  ${iconTemplates[group.iconName] || ""}
+                </span>
+                <span>${group.title}</span>
+              </span>
+              ${clearButtonHtml}
+            </div>
+            <div class="space-y-1">
+        `
+
+        group.items.forEach((item) => {
+          const itemIdx = globalIndex++
+          const iconMarkup = getIconMarkup(item)
+
+          html += `
+            <a
+              href="${item.url}"
+              data-index="${itemIdx}"
+              data-item-id="${item.id}"
+              class="search-result-item flex items-center justify-between p-2.5 rounded-xl text-terminal-secondary hover:text-white hover:bg-white/[0.05] border border-transparent hover:border-emerald-500/30 transition-all group cursor-pointer"
+            >
+              <div class="flex items-center gap-3 min-w-0 pr-3">
+                ${iconMarkup}
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-white group-hover:text-emerald-300 transition-colors truncate">${item.name}</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-terminal-muted border border-white/5 font-mono">${item.categoryLabel}</span>
+                  </div>
+                  <p class="text-xs text-terminal-muted truncate mt-0.5 group-hover:text-terminal-secondary transition-colors">${item.description}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[10px] font-mono text-terminal-muted/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                  ${ui.visit || "Visitar ↵"}
+                </span>
+              </div>
+            </a>
+          `
+        })
+
+        html += `
+            </div>
+          </div>
+        `
+      })
+
+      resultsContainer.innerHTML = html
+
+      // Listener para botón "Limpiar historial"
+      const clearRecentsBtn = document.getElementById("clear-recents-btn")
+      clearRecentsBtn?.addEventListener("click", (e) => {
+        e.stopPropagation()
+        clearRecentSearches()
+      })
+
+      // Guardar en recientes al hacer clic
+      resultsContainer.querySelectorAll(".search-result-item").forEach((el) => {
+        el.addEventListener("click", () => {
+          const itemId = el.getAttribute("data-item-id")
+          const clickedItem = catalog.find((c) => c.id === itemId)
+          if (clickedItem) {
+            saveRecentSearch(clickedItem)
+          }
+        })
+      })
+
+      // Colección de nodos para navegación con flechas
+      visibleItems = Array.from(resultsContainer.querySelectorAll(".search-result-item"))
+
+      // Por defecto seleccionar el primer elemento
+      if (visibleItems.length > 0) {
+        updateActiveIndex(0)
+      }
+    }
+
+    function updateActiveIndex(newIndex: number) {
+      if (visibleItems.length === 0) return
+
+      visibleItems.forEach((el) => {
+        el.classList.remove(
+          "bg-white/[0.08]",
+          "border-emerald-500/40",
+          "ring-1",
+          "ring-emerald-500/30",
+        )
+      })
+
+      if (newIndex >= 0 && newIndex < visibleItems.length) {
+        activeItemIndex = newIndex
+        const activeEl = visibleItems[activeItemIndex]
+        activeEl.classList.add(
+          "bg-white/[0.08]",
+          "border-emerald-500/40",
+          "ring-1",
+          "ring-emerald-500/30",
+        )
+        activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" })
+      }
+    }
+
+    // Input debounce para filtrado instantáneo
+    let timeout: ReturnType<typeof setTimeout>
+    input.addEventListener("input", () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        renderResults(input.value)
+      }, 50)
+    })
+
+    // Navegación con teclado
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault()
+        const next = activeItemIndex + 1 >= visibleItems.length ? 0 : activeItemIndex + 1
+        updateActiveIndex(next)
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault()
+        const prev = activeItemIndex - 1 < 0 ? visibleItems.length - 1 : activeItemIndex - 1
+        updateActiveIndex(prev)
+      } else if (e.key === "Enter") {
+        e.preventDefault()
+        if (activeItemIndex >= 0 && visibleItems[activeItemIndex]) {
+          const activeEl = visibleItems[activeItemIndex]
+          const itemId = activeEl.getAttribute("data-item-id")
+          const selectedItem = catalog.find((c) => c.id === itemId)
+          if (selectedItem) {
+            saveRecentSearch(selectedItem)
+          }
+          const link = activeEl as HTMLAnchorElement
+          window.location.href = link.href
+        }
+      } else if (e.key === "Escape") {
+        closeModal()
+      }
+    })
+
+    // Click en los chips de sugerencia rápida
+    quickChips.forEach((chip) => {
+      chip.addEventListener("click", (e) => {
+        const target = e.currentTarget as HTMLElement
+        const query = target.dataset.query || ""
+        input.value = query
+        renderResults(query)
+        input.focus()
+      })
+    })
+
+    // Atajos globales (/ y Cmd+K / Ctrl+K)
+    document.addEventListener("keydown", (e) => {
+      const activeEl = document.activeElement as HTMLElement
+      const isInputActive =
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.isContentEditable)
+
+      if (e.key === "/" && !isInputActive) {
+        e.preventDefault()
+        openModal()
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault()
+        if (modal.classList.contains("hidden")) {
+          openModal()
+        } else {
+          closeModal()
+        }
+      } else if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+        closeModal()
+      }
+    })
+
+    triggerDesktop?.addEventListener("click", openModal)
+    triggerMobile?.addEventListener("click", openModal)
+    closeBtn?.addEventListener("click", closeModal)
+
+    // Cerrar al hacer clic en el backdrop
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal()
+      }
+    })
+  }
+
+  // Inicialización compatible con Astro View Transitions
+  initNavbarSearch()
+  document.addEventListener("astro:page-load", initNavbarSearch)
+</script>
+
+<style>
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Scrollbar estético ultra-delgado estilo terminal para la lista de resultados */
+  #search-palette-results {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  }
+  #search-palette-results::-webkit-scrollbar {
+    width: 5px;
+  }
+  #search-palette-results::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 9999px;
+    margin: 4px 0;
+  }
+  #search-palette-results::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.18);
+    border-radius: 9999px;
+    transition: background-color 0.2s ease;
+  }
+  #search-palette-results::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(16, 185, 129, 0.5);
+  }
+  #search-palette-results::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+</style>

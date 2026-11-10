@@ -11,8 +11,6 @@ import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
-// Todos los faucets están en faucetsData (mezclados)
-
 const faqItems = [
   {
     pregunta: t("faucets.faq.q1"),
@@ -35,7 +33,40 @@ const faqItems = [
     respuesta: t("faucets.faq.a5"),
   },
 ]
+
+// Schema JSON-LD estructurado para SEO (FAQPage + ItemList)
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ItemList",
+      name: `${t("faucets.heading")} ${t("faucets.heading.accent")}`,
+      description: t("faucets.intro"),
+      numberOfItems: faucetsData.length,
+      itemListElement: faucetsData.map((faucet, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: faucet.name,
+        url: faucet.url,
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faqItems.map((faq) => ({
+        "@type": "Question",
+        name: faq.pregunta,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.respuesta,
+        },
+      })),
+    },
+  ],
+}
 ---
+
+<!-- JSON-LD SEO Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
 <main class="max-w-6xl mx-auto px-6 pt-10 pb-20">
   <!-- Breadcrumb -->
@@ -55,13 +86,14 @@ const faqItems = [
   </header>
 
   <!-- Buscador y filtros -->
-  <div class="flex flex-col sm:flex-row gap-3 mb-10">
+  <div class="flex flex-col sm:flex-row gap-3 mb-4">
     <div class="relative flex-1">
       <svg
-        class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-terminal-muted"
+        class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-terminal-muted pointer-events-none"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           stroke-linecap="round"
@@ -72,9 +104,23 @@ const faqItems = [
       <input
         type="text"
         id="faucet-search"
-        class="w-full bg-terminal-bg border border-terminal-border focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 outline-none rounded-xl pl-10 pr-4 py-3 text-white text-sm font-mono placeholder:text-terminal-muted transition-all"
+        class="w-full bg-terminal-bg border border-terminal-border focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 outline-none rounded-xl pl-10 pr-10 py-3 text-white text-sm font-mono placeholder:text-terminal-muted transition-all"
         placeholder={t("faucets.search.placeholder")}
+        autocomplete="off"
+        spellcheck="false"
       />
+      <!-- Botón X para limpiar buscador -->
+      <button
+        type="button"
+        id="faucet-search-clear"
+        class="hidden absolute right-3 top-1/2 -translate-y-1/2 p-1 text-terminal-muted hover:text-white transition-colors rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
+        title={t("faucets.search.clear")}
+        aria-label={t("faucets.search.clear")}
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
 
     <div class="flex bg-terminal-bg p-1 rounded-xl border border-terminal-border">
@@ -93,16 +139,51 @@ const faqItems = [
     </div>
   </div>
 
+  <!-- Contador dinámico de resultados -->
+  <div class="flex items-center justify-between text-xs font-mono text-terminal-muted mb-6 px-1">
+    <span
+      id="faucet-counter"
+      data-showing-template={t("faucets.count.showing")}
+      data-single-template={t("faucets.count.single")}
+      data-total={faucetsData.length}
+    >
+      {t("faucets.count.showing").replace("{count}", String(faucetsData.length)).replace("{total}", String(faucetsData.length))}
+    </span>
+  </div>
+
+  <!-- Empty State (sin resultados) -->
+  <div
+    id="faucet-empty"
+    class="hidden text-center py-16 px-6 border border-terminal-border/40 rounded-2xl bg-white/[0.01] my-8"
+  >
+    <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-terminal-border/40 flex items-center justify-center text-terminal-muted">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
+      </svg>
+    </div>
+    <h3 class="text-base font-bold text-white mb-1">{t("faucets.empty.title")}</h3>
+    <p class="text-xs text-terminal-secondary max-w-sm mx-auto mb-6">
+      {t("faucets.empty.desc")}
+    </p>
+    <button
+      type="button"
+      id="faucet-empty-reset"
+      class="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/30 rounded-lg text-xs font-mono font-semibold transition-all"
+    >
+      {t("faucets.empty.reset")}
+    </button>
+  </div>
+
   <!-- ─── FAUCETS GRID ─── -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-16" id="grid-faucets">
     {
       faucetsData.map((faucet) => (
         <div
           class:list={[
-            "item-card group border rounded-2xl p-4 flex items-start gap-4 transition-all duration-300",
+            "item-card relative group border rounded-2xl p-4 flex items-start gap-4 transition-all duration-200 cursor-pointer",
             faucet.type === "mainnet"
-              ? "bg-amber-500/[0.03] border-amber-500/[0.08] hover:border-amber-500/20"
-              : "bg-white/[0.02] border-white/[0.05] hover:border-white/[0.08]",
+              ? "bg-amber-500/[0.03] border-amber-500/[0.08] hover:border-amber-500/30 hover:bg-amber-500/[0.06]"
+              : "bg-white/[0.02] border-white/[0.05] hover:border-emerald-500/30 hover:bg-white/[0.04]",
           ]}
           data-type={faucet.type}
           data-tags={faucet.tags.join(" ").toLowerCase()}
@@ -113,27 +194,29 @@ const faqItems = [
             width={40}
             height={40}
             loading="lazy"
+            decoding="async"
             class="w-10 h-10 object-contain rounded-xl flex-shrink-0 mt-0.5"
           />
-          <div class="min-w-0">
+          <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2 mb-1">
               <a
                 href={faucet.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 class:list={[
-                  "inline-flex items-center gap-1 text-sm font-semibold transition-colors no-underline",
+                  "faucet-name inline-flex items-center gap-1.5 text-sm font-semibold transition-colors no-underline after:absolute after:inset-0 after:content-[''] focus:outline-none",
                   faucet.type === "mainnet"
-                    ? "text-white hover:text-amber-400"
-                    : "text-white hover:text-emerald-400",
+                    ? "text-white group-hover:text-amber-400"
+                    : "text-white group-hover:text-emerald-400",
                 ]}
               >
                 {faucet.name}
                 <svg
-                  class="w-3 h-3 opacity-40"
+                  class="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition-opacity"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     stroke-linecap="round"
@@ -159,7 +242,7 @@ const faqItems = [
                 </span>
               )}
             </div>
-            <div class="flex flex-wrap gap-1.5 mt-2">
+            <div class="flex flex-wrap gap-1.5 mt-2 relative z-10">
               {faucet.tags.map((tag) => (
                 <span
                   class:list={[
@@ -193,58 +276,192 @@ const faqItems = [
 </main>
 
 <script is:inline>
-  var activeTab = "all"
+  (function () {
+    var activeTab = "all";
+    var searchInput = document.getElementById("faucet-search");
+    var clearBtn = document.getElementById("faucet-search-clear");
+    var counterEl = document.getElementById("faucet-counter");
+    var emptyEl = document.getElementById("faucet-empty");
+    var resetBtn = document.getElementById("faucet-empty-reset");
+    var tabBtns = document.querySelectorAll(".tab-btn");
 
-  function applyFilters() {
-    var q = document.getElementById("faucet-search").value.toLowerCase().trim()
-    var cards = document.querySelectorAll(".item-card")
+    var showingTemplate = counterEl ? counterEl.getAttribute("data-showing-template") : "Mostrando {count} de {total} faucets";
+    var singleTemplate = counterEl ? counterEl.getAttribute("data-single-template") : "Mostrando 1 faucet";
+    var totalCards = counterEl ? parseInt(counterEl.getAttribute("data-total"), 10) : 0;
 
-    cards.forEach(function (card) {
-      var type = card.getAttribute("data-type")
-      var tagsText = card.getAttribute("data-tags") || ""
-      var name = card.querySelector("a") ? card.querySelector("a").textContent.toLowerCase() : ""
+    // Pre-cacheo en memoria (Optimización para dispositivos con baja RAM/CPU)
+    // Evita cientos de llamadas a querySelectorAll en cada pulsación del teclado
+    var cardElements = document.querySelectorAll(".item-card");
+    var cardsCache = [];
 
-      var tabMatch = activeTab === "all" || type === activeTab
-      var queryMatch = q === "" || tagsText.includes(q) || name.includes(q)
+    for (var i = 0; i < cardElements.length; i++) {
+      var c = cardElements[i];
+      var nameEl = c.querySelector(".faucet-name");
+      var nameText = nameEl ? nameEl.textContent.trim().toLowerCase() : "";
+      var tagsAttr = (c.getAttribute("data-tags") || "").toLowerCase();
+      var tagNodes = c.querySelectorAll(".faucet-tag");
+      var tagsArray = [];
 
-      if (tabMatch && queryMatch) {
-        card.classList.remove("hidden")
-      } else {
-        card.classList.add("hidden")
+      for (var j = 0; j < tagNodes.length; j++) {
+        tagsArray.push({
+          el: tagNodes[j],
+          text: tagNodes[j].textContent.trim().toLowerCase()
+        });
       }
 
-      // Highlight tags que coinciden con la búsqueda
-      var tagEls = card.querySelectorAll(".faucet-tag")
-      tagEls.forEach(function (tag) {
-        if (q !== "" && tag.textContent.toLowerCase().includes(q)) {
-          tag.classList.add("highlight")
-          tag.classList.remove("dimmed")
-        } else if (q !== "") {
-          tag.classList.remove("highlight")
-          tag.classList.add("dimmed")
+      cardsCache.push({
+        el: c,
+        name: nameText,
+        type: c.getAttribute("data-type") || "",
+        searchIndex: (nameText + " " + tagsAttr).toLowerCase(),
+        tags: tagsArray
+      });
+    }
+
+    var animFrameId = null;
+
+    function applyFilters() {
+      var q = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+      // Mostrar u ocultar botón X de limpieza
+      if (clearBtn) {
+        if (q.length > 0) {
+          clearBtn.classList.remove("hidden");
         } else {
-          tag.classList.remove("highlight", "dimmed")
+          clearBtn.classList.add("hidden");
         }
-      })
-    })
+      }
 
-    // Fin de función applyFilters
-  }
+      var visibleCount = 0;
 
-  document.querySelectorAll(".tab-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      activeTab = btn.getAttribute("data-filter")
+      for (var k = 0; k < cardsCache.length; k++) {
+        var item = cardsCache[k];
+        var tabMatch = activeTab === "all" || item.type === activeTab;
+        var queryMatch = q === "" || item.searchIndex.indexOf(q) !== -1;
 
-      document.querySelectorAll(".tab-btn").forEach(function (b) {
-        b.classList.remove("bg-emerald-600", "text-white")
-        b.classList.add("text-terminal-muted")
-      })
-      btn.classList.add("bg-emerald-600", "text-white")
-      btn.classList.remove("text-terminal-muted")
+        if (tabMatch && queryMatch) {
+          item.el.classList.remove("hidden");
+          visibleCount++;
+        } else {
+          item.el.classList.add("hidden");
+        }
 
-      applyFilters()
-    })
-  })
+        // Resaltado inteligente de tags:
+        // Si el usuario buscó por el nombre de la web (ej: "Alchemy", "Thirdweb"), NINGÚN tag se atenúa
+        var nameMatch = q !== "" && item.name.indexOf(q) !== -1;
+        var hasMatchingTag = false;
+        var tags = item.tags;
 
-  document.getElementById("faucet-search").addEventListener("input", applyFilters)
+        if (q !== "" && !nameMatch) {
+          for (var tIdx = 0; tIdx < tags.length; tIdx++) {
+            if (tags[tIdx].text.indexOf(q) !== -1) {
+              hasMatchingTag = true;
+              break;
+            }
+          }
+        }
+
+        for (var tIdx = 0; tIdx < tags.length; tIdx++) {
+          var tag = tags[tIdx];
+          var tagMatch = q !== "" && tag.text.indexOf(q) !== -1;
+
+          if (tagMatch) {
+            tag.el.classList.add("highlight");
+            tag.el.classList.remove("dimmed");
+          } else if (q !== "" && hasMatchingTag && !nameMatch) {
+            // Solo se atenúan los demás tags si la coincidencia fue por una red específica
+            tag.el.classList.remove("highlight");
+            tag.el.classList.add("dimmed");
+          } else {
+            // Si la búsqueda coincidió con el nombre del faucet o no hay búsqueda, todos los tags son 100% legibles
+            tag.el.classList.remove("highlight", "dimmed");
+          }
+        }
+      }
+
+      // Actualizar contador
+      if (counterEl) {
+        if (visibleCount === 1) {
+          counterEl.textContent = singleTemplate;
+        } else {
+          counterEl.textContent = showingTemplate
+            .replace("{count}", visibleCount)
+            .replace("{total}", totalCards);
+        }
+      }
+
+      // Manejar Empty State
+      if (emptyEl) {
+        if (visibleCount === 0) {
+          emptyEl.classList.remove("hidden");
+        } else {
+          emptyEl.classList.add("hidden");
+        }
+      }
+    }
+
+    // Debounce ligero con requestAnimationFrame para 60fps fluidos en móviles modestos
+    function onSearchInput() {
+      if (animFrameId) {
+        cancelAnimationFrame(animFrameId);
+      }
+      animFrameId = requestAnimationFrame(applyFilters);
+    }
+
+    function clearSearch() {
+      if (searchInput) {
+        searchInput.value = "";
+        searchInput.focus();
+      }
+      applyFilters();
+    }
+
+    function resetAllFilters() {
+      if (searchInput) searchInput.value = "";
+      activeTab = "all";
+      tabBtns.forEach(function (b) {
+        if (b.getAttribute("data-filter") === "all") {
+          b.classList.add("bg-emerald-600", "text-white");
+          b.classList.remove("text-terminal-muted");
+        } else {
+          b.classList.remove("bg-emerald-600", "text-white");
+          b.classList.add("text-terminal-muted");
+        }
+      });
+      applyFilters();
+    }
+
+    // Listeners
+    if (searchInput) {
+      searchInput.addEventListener("input", onSearchInput);
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          clearSearch();
+        }
+      });
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", clearSearch);
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener("click", resetAllFilters);
+    }
+
+    tabBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        activeTab = btn.getAttribute("data-filter");
+
+        tabBtns.forEach(function (b) {
+          b.classList.remove("bg-emerald-600", "text-white");
+          b.classList.add("text-terminal-muted");
+        });
+        btn.classList.add("bg-emerald-600", "text-white");
+        btn.classList.remove("text-terminal-muted");
+
+        applyFilters();
+      });
+    });
+  })();
 </script>

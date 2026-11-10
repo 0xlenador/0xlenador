@@ -2,6 +2,7 @@
 import { Image } from "astro:assets"
 import logoImg from "../assets/img/logo.webp"
 import LanguageSwitcher from "./LanguageSwitcher.astro"
+import NavbarSearch from "./NavbarSearch.astro"
 import { useTranslations, getLocalizedPath, type Lang } from "../i18n"
 import { socials } from "../data/socials"
 
@@ -103,7 +104,8 @@ const navLinks = [
         href: loc("/lista-web3"),
         label: t("nav.sub.listaWeb3"),
         iconType: "svg",
-        svgPath: "M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1",
+        svgPath:
+          "M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1",
       },
       {
         href: loc("/faucets"),
@@ -121,7 +123,8 @@ const navLinks = [
         href: loc("/contenido-social"),
         label: t("nav.socialContent"),
         iconType: "svg",
-        svgPath: "M12.75 19.5v-.75a7.5 7.5 0 00-7.5-7.5H4.5m0-6.75h.75c7.87 0 14.25 6.38 14.25 14.25v.75M6 18.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z",
+        svgPath:
+          "M12.75 19.5v-.75a7.5 7.5 0 00-7.5-7.5H4.5m0-6.75h.75c7.87 0 14.25 6.38 14.25 14.25v.75M6 18.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z",
       },
       {
         href: loc("/infravalorados"),
@@ -223,7 +226,9 @@ const navLinks = [
           loading="eager"
           class="w-7 h-7 object-contain"
         />
-        <span class="leading-none">0x<span class="ml-1 md:ml-1.5 text-emerald-500">Leñador</span></span>
+        <span class="leading-none"
+          >0x<span class="ml-1 md:ml-1.5 text-emerald-500">Leñador</span></span
+        >
       </a>
 
       <!-- Desktop nav con Dropdowns -->
@@ -309,23 +314,43 @@ const navLinks = [
       </div>
     </div>
 
-    <!-- Botón hamburguesa (móvil) -->
-    <button
-      id="mobile-menu-button"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-      aria-label={t("nav.mobile.aria.button")}
-      class="lg:hidden text-terminal-muted hover:text-white focus:outline-none z-50 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
-    >
-      <svg id="menu-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          id="menu-path"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 6h16M4 12h16m-7 6h7"></path>
-      </svg>
-    </button>
+    <!-- Buscador Inteligente Desktop (entre Operaciones y Blog) -->
+    <NavbarSearch lang={lang} t={t} />
+
+    <!-- Botones móvil (Buscador + Menú hamburguesa) -->
+    <div class="flex items-center gap-1 lg:hidden z-50">
+      <button
+        id="nav-mobile-search-trigger"
+        type="button"
+        class="p-2 text-terminal-muted hover:text-white focus:outline-none cursor-pointer rounded-lg hover:bg-terminal-elevated/50 transition-colors"
+        aria-label={t("nav.search.placeholder")}
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+
+      <button
+        id="mobile-menu-button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={t("nav.mobile.aria.button")}
+        class="text-terminal-muted hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer p-1"
+      >
+        <svg id="menu-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            id="menu-path"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+      </button>
+    </div>
 
     <!-- Desktop: derecha (Blog + LanguageSwitcher + redes sociales) -->
     <div class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-terminal-muted">
