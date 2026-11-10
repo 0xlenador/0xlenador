@@ -285,60 +285,88 @@ const formatAstroDescription = (skill) => {
               {t("sfl.cooking.dash.skillTitle")}
             </h2>
 
-            <!-- Fila: Lvl [100] + Slider -->
-            <div class="flex items-center justify-between gap-3 mb-3">
-              <div class="flex items-center text-xs font-mono text-white/80">
-                <span>Lvl [</span>
+            <!-- Fila: Lvl [1] → [100] + Dual Slider (Barra expandida hacia la izquierda con thumbs afinados) -->
+            <div class="flex items-center gap-3 sm:gap-4 mb-3">
+              <div class="flex items-center text-xs font-mono text-white/80 gap-0.5 select-none shrink-0">
+                <span class="text-white/60">Lvl</span>
+                <span class="text-white/40">[</span>
+                <input
+                  type="number"
+                  id="skillStartLevelInput"
+                  min="1"
+                  max="200"
+                  value="1"
+                  aria-label="Nivel inicial"
+                  class="w-7 sm:w-8 text-center text-xs font-mono font-bold text-white bg-transparent outline-none p-0 inline-block focus:text-emerald-400"
+                />
+                <span class="text-white/40">]</span>
+                <span class="text-emerald-400/80 font-bold mx-0.5">→</span>
+                <span class="text-white/40">[</span>
                 <input
                   type="number"
                   id="skillLevelInput"
                   min="1"
                   max="200"
                   value="100"
-                  class="w-8 text-center text-xs font-mono font-bold text-white bg-transparent outline-none p-0 inline-block focus:text-emerald-400"
+                  aria-label="Nivel objetivo"
+                  class="w-7 sm:w-8 text-center text-xs font-mono font-bold text-white bg-transparent outline-none p-0 inline-block focus:text-emerald-400"
                 />
-                <span>]</span>
+                <span class="text-white/40">]</span>
               </div>
-              <input
-                type="range"
-                id="skillLevelRange"
-                min="1"
-                max="200"
-                value="100"
-                class="flex-1 max-w-[150px] sm:max-w-[170px] h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white focus:outline-none"
-              />
+              <div class="relative flex items-center flex-1 h-4 min-w-[120px]">
+                <div class="absolute inset-x-0 h-1 bg-white/15 rounded-full pointer-events-none"></div>
+                <div id="skillRangeHighlight" class="absolute h-1 bg-emerald-500 rounded-full pointer-events-none shadow-[0_0_6px_rgba(16,185,129,0.3)]" style="left: 0%; right: 50.25%;"></div>
+                <input
+                  type="range"
+                  id="skillStartLevelRange"
+                  min="1"
+                  max="200"
+                  value="1"
+                  class="range-slider-dual absolute inset-x-0 w-full h-1 appearance-none bg-transparent pointer-events-none cursor-pointer focus:outline-none z-10"
+                />
+                <input
+                  type="range"
+                  id="skillLevelRange"
+                  min="1"
+                  max="200"
+                  value="100"
+                  class="range-slider-dual absolute inset-x-0 w-full h-1 appearance-none bg-transparent pointer-events-none cursor-pointer focus:outline-none z-20"
+                />
+              </div>
             </div>
 
-            <!-- Métrica Principal Destacada: COSTO PROMEDIO POR SKILL (El que prima) -->
+            <!-- Métrica Principal Destacada: XP REQUERIDA (Rango seleccionado) + Leyenda con Costo FLOWER -->
             <div class="border border-emerald-500/50 bg-emerald-950/30 rounded-xl p-3 sm:p-3.5 flex flex-col items-center justify-center text-center shadow-[0_0_20px_rgba(16,185,129,0.12)] transition-all hover:border-emerald-500/70">
               <span class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-emerald-200/80 mb-0.5">
-                {t("sfl.cooking.dash.skillAvgTitle")}
+                {t("sfl.cooking.dash.skillRangeXpTitle")}
               </span>
-              <span id="skillAvgCostDisplay" class="text-2xl sm:text-3xl font-mono font-black text-emerald-400 tracking-tight drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+              <span id="skillRangeXpDisplay" class="text-2xl sm:text-3xl font-mono font-black text-emerald-400 tracking-tight drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">
                 ...
               </span>
-              <span class="text-[10px] sm:text-[11px] font-mono text-white/50 block mt-0.5">
-                {t("sfl.cooking.dash.skillPerPoint")} (<span id="skillAvgXpDisplay">...</span>)
-              </span>
+              <div class="text-[10px] sm:text-[11px] font-mono text-white/70 flex items-center justify-center gap-1 mt-0.5">
+                <span class="text-white/50">{t("sfl.cooking.dash.foodCost")}</span>
+                <span id="skillRangeCostDisplay" class="text-emerald-300 font-bold">...</span>
+                <span class="text-white/40">(<span id="skillRangeDishCount">...</span> {t("sfl.cooking.dash.dishesLabel")})</span>
+              </div>
             </div>
 
             <!-- Desglose de Niveles y Costo Histórico (Cantidad de platos, imagen y costo) -->
             <div class="grid grid-cols-3 gap-1.5 sm:gap-2 mt-3">
-              <!-- Col 1: Llegar a este nivel -->
+              <!-- Col 1: Promedio por Skill -->
               <div class="bg-black/40 border border-white/5 rounded-xl p-2 sm:p-2.5 flex flex-col items-center justify-between text-center min-h-[105px]">
-                <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase tracking-wider truncate w-full" id="skillReachLabel" data-prefix={t("sfl.cooking.dash.skillReachLevel")}>
-                  {t("sfl.cooking.dash.skillReachLevel")} 100
+                <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase tracking-wider truncate w-full" id="skillAvgLabel">
+                  {t("sfl.cooking.dash.skillAvgTitle")}
                 </span>
                 
                 <div class="flex flex-col items-center justify-center text-center font-mono my-0.5">
-                  <span id="skillCostDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-tight">...</span>
-                  <span id="skillDeltaXpDisplay" class="text-[8px] sm:text-[9px] text-white/40 leading-tight mt-0.5">...</span>
+                  <span id="skillAvgCostDisplay" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 leading-tight">...</span>
+                  <span id="skillAvgXpDisplay" class="text-[8px] sm:text-[9px] text-white/40 leading-tight mt-0.5">...</span>
                 </div>
 
                 <div class="flex items-center justify-center gap-1.5 mt-0.5">
-                  <img id="skillReachDishImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow shrink-0" alt="Dish" />
+                  <img id="skillAvgDishImg" src="/img/sunflowerland/food/Boiled Eggs.png" class="w-4 h-4 sm:w-5 sm:h-5 object-contain drop-shadow shrink-0" alt="Dish" />
                   <div class="flex items-baseline gap-0.5">
-                    <span id="skillReachDishCount" class="text-xs sm:text-sm font-mono font-bold text-white">...</span>
+                    <span id="skillAvgDishCount" class="text-xs sm:text-sm font-mono font-bold text-white">...</span>
                     <span class="text-[8px] sm:text-[9px] font-mono text-white/50 uppercase">{t("sfl.cooking.dash.dishesLabel")}</span>
                   </div>
                 </div>
@@ -1213,6 +1241,7 @@ const formatAstroDescription = (skill) => {
       customFishOil: window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined ? window.sflCustomFishOilCost : null,
       boostFilter: document.querySelector('.filter-boost-btn.active')?.dataset?.filter || 'all',
       viewStyle: document.querySelector('.view-switch-btn.active')?.dataset?.action || 'detailed',
+      skillStartLevel: document.getElementById('skillStartLevelRange')?.value || '1',
       skillLevel: document.getElementById('skillLevelRange')?.value || '100'
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(state));
@@ -1787,36 +1816,65 @@ const formatAstroDescription = (skill) => {
     return `${prefix}${formatNumber(xp, 0)} XP`;
   };
 
+  const updateRangeHighlight = (start, target) => {
+    const highlight = document.getElementById("skillRangeHighlight");
+    if (!highlight) return;
+    const s = Math.max(1, Math.min(200, start));
+    const t = Math.max(1, Math.min(200, target));
+    const pct1 = Math.max(0, Math.min(100, ((s - 1) / 199) * 100));
+    const pct2 = Math.max(0, Math.min(100, ((t - 1) / 199) * 100));
+    highlight.style.left = `${pct1}%`;
+    highlight.style.right = `${100 - pct2}%`;
+  };
+
   const updateSkillCalculator = () => {
+    const startRange = document.getElementById("skillStartLevelRange");
+    const startInput = document.getElementById("skillStartLevelInput");
     const levelRange = document.getElementById("skillLevelRange");
     const levelInput = document.getElementById("skillLevelInput");
     if (!levelRange) return;
 
-    let level = parseInt(levelRange.value);
-    if (isNaN(level) || level < 1) level = 1;
-    if (level > 200) level = 200;
+    let rawStart = parseInt(startInput ? startInput.value : (startRange ? startRange.value : 1));
+    let rawTarget = parseInt(levelInput ? levelInput.value : (levelRange ? levelRange.value : 100));
 
-    if (levelInput && parseInt(levelInput.value) !== level) {
-      levelInput.value = level;
+    if (isNaN(rawStart)) rawStart = 1;
+    if (isNaN(rawTarget)) rawTarget = 100;
+
+    const clampedStart = Math.max(1, Math.min(200, rawStart));
+    const clampedTarget = Math.max(1, Math.min(200, rawTarget));
+
+    // Solo sincronizar el valor de los sliders si no tienen el foco activo
+    if (startRange && document.activeElement !== startRange) {
+      startRange.value = clampedStart;
     }
+    if (levelRange && document.activeElement !== levelRange) {
+      levelRange.value = clampedTarget;
+    }
+
+    const startLevel = Math.min(clampedStart, clampedTarget);
+    const targetLevel = Math.max(clampedStart, clampedTarget);
+
+    updateRangeHighlight(startLevel, targetLevel);
 
     const best = getBestRecipe();
 
-    const costDisplay = document.getElementById("skillCostDisplay");
-    const deltaXpDisplay = document.getElementById("skillDeltaXpDisplay");
-    const skillNextCostDisplay = document.getElementById("skillNextCostDisplay");
-    const skillNextDeltaXpDisplay = document.getElementById("skillNextDeltaXpDisplay");
-    const totalCostDisplay = document.getElementById("skillTotalCostDisplay");
-    const totalXpDisplay = document.getElementById("skillTotalXpDisplay");
+    const skillRangeXpDisplay = document.getElementById("skillRangeXpDisplay");
+    const skillRangeCostDisplay = document.getElementById("skillRangeCostDisplay");
+    const skillRangeDishCount = document.getElementById("skillRangeDishCount");
+
     const skillAvgCostDisplay = document.getElementById("skillAvgCostDisplay");
     const skillAvgXpDisplay = document.getElementById("skillAvgXpDisplay");
-    const skillReachLabel = document.getElementById("skillReachLabel");
-    const skillNextLabel = document.getElementById("skillNextLabel");
+    const skillAvgDishImg = document.getElementById("skillAvgDishImg");
+    const skillAvgDishCount = document.getElementById("skillAvgDishCount");
 
-    const skillReachDishImg = document.getElementById("skillReachDishImg");
-    const skillReachDishCount = document.getElementById("skillReachDishCount");
+    const skillNextCostDisplay = document.getElementById("skillNextCostDisplay");
+    const skillNextDeltaXpDisplay = document.getElementById("skillNextDeltaXpDisplay");
+    const skillNextLabel = document.getElementById("skillNextLabel");
     const skillNextDishImg = document.getElementById("skillNextDishImg");
     const skillNextDishCount = document.getElementById("skillNextDishCount");
+
+    const totalCostDisplay = document.getElementById("skillTotalCostDisplay");
+    const totalXpDisplay = document.getElementById("skillTotalXpDisplay");
     const skillTotalDishImg = document.getElementById("skillTotalDishImg");
     const skillTotalDishCount = document.getElementById("skillTotalDishCount");
 
@@ -1827,15 +1885,16 @@ const formatAstroDescription = (skill) => {
     const bestFoodXpDisplay = document.getElementById("bestFoodXpDisplay");
 
     if (!best || !best.efficiency || best.efficiency <= 0) {
+      if (skillRangeXpDisplay) skillRangeXpDisplay.innerText = "...";
+      if (skillRangeCostDisplay) skillRangeCostDisplay.innerText = "...";
+      if (skillRangeDishCount) skillRangeDishCount.innerText = "...";
       if (skillAvgCostDisplay) skillAvgCostDisplay.innerText = "...";
       if (skillAvgXpDisplay) skillAvgXpDisplay.innerText = "...";
-      if (costDisplay) costDisplay.innerText = "...";
-      if (deltaXpDisplay) deltaXpDisplay.innerText = "...";
+      if (skillAvgDishCount) skillAvgDishCount.innerText = "...";
       if (skillNextCostDisplay) skillNextCostDisplay.innerText = "...";
       if (skillNextDeltaXpDisplay) skillNextDeltaXpDisplay.innerText = "...";
       if (totalCostDisplay) totalCostDisplay.innerText = "...";
       if (totalXpDisplay) totalXpDisplay.innerText = "...";
-      if (skillReachDishCount) skillReachDishCount.innerText = "...";
       if (skillNextDishCount) skillNextDishCount.innerText = "...";
       if (skillTotalDishCount) skillTotalDishCount.innerText = "...";
       if (bestFoodNameDisplay) bestFoodNameDisplay.innerText = "...";
@@ -1845,45 +1904,63 @@ const formatAstroDescription = (skill) => {
       return;
     }
 
-    const currentLevelXp = levelExperience[level] || 0;
-    const prevLevelXp = level > 1 ? (levelExperience[level - 1] || 0) : 0;
-    const nextLevelXp = level < 200 ? (levelExperience[level + 1] || currentLevelXp) : currentLevelXp;
+    const startXp = levelExperience[startLevel] || 0;
+    const targetXp = levelExperience[targetLevel] || 0;
+    const rangeXp = Math.max(0, targetXp - startXp);
 
-    const deltaXp = level > 1 ? (currentLevelXp - prevLevelXp) : 0;
-    const nextDeltaXp = level < 200 ? (nextLevelXp - currentLevelXp) : 0;
+    const nextLevelXp = targetLevel < 200 ? (levelExperience[targetLevel + 1] || targetXp) : targetXp;
+    const nextDeltaXp = targetLevel < 200 ? (nextLevelXp - targetXp) : 0;
 
-    const dishesThisLevel = (best.xp > 0 && deltaXp > 0) ? Math.ceil(deltaXp / best.xp) : 0;
+    const dishesRange = (best.xp > 0 && rangeXp > 0) ? Math.ceil(rangeXp / best.xp) : 0;
     const dishesNextLevel = (best.xp > 0 && nextDeltaXp > 0) ? Math.ceil(nextDeltaXp / best.xp) : 0;
-    const dishesTotal = (best.xp > 0 && currentLevelXp > 0) ? Math.ceil(currentLevelXp / best.xp) : 0;
+    const dishesTotal = (best.xp > 0 && targetXp > 0) ? Math.ceil(targetXp / best.xp) : 0;
 
-    const costThisLevel = deltaXp / best.efficiency;
+    const rangeCost = rangeXp / best.efficiency;
     const costNextLevel = nextDeltaXp / best.efficiency;
-    const totalCost = currentLevelXp / best.efficiency;
+    const totalCost = targetXp / best.efficiency;
 
-    // Skills obtenidos hasta este nivel (1 por cada nivel superado a partir de lvl 2)
-    const skillsEarned = Math.max(1, level - 1);
-    const avgCostPerSkill = totalCost / skillsEarned;
-    const avgXpPerSkill = currentLevelXp / skillsEarned;
+    // Skills en el rango seleccionado
+    const skillsEarnedInRange = Math.max(1, targetLevel - startLevel);
+    const avgCostPerSkill = rangeCost / skillsEarnedInRange;
+    const avgXpPerSkill = rangeXp / skillsEarnedInRange;
+    const dishesAvgSkill = (best.xp > 0 && avgXpPerSkill > 0) ? Math.ceil(avgXpPerSkill / best.xp) : 0;
 
-    const safeDishName = best.name.replace(/'/g, "\\'");
     const dishImgSrc = best.image || `/img/sunflowerland/food/${best.name}.png`;
 
-    // Tarjeta 1: Skill Calculator
-    // Métrica Hero: Promedio por Skill (La que prima)
+    // Métrica Hero: XP REQUERIDA (Rango seleccionado) y Leyenda Costo FLOWER
+    if (skillRangeXpDisplay) {
+      skillRangeXpDisplay.innerText = `${formatNumber(rangeXp, 0)} XP`;
+      skillRangeXpDisplay.title = `Rango Lvl ${startLevel} → ${targetLevel}: ${formatNumber(rangeXp, 0)} XP`;
+    }
+    if (skillRangeCostDisplay) {
+      const rangeCostDecimals = rangeCost >= 100 ? 0 : 2;
+      skillRangeCostDisplay.innerText = `~${formatNumber(rangeCost, rangeCostDecimals)} FLOWER`;
+    }
+    if (skillRangeDishCount) {
+      skillRangeDishCount.innerText = formatNumber(dishesRange, 0);
+      skillRangeDishCount.title = `${formatNumber(dishesRange, 0)}x ${best.name}`;
+    }
+
+    // Col 1: Promedio por Skill en el rango
     if (skillAvgCostDisplay) {
       const avgDecimals = avgCostPerSkill >= 100 ? 0 : 2;
       skillAvgCostDisplay.innerText = `${formatNumber(avgCostPerSkill, avgDecimals)} FLOWER`;
     }
     if (skillAvgXpDisplay) {
-      skillAvgXpDisplay.innerText = `~${formatCompactXp(avgXpPerSkill, false)}`;
+      skillAvgXpDisplay.innerText = `(~${formatCompactXp(avgXpPerSkill, false)})`;
       skillAvgXpDisplay.title = `Promedio: ${formatNumber(avgXpPerSkill, 0)} XP`;
     }
-
-    if (skillReachDishImg) {
-      skillReachDishImg.src = dishImgSrc;
-      skillReachDishImg.alt = best.name;
-      skillReachDishImg.onerror = function() { window.handleImgError(this); };
+    if (skillAvgDishImg) {
+      skillAvgDishImg.src = dishImgSrc;
+      skillAvgDishImg.alt = best.name;
+      skillAvgDishImg.title = best.name;
+      skillAvgDishImg.onerror = function() { window.handleImgError(this); };
     }
+    if (skillAvgDishCount) {
+      skillAvgDishCount.innerText = formatNumber(dishesAvgSkill, 0);
+      skillAvgDishCount.title = `${formatNumber(dishesAvgSkill, 0)}x ${best.name}`;
+    }
+
     if (skillNextDishImg) {
       skillNextDishImg.src = dishImgSrc;
       skillNextDishImg.alt = best.name;
@@ -1895,37 +1972,13 @@ const formatAstroDescription = (skill) => {
       skillTotalDishImg.onerror = function() { window.handleImgError(this); };
     }
 
-    // Col 1: Llegar a este nivel
-    if (skillReachLabel) {
-      const prefix = skillReachLabel.dataset.prefix || "Lvl";
-      skillReachLabel.innerText = `${prefix} ${level}`;
-    }
-    if (skillReachDishCount) {
-      skillReachDishCount.innerText = formatNumber(dishesThisLevel, 0);
-      skillReachDishCount.title = `${formatNumber(dishesThisLevel, 0)}x ${best.name}`;
-    }
-    if (skillReachDishImg) {
-      skillReachDishImg.src = dishImgSrc;
-      skillReachDishImg.alt = best.name;
-      skillReachDishImg.title = best.name;
-      skillReachDishImg.onerror = function() { window.handleImgError(this); };
-    }
-    if (costDisplay) {
-      const costThisLevelDecimals = costThisLevel >= 100 ? 0 : 2;
-      costDisplay.innerText = `${formatNumber(costThisLevel, costThisLevelDecimals)} FLOWER`;
-    }
-    if (deltaXpDisplay) {
-      deltaXpDisplay.innerText = `(${formatCompactXp(deltaXp, true)})`;
-      deltaXpDisplay.title = `${formatNumber(deltaXp, 0)} XP`;
-    }
-
     // Col 2: Próximo nivel
     if (skillNextLabel) {
       const prefix = skillNextLabel.dataset.prefix || "Próx. Lvl";
-      skillNextLabel.innerText = level < 200 ? `${prefix} ${level + 1}` : "Max Lvl";
+      skillNextLabel.innerText = targetLevel < 200 ? `${prefix} ${targetLevel + 1}` : "Max Lvl";
     }
     if (skillNextDishCount) {
-      if (level >= 200) {
+      if (targetLevel >= 200) {
         skillNextDishCount.innerText = "-";
         skillNextDishCount.title = "Max Lvl";
       } else {
@@ -1940,7 +1993,7 @@ const formatAstroDescription = (skill) => {
       skillNextDishImg.onerror = function() { window.handleImgError(this); };
     }
     if (skillNextCostDisplay) {
-      if (level >= 200) {
+      if (targetLevel >= 200) {
         skillNextCostDisplay.innerText = "-";
       } else {
         const costNextLevelDecimals = costNextLevel >= 100 ? 0 : 2;
@@ -1948,7 +2001,7 @@ const formatAstroDescription = (skill) => {
       }
     }
     if (skillNextDeltaXpDisplay) {
-      if (level >= 200) {
+      if (targetLevel >= 200) {
         skillNextDeltaXpDisplay.innerText = "(Max)";
       } else {
         skillNextDeltaXpDisplay.innerText = `(${formatCompactXp(nextDeltaXp, true)})`;
@@ -1972,8 +2025,8 @@ const formatAstroDescription = (skill) => {
       totalCostDisplay.innerText = `${formatNumber(totalCost, totalCostDecimals)} FLOWER`;
     }
     if (totalXpDisplay) {
-      totalXpDisplay.innerText = `(${formatCompactXp(currentLevelXp, false)})`;
-      totalXpDisplay.title = `Total: ${formatNumber(currentLevelXp, 0)} XP`;
+      totalXpDisplay.innerText = `(${formatCompactXp(targetXp, false)})`;
+      totalXpDisplay.title = `Total: ${formatNumber(targetXp, 0)} XP`;
     }
 
     // Tarjeta 2: Alimento Más Rentable & XP por FLOWER
@@ -2111,23 +2164,98 @@ const formatAstroDescription = (skill) => {
     }
   }
 
-  // Listeners
+  // Listeners para Rango de Niveles (Start Level y Target Level)
+  const startRange = document.getElementById("skillStartLevelRange");
+  const startInput = document.getElementById("skillStartLevelInput");
   const levelRange = document.getElementById("skillLevelRange");
   const levelInput = document.getElementById("skillLevelInput");
 
-  if (levelRange && levelInput) {
-    levelRange.addEventListener("input", (e) => {
-      levelInput.value = e.target.value;
+  if (startRange && levelRange) {
+    startRange.addEventListener("mousedown", () => {
+      startRange.style.zIndex = "25";
+      levelRange.style.zIndex = "20";
+    });
+    startRange.addEventListener("touchstart", () => {
+      startRange.style.zIndex = "25";
+      levelRange.style.zIndex = "20";
+    });
+    levelRange.addEventListener("mousedown", () => {
+      levelRange.style.zIndex = "25";
+      startRange.style.zIndex = "20";
+    });
+    levelRange.addEventListener("touchstart", () => {
+      levelRange.style.zIndex = "25";
+      startRange.style.zIndex = "20";
+    });
+
+    startRange.addEventListener("input", (e) => {
+      let sVal = parseInt(e.target.value) || 1;
+      let tVal = parseInt(levelRange.value) || 100;
+      if (sVal > tVal) {
+        tVal = sVal;
+        levelRange.value = tVal;
+        if (levelInput) levelInput.value = tVal;
+      }
+      if (startInput) startInput.value = sVal;
+      updateRangeHighlight(sVal, tVal);
       updateSkillCalculator();
       if (typeof saveState === "function") saveState();
     });
 
+    levelRange.addEventListener("input", (e) => {
+      let tVal = parseInt(e.target.value) || 100;
+      let sVal = parseInt(startRange.value) || 1;
+      if (tVal < sVal) {
+        sVal = tVal;
+        startRange.value = sVal;
+        if (startInput) startInput.value = sVal;
+      }
+      if (levelInput) levelInput.value = tVal;
+      updateRangeHighlight(sVal, tVal);
+      updateSkillCalculator();
+      if (typeof saveState === "function") saveState();
+    });
+  }
+
+  if (startInput) {
+    startInput.addEventListener("input", (e) => {
+      let val = parseInt(e.target.value);
+      if (isNaN(val)) return;
+      if (val >= 1 && val <= 200 && startRange) {
+        startRange.value = val;
+      }
+      updateSkillCalculator();
+      if (typeof saveState === "function") saveState();
+    });
+
+    startInput.addEventListener("blur", (e) => {
+      let val = parseInt(e.target.value);
+      if (isNaN(val) || val < 1) val = 1;
+      if (val > 200) val = 200;
+      let tVal = parseInt(levelInput ? levelInput.value : 100);
+      if (isNaN(tVal) || tVal < 1) tVal = 1;
+      if (tVal > 200) tVal = 200;
+
+      if (val > tVal) {
+        tVal = val;
+        if (levelInput) levelInput.value = tVal;
+        if (levelRange) levelRange.value = tVal;
+      }
+      e.target.value = val;
+      if (startRange) startRange.value = val;
+      updateRangeHighlight(val, tVal);
+      updateSkillCalculator();
+      if (typeof saveState === "function") saveState();
+    });
+  }
+
+  if (levelInput) {
     levelInput.addEventListener("input", (e) => {
       let val = parseInt(e.target.value);
       if (isNaN(val)) return;
-      if (val < 1) val = 1;
-      if (val > 200) val = 200;
-      levelRange.value = val;
+      if (val >= 1 && val <= 200 && levelRange) {
+        levelRange.value = val;
+      }
       updateSkillCalculator();
       if (typeof saveState === "function") saveState();
     });
@@ -2136,8 +2264,18 @@ const formatAstroDescription = (skill) => {
       let val = parseInt(e.target.value);
       if (isNaN(val) || val < 1) val = 1;
       if (val > 200) val = 200;
+      let sVal = parseInt(startInput ? startInput.value : 1);
+      if (isNaN(sVal) || sVal < 1) sVal = 1;
+      if (sVal > 200) sVal = 200;
+
+      if (val < sVal) {
+        sVal = val;
+        if (startInput) startInput.value = sVal;
+        if (startRange) startRange.value = sVal;
+      }
       e.target.value = val;
-      levelRange.value = val;
+      if (levelRange) levelRange.value = val;
+      updateRangeHighlight(sVal, val);
       updateSkillCalculator();
       if (typeof saveState === "function") saveState();
     });
@@ -2579,13 +2717,17 @@ const formatAstroDescription = (skill) => {
         } else {
           window.setViewStyle('detailed');
         }
+        const startLevel = state.skillStartLevel || "1";
         const targetLevel = (state.skillLevel && state.skillLevel !== "10") ? state.skillLevel : "100";
+        const startRange = document.getElementById("skillStartLevelRange");
+        const startInput = document.getElementById("skillStartLevelInput");
         const range = document.getElementById("skillLevelRange");
         const input = document.getElementById("skillLevelInput");
-        const badge = document.getElementById("skillSliderBadge");
+        if (startRange) startRange.value = startLevel;
+        if (startInput) startInput.value = startLevel;
         if (range) range.value = targetLevel;
         if (input) input.value = targetLevel;
-        if (badge) badge.innerText = `Lvl ${targetLevel}`;
+        updateRangeHighlight(parseInt(startLevel), parseInt(targetLevel));
       } catch (e) {
         console.error("Failed to parse cached state", e);
       }
@@ -2759,6 +2901,51 @@ const formatAstroDescription = (skill) => {
 
 
 <style>
+  .range-slider-dual {
+    background: transparent !important;
+  }
+  .range-slider-dual::-webkit-slider-runnable-track {
+    background: transparent !important;
+  }
+  .range-slider-dual::-moz-range-track {
+    background: transparent !important;
+  }
+  .range-slider-dual::-webkit-slider-thumb {
+    pointer-events: auto;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 2px solid #141414;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(52, 211, 153, 0.4);
+    transition: transform 0.12s ease, background-color 0.12s ease;
+  }
+  .range-slider-dual::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #34d399;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 4px rgba(52, 211, 153, 0.6);
+  }
+  .range-slider-dual::-moz-range-thumb {
+    pointer-events: auto;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 2px solid #141414;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(52, 211, 153, 0.4);
+    transition: transform 0.12s ease, background-color 0.12s ease;
+  }
+  .range-slider-dual::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    background: #34d399;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 4px rgba(52, 211, 153, 0.6);
+  }
+
   .filter-boost-btn.active, .view-switch-btn.active {
     background-color: rgba(255, 255, 255, 0.15);
     color: white;
