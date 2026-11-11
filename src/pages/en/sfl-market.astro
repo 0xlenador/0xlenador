@@ -11,8 +11,43 @@ const seo = {
   description: t("sfl.seo.description"),
   image: "/img/meta/sunflowerland-og.webp",
 }
+
+const faqItems = [
+  { q: t("sfl.faq.q1"), a: t("sfl.faq.a1") },
+  { q: t("sfl.faq.q2"), a: t("sfl.faq.a2") },
+  { q: t("sfl.faq.q3"), a: t("sfl.faq.a3") },
+  { q: t("sfl.faq.q4"), a: t("sfl.faq.a4") },
+  { q: t("sfl.faq.q5"), a: t("sfl.faq.a5") },
+]
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: t("sfl.seo.title"),
+  operatingSystem: "Web Browser",
+  applicationCategory: ["FinanceApplication", "GameApplication"],
+  description: t("sfl.seo.description"),
+  url: "https://0xlenador.xyz/en/sfl-market/",
+  author: { "@type": "Person", name: "0x Leñador", url: "https://0xlenador.xyz/" },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+}
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.a.replace(/<[^>]*>/g, "").trim(),
+    },
+  })),
+}
+
+const schema = [webAppSchema, faqSchema]
 ---
 
-<Layout title={seo.title} description={seo.description} image={seo.image} customSpacing>
+<Layout title={seo.title} description={seo.description} image={seo.image} schema={schema} customSpacing>
   <SflMarketView />
 </Layout>
