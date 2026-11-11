@@ -1586,16 +1586,18 @@ const t = useTranslations(lang)
                       const icons = {
                          FLOWER: '/img/sunflowerland/flower.jpg',
                          COIN: '/img/sunflowerland/123/coins.png',
-                         USD: '/img/cripto/tether.webp',
                          Gema: '/img/sunflowerland/123/Gem.png',
                          Oil: '/img/sunflowerland/123/Oil.png'
                       };
+                      const iconHTML = c === 'USD'
+                         ? '<span class="text-emerald-400 font-bold text-[10px] leading-none">$</span>'
+                         : `<img src="${icons[c]}" alt="${c}" class="w-full h-full object-contain drop-shadow-sm ${c === 'FLOWER' ? 'rounded-full' : ''}" onerror="this.outerHTML='<span class=\\'text-emerald-400 font-bold text-[10px]\\'>$</span>'" />`;
                       return `
                       <label class="flex items-center gap-1.5 cursor-pointer group h-[14px]">
                          <input type="radio" name="calcCurr" value="${c}" ${c === currentCurr ? 'checked' : ''} class="hidden peer" onchange="window.updateCalc()" />
                          <div class="w-2 h-2 rounded-full border border-white/20 peer-checked:border-white peer-checked:bg-white group-hover:border-white/50 transition-all shrink-0"></div>
                          <div class="w-[10px] h-[10px] flex items-center justify-center shrink-0">
-                            <img src="${icons[c]}" alt="${c}" class="w-full h-full object-contain drop-shadow-sm ${c === 'FLOWER' ? 'rounded-full' : ''}" onerror="this.outerHTML='<span class=\\'text-emerald-400 font-bold text-[10px]\\'>$</span>'" />
+                            ${iconHTML}
                          </div>
                          <span class="text-[8.5px] font-bold text-white/40 peer-checked:text-white/90 group-hover:text-white/70 transition-colors uppercase tracking-widest leading-none mt-[1px]">${c}</span>
                          ${c === 'Oil' ? `
