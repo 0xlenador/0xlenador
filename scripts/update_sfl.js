@@ -347,9 +347,21 @@ async function updateSFLData() {
             getItemPrice(179) ||
             getItemPrice(182) ||
             getItemPrice(178) || null,
-          sparkline7d: Array.from({ length: 8 }, (_, i) => 7 - i).map(o => getSparklinePrice(o)),
-          sparkline30d: Array.from({ length: 31 }, (_, i) => 30 - i).map(o => getSparklinePrice(o)),
-          sparkline180d: Array.from({ length: 181 }, (_, i) => 180 - i).map(o => getSparklinePrice(o)),
+          sparkline7d: (() => {
+            const arr = Array.from({ length: 8 }, (_, i) => 7 - i).map(o => getSparklinePrice(o));
+            if (p0 > 0 && arr.length > 0) arr[arr.length - 1] = p0;
+            return arr;
+          })(),
+          sparkline30d: (() => {
+            const arr = Array.from({ length: 31 }, (_, i) => 30 - i).map(o => getSparklinePrice(o));
+            if (p0 > 0 && arr.length > 0) arr[arr.length - 1] = p0;
+            return arr;
+          })(),
+          sparkline180d: (() => {
+            const arr = Array.from({ length: 181 }, (_, i) => 180 - i).map(o => getSparklinePrice(o));
+            if (p0 > 0 && arr.length > 0) arr[arr.length - 1] = p0;
+            return arr;
+          })(),
         },
       }
     }

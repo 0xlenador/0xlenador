@@ -1147,7 +1147,7 @@ const t = useTranslations(lang)
     `
   }
 
-  const getCardColumnHTML = (title, changeObj, sparklineData, expectedLength, isHourly = false) => {
+  const getCardColumnHTML = (title, changeObj, sparklineData, expectedLength, isHourly = false, currentPrice = 0) => {
     const isLarge = !sparklineData
     const badgeHTML = getBadgeHTML(changeObj, isLarge)
 
@@ -1177,7 +1177,16 @@ const t = useTranslations(lang)
       `
     }
 
-    const sparkSVG = createSparklineSVG(sparklineData, changeObj.isPositive, expectedLength, isHourly)
+    // Garantizar que el último punto de la gráfica coincida exactamente con el precio actual del ítem
+    let syncedSparkline = sparklineData
+    if (Array.isArray(sparklineData) && sparklineData.length > 0 && currentPrice > 0) {
+      if (sparklineData[sparklineData.length - 1] !== currentPrice) {
+        syncedSparkline = [...sparklineData]
+        syncedSparkline[syncedSparkline.length - 1] = currentPrice
+      }
+    }
+
+    const sparkSVG = createSparklineSVG(syncedSparkline, changeObj.isPositive, expectedLength, isHourly)
 
     return `
       <div class="flex flex-col justify-between lg:flex-row lg:items-center bg-terminal-bg/50 lg:bg-transparent p-3 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full h-full lg:h-auto">
@@ -2629,7 +2638,7 @@ const t = useTranslations(lang)
             <div class="absolute -top-1 right-[180px] xl:right-[205px] flex items-center pointer-events-none z-20">
               <span class="text-[12px] font-bold text-white/20 select-none tracking-widest">7D</span>
             </div>
-            <div class="w-full h-full relative z-10">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}</div>
+            <div class="w-full h-full relative z-10">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8, false, item.currentPrice)}</div>
           </div>
 
           <div class="lg:hidden contents mobile-sparklines" data-rendered="false">
@@ -2790,9 +2799,9 @@ const t = useTranslations(lang)
               </div>
               
               <div class="hidden lg:block w-full h-full">
-                 <div class="desktop-graph-7d w-full h-full ${window.activeGraphPeriod === '7d' ? '' : 'hidden'}">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}</div>
-                 <div class="desktop-graph-30d w-full h-full ${window.activeGraphPeriod === '30d' ? '' : 'hidden'}">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31)}</div>
-                 <div class="desktop-graph-180d w-full h-full ${window.activeGraphPeriod === '180d' ? '' : 'hidden'}">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181)}</div>
+                 <div class="desktop-graph-7d w-full h-full ${window.activeGraphPeriod === '7d' ? '' : 'hidden'}">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8, false, item.currentPrice)}</div>
+                 <div class="desktop-graph-30d w-full h-full ${window.activeGraphPeriod === '30d' ? '' : 'hidden'}">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31, false, item.currentPrice)}</div>
+                 <div class="desktop-graph-180d w-full h-full ${window.activeGraphPeriod === '180d' ? '' : 'hidden'}">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181, false, item.currentPrice)}</div>
               </div>
             </div>
           `}
@@ -3067,6 +3076,17 @@ const t = useTranslations(lang)
         }, [])
         .sort((a, b) => b.volume - a.volume)
 
+      // Sincronizar el último punto de todos los sparklines con el precio actual del ítem
+      marketData.forEach((item) => {
+        if (item.currentPrice > 0 && item.history) {
+          ['sparkline7d', 'sparkline30d', 'sparkline180d'].forEach((key) => {
+            if (Array.isArray(item.history[key]) && item.history[key].length > 0) {
+              item.history[key][item.history[key].length - 1] = item.currentPrice
+            }
+          })
+        }
+      })
+
       // Actualizar el widget de precio FLOWER con el dato inyectado desde sfl_data.json
       // Guardamos el precio interno del juego intacto para la calculadora
       let internalPrice = json.flowerPrice ? parseFloat(json.flowerPrice) : 0.0854;
@@ -3218,12 +3238,12 @@ const t = useTranslations(lang)
         if (mobileSparklines && mobileSparklines.dataset.rendered !== "true" && row._itemData) {
           const item = row._itemData
           if (row._isFlowerRow) {
-            mobileSparklines.innerHTML = getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)
+            mobileSparklines.innerHTML = getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8, false, item.currentPrice)
           } else {
             mobileSparklines.innerHTML = `
-              ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8)}
-              ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31)}
-              ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181)}
+              ${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8, false, item.currentPrice)}
+              ${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31, false, item.currentPrice)}
+              ${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181, false, item.currentPrice)}
             `
           }
           mobileSparklines.dataset.rendered = "true"
