@@ -207,7 +207,111 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     </div>
   </div>
 
-  <!-- 2. Bloques por Categorías: Grid 50% en PC -->
+  <!-- 2. Selector de Paridad de Monedas (Coins ➔ FLOWER) -->
+  <div
+    class="w-full mb-6 bg-[#18181b]/95 border border-white/10 rounded-2xl p-4 sm:p-5 shadow-xl backdrop-blur-md relative overflow-hidden"
+  >
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0">
+          <img
+            src="/img/sunflowerland/123/coins.png"
+            class="w-4 h-4 object-contain"
+            alt="Coins"
+          />
+        </div>
+        <div>
+          <h3 class="text-sm sm:text-base font-mono font-bold tracking-tight text-white flex items-center gap-2">
+            {t("sfl.constants.coins.title")}
+          </h3>
+          <p class="text-xs text-terminal-muted hidden sm:block">
+            {t("sfl.constants.coins.desc")}
+          </p>
+        </div>
+      </div>
+
+      <!-- Badge de ratio activo actual -->
+      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-xs font-mono self-start sm:self-auto shadow-inner">
+        <span class="text-terminal-muted">Ratio:</span>
+        <span id="activeCoinsRatioDisplay" class="text-amber-400 font-bold">1 FL = 320 Coins</span>
+      </div>
+    </div>
+
+    <!-- Las 3 Opciones: Arbitraje | Oficial | Personalizado -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <!-- Opción 1: Arbitraje (P2P ➔ Betty) - DEFAULT / ACTIVO -->
+      <button
+        type="button"
+        id="coinsOptionArbitrage"
+        class="coins-parity-btn active flex flex-col items-start gap-1 p-3 rounded-xl border border-amber-500/40 bg-amber-500/10 text-left transition-all cursor-pointer shadow-sm hover:border-amber-500/60"
+        data-mode="arbitrage"
+      >
+        <div class="flex items-center justify-between w-full">
+          <span class="text-xs font-bold font-mono text-white flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>{t("sfl.constants.coins.arbitrage")}</span>
+          </span>
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold">
+            {t("sfl.constants.coins.arbitrageBadge")}
+          </span>
+        </div>
+        <div class="text-xs font-mono font-bold text-amber-400" id="arbitrageRatioText">
+          1 FLOWER : -- Coins
+        </div>
+        <span class="text-[10px] text-terminal-muted leading-tight">
+          Mejor retorno del mercado P2P
+        </span>
+      </button>
+
+      <!-- Opción 2: Oficial (Juego) -->
+      <button
+        type="button"
+        id="coinsOptionOfficial"
+        class="coins-parity-btn flex flex-col items-start gap-1 p-3 rounded-xl border border-white/10 bg-black/40 text-left transition-all cursor-pointer hover:border-white/20 hover:bg-white/[0.03]"
+        data-mode="official"
+      >
+        <div class="flex items-center justify-between w-full">
+          <span class="text-xs font-bold font-mono text-white/80 flex items-center gap-1.5">
+            <span>🏛️</span>
+            <span>{t("sfl.constants.coins.official")}</span>
+          </span>
+        </div>
+        <div class="text-xs font-mono font-bold text-white/70">
+          1 FLOWER : 320 Coins
+        </div>
+        <span class="text-[10px] text-terminal-muted leading-tight">
+          {t("sfl.constants.coins.officialDesc")}
+        </span>
+      </button>
+
+      <!-- Opción 3: Personalizado -->
+      <div
+        id="coinsOptionCustomWrapper"
+        class="coins-parity-btn flex flex-col items-start gap-1.5 p-3 rounded-xl border border-white/10 bg-black/40 text-left transition-all"
+        data-mode="custom"
+      >
+        <div class="flex items-center justify-between w-full">
+          <label for="coinsCustomInput" class="text-xs font-bold font-mono text-white/80 flex items-center gap-1.5 cursor-pointer">
+            <span>✏️</span>
+            <span>{t("sfl.constants.coins.custom")}</span>
+          </label>
+        </div>
+        <div class="flex items-center gap-2 w-full">
+          <span class="text-[11px] font-mono text-terminal-muted whitespace-nowrap">1 FL =</span>
+          <input
+            type="number"
+            id="coinsCustomInput"
+            min="1"
+            step="10"
+            placeholder={t("sfl.constants.coins.customPlaceholder")}
+            class="w-full bg-black/60 border border-white/10 rounded-lg px-2.5 py-1 text-xs font-mono text-amber-400 placeholder:text-white/20 focus:outline-none focus:border-amber-500/50"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Bloques por Categorías: Grid 50% en PC -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
     <!-- BLOQUE 1: BLACKSMITH (Ocupa 50% en escritorio) -->
     <div
@@ -1106,6 +1210,14 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
   </div>
 </SflToolLayout>
 
+<!-- 1. Motor Centralizado de Mercado (compilado por Vite con ES Modules) -->
+<script>
+  import * as SflMarket from "../../lib/sfl/market"
+  ;(window as any).SflMarket = SflMarket
+  // Iniciar la descarga del mercado P2P
+  SflMarket.fetchMarketData()
+</script>
+
 <!-- Script interactivo de cliente -->
 <script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free") }}>
   ;(function () {
@@ -1119,13 +1231,21 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     const liveBettyRatioDisplay = document.getElementById("liveBettyRatioDisplay")
     const liveOilPriceDisplay = document.getElementById("liveOilPriceDisplay")
 
-    // Helper para obtener el precio en FLOWER de un material base desde sfl_data.json
+    // Helper para obtener el precio en FLOWER de un material base (usa el motor SflMarket)
     function getBaseMaterialUnitPrice(materialName) {
-      if (!marketDataCache || !marketDataCache.items || !sflIds) return 0
-      const itemId = Object.keys(sflIds).find((k) => sflIds[k] === materialName)
-      if (!itemId) return 0
-      const item = marketDataCache.items[`collectibles-${itemId}`]
-      return item && item.currentPrice ? parseFloat(item.currentPrice) : 0
+      if (window.SflMarket && typeof window.SflMarket.getItemPrice === "function") {
+        const p = window.SflMarket.getItemPrice(materialName)
+        if (p > 0) return p
+      }
+      const rawState = window.__sflMarketState || (window.SflMarket ? window.SflMarket.getState() : null)
+      if (rawState && rawState.raw && rawState.raw.items && sflIds) {
+        const itemId = Object.keys(sflIds).find((k) => sflIds[k] === materialName)
+        if (itemId) {
+          const item = rawState.raw.items[`collectibles-${itemId}`]
+          if (item && item.currentPrice) return parseFloat(item.currentPrice)
+        }
+      }
+      return 0
     }
 
     // Calcula el costo de 1 unidad de Oil dividiendo el costo total de 1 Oil Drill entre 16.67
@@ -1845,74 +1965,159 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       jafarManager.updateDetail()
     }
 
-    // Actualiza la tasa y los textos
-    function applyBettyRatio(ratio) {
-      if (!ratio || ratio <= 0) return
-      activeCoinsPerFlower = ratio
-      const rounded = Math.round(ratio)
-      if (liveBettyRatioDisplay) {
-        liveBettyRatioDisplay.innerText = `1:${rounded} Coins (Betty)`
+    // --- GESTIÓN DE PARIDAD DE COINS (Arbitraje vs Oficial vs Custom) ---
+    let coinsParityMode = "arbitrage" // "arbitrage" | "official" | "custom"
+    let arbitrageCoinsPerFlower = 320
+    const officialCoinsPerFlower = 320
+    let customCoinsPerFlower = 1000
+
+    const activeCoinsRatioDisplay = document.getElementById("activeCoinsRatioDisplay")
+    const arbitrageRatioText = document.getElementById("arbitrageRatioText")
+    const btnArbitrage = document.getElementById("coinsOptionArbitrage")
+    const btnOfficial = document.getElementById("coinsOptionOfficial")
+    const wrapperCustom = document.getElementById("coinsOptionCustomWrapper")
+    const inputCustom = document.getElementById("coinsCustomInput")
+
+    function updateCoinsParityUI() {
+      // 1. Determinar activeCoinsPerFlower
+      if (coinsParityMode === "arbitrage") {
+        activeCoinsPerFlower = arbitrageCoinsPerFlower
+      } else if (coinsParityMode === "official") {
+        activeCoinsPerFlower = officialCoinsPerFlower
+      } else if (coinsParityMode === "custom") {
+        activeCoinsPerFlower = customCoinsPerFlower > 0 ? customCoinsPerFlower : officialCoinsPerFlower
       }
+
+      // 2. Actualizar estilos de los botones
+      if (btnArbitrage) {
+        if (coinsParityMode === "arbitrage") {
+          btnArbitrage.classList.add("active", "border-amber-500/40", "bg-amber-500/10")
+          btnArbitrage.classList.remove("border-white/10", "bg-black/40")
+        } else {
+          btnArbitrage.classList.remove("active", "border-amber-500/40", "bg-amber-500/10")
+          btnArbitrage.classList.add("border-white/10", "bg-black/40")
+        }
+      }
+
+      if (btnOfficial) {
+        if (coinsParityMode === "official") {
+          btnOfficial.classList.add("active", "border-amber-500/40", "bg-amber-500/10")
+          btnOfficial.classList.remove("border-white/10", "bg-black/40")
+        } else {
+          btnOfficial.classList.remove("active", "border-amber-500/40", "bg-amber-500/10")
+          btnOfficial.classList.add("border-white/10", "bg-black/40")
+        }
+      }
+
+      if (wrapperCustom) {
+        if (coinsParityMode === "custom") {
+          wrapperCustom.classList.add("active", "border-amber-500/40", "bg-amber-500/10")
+          wrapperCustom.classList.remove("border-white/10", "bg-black/40")
+        } else {
+          wrapperCustom.classList.remove("active", "border-amber-500/40", "bg-amber-500/10")
+          wrapperCustom.classList.add("border-white/10", "bg-black/40")
+        }
+      }
+
+      // 3. Actualizar textos de indicadores
+      const rounded = Math.round(activeCoinsPerFlower)
+      if (activeCoinsRatioDisplay) {
+        activeCoinsRatioDisplay.innerText = `1 FL = ${rounded.toLocaleString()} Coins`
+      }
+      if (liveBettyRatioDisplay) {
+        const modeLabel = coinsParityMode === "arbitrage" ? "(Betty)" : coinsParityMode === "official" ? "(Oficial)" : "(Custom)"
+        liveBettyRatioDisplay.innerText = `1:${rounded} Coins ${modeLabel}`
+      }
+
+      // 4. Recalcular todo
       updateAll()
     }
 
-    // Escuchar el evento que emite SflTabs cuando calcula la mejor tasa de Betty
-    window.addEventListener("sfl:bettyBestUpdated", (e) => {
+    // Eventos de selección de modo
+    if (btnArbitrage) {
+      btnArbitrage.addEventListener("click", () => {
+        coinsParityMode = "arbitrage"
+        updateCoinsParityUI()
+      })
+    }
+
+    if (btnOfficial) {
+      btnOfficial.addEventListener("click", () => {
+        coinsParityMode = "official"
+        updateCoinsParityUI()
+      })
+    }
+
+    if (inputCustom) {
+      inputCustom.addEventListener("focus", () => {
+        coinsParityMode = "custom"
+        updateCoinsParityUI()
+      })
+      inputCustom.addEventListener("input", () => {
+        coinsParityMode = "custom"
+        const val = parseFloat(inputCustom.value)
+        if (!isNaN(val) && val > 0) {
+          customCoinsPerFlower = val
+        }
+        updateCoinsParityUI()
+      })
+    }
+
+    // Sincronizar datos con el motor centralizado SflMarket
+    function syncWithMarket(marketState) {
+      if (!marketState) return
+      if (marketState.flowerPrice) {
+        liveFlowerPrice = marketState.flowerPrice
+        if (liveFlowerDisplay) {
+          liveFlowerDisplay.innerText = `$${liveFlowerPrice.toFixed(4)} USD`
+        }
+      }
+      if (marketState.bettyRatio && marketState.bettyRatio > 0) {
+        arbitrageCoinsPerFlower = marketState.bettyRatio
+        if (arbitrageRatioText) {
+          arbitrageRatioText.innerText = `1 FLOWER : ${Math.round(marketState.bettyRatio).toLocaleString()} Coins`
+        }
+      }
+      updateCoinsParityUI()
+    }
+
+    // 1. Escuchar el evento nativo del navegador (infalible ante cualquier orden de carga)
+    window.addEventListener("sfl:marketUpdated", (e) => {
       if (e.detail) {
-        applyBettyRatio(e.detail)
+        syncWithMarket(e.detail)
+      }
+    })
+
+    // 2. Si ya estaba en window o en SflMarket al cargar
+    if (window.__sflMarketState) {
+      syncWithMarket(window.__sflMarketState)
+    } else if (window.SflMarket) {
+      window.SflMarket.onUpdate((s) => syncWithMarket(s))
+      const current = window.SflMarket.getState()
+      if (current && current.raw) {
+        syncWithMarket(current)
+      }
+    }
+
+    // Escuchar el evento legacy de SflTabs por retrocompatibilidad
+    window.addEventListener("sfl:bettyBestUpdated", (e) => {
+      if (e.detail && e.detail > 0) {
+        arbitrageCoinsPerFlower = e.detail
+        if (arbitrageRatioText) {
+          arbitrageRatioText.innerText = `1 FLOWER : ${Math.round(e.detail).toLocaleString()} Coins`
+        }
+        updateCoinsParityUI()
       }
     })
 
     // Si SflTabs ya lo calculó previamente en window.__bestCoinsPerFlower
-    if (window.__bestCoinsPerFlower) {
-      applyBettyRatio(window.__bestCoinsPerFlower)
-    }
-
-    // Consultar datos de API para obtener flowerPrice, precios de materiales y calcular tasa Betty
-    async function fetchLiveMarketData() {
-      try {
-        const res = await fetch("/api/sfl_data.json?t=" + Date.now())
-        if (res.ok) {
-          const data = await res.json()
-          marketDataCache = data
-
-          if (data && data.flowerPrice) {
-            liveFlowerPrice = parseFloat(data.flowerPrice)
-            if (liveFlowerDisplay) {
-              liveFlowerDisplay.innerText = `$${liveFlowerPrice.toFixed(4)} USD`
-            }
-          }
-
-          if (!window.__bestCoinsPerFlower && data && data.items && bettyPrices && sflIds) {
-            let bestRatio = 0
-            Object.keys(bettyPrices).forEach((name) => {
-              const itemConfig = bettyPrices[name]
-              const itemId = Object.keys(sflIds).find((key) => sflIds[key] === name)
-              const internalKey = `collectibles-${itemId}`
-              const marketItem = data.items[internalKey]
-
-              const bettyPriceCoins = itemConfig.sellPrice
-              const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
-              if (p2pPriceFlower > 0) {
-                const ratio = bettyPriceCoins / p2pPriceFlower
-                if (ratio > bestRatio) {
-                  bestRatio = ratio
-                }
-              }
-            })
-
-            if (bestRatio > 0) {
-              applyBettyRatio(bestRatio)
-            }
-          }
-        }
-      } catch (err) {
-        console.error("Error al obtener datos de mercado SFL:", err)
+    if (window.__bestCoinsPerFlower && window.__bestCoinsPerFlower > 0) {
+      arbitrageCoinsPerFlower = window.__bestCoinsPerFlower
+      if (arbitrageRatioText) {
+        arbitrageRatioText.innerText = `1 FLOWER : ${Math.round(window.__bestCoinsPerFlower).toLocaleString()} Coins`
       }
-      updateAll()
     }
 
-    updateAll()
-    fetchLiveMarketData()
+    updateCoinsParityUI()
   })()
 </script>
