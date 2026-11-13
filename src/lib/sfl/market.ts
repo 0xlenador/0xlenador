@@ -89,7 +89,7 @@ export function getItemPrice(name: string): number {
   if (!state.raw?.items) return 0
   const itemId = Object.keys(sflIds).find((k) => (sflIds as Record<string, string>)[k] === name)
   if (!itemId) return 0
-  const item = state.raw.items[`collectibles-${itemId}`]
+  const item = state.raw.items[`collectibles-${itemId}`] || state.raw.items[`resources-${itemId}`]
   return item?.currentPrice ? parseFloat(String(item.currentPrice)) : 0
 }
 

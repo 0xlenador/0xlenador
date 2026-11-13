@@ -834,6 +834,14 @@ const t = useTranslations(lang)
   }
 </script>
 
+<!-- Motor Centralizado de Mercado (compilado por Vite con ES Modules) -->
+<script>
+  import * as SflMarket from "../../lib/sfl/market"
+  ;(window as any).SflMarket = SflMarket
+  // Iniciar descarga deduplicada del mercado
+  SflMarket.fetchMarketData()
+</script>
+
 <script
   define:vars={{
     clientLang: lang,
@@ -2939,11 +2947,18 @@ const t = useTranslations(lang)
       // Si el usuario presiona el botón "Refrescar", se fuerza con Date.now()
       const cacheBuster = forceRefresh ? Date.now() : Math.floor(Date.now() / (5 * 60 * 1000))
 
-      // Consultar el asset estático que actualiza el cron job
-      const response = await fetch(`/api/sfl_data.json?v=${cacheBuster}`)
+      // Consultar datos de mercado (usa SflMarket centralizado si está disponible)
+      let json = null
+      if (window.SflMarket && typeof window.SflMarket.fetchMarketData === "function") {
+        json = await window.SflMarket.fetchMarketData(forceRefresh)
+      }
 
-      if (!response.ok) {
-        throw new Error(`No se pudo cargar el archivo local: ${response.status}`)
+      if (!json) {
+        const response = await fetch(`/api/sfl_data.json?v=${cacheBuster}`)
+        if (!response.ok) {
+          throw new Error(`No se pudo cargar el archivo local: ${response.status}`)
+        }
+        json = await response.json()
       }
       
       try {
@@ -2955,29 +2970,32 @@ const t = useTranslations(lang)
          console.warn("No se pudo cargar sfl_dashboard.json", e)
       }
 
-      const json = await response.json()
-
-      if (!json.items) {
+      if (!json || !json.items) {
         throw new Error(`El archivo de datos estáticos no contiene historial de items.`)
       }
 
       let bestCoinsPerFlower = 0
-      Object.keys(bettyPrices).forEach(name => {
-        const itemConfig = bettyPrices[name]
-        const itemId = Object.keys(sflIds).find(key => sflIds[key] === name)
-        const internalKey = `collectibles-${itemId}`
-        const marketItem = json.items[internalKey]
+      if (window.SflMarket && typeof window.SflMarket.getBettyRatio === "function") {
+        bestCoinsPerFlower = window.SflMarket.getBettyRatio()
+      }
+      if (bestCoinsPerFlower <= 0) {
+        Object.keys(bettyPrices).forEach(name => {
+          const itemConfig = bettyPrices[name]
+          const itemId = Object.keys(sflIds).find(key => sflIds[key] === name)
+          const internalKey = `collectibles-${itemId}`
+          const marketItem = json.items[internalKey]
 
-        const bettyPriceCoins = itemConfig.sellPrice
-        const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
+          const bettyPriceCoins = itemConfig.sellPrice
+          const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
 
-        if (p2pPriceFlower > 0) {
-          const coinsPerFlower = bettyPriceCoins / p2pPriceFlower
-          if (coinsPerFlower > bestCoinsPerFlower) {
-            bestCoinsPerFlower = coinsPerFlower
+          if (p2pPriceFlower > 0) {
+            const coinsPerFlower = bettyPriceCoins / p2pPriceFlower
+            if (coinsPerFlower > bestCoinsPerFlower) {
+              bestCoinsPerFlower = coinsPerFlower
+            }
           }
-        }
-      })
+        })
+      }
       window.sflBestCoinsPerFlower = bestCoinsPerFlower
 
       // Calcular precio dinámico del Oil basado en receta del Oil Drill (16.67 Oil)
