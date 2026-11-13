@@ -207,108 +207,134 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     </div>
   </div>
 
-  <!-- 2. Selector de Paridad de Monedas (Coins ➔ FLOWER) -->
-  <div
-    class="w-full mb-6 bg-[#18181b]/95 border border-white/10 rounded-2xl p-4 sm:p-5 shadow-xl backdrop-blur-md relative overflow-hidden"
-  >
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0">
+  <!-- 2. Segundo Dashboard (5 Columnas de 20% cada una en Desktop) -->
+  <div class="w-full mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-stretch">
+    <!-- COLUMNA 1 (20%): Divisas Base (Coin, Gemas, FLOWER) -->
+    <div
+      class="bg-[#18181b]/95 border border-white/10 rounded-xl p-2 sm:p-2.5 shadow-lg backdrop-blur-md flex flex-col justify-between gap-1.5 font-mono text-[11px] overflow-hidden"
+    >
+      <!-- Cabecera -->
+      <div class="flex items-center justify-between border-b border-white/5 pb-1">
+        <span class="text-[10px] font-bold text-white tracking-wider flex items-center gap-1.5 shrink-0">
+          <span class="text-xs">🪙</span>
+          <span>{t("sfl.constants.dash2.sec1.title")}</span>
+        </span>
+      </div>
+
+      <!-- Fila 1: Coin rate = [Betty editable] [Exchange 320] -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0">
+        <div class="flex items-center gap-1.5 shrink-0">
           <img
             src="/img/sunflowerland/123/coins.png"
-            class="w-4 h-4 object-contain"
-            alt="Coins"
+            alt="Coin"
+            class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
           />
+          <span class="text-[10px] text-terminal-muted font-bold whitespace-nowrap">{t("sfl.constants.coins.label")}</span>
         </div>
-        <div>
-          <h3 class="text-sm sm:text-base font-mono font-bold tracking-tight text-white flex items-center gap-2">
-            {t("sfl.constants.coins.title")}
-          </h3>
-          <p class="text-xs text-terminal-muted hidden sm:block">
-            {t("sfl.constants.coins.desc")}
-          </p>
+
+        <div class="inline-flex items-center gap-1 shrink-0">
+          <!-- Betty / Arbitraje (editable manualmente con clic encima) -->
+          <div
+            id="coinsBettyContainer"
+            class="coins-parity-btn active flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-mono font-bold transition-all bg-amber-500/15 text-amber-400 border border-amber-500/30 whitespace-nowrap leading-none cursor-pointer"
+            title={t("sfl.constants.coins.arbitrage")}
+          >
+            <img
+              src="/img/sunflowerland/NPCs/betty.gif"
+              alt="Betty"
+              class="w-4 h-4 object-contain [image-rendering:pixelated] shrink-0 pointer-events-none"
+            />
+            <input
+              type="number"
+              id="coinsBettyInput"
+              min="1"
+              step="10"
+              placeholder="1335"
+              class="w-11 bg-transparent text-amber-400 font-mono font-bold text-center focus:outline-none focus:bg-black/60 rounded px-0.5 placeholder:text-amber-400/60"
+              title="Clic para editar manualmente"
+            />
+          </div>
+
+          <!-- Oficial / Exchange (320) -->
+          <button
+            type="button"
+            id="coinsOptionOfficial"
+            class="coins-parity-btn flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-mono font-bold transition-all text-white/50 hover:text-white cursor-pointer border border-white/5 bg-black/40 whitespace-nowrap leading-none"
+            data-mode="official"
+            title={t("sfl.constants.coins.official")}
+          >
+            <img
+              src="/img/sunflowerland/123/exchange.png"
+              alt="Exchange"
+              class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+            />
+            <span>320</span>
+          </button>
         </div>
       </div>
 
-      <!-- Badge de ratio activo actual -->
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-xs font-mono self-start sm:self-auto shadow-inner">
-        <span class="text-terminal-muted">Ratio:</span>
-        <span id="activeCoinsRatioDisplay" class="text-amber-400 font-bold">1 FL = 320 Coins</span>
-      </div>
-    </div>
+      <!-- Fila 2: Gemas = [Caja valor 1] [Valor en dólares] -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0 border-t border-white/5 pt-1">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <img
+            src="/img/sunflowerland/123/Gem.png"
+            alt="Gem"
+            class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+          />
+          <span class="text-[10px] text-terminal-muted font-bold whitespace-nowrap">{t("sfl.constants.gems.label")}</span>
+        </div>
 
-    <!-- Las 3 Opciones: Arbitraje | Oficial | Personalizado -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      <!-- Opción 1: Arbitraje (P2P ➔ Betty) - DEFAULT / ACTIVO -->
-      <button
-        type="button"
-        id="coinsOptionArbitrage"
-        class="coins-parity-btn active flex flex-col items-start gap-1 p-3 rounded-xl border border-amber-500/40 bg-amber-500/10 text-left transition-all cursor-pointer shadow-sm hover:border-amber-500/60"
-        data-mode="arbitrage"
-      >
-        <div class="flex items-center justify-between w-full">
-          <span class="text-xs font-bold font-mono text-white flex items-center gap-1.5">
-            <span>⚡</span>
-            <span>{t("sfl.constants.coins.arbitrage")}</span>
-          </span>
-          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold">
-            {t("sfl.constants.coins.arbitrageBadge")}
-          </span>
-        </div>
-        <div class="text-xs font-mono font-bold text-amber-400" id="arbitrageRatioText">
-          1 FLOWER : -- Coins
-        </div>
-        <span class="text-[10px] text-terminal-muted leading-tight">
-          Mejor retorno del mercado P2P
-        </span>
-      </button>
-
-      <!-- Opción 2: Oficial (Juego) -->
-      <button
-        type="button"
-        id="coinsOptionOfficial"
-        class="coins-parity-btn flex flex-col items-start gap-1 p-3 rounded-xl border border-white/10 bg-black/40 text-left transition-all cursor-pointer hover:border-white/20 hover:bg-white/[0.03]"
-        data-mode="official"
-      >
-        <div class="flex items-center justify-between w-full">
-          <span class="text-xs font-bold font-mono text-white/80 flex items-center gap-1.5">
-            <span>🏛️</span>
-            <span>{t("sfl.constants.coins.official")}</span>
-          </span>
-        </div>
-        <div class="text-xs font-mono font-bold text-white/70">
-          1 FLOWER : 320 Coins
-        </div>
-        <span class="text-[10px] text-terminal-muted leading-tight">
-          {t("sfl.constants.coins.officialDesc")}
-        </span>
-      </button>
-
-      <!-- Opción 3: Personalizado -->
-      <div
-        id="coinsOptionCustomWrapper"
-        class="coins-parity-btn flex flex-col items-start gap-1.5 p-3 rounded-xl border border-white/10 bg-black/40 text-left transition-all"
-        data-mode="custom"
-      >
-        <div class="flex items-center justify-between w-full">
-          <label for="coinsCustomInput" class="text-xs font-bold font-mono text-white/80 flex items-center gap-1.5 cursor-pointer">
-            <span>✏️</span>
-            <span>{t("sfl.constants.coins.custom")}</span>
-          </label>
-        </div>
-        <div class="flex items-center gap-2 w-full">
-          <span class="text-[11px] font-mono text-terminal-muted whitespace-nowrap">1 FL =</span>
+        <div class="inline-flex items-center gap-1.5 shrink-0">
           <input
             type="number"
-            id="coinsCustomInput"
+            id="gemAmountInput"
+            value="1"
             min="1"
-            step="10"
-            placeholder={t("sfl.constants.coins.customPlaceholder")}
-            class="w-full bg-black/60 border border-white/10 rounded-lg px-2.5 py-1 text-xs font-mono text-amber-400 placeholder:text-white/20 focus:outline-none focus:border-amber-500/50"
+            step="1"
+            class="w-12 bg-black/60 border border-white/10 rounded px-1 py-0.5 text-[9.5px] text-cyan-400 font-mono font-bold text-center focus:border-cyan-500/40 focus:bg-black/90 focus:outline-none transition-all"
+            title="Cantidad de gemas para calcular tier de precio"
           />
+          <span id="gemPriceDisplayText" class="text-[10px] text-cyan-400 font-bold whitespace-nowrap">$0.0103</span>
+        </div>
+      </div>
+
+      <!-- Fila 3: FLOWER = [Caja valor 1] [Valor en dólares] -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0 border-t border-white/5 pt-1">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <img
+            src="/img/sunflowerland/flower.jpg"
+            alt="FLOWER"
+            class="w-3.5 h-3.5 rounded-full object-cover shrink-0"
+          />
+          <span class="text-[10px] text-terminal-muted font-bold whitespace-nowrap">{t("sfl.constants.flower.label")}</span>
+        </div>
+
+        <div class="inline-flex items-center gap-1.5 shrink-0">
+          <input
+            type="number"
+            id="flowerAmountInput"
+            value="1"
+            min="0.1"
+            step="1"
+            class="w-12 bg-black/60 border border-white/10 rounded px-1 py-0.5 text-[9.5px] text-emerald-400 font-mono font-bold text-center focus:border-emerald-500/40 focus:bg-black/90 focus:outline-none transition-all"
+            title="Cantidad de FLOWER"
+          />
+          <span id="flowerPriceDisplayText" class="text-[10px] text-emerald-400 font-bold whitespace-nowrap cursor-pointer hover:underline" title="Precio en USD (clic para personalizar)">$0.1440</span>
         </div>
       </div>
     </div>
+
+    <!-- COLUMNA 2 (20%): Vacío -->
+    <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
+
+    <!-- COLUMNA 3 (20%): Vacío -->
+    <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
+
+    <!-- COLUMNA 4 (20%): Vacío -->
+    <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
+
+    <!-- COLUMNA 5 (20%): Vacío -->
+    <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
   </div>
 
   <!-- 3. Bloques por Categorías: Grid 50% en PC -->
@@ -1222,6 +1248,8 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 <script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free") }}>
   ;(function () {
     let liveFlowerPrice = 0.144
+    let effectiveFlowerPrice = 0.144
+    let effectiveGemUsd = 0.0103
     let activeCoinsPerFlower = 320 // Paridad inicial fallback
     let marketDataCache = null
     let calculatedOilPriceFlower = 0
@@ -1295,10 +1323,13 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       return 0
     }
 
-    // Helper general para resolver cualquier material (Oil calculado, Tesoros de Jafar, o recursos base P2P)
+    // Helper general para resolver cualquier material (Oil calculado, Gemas, Tesoros de Jafar, o recursos base P2P)
     function getMaterialUnitPrice(materialName) {
       if (materialName === "Oil") {
         return calculatedOilPriceFlower
+      }
+      if (materialName === "Gem" || materialName === "Gems") {
+        return effectiveFlowerPrice > 0 ? effectiveGemUsd / effectiveFlowerPrice : 0
       }
       const treasurePrice = getTreasureUnitPrice(materialName)
       if (treasurePrice > 0) {
@@ -1342,10 +1373,8 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           if (coins === 0 && materialsFlower === 0) {
             badge.innerText = "0"
           } else {
-            if (grandTotalFlower < 0.1) {
+            if (grandTotalFlower < 100) {
               badge.innerText = `${grandTotalFlower.toFixed(4)}`
-            } else if (grandTotalFlower < 10) {
-              badge.innerText = `${grandTotalFlower.toFixed(3)}`
             } else {
               badge.innerText = `${grandTotalFlower.toFixed(2)}`
             }
@@ -1598,7 +1627,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         }
 
         const grandTotalFlower = coinsFlower + materialsTotalFlower
-        const grandTotalUsd = grandTotalFlower * liveFlowerPrice
+        const grandTotalUsd = grandTotalFlower * effectiveFlowerPrice
 
         if (flowerTotal) {
           if (selectedTool.coins === 0 && materialsTotalFlower === 0) {
@@ -1836,7 +1865,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         const unitCoins = selectedTreasure.coins || 0
         const totalCoins = unitCoins * currentMultiplier
         const totalFlower = activeCoinsPerFlower > 0 ? totalCoins / activeCoinsPerFlower : 0
-        const totalUsd = totalFlower * liveFlowerPrice
+        const totalUsd = totalFlower * effectiveFlowerPrice
 
         if (coinsDisplay) {
           coinsDisplay.innerText = `${totalCoins.toLocaleString()} Coins`
@@ -1965,101 +1994,208 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       jafarManager.updateDetail()
     }
 
-    // --- GESTIÓN DE PARIDAD DE COINS (Arbitraje vs Oficial vs Custom) ---
-    let coinsParityMode = "arbitrage" // "arbitrage" | "official" | "custom"
+    // --- GESTIÓN DE DIVISAS BASE (Coin, Gemas, FLOWER) ---
+    // 1. Coins
+    let coinsParityMode = "arbitrage" // "arbitrage" | "official"
+    let isBettyCustom = false
+    let customBettyRatio = null
     let arbitrageCoinsPerFlower = 320
     const officialCoinsPerFlower = 320
-    let customCoinsPerFlower = 1000
 
-    const activeCoinsRatioDisplay = document.getElementById("activeCoinsRatioDisplay")
-    const arbitrageRatioText = document.getElementById("arbitrageRatioText")
-    const btnArbitrage = document.getElementById("coinsOptionArbitrage")
+    const containerBetty = document.getElementById("coinsBettyContainer")
+    const inputBetty = document.getElementById("coinsBettyInput")
     const btnOfficial = document.getElementById("coinsOptionOfficial")
-    const wrapperCustom = document.getElementById("coinsOptionCustomWrapper")
-    const inputCustom = document.getElementById("coinsCustomInput")
+    const arbitrageRatioText = document.getElementById("arbitrageRatioText")
 
-    function updateCoinsParityUI() {
+    // 2. Gemas (Fórmula algorítmica de SFL Mercado: tiers fiat con 20% descuento cripto)
+    const getGemFiatPrice = (gems) => {
+      if (gems < 650) return 1.29 / 100
+      if (gems < 1350) return 6.49 / 650
+      if (gems < 2800) return 12.99 / 1350
+      if (gems < 8000) return 25.99 / 2800
+      if (gems < 15500) return 0.0087825 // Hidden tier
+      if (gems < 200000) return 129.99 / 15500
+      return 1299.99 / 200000
+    }
+
+    let gemAmount = 1
+    const gemAmountInput = document.getElementById("gemAmountInput")
+    const gemPriceDisplayText = document.getElementById("gemPriceDisplayText")
+
+    // 3. FLOWER
+    let flowerAmount = 1
+    let isFlowerCustom = false
+    let customFlowerPrice = null
+    const flowerAmountInput = document.getElementById("flowerAmountInput")
+    const flowerPriceDisplayText = document.getElementById("flowerPriceDisplayText")
+
+    function updateCurrencyUI() {
       // 1. Determinar activeCoinsPerFlower
       if (coinsParityMode === "arbitrage") {
-        activeCoinsPerFlower = arbitrageCoinsPerFlower
+        activeCoinsPerFlower = (isBettyCustom && customBettyRatio && customBettyRatio > 0)
+          ? customBettyRatio
+          : arbitrageCoinsPerFlower
       } else if (coinsParityMode === "official") {
         activeCoinsPerFlower = officialCoinsPerFlower
-      } else if (coinsParityMode === "custom") {
-        activeCoinsPerFlower = customCoinsPerFlower > 0 ? customCoinsPerFlower : officialCoinsPerFlower
       }
 
-      // 2. Actualizar estilos de los botones
-      if (btnArbitrage) {
+      // Estilos de botones de Coin
+      const activeBtnClass = ["bg-amber-500/15", "text-amber-400", "border-amber-500/30"]
+      const inactiveBtnClass = ["text-white/50", "border-white/5", "bg-black/40"]
+
+      if (containerBetty) {
         if (coinsParityMode === "arbitrage") {
-          btnArbitrage.classList.add("active", "border-amber-500/40", "bg-amber-500/10")
-          btnArbitrage.classList.remove("border-white/10", "bg-black/40")
+          containerBetty.classList.add(...activeBtnClass)
+          containerBetty.classList.remove(...inactiveBtnClass)
         } else {
-          btnArbitrage.classList.remove("active", "border-amber-500/40", "bg-amber-500/10")
-          btnArbitrage.classList.add("border-white/10", "bg-black/40")
+          containerBetty.classList.remove(...activeBtnClass)
+          containerBetty.classList.add(...inactiveBtnClass)
+        }
+      }
+
+      if (inputBetty) {
+        if (coinsParityMode === "arbitrage") {
+          inputBetty.classList.add("text-amber-400")
+          inputBetty.classList.remove("text-white/50")
+        } else {
+          inputBetty.classList.remove("text-amber-400")
+          inputBetty.classList.add("text-white/50")
+        }
+        inputBetty.placeholder = Math.round(arbitrageCoinsPerFlower).toString()
+        if (!isBettyCustom) {
+          inputBetty.value = Math.round(arbitrageCoinsPerFlower).toString()
         }
       }
 
       if (btnOfficial) {
         if (coinsParityMode === "official") {
-          btnOfficial.classList.add("active", "border-amber-500/40", "bg-amber-500/10")
-          btnOfficial.classList.remove("border-white/10", "bg-black/40")
+          btnOfficial.classList.add(...activeBtnClass)
+          btnOfficial.classList.remove(...inactiveBtnClass)
         } else {
-          btnOfficial.classList.remove("active", "border-amber-500/40", "bg-amber-500/10")
-          btnOfficial.classList.add("border-white/10", "bg-black/40")
+          btnOfficial.classList.remove(...activeBtnClass)
+          btnOfficial.classList.add(...inactiveBtnClass)
         }
       }
 
-      if (wrapperCustom) {
-        if (coinsParityMode === "custom") {
-          wrapperCustom.classList.add("active", "border-amber-500/40", "bg-amber-500/10")
-          wrapperCustom.classList.remove("border-white/10", "bg-black/40")
+      // 2. Determinar precio activo de FLOWER
+      const effectiveFlowerPrice = (isFlowerCustom && customFlowerPrice && customFlowerPrice > 0)
+        ? customFlowerPrice
+        : liveFlowerPrice
+
+      const totalFlowerUsd = flowerAmount * effectiveFlowerPrice
+
+      if (flowerPriceDisplayText) {
+        if (flowerAmount === 1) {
+          flowerPriceDisplayText.innerText = `$${effectiveFlowerPrice.toFixed(4)}`
+          flowerPriceDisplayText.title = isFlowerCustom
+            ? `$${effectiveFlowerPrice.toFixed(4)} USD / FL (Personalizado. Clic para cambiar)`
+            : `$${effectiveFlowerPrice.toFixed(4)} USD / FL (En vivo. Clic para personalizar)`
         } else {
-          wrapperCustom.classList.remove("active", "border-amber-500/40", "bg-amber-500/10")
-          wrapperCustom.classList.add("border-white/10", "bg-black/40")
+          flowerPriceDisplayText.innerText = `$${totalFlowerUsd >= 10 ? totalFlowerUsd.toFixed(2) : totalFlowerUsd.toFixed(4)}`
+          flowerPriceDisplayText.title = `$${effectiveFlowerPrice.toFixed(4)} USD/FL (Total: $${totalFlowerUsd.toFixed(2)}. Clic para personalizar)`
+        }
+      }
+      if (liveFlowerDisplay) {
+        liveFlowerDisplay.innerText = `$${effectiveFlowerPrice.toFixed(4)} USD`
+      }
+
+      // 3. Determinar precio activo de Gemas según fórmula algorítmica
+      const fiatPerGem = getGemFiatPrice(gemAmount)
+      const unitGemUsd = fiatPerGem * 0.8
+      const totalGemUsd = gemAmount * unitGemUsd
+      effectiveGemUsd = unitGemUsd
+
+      if (gemPriceDisplayText) {
+        if (gemAmount === 1) {
+          gemPriceDisplayText.innerText = `$${unitGemUsd.toFixed(4)}`
+          gemPriceDisplayText.title = `$${unitGemUsd.toFixed(4)} USD / gema`
+        } else {
+          gemPriceDisplayText.innerText = `$${totalGemUsd >= 10 ? totalGemUsd.toFixed(2) : totalGemUsd.toFixed(4)}`
+          gemPriceDisplayText.title = `$${unitGemUsd.toFixed(4)} USD/gema (Total: $${totalGemUsd.toFixed(2)})`
         }
       }
 
-      // 3. Actualizar textos de indicadores
+      // 4. Textos de ratio
       const rounded = Math.round(activeCoinsPerFlower)
-      if (activeCoinsRatioDisplay) {
-        activeCoinsRatioDisplay.innerText = `1 FL = ${rounded.toLocaleString()} Coins`
-      }
       if (liveBettyRatioDisplay) {
         const modeLabel = coinsParityMode === "arbitrage" ? "(Betty)" : coinsParityMode === "official" ? "(Oficial)" : "(Custom)"
         liveBettyRatioDisplay.innerText = `1:${rounded} Coins ${modeLabel}`
       }
 
-      // 4. Recalcular todo
+      // 5. Recalcular todo
       updateAll()
     }
 
-    // Eventos de selección de modo
-    if (btnArbitrage) {
-      btnArbitrage.addEventListener("click", () => {
+    // Eventos de Coin
+    if (containerBetty) {
+      containerBetty.addEventListener("click", (e) => {
         coinsParityMode = "arbitrage"
-        updateCoinsParityUI()
+        if (e.target !== inputBetty && inputBetty) {
+          inputBetty.focus()
+        }
+        updateCurrencyUI()
+      })
+    }
+
+    if (inputBetty) {
+      inputBetty.addEventListener("focus", () => {
+        coinsParityMode = "arbitrage"
+        updateCurrencyUI()
+      })
+      inputBetty.addEventListener("input", () => {
+        coinsParityMode = "arbitrage"
+        const val = parseFloat(inputBetty.value)
+        if (!isNaN(val) && val > 0) {
+          isBettyCustom = true
+          customBettyRatio = val
+        } else {
+          isBettyCustom = false
+          customBettyRatio = null
+        }
+        updateCurrencyUI()
       })
     }
 
     if (btnOfficial) {
       btnOfficial.addEventListener("click", () => {
         coinsParityMode = "official"
-        updateCoinsParityUI()
+        updateCurrencyUI()
       })
     }
 
-    if (inputCustom) {
-      inputCustom.addEventListener("focus", () => {
-        coinsParityMode = "custom"
-        updateCoinsParityUI()
+    // Eventos de Gemas
+    if (gemAmountInput) {
+      gemAmountInput.addEventListener("input", () => {
+        const val = parseFloat(gemAmountInput.value)
+        gemAmount = (!isNaN(val) && val > 0) ? val : 1
+        updateCurrencyUI()
       })
-      inputCustom.addEventListener("input", () => {
-        coinsParityMode = "custom"
-        const val = parseFloat(inputCustom.value)
-        if (!isNaN(val) && val > 0) {
-          customCoinsPerFlower = val
+    }
+
+    // Eventos de FLOWER
+    if (flowerAmountInput) {
+      flowerAmountInput.addEventListener("input", () => {
+        const val = parseFloat(flowerAmountInput.value)
+        flowerAmount = (!isNaN(val) && val > 0) ? val : 1
+        updateCurrencyUI()
+      })
+    }
+
+    if (flowerPriceDisplayText) {
+      flowerPriceDisplayText.addEventListener("click", () => {
+        const current = (isFlowerCustom && customFlowerPrice) ? customFlowerPrice : liveFlowerPrice
+        const input = prompt("Precio personalizado de 1 FLOWER en USD (deja vacío para volver al precio en vivo):", current.toFixed(4))
+        if (input !== null) {
+          const val = parseFloat(input.trim())
+          if (!isNaN(val) && val > 0) {
+            isFlowerCustom = true
+            customFlowerPrice = val
+          } else {
+            isFlowerCustom = false
+            customFlowerPrice = null
+          }
+          updateCurrencyUI()
         }
-        updateCoinsParityUI()
       })
     }
 
@@ -2068,20 +2204,17 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       if (!marketState) return
       if (marketState.flowerPrice) {
         liveFlowerPrice = marketState.flowerPrice
-        if (liveFlowerDisplay) {
-          liveFlowerDisplay.innerText = `$${liveFlowerPrice.toFixed(4)} USD`
-        }
       }
       if (marketState.bettyRatio && marketState.bettyRatio > 0) {
         arbitrageCoinsPerFlower = marketState.bettyRatio
         if (arbitrageRatioText) {
-          arbitrageRatioText.innerText = `1 FLOWER : ${Math.round(marketState.bettyRatio).toLocaleString()} Coins`
+          arbitrageRatioText.innerText = `1:${Math.round(marketState.bettyRatio).toLocaleString()}`
         }
       }
-      updateCoinsParityUI()
+      updateCurrencyUI()
     }
 
-    // 1. Escuchar el evento nativo del navegador (infalible ante cualquier orden de carga)
+    // 1. Escuchar el evento nativo del navegador
     window.addEventListener("sfl:marketUpdated", (e) => {
       if (e.detail) {
         syncWithMarket(e.detail)
@@ -2104,9 +2237,9 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       if (e.detail && e.detail > 0) {
         arbitrageCoinsPerFlower = e.detail
         if (arbitrageRatioText) {
-          arbitrageRatioText.innerText = `1 FLOWER : ${Math.round(e.detail).toLocaleString()} Coins`
+          arbitrageRatioText.innerText = `1:${Math.round(e.detail).toLocaleString()}`
         }
-        updateCoinsParityUI()
+        updateCurrencyUI()
       }
     })
 
@@ -2114,10 +2247,10 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     if (window.__bestCoinsPerFlower && window.__bestCoinsPerFlower > 0) {
       arbitrageCoinsPerFlower = window.__bestCoinsPerFlower
       if (arbitrageRatioText) {
-        arbitrageRatioText.innerText = `1 FLOWER : ${Math.round(window.__bestCoinsPerFlower).toLocaleString()} Coins`
+        arbitrageRatioText.innerText = `1:${Math.round(window.__bestCoinsPerFlower).toLocaleString()}`
       }
     }
 
-    updateCoinsParityUI()
+    updateCurrencyUI()
   })()
 </script>

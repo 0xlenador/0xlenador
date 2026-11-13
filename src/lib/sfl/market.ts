@@ -224,3 +224,32 @@ function _notify(): void {
     }
   })
 }
+
+// ---------------------------------------------------------------------------
+// Algoritmo de Tiers de Gemas (Fórmula oficial de Sunflower Land)
+// ---------------------------------------------------------------------------
+
+/**
+ * Retorna el precio fiat base (USD) por gema según los paquetes escalonados del juego.
+ */
+export function getGemFiatPrice(gems: number): number {
+  if (gems < 650) return 1.29 / 100
+  if (gems < 1350) return 6.49 / 650
+  if (gems < 2800) return 12.99 / 1350
+  if (gems < 8000) return 25.99 / 2800
+  if (gems < 15500) return 0.0087825 // Hidden tier
+  if (gems < 200000) return 129.99 / 15500
+  return 1299.99 / 200000
+}
+
+/**
+ * Calcula el costo en USD por gema y total con el descuento del 20% de pago cripto.
+ */
+export function calculateGemCostUsd(gems: number): { unitUsd: number; totalUsd: number } {
+  const fiatPerGem = getGemFiatPrice(gems)
+  const unitUsd = fiatPerGem * 0.8
+  return {
+    unitUsd,
+    totalUsd: gems * unitUsd,
+  }
+}
