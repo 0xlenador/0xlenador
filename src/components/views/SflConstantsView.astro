@@ -28,6 +28,12 @@ const jafarSellTab = jafar.tabs.find((tab) => tab.id === "sell")
 const jafarSellCategories = jafarSellTab ? jafarSellTab.categories : []
 const totalJafarSellItems = jafarSellCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
 const jafarSellItems = jafarSellCategories[0]?.items || []
+
+import { getAnimalBuildings } from "../../lib/sfl/animals"
+const animalBuildings = getAnimalBuildings()
+const henHouse = animalBuildings.find((b) => b.id === "hen_house")
+const barn = animalBuildings.find((b) => b.id === "barn")
+const pigpen = animalBuildings.find((b) => b.id === "pigpen")
 ---
 
 <SflToolLayout activeTab="constantes">
@@ -1255,6 +1261,359 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         </div>
       </div>
     </div>
+
+    <!-- BLOQUE 3: ANIMAL BUILDINGS & BOUNTIES (Ancho completo) -->
+    <div
+      class="col-span-full bg-[#18181b]/95 border border-white/10 rounded-2xl shadow-xl backdrop-blur-md overflow-hidden flex flex-col mt-2"
+    >
+      <!-- Cabecera del Edificio con Icono y Tabs -->
+      <div class="p-3.5 sm:p-4 border-b border-white/10 bg-black/20">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <div
+              class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 relative p-1.5"
+            >
+              <img
+                src="/img/sunflowerland/123/Chicken.png"
+                alt="Animal Buildings"
+                class="w-full h-full object-contain pointer-events-none [image-rendering:pixelated]"
+              />
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                {t("sfl.constants.building.animals")}
+                <span
+                  class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-normal"
+                >
+                  3 Edificios
+                </span>
+              </h3>
+              <p class="text-xs text-terminal-muted">
+                {t("sfl.constants.building.animals.desc")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Pestañas: Hen House, Barn, Pigpen, Bounties -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5">
+          <button
+            type="button"
+            class="animal-tab-btn flex-1 min-w-[100px] py-1 px-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 bg-white/10 text-amber-400 border border-amber-500/30 shadow-sm"
+            data-target="animal-tab-hen-house"
+          >
+            <img src="/img/sunflowerland/123/Chicken.png" alt="Hen House" class="w-4 h-4 object-contain [image-rendering:pixelated]" />
+            <span>{t("sfl.constants.tab.hen_house")}</span>
+          </button>
+          <button
+            type="button"
+            class="animal-tab-btn flex-1 min-w-[100px] py-1 px-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+            data-target="animal-tab-barn"
+          >
+            <img src="/img/sunflowerland/powerups/baby_cow.webp" alt="Barn" class="w-4 h-4 object-contain [image-rendering:pixelated]" />
+            <span>{t("sfl.constants.tab.barn")}</span>
+          </button>
+          <button
+            type="button"
+            class="animal-tab-btn flex-1 min-w-[100px] py-1 px-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+            data-target="animal-tab-pigpen"
+          >
+            <img src="/img/sunflowerland/123/pig.webp" alt="Pigpen" class="w-4 h-4 object-contain [image-rendering:pixelated]" />
+            <span>{t("sfl.constants.tab.pigpen")}</span>
+          </button>
+          <button
+            type="button"
+            class="animal-tab-btn flex-1 min-w-[100px] py-1 px-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-white/50 hover:text-white/80 hover:bg-white/[0.04] border border-transparent"
+            data-target="animal-tab-bounties"
+          >
+            <span>📜</span>
+            <span>{t("sfl.constants.tab.bounties")}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 1: HEN HOUSE -->
+      <div id="animal-tab-hen-house" class="animal-tab-panel p-3.5 sm:p-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+          {
+            henHouse?.levels.map((lvl) => (
+              <div
+                class="animal-building-level-card bg-black/40 border border-white/10 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between hover:border-amber-400/40 transition-all shadow-md group"
+                data-coins={lvl.coins}
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mb-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-1 shrink-0">
+                        <img src="/img/sunflowerland/123/Chicken.png" alt="Hen House" class="w-full h-full object-contain [image-rendering:pixelated]" />
+                      </div>
+                      <div>
+                        <h4 class="text-xs sm:text-sm font-bold text-white tracking-tight">{lvl.name}</h4>
+                        <span class="text-[10px] font-mono text-terminal-muted">Bumpkin Lvl {henHouse.unlockBumpkinLevel}</span>
+                      </div>
+                    </div>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                      Cap: {lvl.capacity}
+                    </span>
+                  </div>
+
+                  <!-- Costo en Monedas -->
+                  <div class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 mb-2.5">
+                    <div class="flex items-center gap-1.5">
+                      <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-4 h-4 object-contain" />
+                      <span class="text-xs font-mono font-bold text-amber-300">{lvl.coins.toLocaleString()} Coins</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3 h-3 object-cover rounded-full" />
+                      <span class="animal-coins-flower text-[11px] font-mono font-bold text-emerald-400">--</span>
+                    </div>
+                  </div>
+
+                  <!-- Materiales / Ingredientes -->
+                  <div class="flex flex-col gap-1.5 mb-3">
+                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-terminal-muted">
+                      {t("sfl.constants.detail.ingredients")}
+                    </span>
+                    <div class="flex flex-col gap-1">
+                      {lvl.ingredients.map((ing) => (
+                        <div
+                          class="animal-ingredient-item flex items-center justify-between p-1.5 rounded-lg bg-black/30 border border-white/5 text-[11px]"
+                          data-name={ing.name}
+                          data-amount={ing.amount}
+                        >
+                          <div class="flex items-center gap-1.5">
+                            <img src={ing.image} alt={ing.name} class="w-4 h-4 object-contain [image-rendering:pixelated]" />
+                            <span class="text-white font-mono">{ing.name}</span>
+                            <span class="text-amber-400 font-mono font-bold">x{ing.amount}</span>
+                          </div>
+                          <div class="flex items-center gap-1">
+                            <span class="animal-ingredient-flower text-[10px] font-mono text-emerald-400 font-bold">--</span>
+                            <span class="text-[9px] font-mono text-white/40">FL</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer: Total Level Cost -->
+                <div class="pt-2.5 border-t border-white/10 flex items-center justify-between">
+                  <span class="text-[10px] font-mono text-terminal-muted">{t("sfl.constants.detail.totalCost")}</span>
+                  <div class="text-right">
+                    <div class="flex items-center justify-end gap-1">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 object-cover rounded-full" />
+                      <span class="animal-level-total-flower text-xs font-mono font-bold text-emerald-400">--</span>
+                      <span class="text-[10px] font-mono text-white/50">FL</span>
+                    </div>
+                    <span class="animal-level-total-usd text-[10px] font-mono text-terminal-muted block">$0.00</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- PESTAÑA 2: BARN -->
+      <div id="animal-tab-barn" class="animal-tab-panel p-3.5 sm:p-5 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+          {
+            barn?.levels.map((lvl) => (
+              <div
+                class="animal-building-level-card bg-black/40 border border-white/10 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between hover:border-amber-400/40 transition-all shadow-md group"
+                data-coins={lvl.coins}
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mb-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center p-1 shrink-0">
+                        <img src="/img/sunflowerland/powerups/baby_cow.webp" alt="Barn" class="w-full h-full object-contain [image-rendering:pixelated]" />
+                      </div>
+                      <div>
+                        <h4 class="text-xs sm:text-sm font-bold text-white tracking-tight">{lvl.name}</h4>
+                        <span class="text-[10px] font-mono text-terminal-muted">Bumpkin Lvl {barn.unlockBumpkinLevel}</span>
+                      </div>
+                    </div>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                      Cap: {lvl.capacity}
+                    </span>
+                  </div>
+
+                  <!-- Costo en Monedas -->
+                  <div class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 mb-2.5">
+                    <div class="flex items-center gap-1.5">
+                      <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-4 h-4 object-contain" />
+                      <span class="text-xs font-mono font-bold text-amber-300">{lvl.coins.toLocaleString()} Coins</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3 h-3 object-cover rounded-full" />
+                      <span class="animal-coins-flower text-[11px] font-mono font-bold text-emerald-400">--</span>
+                    </div>
+                  </div>
+
+                  <!-- Materiales / Ingredientes -->
+                  <div class="flex flex-col gap-1.5 mb-3">
+                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-terminal-muted">
+                      {t("sfl.constants.detail.ingredients")}
+                    </span>
+                    <div class="flex flex-col gap-1">
+                      {lvl.ingredients.map((ing) => (
+                        <div
+                          class="animal-ingredient-item flex items-center justify-between p-1.5 rounded-lg bg-black/30 border border-white/5 text-[11px]"
+                          data-name={ing.name}
+                          data-amount={ing.amount}
+                        >
+                          <div class="flex items-center gap-1.5">
+                            <img src={ing.image} alt={ing.name} class="w-4 h-4 object-contain [image-rendering:pixelated]" />
+                            <span class="text-white font-mono">{ing.name}</span>
+                            <span class="text-amber-400 font-mono font-bold">x{ing.amount}</span>
+                          </div>
+                          <div class="flex items-center gap-1">
+                            <span class="animal-ingredient-flower text-[10px] font-mono text-emerald-400 font-bold">--</span>
+                            <span class="text-[9px] font-mono text-white/40">FL</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer: Total Level Cost -->
+                <div class="pt-2.5 border-t border-white/10 flex items-center justify-between">
+                  <span class="text-[10px] font-mono text-terminal-muted">{t("sfl.constants.detail.totalCost")}</span>
+                  <div class="text-right">
+                    <div class="flex items-center justify-end gap-1">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 object-cover rounded-full" />
+                      <span class="animal-level-total-flower text-xs font-mono font-bold text-emerald-400">--</span>
+                      <span class="text-[10px] font-mono text-white/50">FL</span>
+                    </div>
+                    <span class="animal-level-total-usd text-[10px] font-mono text-terminal-muted block">$0.00</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- PESTAÑA 3: PIGPEN -->
+      <div id="animal-tab-pigpen" class="animal-tab-panel p-3.5 sm:p-5 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+          {
+            pigpen?.levels.map((lvl) => (
+              <div
+                class="animal-building-level-card bg-black/40 border border-white/10 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between hover:border-amber-400/40 transition-all shadow-md group"
+                data-coins={lvl.coins}
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 mb-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/30 flex items-center justify-center p-1 shrink-0">
+                        <img src="/img/sunflowerland/123/pig.webp" alt="Pigpen" class="w-full h-full object-contain [image-rendering:pixelated]" />
+                      </div>
+                      <div>
+                        <h4 class="text-xs sm:text-sm font-bold text-white tracking-tight">{lvl.name}</h4>
+                        <span class="text-[10px] font-mono text-terminal-muted">Bumpkin Lvl {pigpen.unlockBumpkinLevel} (Petal Paradise)</span>
+                      </div>
+                    </div>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/30">
+                      Cap: {lvl.capacity}
+                    </span>
+                  </div>
+
+                  <!-- Costo en Monedas -->
+                  <div class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 mb-2.5">
+                    <div class="flex items-center gap-1.5">
+                      <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-4 h-4 object-contain" />
+                      <span class="text-xs font-mono font-bold text-amber-300">{lvl.coins.toLocaleString()} Coins</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3 h-3 object-cover rounded-full" />
+                      <span class="animal-coins-flower text-[11px] font-mono font-bold text-emerald-400">--</span>
+                    </div>
+                  </div>
+
+                  <!-- Materiales / Ingredientes -->
+                  <div class="flex flex-col gap-1.5 mb-3">
+                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-terminal-muted">
+                      {t("sfl.constants.detail.ingredients")}
+                    </span>
+                    <div class="flex flex-col gap-1">
+                      {lvl.ingredients.map((ing) => (
+                        <div
+                          class="animal-ingredient-item flex items-center justify-between p-1.5 rounded-lg bg-black/30 border border-white/5 text-[11px]"
+                          data-name={ing.name}
+                          data-amount={ing.amount}
+                        >
+                          <div class="flex items-center gap-1.5">
+                            <img src={ing.image} alt={ing.name} class="w-4 h-4 object-contain [image-rendering:pixelated]" />
+                            <span class="text-white font-mono">{ing.name}</span>
+                            <span class="text-amber-400 font-mono font-bold">x{ing.amount}</span>
+                          </div>
+                          <div class="flex items-center gap-1">
+                            <span class="animal-ingredient-flower text-[10px] font-mono text-emerald-400 font-bold">--</span>
+                            <span class="text-[9px] font-mono text-white/40">FL</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer: Total Level Cost -->
+                <div class="pt-2.5 border-t border-white/10 flex items-center justify-between">
+                  <span class="text-[10px] font-mono text-terminal-muted">{t("sfl.constants.detail.totalCost")}</span>
+                  <div class="text-right">
+                    <div class="flex items-center justify-end gap-1">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 object-cover rounded-full" />
+                      <span class="animal-level-total-flower text-xs font-mono font-bold text-emerald-400">--</span>
+                      <span class="text-[10px] font-mono text-white/50">FL</span>
+                    </div>
+                    <span class="animal-level-total-usd text-[10px] font-mono text-terminal-muted block">$0.00</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- PESTAÑA 4: BOUNTIES (Módulo en preparación) -->
+      <div id="animal-tab-bounties" class="animal-tab-panel p-4 sm:p-6 hidden">
+        <div class="bg-black/40 border border-white/10 rounded-xl p-5 sm:p-6 text-center max-w-xl mx-auto flex flex-col items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl shadow-inner">
+            📜
+          </div>
+          <div>
+            <h4 class="text-sm sm:text-base font-bold text-white tracking-tight mb-1">
+              {t("sfl.constants.animals.bounties.title")}
+            </h4>
+            <p class="text-xs text-terminal-secondary leading-relaxed">
+              {t("sfl.constants.animals.bounties.desc")}
+            </p>
+          </div>
+
+          <div class="w-full grid grid-cols-1 sm:grid-cols-3 gap-2.5 my-2 text-left">
+            <div class="bg-white/[0.02] border border-white/5 rounded-lg p-2.5">
+              <span class="text-[10px] font-mono font-bold text-amber-400 block mb-0.5">🗓️ Ciclo Semanal</span>
+              <p class="text-[10px] text-terminal-muted leading-snug">Las solicitudes de bounties rotan cada semana con recompensas únicas.</p>
+            </div>
+            <div class="bg-white/[0.02] border border-white/5 rounded-lg p-2.5">
+              <span class="text-[10px] font-mono font-bold text-emerald-400 block mb-0.5">❤️ Animal Sano</span>
+              <p class="text-[10px] text-terminal-muted leading-snug">Vender animales enfermos penaliza un 50% el valor de la recompensa.</p>
+            </div>
+            <div class="bg-white/[0.02] border border-white/5 rounded-lg p-2.5">
+              <span class="text-[10px] font-mono font-bold text-blue-400 block mb-0.5">🎟️ Tickets & Gemas</span>
+              <p class="text-[10px] text-terminal-muted leading-snug">Otorga Chapter Tickets para avanzar en el pase de temporada.</p>
+            </div>
+          </div>
+
+          <div class="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[11px] font-mono">
+            {t("sfl.constants.animals.bounties.placeholder")}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </SflToolLayout>
 
@@ -2004,6 +2363,74 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
 
     const jafarSellManager = createSellController()
 
+    // Actualiza los costos en FLOWER y USD de los edificios de animales
+    function updateAnimalBuildings() {
+      const cards = document.querySelectorAll(".animal-building-level-card")
+      cards.forEach((card) => {
+        const coins = parseFloat(card.dataset.coins) || 0
+        const coinsFlower = activeCoinsPerFlower > 0 ? coins / activeCoinsPerFlower : 0
+        const coinsFlowerEl = card.querySelector(".animal-coins-flower")
+        if (coinsFlowerEl) {
+          coinsFlowerEl.innerText = coinsFlower > 0 ? (coinsFlower < 10 ? coinsFlower.toFixed(3) : coinsFlower.toFixed(1)) : "0"
+        }
+
+        let ingredientsCostFlower = 0
+        const items = card.querySelectorAll(".animal-ingredient-item")
+        items.forEach((item) => {
+          const name = item.dataset.name
+          const amount = parseFloat(item.dataset.amount) || 0
+          const unitPrice = getMaterialUnitPrice(name)
+          const totalIngFlower = unitPrice * amount
+          ingredientsCostFlower += totalIngFlower
+
+          const flowerEl = item.querySelector(".animal-ingredient-flower")
+          if (flowerEl) {
+            flowerEl.innerText = totalIngFlower > 0
+              ? (totalIngFlower < 10 ? totalIngFlower.toFixed(3) : totalIngFlower.toFixed(1))
+              : "--"
+          }
+        })
+
+        const totalLevelFlower = coinsFlower + ingredientsCostFlower
+        const totalLevelUsd = totalLevelFlower * effectiveFlowerPrice
+
+        const totalFlowerEl = card.querySelector(".animal-level-total-flower")
+        if (totalFlowerEl) {
+          totalFlowerEl.innerText = totalLevelFlower > 0
+            ? (totalLevelFlower < 10 ? totalLevelFlower.toFixed(3) : totalLevelFlower.toFixed(1))
+            : "--"
+        }
+
+        const totalUsdEl = card.querySelector(".animal-level-total-usd")
+        if (totalUsdEl) {
+          totalUsdEl.innerText = `$${totalLevelUsd.toFixed(2)}`
+        }
+      })
+    }
+
+    // Pestañas de edificios de animales
+    const animalTabBtns = document.querySelectorAll(".animal-tab-btn")
+    const animalTabPanels = document.querySelectorAll(".animal-tab-panel")
+    animalTabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.target
+        animalTabBtns.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-amber-400", "border-amber-500/30", "shadow-sm")
+          b.classList.add("text-white/50", "hover:text-white/80", "hover:bg-white/[0.04]", "border-transparent")
+        })
+        btn.classList.add("bg-white/10", "text-amber-400", "border-amber-500/30", "shadow-sm")
+        btn.classList.remove("text-white/50", "hover:text-white/80", "hover:bg-white/[0.04]", "border-transparent")
+
+        animalTabPanels.forEach((panel) => {
+          if (panel.id === targetId) {
+            panel.classList.remove("hidden")
+          } else {
+            panel.classList.add("hidden")
+          }
+        })
+      })
+    })
+
     function updateAll() {
       updateOilPriceDisplay()
       blacksmithManager.updateSlots()
@@ -2014,6 +2441,7 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       }
       jafarManager.updateSlots()
       jafarManager.updateDetail()
+      updateAnimalBuildings()
     }
 
     // --- GESTIÓN DE DIVISAS BASE (Coin, Gemas, FLOWER) ---
