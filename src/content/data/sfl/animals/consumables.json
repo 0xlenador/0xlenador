@@ -1,0 +1,242 @@
+{
+  "kernel_blend": {
+    "id": "kernel_blend",
+    "name": "Kernel Blend",
+    "description": "Blend of crushed kernels for poultry and livestock.",
+    "category": "feed",
+    "targetAnimals": ["chicken", "cow", "sheep"],
+    "xp": 100,
+    "craftingIngredients": [
+      { "name": "Corn", "amount": 1, "image": "/img/sunflowerland/Corn.png" }
+    ]
+  },
+  "hay": {
+    "id": "hay",
+    "name": "Hay",
+    "description": "Dried wheat bundles, essential for farm animals.",
+    "category": "feed",
+    "targetAnimals": ["chicken", "cow", "sheep"],
+    "xp": 100,
+    "craftingIngredients": [
+      { "name": "Wheat", "amount": 1, "image": "/img/sunflowerland/Wheat.png" }
+    ]
+  },
+  "nutribarley": {
+    "id": "nutribarley",
+    "name": "NutriBarley",
+    "description": "High-nutrient barley grains that boost animal health.",
+    "category": "feed",
+    "targetAnimals": ["chicken", "cow", "sheep"],
+    "xp": 100,
+    "craftingIngredients": [
+      { "name": "Barley", "amount": 1, "image": "/img/sunflowerland/Barley.png" }
+    ]
+  },
+  "mixed_grain": {
+    "id": "mixed_grain",
+    "name": "Mixed Grain",
+    "description": "A balanced combination of corn, wheat, and barley.",
+    "category": "feed",
+    "targetAnimals": ["chicken", "cow", "sheep"],
+    "xp": 350,
+    "craftingIngredients": [
+      { "name": "Corn", "amount": 1, "image": "/img/sunflowerland/Corn.png" },
+      { "name": "Wheat", "amount": 1, "image": "/img/sunflowerland/Wheat.png" },
+      { "name": "Barley", "amount": 1, "image": "/img/sunflowerland/Barley.png" }
+    ]
+  },
+  "omnifeed": {
+    "id": "omnifeed",
+    "name": "Omnifeed",
+    "description": "Universal favorite food for any farm animal, granting instant satisfaction.",
+    "category": "feed",
+    "targetAnimals": ["chicken", "cow", "sheep"],
+    "xp": 500,
+    "isUniversalFavorite": true,
+    "craftingIngredients": [
+      { "name": "Gem", "amount": 1, "image": "/img/sunflowerland/123/Gem.png" }
+    ]
+  },
+  "barn_delight": {
+    "id": "barn_delight",
+    "name": "Barn Delight",
+    "description": "Medicine mixed at the Feeder Machine to cure sick animals and restore standard drop rates.",
+    "category": "medicine",
+    "targetAnimals": ["chicken", "cow", "sheep"],
+    "effect": "Cures sickness, avoiding -50% harvest drop penalty and stopping contagion",
+    "craftingIngredients": [
+      { "name": "Lemon", "amount": 5, "image": "/img/sunflowerland/Lemon.png" },
+      { "name": "Honey", "amount": 3, "image": "/img/sunflowerland/Honey.png" }
+    ]
+  },
+  "mud_bath": {
+    "id": "mud_bath",
+    "name": "Mud Bath",
+    "description": "Coats a pig in cave mud to grant a +25% feeding XP boost and full immunity to sickness.",
+    "category": "mud",
+    "targetAnimals": ["pig"],
+    "cost": 25,
+    "resource": "Mud",
+    "image": "/img/sunflowerland/123/mud.webp",
+    "effects": {
+      "xpBoostPercent": 25,
+      "sicknessImmunity": true
+    },
+    "craftingIngredients": [
+      { "name": "Mud", "amount": 25, "image": "/img/sunflowerland/123/mud.webp" }
+    ]
+  },
+  "green_beetle": {
+    "id": "green_beetle",
+    "name": "Green Beetle",
+    "description": "Common cave beetle fed to farm animals for a direct XP boost.",
+    "category": "beetle",
+    "targetAnimals": ["chicken", "cow", "sheep", "pig"],
+    "xp": 100,
+    "image": "/img/sunflowerland/green_beetle.webp"
+  },
+  "blue_beetle": {
+    "id": "blue_beetle",
+    "name": "Blue Beetle",
+    "description": "Uncommon cave beetle that provides a substantial instant XP boost.",
+    "category": "beetle",
+    "targetAnimals": ["chicken", "cow", "sheep", "pig"],
+    "xp": 200,
+    "image": "/img/sunflowerland/blue_beetle.webp"
+  },
+  "pink_beetle": {
+    "id": "pink_beetle",
+    "name": "Pink Beetle",
+    "description": "Rare cave beetle that significantly accelerates animal growth.",
+    "category": "beetle",
+    "targetAnimals": ["chicken", "cow", "sheep", "pig"],
+    "xp": 400,
+    "image": "/img/sunflowerland/pink_beetle.webp"
+  },
+  "amber_beetle": {
+    "id": "amber_beetle",
+    "name": "Amber Beetle",
+    "description": "Legendary cave beetle delivering a massive instant XP injection.",
+    "category": "beetle",
+    "targetAnimals": ["chicken", "cow", "sheep", "pig"],
+    "xp": 800,
+    "image": "/img/sunflowerland/amber_beetle.webp"
+  },
+  "basic_slop": {
+    "id": "basic_slop",
+    "name": "Basic Slop",
+    "description": "Starter slop for pigs (Levels 1–2). Prepared using any single crop from the list.",
+    "category": "slop",
+    "tier": 1,
+    "targetAnimals": ["pig"],
+    "unlockLevel": 1,
+    "xp": 100,
+    "options": [
+      { "name": "Sunflower", "amount": 800, "image": "/img/sunflowerland/Sunflower.png" },
+      { "name": "Potato", "amount": 150, "image": "/img/sunflowerland/Potato.png" },
+      { "name": "Rhubarb", "amount": 100, "image": "/img/sunflowerland/Rhubarb.png" },
+      { "name": "Pumpkin", "amount": 60, "image": "/img/sunflowerland/Pumpkin.png" },
+      { "name": "Zucchini", "amount": 60, "image": "/img/sunflowerland/Zucchini.png" },
+      { "name": "Carrot", "amount": 25, "image": "/img/sunflowerland/Carrot.png" },
+      { "name": "Yam", "amount": 25, "image": "/img/sunflowerland/Yam.png" }
+    ]
+  },
+  "hearty_slop": {
+    "id": "hearty_slop",
+    "name": "Hearty Slop",
+    "description": "Hearty slop for growing pigs (Levels 3–5). Prepared using any single crop from the list.",
+    "category": "slop",
+    "tier": 2,
+    "targetAnimals": ["pig"],
+    "unlockLevel": 3,
+    "xp": 250,
+    "options": [
+      { "name": "Tomato", "amount": 20, "image": "/img/sunflowerland/Tomato.png" },
+      { "name": "Beetroot", "amount": 15, "image": "/img/sunflowerland/Beetroot.png" },
+      { "name": "Pepper", "amount": 15, "image": "/img/sunflowerland/Pepper.png" },
+      { "name": "Cauliflower", "amount": 8, "image": "/img/sunflowerland/Cauliflower.png" },
+      { "name": "Parsnip", "amount": 5, "image": "/img/sunflowerland/Parsnip.png" },
+      { "name": "Lemon", "amount": 4, "image": "/img/sunflowerland/Lemon.png" },
+      { "name": "Blueberry", "amount": 4, "image": "/img/sunflowerland/Blueberry.png" }
+    ]
+  },
+  "rich_slop": {
+    "id": "rich_slop",
+    "name": "Rich Slop",
+    "description": "Rich slop for mature pigs (Levels 6–9). Prepared using any single crop from the list.",
+    "category": "slop",
+    "tier": 3,
+    "targetAnimals": ["pig"],
+    "unlockLevel": 6,
+    "xp": 600,
+    "options": [
+      { "name": "Eggplant", "amount": 6, "image": "/img/sunflowerland/Eggplant.png" },
+      { "name": "Wheat", "amount": 6, "image": "/img/sunflowerland/Wheat.png" },
+      { "name": "Turnip", "amount": 6, "image": "/img/sunflowerland/Turnip.png" },
+      { "name": "Corn", "amount": 5, "image": "/img/sunflowerland/Corn.png" },
+      { "name": "Onion", "amount": 5, "image": "/img/sunflowerland/Onion.png" },
+      { "name": "Radish", "amount": 5, "image": "/img/sunflowerland/Radish.png" },
+      { "name": "Kale", "amount": 4, "image": "/img/sunflowerland/Kale.png" }
+    ]
+  },
+  "gourmet_slop": {
+    "id": "gourmet_slop",
+    "name": "Gourmet Slop",
+    "description": "Gourmet slop for adult pigs (Levels 10–15). Prepared using any single eligible ingredient from the list.",
+    "category": "slop",
+    "tier": 4,
+    "targetAnimals": ["pig"],
+    "unlockLevel": 10,
+    "xp": 1500,
+    "options": [
+      { "name": "Rice", "amount": 1, "image": "/img/sunflowerland/Rice.png" },
+      { "name": "Olive", "amount": 1, "image": "/img/sunflowerland/Olive.png" },
+      { "name": "Grape", "amount": 1, "image": "/img/sunflowerland/Grape.png" },
+      { "name": "Celestine", "amount": 1, "image": "/img/sunflowerland/Celestine.png" },
+      { "name": "Lunara", "amount": 1, "image": "/img/sunflowerland/Lunara.png" },
+      { "name": "Duskberry", "amount": 1, "image": "/img/sunflowerland/Duskberry.png" },
+      { "name": "Magic Mushroom", "amount": 1, "image": "/img/sunflowerland/123/magic_mushroom.webp" },
+      { "name": "Moray Eel", "amount": 1, "image": "/img/sunflowerland/fish/Moray Eel.png" },
+      { "name": "Napoleanfish", "amount": 1, "image": "/img/sunflowerland/fish/Napoleanfish.png" },
+      { "name": "Mahi Mahi", "amount": 1, "image": "/img/sunflowerland/fish/Mahi Mahi.png" },
+      { "name": "Tuna", "amount": 1, "image": "/img/sunflowerland/fish/Tuna.png" },
+      { "name": "Angelfish", "amount": 1, "image": "/img/sunflowerland/fish/Angelfish.png" },
+      { "name": "Zebra Turkeyfish", "amount": 1, "image": "/img/sunflowerland/fish/Zebra Turkeyfish.png" },
+      { "name": "Olive Flounder", "amount": 1, "image": "/img/sunflowerland/fish/Olive Flounder.png" },
+      { "name": "Ray", "amount": 1, "image": "/img/sunflowerland/fish/Ray.png" },
+      { "name": "Football fish", "amount": 1, "image": "/img/sunflowerland/fish/Football fish.png" },
+      { "name": "Parrotfish", "amount": 1, "image": "/img/sunflowerland/fish/Parrotfish.png" },
+      { "name": "Rock Blackfish", "amount": 1, "image": "/img/sunflowerland/fish/Rock Blackfish.png" },
+      { "name": "Red Snapper", "amount": 1, "image": "/img/sunflowerland/fish/Red Snapper.png" },
+      { "name": "Barred Knifejaw", "amount": 1, "image": "/img/sunflowerland/fish/Barred Knifejaw.png" },
+      { "name": "Muskellunge", "amount": 1, "image": "/img/sunflowerland/fish/Muskellunge.png" },
+      { "name": "Blue Marlin", "amount": 1, "image": "/img/sunflowerland/fish/Blue Marlin.png" },
+      { "name": "Oarfish", "amount": 1, "image": "/img/sunflowerland/fish/Oarfish.png" },
+      { "name": "Sunfish", "amount": 1, "image": "/img/sunflowerland/fish/Sunfish.png" },
+      { "name": "Hammerhead shark", "amount": 1, "image": "/img/sunflowerland/fish/Hammerhead shark.png" },
+      { "name": "Whale Shark", "amount": 1, "image": "/img/sunflowerland/fish/Whale Shark.png" },
+      { "name": "Surgeonfish", "amount": 1, "image": "/img/sunflowerland/fish/Surgeonfish.png" },
+      { "name": "Halibut", "amount": 1, "image": "/img/sunflowerland/fish/Halibut.png" },
+      { "name": "Saw Shark", "amount": 1, "image": "/img/sunflowerland/fish/Saw Shark.png" },
+      { "name": "White Shark", "amount": 1, "image": "/img/sunflowerland/fish/White Shark.png" },
+      { "name": "Cobia", "amount": 1, "image": "/img/sunflowerland/fish/Cobia.png" },
+      { "name": "Walleye", "amount": 1, "image": "/img/sunflowerland/fish/Walleye.png" },
+      { "name": "Weakfish", "amount": 1, "image": "/img/sunflowerland/fish/Weakfish.png" },
+      { "name": "Coelacanth", "amount": 1, "image": "/img/sunflowerland/fish/Coelacanth.png" },
+      { "name": "Blue Crab", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Blue Crab.png" },
+      { "name": "Lobster", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Lobster.png" },
+      { "name": "Hermit Crab", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Hermit Crab.png" },
+      { "name": "Shrimp", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Shrimp.png" },
+      { "name": "Mussel", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Mussel.png" },
+      { "name": "Oyster", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Oyster.png" },
+      { "name": "Anemone", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Anemone.png" },
+      { "name": "Sea Slug", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Sea Slug.png" },
+      { "name": "Sea Snail", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Sea Snail.png" },
+      { "name": "Garden Eel", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Garden Eel.png" },
+      { "name": "Sea Grapes", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Sea Grapes.png" },
+      { "name": "Octopus", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Octopus.png" },
+      { "name": "Sea Urchin", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Sea Urchin.png" },
+      { "name": "Horseshoe Crab", "amount": 1, "image": "/img/sunflowerland/fish/crabs/Horseshoe Crab.png" }
+    ]
+  }
+}

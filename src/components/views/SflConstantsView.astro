@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components"
 import SflToolLayout from "../SflToolLayout.astro"
 import blacksmithData from "../../content/data/sfl/blacksmith_tools.json"
 import jafarData from "../../content/data/sfl/jafar_shop"
@@ -214,9 +215,9 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       class="bg-[#18181b]/95 border border-white/10 rounded-xl p-2 sm:p-2.5 shadow-lg backdrop-blur-md flex flex-col justify-between gap-1.5 font-mono text-[11px] overflow-hidden"
     >
       <!-- Cabecera -->
-      <div class="flex items-center justify-between border-b border-white/5 pb-1">
+      <div class="flex items-center justify-between">
         <span class="text-[10px] font-bold text-white tracking-wider flex items-center gap-1.5 shrink-0">
-          <span class="text-xs">🪙</span>
+          <Icon name="lucide:coins" class="w-3.5 h-3.5 text-amber-400 shrink-0" />
           <span>{t("sfl.constants.dash2.sec1.title")}</span>
         </span>
       </div>
@@ -273,8 +274,8 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         </div>
       </div>
 
-      <!-- Fila 2: Gemas = [Caja valor 1] [Valor en dólares] -->
-      <div class="flex items-center justify-between gap-1 w-full min-w-0 border-t border-white/5 pt-1">
+      <!-- Fila 2: Gemas = [Caja valor 1] [Bono %] [Valor en dólares] -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0">
         <div class="flex items-center gap-1.5 shrink-0">
           <img
             src="/img/sunflowerland/123/Gem.png"
@@ -284,22 +285,43 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
           <span class="text-[10px] text-terminal-muted font-bold whitespace-nowrap">{t("sfl.constants.gems.label")}</span>
         </div>
 
-        <div class="inline-flex items-center gap-1.5 shrink-0">
+        <div class="inline-flex items-center gap-1 shrink-0">
           <input
             type="number"
             id="gemAmountInput"
             value="1"
             min="1"
             step="1"
-            class="w-12 bg-black/60 border border-white/10 rounded px-1 py-0.5 text-[9.5px] text-cyan-400 font-mono font-bold text-center focus:border-cyan-500/40 focus:bg-black/90 focus:outline-none transition-all"
-            title="Cantidad de gemas para calcular tier de precio"
+            class="w-11 bg-black/60 border border-white/10 rounded px-1 py-0.5 text-[9.5px] text-cyan-400 font-mono font-bold text-center focus:border-cyan-500/40 focus:bg-black/90 focus:outline-none transition-all"
+            title="Cantidad de gemas a cotizar"
           />
+
+          <!-- Pill de Bono % recibido por volumen -->
+          <div
+            id="gemBonusContainer"
+            class="flex items-center px-1 py-0.5 rounded text-[9px] font-mono font-bold bg-white/5 text-white/50 border border-white/10 whitespace-nowrap leading-none transition-all cursor-pointer"
+            title={t("sfl.constants.gems.bonusTooltip")}
+          >
+            <span>+</span>
+            <input
+              type="number"
+              id="gemBonusInput"
+              value="0"
+              min="0"
+              max="200"
+              step="1"
+              class="w-5 bg-transparent text-inherit font-mono font-bold text-center focus:outline-none focus:bg-black/60 rounded px-0 py-0 leading-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              title={t("sfl.constants.gems.bonusTooltip")}
+            />
+            <span>%</span>
+          </div>
+
           <span id="gemPriceDisplayText" class="text-[10px] text-cyan-400 font-bold whitespace-nowrap">$0.0103</span>
         </div>
       </div>
 
       <!-- Fila 3: FLOWER = [Caja valor 1] [Valor en dólares] -->
-      <div class="flex items-center justify-between gap-1 w-full min-w-0 border-t border-white/5 pt-1">
+      <div class="flex items-center justify-between gap-1 w-full min-w-0">
         <div class="flex items-center gap-1.5 shrink-0">
           <img
             src="/img/sunflowerland/flower.jpg"
@@ -2019,7 +2041,11 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
     }
 
     let gemAmount = 1
+    let isGemBonusCustom = false
+    let customGemBonus = null
     const gemAmountInput = document.getElementById("gemAmountInput")
+    const gemBonusInput = document.getElementById("gemBonusInput")
+    const gemBonusContainer = document.getElementById("gemBonusContainer")
     const gemPriceDisplayText = document.getElementById("gemPriceDisplayText")
 
     // 3. FLOWER
@@ -2099,19 +2125,45 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
         liveFlowerDisplay.innerText = `$${effectiveFlowerPrice.toFixed(4)} USD`
       }
 
-      // 3. Determinar precio activo de Gemas según fórmula algorítmica
-      const fiatPerGem = getGemFiatPrice(gemAmount)
+      // 3. Determinar precio activo de Gemas y bono por volumen
+      let fiatPerGem = 0.0129
+      let gemBonus = 0
+
+      if (isGemBonusCustom && customGemBonus !== null && customGemBonus >= 0) {
+        gemBonus = customGemBonus
+        fiatPerGem = 0.0129 / (1 + customGemBonus)
+      } else {
+        fiatPerGem = getGemFiatPrice(gemAmount)
+        gemBonus = (0.0129 / fiatPerGem) - 1
+      }
+
       const unitGemUsd = fiatPerGem * 0.8
       const totalGemUsd = gemAmount * unitGemUsd
       effectiveGemUsd = unitGemUsd
 
+      const bonusPercent = Math.round(gemBonus * 100)
+
+      if (gemBonusInput && document.activeElement !== gemBonusInput) {
+        gemBonusInput.value = bonusPercent.toString()
+      }
+
+      if (gemBonusContainer) {
+        if (bonusPercent > 0) {
+          gemBonusContainer.classList.add("bg-emerald-500/15", "text-emerald-400", "border-emerald-500/30")
+          gemBonusContainer.classList.remove("bg-white/5", "text-white/50", "border-white/10")
+        } else {
+          gemBonusContainer.classList.add("bg-white/5", "text-white/50", "border-white/10")
+          gemBonusContainer.classList.remove("bg-emerald-500/15", "text-emerald-400", "border-emerald-500/30")
+        }
+      }
+
       if (gemPriceDisplayText) {
         if (gemAmount === 1) {
           gemPriceDisplayText.innerText = `$${unitGemUsd.toFixed(4)}`
-          gemPriceDisplayText.title = `$${unitGemUsd.toFixed(4)} USD / gema`
+          gemPriceDisplayText.title = `$${unitGemUsd.toFixed(4)} USD/gema ($${fiatPerGem.toFixed(4)} fiat -20% cripto. Bono: +${bonusPercent}%)`
         } else {
           gemPriceDisplayText.innerText = `$${totalGemUsd >= 10 ? totalGemUsd.toFixed(2) : totalGemUsd.toFixed(4)}`
-          gemPriceDisplayText.title = `$${unitGemUsd.toFixed(4)} USD/gema (Total: $${totalGemUsd.toFixed(2)})`
+          gemPriceDisplayText.title = `$${unitGemUsd.toFixed(4)} USD/u (Total: $${totalGemUsd.toFixed(2)}. Bono: +${bonusPercent}%)`
         }
       }
 
@@ -2168,7 +2220,42 @@ const jafarSellItems = jafarSellCategories[0]?.items || []
       gemAmountInput.addEventListener("input", () => {
         const val = parseFloat(gemAmountInput.value)
         gemAmount = (!isNaN(val) && val > 0) ? val : 1
+        isGemBonusCustom = false
+        customGemBonus = null
         updateCurrencyUI()
+      })
+    }
+
+    if (gemBonusContainer) {
+      gemBonusContainer.addEventListener("click", (e) => {
+        if (e.target !== gemBonusInput && gemBonusInput) {
+          gemBonusInput.focus()
+          gemBonusInput.select()
+        }
+      })
+    }
+
+    if (gemBonusInput) {
+      gemBonusInput.addEventListener("focus", () => {
+        gemBonusInput.select()
+      })
+      gemBonusInput.addEventListener("input", () => {
+        const val = parseFloat(gemBonusInput.value)
+        if (!isNaN(val) && val >= 0) {
+          isGemBonusCustom = true
+          customGemBonus = val / 100
+        } else {
+          isGemBonusCustom = false
+          customGemBonus = null
+        }
+        updateCurrencyUI()
+      })
+      gemBonusInput.addEventListener("blur", () => {
+        if (!gemBonusInput.value || isNaN(parseFloat(gemBonusInput.value))) {
+          isGemBonusCustom = false
+          customGemBonus = null
+          updateCurrencyUI()
+        }
       })
     }
 

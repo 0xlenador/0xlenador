@@ -1,0 +1,242 @@
+{
+  "chicken": {
+    "id": "chicken",
+    "name": "Chicken",
+    "buildingId": "hen_house",
+    "icon": "/img/sunflowerland/123/Chicken.png",
+    "purchaseCost": {
+      "coins": 50
+    },
+    "maxLevel": 15,
+    "sleepDurationHours": 24,
+    "careTools": [
+      { "id": "petting_hand", "name": "Petting Hand", "xp": 10, "image": "/img/sunflowerland/tools/Petting Hand.webp" },
+      { "id": "brush", "name": "Brush", "xp": 20, "image": "/img/sunflowerland/tools/Brush.webp" },
+      { "id": "music_box", "name": "Music Box", "xp": 40, "image": "/img/sunflowerland/tools/Music Box.webp" }
+    ],
+    "acceptedFoods": [
+      "kernel_blend",
+      "hay",
+      "nutribarley",
+      "mixed_grain",
+      "omnifeed"
+    ],
+    "drops": {
+      "primary": {
+        "id": "egg",
+        "name": "Egg",
+        "image": "/img/sunflowerland/Egg.png",
+        "unlockLevel": 1,
+        "yieldTiers": [
+          { "minLevel": 1, "maxLevel": 5, "amount": 1 },
+          { "minLevel": 6, "maxLevel": 10, "amount": 2 },
+          { "minLevel": 11, "maxLevel": 15, "amount": 3 }
+        ]
+      },
+      "secondary": {
+        "id": "feather",
+        "name": "Feather",
+        "image": "/img/sunflowerland/Feather.png",
+        "unlockLevel": 3,
+        "amount": 1
+      }
+    },
+    "levels": [
+      { "level": 1, "xpRequired": 100, "cumulativeXp": 100 },
+      { "level": 2, "xpRequired": 150, "cumulativeXp": 250 },
+      { "level": 3, "xpRequired": 250, "cumulativeXp": 500 },
+      { "level": 4, "xpRequired": 350, "cumulativeXp": 850 },
+      { "level": 5, "xpRequired": 450, "cumulativeXp": 1300 },
+      { "level": 6, "xpRequired": 600, "cumulativeXp": 1900 },
+      { "level": 7, "xpRequired": 800, "cumulativeXp": 2700 },
+      { "level": 8, "xpRequired": 1000, "cumulativeXp": 3700 },
+      { "level": 9, "xpRequired": 1300, "cumulativeXp": 5000 },
+      { "level": 10, "xpRequired": 1500, "cumulativeXp": 6500 },
+      { "level": 11, "xpRequired": 2000, "cumulativeXp": 8500 },
+      { "level": 12, "xpRequired": 2500, "cumulativeXp": 11000 },
+      { "level": 13, "xpRequired": 3000, "cumulativeXp": 14000 },
+      { "level": 14, "xpRequired": 4000, "cumulativeXp": 18000 },
+      { "level": 15, "xpRequired": 5000, "cumulativeXp": 23000 }
+    ]
+  },
+  "cow": {
+    "id": "cow",
+    "name": "Cow",
+    "buildingId": "barn",
+    "icon": "/img/sunflowerland/powerups/baby_cow.webp",
+    "purchaseCost": {
+      "coins": 100
+    },
+    "maxLevel": 15,
+    "sleepDurationHours": 24,
+    "careTools": [
+      { "id": "petting_hand", "name": "Petting Hand", "xp": 10, "image": "/img/sunflowerland/tools/Petting Hand.webp" },
+      { "id": "brush", "name": "Brush", "xp": 20, "image": "/img/sunflowerland/tools/Brush.webp" },
+      { "id": "music_box", "name": "Music Box", "xp": 40, "image": "/img/sunflowerland/tools/Music Box.webp" }
+    ],
+    "acceptedFoods": [
+      "kernel_blend",
+      "hay",
+      "nutribarley",
+      "mixed_grain",
+      "omnifeed"
+    ],
+    "drops": {
+      "primary": {
+        "id": "milk",
+        "name": "Milk",
+        "image": "/img/sunflowerland/Milk.png",
+        "unlockLevel": 1,
+        "yieldTiers": [
+          { "minLevel": 1, "maxLevel": 5, "amount": 1 },
+          { "minLevel": 6, "maxLevel": 10, "amount": 2 },
+          { "minLevel": 11, "maxLevel": 15, "amount": 3 }
+        ]
+      },
+      "secondary": {
+        "id": "leather",
+        "name": "Leather",
+        "image": "/img/sunflowerland/Leather.png",
+        "unlockLevel": 5,
+        "amount": 1
+      }
+    },
+    "levels": [
+      { "level": 1, "xpRequired": 100, "cumulativeXp": 100 },
+      { "level": 2, "xpRequired": 150, "cumulativeXp": 250 },
+      { "level": 3, "xpRequired": 250, "cumulativeXp": 500 },
+      { "level": 4, "xpRequired": 350, "cumulativeXp": 850 },
+      { "level": 5, "xpRequired": 450, "cumulativeXp": 1300 },
+      { "level": 6, "xpRequired": 600, "cumulativeXp": 1900 },
+      { "level": 7, "xpRequired": 800, "cumulativeXp": 2700 },
+      { "level": 8, "xpRequired": 1000, "cumulativeXp": 3700 },
+      { "level": 9, "xpRequired": 1300, "cumulativeXp": 5000 },
+      { "level": 10, "xpRequired": 1500, "cumulativeXp": 6500 },
+      { "level": 11, "xpRequired": 2000, "cumulativeXp": 8500 },
+      { "level": 12, "xpRequired": 2500, "cumulativeXp": 11000 },
+      { "level": 13, "xpRequired": 3000, "cumulativeXp": 14000 },
+      { "level": 14, "xpRequired": 4000, "cumulativeXp": 18000 },
+      { "level": 15, "xpRequired": 5000, "cumulativeXp": 23000 }
+    ]
+  },
+  "sheep": {
+    "id": "sheep",
+    "name": "Sheep",
+    "buildingId": "barn",
+    "icon": "/img/sunflowerland/cosmetics/collectibles/baby_sheep.webp",
+    "purchaseCost": {
+      "coins": 100
+    },
+    "maxLevel": 15,
+    "sleepDurationHours": 24,
+    "careTools": [
+      { "id": "petting_hand", "name": "Petting Hand", "xp": 10, "image": "/img/sunflowerland/tools/Petting Hand.webp" },
+      { "id": "brush", "name": "Brush", "xp": 20, "image": "/img/sunflowerland/tools/Brush.webp" },
+      { "id": "music_box", "name": "Music Box", "xp": 40, "image": "/img/sunflowerland/tools/Music Box.webp" }
+    ],
+    "acceptedFoods": [
+      "kernel_blend",
+      "hay",
+      "nutribarley",
+      "mixed_grain",
+      "omnifeed"
+    ],
+    "drops": {
+      "primary": {
+        "id": "wool",
+        "name": "Wool",
+        "image": "/img/sunflowerland/Wool.png",
+        "unlockLevel": 1,
+        "yieldTiers": [
+          { "minLevel": 1, "maxLevel": 5, "amount": 1 },
+          { "minLevel": 6, "maxLevel": 10, "amount": 2 },
+          { "minLevel": 11, "maxLevel": 15, "amount": 3 }
+        ]
+      },
+      "secondary": {
+        "id": "merino_wool",
+        "name": "Merino Wool",
+        "image": "/img/sunflowerland/Merino Wool.png",
+        "unlockLevel": 5,
+        "amount": 1
+      }
+    },
+    "levels": [
+      { "level": 1, "xpRequired": 100, "cumulativeXp": 100 },
+      { "level": 2, "xpRequired": 150, "cumulativeXp": 250 },
+      { "level": 3, "xpRequired": 250, "cumulativeXp": 500 },
+      { "level": 4, "xpRequired": 350, "cumulativeXp": 850 },
+      { "level": 5, "xpRequired": 450, "cumulativeXp": 1300 },
+      { "level": 6, "xpRequired": 600, "cumulativeXp": 1900 },
+      { "level": 7, "xpRequired": 800, "cumulativeXp": 2700 },
+      { "level": 8, "xpRequired": 1000, "cumulativeXp": 3700 },
+      { "level": 9, "xpRequired": 1300, "cumulativeXp": 5000 },
+      { "level": 10, "xpRequired": 1500, "cumulativeXp": 6500 },
+      { "level": 11, "xpRequired": 2000, "cumulativeXp": 8500 },
+      { "level": 12, "xpRequired": 2500, "cumulativeXp": 11000 },
+      { "level": 13, "xpRequired": 3000, "cumulativeXp": 14000 },
+      { "level": 14, "xpRequired": 4000, "cumulativeXp": 18000 },
+      { "level": 15, "xpRequired": 5000, "cumulativeXp": 23000 }
+    ]
+  },
+  "pig": {
+    "id": "pig",
+    "name": "Pig",
+    "buildingId": "pigpen",
+    "icon": "/img/sunflowerland/123/pig.webp",
+    "purchaseCost": {
+      "coins": 100
+    },
+    "maxLevel": 15,
+    "sleepDurationHours": 24,
+    "careTools": [
+      { "id": "petting_hand", "name": "Petting Hand", "xp": 10, "image": "/img/sunflowerland/tools/Petting Hand.webp" },
+      { "id": "brush", "name": "Brush", "xp": 20, "image": "/img/sunflowerland/tools/Brush.webp" },
+      { "id": "music_box", "name": "Music Box", "xp": 40, "image": "/img/sunflowerland/tools/Music Box.webp" }
+    ],
+    "acceptedFoods": [
+      "basic_slop",
+      "hearty_slop",
+      "rich_slop",
+      "gourmet_slop"
+    ],
+    "drops": {
+      "primary": {
+        "id": "mud",
+        "name": "Mud",
+        "image": "/img/sunflowerland/123/mud.webp",
+        "unlockLevel": 1,
+        "yieldTiers": [
+          { "minLevel": 1, "maxLevel": 5, "amount": 1 },
+          { "minLevel": 6, "maxLevel": 10, "amount": 2 },
+          { "minLevel": 11, "maxLevel": 15, "amount": 3 }
+        ]
+      },
+      "secondary": {
+        "id": "truffle",
+        "name": "Truffle",
+        "image": "/img/sunflowerland/truffle.webp",
+        "unlockLevel": 5,
+        "amount": 1
+      }
+    },
+    "levels": [
+      { "level": 1, "xpRequired": 100, "cumulativeXp": 100 },
+      { "level": 2, "xpRequired": 150, "cumulativeXp": 250 },
+      { "level": 3, "xpRequired": 250, "cumulativeXp": 500 },
+      { "level": 4, "xpRequired": 350, "cumulativeXp": 850 },
+      { "level": 5, "xpRequired": 450, "cumulativeXp": 1300 },
+      { "level": 6, "xpRequired": 600, "cumulativeXp": 1900 },
+      { "level": 7, "xpRequired": 800, "cumulativeXp": 2700 },
+      { "level": 8, "xpRequired": 1000, "cumulativeXp": 3700 },
+      { "level": 9, "xpRequired": 1300, "cumulativeXp": 5000 },
+      { "level": 10, "xpRequired": 1500, "cumulativeXp": 6500 },
+      { "level": 11, "xpRequired": 2000, "cumulativeXp": 8500 },
+      { "level": 12, "xpRequired": 2500, "cumulativeXp": 11000 },
+      { "level": 13, "xpRequired": 3000, "cumulativeXp": 14000 },
+      { "level": 14, "xpRequired": 4000, "cumulativeXp": 18000 },
+      { "level": 15, "xpRequired": 5000, "cumulativeXp": 23000 }
+    ]
+  }
+}
+
