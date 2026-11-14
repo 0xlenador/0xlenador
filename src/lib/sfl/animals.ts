@@ -27,12 +27,20 @@ export interface IngredientCost {
   image: string
 }
 
+export interface LevelBounties {
+  totalWeekly: number
+  seasonalTickets: number
+  coins: number
+  gems: number
+}
+
 export interface BuildingLevel {
   level: number
   name: string
   capacity: number
   coins: number
   ingredients: IngredientCost[]
+  bounties?: LevelBounties
 }
 
 export interface AnimalBuilding {
