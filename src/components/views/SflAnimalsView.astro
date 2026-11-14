@@ -1,0 +1,1038 @@
+---
+// ============================================================
+// src/components/views/SflAnimalsView.astro
+// Vista pura para la herramienta de animales de Sunflower Land.
+// Fuente única de verdad consumida por /sfl-animales/ y /en/sfl-animals/.
+// El idioma se detecta dinámicamente desde la URL vía getLangFromUrl.
+// ============================================================
+import { getEntry } from "astro:content"
+import { getLangFromUrl, useTranslations } from "../../i18n/utils"
+import SflToolLayout from "../SflToolLayout.astro"
+import FaqAccordion from "../FaqAccordion.astro"
+
+import animalsDataRaw from "../../content/data/sfl/animals/animals.json"
+import buildingsDataRaw from "../../content/data/sfl/animals/buildings.json"
+import consumablesDataRaw from "../../content/data/sfl/animals/consumables.json"
+
+const sflPowerUpsEntry = await getEntry("sfl", "powerups")
+const sflSkillsEntry = await getEntry("sfl", "skills")
+
+const sflPowerUpsData = sflPowerUpsEntry?.data?.power_ups || { collectibles: {}, wearables: {} }
+const sflAnimalsSkills = sflSkillsEntry?.data?.Animals || {}
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// ---------------------------------------------------------------------------
+// Filtrado de PowerUps de Animales (Collectibles y Wearables)
+// ---------------------------------------------------------------------------
+interface AnimalBuffItem {
+  id: string
+  name: string
+  boost: string
+  category: "collectibles" | "wearables"
+  isWearable: boolean
+  image: string
+  effectType: string
+}
+
+const getEffectType = (desc: string) => {
+  if (!desc) return "other"
+  const d = desc.toLowerCase()
+  const effects: string[] = []
+  if (
+    d.includes("yield") ||
+    d.includes("produce") ||
+    d.includes("egg") ||
+    d.includes("milk") ||
+    d.includes("wool") ||
+    d.includes("feather") ||
+    d.includes("leather") ||
+    d.includes("merino") ||
+    d.includes("truffle") ||
+    d.includes("mud")
+  ) {
+    effects.push("drops")
+  }
+  if (d.includes("sleep") || d.includes("time") || d.includes("wake") || d.includes("speed")) {
+    effects.push("time")
+  }
+  if (
+    d.includes("feed") ||
+    d.includes("cost") ||
+    d.includes("free") ||
+    d.includes("grain") ||
+    d.includes("slop") ||
+    d.includes("xp")
+  ) {
+    effects.push("feed")
+  }
+  return effects.length > 0 ? effects.join(" ") : "other"
+}
+
+const isAnimalBuff = (name: string, boost: string) => {
+  const n = (name || "").toLowerCase()
+  const b = (boost || "").toLowerCase()
+  const full = `${n} ${b}`
+
+  if (
+    n.includes("eggplant") ||
+    b.includes("eggplant") ||
+    n.includes("banana") ||
+    n.includes("oil") ||
+    n.includes("paw aura") ||
+    n.includes("victoria's apron")
+  ) {
+    return false
+  }
+
+  return (
+    full.includes("animal") ||
+    full.includes("chicken") ||
+    full.includes("sheep") ||
+    full.includes("cow") ||
+    full.includes("pig") ||
+    full.includes("egg") ||
+    full.includes("wool") ||
+    full.includes("milk") ||
+    full.includes("feather") ||
+    full.includes("leather") ||
+    full.includes("merino") ||
+    full.includes("mud") ||
+    full.includes("truffle") ||
+    full.includes("barn") ||
+    full.includes("hen house") ||
+    full.includes("bale")
+  )
+}
+
+const animalBuffs: AnimalBuffItem[] = []
+
+for (const cat of ["collectibles", "wearables"] as const) {
+  const group = sflPowerUpsData[cat] || {}
+  for (const [id, item] of Object.entries(group) as [string, any][]) {
+    if (isAnimalBuff(item.name, item.boost)) {
+      animalBuffs.push({
+        id,
+        name: item.name,
+        boost: item.boost,
+        category: cat,
+        isWearable: cat === "wearables",
+        image: item.image,
+        effectType: getEffectType(item.boost),
+      })
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Orden estricto solicitado: Pollos (chicken), Ovejas (sheep), Vacas (cow), Cerdos (pig)
+// ---------------------------------------------------------------------------
+const orderedAnimalIds = ["chicken", "sheep", "cow", "pig"] as const
+
+interface AnimalLevelDisplay {
+  level: number
+  xpRequired: number
+  cumulativeXp: number
+  primaryAmount: number
+  secondaryAmount: number
+  milestoneKey: string
+}
+
+interface AnimalMetaDisplay {
+  id: (typeof orderedAnimalIds)[number]
+  name: string
+  tabLabel: string
+  icon: string
+  buildingName: string
+  buildingIcon: string
+  costCoins: number
+  sleepHours: number
+  primaryDrop: {
+    name: string
+    image: string
+  }
+  secondaryDrop?: {
+    name: string
+    image: string
+    unlockLevel: number
+  }
+  careTools: Array<{ id: string; name: string; xp: number; image: string }>
+  acceptedFoods: Array<{ name: string; image: string; xp?: number }>
+  levels: AnimalLevelDisplay[]
+}
+
+const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) => {
+  const rawAnimal = (animalsDataRaw as any)[animalId]
+  const rawBuilding = (buildingsDataRaw as any)[rawAnimal.buildingId]
+
+  // Mapeo de alimentos con imágenes y XP de consumablesDataRaw
+  const foods = rawAnimal.acceptedFoods.map((foodId: string) => {
+    const consumable = (consumablesDataRaw as any)[foodId]
+    if (consumable) {
+      const firstIngImg = consumable.craftingIngredients?.[0]?.image || consumable.image || "/img/sunflowerland/Wheat.png"
+      return {
+        name: consumable.name,
+        image: consumable.image || firstIngImg,
+        xp: consumable.xp,
+      }
+    }
+    return {
+      name: foodId.replace(/_/g, " "),
+      image: `/img/sunflowerland/${foodId.charAt(0).toUpperCase() + foodId.slice(1)}.png`,
+      xp: undefined,
+    }
+  })
+
+  // Generación de progresión de 15 niveles
+  const levels: AnimalLevelDisplay[] = rawAnimal.levels.map((lvlObj: any) => {
+    const lvl = lvlObj.level
+    let primaryAmount = 1
+    if (lvl >= 6 && lvl <= 10) primaryAmount = 2
+    if (lvl >= 11) primaryAmount = 3
+
+    const secUnlock = rawAnimal.drops.secondary?.unlockLevel || 99
+    const secondaryAmount = lvl >= secUnlock ? 1 : 0
+
+    let milestoneKey = "sfl.animals.milestone.regular"
+    if (lvl === 1) milestoneKey = "sfl.animals.milestone.lvl1"
+    else if (lvl === 3 && animalId === "chicken") milestoneKey = "sfl.animals.milestone.lvl3Chicken"
+    else if (lvl === secUnlock) milestoneKey = "sfl.animals.milestone.lvl5Secondary"
+    else if (lvl === 6) milestoneKey = "sfl.animals.milestone.lvl6Tier2"
+    else if (lvl === 10) milestoneKey = "sfl.animals.milestone.lvl10Tier2Max"
+    else if (lvl === 11) milestoneKey = "sfl.animals.milestone.lvl11Tier3"
+    else if (lvl === 15) milestoneKey = "sfl.animals.milestone.lvl15Max"
+
+    return {
+      level: lvl,
+      xpRequired: lvlObj.xpRequired,
+      cumulativeXp: lvlObj.cumulativeXp,
+      primaryAmount,
+      secondaryAmount,
+      milestoneKey,
+    }
+  })
+
+  const tabLabels: Record<string, string> = {
+    chicken: t("sfl.animals.tabs.chickens"),
+    sheep: t("sfl.animals.tabs.sheep"),
+    cow: t("sfl.animals.tabs.cows"),
+    pig: t("sfl.animals.tabs.pigs"),
+  }
+
+  return {
+    id: animalId,
+    name: rawAnimal.name,
+    tabLabel: tabLabels[animalId] || rawAnimal.name,
+    icon: rawAnimal.icon,
+    buildingName: rawBuilding?.name || rawAnimal.buildingId,
+    buildingIcon: rawBuilding?.icon || rawAnimal.icon,
+    costCoins: rawAnimal.purchaseCost.coins,
+    sleepHours: rawAnimal.sleepDurationHours,
+    primaryDrop: {
+      name: rawAnimal.drops.primary.name,
+      image: rawAnimal.drops.primary.image,
+    },
+    secondaryDrop: rawAnimal.drops.secondary
+      ? {
+          name: rawAnimal.drops.secondary.name,
+          image: rawAnimal.drops.secondary.image,
+          unlockLevel: rawAnimal.drops.secondary.unlockLevel,
+        }
+      : undefined,
+    careTools: rawAnimal.careTools,
+    acceptedFoods: foods,
+    levels,
+  }
+})
+
+// FAQ Items
+const faqItems = [
+  { pregunta: t("sfl.animals.faq.q1"), respuesta: t("sfl.animals.faq.a1") },
+  { pregunta: t("sfl.animals.faq.q2"), respuesta: t("sfl.animals.faq.a2") },
+  { pregunta: t("sfl.animals.faq.q3"), respuesta: t("sfl.animals.faq.a3") },
+  { pregunta: t("sfl.animals.faq.q4"), respuesta: t("sfl.animals.faq.a4") },
+]
+---
+
+<SflToolLayout activeTab="animales">
+  <!-- Encabezado Principal -->
+  <div class="mb-5 relative z-10 text-center sm:text-left">
+    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">
+      {t("sfl.animals.heading")}
+      <span class="text-emerald-500"> {t("sfl.animals.heading.accent")}</span>
+    </h1>
+    <p class="text-terminal-secondary text-sm leading-relaxed max-w-3xl">
+      {t("sfl.animals.intro")}
+    </p>
+  </div>
+
+  <!-- Dashboard Inicial Minimalista (Vacío / En fase de preparación) -->
+  <div class="w-full mb-8 relative z-10 flex flex-col gap-4">
+    <!-- Fila 1: Tarjetas de Dashboard -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
+      <!-- Bloque Izquierdo: HERO DASHBOARD VACÍO (md:col-span-7 xl:col-span-8) -->
+      <div
+        class="md:col-span-7 xl:col-span-8 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-20 overflow-hidden"
+      >
+        <!-- Resplandor verde esmeralda difuminado suave -->
+        <div class="absolute left-1/4 top-1/2 -translate-y-1/2 w-64 h-32 bg-emerald-500/15 blur-3xl rounded-full pointer-events-none -z-0"></div>
+
+        <div class="relative z-10">
+          <!-- Header sutil -->
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block">
+              {t("sfl.animals.dash.title")}
+            </span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              {t("sfl.animals.dash.emptyNotice")}
+            </span>
+          </div>
+
+          <!-- Hero Content -->
+          <div class="flex items-center gap-5 my-3">
+            <div class="relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-white/5 border border-white/10 rounded-2xl p-2.5 flex items-center justify-center shadow-inner">
+              <img
+                src="/img/sunflowerland/123/Chicken.png"
+                alt="Sunflower Land Animals"
+                class="w-full h-full object-contain drop-shadow-md animate-pulse"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="flex flex-col min-w-0">
+              <h2 class="text-lg sm:text-xl font-bold text-white tracking-wide truncate">
+                {t("sfl.animals.dash.subtitle")}
+              </h2>
+              <p class="text-xs sm:text-sm text-terminal-secondary mt-1 max-w-xl leading-relaxed">
+                {t("sfl.animals.dash.emptyDesc")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer del Bloque Izquierdo -->
+        <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/40 relative z-10">
+          <span>0xLeñador Engine · SFL v2.0</span>
+          <span class="text-emerald-400/80">4 / 4 Especies</span>
+        </div>
+      </div>
+
+      <!-- Bloque Derecho: ESTADÍSTICAS GLOBALES (md:col-span-5 xl:col-span-4) -->
+      <div
+        class="md:col-span-5 xl:col-span-4 bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-20"
+      >
+        <div>
+          <!-- Header sutil -->
+          <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-4">
+            Constantes de Granja
+          </span>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- Stat 1 -->
+            <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between">
+              <span class="text-[9px] font-mono text-white/40 uppercase tracking-wider">{t("sfl.animals.dash.statAnimals")}</span>
+              <span class="text-xl font-mono font-black text-emerald-400 mt-1">4</span>
+            </div>
+
+            <!-- Stat 2 -->
+            <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between">
+              <span class="text-[9px] font-mono text-white/40 uppercase tracking-wider">{t("sfl.animals.dash.statMaxLevel")}</span>
+              <span class="text-xl font-mono font-black text-white mt-1">Lvl 15</span>
+            </div>
+
+            <!-- Stat 3 -->
+            <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between col-span-2">
+              <span class="text-[9px] font-mono text-white/40 uppercase tracking-wider">{t("sfl.animals.dash.statCycle")}</span>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-base font-mono font-bold text-emerald-400">{t("sfl.animals.dash.statCycleVal")}</span>
+                <span class="text-[10px] font-mono text-white/40">Base sin boosts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-white/40">
+          <span>Herramientas: 3</span>
+          <span class="text-white/60">Afecto diario</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 2: Franja Horizontal de Indicadores Rápidos -->
+    <div class="w-full bg-[#18181b]/95 border border-white/10 rounded-2xl p-3 sm:px-4 sm:py-3.5 shadow-xl backdrop-blur-md">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/5 items-center">
+        <!-- 1. Monedas -->
+        <div class="flex items-center gap-3 sm:justify-center">
+          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+            <img src="/img/sunflowerland/123/coins.png" class="w-full h-full object-contain" alt="Coins" />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">{t("sfl.animals.dash.quickCoins")}</span>
+            <span class="text-xs font-mono font-bold text-emerald-400">1 : 320</span>
+          </div>
+        </div>
+
+        <!-- 2. Alimento de Granos -->
+        <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0">
+          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+            <img src="/img/sunflowerland/Wheat.png" class="w-full h-full object-contain" alt="Wheat" />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">{t("sfl.animals.dash.quickGrain")}</span>
+            <span class="text-xs font-mono font-bold text-white">100 - 350 XP</span>
+          </div>
+        </div>
+
+        <!-- 3. Slops / Pocilga -->
+        <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0">
+          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+            <img src="/img/sunflowerland/123/mud.webp" class="w-full h-full object-contain" alt="Mud" />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">{t("sfl.animals.dash.quickSlop")}</span>
+            <span class="text-xs font-mono font-bold text-white">4 Variantes</span>
+          </div>
+        </div>
+
+        <!-- 4. Herramientas de afecto -->
+        <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0">
+          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+            <img src="/img/sunflowerland/tools/Petting Hand.webp" class="w-full h-full object-contain" alt="Petting" />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">Cuidado Diario</span>
+            <span class="text-xs font-mono font-bold text-emerald-400">+70 XP / día</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boosts (PowerUps & Skills) -->
+  <details class="group w-full mb-8 bg-white/[0.02] border border-white/5 rounded-2xl" open>
+    <summary
+      class="flex flex-col xl:flex-row xl:items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors rounded-2xl list-none gap-4"
+    >
+      <div class="flex items-center gap-2 shrink-0">
+        <svg
+          class="w-2.5 h-2.5 text-emerald-500 transition-transform duration-200 group-open:rotate-90 shrink-0"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M8 5v14l11-7z"></path>
+        </svg>
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider inline-flex items-center">
+          {t("sfl.animals.boosts.title")}
+        </h2>
+      </div>
+
+      <div class="text-[10px] text-white/40 font-mono group-open:hidden uppercase tracking-widest border border-white/10 px-2 py-1 rounded-md xl:ml-auto w-max">
+        {t("sfl.animals.boosts.tapToExpand")}
+      </div>
+
+      <!-- Filtros Desktop -->
+      <div
+        class="hidden group-open:xl:flex overflow-x-auto no-scrollbar w-full xl:w-auto pb-2 xl:pb-0 -mx-4 px-4 xl:mx-0 xl:px-0"
+        onclick="event.preventDefault();"
+      >
+        <div class="flex items-center gap-3 w-max shrink-0 mx-auto xl:mx-0 xl:ml-auto">
+          <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
+            <button
+              class="animal-filter-boost-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+              data-filter="all"
+            >
+              {t("sfl.animals.boosts.filterAll")}
+            </button>
+            <button
+              class="animal-filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+              data-filter="drops"
+            >
+              {t("sfl.animals.boosts.filterDrops")}
+            </button>
+            <button
+              class="animal-filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+              data-filter="time"
+            >
+              {t("sfl.animals.boosts.filterTime")}
+            </button>
+            <button
+              class="animal-filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+              data-filter="feed"
+            >
+              {t("sfl.animals.boosts.filterFeed")}
+            </button>
+          </div>
+          <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
+            <button
+              class="animal-view-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+              data-action="detailed"
+            >
+              {t("sfl.animals.boosts.viewDetailed")}
+            </button>
+            <button
+              class="animal-view-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+              data-action="compact"
+            >
+              {t("sfl.animals.boosts.viewCompact")}
+            </button>
+          </div>
+        </div>
+      </div>
+    </summary>
+
+    <div class="p-4 pt-0 relative">
+      <!-- Filtros Mobile -->
+      <div class="flex items-center justify-end mb-4 xl:hidden">
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+          <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
+            <button class="animal-filter-boost-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="all">{t("sfl.animals.boosts.filterAll")}</button>
+            <button class="animal-filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="drops">{t("sfl.animals.boosts.filterDrops")}</button>
+            <button class="animal-filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="time">{t("sfl.animals.boosts.filterTime")}</button>
+            <button class="animal-filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="feed">{t("sfl.animals.boosts.filterFeed")}</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-start w-full mt-2">
+        <!-- Subgrupo: PowerUps & Coleccionables -->
+        <details class="group/sub w-full mb-1 open:mb-6" open>
+          <summary
+            class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-emerald-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden"
+          >
+            <svg
+              class="w-2.5 h-2.5 mr-2 text-emerald-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+            {t("sfl.animals.boosts.powerupsTitle")} ({animalBuffs.length})
+          </summary>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+            {
+              animalBuffs.map((buff) => {
+                const imgPath = buff.isWearable
+                  ? `/img/sunflowerland/powerups/wearables/${buff.image}`
+                  : `/img/sunflowerland/powerups/${buff.image}`
+
+                return (
+                  <label
+                    data-effect={buff.effectType}
+                    class="animal-buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all"
+                  >
+                    <input
+                      type="checkbox"
+                      class="hidden animal-buff-checkbox"
+                      data-buff-id={buff.id}
+                    />
+                    <img
+                      src={imgPath}
+                      class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
+                      onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';"
+                      alt={buff.name}
+                      title={buff.boost}
+                      width="24"
+                      height="24"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="flex flex-col normal-view min-w-0">
+                      <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors truncate">
+                        {buff.name}
+                      </span>
+                      <span class="text-[9px] text-terminal-muted leading-tight line-clamp-2" title={buff.boost}>
+                        {buff.boost}
+                      </span>
+                    </div>
+                    <div class="hidden compact-view w-full">
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-emerald-400 transition-colors" title={buff.boost}>
+                        {buff.name}
+                      </span>
+                    </div>
+                  </label>
+                )
+              })
+            }
+          </div>
+        </details>
+
+        <!-- Subgrupo: Habilidades Bumpkin (Skills) -->
+        <details class="group/sub w-full mb-1 open:mb-6" open>
+          <summary
+            class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-blue-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden"
+          >
+            <svg
+              class="w-2.5 h-2.5 mr-2 text-blue-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+            {t("sfl.animals.boosts.skillsTitle")} ({Object.keys(sflAnimalsSkills).length})
+          </summary>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+            {
+              Object.entries(sflAnimalsSkills).map(([skillName, skillData]: [string, any]) => {
+                const effectType = getEffectType(skillData.description)
+                return (
+                  <div
+                    data-effect={effectType}
+                    class="animal-skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"
+                    data-skill-id={skillName}
+                  >
+                    <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                      <img
+                        src={skillData.image}
+                        class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
+                        onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';"
+                        alt={skillName}
+                        title={skillData.description}
+                        width="24"
+                        height="24"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div class="flex flex-col normal-view min-w-0">
+                        <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
+                          {skillName}
+                        </span>
+                        <span class="text-[9px] text-terminal-muted leading-tight line-clamp-2" title={skillData.description}>
+                          {skillData.description}
+                        </span>
+                      </div>
+                      <div class="hidden compact-view w-full mr-2">
+                        <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors" title={skillData.description}>
+                          {skillName}
+                        </span>
+                      </div>
+                    </div>
+
+                    {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
+                      <div class="flex items-center gap-2 mt-auto pt-1.5 border-t border-white/10" onclick="event.stopPropagation()">
+                        {Object.keys(skillData.cost_by_rank).map((_, idx) => (
+                          <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+                            <input
+                              type="checkbox"
+                              value={idx + 1}
+                              class="animal-skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500/50"
+                              data-skill-id={skillName}
+                              data-rank={idx + 1}
+                            />
+                            <span class="text-[8px] font-mono font-bold text-white/50">R{idx + 1}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })
+            }
+          </div>
+        </details>
+      </div>
+    </div>
+  </details>
+
+  <!-- Controles y Pestañas de Animales -->
+  <!-- ORDEN ESTRICTO: Pollos (chicken), Ovejas (sheep), Vacas (cow), Cerdos (pig) -->
+  <div class="sticky top-0 z-40 bg-[#06080A]/95 backdrop-blur-md py-4 border-b border-white/5 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:border-0 sm:static sm:py-0">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
+      <!-- Pestañas ordenadas -->
+      <div class="flex gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar snap-x" id="animalTabsContainer">
+        {
+          animalsDisplayList.map((animal, idx) => {
+            const isFirst = idx === 0
+            return (
+              <button
+                type="button"
+                class:list={[
+                  "animal-tab-btn snap-start px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap shrink-0 flex items-center gap-2 cursor-pointer",
+                  isFirst
+                    ? "active bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-sm"
+                    : "bg-white/5 text-white/50 border border-white/10 hover:bg-white/10 hover:text-white",
+                ]}
+                data-animal-id={animal.id}
+              >
+                <img
+                  src={animal.icon}
+                  alt={animal.tabLabel}
+                  class="w-5 h-5 object-contain drop-shadow"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span>{animal.tabLabel}</span>
+              </button>
+            )
+          })
+        }
+      </div>
+
+      <!-- Buscador rápido por nivel/hito -->
+      <div class="relative w-full sm:w-72 shrink-0 md:ml-auto">
+        <input
+          type="text"
+          id="animalSearchInput"
+          placeholder={t("sfl.animals.search.placeholder")}
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all font-mono"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedores de cada animal con su tarjeta de resumen y su tabla de niveles -->
+  <div id="animalsViewsWrapper" class="relative z-10">
+    {
+      animalsDisplayList.map((animal, idx) => {
+        const isFirst = idx === 0
+        return (
+          <div
+            id={`animal-panel-${animal.id}`}
+            class:list={["animal-panel flex flex-col gap-6", isFirst ? "" : "hidden"]}
+            data-animal-id={animal.id}
+          >
+            <!-- Tarjeta de Resumen del Animal Activo -->
+            <div class="bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md">
+              <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <!-- Info Principal del Animal -->
+                <div class="flex items-center gap-4">
+                  <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center justify-center shrink-0">
+                    <img
+                      src={animal.icon}
+                      alt={animal.name}
+                      class="w-full h-full object-contain drop-shadow-md"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <h2 class="text-2xl font-black text-white tracking-tight">{animal.tabLabel}</h2>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-white/70 border border-white/10">
+                        {t("sfl.animals.card.building")}: {animal.buildingName}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-4 mt-2 text-xs font-mono text-white/60">
+                      <span>{t("sfl.animals.card.cost")}: <strong class="text-emerald-400">{animal.costCoins} Monedas</strong></span>
+                      <span>{t("sfl.animals.card.sleep")}: <strong class="text-white">{animal.sleepHours}h</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Drops y Alimentos -->
+                <div class="flex items-center gap-6 flex-wrap sm:flex-nowrap border-t lg:border-t-0 pt-4 lg:pt-0 border-white/5 w-full lg:w-auto">
+                  <!-- Drop Primario -->
+                  <div class="flex flex-col">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1">
+                      {t("sfl.animals.card.primaryDrop")}
+                    </span>
+                    <div class="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl px-3 py-1.5">
+                      <img src={animal.primaryDrop.image} alt={animal.primaryDrop.name} class="w-6 h-6 object-contain" />
+                      <span class="text-xs font-bold text-white">{animal.primaryDrop.name}</span>
+                    </div>
+                  </div>
+
+                  <!-- Drop Secundario -->
+                  {animal.secondaryDrop && (
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1">
+                        {t("sfl.animals.card.secondaryDrop")}
+                      </span>
+                      <div class="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl px-3 py-1.5">
+                        <img src={animal.secondaryDrop.image} alt={animal.secondaryDrop.name} class="w-6 h-6 object-contain" />
+                        <div class="flex flex-col">
+                          <span class="text-xs font-bold text-white">{animal.secondaryDrop.name}</span>
+                          <span class="text-[9px] font-mono text-emerald-400">Lvl {animal.secondaryDrop.unlockLevel}+</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <!-- Herramientas de Cuidado -->
+                  <div class="flex flex-col">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1">
+                      {t("sfl.animals.card.tools")}
+                    </span>
+                    <div class="flex items-center gap-1.5 bg-black/40 border border-white/5 rounded-xl px-2.5 py-1.5">
+                      {animal.careTools.map((tool) => (
+                        <img
+                          src={tool.image}
+                          alt={tool.name}
+                          title={`${tool.name} (+${tool.xp} XP)`}
+                          class="w-6 h-6 object-contain drop-shadow hover:scale-110 transition-transform cursor-help"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Niveles del Animal (Desktop Header + Rows) -->
+            <div class="w-full">
+              <!-- Header Tabla Desktop -->
+              <div class="hidden lg:grid grid-cols-[12%_18%_18%_18%_16%_18%] p-3 bg-white/[0.02] border border-white/5 rounded-2xl mb-3 items-center text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
+                <div class="px-3">{t("sfl.animals.table.colLevel")}</div>
+                <div class="px-3">{t("sfl.animals.table.colXpReq")}</div>
+                <div class="px-3">{t("sfl.animals.table.colXpTotal")}</div>
+                <div class="px-3">{t("sfl.animals.table.colPrimary")}</div>
+                <div class="px-3">{t("sfl.animals.table.colSecondary")}</div>
+                <div class="px-3">{t("sfl.animals.table.colMilestone")}</div>
+              </div>
+
+              <!-- Body de Filas -->
+              <div class="flex flex-col gap-3 lg:gap-0 lg:bg-white/[0.01] lg:border lg:border-white/5 lg:rounded-3xl lg:p-2 lg:overflow-hidden animal-rows-container">
+                {animal.levels.map((lvl) => {
+                  const milestoneText = t(lvl.milestoneKey as any)
+
+                  return (
+                    <div
+                      class="animal-level-row hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-2xl p-4 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[12%_18%_18%_18%_16%_18%] lg:items-center lg:py-3.5"
+                      data-level={lvl.level}
+                      data-milestone={milestoneText.toLowerCase()}
+                    >
+                      <!-- Col 1: Nivel -->
+                      <div class="lg:px-3 flex items-center justify-between lg:justify-start gap-2 mb-3 lg:mb-0">
+                        <div class="flex items-center gap-2">
+                          <span class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-mono font-bold text-sm text-emerald-400 shadow-sm">
+                            {lvl.level}
+                          </span>
+                          <span class="text-xs font-bold text-white lg:hidden">
+                            {animal.tabLabel} · Nivel {lvl.level}
+                          </span>
+                        </div>
+                        {lvl.level === 15 && (
+                          <span class="lg:hidden text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            CAP
+                          </span>
+                        )}
+                      </div>
+
+                      <!-- Mobile Grid de Métricas -->
+                      <div class="grid grid-cols-2 gap-2 mb-3 lg:hidden">
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-center">
+                          <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">
+                            {t("sfl.animals.table.colXpReq")}
+                          </span>
+                          <span class="text-white font-mono font-bold text-sm">+{lvl.xpRequired} XP</span>
+                        </div>
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-center">
+                          <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">
+                            {t("sfl.animals.table.colXpTotal")}
+                          </span>
+                          <span class="text-emerald-400 font-mono font-bold text-sm">{lvl.cumulativeXp} XP</span>
+                        </div>
+                      </div>
+
+                      <!-- Col 2: XP Requerida (Desktop) -->
+                      <div class="hidden lg:flex px-3 items-center">
+                        <span class="text-sm font-mono text-white/90">+{lvl.xpRequired} XP</span>
+                      </div>
+
+                      <!-- Col 3: XP Acumulada (Desktop) -->
+                      <div class="hidden lg:flex px-3 items-center">
+                        <span class="text-sm font-mono font-bold text-emerald-400">{lvl.cumulativeXp} XP</span>
+                      </div>
+
+                      <!-- Col 4: Drop Primario -->
+                      <div class="flex items-center justify-between lg:justify-start lg:px-3 gap-2 mb-2 lg:mb-0">
+                        <span class="text-xs text-white/50 lg:hidden">{t("sfl.animals.table.colPrimary")}:</span>
+                        <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2.5 py-1 lg:p-0 rounded-lg">
+                          <img
+                            src={animal.primaryDrop.image}
+                            alt={animal.primaryDrop.name}
+                            class="w-5 h-5 object-contain"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <span class="text-xs font-mono font-bold text-white">
+                            {lvl.primaryAmount}x {animal.primaryDrop.name}
+                          </span>
+                          <span
+                            class:list={[
+                              "text-[9px] font-mono px-1.5 py-0.2 rounded ml-1",
+                              lvl.primaryAmount === 1 ? "bg-white/5 text-white/50" : "",
+                              lvl.primaryAmount === 2 ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" : "",
+                              lvl.primaryAmount === 3 ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" : "",
+                            ]}
+                          >
+                            Tier {lvl.primaryAmount}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Col 5: Drop Secundario -->
+                      <div class="flex items-center justify-between lg:justify-start lg:px-3 gap-2 mb-2 lg:mb-0">
+                        <span class="text-xs text-white/50 lg:hidden">{t("sfl.animals.table.colSecondary")}:</span>
+                        {animal.secondaryDrop ? (
+                          lvl.secondaryAmount > 0 ? (
+                            <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2.5 py-1 lg:p-0 rounded-lg">
+                              <img
+                                src={animal.secondaryDrop.image}
+                                alt={animal.secondaryDrop.name}
+                                class="w-5 h-5 object-contain"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                              <span class="text-xs font-mono font-bold text-emerald-300">
+                                1x {animal.secondaryDrop.name}
+                              </span>
+                            </div>
+                          ) : (
+                            <span class="text-xs font-mono text-white/20 italic">Bloqueado (Lvl {animal.secondaryDrop.unlockLevel})</span>
+                          )
+                        ) : (
+                          <span class="text-xs font-mono text-white/20">—</span>
+                        )}
+                      </div>
+
+                      <!-- Col 6: Hito / Desbloqueo -->
+                      <div class="lg:px-3 pt-2 lg:pt-0 border-t border-white/5 lg:border-0 flex items-center">
+                        <span
+                          class:list={[
+                            "text-xs leading-snug",
+                            lvl.milestoneKey.includes("lvl15")
+                              ? "text-amber-400 font-bold"
+                              : lvl.milestoneKey.includes("lvl3") || lvl.milestoneKey.includes("lvl5") || lvl.milestoneKey.includes("Tier")
+                                ? "text-emerald-400/90 font-medium"
+                                : "text-terminal-muted",
+                          ]}
+                        >
+                          {milestoneText}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )
+      })
+    }
+  </div>
+
+  <div slot="footer" class="mt-12">
+    <!-- Acordeón de Preguntas Frecuentes (FAQ) -->
+    <FaqAccordion
+      title={t("sfl.animals.faq.title")}
+      subtitle={t("sfl.animals.faq.subtitle")}
+      items={faqItems}
+    />
+  </div>
+</SflToolLayout>
+
+<script is:inline>
+  // ---------------------------------------------------------------------------
+  // Lógica interactiva en cliente (Pestañas, Buscador, Filtros de Boosts)
+  // ---------------------------------------------------------------------------
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Manejo de Pestañas de Animales (Pollos, Ovejas, Vacas, Cerdos)
+    const tabBtns = document.querySelectorAll(".animal-tab-btn")
+    const panels = document.querySelectorAll(".animal-panel")
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const animalId = btn.getAttribute("data-animal-id")
+
+        tabBtns.forEach((b) => {
+          b.classList.remove("active", "bg-emerald-500/20", "text-emerald-400", "border-emerald-500/40")
+          b.classList.add("bg-white/5", "text-white/50", "border-white/10")
+        })
+
+        btn.classList.add("active", "bg-emerald-500/20", "text-emerald-400", "border-emerald-500/40")
+        btn.classList.remove("bg-white/5", "text-white/50", "border-white/10")
+
+        panels.forEach((p) => {
+          if (p.getAttribute("data-animal-id") === animalId) {
+            p.classList.remove("hidden")
+          } else {
+            p.classList.add("hidden")
+          }
+        })
+      })
+    })
+
+    // 2. Buscador rápido en la tabla
+    const searchInput = document.getElementById("animalSearchInput")
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        const query = (e.target.value || "").toLowerCase().trim()
+        const activePanel = document.querySelector(".animal-panel:not(.hidden)")
+        if (!activePanel) return
+
+        const rows = activePanel.querySelectorAll(".animal-level-row")
+        rows.forEach((row) => {
+          const lvl = row.getAttribute("data-level") || ""
+          const milestone = row.getAttribute("data-milestone") || ""
+          const text = (row.textContent || "").toLowerCase()
+
+          if (!query || lvl.includes(query) || milestone.includes(query) || text.includes(query)) {
+            row.style.display = ""
+          } else {
+            row.style.display = "none"
+          }
+        })
+      })
+    }
+
+    // 3. Filtros de Boosts (All, Drops, Time, Feed)
+    const filterBtns = document.querySelectorAll(".animal-filter-boost-btn")
+    const buffCards = document.querySelectorAll(".animal-buff-card, .animal-skill-card")
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter")
+
+        filterBtns.forEach((b) => {
+          if (b.getAttribute("data-filter") === filter) {
+            b.classList.add("active", "text-white", "bg-white/10")
+            b.classList.remove("text-white/40")
+          } else {
+            b.classList.remove("active", "text-white", "bg-white/10")
+            b.classList.add("text-white/40")
+          }
+        })
+
+        buffCards.forEach((card) => {
+          const cardEffects = (card.getAttribute("data-effect") || "").split(" ")
+          if (filter === "all" || cardEffects.includes(filter)) {
+            card.style.display = ""
+          } else {
+            card.style.display = "none"
+          }
+        })
+      })
+    })
+
+    // 4. Conmutador de vista Detailed / Compact para Boosts
+    const viewSwitchBtns = document.querySelectorAll(".animal-view-switch-btn")
+    viewSwitchBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const action = btn.getAttribute("data-action")
+
+        viewSwitchBtns.forEach((b) => {
+          if (b.getAttribute("data-action") === action) {
+            b.classList.add("active", "text-white", "bg-white/10")
+            b.classList.remove("text-white/40")
+          } else {
+            b.classList.remove("active", "text-white", "bg-white/10")
+            b.classList.add("text-white/40")
+          }
+        })
+
+        const normalViews = document.querySelectorAll(".normal-view")
+        const compactViews = document.querySelectorAll(".compact-view")
+
+        if (action === "compact") {
+          normalViews.forEach((el) => el.classList.add("hidden"))
+          compactViews.forEach((el) => el.classList.remove("hidden"))
+        } else {
+          normalViews.forEach((el) => el.classList.remove("hidden"))
+          compactViews.forEach((el) => el.classList.add("hidden"))
+        }
+      })
+    })
+  })
+</script>

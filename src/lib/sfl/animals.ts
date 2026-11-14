@@ -27,11 +27,17 @@ export interface IngredientCost {
   image: string
 }
 
+export interface BountyCategoryDetail {
+  count: number
+  minLevel?: number | null
+  maxLevel?: number | null
+}
+
 export interface LevelBounties {
   totalWeekly: number
-  seasonalTickets: number
-  coins: number
-  gems: number
+  tickets?: BountyCategoryDetail
+  coins?: BountyCategoryDetail
+  gems?: BountyCategoryDetail
 }
 
 export interface BuildingLevel {

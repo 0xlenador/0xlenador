@@ -1364,55 +1364,76 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
         </div>
       </div>
 
-      <!-- Contenido: Formato idéntico a Blacksmith (md:col-span-8 izq, md:col-span-4 der) -->
+      <!-- Contenido: Formato idéntico a Blacksmith (md:col-span-7 izq, md:col-span-5 der) -->
       <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch h-full">
-          <!-- Columna Izquierda: Costos por Nivel (md:col-span-8) -->
-          <div class="md:col-span-8 flex flex-col gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-stretch h-full">
+          <!-- Columna Izquierda: Costos por Nivel (md:col-span-7) -->
+          <div class="md:col-span-7 flex flex-col gap-2">
             {
-              henHouse?.levels.map((lvl) => (
-                <div class="animal-building-level-card flex flex-col gap-1.5" data-coins={lvl.coins}>
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-mono font-bold tracking-wider uppercase text-terminal-muted px-1.5 py-0.5 rounded bg-white/[0.03] border border-white/5">
-                      {lvl.name} (Cap: {lvl.capacity})
+              henHouse?.levels.map((lvl, idx) => (
+                <div
+                  class={`animal-building-level-card henhouse-level-card flex flex-col gap-1.5 p-2 rounded-xl border transition-all cursor-pointer ${
+                    idx === 0
+                      ? "bg-black/60 border-amber-400/40 shadow-[0_0_15px_rgba(251,191,36,0.08)]"
+                      : "bg-black/30 border-white/5 opacity-70 hover:opacity-100 hover:border-white/20"
+                  }`}
+                  data-coins={lvl.coins}
+                  data-level={lvl.level}
+                >
+                  <div class="flex items-center justify-between gap-1.5">
+                    <span
+                      class={`henhouse-lvl-pill text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded transition-all shrink-0 ${
+                        idx === 0
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                          : "bg-white/[0.03] text-terminal-muted border border-white/5"
+                      }`}
+                    >
+                      {t("sfl.constants.bounties.levelPrefix")} {lvl.level} · Cap: {lvl.capacity}
                     </span>
-                    <div class="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-400">
-                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3 h-3 object-cover rounded-full" />
-                      <span class="animal-level-total-flower">--</span>
-                      <span class="animal-level-total-usd text-[9px] font-normal text-terminal-muted ml-0.5">($0.00)</span>
+                    <div class="flex items-center gap-1 text-[11px] font-mono font-medium text-terminal-secondary shrink-0">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 object-cover rounded-full" />
+                      <span class="animal-level-total-flower font-bold text-white">--</span>
+                      <span class="animal-level-total-usd text-[9px] font-normal text-white/40 ml-0.5">($0.00)</span>
                     </div>
                   </div>
 
                   <div
-                    class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex flex-wrap items-center gap-1.5 hover:border-amber-400/40 transition-all shadow-sm"
+                    class="bg-black/40 border border-white/5 rounded-xl p-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shadow-sm"
                   >
                     <!-- Slot Monedas -->
-                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 font-mono text-xs shrink-0">
-                      <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain" />
-                      <span class="text-amber-300 font-bold">{lvl.coins >= 1000 ? `${(lvl.coins / 1000).toFixed(lvl.coins % 1000 === 0 ? 0 : 1)}k` : lvl.coins}</span>
-                      <span class="inline-flex items-center gap-0.5 text-[9.5px] text-terminal-secondary font-medium ml-0.5">
-                        <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
-                        <span class="animal-coins-flower">--</span>
-                        <span class="animal-coins-usd text-[8.5px] font-normal text-white/40 ml-0.5">($0.00)</span>
-                      </span>
+                    <div class="flex items-center justify-between gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px]">
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain shrink-0" />
+                        <span class="text-amber-300 font-bold truncate text-[10.5px]">
+                          {lvl.coins >= 1000 ? `${(lvl.coins / 1000).toFixed(lvl.coins % 1000 === 0 ? 0 : 1)}k` : lvl.coins} Coins
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-0.5 text-[9.5px] text-terminal-secondary shrink-0 ml-1">
+                        <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2 h-2 rounded-full object-cover shrink-0" />
+                        <span class="animal-coins-flower text-emerald-400 font-semibold">--</span>
+                        <span class="animal-coins-usd text-[8.5px] text-white/40 ml-0.5 hidden xl:inline">($0.00)</span>
+                      </div>
                     </div>
 
                     <!-- Slots Ingredientes -->
                     {lvl.ingredients.map((ing) => (
                       <div
-                        class="animal-ingredient-item inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 font-mono text-xs"
+                        class="animal-ingredient-item flex items-center justify-between gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px]"
                         data-name={ing.name}
                         data-amount={ing.amount}
-                        title={ing.name}
+                        title={`${ing.name} x${ing.amount}`}
                       >
-                        <img src={ing.image} alt={ing.name} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                        <span class="text-white/80">{ing.name}</span>
-                        <span class="text-amber-400 font-bold">x{ing.amount}</span>
-                        <span class="inline-flex items-center gap-0.5 text-[9.5px] text-terminal-secondary font-medium ml-0.5">
-                          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
-                          <span class="animal-ingredient-flower">--</span>
-                          <span class="animal-ingredient-usd text-[8.5px] font-normal text-white/40 ml-0.5">($0.00)</span>
-                        </span>
+                        <div class="flex items-center gap-1.5 min-w-0">
+                          <img src={ing.image} alt={ing.name} class="w-3.5 h-3.5 object-contain shrink-0 [image-rendering:pixelated]" />
+                          <span class="text-white/85 font-medium truncate text-[10.5px]">
+                            {ing.amount >= 1000 ? `${(ing.amount / 1000).toFixed(ing.amount % 1000 === 0 ? 0 : 1)}k` : ing.amount} <span class="text-terminal-muted text-[9.5px]">{ing.name}</span>
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-0.5 text-[9.5px] text-terminal-secondary shrink-0 ml-1">
+                          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2 h-2 rounded-full object-cover shrink-0" />
+                          <span class="animal-ingredient-flower text-emerald-400 font-semibold">--</span>
+                          <span class="animal-ingredient-usd text-[8.5px] text-white/40 ml-0.5 hidden xl:inline">($0.00)</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1421,17 +1442,106 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
             }
           </div>
 
-          <!-- Columna Derecha: Panel de Bounties (md:col-span-4 con formato Blacksmith) -->
-          <div class="md:col-span-4 bg-black/40 border border-white/10 rounded-xl p-3.5 flex flex-col items-center justify-center text-center min-h-[380px]">
-            <div class="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center mb-2.5 p-2 shadow-inner">
-              <img src="/img/sunflowerland/123/Chicken.png" alt="Chicken" class="w-8 h-8 object-contain [image-rendering:pixelated]" />
+          <!-- Columna Derecha: Panel de Bounties (md:col-span-5) -->
+          <div class="md:col-span-5 bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col justify-between min-h-[320px]">
+            <div>
+              <!-- Cabecera -->
+              <div class="mb-2">
+                <h4 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center justify-between">
+                  <span>{t("sfl.constants.bounties.title")}</span>
+                  <span class="henhouse-bounty-badge text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-normal">
+                    {t("sfl.constants.bounties.levelPrefix")} 1
+                  </span>
+                </h4>
+              </div>
+              <p class="text-xs text-terminal-secondary leading-relaxed mb-2.5">
+                {t("sfl.constants.bounties.desc")}
+              </p>
+
+              <!-- Separador -->
+              <div class="border-t border-white/10 my-2.5"></div>
+
+              <!-- Distribución de Pedidos por Nivel -->
+              {henHouse?.levels.map((lvl, idx) => (
+                <div
+                  id={`henhouse-bounty-lvl-${lvl.level}`}
+                  class={`henhouse-bounty-panel flex flex-col gap-2 ${idx === 0 ? "" : "hidden"}`}
+                >
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted block mb-0.5">
+                    {t("sfl.constants.bounties.category")}
+                  </span>
+
+                  <!-- Fila Boletos -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/others/beetle_wing.webp" alt={t("sfl.constants.bounties.tickets")} class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.tickets")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.tickets?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.tickets.minLevel}–${lvl.bounties.tickets.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class="text-emerald-400 text-sm">{lvl.bounties?.tickets?.count ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Fila Coins -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/123/coins.png" alt={t("sfl.constants.bounties.coins")} class="w-4 h-4 object-contain shrink-0" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.coins")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.coins?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.coins.minLevel}–${lvl.bounties.coins.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class="text-emerald-400 text-sm">{lvl.bounties?.coins?.count ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Fila Gemas -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/123/Gem.png" alt={t("sfl.constants.bounties.gems")} class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.gems")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.gems?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.gems.minLevel}–${lvl.bounties.gems.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class={(lvl.bounties?.gems?.count ?? 0) > 0 ? "text-purple-300 text-sm" : "text-white/40 text-sm"}>
+                        {lvl.bounties?.gems?.count ?? 0}
+                      </span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Capacidad Total -->
+                  <div class="flex items-center justify-between py-2 px-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-500/20 mt-1">
+                    <span class="text-xs font-mono text-terminal-secondary font-medium">
+                      {t("sfl.constants.bounties.weeklyCapacity")}
+                    </span>
+                    <div class="flex items-center gap-1 font-mono text-xs font-bold text-white">
+                      <span class="text-sm font-bold text-emerald-400">{lvl.bounties?.totalWeekly ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.ordersPerWeek")}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <h4 class="text-sm font-bold text-white mb-1 tracking-tight">
-              {t("sfl.constants.bounties.hen_house")}
-            </h4>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-terminal-muted">
-              {t("sfl.constants.bounties.pending")}
-            </span>
+
+            <!-- Footer discreto -->
+            <div class="mt-3 pt-2.5 border-t border-white/10 text-[10px] font-mono text-terminal-muted text-center">
+              {t("sfl.constants.bounties.rotationNote")}
+            </div>
           </div>
         </div>
       </div>
@@ -1474,55 +1584,76 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
         </div>
       </div>
 
-      <!-- Contenido: Formato idéntico a Blacksmith (md:col-span-8 izq, md:col-span-4 der) -->
+      <!-- Contenido: Formato idéntico a Blacksmith (md:col-span-7 izq, md:col-span-5 der) -->
       <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch h-full">
-          <!-- Columna Izquierda: Costos por Nivel (md:col-span-8) -->
-          <div class="md:col-span-8 flex flex-col gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-stretch h-full">
+          <!-- Columna Izquierda: Costos por Nivel (md:col-span-7) -->
+          <div class="md:col-span-7 flex flex-col gap-2">
             {
-              barn?.levels.map((lvl) => (
-                <div class="animal-building-level-card flex flex-col gap-1.5" data-coins={lvl.coins}>
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-mono font-bold tracking-wider uppercase text-terminal-muted px-1.5 py-0.5 rounded bg-white/[0.03] border border-white/5">
-                      {lvl.name} (Cap: {lvl.capacity})
+              barn?.levels.map((lvl, idx) => (
+                <div
+                  class={`animal-building-level-card barn-level-card flex flex-col gap-1.5 p-2 rounded-xl border transition-all cursor-pointer ${
+                    idx === 0
+                      ? "bg-black/60 border-amber-400/40 shadow-[0_0_15px_rgba(251,191,36,0.08)]"
+                      : "bg-black/30 border-white/5 opacity-70 hover:opacity-100 hover:border-white/20"
+                  }`}
+                  data-coins={lvl.coins}
+                  data-level={lvl.level}
+                >
+                  <div class="flex items-center justify-between gap-1.5">
+                    <span
+                      class={`barn-lvl-pill text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded transition-all shrink-0 ${
+                        idx === 0
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                          : "bg-white/[0.03] text-terminal-muted border border-white/5"
+                      }`}
+                    >
+                      {t("sfl.constants.bounties.levelPrefix")} {lvl.level} · Cap: {lvl.capacity}
                     </span>
-                    <div class="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-400">
-                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3 h-3 object-cover rounded-full" />
-                      <span class="animal-level-total-flower">--</span>
-                      <span class="animal-level-total-usd text-[9px] font-normal text-terminal-muted ml-0.5">($0.00)</span>
+                    <div class="flex items-center gap-1 text-[11px] font-mono font-medium text-terminal-secondary shrink-0">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 object-cover rounded-full" />
+                      <span class="animal-level-total-flower font-bold text-white">--</span>
+                      <span class="animal-level-total-usd text-[9px] font-normal text-white/40 ml-0.5">($0.00)</span>
                     </div>
                   </div>
 
                   <div
-                    class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex flex-wrap items-center gap-1.5 hover:border-amber-400/40 transition-all shadow-sm"
+                    class="bg-black/40 border border-white/5 rounded-xl p-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shadow-sm"
                   >
                     <!-- Slot Monedas -->
-                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 font-mono text-xs shrink-0">
-                      <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain" />
-                      <span class="text-amber-300 font-bold">{lvl.coins >= 1000 ? `${(lvl.coins / 1000).toFixed(lvl.coins % 1000 === 0 ? 0 : 1)}k` : lvl.coins}</span>
-                      <span class="inline-flex items-center gap-0.5 text-[9.5px] text-terminal-secondary font-medium ml-0.5">
-                        <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
-                        <span class="animal-coins-flower">--</span>
-                        <span class="animal-coins-usd text-[8.5px] font-normal text-white/40 ml-0.5">($0.00)</span>
-                      </span>
+                    <div class="flex items-center justify-between gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px]">
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain shrink-0" />
+                        <span class="text-amber-300 font-bold truncate text-[10.5px]">
+                          {lvl.coins >= 1000 ? `${(lvl.coins / 1000).toFixed(lvl.coins % 1000 === 0 ? 0 : 1)}k` : lvl.coins} Coins
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-0.5 text-[9.5px] text-terminal-secondary shrink-0 ml-1">
+                        <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2 h-2 rounded-full object-cover shrink-0" />
+                        <span class="animal-coins-flower text-emerald-400 font-semibold">--</span>
+                        <span class="animal-coins-usd text-[8.5px] text-white/40 ml-0.5 hidden xl:inline">($0.00)</span>
+                      </div>
                     </div>
 
                     <!-- Slots Ingredientes -->
                     {lvl.ingredients.map((ing) => (
                       <div
-                        class="animal-ingredient-item inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 font-mono text-xs"
+                        class="animal-ingredient-item flex items-center justify-between gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px]"
                         data-name={ing.name}
                         data-amount={ing.amount}
-                        title={ing.name}
+                        title={`${ing.name} x${ing.amount}`}
                       >
-                        <img src={ing.image} alt={ing.name} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                        <span class="text-white/80">{ing.name}</span>
-                        <span class="text-amber-400 font-bold">x{ing.amount}</span>
-                        <span class="inline-flex items-center gap-0.5 text-[9.5px] text-terminal-secondary font-medium ml-0.5">
-                          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
-                          <span class="animal-ingredient-flower">--</span>
-                          <span class="animal-ingredient-usd text-[8.5px] font-normal text-white/40 ml-0.5">($0.00)</span>
-                        </span>
+                        <div class="flex items-center gap-1.5 min-w-0">
+                          <img src={ing.image} alt={ing.name} class="w-3.5 h-3.5 object-contain shrink-0 [image-rendering:pixelated]" />
+                          <span class="text-white/85 font-medium truncate text-[10.5px]">
+                            {ing.amount >= 1000 ? `${(ing.amount / 1000).toFixed(ing.amount % 1000 === 0 ? 0 : 1)}k` : ing.amount} <span class="text-terminal-muted text-[9.5px]">{ing.name}</span>
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-0.5 text-[9.5px] text-terminal-secondary shrink-0 ml-1">
+                          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2 h-2 rounded-full object-cover shrink-0" />
+                          <span class="animal-ingredient-flower text-emerald-400 font-semibold">--</span>
+                          <span class="animal-ingredient-usd text-[8.5px] text-white/40 ml-0.5 hidden xl:inline">($0.00)</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1531,20 +1662,106 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
             }
           </div>
 
-          <!-- Columna Derecha: Panel de Bounties (md:col-span-4 con formato Blacksmith) -->
-          <div class="md:col-span-4 bg-black/40 border border-white/10 rounded-xl p-3.5 flex flex-col items-center justify-center text-center min-h-[380px]">
-            <div class="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center mb-2.5 p-2 shadow-inner">
-              <div class="flex items-center -space-x-1.5">
-                <img src="/img/sunflowerland/powerups/baby_cow.webp" alt="Cow" class="w-7 h-7 object-contain [image-rendering:pixelated]" />
-                <img src="/img/sunflowerland/cosmetics/collectibles/baby_sheep.webp" alt="Sheep" class="w-7 h-7 object-contain [image-rendering:pixelated]" />
+          <!-- Columna Derecha: Panel de Bounties (md:col-span-5) -->
+          <div class="md:col-span-5 bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col justify-between min-h-[320px]">
+            <div>
+              <!-- Cabecera -->
+              <div class="mb-2">
+                <h4 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center justify-between">
+                  <span>{t("sfl.constants.bounties.title")}</span>
+                  <span class="barn-bounty-badge text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-normal">
+                    {t("sfl.constants.bounties.levelPrefix")} 1
+                  </span>
+                </h4>
               </div>
+              <p class="text-xs text-terminal-secondary leading-relaxed mb-2.5">
+                {t("sfl.constants.bounties.desc")}
+              </p>
+
+              <!-- Separador -->
+              <div class="border-t border-white/10 my-2.5"></div>
+
+              <!-- Distribución de Pedidos por Nivel -->
+              {barn?.levels.map((lvl, idx) => (
+                <div
+                  id={`barn-bounty-lvl-${lvl.level}`}
+                  class={`barn-bounty-panel flex flex-col gap-2 ${idx === 0 ? "" : "hidden"}`}
+                >
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted block mb-0.5">
+                    {t("sfl.constants.bounties.category")}
+                  </span>
+
+                  <!-- Fila Boletos -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/others/beetle_wing.webp" alt={t("sfl.constants.bounties.tickets")} class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.tickets")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.tickets?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.tickets.minLevel}–${lvl.bounties.tickets.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class="text-emerald-400 text-sm">{lvl.bounties?.tickets?.count ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Fila Coins -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/123/coins.png" alt={t("sfl.constants.bounties.coins")} class="w-4 h-4 object-contain shrink-0" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.coins")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.coins?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.coins.minLevel}–${lvl.bounties.coins.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class="text-emerald-400 text-sm">{lvl.bounties?.coins?.count ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Fila Gemas -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/123/Gem.png" alt={t("sfl.constants.bounties.gems")} class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.gems")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.gems?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.gems.minLevel}–${lvl.bounties.gems.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class={(lvl.bounties?.gems?.count ?? 0) > 0 ? "text-purple-300 text-sm" : "text-white/40 text-sm"}>
+                        {lvl.bounties?.gems?.count ?? 0}
+                      </span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Capacidad Total -->
+                  <div class="flex items-center justify-between py-2 px-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-500/20 mt-1">
+                    <span class="text-xs font-mono text-terminal-secondary font-medium">
+                      {t("sfl.constants.bounties.weeklyCapacity")}
+                    </span>
+                    <div class="flex items-center gap-1 font-mono text-xs font-bold text-white">
+                      <span class="text-sm font-bold text-emerald-400">{lvl.bounties?.totalWeekly ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.ordersPerWeek")}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <h4 class="text-sm font-bold text-white mb-1 tracking-tight">
-              {t("sfl.constants.bounties.barn")}
-            </h4>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-terminal-muted">
-              {t("sfl.constants.bounties.pending")}
-            </span>
+
+            <!-- Footer discreto -->
+            <div class="mt-3 pt-2.5 border-t border-white/10 text-[10px] font-mono text-terminal-muted text-center">
+              {t("sfl.constants.bounties.rotationNote")}
+            </div>
           </div>
         </div>
       </div>
@@ -1587,55 +1804,76 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
         </div>
       </div>
 
-      <!-- Contenido: Formato idéntico a Blacksmith (md:col-span-8 izq, md:col-span-4 der) -->
+      <!-- Contenido: Formato idéntico a Blacksmith (md:col-span-7 izq, md:col-span-5 der) -->
       <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch h-full">
-          <!-- Columna Izquierda: Costos por Nivel (md:col-span-8) -->
-          <div class="md:col-span-8 flex flex-col gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-stretch h-full">
+          <!-- Columna Izquierda: Costos por Nivel (md:col-span-7) -->
+          <div class="md:col-span-7 flex flex-col gap-2">
             {
-              pigpen?.levels.map((lvl) => (
-                <div class="animal-building-level-card flex flex-col gap-1.5" data-coins={lvl.coins}>
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-mono font-bold tracking-wider uppercase text-terminal-muted px-1.5 py-0.5 rounded bg-white/[0.03] border border-white/5">
-                      {lvl.name} (Cap: {lvl.capacity})
+              pigpen?.levels.map((lvl, idx) => (
+                <div
+                  class={`animal-building-level-card pigpen-level-card flex flex-col gap-1.5 p-2 rounded-xl border transition-all cursor-pointer ${
+                    idx === 0
+                      ? "bg-black/60 border-amber-400/40 shadow-[0_0_15px_rgba(251,191,36,0.08)]"
+                      : "bg-black/30 border-white/5 opacity-70 hover:opacity-100 hover:border-white/20"
+                  }`}
+                  data-coins={lvl.coins}
+                  data-level={lvl.level}
+                >
+                  <div class="flex items-center justify-between gap-1.5">
+                    <span
+                      class={`pigpen-lvl-pill text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded transition-all shrink-0 ${
+                        idx === 0
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                          : "bg-white/[0.03] text-terminal-muted border border-white/5"
+                      }`}
+                    >
+                      {t("sfl.constants.bounties.levelPrefix")} {lvl.level} · Cap: {lvl.capacity}
                     </span>
-                    <div class="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-400">
-                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-3 h-3 object-cover rounded-full" />
-                      <span class="animal-level-total-flower">--</span>
-                      <span class="animal-level-total-usd text-[9px] font-normal text-terminal-muted ml-0.5">($0.00)</span>
+                    <div class="flex items-center gap-1 text-[11px] font-mono font-medium text-terminal-secondary shrink-0">
+                      <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 object-cover rounded-full" />
+                      <span class="animal-level-total-flower font-bold text-white">--</span>
+                      <span class="animal-level-total-usd text-[9px] font-normal text-white/40 ml-0.5">($0.00)</span>
                     </div>
                   </div>
 
                   <div
-                    class="bg-black/40 border border-white/10 rounded-xl p-2.5 flex flex-wrap items-center gap-1.5 hover:border-amber-400/40 transition-all shadow-sm"
+                    class="bg-black/40 border border-white/5 rounded-xl p-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shadow-sm"
                   >
                     <!-- Slot Monedas -->
-                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 font-mono text-xs shrink-0">
-                      <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain" />
-                      <span class="text-amber-300 font-bold">{lvl.coins >= 1000 ? `${(lvl.coins / 1000).toFixed(lvl.coins % 1000 === 0 ? 0 : 1)}k` : lvl.coins}</span>
-                      <span class="inline-flex items-center gap-0.5 text-[9.5px] text-terminal-secondary font-medium ml-0.5">
-                        <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
-                        <span class="animal-coins-flower">--</span>
-                        <span class="animal-coins-usd text-[8.5px] font-normal text-white/40 ml-0.5">($0.00)</span>
-                      </span>
+                    <div class="flex items-center justify-between gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px]">
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <img src="/img/sunflowerland/123/coins.png" alt="Coins" class="w-3.5 h-3.5 object-contain shrink-0" />
+                        <span class="text-amber-300 font-bold truncate text-[10.5px]">
+                          {lvl.coins >= 1000 ? `${(lvl.coins / 1000).toFixed(lvl.coins % 1000 === 0 ? 0 : 1)}k` : lvl.coins} Coins
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-0.5 text-[9.5px] text-terminal-secondary shrink-0 ml-1">
+                        <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2 h-2 rounded-full object-cover shrink-0" />
+                        <span class="animal-coins-flower text-emerald-400 font-semibold">--</span>
+                        <span class="animal-coins-usd text-[8.5px] text-white/40 ml-0.5 hidden xl:inline">($0.00)</span>
+                      </div>
                     </div>
 
                     <!-- Slots Ingredientes -->
                     {lvl.ingredients.map((ing) => (
                       <div
-                        class="animal-ingredient-item inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 font-mono text-xs"
+                        class="animal-ingredient-item flex items-center justify-between gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px]"
                         data-name={ing.name}
                         data-amount={ing.amount}
-                        title={ing.name}
+                        title={`${ing.name} x${ing.amount}`}
                       >
-                        <img src={ing.image} alt={ing.name} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                        <span class="text-white/80">{ing.name}</span>
-                        <span class="text-amber-400 font-bold">x{ing.amount}</span>
-                        <span class="inline-flex items-center gap-0.5 text-[9.5px] text-terminal-secondary font-medium ml-0.5">
-                          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
-                          <span class="animal-ingredient-flower">--</span>
-                          <span class="animal-ingredient-usd text-[8.5px] font-normal text-white/40 ml-0.5">($0.00)</span>
-                        </span>
+                        <div class="flex items-center gap-1.5 min-w-0">
+                          <img src={ing.image} alt={ing.name} class="w-3.5 h-3.5 object-contain shrink-0 [image-rendering:pixelated]" />
+                          <span class="text-white/85 font-medium truncate text-[10.5px]">
+                            {ing.amount >= 1000 ? `${(ing.amount / 1000).toFixed(ing.amount % 1000 === 0 ? 0 : 1)}k` : ing.amount} <span class="text-terminal-muted text-[9.5px]">{ing.name}</span>
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-0.5 text-[9.5px] text-terminal-secondary shrink-0 ml-1">
+                          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" class="w-2 h-2 rounded-full object-cover shrink-0" />
+                          <span class="animal-ingredient-flower text-emerald-400 font-semibold">--</span>
+                          <span class="animal-ingredient-usd text-[8.5px] text-white/40 ml-0.5 hidden xl:inline">($0.00)</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1644,17 +1882,106 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
             }
           </div>
 
-          <!-- Columna Derecha: Panel de Bounties (md:col-span-4 con formato Blacksmith) -->
-          <div class="md:col-span-4 bg-black/40 border border-white/10 rounded-xl p-3.5 flex flex-col items-center justify-center text-center min-h-[380px]">
-            <div class="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center mb-2.5 p-2 shadow-inner">
-              <img src="/img/sunflowerland/123/pig.webp" alt="Pig" class="w-8 h-8 object-contain [image-rendering:pixelated]" />
+          <!-- Columna Derecha: Panel de Bounties (md:col-span-5) -->
+          <div class="md:col-span-5 bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col justify-between min-h-[320px]">
+            <div>
+              <!-- Cabecera -->
+              <div class="mb-2">
+                <h4 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center justify-between">
+                  <span>{t("sfl.constants.bounties.title")}</span>
+                  <span class="pigpen-bounty-badge text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-normal">
+                    {t("sfl.constants.bounties.levelPrefix")} 1
+                  </span>
+                </h4>
+              </div>
+              <p class="text-xs text-terminal-secondary leading-relaxed mb-2.5">
+                {t("sfl.constants.bounties.desc")}
+              </p>
+
+              <!-- Separador -->
+              <div class="border-t border-white/10 my-2.5"></div>
+
+              <!-- Distribución de Pedidos por Nivel -->
+              {pigpen?.levels.map((lvl, idx) => (
+                <div
+                  id={`pigpen-bounty-lvl-${lvl.level}`}
+                  class={`pigpen-bounty-panel flex flex-col gap-2 ${idx === 0 ? "" : "hidden"}`}
+                >
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted block mb-0.5">
+                    {t("sfl.constants.bounties.category")}
+                  </span>
+
+                  <!-- Fila Boletos -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/others/beetle_wing.webp" alt={t("sfl.constants.bounties.tickets")} class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.tickets")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.tickets?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.tickets.minLevel}–${lvl.bounties.tickets.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class="text-emerald-400 text-sm">{lvl.bounties?.tickets?.count ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Fila Coins -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/123/coins.png" alt={t("sfl.constants.bounties.coins")} class="w-4 h-4 object-contain shrink-0" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.coins")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.coins?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.coins.minLevel}–${lvl.bounties.coins.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class="text-emerald-400 text-sm">{lvl.bounties?.coins?.count ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Fila Gemas -->
+                  <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-black/30 border border-white/5 text-xs font-mono">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="/img/sunflowerland/123/Gem.png" alt={t("sfl.constants.bounties.gems")} class="w-4 h-4 object-contain shrink-0 [image-rendering:pixelated]" />
+                      <div class="flex flex-col min-w-0 leading-tight">
+                        <span class="text-white font-bold text-xs truncate">{t("sfl.constants.bounties.gems")}</span>
+                        <span class="text-[9.5px] text-terminal-muted truncate">
+                          {lvl.bounties?.gems?.minLevel ? `${t("sfl.constants.bounties.lvl")} ${lvl.bounties.gems.minLevel}–${lvl.bounties.gems.maxLevel}` : t("sfl.constants.bounties.noRange")}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 font-bold shrink-0 ml-2">
+                      <span class={(lvl.bounties?.gems?.count ?? 0) > 0 ? "text-purple-300 text-sm" : "text-white/40 text-sm"}>
+                        {lvl.bounties?.gems?.count ?? 0}
+                      </span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.reqs")}</span>
+                    </div>
+                  </div>
+
+                  <!-- Capacidad Total -->
+                  <div class="flex items-center justify-between py-2 px-3 rounded-xl bg-emerald-500/[0.06] border border-emerald-500/20 mt-1">
+                    <span class="text-xs font-mono text-terminal-secondary font-medium">
+                      {t("sfl.constants.bounties.weeklyCapacity")}
+                    </span>
+                    <div class="flex items-center gap-1 font-mono text-xs font-bold text-white">
+                      <span class="text-sm font-bold text-emerald-400">{lvl.bounties?.totalWeekly ?? 0}</span>
+                      <span class="text-[10px] text-terminal-muted font-normal">{t("sfl.constants.bounties.ordersPerWeek")}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <h4 class="text-sm font-bold text-white mb-1 tracking-tight">
-              {t("sfl.constants.bounties.pigpen")}
-            </h4>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-terminal-muted">
-              {t("sfl.constants.bounties.pending")}
-            </span>
+
+            <!-- Footer discreto -->
+            <div class="mt-3 pt-2.5 border-t border-white/10 text-[10px] font-mono text-terminal-muted text-center">
+              {t("sfl.constants.bounties.rotationNote")}
+            </div>
           </div>
         </div>
       </div>
@@ -1671,7 +1998,7 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
 </script>
 
 <!-- Script interactivo de cliente -->
-<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, mudMixOptions, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free") }}>
+<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, mudMixOptions, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free"), tLevelPrefix: t("sfl.constants.bounties.levelPrefix") }}>
   ;(function () {
     let liveFlowerPrice = 0.144
     let effectiveFlowerPrice = 0.144
@@ -2560,6 +2887,58 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
         }
       })
     }
+
+    // Sincronizar selección de nivel en la columna izquierda con los bounties de la derecha
+    function initBuildingLevelSync(prefix) {
+      const cards = document.querySelectorAll(`.${prefix}-level-card`)
+      const badge = document.querySelector(`.${prefix}-bounty-badge`)
+      const panels = document.querySelectorAll(`.${prefix}-bounty-panel`)
+
+      cards.forEach((card) => {
+        card.addEventListener("click", () => {
+          const level = card.getAttribute("data-level")
+
+          // Actualizar estilos activos de las tarjetas en la izquierda (estilo Blacksmith / Jafar)
+          cards.forEach((c) => {
+            const isCurrent = c === card
+            const pill = c.querySelector(`.${prefix}-lvl-pill`)
+            if (isCurrent) {
+              c.classList.add("bg-black/60", "border-amber-400/40", "shadow-[0_0_15px_rgba(251,191,36,0.08)]", "opacity-100")
+              c.classList.remove("bg-black/30", "border-white/5", "opacity-70")
+              if (pill) {
+                pill.classList.add("bg-amber-500/10", "text-amber-400", "border-amber-500/30")
+                pill.classList.remove("bg-white/[0.03]", "text-terminal-muted", "border-white/5")
+              }
+            } else {
+              c.classList.remove("bg-black/60", "border-amber-400/40", "shadow-[0_0_15px_rgba(251,191,36,0.08)]", "opacity-100")
+              c.classList.add("bg-black/30", "border-white/5", "opacity-70")
+              if (pill) {
+                pill.classList.remove("bg-amber-500/10", "text-amber-400", "border-amber-500/30")
+                pill.classList.add("bg-white/[0.03]", "text-terminal-muted", "border-white/5")
+              }
+            }
+          })
+
+          // Actualizar texto del badge en la cabecera del panel de bounties
+          if (badge) {
+            badge.textContent = `${tLevelPrefix} ${level}`
+          }
+
+          // Mostrar el panel de bounties correspondiente y ocultar los demás
+          panels.forEach((p) => {
+            if (p.id === `${prefix}-bounty-lvl-${level}`) {
+              p.classList.remove("hidden")
+            } else {
+              p.classList.add("hidden")
+            }
+          })
+        })
+      })
+    }
+
+    initBuildingLevelSync("henhouse")
+    initBuildingLevelSync("barn")
+    initBuildingLevelSync("pigpen")
 
     function updateAll() {
       updateOilPriceDisplay()
