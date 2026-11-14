@@ -1,11 +1,21 @@
 ---
 import SflToolLayout from "../SflToolLayout.astro"
+import FaqAccordion from "../FaqAccordion.astro"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
 import sflIds from "../../content/data/sfl/resources.json"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
+
+const faqItems = [
+  { pregunta: t("sfl.betty.faq.q1"), respuesta: t("sfl.betty.faq.a1") },
+  { pregunta: t("sfl.betty.faq.q2"), respuesta: t("sfl.betty.faq.a2") },
+  { pregunta: t("sfl.betty.faq.q3"), respuesta: t("sfl.betty.faq.a3") },
+  { pregunta: t("sfl.betty.faq.q4"), respuesta: t("sfl.betty.faq.a4") },
+  { pregunta: t("sfl.betty.faq.q5"), respuesta: t("sfl.betty.faq.a5") },
+  { pregunta: t("sfl.betty.faq.q6"), respuesta: t("sfl.betty.faq.a6") },
+]
 ---
 
 <SflToolLayout activeTab="betty">
@@ -29,9 +39,9 @@ const t = useTranslations(lang)
         <div>
           <!-- Header con Título y Botón de Reset a Mejor Opción -->
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60">
+            <h2 class="text-xs font-mono font-bold tracking-widest uppercase text-white/60">
               {t("sfl.betty.dash.bestTitle")}
-            </span>
+            </h2>
             <button
               type="button"
               id="resetBestBtn"
@@ -50,9 +60,11 @@ const t = useTranslations(lang)
             <div class="relative shrink-0">
               <img
                 id="bestItemHeroImg"
-                src="/img/sunflowerland/123/empty.png"
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3C/svg%3E"
+                width="80"
+                height="80"
                 class="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
-                alt="Optimal Item"
+                alt="Mejor Ítem para Betty"
               />
             </div>
 
@@ -115,9 +127,9 @@ const t = useTranslations(lang)
         <div>
           <!-- Header con Presets Rápidos de Inversión -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
-            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60">
+            <h2 class="text-xs font-mono font-bold tracking-widest uppercase text-white/60">
               {t("sfl.betty.dash.simulatorTitle")}
-            </span>
+            </h2>
             <div class="flex items-center gap-1.5">
               <span class="text-[10px] font-mono text-white/40 uppercase mr-1">Presets:</span>
               <button type="button" class="preset-flower-btn px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/40 text-[10px] font-mono text-white/70 hover:text-emerald-400 transition-all cursor-pointer" data-flower="5">5</button>
@@ -147,8 +159,12 @@ const t = useTranslations(lang)
                 />
                 <img
                   src="/img/sunflowerland/flower.jpg"
+                  width="20"
+                  height="20"
                   class="w-5 h-5 rounded-full absolute right-0 object-cover opacity-90 shadow"
                   alt="FLOWER"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div class="text-[10px] font-mono text-white/40 mt-1 truncate">
@@ -185,7 +201,9 @@ const t = useTranslations(lang)
                 />
                 <img
                   id="itemsOutputImg"
-                  src="/img/sunflowerland/123/empty.png"
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3C/svg%3E"
+                  width="24"
+                  height="24"
                   class="w-6 h-6 object-contain absolute right-0 drop-shadow [image-rendering:pixelated]"
                   alt="Item"
                 />
@@ -224,8 +242,12 @@ const t = useTranslations(lang)
                 />
                 <img
                   src="/img/sunflowerland/123/coins.png"
+                  width="20"
+                  height="20"
                   class="w-5 h-5 absolute right-0 object-contain drop-shadow"
                   alt="Coins"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div id="calcBettyUnitPay" class="text-[10px] font-mono text-emerald-300/60 mt-1 truncate">
@@ -252,6 +274,7 @@ const t = useTranslations(lang)
   </div>
 
   <div class="w-full">
+    <h2 class="sr-only">{t("sfl.betty.table.title")}</h2>
     <!-- Controles -->
     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div class="relative flex-1">
@@ -365,6 +388,16 @@ const t = useTranslations(lang)
         <!-- JS inyectará filas aquí -->
       </div>
     </div>
+  </div>
+
+  <!-- Preguntas Frecuentes (FAQ) -->
+  <div slot="footer">
+    <FaqAccordion
+      titulo={t("sfl.betty.faq.title")}
+      subtitulo={t("sfl.betty.faq.subtitle")}
+      startId={920}
+      items={faqItems}
+    />
   </div>
 </SflToolLayout>
 
@@ -488,8 +521,9 @@ const t = useTranslations(lang)
 
       // Actualizar Hero Visual
       if (heroImg) {
-        heroImg.src = `/img/sunflowerland/${item.name}.png`
-        heroImg.onerror = () => { heroImg.src = '/img/sunflowerland/123/empty.png' }
+        heroImg.src = encodeURI(`/img/sunflowerland/${item.name}.png`)
+        heroImg.alt = item.name
+        heroImg.onerror = () => { heroImg.onerror = null; heroImg.src = '/img/sunflowerland/123/bear.png' }
       }
       if (heroProfit) {
         heroProfit.innerText = `${isPositive ? '+' : ''}${profitFormatted}%`
@@ -511,7 +545,7 @@ const t = useTranslations(lang)
       // Selector de ítem contenido
       selectedContent.innerHTML = `
         <div class="flex flex-1 items-center gap-2.5 min-w-0">
-          <img src="/img/sunflowerland/${item.name}.png" class="w-8 h-8 object-contain shrink-0 drop-shadow" onerror="this.src='/img/sunflowerland/123/empty.png'" />
+          <img src="${encodeURI('/img/sunflowerland/' + item.name + '.png')}" alt="${item.name}" width="32" height="32" class="w-8 h-8 object-contain shrink-0 drop-shadow" onerror="this.onerror=null; this.src='/img/sunflowerland/123/bear.png'" />
           <div class="flex flex-col min-w-0">
             <span class="text-xs sm:text-sm font-bold text-white leading-tight truncate">${item.name}</span>
             <div class="flex items-center gap-1.5 mt-0.5">
@@ -527,8 +561,9 @@ const t = useTranslations(lang)
       `
       
       if (itemsOutputImg) {
-        itemsOutputImg.src = `/img/sunflowerland/${item.name}.png`
-        itemsOutputImg.onerror = () => { itemsOutputImg.src = '/img/sunflowerland/123/empty.png' }
+        itemsOutputImg.src = encodeURI(`/img/sunflowerland/${item.name}.png`)
+        itemsOutputImg.alt = item.name
+        itemsOutputImg.onerror = () => { itemsOutputImg.onerror = null; itemsOutputImg.src = '/img/sunflowerland/123/bear.png' }
       }
 
       const updateCalculatedProfit = (flowerVal, coinsVal) => {
@@ -638,7 +673,7 @@ const t = useTranslations(lang)
      dropdown.innerHTML = sortedItems.map(item => `
         <button type="button" class="dropdown-item w-full flex items-center justify-between p-2.5 hover:bg-white/10 rounded-lg transition-colors text-left cursor-pointer group" data-name="${item.name}">
            <div class="flex items-center gap-2.5 min-w-0">
-             <img src="/img/sunflowerland/${item.name}.png" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="this.src='/img/sunflowerland/123/empty.png'" loading="lazy" />
+             <img src="${encodeURI('/img/sunflowerland/' + item.name + '.png')}" alt="${item.name}" width="24" height="24" class="w-6 h-6 object-contain shrink-0 drop-shadow" onerror="this.onerror=null; this.src='/img/sunflowerland/123/bear.png'" loading="lazy" decoding="async" />
              <div class="flex flex-col min-w-0">
                <span class="text-xs font-semibold text-white group-hover:text-emerald-300 transition-colors truncate">${item.name}</span>
                <span class="text-[9px] font-mono text-white/40 uppercase">${item.category}</span>
@@ -775,7 +810,7 @@ const t = useTranslations(lang)
     }
 
     filtered.forEach((item) => {
-      const imgPath = `/img/sunflowerland/${item.name}.png`
+      const imgPath = encodeURI(`/img/sunflowerland/${item.name}.png`)
       
       // Colores de profit
       let profitColorClass = "text-terminal-muted"
@@ -799,7 +834,7 @@ const t = useTranslations(lang)
         <!-- Name -->
         <div class="flex items-center gap-3 mb-4 lg:mb-0">
           <div class="w-10 h-10 lg:w-8 lg:h-8 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center p-1.5 shrink-0">
-            <img src="${imgPath}" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm" onerror="this.src='/img/sunflowerland/123/empty.png'" loading="lazy" />
+            <img src="${imgPath}" alt="${item.name}" width="32" height="32" class="w-full h-full object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='/img/sunflowerland/123/bear.png'" loading="lazy" decoding="async" />
           </div>
           <div>
             <p class="text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors">${item.name}</p>
@@ -816,7 +851,7 @@ const t = useTranslations(lang)
           <span class="text-xs text-terminal-muted lg:hidden">${tBettyCoins}</span>
           <div class="flex items-center gap-1.5">
             <span class="text-sm font-bold text-yellow-400">${formatNumber(item.bettyCoins)}</span>
-            <img src="/img/sunflowerland/123/coins.png" class="w-3.5 h-3.5" alt="Coins" />
+            <img src="/img/sunflowerland/123/coins.png" width="14" height="14" class="w-3.5 h-3.5" alt="Coins" loading="lazy" decoding="async" />
           </div>
         </div>
 
@@ -825,7 +860,7 @@ const t = useTranslations(lang)
           <span class="text-xs text-terminal-muted lg:hidden">${tP2pPrice}</span>
           <div class="flex items-center gap-1.5">
             <span class="text-sm font-sans font-medium ${item.p2pPrice > 0 ? 'text-white/90' : 'text-white/30'}">${item.p2pPrice > 0 ? formatNumber(item.p2pPrice, 4) : 'N/A'}</span>
-            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full ${item.p2pPrice > 0 ? '' : 'opacity-30'}" alt="FLOWER" />
+            <img src="/img/sunflowerland/flower.jpg" width="14" height="14" class="w-3.5 h-3.5 rounded-full ${item.p2pPrice > 0 ? '' : 'opacity-30'}" alt="FLOWER" loading="lazy" decoding="async" />
           </div>
         </div>
 
@@ -835,7 +870,7 @@ const t = useTranslations(lang)
           <div class="flex items-center gap-1.5">
             <span class="text-sm font-bold ${profitColorClass}">${item.p2pPrice > 0 ? formatNumber(item.coinsPerFlower, 0) : 'N/A'}</span>
             <span class="text-[10px] text-white/30">/</span>
-            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full ${item.p2pPrice > 0 ? '' : 'opacity-30'}" alt="FLOWER" />
+            <img src="/img/sunflowerland/flower.jpg" width="14" height="14" class="w-3.5 h-3.5 rounded-full ${item.p2pPrice > 0 ? '' : 'opacity-30'}" alt="FLOWER" loading="lazy" decoding="async" />
           </div>
         </div>
 

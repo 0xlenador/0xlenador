@@ -11,8 +11,20 @@ const seo = {
   description: t("sfl.betty.seo.description"),
   image: "/img/meta/sunflowerland-og.webp",
 }
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: t("sfl.betty.seo.title"),
+  operatingSystem: "Web Browser",
+  applicationCategory: ["FinanceApplication", "GameApplication"],
+  description: t("sfl.betty.seo.description"),
+  url: "https://0xlenador.xyz/sfl-betty/",
+  author: { "@type": "Person", name: "0x Leñador", url: "https://0xlenador.xyz/" },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+}
 ---
 
-<Layout title={seo.title} description={seo.description} image={seo.image} customSpacing>
+<Layout title={seo.title} description={seo.description} image={seo.image} schema={schema} customSpacing>
   <SflBettyView />
 </Layout>
