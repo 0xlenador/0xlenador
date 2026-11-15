@@ -217,13 +217,101 @@ const LOVE_REQUESTS: Record<number, { petting: number; brush: number; music: num
   15: { petting: 0.1, brush: 0.2, music: 0.7 },
 }
 
-// Obtiene el alimento favorito oficial y más eficiente de cada tier y animal
-function getFavoriteFoodForLevel(animalId: string, toLevel: number) {
+// Cantidad de raciones requeridas por cada acción de alimentación según el código oficial de SFL
+const REQUIRED_FOOD_QTY: Record<string, number> = {
+  chicken: 1,
+  sheep: 3,
+  cow: 5,
+  pig: 1,
+}
+
+// Drops oficiales exactos según ANIMAL_RESOURCE_DROP de Sunflower Land
+const OFFICIAL_RESOURCE_DROPS: Record<string, Record<number, Array<{ name: string; amount: number; image: string }>>> = {
+  chicken: {
+    1: [{ name: "Egg", amount: 1, image: "/img/sunflowerland/Egg.png" }],
+    2: [{ name: "Egg", amount: 1, image: "/img/sunflowerland/Egg.png" }],
+    3: [{ name: "Egg", amount: 1, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
+    4: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
+    5: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
+    6: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
+    7: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
+    8: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
+    9: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
+    10: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
+    11: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
+    12: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
+    13: [{ name: "Egg", amount: 4, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
+    14: [{ name: "Egg", amount: 4, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
+    15: [{ name: "Egg", amount: 5, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 3, image: "/img/sunflowerland/Feather.png" }],
+  },
+  cow: {
+    1: [{ name: "Milk", amount: 1, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
+    2: [{ name: "Milk", amount: 1, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
+    3: [{ name: "Milk", amount: 1, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
+    4: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
+    5: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
+    6: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
+    7: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
+    8: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
+    9: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
+    10: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
+    11: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
+    12: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
+    13: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
+    14: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
+    15: [{ name: "Milk", amount: 4, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 4, image: "/img/sunflowerland/Leather.png" }],
+  },
+  sheep: {
+    1: [{ name: "Wool", amount: 1, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
+    2: [{ name: "Wool", amount: 1, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
+    3: [{ name: "Wool", amount: 1, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
+    4: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
+    5: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
+    6: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
+    7: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
+    8: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
+    9: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
+    10: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
+    11: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
+    12: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
+    13: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
+    14: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
+    15: [{ name: "Wool", amount: 4, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 4, image: "/img/sunflowerland/Merino Wool.png" }],
+  },
+  pig: {
+    1: [{ name: "Truffle", amount: 1, image: "/img/sunflowerland/truffle.webp" }],
+    2: [{ name: "Truffle", amount: 1, image: "/img/sunflowerland/truffle.webp" }],
+    3: [{ name: "Truffle", amount: 1, image: "/img/sunflowerland/truffle.webp" }],
+    4: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
+    5: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
+    6: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
+    7: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
+    8: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    9: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    10: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    11: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    12: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    13: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    14: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
+    15: [{ name: "Truffle", amount: 4, image: "/img/sunflowerland/truffle.webp" }],
+  },
+}
+
+// Obtiene el alimento favorito oficial y más eficiente de cada tier y animal según su nivel actual
+function getFavoriteFoodForLevel(animalId: string, currentLevel: number) {
   if (animalId === "pig") {
     let slopId = "basic_slop"
-    if (toLevel >= 3 && toLevel <= 5) slopId = "hearty_slop"
-    else if (toLevel >= 6 && toLevel <= 9) slopId = "rich_slop"
-    else if (toLevel >= 10) slopId = "gourmet_slop"
+    let slopXp = 60
+    if (currentLevel >= 3 && currentLevel <= 5) {
+      slopId = "hearty_slop"
+      slopXp = 60
+    } else if (currentLevel >= 6 && currentLevel <= 9) {
+      slopId = "rich_slop"
+      slopXp = 60
+    } else if (currentLevel >= 10) {
+      slopId = "gourmet_slop"
+      slopXp = 80
+    }
 
     const consumable = (consumablesDataRaw as any)[slopId]
     const options = consumable?.options || []
@@ -248,9 +336,9 @@ function getFavoriteFoodForLevel(animalId: string, toLevel: number) {
 
     return {
       name: consumable?.name || "Slop",
-      image: cheapestOpt.image || "/img/sunflowerland/Potato.png",
+      image: consumable?.image || "/img/sunflowerland/animals/basic_slop.webp",
       ingredient: `${cheapestOpt.amount}x ${cheapestOpt.name}`,
-      xp: consumable?.xp || 100,
+      xp: slopXp,
       costFlower: minCostFlower,
       costUsd: minCostFlower * flowerUsd,
       isFav: true,
@@ -258,38 +346,41 @@ function getFavoriteFoodForLevel(animalId: string, toLevel: number) {
   }
 
   // Para chicken, cow y sheep:
-  // Tiers oficiales de alimento favorito:
-  // Niveles 1-3: Kernel Blend (1x Corn, 60 XP)
-  // Niveles 4-6: Hay (1x Wheat, 60 XP)
-  // Niveles 7-10: NutriBarley (1x Barley, 60 XP)
-  // Niveles 11-15: Mixed Grain (1x Corn, 1x Wheat, 1x Barley, 80 XP)
-  if (toLevel <= 3) {
+  // Tiers oficiales de alimento favorito según nivel de origen (ANIMAL_FOOD_EXPERIENCE):
+  // Niveles 0-2: Kernel Blend (1x Corn, 60 XP)
+  // Niveles 3-5: Hay (1x Wheat, 60 XP)
+  // Niveles 6-9: NutriBarley (1x Barley, 60 XP)
+  // Niveles 10-15: Mixed Grain (1x Corn, 1x Wheat, 1x Barley, 80 XP)
+  if (currentLevel <= 2) {
     const cost = marketPrices["Corn"] || 0.02
+    const foodDef = (consumablesDataRaw as any)["kernel_blend"]
     return {
-      name: "Kernel Blend",
-      image: "/img/sunflowerland/Corn.png",
+      name: foodDef?.name || "Kernel Blend",
+      image: foodDef?.image || "/img/sunflowerland/animals/kernel_blend.webp",
       ingredient: "1x Corn",
       xp: 60,
       costFlower: cost,
       costUsd: cost * flowerUsd,
       isFav: true,
     }
-  } else if (toLevel <= 6) {
+  } else if (currentLevel <= 5) {
     const cost = marketPrices["Wheat"] || 0.01598
+    const foodDef = (consumablesDataRaw as any)["hay"]
     return {
-      name: "Hay",
-      image: "/img/sunflowerland/Wheat.png",
+      name: foodDef?.name || "Hay",
+      image: foodDef?.image || "/img/sunflowerland/animals/hay.webp",
       ingredient: "1x Wheat",
       xp: 60,
       costFlower: cost,
       costUsd: cost * flowerUsd,
       isFav: true,
     }
-  } else if (toLevel <= 10) {
+  } else if (currentLevel <= 9) {
     const cost = marketPrices["Barley"] || 0.02285
+    const foodDef = (consumablesDataRaw as any)["nutribarley"]
     return {
-      name: "NutriBarley",
-      image: "/img/sunflowerland/Barley.png",
+      name: foodDef?.name || "NutriBarley",
+      image: foodDef?.image || "/img/sunflowerland/animals/nutri_barley.webp",
       ingredient: "1x Barley",
       xp: 60,
       costFlower: cost,
@@ -301,9 +392,10 @@ function getFavoriteFoodForLevel(animalId: string, toLevel: number) {
     const wheatCost = marketPrices["Wheat"] || 0.01598
     const barleyCost = marketPrices["Barley"] || 0.02285
     const cost = cornCost + wheatCost + barleyCost
+    const foodDef = (consumablesDataRaw as any)["mixed_grain"]
     return {
-      name: "Mixed Grain",
-      image: "/img/sunflowerland/Corn.png",
+      name: foodDef?.name || "Mixed Grain",
+      image: foodDef?.image || "/img/sunflowerland/animals/mixed_grain.webp",
       ingredient: "1x Corn, 1x Wheat, 1x Barley",
       xp: 80,
       costFlower: cost,
@@ -355,26 +447,25 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
   const rawAnimal = (animalsDataRaw as any)[animalId]
   const rawBuilding = (buildingsDataRaw as any)[rawAnimal.buildingId]
 
-  // Mapeo de alimentos con imágenes y XP de consumablesDataRaw
+  // Mapeo de alimentos con imágenes reales y XP de consumablesDataRaw
   const foods = rawAnimal.acceptedFoods.map((foodId: string) => {
     const consumable = (consumablesDataRaw as any)[foodId]
     if (consumable) {
-      const firstIngImg = consumable.craftingIngredients?.[0]?.image || consumable.image || "/img/sunflowerland/Wheat.png"
       return {
         name: consumable.name,
-        image: consumable.image || firstIngImg,
+        image: consumable.image || `/img/sunflowerland/animals/${foodId}.webp`,
         xp: consumable.xp,
       }
     }
     return {
       name: foodId.replace(/_/g, " "),
-      image: `/img/sunflowerland/${foodId.charAt(0).toUpperCase() + foodId.slice(1)}.png`,
+      image: `/img/sunflowerland/animals/${foodId}.webp`,
       xp: undefined,
     }
   })
 
-  // Alimento predeterminado para el cálculo del ciclo base (Kernel Blend = 60 XP)
-  const defaultFood = foods[0] || { name: "Kernel Blend", image: "/img/sunflowerland/Corn.png", xp: 60 }
+  // Alimento predeterminado para el cálculo del ciclo base
+  const defaultFood = foods[0] || { name: "Kernel Blend", image: "/img/sunflowerland/animals/kernel_blend.webp", xp: 60 }
   const cycleFoodXp = defaultFood.xp || 60
 
   let currentCarryover = 0
@@ -432,22 +523,24 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     const singleAffectionXp = (loveProb.petting * 10) + (loveProb.brush * 20) + (loveProb.music * 40)
     const affectionXp = isInstant ? 0 : Math.round(singleAffectionXp * 2)
 
-    // Alimento favorito oficial para este nivel
-    const favFood = getFavoriteFoodForLevel(animalId, toLvl)
+    // Alimento favorito oficial para el nivel actual de origen
+    const favFood = getFavoriteFoodForLevel(animalId, fromLvl)
     const unitFoodXp = favFood.xp
 
     // XP que falta cubrir con alimento tras descontar el residual previo y el afecto
     const neededFromFood = Math.max(0, xpReq - receivedResidual - affectionXp)
 
-    // Unidades de alimento necesarias para que el animal alcance o supere el umbral del nivel
-    const foodUnits = Math.max(1, Math.ceil(neededFromFood / unitFoodXp))
+    // Cada acción de alimentación otorga unitFoodXp y consume REQUIRED_FOOD_QTY raciones
+    const neededFeeds = Math.max(1, Math.ceil(neededFromFood / unitFoodXp))
+    const requiredPerFeed = REQUIRED_FOOD_QTY[animalId] || 1
+    const foodUnits = neededFeeds * requiredPerFeed
 
     // Costo total de las raciones completas compradas para este nivel
     const foodCostFlower = foodUnits * favFood.costFlower
     const foodCostUsd = foodUnits * favFood.costUsd
 
     // XP total de comida suministrada y XP total obtenida en el ciclo
-    const totalFoodXp = foodUnits * unitFoodXp
+    const totalFoodXp = neededFeeds * unitFoodXp
     const totalXpObtained = affectionXp + totalFoodXp
 
     // Total acumulado disponible y remanente residual que pasa al siguiente nivel
@@ -455,36 +548,15 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     const residualGenerated = Math.max(0, totalAvailable - xpReq)
     currentCarryover = residualGenerated
 
-    // Recursos obtenidos en el nivel
-    let primaryAmount = 1
-    if (toLvl >= 6 && toLvl <= 10) primaryAmount = 2
-    if (toLvl >= 11) primaryAmount = 3
-
-    const secUnlock = rawAnimal.drops.secondary?.unlockLevel || 99
-    const secondaryAmount = toLvl >= secUnlock ? 1 : 0
-
-    const resources: AnimalLevelDisplay["resources"] = [
-      {
-        name: rawAnimal.drops.primary.name,
-        amount: primaryAmount,
-        image: rawAnimal.drops.primary.image,
-      },
-    ]
-
-    if (secondaryAmount > 0 && rawAnimal.drops.secondary) {
-      resources.push({
-        name: rawAnimal.drops.secondary.name,
-        amount: secondaryAmount,
-        image: rawAnimal.drops.secondary.image,
-      })
-    }
+    // Recursos obtenidos oficialmente según ANIMAL_RESOURCE_DROP
+    const resources: AnimalLevelDisplay["resources"] = OFFICIAL_RESOURCE_DROPS[animalId]?.[toLvl] || []
 
     // Ingresos brutos por venta de recursos en FLOWER y USD
-    const primaryUnitPrice = marketPrices[rawAnimal.drops.primary.name] || 0
-    const secondaryUnitPrice = rawAnimal.drops.secondary
-      ? (marketPrices[rawAnimal.drops.secondary.name] || 0)
-      : 0
-    const revenueFlower = (primaryAmount * primaryUnitPrice) + (secondaryAmount * secondaryUnitPrice)
+    let revenueFlower = 0
+    for (const res of resources) {
+      const unitPrice = marketPrices[res.name] || 0
+      revenueFlower += res.amount * unitPrice
+    }
     const revenueUsd = revenueFlower * flowerUsd
 
     // Profit neto exclusivo en FLOWER y USD imputando exactamente el costo de alimento consumido
