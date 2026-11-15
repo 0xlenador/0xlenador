@@ -308,6 +308,7 @@ const OFFICIAL_RESOURCE_DROPS: Record<string, Record<number, Array<{ name: strin
 interface FoodCandidate {
   id: string
   name: string
+  displayName?: string
   image: string
   ingredient: string
   ingredientImage?: string
@@ -319,13 +320,17 @@ interface FoodCandidate {
   costPerFeed: number
   costPerXp: number
   isFav: boolean
+  isOptimal?: boolean
 }
 
-// Obtiene el alimento matemáticamente más óptimo en costo por XP (evaluando granos, slops, omnifeed y escarabajos)
-function getOptimalFoodForLevel(animalId: string, currentLevel: number): FoodCandidate {
+// Obtiene todas las opciones de alimento elegibles para el nivel y determina la matemáticamente más óptima
+function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
+  optimal: FoodCandidate
+  options: FoodCandidate[]
+} {
   const candidates: FoodCandidate[] = []
 
-  // 1. Alimento regular favorito del tier
+  // 1. Alimento regular (Slops para Pig, Granos para otros)
   if (animalId === "pig") {
     let slopId = "basic_slop"
     let slopXp = 60
@@ -343,113 +348,111 @@ function getOptimalFoodForLevel(animalId: string, currentLevel: number): FoodCan
     const consumable = (consumablesDataRaw as any)[slopId]
     const options = consumable?.options || []
 
-    let cheapestOpt = options[0] || { name: "Potato", amount: 150, image: "/img/sunflowerland/Potato.png" }
-    let minCostFlower = Infinity
-
     for (const opt of options) {
       const price = marketPrices[opt.name] ?? 0
       if (price > 0) {
-        const total = price * opt.amount
-        if (total < minCostFlower) {
-          minCostFlower = total
-          cheapestOpt = opt
-        }
+        const totalCost = price * opt.amount
+        candidates.push({
+          id: `${slopId}_${opt.name}`,
+          name: consumable?.name || "Slop",
+          displayName: `${consumable?.name || "Slop"} (${opt.name})`,
+          image: consumable?.image || `/img/sunflowerland/animals/${slopId}.webp`,
+          ingredient: `${opt.amount}x ${opt.name}`,
+          ingredientImage: opt.image,
+          ingredientName: opt.name,
+          ingredientAmount: opt.amount,
+          xp: slopXp,
+          unitCostFlower: totalCost,
+          requiredPerFeed: 1,
+          costPerFeed: totalCost,
+          costPerXp: totalCost / slopXp,
+          isFav: true,
+          isOptimal: false,
+        })
       }
     }
 
-    if (minCostFlower === Infinity) {
-      minCostFlower = 0.0346
+    if (candidates.length === 0) {
+      candidates.push({
+        id: slopId,
+        name: consumable?.name || "Slop",
+        displayName: consumable?.name || "Slop",
+        image: consumable?.image || `/img/sunflowerland/animals/${slopId}.webp`,
+        ingredient: "150x Potato",
+        ingredientImage: "/img/sunflowerland/Potato.png",
+        ingredientName: "Potato",
+        ingredientAmount: 150,
+        xp: slopXp,
+        unitCostFlower: 0.0346,
+        requiredPerFeed: 1,
+        costPerFeed: 0.0346,
+        costPerXp: 0.0346 / slopXp,
+        isFav: true,
+        isOptimal: false,
+      })
     }
-
-    candidates.push({
-      id: slopId,
-      name: consumable?.name || "Slop",
-      image: consumable?.image || `/img/sunflowerland/animals/${slopId}.webp`,
-      ingredient: `${cheapestOpt.amount}x ${cheapestOpt.name}`,
-      ingredientImage: cheapestOpt.image,
-      ingredientName: cheapestOpt.name,
-      ingredientAmount: cheapestOpt.amount,
-      xp: slopXp,
-      unitCostFlower: minCostFlower,
-      requiredPerFeed: 1,
-      costPerFeed: minCostFlower,
-      costPerXp: minCostFlower / slopXp,
-      isFav: true,
-    })
   } else {
     // chicken, cow, sheep
     const reqQty = REQUIRED_FOOD_QTY[animalId] || 1
 
-    if (currentLevel <= 2) {
-      const unitPrice = marketPrices["Corn"] || 0.02
-      const costPerFeed = reqQty * unitPrice
-      const foodDef = (consumablesDataRaw as any)["kernel_blend"]
-      candidates.push({
+    const grainsDef = [
+      {
         id: "kernel_blend",
-        name: foodDef?.name || "Kernel Blend",
-        image: foodDef?.image || "/img/sunflowerland/animals/kernel_blend.webp",
+        name: "Kernel Blend",
+        image: "/img/sunflowerland/animals/kernel_blend.webp",
         ingredient: "1x Corn",
-        xp: 60,
-        unitCostFlower: unitPrice,
-        requiredPerFeed: reqQty,
-        costPerFeed,
-        costPerXp: costPerFeed / 60,
-        isFav: true,
-      })
-    } else if (currentLevel <= 5) {
-      const unitPrice = marketPrices["Wheat"] || 0.01598
-      const costPerFeed = reqQty * unitPrice
-      const foodDef = (consumablesDataRaw as any)["hay"]
-      candidates.push({
+        price: marketPrices["Corn"] || 0.02,
+        xp: currentLevel <= 2 ? 60 : 10,
+        isFav: currentLevel <= 2,
+      },
+      {
         id: "hay",
-        name: foodDef?.name || "Hay",
-        image: foodDef?.image || "/img/sunflowerland/animals/hay.webp",
+        name: "Hay",
+        image: "/img/sunflowerland/animals/hay.webp",
         ingredient: "1x Wheat",
-        xp: 60,
-        unitCostFlower: unitPrice,
-        requiredPerFeed: reqQty,
-        costPerFeed,
-        costPerXp: costPerFeed / 60,
-        isFav: true,
-      })
-    } else if (currentLevel <= 9) {
-      const unitPrice = marketPrices["Barley"] || 0.02285
-      const costPerFeed = reqQty * unitPrice
-      const foodDef = (consumablesDataRaw as any)["nutribarley"]
-      candidates.push({
+        price: marketPrices["Wheat"] || 0.01598,
+        xp: currentLevel >= 3 && currentLevel <= 5 ? 60 : (currentLevel <= 2 ? 10 : 20),
+        isFav: currentLevel >= 3 && currentLevel <= 5,
+      },
+      {
         id: "nutribarley",
-        name: foodDef?.name || "NutriBarley",
-        image: foodDef?.image || "/img/sunflowerland/animals/nutri_barley.webp",
+        name: "NutriBarley",
+        image: "/img/sunflowerland/animals/nutri_barley.webp",
         ingredient: "1x Barley",
-        xp: 60,
-        unitCostFlower: unitPrice,
-        requiredPerFeed: reqQty,
-        costPerFeed,
-        costPerXp: costPerFeed / 60,
-        isFav: true,
-      })
-    } else {
-      const cornCost = marketPrices["Corn"] || 0.02
-      const wheatCost = marketPrices["Wheat"] || 0.01598
-      const barleyCost = marketPrices["Barley"] || 0.02285
-      const unitPrice = cornCost + wheatCost + barleyCost
-      const costPerFeed = reqQty * unitPrice
-      const foodDef = (consumablesDataRaw as any)["mixed_grain"]
-      candidates.push({
+        price: marketPrices["Barley"] || 0.02285,
+        xp: currentLevel >= 6 && currentLevel <= 9 ? 60 : (currentLevel <= 5 ? 20 : 30),
+        isFav: currentLevel >= 6 && currentLevel <= 9,
+      },
+      {
         id: "mixed_grain",
-        name: foodDef?.name || "Mixed Grain",
-        image: foodDef?.image || "/img/sunflowerland/animals/mixed_grain.webp",
+        name: "Mixed Grain",
+        image: "/img/sunflowerland/animals/mixed_grain.webp",
         ingredient: "1x Corn, 1x Wheat, 1x Barley",
-        xp: 80,
-        unitCostFlower: unitPrice,
+        price: (marketPrices["Corn"] || 0.02) + (marketPrices["Wheat"] || 0.01598) + (marketPrices["Barley"] || 0.02285),
+        xp: currentLevel >= 10 ? 80 : 30,
+        isFav: currentLevel >= 10,
+      },
+    ]
+
+    for (const g of grainsDef) {
+      const costPerFeed = reqQty * g.price
+      candidates.push({
+        id: g.id,
+        name: g.name,
+        displayName: g.name,
+        image: g.image,
+        ingredient: g.ingredient,
+        xp: g.xp,
+        unitCostFlower: g.price,
         requiredPerFeed: reqQty,
         costPerFeed,
-        costPerXp: costPerFeed / 80,
-        isFav: true,
+        costPerXp: costPerFeed / g.xp,
+        isFav: g.isFav,
+        isOptimal: false,
       })
     }
 
-    // 2. Omnifeed (solo chicken, cow, sheep)
+    // Omnifeed (Chicken, Cow, Sheep)
     if (gemFlowerPrice > 0) {
       const omniXp = currentLevel <= 9 ? 60 : 80
       const costPerFeed = reqQty * gemFlowerPrice
@@ -457,6 +460,7 @@ function getOptimalFoodForLevel(animalId: string, currentLevel: number): FoodCan
       candidates.push({
         id: "omnifeed",
         name: omniDef?.name || "Omnifeed",
+        displayName: "Omnifeed",
         image: omniDef?.image || "/img/sunflowerland/animals/omnifeed.webp",
         ingredient: "1x Gem",
         xp: omniXp,
@@ -465,11 +469,12 @@ function getOptimalFoodForLevel(animalId: string, currentLevel: number): FoodCan
         costPerFeed,
         costPerXp: costPerFeed / omniXp,
         isFav: true,
+        isOptimal: false,
       })
     }
   }
 
-  // 3. Escarabajos (Chicken, Cow, Sheep, Pig) - Cada ración consume siempre 1 escarabajo
+  // 2. Escarabajos (Chicken, Cow, Sheep, Pig)
   const beetlesList = [
     { id: "green_beetle", name: "Green Beetle", xp: 100, img: "/img/sunflowerland/green_beetle.webp" },
     { id: "blue_beetle", name: "Blue Beetle", xp: 200, img: "/img/sunflowerland/blue_beetle.webp" },
@@ -483,20 +488,29 @@ function getOptimalFoodForLevel(animalId: string, currentLevel: number): FoodCan
       candidates.push({
         id: b.id,
         name: b.name,
+        displayName: b.name,
         image: b.img,
-        ingredient: "Cave Beetle",
+        ingredient: "Beetle P2P",
         xp: b.xp,
         unitCostFlower: price,
         requiredPerFeed: 1,
         costPerFeed: price,
         costPerXp: price / b.xp,
         isFav: true,
+        isOptimal: false,
       })
     }
   }
 
   // Selección matemática del de menor costo por unidad de XP
-  return candidates.reduce((best, curr) => (curr.costPerXp < best.costPerXp ? curr : best))
+  const optimal = candidates.reduce((best, curr) => (curr.costPerXp < best.costPerXp ? curr : best))
+  optimal.isOptimal = true
+
+  return { optimal, options: candidates }
+}
+
+function getOptimalFoodForLevel(animalId: string, currentLevel: number): FoodCandidate {
+  return getAllFoodOptionsForLevel(animalId, currentLevel).optimal
 }
 
 const formatProfitFlower = (val: number) => {
@@ -537,9 +551,19 @@ interface AnimalMetaDisplay {
   levels: AnimalLevelDisplay[]
 }
 
+const clientAnimalsData: Record<string, any> = {}
+
 const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) => {
   const rawAnimal = (animalsDataRaw as any)[animalId]
   const rawBuilding = (buildingsDataRaw as any)[rawAnimal.buildingId]
+
+  clientAnimalsData[animalId] = {
+    id: animalId,
+    name: rawAnimal.name,
+    sleepHours: rawAnimal.sleepDurationHours,
+    requiredPerFeed: REQUIRED_FOOD_QTY[animalId] || 1,
+    levels: []
+  }
 
   // Mapeo de alimentos con imágenes reales y XP de consumablesDataRaw
   const foods = rawAnimal.acceptedFoods.map((foodId: string) => {
@@ -617,8 +641,8 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     const singleAffectionXp = (loveProb.petting * 10) + (loveProb.brush * 20) + (loveProb.music * 40)
     const affectionXp = isInstant ? 0 : Math.round(singleAffectionXp * 2)
 
-    // Alimento óptimo más económico por unidad de XP (evaluando granos, slops, omnifeed y escarabajos)
-    const optFood = getOptimalFoodForLevel(animalId, fromLvl)
+    // Alimento óptimo más económico por unidad de XP y opciones completas
+    const { optimal: optFood, options: foodOptions } = getAllFoodOptionsForLevel(animalId, fromLvl)
     const unitFoodXp = optFood.xp
 
     // XP que falta cubrir con alimento tras descontar el residual previo y el afecto
@@ -655,6 +679,18 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     // Profit neto exclusivo en FLOWER y USD imputando exactamente el costo de alimento consumido
     const profitFlower = revenueFlower - foodCostFlower
     const profitUsd = profitFlower * flowerUsd
+
+    clientAnimalsData[animalId].levels.push({
+      level: toLvl,
+      fromLevel: fromLvl,
+      xpRequired: xpReq,
+      isInstant,
+      affectionXp,
+      revenueFlower,
+      selectedFoodId: optFood.id,
+      optimalFoodId: optFood.id,
+      options: foodOptions,
+    })
 
     return {
       fromLevel: fromLvl,
@@ -722,6 +758,15 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     levels,
   }
 })
+
+const clientPayload = {
+  flowerUsd,
+  resLabel,
+  affecLabel,
+  foodLabel,
+  surplusLabel,
+  animals: clientAnimalsData,
+}
 
 // FAQ Items
 const faqItems = [
@@ -1264,7 +1309,9 @@ const faqItems = [
                   return (
                     <div
                       class="animal-level-row hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-2xl p-4 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[16%_16%_22%_20%_13%_13%] lg:items-center lg:py-3.5"
+                      data-animal={animal.id}
                       data-level={lvl.toLevel}
+                      data-from-level={lvl.fromLevel}
                       data-search={`${lvl.fromLevel} ${lvl.toLevel} ${lvl.food?.name || ''} ${(lvl.affectionTools || []).map(t => t.name).join(' ')} ${(lvl.resources || []).map(r => r?.name || '').join(' ')}`}
                     >
                       <!-- Columna 1: Nivel (0 > 1) - XP y debajo tiempo (24h) -->
@@ -1325,21 +1372,31 @@ const faqItems = [
                           <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colFeed")}</span>
                           <div class="mt-1 flex flex-col">
                             <div class="flex items-center gap-1.5 flex-wrap">
-                              <div class="relative shrink-0 flex items-center justify-center">
-                                <img src={lvl.food.image} alt={lvl.food.name} class="w-3.5 h-3.5 object-contain" />
-                                {lvl.food.ingredientImage && (
-                                  <img
-                                    src={lvl.food.ingredientImage}
-                                    alt={lvl.food.ingredientName || ""}
-                                    title={lvl.food.ingredient}
-                                    class="absolute -bottom-1 -right-1 w-2.5 h-2.5 object-contain drop-shadow"
-                                    loading="lazy"
-                                  />
-                                )}
+                              <div class="relative shrink-0 flex items-center justify-center row-food-icon-wrap">
+                                <img src={lvl.food.image} alt={lvl.food.name} class="w-3.5 h-3.5 object-contain row-food-img" />
+                                <span class={`row-food-overlay-wrap ${lvl.food.ingredientImage ? "" : "hidden"}`}>
+                                  {lvl.food.ingredientImage && (
+                                    <img
+                                      src={lvl.food.ingredientImage}
+                                      alt={lvl.food.ingredientName || ""}
+                                      title={lvl.food.ingredient}
+                                      class="absolute -bottom-1 -right-1 w-2.5 h-2.5 object-contain drop-shadow"
+                                      loading="lazy"
+                                    />
+                                  )}
+                                </span>
                               </div>
-                              <span class="text-xs font-mono text-white truncate font-medium">
-                                {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
-                              </span>
+                              <button
+                                type="button"
+                                class="food-selector-trigger text-xs font-mono text-white truncate font-medium hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none"
+                                data-animal={animal.id}
+                                data-level={lvl.toLevel}
+                                title="Clic para elegir alimento"
+                              >
+                                <span class="row-food-name">
+                                  {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
+                                </span>
+                              </button>
                             </div>
                             <div class="flex items-center gap-1 mt-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight">
                               <img
@@ -1348,9 +1405,9 @@ const faqItems = [
                                 class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
                                 loading="lazy"
                               />
-                              <span>{lvl.food.costFlower.toFixed(4)}</span>
+                              <span class="row-food-flower">{lvl.food.costFlower.toFixed(4)}</span>
                             </div>
-                            <span class="text-[9px] font-mono text-white/50 leading-tight mt-0.5">
+                            <span class="row-food-usd text-[9px] font-mono text-white/50 leading-tight mt-0.5">
                               ${lvl.food.costUsd.toFixed(4)} USD
                             </span>
                           </div>
@@ -1360,11 +1417,11 @@ const faqItems = [
                         <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between col-span-2">
                           <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colXpCalc")}</span>
                           <div class="mt-1 flex flex-col">
-                            <span class="text-xs font-mono font-bold text-emerald-400">+{lvl.totalAvailable} XP</span>
-                            <span class="text-[10px] font-mono text-white/70 mt-0.5">
+                            <span class="row-xp-total text-xs font-mono font-bold text-emerald-400">+{lvl.totalAvailable} XP</span>
+                            <span class="row-xp-breakdown text-[10px] font-mono text-white/70 mt-0.5">
                               {lvl.residualXp} {resLabel} + {lvl.affectionXp} {affecLabel} + {lvl.totalFoodXp} {foodLabel}
                             </span>
-                            <span class="text-[9px] font-mono text-white/40 mt-0.5">
+                            <span class="row-xp-surplus text-[9px] font-mono text-white/40 mt-0.5">
                               ({surplusLabel} +{lvl.residualGenerated} XP)
                             </span>
                           </div>
@@ -1401,10 +1458,10 @@ const faqItems = [
                         <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
                           <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colProfit")}</span>
                           <div class="mt-1 flex flex-col">
-                            <span class:list={["text-xs font-mono font-bold", lvl.profitFlower >= 0 ? "text-emerald-400" : "text-rose-400"]}>
+                            <span class:list={["row-profit-flower text-xs font-mono font-bold", lvl.profitFlower >= 0 ? "text-emerald-400" : "text-rose-400"]}>
                               {formatProfitFlower(lvl.profitFlower)}
                             </span>
-                            <span class:list={["text-[10px] font-mono", lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80"]}>
+                            <span class:list={["row-profit-usd text-[10px] font-mono", lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80"]}>
                               {formatProfitUsd(lvl.profitUsd)} USD
                             </span>
                           </div>
@@ -1450,22 +1507,32 @@ const faqItems = [
 
                       <!-- Columna 3: Alimento Favorito Oficial (Desktop) -->
                       <div class="hidden lg:flex px-3 items-center gap-2.5">
-                        <div class="relative shrink-0 flex items-center justify-center">
-                          <img src={lvl.food.image} alt={lvl.food.name} class="w-4.5 h-4.5 object-contain drop-shadow" />
-                          {lvl.food.ingredientImage && (
-                            <img
-                              src={lvl.food.ingredientImage}
-                              alt={lvl.food.ingredientName || ""}
-                              title={lvl.food.ingredient}
-                              class="absolute -bottom-1 -right-1.5 w-3 h-3 object-contain drop-shadow z-10"
-                              loading="lazy"
-                            />
-                          )}
+                        <div class="relative shrink-0 flex items-center justify-center row-food-icon-wrap">
+                          <img src={lvl.food.image} alt={lvl.food.name} class="w-4.5 h-4.5 object-contain drop-shadow row-food-img" />
+                          <span class={`row-food-overlay-wrap ${lvl.food.ingredientImage ? "" : "hidden"}`}>
+                            {lvl.food.ingredientImage && (
+                              <img
+                                src={lvl.food.ingredientImage}
+                                alt={lvl.food.ingredientName || ""}
+                                title={lvl.food.ingredient}
+                                class="absolute -bottom-1 -right-1.5 w-3 h-3 object-contain drop-shadow z-10"
+                                loading="lazy"
+                              />
+                            )}
+                          </span>
                         </div>
                         <div class="flex flex-col min-w-0">
-                          <span class="text-xs text-white font-medium truncate" title={lvl.food.ingredient ? `${lvl.food.name} (${lvl.food.ingredient})` : lvl.food.name}>
-                            {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
-                          </span>
+                          <button
+                            type="button"
+                            class="food-selector-trigger text-xs text-white font-medium truncate hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none flex items-center gap-1 min-w-0"
+                            data-animal={animal.id}
+                            data-level={lvl.toLevel}
+                            title="Clic para elegir alimento"
+                          >
+                            <span class="row-food-name truncate" title={lvl.food.ingredient ? `${lvl.food.name} (${lvl.food.ingredient})` : lvl.food.name}>
+                              {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
+                            </span>
+                          </button>
                           <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-0.5">
                             <img
                               src="/img/sunflowerland/flower.jpg"
@@ -1473,9 +1540,9 @@ const faqItems = [
                               class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
                               loading="lazy"
                             />
-                            <span>{lvl.food.costFlower.toFixed(4)}</span>
+                            <span class="row-food-flower">{lvl.food.costFlower.toFixed(4)}</span>
                           </div>
-                          <span class="text-[9px] font-mono text-white/50 leading-tight">
+                          <span class="row-food-usd text-[9px] font-mono text-white/50 leading-tight">
                             ${lvl.food.costUsd.toFixed(4)} USD
                           </span>
                         </div>
@@ -1483,13 +1550,13 @@ const faqItems = [
 
                       <!-- Columna 4: Cálculo XP (Desktop) -->
                       <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
-                        <span class="font-mono font-bold text-sm text-emerald-400 leading-tight">
+                        <span class="row-xp-total font-mono font-bold text-sm text-emerald-400 leading-tight">
                           +{lvl.totalAvailable} XP
                         </span>
-                        <span class="text-[10px] font-mono text-white/70 leading-tight mt-0.5 truncate" title={`${lvl.residualXp} ${resLabel} + ${lvl.affectionXp} ${affecLabel} + ${lvl.totalFoodXp} ${foodLabel}`}>
+                        <span class="row-xp-breakdown text-[10px] font-mono text-white/70 leading-tight mt-0.5 truncate" title={`${lvl.residualXp} ${resLabel} + ${lvl.affectionXp} ${affecLabel} + ${lvl.totalFoodXp} ${foodLabel}`}>
                           {lvl.residualXp} {resLabel} + {lvl.affectionXp} {affecLabel} + {lvl.totalFoodXp} {foodLabel}
                         </span>
-                        <span class="text-[9px] font-mono text-white/40 leading-tight mt-0.5">
+                        <span class="row-xp-surplus text-[9px] font-mono text-white/40 leading-tight mt-0.5">
                           ({surplusLabel} +{lvl.residualGenerated} XP)
                         </span>
                       </div>
@@ -1521,15 +1588,15 @@ const faqItems = [
                       <!-- Columna 7: Profit exclusivo en FLOWER y USD (Desktop) -->
                       <div class="hidden lg:flex px-3 items-center">
                         <div class:list={[
-                          "flex flex-col px-2.5 py-1 rounded-lg border font-mono",
+                          "row-profit-badge flex flex-col px-2.5 py-1 rounded-lg border font-mono",
                           lvl.profitFlower >= 0
                             ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
                             : "bg-rose-500/10 border-rose-500/20 text-rose-400"
                         ]}>
-                          <span class="font-bold text-xs leading-tight">
+                          <span class="row-profit-flower font-bold text-xs leading-tight">
                             {formatProfitFlower(lvl.profitFlower)}
                           </span>
-                          <span class:list={["text-[10px] leading-tight", lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80"]}>
+                          <span class:list={["row-profit-usd text-[10px] leading-tight", lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80"]}>
                             {formatProfitUsd(lvl.profitUsd)} USD
                           </span>
                         </div>
@@ -1544,6 +1611,15 @@ const faqItems = [
       })
     }
   </div>
+
+  <!-- Modal / Dropdown Flotante Minimalista de Selección de Alimento -->
+  <div
+    id="sflFoodDropdown"
+    class="fixed hidden z-50 bg-[#161616]/98 border border-white/10 rounded-2xl p-2 shadow-2xl backdrop-blur-xl max-h-80 overflow-y-auto no-scrollbar w-72 flex flex-col gap-1.5 transition-all duration-150"
+    style="box-shadow: 0 20px 40px -15px rgba(0,0,0,0.9);"
+  ></div>
+
+  <script id="sflAnimalsData" type="application/json" set:html={JSON.stringify(clientPayload)} />
 
   <div slot="footer" class="mt-12">
     <!-- Acordeón de Preguntas Frecuentes (FAQ) -->
@@ -1666,5 +1742,299 @@ const faqItems = [
         }
       })
     })
+
+    // 5. Selector flotante de alimentos y recálculo en tiempo real
+    const dataScript = document.getElementById("sflAnimalsData")
+    if (dataScript) {
+      try {
+        const clientState = JSON.parse(dataScript.textContent || "{}")
+        const dropdown = document.getElementById("sflFoodDropdown")
+        let activeTrigger = null
+
+        const closeDropdown = () => {
+          if (dropdown) {
+            dropdown.classList.add("hidden")
+            dropdown.innerHTML = ""
+          }
+          activeTrigger = null
+        }
+
+        const openDropdown = (trigger, animalId, level) => {
+          if (!dropdown) return
+          if (activeTrigger === trigger) {
+            closeDropdown()
+            return
+          }
+
+          const animal = clientState.animals?.[animalId]
+          if (!animal) return
+
+          const lvlData = animal.levels?.find((l) => l.level === Number(level))
+          if (!lvlData || !lvlData.options) return
+
+          activeTrigger = trigger
+
+          // Renderizar opciones minimalistas
+          dropdown.innerHTML = `
+            <div class="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-white/40 border-b border-white/5 flex items-center justify-between">
+              <span>Alimento (Nivel ${lvlData.level})</span>
+              <span class="text-[9px] text-emerald-400/80">Seleccionar</span>
+            </div>
+            <div class="flex flex-col gap-1 mt-1 max-h-64 overflow-y-auto no-scrollbar">
+              ${lvlData.options
+                .map((opt) => {
+                  const isSelected = opt.id === lvlData.selectedFoodId
+                  const isOptimal = opt.isOptimal
+                  return `
+                  <button
+                    type="button"
+                    class="food-option-btn text-left p-1.5 rounded-xl transition-all cursor-pointer border flex items-center justify-between gap-2 ${
+                      isSelected
+                        ? "bg-white/10 border-emerald-500/40 text-white"
+                        : "bg-white/[0.02] border-transparent hover:bg-white/5 text-white/80"
+                    }"
+                    data-animal="${animalId}"
+                    data-level="${level}"
+                    data-food-id="${opt.id}"
+                  >
+                    <div class="flex items-center gap-2 min-w-0">
+                      <div class="relative shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-black/40 border border-white/10">
+                        <img src="${opt.image}" alt="${opt.name}" class="w-4 h-4 object-contain" />
+                        ${
+                          opt.ingredientImage
+                            ? `<img src="${opt.ingredientImage}" alt="" class="absolute -bottom-1 -right-1 w-2.5 h-2.5 object-contain drop-shadow" />`
+                            : ""
+                        }
+                      </div>
+                      <div class="flex flex-col min-w-0">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                          <span class="text-xs font-medium text-white truncate">${opt.name}</span>
+                          ${
+                            isOptimal
+                              ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ÓPTIMO</span>`
+                              : ""
+                          }
+                        </div>
+                        <span class="text-[9px] font-mono text-white/40 truncate">${opt.ingredient || ""}</span>
+                      </div>
+                    </div>
+                    <div class="flex flex-col items-end shrink-0 font-mono text-right">
+                      <span class="text-[11px] font-bold text-emerald-400">+${opt.xp} XP</span>
+                      <span class="text-[9px] text-white/50">${opt.costPerFeed.toFixed(4)} FL</span>
+                    </div>
+                  </button>
+                `
+                })
+                .join("")}
+            </div>
+          `
+
+          // Posicionamiento flotante seguro
+          const rect = trigger.getBoundingClientRect()
+          const menuWidth = 288
+          let left = rect.left
+          if (left + menuWidth > window.innerWidth - 12) {
+            left = window.innerWidth - menuWidth - 12
+          }
+          if (left < 12) left = 12
+
+          let top = rect.bottom + 6
+          const menuHeight = 280
+          if (top + menuHeight > window.innerHeight - 12) {
+            top = Math.max(12, rect.top - menuHeight - 6)
+          }
+
+          dropdown.style.top = `${top}px`
+          dropdown.style.left = `${left}px`
+          dropdown.classList.remove("hidden")
+        }
+
+        const recalculateAnimalProgression = (animalId) => {
+          const animal = clientState.animals?.[animalId]
+          if (!animal || !animal.levels) return
+
+          let currentCarryover = 0
+
+          animal.levels.forEach((lvl) => {
+            const isFirst = lvl.fromLevel === 0
+            const receivedResidual = isFirst ? 0 : currentCarryover
+            const xpReq = lvl.xpRequired
+            const affectionXp = lvl.affectionXp || 0
+
+            const chosenFood =
+              lvl.options.find((opt) => opt.id === lvl.selectedFoodId) ||
+              lvl.options.find((opt) => opt.isOptimal) ||
+              lvl.options[0]
+
+            const unitFoodXp = chosenFood.xp
+            const neededFromFood = Math.max(0, xpReq - receivedResidual - affectionXp)
+            const neededFeeds = Math.max(1, Math.ceil(neededFromFood / unitFoodXp))
+            const foodUnits = neededFeeds * chosenFood.requiredPerFeed
+
+            const foodCostFlower = neededFeeds * chosenFood.costPerFeed
+            const foodCostUsd = foodCostFlower * clientState.flowerUsd
+
+            const totalFoodXp = neededFeeds * unitFoodXp
+            const totalXpObtained = affectionXp + totalFoodXp
+            const totalAvailable = receivedResidual + totalXpObtained
+            const residualGenerated = Math.max(0, totalAvailable - xpReq)
+            currentCarryover = residualGenerated
+
+            const profitFlower = lvl.revenueFlower - foodCostFlower
+            const profitUsd = profitFlower * clientState.flowerUsd
+
+            // Formateadores
+            const signFlower = profitFlower >= 0 ? "+" : ""
+            const formattedProfitFlower = `${signFlower}${profitFlower.toFixed(4)} FL`
+            const signUsd = profitUsd >= 0 ? "+" : "-"
+            const formattedProfitUsd = `${signUsd}$${Math.abs(profitUsd).toFixed(4)} USD`
+
+            // Actualizar filas de DOM
+            const rows = document.querySelectorAll(
+              `.animal-level-row[data-animal="${animalId}"][data-level="${lvl.level}"]`
+            )
+            rows.forEach((row) => {
+              // 1. Food img & overlay
+              const foodImgs = row.querySelectorAll(".row-food-img")
+              foodImgs.forEach((img) => {
+                img.src = chosenFood.image
+                img.alt = chosenFood.name
+              })
+              const overlayWraps = row.querySelectorAll(".row-food-overlay-wrap")
+              overlayWraps.forEach((wrap) => {
+                if (chosenFood.ingredientImage) {
+                  wrap.innerHTML = `<img src="${chosenFood.ingredientImage}" alt="${chosenFood.ingredientName || ""}" title="${chosenFood.ingredient}" class="absolute -bottom-1 -right-1 lg:-right-1.5 w-2.5 h-2.5 lg:w-3 lg:h-3 object-contain drop-shadow z-10" loading="lazy" />`
+                  wrap.classList.remove("hidden")
+                } else {
+                  wrap.innerHTML = ""
+                  wrap.classList.add("hidden")
+                }
+              })
+
+              // 2. Food name
+              const foodNameEls = row.querySelectorAll(".row-food-name")
+              const unitsPrefix = foodUnits > 1 ? `${foodUnits}x ` : ""
+              foodNameEls.forEach((el) => {
+                el.textContent = `${unitsPrefix}${chosenFood.name}`
+                el.title = chosenFood.ingredient
+                  ? `${chosenFood.name} (${chosenFood.ingredient})`
+                  : chosenFood.name
+              })
+
+              // 3. Food cost FLOWER & USD
+              const foodFlowerEls = row.querySelectorAll(".row-food-flower")
+              foodFlowerEls.forEach((el) => {
+                el.textContent = foodCostFlower.toFixed(4)
+              })
+              const foodUsdEls = row.querySelectorAll(".row-food-usd")
+              foodUsdEls.forEach((el) => {
+                el.textContent = `$${foodCostUsd.toFixed(4)} USD`
+              })
+
+              // 4. XP Total
+              const xpTotalEls = row.querySelectorAll(".row-xp-total")
+              xpTotalEls.forEach((el) => {
+                el.textContent = `+${totalAvailable} XP`
+              })
+
+              // 5. XP Breakdown
+              const xpBreakdownEls = row.querySelectorAll(".row-xp-breakdown")
+              const breakdownText = `${receivedResidual} ${clientState.resLabel} + ${affectionXp} ${clientState.affecLabel} + ${totalFoodXp} ${clientState.foodLabel}`
+              xpBreakdownEls.forEach((el) => {
+                el.textContent = breakdownText
+                el.title = breakdownText
+              })
+
+              // 6. XP Surplus
+              const xpSurplusEls = row.querySelectorAll(".row-xp-surplus")
+              xpSurplusEls.forEach((el) => {
+                el.textContent = `(${clientState.surplusLabel} +${residualGenerated} XP)`
+              })
+
+              // 7. Profit FLOWER & USD & Badge
+              const profitFlowerEls = row.querySelectorAll(".row-profit-flower")
+              profitFlowerEls.forEach((el) => {
+                el.textContent = formattedProfitFlower
+                if (profitFlower >= 0) {
+                  el.classList.remove("text-rose-400")
+                  el.classList.add("text-emerald-400")
+                } else {
+                  el.classList.remove("text-emerald-400")
+                  el.classList.add("text-rose-400")
+                }
+              })
+
+              const profitUsdEls = row.querySelectorAll(".row-profit-usd")
+              profitUsdEls.forEach((el) => {
+                el.textContent = formattedProfitUsd
+                if (profitUsd >= 0) {
+                  el.classList.remove("text-rose-400", "text-rose-400/80")
+                  el.classList.add("text-emerald-400", "text-emerald-400/80")
+                } else {
+                  el.classList.remove("text-emerald-400", "text-emerald-400/80")
+                  el.classList.add("text-rose-400", "text-rose-400/80")
+                }
+              })
+
+              const profitBadges = row.querySelectorAll(".row-profit-badge")
+              profitBadges.forEach((badge) => {
+                if (profitFlower >= 0) {
+                  badge.classList.remove("bg-rose-500/10", "border-rose-500/20", "text-rose-400")
+                  badge.classList.add("bg-emerald-500/10", "border-emerald-500/20", "text-emerald-400")
+                } else {
+                  badge.classList.remove("bg-emerald-500/10", "border-emerald-500/20", "text-emerald-400")
+                  badge.classList.add("bg-rose-500/10", "border-rose-500/20", "text-rose-400")
+                }
+              })
+            })
+          })
+        }
+
+        // Delegación de eventos para clicks
+        document.addEventListener("click", (e) => {
+          const trigger = e.target.closest(".food-selector-trigger")
+          if (trigger) {
+            e.stopPropagation()
+            const animalId = trigger.getAttribute("data-animal")
+            const level = trigger.getAttribute("data-level")
+            openDropdown(trigger, animalId, level)
+            return
+          }
+
+          const optionBtn = e.target.closest(".food-option-btn")
+          if (optionBtn) {
+            e.stopPropagation()
+            const animalId = optionBtn.getAttribute("data-animal")
+            const level = Number(optionBtn.getAttribute("data-level"))
+            const foodId = optionBtn.getAttribute("data-food-id")
+
+            const animal = clientState.animals?.[animalId]
+            if (animal) {
+              const lvlObj = animal.levels?.find((l) => l.level === level)
+              if (lvlObj) {
+                lvlObj.selectedFoodId = foodId
+                recalculateAnimalProgression(animalId)
+              }
+            }
+            closeDropdown()
+            return
+          }
+
+          // Clic fuera del menú
+          if (dropdown && !dropdown.contains(e.target)) {
+            closeDropdown()
+          }
+        })
+
+        // Cerrar con Escape, scroll o resize
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeDropdown()
+        })
+        window.addEventListener("scroll", closeDropdown, { passive: true })
+        window.addEventListener("resize", closeDropdown, { passive: true })
+      } catch (err) {
+        console.error("Error al inicializar el selector de alimentos:", err)
+      }
+    }
   })
 </script>
