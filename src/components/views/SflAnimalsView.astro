@@ -548,6 +548,8 @@ interface AnimalMetaDisplay {
   }
   careTools: Array<{ id: string; name: string; xp: number; image: string }>
   acceptedFoods: Array<{ name: string; image: string; xp?: number }>
+  totalProfitFlower: number
+  totalProfitUsd: number
   levels: AnimalLevelDisplay[]
 }
 
@@ -562,6 +564,16 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     name: rawAnimal.name,
     sleepHours: rawAnimal.sleepDurationHours,
     requiredPerFeed: REQUIRED_FOOD_QTY[animalId] || 1,
+    primaryDropName: rawAnimal.drops.primary.name,
+    secondaryDropName: rawAnimal.drops.secondary?.name,
+    boosts: {
+      food: 1,
+      foodXp: 1,
+      careMultiplier: 1,
+      primaryDrop: 0,
+      secondaryDrop: 0,
+    },
+    targetLevel: 15,
     levels: []
   }
 
@@ -686,7 +698,18 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
       xpRequired: xpReq,
       isInstant,
       affectionXp,
+      baseAffectionXp: affectionXp,
+      loveProb: isInstant ? { petting: 0, brush: 0, music: 0 } : loveProb,
+      baseResources: resources.map((r) => ({
+        name: r.name,
+        amount: r.amount,
+        image: r.image,
+        unitPrice: marketPrices[r.name] || 0,
+        isPrimary: r.name === rawAnimal.drops.primary.name,
+        isSecondary: rawAnimal.drops.secondary ? r.name === rawAnimal.drops.secondary.name : false,
+      })),
       revenueFlower,
+      revenueUsd,
       selectedFoodId: optFood.id,
       optimalFoodId: optFood.id,
       options: foodOptions,
@@ -755,6 +778,8 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
       : undefined,
     careTools: rawAnimal.careTools,
     acceptedFoods: foods,
+    totalProfitFlower: levels.reduce((acc, l) => acc + l.profitFlower, 0),
+    totalProfitUsd: levels.reduce((acc, l) => acc + l.profitUsd, 0),
     levels,
   }
 })
@@ -765,6 +790,7 @@ const clientPayload = {
   affecLabel,
   foodLabel,
   surplusLabel,
+  totalProfitLabel: t("sfl.animals.card.totalProfit"),
   animals: clientAnimalsData,
 }
 
@@ -1216,10 +1242,10 @@ const faqItems = [
           >
             <!-- Tarjeta de Resumen del Animal Activo -->
             <div class="bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md">
-              <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
                 <!-- Info Principal del Animal -->
-                <div class="flex items-center gap-4">
-                  <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center justify-center shrink-0">
+                <div class="flex items-center gap-4 sm:gap-5 shrink-0">
+                  <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center justify-center shrink-0 shadow-inner">
                     <img
                       src={animal.icon}
                       alt={animal.name}
@@ -1228,64 +1254,203 @@ const faqItems = [
                       decoding="async"
                     />
                   </div>
-                  <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <h2 class="text-2xl font-black text-white tracking-tight">{animal.tabLabel}</h2>
-                      <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-white/70 border border-white/10">
-                        {t("sfl.animals.card.building")}: {animal.buildingName}
-                      </span>
+                  <div class="flex flex-col justify-center">
+                    <!-- Título -->
+                    <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
+                      {animal.tabLabel}
+                    </h2>
+                    <!-- Building debajo del nombre -->
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <img src={animal.buildingIcon} alt={animal.buildingName} class="w-3.5 h-3.5 object-contain opacity-70" />
+                      <span class="text-xs font-mono text-white/60">{animal.buildingName}</span>
                     </div>
-                    <div class="flex items-center gap-4 mt-2 text-xs font-mono text-white/60">
-                      <span>{t("sfl.animals.card.cost")}: <strong class="text-emerald-400">{animal.costCoins} Monedas</strong></span>
-                      <span>{t("sfl.animals.card.sleep")}: <strong class="text-white">{animal.sleepHours}h</strong></span>
+                    <!-- Costo de compra y debajo Tiempo -->
+                    <div class="flex flex-col gap-0.5 mt-2 text-xs font-mono">
+                      <div class="flex items-center gap-1.5 text-white/60">
+                        <span>{t("sfl.animals.card.cost")}:</span>
+                        <strong class="text-emerald-400 font-semibold">{animal.costCoins} Monedas</strong>
+                      </div>
+                      <div class="flex items-center gap-1.5 text-white/60">
+                        <span>{t("sfl.animals.card.sleep")}:</span>
+                        <strong class="text-white font-semibold">{animal.sleepHours}h</strong>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Drops y Alimentos -->
-                <div class="flex items-center gap-6 flex-wrap sm:flex-nowrap border-t lg:border-t-0 pt-4 lg:pt-0 border-white/5 w-full lg:w-auto">
-                  <!-- Drop Primario -->
-                  <div class="flex flex-col">
-                    <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1">
-                      {t("sfl.animals.card.primaryDrop")}
+                <!-- Bloque Central: Barra de Boosts centrada + Selector de Nivel Objetivo con Puntos -->
+                <div class="flex flex-col items-center justify-center flex-1 w-full xl:w-auto xl:max-w-2xl px-1 sm:px-2 gap-3 border-t xl:border-t-0 pt-4 xl:pt-0 border-white/5">
+                  <!-- Título y Barra de Boosts -->
+                  <div class="flex flex-col items-center w-full">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1.5 self-center">
+                      {t("sfl.animals.card.boostsTitle")}
                     </span>
-                    <div class="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl px-3 py-1.5">
-                      <img src={animal.primaryDrop.image} alt={animal.primaryDrop.name} class="w-6 h-6 object-contain" />
-                      <span class="text-xs font-bold text-white">{animal.primaryDrop.name}</span>
+                    <div class="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap bg-black/40 border border-white/5 rounded-2xl p-2 sm:px-3 sm:py-2 w-full max-w-fit shadow-inner">
+                      <!-- Food: 1 -->
+                      <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
+                        <span class="text-xs font-mono font-medium text-white/80">Food:</span>
+                        <input
+                          type="number"
+                          step="1"
+                          min="0"
+                          value="1"
+                          data-animal={animal.id}
+                          data-boost-type="food"
+                          class="animal-boost-input w-11 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
+                          title="Multiplicador de consumo de alimento"
+                        />
+                      </div>
+
+                      <!-- Food XP: 1 -->
+                      <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
+                        <span class="text-xs font-mono font-medium text-white/80">Food XP:</span>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0.1"
+                          value="1"
+                          data-animal={animal.id}
+                          data-boost-type="foodXp"
+                          class="animal-boost-input w-11 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
+                          title="Multiplicador de XP obtenida de los alimentos"
+                        />
+                      </div>
+
+                      <!-- Care Tools Multiplier (los 3 iconos con sus tooltips + input multiplicador) -->
+                      <div class="flex items-center gap-2 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
+                        <div class="flex items-center -space-x-1 shrink-0">
+                          {animal.careTools.map((tool, tIdx) => (
+                            <img
+                              src={tool.image}
+                              alt={tool.name}
+                              title={`${tool.name} (+${tool.xp} XP)`}
+                              class="w-4.5 h-4.5 object-contain drop-shadow hover:scale-125 transition-transform cursor-help relative"
+                              style={`z-index: ${tIdx + 1};`}
+                            />
+                          ))}
+                        </div>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0.1"
+                          value="1"
+                          data-animal={animal.id}
+                          data-boost-type="careMultiplier"
+                          class="animal-boost-input w-11 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
+                          title="Multiplicador de XP para las herramientas de afecto (ej: 1.5 = +50% XP)"
+                        />
+                      </div>
+
+                      <!-- Primary Drop (ej. Egg: +0.00) -->
+                      <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
+                        <img src={animal.primaryDrop.image} alt={animal.primaryDrop.name} class="w-4 h-4 object-contain" />
+                        <span class="text-xs font-mono font-medium text-white/80">{animal.primaryDrop.name}:</span>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          value="0"
+                          placeholder="+0.00"
+                          data-animal={animal.id}
+                          data-boost-type="primaryDrop"
+                          class="animal-boost-input w-14 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
+                          title={`Bonus de drop para ${animal.primaryDrop.name}`}
+                        />
+                      </div>
+
+                      <!-- Secondary Drop (ej. Feather: +0.00) -->
+                      {animal.secondaryDrop && (
+                        <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
+                          <img src={animal.secondaryDrop.image} alt={animal.secondaryDrop.name} class="w-4 h-4 object-contain" />
+                          <span class="text-xs font-mono font-medium text-white/80">{animal.secondaryDrop.name}:</span>
+                          <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            value="0"
+                            placeholder="+0.00"
+                            data-animal={animal.id}
+                            data-boost-type="secondaryDrop"
+                            class="animal-boost-input w-14 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
+                            title={`Bonus de drop para ${animal.secondaryDrop.name}`}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <!-- Drop Secundario -->
-                  {animal.secondaryDrop && (
-                    <div class="flex flex-col">
-                      <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1">
-                        {t("sfl.animals.card.secondaryDrop")}
+                  <!-- Línea de Puntos: Selector de Nivel Objetivo (1 al 15) -->
+                  <div class="flex flex-col items-center w-full max-w-lg px-2">
+                    <div class="flex items-center justify-between w-full mb-1 text-[10px] font-mono text-white/40">
+                      <span class="flex items-center gap-1">
+                        <span>🎯</span>
+                        <span>{t("sfl.animals.card.targetLevel")}:</span>
+                        <strong class="text-emerald-400 font-bold target-level-number" data-animal={animal.id}>Lvl 15</strong>
                       </span>
-                      <div class="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl px-3 py-1.5">
-                        <img src={animal.secondaryDrop.image} alt={animal.secondaryDrop.name} class="w-6 h-6 object-contain" />
-                        <div class="flex flex-col">
-                          <span class="text-xs font-bold text-white">{animal.secondaryDrop.name}</span>
-                          <span class="text-[9px] font-mono text-emerald-400">Lvl {animal.secondaryDrop.unlockLevel}+</span>
-                        </div>
-                      </div>
+                      <span class="text-white/30 hidden sm:inline">Clic en un nivel para limitar cálculo</span>
                     </div>
-                  )}
 
-                  <!-- Herramientas de Cuidado -->
-                  <div class="flex flex-col">
-                    <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1">
-                      {t("sfl.animals.card.tools")}
-                    </span>
-                    <div class="flex items-center gap-1.5 bg-black/40 border border-white/5 rounded-xl px-2.5 py-1.5">
-                      {animal.careTools.map((tool) => (
-                        <img
-                          src={tool.image}
-                          alt={tool.name}
-                          title={`${tool.name} (+${tool.xp} XP)`}
-                          class="w-6 h-6 object-contain drop-shadow hover:scale-110 transition-transform cursor-help"
-                        />
-                      ))}
+                    <!-- Pista interactiva de 15 puntos -->
+                    <div class="relative w-full flex items-center justify-between py-1 px-1 animal-target-track" data-animal={animal.id}>
+                      <div class="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-1 bg-white/10 rounded-full z-0"></div>
+                      <div
+                        class="target-level-progress-bar absolute left-2 top-1/2 -translate-y-1/2 h-1 bg-emerald-500 rounded-full z-0 transition-all duration-200"
+                        data-animal={animal.id}
+                        style="width: 100%;"
+                      ></div>
+
+                      {Array.from({ length: 15 }, (_, i) => i + 1).map((lvlNum) => {
+                        const isSelected = lvlNum === 15
+                        return (
+                          <button
+                            type="button"
+                            class:list={[
+                              "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none",
+                              isSelected
+                                ? "bg-emerald-400 text-black border-2 border-emerald-500 ring-2 ring-emerald-400/50 scale-110 shadow-sm shadow-emerald-500/50"
+                                : "bg-emerald-500/80 text-black border border-emerald-400/60 hover:scale-110"
+                            ]}
+                            data-animal={animal.id}
+                            data-target-level={lvlNum}
+                            title={`Calcular profit hasta Nivel ${lvlNum}`}
+                          >
+                            <span class="pointer-events-none">{lvlNum}</span>
+                          </button>
+                        )
+                      })}
                     </div>
+                  </div>
+                </div>
+
+                <!-- Cuadro de Profit Total Acumulado (Extremo Derecho) -->
+                <div class="flex flex-col shrink-0 self-center xl:self-auto border-t xl:border-t-0 pt-4 xl:pt-0 border-white/5 w-full xl:w-auto">
+                  <span
+                    class="animal-total-profit-title text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1.5 text-center xl:text-right"
+                    data-animal={animal.id}
+                  >
+                    {t("sfl.animals.card.totalProfit")} (Lvl 1-15)
+                  </span>
+                  <div
+                    class:list={[
+                      "animal-total-profit-badge flex flex-col items-center xl:items-end justify-center px-4 py-2 rounded-2xl border font-mono transition-colors min-w-[130px]",
+                      animal.totalProfitFlower >= 0
+                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                        : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                    ]}
+                    data-animal={animal.id}
+                  >
+                    <span
+                      class="animal-total-profit-flower font-black text-sm sm:text-base leading-tight"
+                      data-animal={animal.id}
+                    >
+                      {formatProfitFlower(animal.totalProfitFlower)}
+                    </span>
+                    <span
+                      class="animal-total-profit-usd text-xs leading-tight opacity-80 mt-0.5"
+                      data-animal={animal.id}
+                    >
+                      {formatProfitUsd(animal.totalProfitUsd)} USD
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1359,7 +1524,7 @@ const faqItems = [
                                     />
                                   ))}
                                 </div>
-                                <span class="text-xs font-mono font-bold text-emerald-400">+{lvl.affectionXp} XP</span>
+                                <span class="row-affection-xp text-xs font-mono font-bold text-emerald-400">+{lvl.affectionXp} XP</span>
                               </div>
                             ) : (
                               <span class="text-xs font-mono text-white/30 italic mt-1">—</span>
@@ -1431,7 +1596,7 @@ const faqItems = [
                         <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
                           <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colYield")}</span>
                           <div class="mt-1 flex flex-col">
-                            <div class="flex items-center gap-1.5 flex-wrap">
+                            <div class="flex items-center gap-1.5 flex-wrap row-resources-wrap">
                               {(lvl.resources || []).map((res) => (
                                 <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
                                   <img src={res?.image} alt={res?.name || ''} class="w-3.5 h-3.5 object-contain" />
@@ -1446,9 +1611,9 @@ const faqItems = [
                                 class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
                                 loading="lazy"
                               />
-                              <span>+{lvl.revenueFlower.toFixed(4)}</span>
+                              <span class="row-yield-flower">+{lvl.revenueFlower.toFixed(4)}</span>
                             </div>
-                            <span class="text-[9px] font-mono text-white/50 leading-tight mt-0.5">
+                            <span class="row-yield-usd text-[9px] font-mono text-white/50 leading-tight mt-0.5">
                               +${lvl.revenueUsd.toFixed(4)} USD
                             </span>
                           </div>
@@ -1491,7 +1656,7 @@ const faqItems = [
                                 <span class="text-xs text-white font-medium truncate" title={lvl.affectionTools.map(t => `${t.name} (${t.percent}%)`).join(", ")}>
                                   2x Afecto
                                 </span>
-                                <span class="text-[10px] font-mono text-emerald-400 font-bold leading-none mt-0.5">
+                                <span class="row-affection-xp text-[10px] font-mono text-emerald-400 font-bold leading-none mt-0.5">
                                   +{lvl.affectionXp} XP
                                 </span>
                               </div>
@@ -1563,7 +1728,7 @@ const faqItems = [
 
                       <!-- Columna 5: Recursos Obtenidos (Desktop) -->
                       <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
-                        <div class="flex items-center gap-1.5 flex-wrap">
+                        <div class="flex items-center gap-1.5 flex-wrap row-resources-wrap">
                           {(lvl.resources || []).map((res) => (
                             <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
                               <img src={res?.image} alt={res?.name || ''} class="w-3.5 h-3.5 object-contain" />
@@ -1578,9 +1743,9 @@ const faqItems = [
                             class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
                             loading="lazy"
                           />
-                          <span>+{lvl.revenueFlower.toFixed(4)}</span>
+                          <span class="row-yield-flower">+{lvl.revenueFlower.toFixed(4)}</span>
                         </div>
-                        <span class="text-[9px] font-mono text-white/50 leading-tight">
+                        <span class="row-yield-usd text-[9px] font-mono text-white/50 leading-tight">
                           +${lvl.revenueUsd.toFixed(4)} USD
                         </span>
                       </div>
@@ -1852,26 +2017,46 @@ const faqItems = [
         const recalculateAnimalProgression = (animalId) => {
           const animal = clientState.animals?.[animalId]
           if (!animal || !animal.levels) return
+          const boosts = animal.boosts || { food: 1, foodXp: 1, careMultiplier: 1, primaryDrop: 0, secondaryDrop: 0 }
+          const targetLevel = animal.targetLevel || 15
 
           let currentCarryover = 0
+          let totalAnimalProfitFlower = 0
+          let totalAnimalProfitUsd = 0
 
           animal.levels.forEach((lvl) => {
             const isFirst = lvl.fromLevel === 0
             const receivedResidual = isFirst ? 0 : currentCarryover
             const xpReq = lvl.xpRequired
-            const affectionXp = lvl.affectionXp || 0
+
+            // Cálculo dinámico de afecto con Care Multiplier (ej: 1.5 = +50% XP a las 3 care tools)
+            const careMultiplier = boosts.careMultiplier !== undefined ? boosts.careMultiplier : 1
+            let affectionXp = 0
+            if (!lvl.isInstant && lvl.loveProb) {
+              const p = lvl.loveProb
+              const singleAffectionXp = ((p.petting * 10) + (p.brush * 20) + (p.music * 40)) * careMultiplier
+              affectionXp = Math.round(singleAffectionXp * 2)
+            } else {
+              affectionXp = lvl.baseAffectionXp !== undefined ? Math.round(lvl.baseAffectionXp * careMultiplier) : 0
+            }
 
             const chosenFood =
               lvl.options.find((opt) => opt.id === lvl.selectedFoodId) ||
               lvl.options.find((opt) => opt.isOptimal) ||
               lvl.options[0]
 
-            const unitFoodXp = chosenFood.xp
+            // Multiplicador de Food XP
+            const foodXpMultiplier = boosts.foodXp !== undefined ? boosts.foodXp : 1
+            const unitFoodXp = Math.max(1, Math.round(chosenFood.xp * foodXpMultiplier))
+
             const neededFromFood = Math.max(0, xpReq - receivedResidual - affectionXp)
             const neededFeeds = Math.max(1, Math.ceil(neededFromFood / unitFoodXp))
-            const foodUnits = neededFeeds * chosenFood.requiredPerFeed
 
-            const foodCostFlower = neededFeeds * chosenFood.costPerFeed
+            // Multiplicador de consumo de comida
+            const foodMultiplier = boosts.food !== undefined ? boosts.food : 1
+            const foodUnits = Math.round(neededFeeds * chosenFood.requiredPerFeed * foodMultiplier)
+
+            const foodCostFlower = neededFeeds * chosenFood.costPerFeed * foodMultiplier
             const foodCostUsd = foodCostFlower * clientState.flowerUsd
 
             const totalFoodXp = neededFeeds * unitFoodXp
@@ -1880,8 +2065,28 @@ const faqItems = [
             const residualGenerated = Math.max(0, totalAvailable - xpReq)
             currentCarryover = residualGenerated
 
-            const profitFlower = lvl.revenueFlower - foodCostFlower
+            // Cálculo dinámico de recursos con boosts
+            let revenueFlower = 0
+            const boostedResources = (lvl.baseResources || []).map((res) => {
+              let amount = res.amount
+              if (res.isPrimary && boosts.primaryDrop) amount += boosts.primaryDrop
+              if (res.isSecondary && boosts.secondaryDrop) amount += boosts.secondaryDrop
+              amount = Math.max(0, amount)
+              revenueFlower += amount * res.unitPrice
+              return {
+                name: res.name,
+                amount,
+                image: res.image,
+              }
+            })
+            const revenueUsd = revenueFlower * clientState.flowerUsd
+
+            const profitFlower = revenueFlower - foodCostFlower
             const profitUsd = profitFlower * clientState.flowerUsd
+            if (lvl.level <= targetLevel) {
+              totalAnimalProfitFlower += profitFlower
+              totalAnimalProfitUsd += profitUsd
+            }
 
             // Formateadores
             const signFlower = profitFlower >= 0 ? "+" : ""
@@ -1894,6 +2099,18 @@ const faqItems = [
               `.animal-level-row[data-animal="${animalId}"][data-level="${lvl.level}"]`
             )
             rows.forEach((row) => {
+              if (lvl.level > targetLevel) {
+                row.classList.add("opacity-35")
+              } else {
+                row.classList.remove("opacity-35")
+              }
+
+              // 0. Affection XP
+              const affectionXpEls = row.querySelectorAll(".row-affection-xp")
+              affectionXpEls.forEach((el) => {
+                el.textContent = `+${affectionXp} XP`
+              })
+
               // 1. Food img & overlay
               const foodImgs = row.querySelectorAll(".row-food-img")
               foodImgs.forEach((img) => {
@@ -1951,7 +2168,32 @@ const faqItems = [
                 el.textContent = `(${clientState.surplusLabel} +${residualGenerated} XP)`
               })
 
-              // 7. Profit FLOWER & USD & Badge
+              // 7. Recursos Obtenidos (Amounts & Revenue)
+              const resWraps = row.querySelectorAll(".row-resources-wrap")
+              resWraps.forEach((wrap) => {
+                wrap.innerHTML = boostedResources
+                  .map(
+                    (r) => `
+                    <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
+                      <img src="${r.image}" alt="${r.name}" class="w-3.5 h-3.5 object-contain" />
+                      <span class="text-[11px] font-mono font-bold text-white">${Number(r.amount.toFixed(2))}x</span>
+                    </div>
+                  `
+                  )
+                  .join("")
+              })
+
+              const yieldFlowerEls = row.querySelectorAll(".row-yield-flower")
+              yieldFlowerEls.forEach((el) => {
+                el.textContent = `+${revenueFlower.toFixed(4)}`
+              })
+
+              const yieldUsdEls = row.querySelectorAll(".row-yield-usd")
+              yieldUsdEls.forEach((el) => {
+                el.textContent = `+$${revenueUsd.toFixed(4)} USD`
+              })
+
+              // 8. Profit FLOWER & USD & Badge
               const profitFlowerEls = row.querySelectorAll(".row-profit-flower")
               profitFlowerEls.forEach((el) => {
                 el.textContent = formattedProfitFlower
@@ -1988,10 +2230,104 @@ const faqItems = [
               })
             })
           })
+
+          // Actualizar cuadro de Profit Total Acumulado en el extremo derecho
+          const totalFlowerEl = document.querySelector(`.animal-total-profit-flower[data-animal="${animalId}"]`)
+          const totalUsdEl = document.querySelector(`.animal-total-profit-usd[data-animal="${animalId}"]`)
+          const totalBadgeEl = document.querySelector(`.animal-total-profit-badge[data-animal="${animalId}"]`)
+
+          if (totalFlowerEl) {
+            const signFlower = totalAnimalProfitFlower >= 0 ? "+" : ""
+            totalFlowerEl.textContent = `${signFlower}${totalAnimalProfitFlower.toFixed(4)} FL`
+          }
+          if (totalUsdEl) {
+            const signUsd = totalAnimalProfitUsd >= 0 ? "+" : "-"
+            totalUsdEl.textContent = `${signUsd}$${Math.abs(totalAnimalProfitUsd).toFixed(4)} USD`
+          }
+          if (totalBadgeEl) {
+            if (totalAnimalProfitFlower >= 0) {
+              totalBadgeEl.classList.remove("bg-rose-500/10", "border-rose-500/20", "text-rose-400")
+              totalBadgeEl.classList.add("bg-emerald-500/10", "border-emerald-500/20", "text-emerald-400")
+            } else {
+              totalBadgeEl.classList.remove("bg-emerald-500/10", "border-emerald-500/20", "text-emerald-400")
+              totalBadgeEl.classList.add("bg-rose-500/10", "border-rose-500/20", "text-rose-400")
+            }
+          }
+
+          // Actualizar UI del Nivel Objetivo (Título, Indicador de Nivel, Barra de Progreso y Puntos)
+          const titleEl = document.querySelector(`.animal-total-profit-title[data-animal="${animalId}"]`)
+          if (titleEl) {
+            titleEl.textContent = `${clientState.totalProfitLabel || "Profit Total"} (Lvl 1-${targetLevel})`
+          }
+          const targetNumEl = document.querySelector(`.target-level-number[data-animal="${animalId}"]`)
+          if (targetNumEl) {
+            targetNumEl.textContent = `Lvl ${targetLevel}`
+          }
+          const progressBar = document.querySelector(`.target-level-progress-bar[data-animal="${animalId}"]`)
+          if (progressBar) {
+            const pct = Math.max(0, Math.min(100, ((targetLevel - 1) / 14) * 100))
+            progressBar.style.width = `${pct}%`
+          }
+          const dots = document.querySelectorAll(`.target-level-dot[data-animal="${animalId}"]`)
+          dots.forEach((dot) => {
+            const dLvl = Number(dot.getAttribute("data-target-level"))
+            if (dLvl === targetLevel) {
+              dot.className =
+                "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none bg-emerald-400 text-black border-2 border-emerald-500 ring-2 ring-emerald-400/50 scale-110 shadow-sm shadow-emerald-500/50"
+            } else if (dLvl < targetLevel) {
+              dot.className =
+                "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none bg-emerald-500/80 text-black border border-emerald-400/60 hover:scale-110"
+            } else {
+              dot.className =
+                "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none bg-white/10 text-white/30 border border-white/20 hover:bg-white/20 hover:text-white"
+            }
+          })
         }
+
+        // Manejador de cambios en los inputs de Boosts del animal
+        document.addEventListener("input", (e) => {
+          const input = e.target.closest(".animal-boost-input")
+          if (!input) return
+          const animalId = input.getAttribute("data-animal")
+          const boostType = input.getAttribute("data-boost-type")
+          const rawVal = parseFloat(input.value)
+
+          const animal = clientState.animals?.[animalId]
+          if (!animal) return
+          if (!animal.boosts) {
+            animal.boosts = { food: 1, foodXp: 1, careMultiplier: 1, primaryDrop: 0, secondaryDrop: 0 }
+          }
+
+          if (boostType === "food") {
+            animal.boosts.food = isNaN(rawVal) || rawVal < 0 ? 1 : rawVal
+          } else if (boostType === "foodXp") {
+            animal.boosts.foodXp = isNaN(rawVal) || rawVal < 0.1 ? 1 : rawVal
+          } else if (boostType === "careMultiplier") {
+            animal.boosts.careMultiplier = isNaN(rawVal) || rawVal < 0.1 ? 1 : rawVal
+          } else if (boostType === "primaryDrop") {
+            animal.boosts.primaryDrop = isNaN(rawVal) || rawVal < 0 ? 0 : rawVal
+          } else if (boostType === "secondaryDrop") {
+            animal.boosts.secondaryDrop = isNaN(rawVal) || rawVal < 0 ? 0 : rawVal
+          }
+
+          recalculateAnimalProgression(animalId)
+        })
 
         // Delegación de eventos para clicks
         document.addEventListener("click", (e) => {
+          const dotBtn = e.target.closest(".target-level-dot")
+          if (dotBtn) {
+            e.stopPropagation()
+            const animalId = dotBtn.getAttribute("data-animal")
+            const newTarget = Number(dotBtn.getAttribute("data-target-level"))
+            const animal = clientState.animals?.[animalId]
+            if (animal && newTarget >= 1 && newTarget <= 15) {
+              animal.targetLevel = newTarget
+              recalculateAnimalProgression(animalId)
+            }
+            return
+          }
+
           const trigger = e.target.closest(".food-selector-trigger")
           if (trigger) {
             e.stopPropagation()
