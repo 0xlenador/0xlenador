@@ -245,11 +245,20 @@ export function getGemFiatPrice(gems: number): number {
 /**
  * Calcula el costo en USD por gema y total con el descuento del 20% de pago cripto.
  */
-export function calculateGemCostUsd(gems: number): { unitUsd: number; totalUsd: number } {
+export function calculateGemCostUsd(gems: number = 1): { unitUsd: number; totalUsd: number } {
   const fiatPerGem = getGemFiatPrice(gems)
   const unitUsd = fiatPerGem * 0.8
   return {
     unitUsd,
     totalUsd: gems * unitUsd,
   }
+}
+
+/**
+ * Devuelve el costo de 1 gema expresado en FLOWER según el precio en vivo de FLOWER.
+ */
+export function getGemFlowerPrice(gems: number = 1): number {
+  const { unitUsd } = calculateGemCostUsd(gems)
+  const flowerUsd = getFlowerPrice()
+  return flowerUsd > 0 ? unitUsd / flowerUsd : 0
 }

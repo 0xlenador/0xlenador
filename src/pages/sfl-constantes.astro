@@ -11,9 +11,56 @@ const seo = {
   description: t("sfl.constants.seo.description"),
   image: "/img/meta/sunflowerland-og.webp",
 }
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: seo.title,
+  operatingSystem: "Web Browser",
+  applicationCategory: ["FinanceApplication", "GameApplication"],
+  description: seo.description,
+  url: "https://0xlenador.xyz/sfl-constantes/",
+  author: { "@type": "Person", name: "0x Leñador", url: "https://0xlenador.xyz/" },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+}
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://0xlenador.xyz/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Sunflower Land",
+      item: "https://0xlenador.xyz/sunflowerland/",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Constantes",
+      item: "https://0xlenador.xyz/sfl-constantes/",
+    },
+  ],
+}
+
+const schema = [webAppSchema, breadcrumbSchema]
 ---
 
-<Layout title={seo.title} description={seo.description} image={seo.image} customSpacing>
+<Layout
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  imageWidth={1200}
+  imageHeight={630}
+  schema={schema}
+  customSpacing
+>
   <SflConstantsView />
 </Layout>
 

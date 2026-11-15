@@ -9,10 +9,35 @@ import { getEntry } from "astro:content"
 import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 import SflToolLayout from "../SflToolLayout.astro"
 import FaqAccordion from "../FaqAccordion.astro"
+import fs from "node:fs"
+import path from "node:path"
 
 import animalsDataRaw from "../../content/data/sfl/animals/animals.json"
 import buildingsDataRaw from "../../content/data/sfl/animals/buildings.json"
 import consumablesDataRaw from "../../content/data/sfl/animals/consumables.json"
+import sflResourcesJson from "../../content/data/sfl/resources.json"
+
+// Lectura de precios P2P en FLOWER y USD desde sfl_data.json
+const marketPrices: Record<string, number> = {}
+let flowerUsd = 0.1388
+
+try {
+  const sflDataPath = path.resolve(process.cwd(), "public/api/sfl_data.json")
+  if (fs.existsSync(sflDataPath)) {
+    const sflData = JSON.parse(fs.readFileSync(sflDataPath, "utf8"))
+    flowerUsd = Number(sflData.flowerPrice) || 0.1388
+    if (sflData.items) {
+      Object.values(sflData.items).forEach((item: any) => {
+        const colMatch = item.key?.match(/collectibles-(\d+)$/)
+        if (colMatch && (sflResourcesJson as any)[colMatch[1]]) {
+          marketPrices[(sflResourcesJson as any)[colMatch[1]]] = item.currentPrice || 0
+        }
+      })
+    }
+  }
+} catch (e) {
+  console.error("Error leyendo sfl_data.json en build:", e)
+}
 
 const sflPowerUpsEntry = await getEntry("sfl", "powerups")
 const sflSkillsEntry = await getEntry("sfl", "skills")
@@ -130,14 +155,178 @@ for (const cat of ["collectibles", "wearables"] as const) {
 // ---------------------------------------------------------------------------
 const orderedAnimalIds = ["chicken", "sheep", "cow", "pig"] as const
 
-interface AnimalLevelDisplay {
-  level: number
-  xpRequired: number
-  cumulativeXp: number
-  primaryAmount: number
-  secondaryAmount: number
-  milestoneKey: string
+interface AffectionToolItem {
+  id: string
+  name: string
+  xp: number
+  percent: number
+  image: string
 }
+
+interface AnimalLevelDisplay {
+  fromLevel: number
+  toLevel: number
+  xpRequired: number
+  sleepHours: number
+  isInstant: boolean
+  residualXp: number
+  residualGenerated: number
+  affectionTools: AffectionToolItem[]
+  affectionXp: number
+  food: {
+    name: string
+    image: string
+    ingredient: string
+    units: number
+    xp: number
+    costFlower: number
+    costUsd: number
+    isFav: boolean
+  }
+  totalXpObtained: number
+  totalFoodXp: number
+  totalAvailable: number
+  resources: Array<{
+    name: string
+    amount: number
+    image: string
+  }>
+  revenueFlower: number
+  revenueUsd: number
+  profitFlower: number
+  profitUsd: number
+}
+
+// Probabilidades oficiales de Love Requests por nivel (imagen del usuario)
+const LOVE_REQUESTS: Record<number, { petting: number; brush: number; music: number }> = {
+  0: { petting: 0, brush: 0, music: 0 },
+  1: { petting: 1.0, brush: 0, music: 0 },
+  2: { petting: 0.8, brush: 0.2, music: 0 },
+  3: { petting: 0.7, brush: 0.3, music: 0 },
+  4: { petting: 0.6, brush: 0.3, music: 0.1 },
+  5: { petting: 0.5, brush: 0.4, music: 0.1 },
+  6: { petting: 0.5, brush: 0.3, music: 0.2 },
+  7: { petting: 0.4, brush: 0.4, music: 0.2 },
+  8: { petting: 0.4, brush: 0.3, music: 0.3 },
+  9: { petting: 0.3, brush: 0.4, music: 0.3 },
+  10: { petting: 0.3, brush: 0.3, music: 0.4 },
+  11: { petting: 0.2, brush: 0.4, music: 0.4 },
+  12: { petting: 0.2, brush: 0.3, music: 0.5 },
+  13: { petting: 0.1, brush: 0.4, music: 0.5 },
+  14: { petting: 0.1, brush: 0.3, music: 0.6 },
+  15: { petting: 0.1, brush: 0.2, music: 0.7 },
+}
+
+// Obtiene el alimento favorito oficial y más eficiente de cada tier y animal
+function getFavoriteFoodForLevel(animalId: string, toLevel: number) {
+  if (animalId === "pig") {
+    let slopId = "basic_slop"
+    if (toLevel >= 3 && toLevel <= 5) slopId = "hearty_slop"
+    else if (toLevel >= 6 && toLevel <= 9) slopId = "rich_slop"
+    else if (toLevel >= 10) slopId = "gourmet_slop"
+
+    const consumable = (consumablesDataRaw as any)[slopId]
+    const options = consumable?.options || []
+
+    let cheapestOpt = options[0] || { name: "Potato", amount: 150, image: "/img/sunflowerland/Potato.png" }
+    let minCostFlower = Infinity
+
+    for (const opt of options) {
+      const price = marketPrices[opt.name] ?? 0
+      if (price > 0) {
+        const total = price * opt.amount
+        if (total < minCostFlower) {
+          minCostFlower = total
+          cheapestOpt = opt
+        }
+      }
+    }
+
+    if (minCostFlower === Infinity) {
+      minCostFlower = 0.0346
+    }
+
+    return {
+      name: consumable?.name || "Slop",
+      image: cheapestOpt.image || "/img/sunflowerland/Potato.png",
+      ingredient: `${cheapestOpt.amount}x ${cheapestOpt.name}`,
+      xp: consumable?.xp || 100,
+      costFlower: minCostFlower,
+      costUsd: minCostFlower * flowerUsd,
+      isFav: true,
+    }
+  }
+
+  // Para chicken, cow y sheep:
+  // Tiers oficiales de alimento favorito:
+  // Niveles 1-3: Kernel Blend (1x Corn, 60 XP)
+  // Niveles 4-6: Hay (1x Wheat, 60 XP)
+  // Niveles 7-10: NutriBarley (1x Barley, 60 XP)
+  // Niveles 11-15: Mixed Grain (1x Corn, 1x Wheat, 1x Barley, 80 XP)
+  if (toLevel <= 3) {
+    const cost = marketPrices["Corn"] || 0.02
+    return {
+      name: "Kernel Blend",
+      image: "/img/sunflowerland/Corn.png",
+      ingredient: "1x Corn",
+      xp: 60,
+      costFlower: cost,
+      costUsd: cost * flowerUsd,
+      isFav: true,
+    }
+  } else if (toLevel <= 6) {
+    const cost = marketPrices["Wheat"] || 0.01598
+    return {
+      name: "Hay",
+      image: "/img/sunflowerland/Wheat.png",
+      ingredient: "1x Wheat",
+      xp: 60,
+      costFlower: cost,
+      costUsd: cost * flowerUsd,
+      isFav: true,
+    }
+  } else if (toLevel <= 10) {
+    const cost = marketPrices["Barley"] || 0.02285
+    return {
+      name: "NutriBarley",
+      image: "/img/sunflowerland/Barley.png",
+      ingredient: "1x Barley",
+      xp: 60,
+      costFlower: cost,
+      costUsd: cost * flowerUsd,
+      isFav: true,
+    }
+  } else {
+    const cornCost = marketPrices["Corn"] || 0.02
+    const wheatCost = marketPrices["Wheat"] || 0.01598
+    const barleyCost = marketPrices["Barley"] || 0.02285
+    const cost = cornCost + wheatCost + barleyCost
+    return {
+      name: "Mixed Grain",
+      image: "/img/sunflowerland/Corn.png",
+      ingredient: "1x Corn, 1x Wheat, 1x Barley",
+      xp: 80,
+      costFlower: cost,
+      costUsd: cost * flowerUsd,
+      isFav: true,
+    }
+  }
+}
+
+const formatProfitFlower = (val: number) => {
+  const sign = val >= 0 ? "+" : ""
+  return `${sign}${val.toFixed(4)} FL`
+}
+
+const formatProfitUsd = (val: number) => {
+  const sign = val >= 0 ? "+" : "-"
+  return `${sign}$${Math.abs(val).toFixed(4)}`
+}
+
+const resLabel = "res"
+const affecLabel = lang === "en" ? "affec" : "afec"
+const foodLabel = lang === "en" ? "food" : "comida"
+const surplusLabel = t("sfl.animals.table.surplus")
 
 interface AnimalMetaDisplay {
   id: (typeof orderedAnimalIds)[number]
@@ -184,32 +373,152 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     }
   })
 
-  // Generación de progresión de 15 niveles
+  // Alimento predeterminado para el cálculo del ciclo base (Kernel Blend = 60 XP)
+  const defaultFood = foods[0] || { name: "Kernel Blend", image: "/img/sunflowerland/Corn.png", xp: 60 }
+  const cycleFoodXp = defaultFood.xp || 60
+
+  let currentCarryover = 0
+
+  // Generación de progresión de 15 saltos de nivel con cálculo de residual
   const levels: AnimalLevelDisplay[] = rawAnimal.levels.map((lvlObj: any) => {
-    const lvl = lvlObj.level
+    const toLvl = lvlObj.level
+    const fromLvl = toLvl - 1
+    const xpReq = lvlObj.xpRequired
+    const isFirstLevel = fromLvl === 0
+
+    // En 0 > 1 el residual recibido es siempre 0 (es el inicio)
+    // En niveles posteriores, recibe el remanente del nivel anterior
+    const receivedResidual = isFirstLevel ? 0 : currentCarryover
+
+    // En 0 > 1 es instantáneo y no hay afecto
+    const isInstant = isFirstLevel
+    const sleepHours = isInstant ? 0 : rawAnimal.sleepDurationHours
+
+    // Probabilidades oficiales de Love Requests para este nivel de origen
+    const loveProb = LOVE_REQUESTS[fromLvl] || { petting: 0, brush: 0, music: 0 }
+    const affectionTools: AffectionToolItem[] = []
+
+    if (!isInstant) {
+      if (loveProb.petting > 0) {
+        affectionTools.push({
+          id: "petting_hand",
+          name: "Petting Hand",
+          xp: 10,
+          percent: Math.round(loveProb.petting * 100),
+          image: "/img/sunflowerland/tools/Petting Hand.webp",
+        })
+      }
+      if (loveProb.brush > 0) {
+        affectionTools.push({
+          id: "brush",
+          name: "Brush",
+          xp: 20,
+          percent: Math.round(loveProb.brush * 100),
+          image: "/img/sunflowerland/tools/Brush.webp",
+        })
+      }
+      if (loveProb.music > 0) {
+        affectionTools.push({
+          id: "music_box",
+          name: "Music Box",
+          xp: 40,
+          percent: Math.round(loveProb.music * 100),
+          image: "/img/sunflowerland/tools/Music Box.webp",
+        })
+      }
+    }
+
+    // Afecto diario: son 2 caricias al día con valor esperado según probabilidades
+    const singleAffectionXp = (loveProb.petting * 10) + (loveProb.brush * 20) + (loveProb.music * 40)
+    const affectionXp = isInstant ? 0 : Math.round(singleAffectionXp * 2)
+
+    // Alimento favorito oficial para este nivel
+    const favFood = getFavoriteFoodForLevel(animalId, toLvl)
+    const unitFoodXp = favFood.xp
+
+    // XP que falta cubrir con alimento tras descontar el residual previo y el afecto
+    const neededFromFood = Math.max(0, xpReq - receivedResidual - affectionXp)
+
+    // Unidades de alimento necesarias para que el animal alcance o supere el umbral del nivel
+    const foodUnits = Math.max(1, Math.ceil(neededFromFood / unitFoodXp))
+
+    // Costo total de las raciones completas compradas para este nivel
+    const foodCostFlower = foodUnits * favFood.costFlower
+    const foodCostUsd = foodUnits * favFood.costUsd
+
+    // XP total de comida suministrada y XP total obtenida en el ciclo
+    const totalFoodXp = foodUnits * unitFoodXp
+    const totalXpObtained = affectionXp + totalFoodXp
+
+    // Total acumulado disponible y remanente residual que pasa al siguiente nivel
+    const totalAvailable = receivedResidual + totalXpObtained
+    const residualGenerated = Math.max(0, totalAvailable - xpReq)
+    currentCarryover = residualGenerated
+
+    // Recursos obtenidos en el nivel
     let primaryAmount = 1
-    if (lvl >= 6 && lvl <= 10) primaryAmount = 2
-    if (lvl >= 11) primaryAmount = 3
+    if (toLvl >= 6 && toLvl <= 10) primaryAmount = 2
+    if (toLvl >= 11) primaryAmount = 3
 
     const secUnlock = rawAnimal.drops.secondary?.unlockLevel || 99
-    const secondaryAmount = lvl >= secUnlock ? 1 : 0
+    const secondaryAmount = toLvl >= secUnlock ? 1 : 0
 
-    let milestoneKey = "sfl.animals.milestone.regular"
-    if (lvl === 1) milestoneKey = "sfl.animals.milestone.lvl1"
-    else if (lvl === 3 && animalId === "chicken") milestoneKey = "sfl.animals.milestone.lvl3Chicken"
-    else if (lvl === secUnlock) milestoneKey = "sfl.animals.milestone.lvl5Secondary"
-    else if (lvl === 6) milestoneKey = "sfl.animals.milestone.lvl6Tier2"
-    else if (lvl === 10) milestoneKey = "sfl.animals.milestone.lvl10Tier2Max"
-    else if (lvl === 11) milestoneKey = "sfl.animals.milestone.lvl11Tier3"
-    else if (lvl === 15) milestoneKey = "sfl.animals.milestone.lvl15Max"
+    const resources: AnimalLevelDisplay["resources"] = [
+      {
+        name: rawAnimal.drops.primary.name,
+        amount: primaryAmount,
+        image: rawAnimal.drops.primary.image,
+      },
+    ]
+
+    if (secondaryAmount > 0 && rawAnimal.drops.secondary) {
+      resources.push({
+        name: rawAnimal.drops.secondary.name,
+        amount: secondaryAmount,
+        image: rawAnimal.drops.secondary.image,
+      })
+    }
+
+    // Ingresos brutos por venta de recursos en FLOWER y USD
+    const primaryUnitPrice = marketPrices[rawAnimal.drops.primary.name] || 0
+    const secondaryUnitPrice = rawAnimal.drops.secondary
+      ? (marketPrices[rawAnimal.drops.secondary.name] || 0)
+      : 0
+    const revenueFlower = (primaryAmount * primaryUnitPrice) + (secondaryAmount * secondaryUnitPrice)
+    const revenueUsd = revenueFlower * flowerUsd
+
+    // Profit neto exclusivo en FLOWER y USD imputando exactamente el costo de alimento consumido
+    const profitFlower = revenueFlower - foodCostFlower
+    const profitUsd = profitFlower * flowerUsd
 
     return {
-      level: lvl,
-      xpRequired: lvlObj.xpRequired,
-      cumulativeXp: lvlObj.cumulativeXp,
-      primaryAmount,
-      secondaryAmount,
-      milestoneKey,
+      fromLevel: fromLvl,
+      toLevel: toLvl,
+      xpRequired: xpReq,
+      sleepHours,
+      isInstant,
+      residualXp: receivedResidual,
+      residualGenerated,
+      affectionTools,
+      affectionXp,
+      food: {
+        name: favFood.name,
+        image: favFood.image,
+        ingredient: favFood.ingredient,
+        units: foodUnits,
+        xp: unitFoodXp,
+        costFlower: foodCostFlower,
+        costUsd: foodCostUsd,
+        isFav: favFood.isFav,
+      },
+      totalXpObtained,
+      totalFoodXp,
+      totalAvailable,
+      resources,
+      revenueFlower,
+      revenueUsd,
+      profitFlower,
+      profitUsd,
     }
   })
 
@@ -769,138 +1078,271 @@ const faqItems = [
               </div>
             </div>
 
-            <!-- Tabla de Niveles del Animal (Desktop Header + Rows) -->
+            <!-- Tabla de Niveles del Animal (Desktop Header + Rows con 6 columnas) -->
             <div class="w-full">
-              <!-- Header Tabla Desktop -->
-              <div class="hidden lg:grid grid-cols-[12%_18%_18%_18%_16%_18%] p-3 bg-white/[0.02] border border-white/5 rounded-2xl mb-3 items-center text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
-                <div class="px-3">{t("sfl.animals.table.colLevel")}</div>
-                <div class="px-3">{t("sfl.animals.table.colXpReq")}</div>
-                <div class="px-3">{t("sfl.animals.table.colXpTotal")}</div>
-                <div class="px-3">{t("sfl.animals.table.colPrimary")}</div>
-                <div class="px-3">{t("sfl.animals.table.colSecondary")}</div>
-                <div class="px-3">{t("sfl.animals.table.colMilestone")}</div>
+              <!-- Header Tabla Desktop (6 columnas: Nivel & Tiempo, Afecto, Alimento, Cálculo XP, Recursos, Profit) -->
+              <div class="hidden lg:grid grid-cols-[16%_16%_22%_20%_13%_13%] p-3 bg-white/[0.02] border border-white/5 rounded-2xl mb-3 items-center text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold">
+                <div class="px-3">{t("sfl.animals.table.colLevelTime")}</div>
+                <div class="px-3">{t("sfl.animals.table.colAffection")}</div>
+                <div class="px-3">{t("sfl.animals.table.colFeed")}</div>
+                <div class="px-3">{t("sfl.animals.table.colXpCalc")}</div>
+                <div class="px-3">{t("sfl.animals.table.colYield")}</div>
+                <div class="px-3">{t("sfl.animals.table.colProfit")}</div>
               </div>
 
               <!-- Body de Filas -->
               <div class="flex flex-col gap-3 lg:gap-0 lg:bg-white/[0.01] lg:border lg:border-white/5 lg:rounded-3xl lg:p-2 lg:overflow-hidden animal-rows-container">
                 {animal.levels.map((lvl) => {
-                  const milestoneText = t(lvl.milestoneKey as any)
-
                   return (
                     <div
-                      class="animal-level-row hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-2xl p-4 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[12%_18%_18%_18%_16%_18%] lg:items-center lg:py-3.5"
-                      data-level={lvl.level}
-                      data-milestone={milestoneText.toLowerCase()}
+                      class="animal-level-row hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-2xl p-4 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[16%_16%_22%_20%_13%_13%] lg:items-center lg:py-3.5"
+                      data-level={lvl.toLevel}
+                      data-search={`${lvl.fromLevel} ${lvl.toLevel} ${lvl.food?.name || ''} ${(lvl.affectionTools || []).map(t => t.name).join(' ')} ${(lvl.resources || []).map(r => r?.name || '').join(' ')}`}
                     >
-                      <!-- Col 1: Nivel -->
-                      <div class="lg:px-3 flex items-center justify-between lg:justify-start gap-2 mb-3 lg:mb-0">
+                      <!-- Columna 1: Nivel (0 > 1) - XP y debajo tiempo (24h) -->
+                      <div class="lg:px-3 flex flex-col justify-center mb-3 lg:mb-0">
                         <div class="flex items-center gap-2">
-                          <span class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-mono font-bold text-sm text-emerald-400 shadow-sm">
-                            {lvl.level}
+                          <span class="font-mono font-bold text-white text-sm">
+                            {lvl.fromLevel} &gt; {lvl.toLevel}
                           </span>
-                          <span class="text-xs font-bold text-white lg:hidden">
-                            {animal.tabLabel} · Nivel {lvl.level}
+                          <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                            {lvl.xpRequired} XP
                           </span>
+                          {lvl.toLevel === 15 && (
+                            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                              CAP
+                            </span>
+                          )}
                         </div>
-                        {lvl.level === 15 && (
-                          <span class="lg:hidden text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                            CAP
+                        {lvl.isInstant ? (
+                          <span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 mt-0.5 font-semibold">
+                            <span>⚡</span> {t("sfl.animals.table.instant")}
+                          </span>
+                        ) : (
+                          <span class="text-[11px] font-mono text-terminal-muted flex items-center gap-1 mt-0.5">
+                            <span>🕒</span> {lvl.sleepHours}h
                           </span>
                         )}
                       </div>
 
-                      <!-- Mobile Grid de Métricas -->
+                      <!-- Mobile Grid de Métricas (2 columnas) -->
                       <div class="grid grid-cols-2 gap-2 mb-3 lg:hidden">
-                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-center">
-                          <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">
-                            {t("sfl.animals.table.colXpReq")}
-                          </span>
-                          <span class="text-white font-mono font-bold text-sm">+{lvl.xpRequired} XP</span>
+                        <!-- Mobile: Afecto -->
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+                          <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colAffection")}</span>
+                          {
+                            lvl.affectionTools && lvl.affectionTools.length > 0 ? (
+                              <div class="flex items-center justify-between gap-1 mt-1">
+                                <div class="flex items-center -space-x-1.5 shrink-0">
+                                  {lvl.affectionTools.map((tool, tIdx) => (
+                                    <img
+                                      src={tool.image}
+                                      alt={tool.name}
+                                      title={`${tool.name} (${tool.percent}%)`}
+                                      class="w-4 h-4 object-contain rounded-full bg-black/60 border border-white/10 p-0.5 relative"
+                                      style={`z-index: ${tIdx + 1};`}
+                                    />
+                                  ))}
+                                </div>
+                                <span class="text-xs font-mono font-bold text-emerald-400">+{lvl.affectionXp} XP</span>
+                              </div>
+                            ) : (
+                              <span class="text-xs font-mono text-white/30 italic mt-1">—</span>
+                            )
+                          }
                         </div>
-                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-center">
-                          <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">
-                            {t("sfl.animals.table.colXpTotal")}
-                          </span>
-                          <span class="text-emerald-400 font-mono font-bold text-sm">{lvl.cumulativeXp} XP</span>
-                        </div>
-                      </div>
 
-                      <!-- Col 2: XP Requerida (Desktop) -->
-                      <div class="hidden lg:flex px-3 items-center">
-                        <span class="text-sm font-mono text-white/90">+{lvl.xpRequired} XP</span>
-                      </div>
-
-                      <!-- Col 3: XP Acumulada (Desktop) -->
-                      <div class="hidden lg:flex px-3 items-center">
-                        <span class="text-sm font-mono font-bold text-emerald-400">{lvl.cumulativeXp} XP</span>
-                      </div>
-
-                      <!-- Col 4: Drop Primario -->
-                      <div class="flex items-center justify-between lg:justify-start lg:px-3 gap-2 mb-2 lg:mb-0">
-                        <span class="text-xs text-white/50 lg:hidden">{t("sfl.animals.table.colPrimary")}:</span>
-                        <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2.5 py-1 lg:p-0 rounded-lg">
-                          <img
-                            src={animal.primaryDrop.image}
-                            alt={animal.primaryDrop.name}
-                            class="w-5 h-5 object-contain"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                          <span class="text-xs font-mono font-bold text-white">
-                            {lvl.primaryAmount}x {animal.primaryDrop.name}
-                          </span>
-                          <span
-                            class:list={[
-                              "text-[9px] font-mono px-1.5 py-0.2 rounded ml-1",
-                              lvl.primaryAmount === 1 ? "bg-white/5 text-white/50" : "",
-                              lvl.primaryAmount === 2 ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" : "",
-                              lvl.primaryAmount === 3 ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" : "",
-                            ]}
-                          >
-                            Tier {lvl.primaryAmount}
-                          </span>
-                        </div>
-                      </div>
-
-                      <!-- Col 5: Drop Secundario -->
-                      <div class="flex items-center justify-between lg:justify-start lg:px-3 gap-2 mb-2 lg:mb-0">
-                        <span class="text-xs text-white/50 lg:hidden">{t("sfl.animals.table.colSecondary")}:</span>
-                        {animal.secondaryDrop ? (
-                          lvl.secondaryAmount > 0 ? (
-                            <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2.5 py-1 lg:p-0 rounded-lg">
-                              <img
-                                src={animal.secondaryDrop.image}
-                                alt={animal.secondaryDrop.name}
-                                class="w-5 h-5 object-contain"
-                                loading="lazy"
-                                decoding="async"
-                              />
-                              <span class="text-xs font-mono font-bold text-emerald-300">
-                                1x {animal.secondaryDrop.name}
+                        <!-- Mobile: Alimento -->
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+                          <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colFeed")}</span>
+                          <div class="mt-1 flex flex-col">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                              <img src={lvl.food.image} alt={lvl.food.name} class="w-3.5 h-3.5 object-contain shrink-0" />
+                              <span class="text-xs font-mono text-white truncate font-medium">
+                                {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
                               </span>
                             </div>
-                          ) : (
-                            <span class="text-xs font-mono text-white/20 italic">Bloqueado (Lvl {animal.secondaryDrop.unlockLevel})</span>
-                          )
-                        ) : (
-                          <span class="text-xs font-mono text-white/20">—</span>
-                        )}
+                            <div class="flex items-center gap-1 mt-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight">
+                              <img
+                                src="/img/sunflowerland/flower.jpg"
+                                alt="FLOWER"
+                                class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                                loading="lazy"
+                              />
+                              <span>{lvl.food.costFlower.toFixed(4)}</span>
+                            </div>
+                            <span class="text-[9px] font-mono text-white/50 leading-tight mt-0.5">
+                              ${lvl.food.costUsd.toFixed(4)} USD
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Mobile: Cálculo XP (Ancho completo) -->
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between col-span-2">
+                          <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colXpCalc")}</span>
+                          <div class="mt-1 flex flex-col">
+                            <span class="text-xs font-mono font-bold text-emerald-400">+{lvl.totalAvailable} XP</span>
+                            <span class="text-[10px] font-mono text-white/70 mt-0.5">
+                              {lvl.residualXp} {resLabel} + {lvl.affectionXp} {affecLabel} + {lvl.totalFoodXp} {foodLabel}
+                            </span>
+                            <span class="text-[9px] font-mono text-white/40 mt-0.5">
+                              ({surplusLabel} +{lvl.residualGenerated} XP)
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Mobile: Recursos -->
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+                          <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colYield")}</span>
+                          <div class="mt-1 flex flex-col">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                              {(lvl.resources || []).map((res) => (
+                                <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
+                                  <img src={res?.image} alt={res?.name || ''} class="w-3.5 h-3.5 object-contain" />
+                                  <span class="text-[11px] font-mono font-bold text-white">{res?.amount}x</span>
+                                </div>
+                              ))}
+                            </div>
+                            <div class="flex items-center gap-1 mt-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight">
+                              <img
+                                src="/img/sunflowerland/flower.jpg"
+                                alt="FLOWER"
+                                class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                                loading="lazy"
+                              />
+                              <span>+{lvl.revenueFlower.toFixed(4)}</span>
+                            </div>
+                            <span class="text-[9px] font-mono text-white/50 leading-tight mt-0.5">
+                              +${lvl.revenueUsd.toFixed(4)} USD
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Mobile: Profit -->
+                        <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+                          <span class="text-[9px] text-white/40 uppercase font-mono">{t("sfl.animals.table.colProfit")}</span>
+                          <div class="mt-1 flex flex-col">
+                            <span class:list={["text-xs font-mono font-bold", lvl.profitFlower >= 0 ? "text-emerald-400" : "text-rose-400"]}>
+                              {formatProfitFlower(lvl.profitFlower)}
+                            </span>
+                            <span class:list={["text-[10px] font-mono", lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80"]}>
+                              {formatProfitUsd(lvl.profitUsd)} USD
+                            </span>
+                          </div>
+                        </div>
                       </div>
 
-                      <!-- Col 6: Hito / Desbloqueo -->
-                      <div class="lg:px-3 pt-2 lg:pt-0 border-t border-white/5 lg:border-0 flex items-center">
-                        <span
-                          class:list={[
-                            "text-xs leading-snug",
-                            lvl.milestoneKey.includes("lvl15")
-                              ? "text-amber-400 font-bold"
-                              : lvl.milestoneKey.includes("lvl3") || lvl.milestoneKey.includes("lvl5") || lvl.milestoneKey.includes("Tier")
-                                ? "text-emerald-400/90 font-medium"
-                                : "text-terminal-muted",
-                          ]}
-                        >
-                          {milestoneText}
+                      <!-- Columna 2: Afecto (Desktop con solapamiento del 40%) -->
+                      <div class="hidden lg:flex px-3 items-center gap-2.5">
+                        {
+                          lvl.affectionTools && lvl.affectionTools.length > 0 ? (
+                            <>
+                              <!-- Stack de iconos de afecto solapados un 40% a la derecha -->
+                              <div class="flex items-center -space-x-1.5 shrink-0 relative">
+                                {lvl.affectionTools.map((tool, tIdx) => (
+                                  <img
+                                    src={tool.image}
+                                    alt={tool.name}
+                                    title={`${tool.name}: ${tool.percent}%`}
+                                    class="w-4.5 h-4.5 object-contain rounded-full bg-black/60 border border-white/10 p-0.5 shadow-md transition-transform hover:scale-125 hover:z-20 relative cursor-help"
+                                    style={`z-index: ${tIdx + 1};`}
+                                    loading="lazy"
+                                    decoding="async"
+                                  />
+                                ))}
+                              </div>
+                              <div class="flex flex-col min-w-0">
+                                <span class="text-xs text-white font-medium truncate" title={lvl.affectionTools.map(t => `${t.name} (${t.percent}%)`).join(", ")}>
+                                  2x Afecto
+                                </span>
+                                <span class="text-[10px] font-mono text-emerald-400 font-bold leading-none mt-0.5">
+                                  +{lvl.affectionXp} XP
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <div class="flex items-center gap-1.5 text-white/30 font-mono text-xs italic">
+                              <span>—</span>
+                              <span class="text-[10px]">{t("sfl.animals.table.noAffection")}</span>
+                            </div>
+                          )
+                        }
+                      </div>
+
+                      <!-- Columna 3: Alimento Favorito Oficial (Desktop) -->
+                      <div class="hidden lg:flex px-3 items-center gap-2.5">
+                        <img src={lvl.food.image} alt={lvl.food.name} class="w-4.5 h-4.5 object-contain drop-shadow shrink-0" />
+                        <div class="flex flex-col min-w-0">
+                          <span class="text-xs text-white font-medium truncate">
+                            {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
+                          </span>
+                          <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-0.5">
+                            <img
+                              src="/img/sunflowerland/flower.jpg"
+                              alt="FLOWER"
+                              class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                              loading="lazy"
+                            />
+                            <span>{lvl.food.costFlower.toFixed(4)}</span>
+                          </div>
+                          <span class="text-[9px] font-mono text-white/50 leading-tight">
+                            ${lvl.food.costUsd.toFixed(4)} USD
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Columna 4: Cálculo XP (Desktop) -->
+                      <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
+                        <span class="font-mono font-bold text-sm text-emerald-400 leading-tight">
+                          +{lvl.totalAvailable} XP
                         </span>
+                        <span class="text-[10px] font-mono text-white/70 leading-tight mt-0.5 truncate" title={`${lvl.residualXp} ${resLabel} + ${lvl.affectionXp} ${affecLabel} + ${lvl.totalFoodXp} ${foodLabel}`}>
+                          {lvl.residualXp} {resLabel} + {lvl.affectionXp} {affecLabel} + {lvl.totalFoodXp} {foodLabel}
+                        </span>
+                        <span class="text-[9px] font-mono text-white/40 leading-tight mt-0.5">
+                          ({surplusLabel} +{lvl.residualGenerated} XP)
+                        </span>
+                      </div>
+
+                      <!-- Columna 5: Recursos Obtenidos (Desktop) -->
+                      <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                          {(lvl.resources || []).map((res) => (
+                            <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
+                              <img src={res?.image} alt={res?.name || ''} class="w-3.5 h-3.5 object-contain" />
+                              <span class="text-[11px] font-mono font-bold text-white">{res?.amount}x</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-0.5">
+                          <img
+                            src="/img/sunflowerland/flower.jpg"
+                            alt="FLOWER"
+                            class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                            loading="lazy"
+                          />
+                          <span>+{lvl.revenueFlower.toFixed(4)}</span>
+                        </div>
+                        <span class="text-[9px] font-mono text-white/50 leading-tight">
+                          +${lvl.revenueUsd.toFixed(4)} USD
+                        </span>
+                      </div>
+
+                      <!-- Columna 7: Profit exclusivo en FLOWER y USD (Desktop) -->
+                      <div class="hidden lg:flex px-3 items-center">
+                        <div class:list={[
+                          "flex flex-col px-2.5 py-1 rounded-lg border font-mono",
+                          lvl.profitFlower >= 0
+                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                            : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                        ]}>
+                          <span class="font-bold text-xs leading-tight">
+                            {formatProfitFlower(lvl.profitFlower)}
+                          </span>
+                          <span class:list={["text-[10px] leading-tight", lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80"]}>
+                            {formatProfitUsd(lvl.profitUsd)} USD
+                          </span>
+                        </div>
                       </div>
                     </div>
                   )
@@ -965,10 +1407,10 @@ const faqItems = [
         const rows = activePanel.querySelectorAll(".animal-level-row")
         rows.forEach((row) => {
           const lvl = row.getAttribute("data-level") || ""
-          const milestone = row.getAttribute("data-milestone") || ""
+          const searchAttr = (row.getAttribute("data-search") || "").toLowerCase()
           const text = (row.textContent || "").toLowerCase()
 
-          if (!query || lvl.includes(query) || milestone.includes(query) || text.includes(query)) {
+          if (!query || lvl.includes(query) || searchAttr.includes(query) || text.includes(query)) {
             row.style.display = ""
           } else {
             row.style.display = "none"
