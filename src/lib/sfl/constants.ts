@@ -160,13 +160,21 @@ export function getRefinedSaltPrice(resolveMaterialPrice?: MaterialPriceResolver
 }
 
 /**
- * Devuelve el costo de 1 unidad de Honey Treat en FLOWER (1 Refined Salt + 1 Honey).
+ * Devuelve el costo de 1 lote crafteado de Honey Treat (5 Refined Salt + 5 Honey).
+ * Cada crafteo produce 6 unidades.
  */
-export function getHoneyTreatPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+export function getHoneyTreatBatchPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
   const getPrice = resolveMaterialPrice || getItemPrice
   const refinedSaltPrice = getRefinedSaltPrice(getPrice)
   const honeyPrice = getPrice("Honey") || 0
-  return refinedSaltPrice + honeyPrice
+  return (refinedSaltPrice * 5) + (honeyPrice * 5)
+}
+
+/**
+ * Devuelve el costo de 1 unidad individual de Honey Treat en FLOWER (lote / 6).
+ */
+export function getHoneyTreatPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+  return getHoneyTreatBatchPrice(resolveMaterialPrice) / 6
 }
 
 /**
@@ -178,6 +186,63 @@ export function getHoneyTreatPriceUsd(
 ): number {
   const effFlowerPrice = flowerPrice && flowerPrice > 0 ? flowerPrice : getFlowerPrice()
   return getHoneyTreatPrice(resolveMaterialPrice) * effFlowerPrice
+}
+
+/**
+ * Devuelve el costo de 1 lote crafteado de Truffle Seasoning (5 Refined Salt + 10 Truffle).
+ * Cada crafteo produce 6 unidades.
+ */
+export function getTruffleSeasoningBatchPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+  const getPrice = resolveMaterialPrice || getItemPrice
+  const refinedSaltPrice = getRefinedSaltPrice(getPrice)
+  const trufflePrice = getPrice("Truffle") || 0
+  return (refinedSaltPrice * 5) + (trufflePrice * 10)
+}
+
+/**
+ * Devuelve el costo de 1 unidad individual de Truffle Seasoning en FLOWER (lote / 6).
+ */
+export function getTruffleSeasoningPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+  return getTruffleSeasoningBatchPrice(resolveMaterialPrice) / 6
+}
+
+/**
+ * Devuelve el costo de 1 unidad de Truffle Seasoning en USD según el precio de FLOWER.
+ */
+export function getTruffleSeasoningPriceUsd(
+  flowerPrice?: number,
+  resolveMaterialPrice?: MaterialPriceResolver
+): number {
+  const effFlowerPrice = flowerPrice && flowerPrice > 0 ? flowerPrice : getFlowerPrice()
+  return getTruffleSeasoningPrice(resolveMaterialPrice) * effFlowerPrice
+}
+
+/**
+ * Devuelve el costo de 1 lote crafteado de Salt Lick (5 Refined Salt).
+ * Cada crafteo produce 6 unidades.
+ */
+export function getSaltLickBatchPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+  const getPrice = resolveMaterialPrice || getItemPrice
+  const refinedSaltPrice = getRefinedSaltPrice(getPrice)
+  return refinedSaltPrice * 5
+}
+
+/**
+ * Devuelve el costo de 1 unidad individual de Salt Lick en FLOWER (lote / 6).
+ */
+export function getSaltLickPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+  return getSaltLickBatchPrice(resolveMaterialPrice) / 6
+}
+
+/**
+ * Devuelve el costo de 1 unidad de Salt Lick en USD según el precio de FLOWER.
+ */
+export function getSaltLickPriceUsd(
+  flowerPrice?: number,
+  resolveMaterialPrice?: MaterialPriceResolver
+): number {
+  const effFlowerPrice = flowerPrice && flowerPrice > 0 ? flowerPrice : getFlowerPrice()
+  return getSaltLickPrice(resolveMaterialPrice) * effFlowerPrice
 }
 
 // ============================================================================
@@ -215,12 +280,18 @@ export function resolveMaterialFlowerCost(
     return ctx.flowerPriceUsd > 0 ? gemUsd / ctx.flowerPriceUsd : 0
   }
 
-  // 3. Refined Salt / Honey Treat
+  // 3. Aging Shed, Especias y Tratos de Animales
   if (materialName === "Refined Salt") {
     return getRefinedSaltPrice(ctx.resolveBasePrice || getItemPrice)
   }
   if (materialName === "Honey Treat") {
     return getHoneyTreatPrice(ctx.resolveBasePrice || getItemPrice)
+  }
+  if (materialName === "Truffle Seasoning") {
+    return getTruffleSeasoningPrice(ctx.resolveBasePrice || getItemPrice)
+  }
+  if (materialName === "Salt Lick") {
+    return getSaltLickPrice(ctx.resolveBasePrice || getItemPrice)
   }
 
   // 4. Tesoros de Jafar (con valor tasado en Coins)
