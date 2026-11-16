@@ -655,9 +655,14 @@ const tabs = [
     })
 
     const sflPrice = window.sflInternalPrice || 0.136
-    const gemBaseUsd = 0.0103
-    const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29
-    const gemCostUsd = gemBaseUsd / (1 + gemBonus)
+    let gemCostUsd = 0.0103
+    if (window.SflConstants && typeof window.SflConstants.calculateGemCostUsd === "function") {
+      gemCostUsd = window.SflConstants.calculateGemCostUsd(val || 1).unitUsd
+    } else {
+      const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29
+      const gemBaseFiat = 0.0129
+      gemCostUsd = (gemBaseFiat / (1 + gemBonus)) * 0.8
+    }
     const gemCostFlower = gemCostUsd / sflPrice
 
     const totalFlower = val * gemCostFlower

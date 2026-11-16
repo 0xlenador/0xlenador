@@ -2048,10 +2048,12 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
   </div>
 </SflToolLayout>
 
-<!-- 1. Motor Centralizado de Mercado (compilado por Vite con ES Modules) -->
+<!-- 1. Motor Centralizado de Mercado y Constantes (compilado por Vite con ES Modules) -->
 <script>
   import * as SflMarket from "../../lib/sfl/market"
+  import * as SflConstants from "../../lib/sfl/constants"
   ;(window as any).SflMarket = SflMarket
+  ;(window as any).SflConstants = SflConstants
   // Iniciar la descarga del mercado P2P
   SflMarket.fetchMarketData()
 </script>
@@ -2101,6 +2103,9 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
 
     // Calcula el costo de 1 unidad de Oil dividiendo el costo total de 1 Oil Drill entre 16.67
     function calculateOilUnitPrice() {
+      if (window.SflConstants && typeof window.SflConstants.calculateOilUnitPrice === "function") {
+        return window.SflConstants.calculateOilUnitPrice(activeCoinsPerFlower, 16.67, getBaseMaterialUnitPrice)
+      }
       if (!oilDrillItem) return 0
       const coins = oilDrillItem.coins || 0
       const coinsFlower = activeCoinsPerFlower > 0 ? coins / activeCoinsPerFlower : 0
@@ -3028,6 +3033,9 @@ const pigpen = animalBuildings.find((b) => b.id === "pigpen")
 
     // 2. Gemas (Fórmula algorítmica de SFL Mercado: tiers fiat con 20% descuento cripto)
     const getGemFiatPrice = (gems) => {
+      if (window.SflConstants && typeof window.SflConstants.getGemFiatPrice === "function") {
+        return window.SflConstants.getGemFiatPrice(gems)
+      }
       if (gems < 650) return 1.29 / 100
       if (gems < 1350) return 6.49 / 650
       if (gems < 2800) return 12.99 / 1350
