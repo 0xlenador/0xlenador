@@ -262,3 +262,34 @@ export function getGemFlowerPrice(gems: number = 1): number {
   const flowerUsd = getFlowerPrice()
   return flowerUsd > 0 ? unitUsd / flowerUsd : 0
 }
+
+// ---------------------------------------------------------------------------
+// Aging Shed & Consumibles de Animales
+// ---------------------------------------------------------------------------
+
+/**
+ * Devuelve el costo de 1 unidad de Refined Salt en FLOWER.
+ * En el Aging Shed, 1 Refined Salt requiere 10 Salt del mercado P2P.
+ */
+export function getRefinedSaltPrice(): number {
+  const saltPrice = getItemPrice("Salt")
+  return saltPrice * 10
+}
+
+/**
+ * Devuelve el costo de 1 unidad de Honey Treat en FLOWER.
+ * 1 Honey Treat requiere 1 Refined Salt + 1 Honey del mercado P2P.
+ */
+export function getHoneyTreatPrice(): number {
+  const refinedSaltPrice = getRefinedSaltPrice()
+  const honeyPrice = getItemPrice("Honey")
+  return refinedSaltPrice + honeyPrice
+}
+
+/**
+ * Devuelve el costo de 1 unidad de Honey Treat en USD según el precio actual de FLOWER.
+ */
+export function getHoneyTreatPriceUsd(): number {
+  const flowerPrice = getFlowerPrice()
+  return getHoneyTreatPrice() * flowerPrice
+}

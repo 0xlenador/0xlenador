@@ -44,6 +44,13 @@ try {
 const gemCostUsd = calculateGemCostUsd(1).unitUsd
 const gemFlowerPrice = flowerUsd > 0 ? gemCostUsd / flowerUsd : 0
 
+// Costo de 1 Refined Salt (10 Salt P2P) y 1 Honey Treat (1 Refined Salt + 1 Honey P2P)
+const saltPriceFlower = marketPrices["Salt"] || 0
+const refinedSaltPriceFlower = saltPriceFlower * 10
+const honeyPriceFlower = marketPrices["Honey"] || 0
+const honeyTreatCostFlower = refinedSaltPriceFlower + honeyPriceFlower
+const honeyTreatCostUsd = honeyTreatCostFlower * flowerUsd
+
 const sflPowerUpsEntry = await getEntry("sfl", "powerups")
 const sflSkillsEntry = await getEntry("sfl", "skills")
 
@@ -574,6 +581,8 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
       secondaryDrop: 0,
     },
     targetLevel: 15,
+    honeyTreatLevel: null,
+    isHoneyTreatToolActive: false,
     levels: []
   }
 
@@ -786,6 +795,8 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
 
 const clientPayload = {
   flowerUsd,
+  honeyTreatCostFlower,
+  honeyTreatCostUsd,
   resLabel,
   affecLabel,
   foodLabel,
@@ -1240,95 +1251,101 @@ const faqItems = [
             class:list={["animal-panel flex flex-col gap-6", isFirst ? "" : "hidden"]}
             data-animal-id={animal.id}
           >
-            <!-- Tarjeta de Resumen del Animal Activo -->
-            <div class="bg-[#18181b]/95 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md">
-              <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
-                <!-- Info Principal del Animal -->
-                <div class="flex items-center gap-4 sm:gap-5 shrink-0">
-                  <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center justify-center shrink-0 shadow-inner">
+            <!-- Tarjeta de Resumen del Animal Activo (Ultra Compacta y Organizada) -->
+            <div class="bg-[#151518]/95 border border-white/10 rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg backdrop-blur-md">
+              <div class="flex flex-col xl:flex-row items-center justify-between gap-3 sm:gap-4 xl:gap-6">
+                <!-- Info Principal del Animal (Ultra Compacto y Sin Espacio Muerto) -->
+                <div class="flex items-center gap-3 shrink-0 self-center xl:self-auto">
+                  <div class="w-11 h-11 sm:w-12 sm:h-12 bg-white/[0.04] border border-white/10 rounded-xl p-1.5 flex items-center justify-center shrink-0 shadow-sm">
                     <img
                       src={animal.icon}
                       alt={animal.name}
-                      class="w-full h-full object-contain drop-shadow-md"
+                      class="w-full h-full object-contain drop-shadow"
                       loading="lazy"
                       decoding="async"
                     />
                   </div>
                   <div class="flex flex-col justify-center">
-                    <!-- Título -->
-                    <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
-                      {animal.tabLabel}
-                    </h2>
-                    <!-- Building debajo del nombre -->
-                    <div class="flex items-center gap-1.5 mt-0.5">
-                      <img src={animal.buildingIcon} alt={animal.buildingName} class="w-3.5 h-3.5 object-contain opacity-70" />
-                      <span class="text-xs font-mono text-white/60">{animal.buildingName}</span>
+                    <div class="flex items-center gap-2">
+                      <h2 class="text-sm sm:text-base font-bold text-white tracking-tight leading-none">
+                        {animal.tabLabel}
+                      </h2>
+                      <div class="inline-flex items-center gap-1 bg-white/[0.04] border border-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono text-white/60">
+                        <img src={animal.buildingIcon} alt={animal.buildingName} class="w-3 h-3 object-contain opacity-70" />
+                        <span>{animal.buildingName}</span>
+                      </div>
                     </div>
-                    <!-- Costo de compra y debajo Tiempo -->
-                    <div class="flex flex-col gap-0.5 mt-2 text-xs font-mono">
-                      <div class="flex items-center gap-1.5 text-white/60">
-                        <span>{t("sfl.animals.card.cost")}:</span>
-                        <strong class="text-emerald-400 font-semibold">{animal.costCoins} Monedas</strong>
-                      </div>
-                      <div class="flex items-center gap-1.5 text-white/60">
-                        <span>{t("sfl.animals.card.sleep")}:</span>
-                        <strong class="text-white font-semibold">{animal.sleepHours}h</strong>
-                      </div>
+                    <div class="flex items-center gap-2 mt-1 text-[11px] font-mono text-white/60">
+                      <span>{t("sfl.animals.card.cost")}: <strong class="text-emerald-400 font-semibold">{animal.costCoins}</strong></span>
+                      <span class="text-white/20">·</span>
+                      <span>{t("sfl.animals.card.sleep")}: <strong class="text-white font-semibold">{animal.sleepHours}h</strong></span>
                     </div>
                   </div>
                 </div>
 
-                <!-- Bloque Central: Barra de Boosts centrada + Selector de Nivel Objetivo con Puntos -->
-                <div class="flex flex-col items-center justify-center flex-1 w-full xl:w-auto xl:max-w-2xl px-1 sm:px-2 gap-3 border-t xl:border-t-0 pt-4 xl:pt-0 border-white/5">
-                  <!-- Título y Barra de Boosts -->
-                  <div class="flex flex-col items-center w-full">
-                    <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1.5 self-center">
-                      {t("sfl.animals.card.boostsTitle")}
-                    </span>
-                    <div class="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap bg-black/40 border border-white/5 rounded-2xl p-2 sm:px-3 sm:py-2 w-full max-w-fit shadow-inner">
-                      <!-- Food: 1 -->
-                      <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
-                        <span class="text-xs font-mono font-medium text-white/80">Food:</span>
-                        <input
-                          type="number"
-                          step="1"
-                          min="0"
-                          value="1"
-                          data-animal={animal.id}
-                          data-boost-type="food"
-                          class="animal-boost-input w-11 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
-                          title="Multiplicador de consumo de alimento"
-                        />
-                      </div>
-
-                      <!-- Food XP: 1 -->
-                      <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
-                        <span class="text-xs font-mono font-medium text-white/80">Food XP:</span>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0.1"
-                          value="1"
-                          data-animal={animal.id}
-                          data-boost-type="foodXp"
-                          class="animal-boost-input w-11 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
-                          title="Multiplicador de XP obtenida de los alimentos"
-                        />
-                      </div>
-
-                      <!-- Care Tools Multiplier (los 3 iconos con sus tooltips + input multiplicador) -->
-                      <div class="flex items-center gap-2 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
-                        <div class="flex items-center -space-x-1 shrink-0">
-                          {animal.careTools.map((tool, tIdx) => (
-                            <img
-                              src={tool.image}
-                              alt={tool.name}
-                              title={`${tool.name} (+${tool.xp} XP)`}
-                              class="w-4.5 h-4.5 object-contain drop-shadow hover:scale-125 transition-transform cursor-help relative"
-                              style={`z-index: ${tIdx + 1};`}
-                            />
-                          ))}
+                <!-- Bloque Central: Boosts Segmentados + Scrubber Apple (Compacto) -->
+                <div class="flex-1 w-full min-w-0 flex flex-col items-center justify-center gap-2 px-0 xl:px-2 border-t xl:border-t-0 pt-2.5 xl:pt-0 border-white/5">
+                  <!-- Barra de Boosts en 3 Cápsulas Segmentadas Compactas (Sin saltos de línea feos) -->
+                  <div class="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap lg:flex-nowrap w-full max-w-4xl">
+                    <!-- Grupo 1: Feeding -->
+                    <div class="flex items-center gap-1.5 bg-[#18181b]/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0">
+                      <span class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none">
+                        {t("sfl.animals.card.groupFeeding")}
+                      </span>
+                      <div class="w-px h-3 bg-white/10"></div>
+                      <!-- Food Qty -->
+                      <div class="flex items-center gap-1" title="Multiplicador de consumo de alimento">
+                        <span class="text-[10px] sm:text-[11px] font-mono text-white/70">Feed:</span>
+                        <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
+                          <input
+                            type="number"
+                            step="1"
+                            min="0"
+                            value="1"
+                            data-animal={animal.id}
+                            data-boost-type="food"
+                            class="animal-boost-input w-7 sm:w-8 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+                          />
+                          <span class="text-[9px] font-mono text-emerald-500/70 select-none font-bold">×</span>
                         </div>
+                      </div>
+                      <div class="w-px h-2.5 bg-white/10"></div>
+                      <!-- Food XP -->
+                      <div class="flex items-center gap-1" title="Multiplicador de XP obtenida de los alimentos">
+                        <span class="text-[10px] sm:text-[11px] font-mono text-white/70">XP:</span>
+                        <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
+                          <input
+                            type="number"
+                            step="0.1"
+                            min="0.1"
+                            value="1"
+                            data-animal={animal.id}
+                            data-boost-type="foodXp"
+                            class="animal-boost-input w-7 sm:w-8 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+                          />
+                          <span class="text-[9px] font-mono text-emerald-500/70 select-none font-bold">×</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Grupo 2: Care -->
+                    <div class="flex items-center gap-1.5 bg-[#18181b]/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0" title="Multiplicador de afecto para las herramientas diarias">
+                      <span class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none">
+                        {t("sfl.animals.card.groupCare")}
+                      </span>
+                      <div class="w-px h-3 bg-white/10"></div>
+                      <div class="flex items-center bg-black/50 border border-white/5 rounded-lg px-1 py-0.5 -space-x-1 shrink-0">
+                        {animal.careTools.map((tool, tIdx) => (
+                          <img
+                            src={tool.image}
+                            alt={tool.name}
+                            title={`${tool.name} (+${tool.xp} XP)`}
+                            class="w-4 h-4 object-contain drop-shadow hover:scale-125 transition-transform cursor-help relative"
+                            style={`z-index: ${tIdx + 1};`}
+                          />
+                        ))}
+                      </div>
+                      <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
                         <input
                           type="number"
                           step="0.1"
@@ -1336,65 +1353,99 @@ const faqItems = [
                           value="1"
                           data-animal={animal.id}
                           data-boost-type="careMultiplier"
-                          class="animal-boost-input w-11 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
-                          title="Multiplicador de XP para las herramientas de afecto (ej: 1.5 = +50% XP)"
+                          class="animal-boost-input w-7 sm:w-8 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
                         />
+                        <span class="text-[9px] font-mono text-emerald-500/70 select-none font-bold">×</span>
                       </div>
+                    </div>
 
-                      <!-- Primary Drop (ej. Egg: +0.00) -->
-                      <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
-                        <img src={animal.primaryDrop.image} alt={animal.primaryDrop.name} class="w-4 h-4 object-contain" />
-                        <span class="text-xs font-mono font-medium text-white/80">{animal.primaryDrop.name}:</span>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          value="0"
-                          placeholder="+0.00"
-                          data-animal={animal.id}
-                          data-boost-type="primaryDrop"
-                          class="animal-boost-input w-14 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
-                          title={`Bonus de drop para ${animal.primaryDrop.name}`}
-                        />
-                      </div>
-
-                      <!-- Secondary Drop (ej. Feather: +0.00) -->
-                      {animal.secondaryDrop && (
-                        <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/[0.08] transition-colors rounded-xl px-2 sm:px-2.5 py-1.5 border border-white/5">
-                          <img src={animal.secondaryDrop.image} alt={animal.secondaryDrop.name} class="w-4 h-4 object-contain" />
-                          <span class="text-xs font-mono font-medium text-white/80">{animal.secondaryDrop.name}:</span>
+                    <!-- Grupo 3: Drops -->
+                    <div class="flex items-center gap-1.5 bg-[#18181b]/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0">
+                      <span class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none">
+                        {t("sfl.animals.card.groupDrops")}
+                      </span>
+                      <div class="w-px h-3 bg-white/10"></div>
+                      <!-- Primary Drop -->
+                      <div class="flex items-center gap-1" title={`Cantidad fija añadida por recogida (${animal.primaryDrop.name})`}>
+                        <img src={animal.primaryDrop.image} alt={animal.primaryDrop.name} class="w-3.5 h-3.5 object-contain shrink-0" />
+                        <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
+                          <span class="text-[10px] font-mono text-emerald-400/70 select-none font-bold mr-0.5">+</span>
                           <input
                             type="number"
                             step="0.1"
                             min="0"
                             value="0"
-                            placeholder="+0.00"
+                            placeholder="0.00"
                             data-animal={animal.id}
-                            data-boost-type="secondaryDrop"
-                            class="animal-boost-input w-14 bg-black/60 border border-white/10 rounded-md px-1.5 py-0.5 text-xs font-mono text-emerald-400 text-center focus:outline-none focus:border-emerald-500/60 transition-all font-semibold"
-                            title={`Bonus de drop para ${animal.secondaryDrop.name}`}
+                            data-boost-type="primaryDrop"
+                            class="animal-boost-input w-8 sm:w-9 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
                           />
                         </div>
+                      </div>
+                      <!-- Secondary Drop -->
+                      {animal.secondaryDrop && (
+                        <>
+                          <div class="w-px h-2.5 bg-white/10"></div>
+                          <div class="flex items-center gap-1" title={`Cantidad fija añadida por recogida (${animal.secondaryDrop.name})`}>
+                            <img src={animal.secondaryDrop.image} alt={animal.secondaryDrop.name} class="w-3.5 h-3.5 object-contain shrink-0" />
+                            <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
+                              <span class="text-[10px] font-mono text-emerald-400/70 select-none font-bold mr-0.5">+</span>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                value="0"
+                                placeholder="0.00"
+                                data-animal={animal.id}
+                                data-boost-type="secondaryDrop"
+                                class="animal-boost-input w-8 sm:w-9 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </>
                       )}
                     </div>
                   </div>
 
-                  <!-- Línea de Puntos: Selector de Nivel Objetivo (1 al 15) -->
-                  <div class="flex flex-col items-center w-full max-w-lg px-2">
-                    <div class="flex items-center justify-between w-full mb-1 text-[10px] font-mono text-white/40">
-                      <span class="flex items-center gap-1">
-                        <span>🎯</span>
-                        <span>{t("sfl.animals.card.targetLevel")}:</span>
-                        <strong class="text-emerald-400 font-bold target-level-number" data-animal={animal.id}>Lvl 15</strong>
-                      </span>
-                      <span class="text-white/30 hidden sm:inline">Clic en un nivel para limitar cálculo</span>
+                  <!-- Línea de Puntos: Selector de Nivel Objetivo (1 al 15) Compacto -->
+                  <div class="flex flex-col items-center w-full max-w-4xl px-1">
+                    <div class="flex items-center justify-between w-full mb-1 text-xs font-mono gap-2">
+                      <div class="flex items-center gap-2">
+                        <!-- Target Level Indicator -->
+                        <div class="flex items-center gap-1.5 bg-[#18181b]/90 border border-white/10 rounded-lg px-2 py-0.5 text-white/70 shadow-sm">
+                          <span class="text-[11px]">🎯</span>
+                          <span class="text-white/40 uppercase text-[9px] tracking-wider font-semibold">{t("sfl.animals.card.targetLevel")}:</span>
+                          <strong class="text-emerald-400 font-bold text-[11px] target-level-number" data-animal={animal.id}>Lvl 15</strong>
+                        </div>
+
+                        <!-- Botón Toggle Honey Treat -->
+                        <button
+                          type="button"
+                          class="honey-treat-toggle-btn group flex items-center gap-1.5 bg-[#18181b] border border-amber-500/30 hover:border-amber-400 rounded-lg px-2 py-0.5 shadow-sm transition-all focus:outline-none cursor-pointer select-none"
+                          data-animal={animal.id}
+                          title={t("sfl.animals.card.honeyTreatTooltip")}
+                        >
+                          <img
+                            src="/img/sunflowerland/animals/honey_treat.webp"
+                            alt="Honey Treat"
+                            class="w-3.5 h-3.5 object-contain drop-shadow transition-transform group-hover:scale-110"
+                          />
+                          <span class="text-[10px] font-mono font-bold text-amber-400 group-hover:text-amber-300">
+                            {t("sfl.animals.card.honeyTreatBtn")}
+                          </span>
+                          <span class="honey-treat-indicator text-[9px] font-mono text-amber-300/60 hidden sm:inline">(-25% feed)</span>
+                          <span class="honey-treat-badge ml-0.5 w-1.5 h-1.5 rounded-full bg-amber-500/30"></span>
+                        </button>
+                      </div>
+
+                      <span class="text-[10px] text-white/40 tracking-tight hidden md:inline">{t("sfl.animals.card.targetHint")}</span>
                     </div>
 
-                    <!-- Pista interactiva de 15 puntos -->
+                    <!-- Pista interactiva de 15 puntos estilo Timeline Apple Compacta -->
                     <div class="relative w-full flex items-center justify-between py-1 px-1 animal-target-track" data-animal={animal.id}>
-                      <div class="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-1 bg-white/10 rounded-full z-0"></div>
+                      <div class="absolute left-2.5 right-2.5 top-1/2 -translate-y-1/2 h-1 bg-white/[0.08] rounded-full z-0"></div>
                       <div
-                        class="target-level-progress-bar absolute left-2 top-1/2 -translate-y-1/2 h-1 bg-emerald-500 rounded-full z-0 transition-all duration-200"
+                        class="target-level-progress-bar absolute left-2.5 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-emerald-500/80 to-emerald-400 rounded-full z-0 transition-all duration-200"
                         data-animal={animal.id}
                         style="width: 100%;"
                       ></div>
@@ -1405,10 +1456,10 @@ const faqItems = [
                           <button
                             type="button"
                             class:list={[
-                              "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none",
+                              "target-level-dot relative rounded-full flex items-center justify-center font-mono select-none cursor-pointer transition-all duration-150 focus:outline-none",
                               isSelected
-                                ? "bg-emerald-400 text-black border-2 border-emerald-500 ring-2 ring-emerald-400/50 scale-110 shadow-sm shadow-emerald-500/50"
-                                : "bg-emerald-500/80 text-black border border-emerald-400/60 hover:scale-110"
+                                ? "z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 bg-emerald-400 text-black text-[10px] font-black border-2 border-emerald-200 ring-2 ring-emerald-400/40 scale-110 shadow-[0_0_12px_rgba(52,211,153,0.65)]"
+                                : "z-10 w-5 h-5 bg-[#1a1a1d] text-emerald-400/90 border border-emerald-500/40 text-[9px] font-semibold hover:border-emerald-400 hover:scale-110 hover:text-emerald-300"
                             ]}
                             data-animal={animal.id}
                             data-target-level={lvlNum}
@@ -1422,17 +1473,17 @@ const faqItems = [
                   </div>
                 </div>
 
-                <!-- Cuadro de Profit Total Acumulado (Extremo Derecho) -->
-                <div class="flex flex-col shrink-0 self-center xl:self-auto border-t xl:border-t-0 pt-4 xl:pt-0 border-white/5 w-full xl:w-auto">
+                <!-- Cuadro de Profit Total Acumulado (Extremo Derecho Compacto) -->
+                <div class="flex flex-col shrink-0 self-center xl:self-auto border-t xl:border-t-0 pt-2.5 xl:pt-0 border-white/5 w-full xl:w-auto">
                   <span
-                    class="animal-total-profit-title text-[10px] font-mono uppercase tracking-wider text-white/40 mb-1.5 text-center xl:text-right"
+                    class="animal-total-profit-title text-[9px] font-mono uppercase tracking-wider text-white/40 mb-1 text-center xl:text-right"
                     data-animal={animal.id}
                   >
                     {t("sfl.animals.card.totalProfit")} (Lvl 1-15)
                   </span>
                   <div
                     class:list={[
-                      "animal-total-profit-badge flex flex-col items-center xl:items-end justify-center px-4 py-2 rounded-2xl border font-mono transition-colors min-w-[130px]",
+                      "animal-total-profit-badge flex flex-col items-center xl:items-end justify-center px-3.5 py-1.5 rounded-xl border font-mono transition-colors min-w-[125px]",
                       animal.totalProfitFlower >= 0
                         ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
                         : "bg-rose-500/10 border-rose-500/20 text-rose-400"
@@ -1443,13 +1494,14 @@ const faqItems = [
                       class="animal-total-profit-flower font-black text-sm sm:text-base leading-tight"
                       data-animal={animal.id}
                     >
-                      {formatProfitFlower(animal.totalProfitFlower)}
+                      {animal.totalProfitFlower >= 0 ? "+" : ""}
+                      {animal.totalProfitFlower.toFixed(4)} FL
                     </span>
                     <span
-                      class="animal-total-profit-usd text-xs leading-tight opacity-80 mt-0.5"
+                      class="animal-total-profit-usd text-[10px] font-mono font-medium opacity-80"
                       data-animal={animal.id}
                     >
-                      {formatProfitUsd(animal.totalProfitUsd)} USD
+                      {animal.totalProfitUsd >= 0 ? "+" : "-"}${Math.abs(animal.totalProfitUsd).toFixed(4)} USD
                     </span>
                   </div>
                 </div>
@@ -1553,13 +1605,16 @@ const faqItems = [
                               </div>
                               <button
                                 type="button"
-                                class="food-selector-trigger text-xs font-mono text-white truncate font-medium hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none"
+                                class="food-selector-trigger text-xs font-mono text-white truncate font-medium hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none flex items-center"
                                 data-animal={animal.id}
                                 data-level={lvl.toLevel}
                                 title="Clic para elegir alimento"
                               >
                                 <span class="row-food-name">
                                   {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
+                                </span>
+                                <span class="row-honey-badge hidden inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 ml-1 shrink-0" title="Honey Treat activo (-25% comida)">
+                                  🍯 -25%
                                 </span>
                               </button>
                             </div>
@@ -1696,6 +1751,9 @@ const faqItems = [
                           >
                             <span class="row-food-name truncate" title={lvl.food.ingredient ? `${lvl.food.name} (${lvl.food.ingredient})` : lvl.food.name}>
                               {lvl.food.units > 1 ? `${lvl.food.units}x ` : ""}{lvl.food.name}
+                            </span>
+                            <span class="row-honey-badge hidden inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 ml-1 shrink-0" title="Honey Treat activo (-25% comida)">
+                              🍯 -25%
                             </span>
                           </button>
                           <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-0.5">
@@ -2052,11 +2110,23 @@ const faqItems = [
             const neededFromFood = Math.max(0, xpReq - receivedResidual - affectionXp)
             const neededFeeds = Math.max(1, Math.ceil(neededFromFood / unitFoodXp))
 
-            // Multiplicador de consumo de comida
-            const foodMultiplier = boosts.food !== undefined ? boosts.food : 1
-            const foodUnits = Math.round(neededFeeds * chosenFood.requiredPerFeed * foodMultiplier)
+            // Multiplicador de consumo de comida (Honey Treat reduce 25% el alimento en 3 turnos)
+            const hasHoneyTreat = Boolean(
+              animal.honeyTreatLevel &&
+              lvl.level >= animal.honeyTreatLevel &&
+              lvl.level < animal.honeyTreatLevel + 3
+            )
+            const treatMultiplier = hasHoneyTreat ? 0.75 : 1
+            const baseFoodMultiplier = boosts.food !== undefined ? boosts.food : 1
+            const effectiveFoodMultiplier = baseFoodMultiplier * treatMultiplier
 
-            const foodCostFlower = neededFeeds * chosenFood.costPerFeed * foodMultiplier
+            const foodUnits = Math.round(neededFeeds * chosenFood.requiredPerFeed * effectiveFoodMultiplier)
+
+            // Costo de alimento: si es el nivel inicial del Honey Treat, imputamos el costo de 1 Honey Treat (10 Salt + 1 Honey P2P)
+            let foodCostFlower = neededFeeds * chosenFood.costPerFeed * effectiveFoodMultiplier
+            if (hasHoneyTreat && lvl.level === animal.honeyTreatLevel && clientState.honeyTreatCostFlower) {
+              foodCostFlower += clientState.honeyTreatCostFlower
+            }
             const foodCostUsd = foodCostFlower * clientState.flowerUsd
 
             const totalFoodXp = neededFeeds * unitFoodXp
@@ -2128,7 +2198,7 @@ const faqItems = [
                 }
               })
 
-              // 2. Food name
+              // 2. Food name & Honey Badge
               const foodNameEls = row.querySelectorAll(".row-food-name")
               const unitsPrefix = foodUnits > 1 ? `${foodUnits}x ` : ""
               foodNameEls.forEach((el) => {
@@ -2136,6 +2206,14 @@ const faqItems = [
                 el.title = chosenFood.ingredient
                   ? `${chosenFood.name} (${chosenFood.ingredient})`
                   : chosenFood.name
+              })
+              const honeyBadges = row.querySelectorAll(".row-honey-badge")
+              honeyBadges.forEach((badge) => {
+                if (hasHoneyTreat) {
+                  badge.classList.remove("hidden")
+                } else {
+                  badge.classList.add("hidden")
+                }
               })
 
               // 3. Food cost FLOWER & USD
@@ -2268,20 +2346,83 @@ const faqItems = [
             const pct = Math.max(0, Math.min(100, ((targetLevel - 1) / 14) * 100))
             progressBar.style.width = `${pct}%`
           }
+
           const dots = document.querySelectorAll(`.target-level-dot[data-animal="${animalId}"]`)
           dots.forEach((dot) => {
             const dLvl = Number(dot.getAttribute("data-target-level"))
-            if (dLvl === targetLevel) {
+            const isTarget = dLvl === targetLevel
+            const isBeforeTarget = dLvl < targetLevel
+            const isHoney = Boolean(
+              animal.honeyTreatLevel &&
+              dLvl >= animal.honeyTreatLevel &&
+              dLvl < animal.honeyTreatLevel + 3
+            )
+
+            if (isHoney) {
+              // 🍯 Nivel cubierto por Honey Treat (Color Miel Ámbar brillante)
+              if (isTarget) {
+                dot.className =
+                  "target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b from-amber-300 via-amber-400 to-amber-500 text-black border-2 border-amber-100 ring-2 ring-amber-400/80 scale-115 shadow-[0_0_16px_rgba(251,191,36,0.9)]"
+              } else {
+                dot.className =
+                  "target-level-dot relative z-10 w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-mono text-[9px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b from-amber-400 to-amber-500 text-black border-2 border-amber-200 ring-2 ring-amber-400/50 scale-105 shadow-[0_0_10px_rgba(251,191,36,0.7)]"
+              }
+            } else if (isTarget) {
               dot.className =
-                "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none bg-emerald-400 text-black border-2 border-emerald-500 ring-2 ring-emerald-400/50 scale-110 shadow-sm shadow-emerald-500/50"
-            } else if (dLvl < targetLevel) {
+                "target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-emerald-400 text-black border-2 border-emerald-200 ring-2 ring-emerald-400/40 scale-110 shadow-[0_0_12px_rgba(52,211,153,0.65)]"
+            } else if (isBeforeTarget) {
               dot.className =
-                "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none bg-emerald-500/80 text-black border border-emerald-400/60 hover:scale-110"
+                "target-level-dot relative z-10 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[9px] font-semibold select-none cursor-pointer transition-all duration-150 focus:outline-none bg-[#1a1a1d] text-emerald-400/90 border border-emerald-500/40 hover:border-emerald-400 hover:scale-110 hover:text-emerald-300"
             } else {
               dot.className =
-                "target-level-dot relative z-10 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center transition-all cursor-pointer font-mono text-[9px] font-bold select-none focus:outline-none bg-white/10 text-white/30 border border-white/20 hover:bg-white/20 hover:text-white"
+                "target-level-dot relative z-10 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[9px] font-medium select-none cursor-pointer transition-all duration-150 focus:outline-none bg-[#141416] text-white/20 border border-white/[0.06] hover:bg-white/10 hover:text-white/60 hover:border-white/20"
             }
           })
+
+          updateHoneyTreatBtnUI(animalId)
+        }
+
+        const updateHoneyTreatBtnUI = (animalId) => {
+          const animal = clientState.animals?.[animalId]
+          if (!animal) return
+          const btn = document.querySelector(`.honey-treat-toggle-btn[data-animal="${animalId}"]`)
+          if (!btn) return
+
+          const badge = btn.querySelector(".honey-treat-badge")
+          const indicator = btn.querySelector(".honey-treat-indicator")
+
+          if (animal.isHoneyTreatToolActive) {
+            btn.classList.add("bg-amber-500/20", "border-amber-400", "ring-2", "ring-amber-400/50", "shadow-[0_0_10px_rgba(251,191,36,0.4)]")
+            btn.classList.remove("bg-[#18181b]", "border-amber-500/30")
+            if (badge) {
+              badge.className = "honey-treat-badge ml-0.5 w-2 h-2 rounded-full bg-amber-400 animate-ping"
+            }
+            if (indicator) {
+              indicator.textContent = "Elige nivel..."
+              indicator.classList.add("text-amber-300", "font-bold")
+            }
+          } else if (animal.honeyTreatLevel) {
+            const endLvl = Math.min(15, animal.honeyTreatLevel + 2)
+            btn.classList.add("bg-amber-500/15", "border-amber-400/80")
+            btn.classList.remove("bg-[#18181b]", "border-amber-500/30", "ring-2", "ring-amber-400/50")
+            if (badge) {
+              badge.className = "honey-treat-badge ml-0.5 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.8)]"
+            }
+            if (indicator) {
+              indicator.textContent = `Lvl ${animal.honeyTreatLevel}-${endLvl} (-25%)`
+              indicator.classList.remove("text-amber-300", "font-bold")
+            }
+          } else {
+            btn.classList.remove("bg-amber-500/20", "bg-amber-500/15", "border-amber-400", "border-amber-400/80", "ring-2", "ring-amber-400/50", "shadow-[0_0_10px_rgba(251,191,36,0.4)]")
+            btn.classList.add("bg-[#18181b]", "border-amber-500/30")
+            if (badge) {
+              badge.className = "honey-treat-badge ml-0.5 w-1.5 h-1.5 rounded-full bg-amber-500/30"
+            }
+            if (indicator) {
+              indicator.textContent = "(-25% feed)"
+              indicator.classList.remove("text-amber-300", "font-bold")
+            }
+          }
         }
 
         // Manejador de cambios en los inputs de Boosts del animal
@@ -2315,16 +2456,45 @@ const faqItems = [
 
         // Delegación de eventos para clicks
         document.addEventListener("click", (e) => {
+          // Toggle del modo Honey Treat
+          const honeyBtn = e.target.closest(".honey-treat-toggle-btn")
+          if (honeyBtn) {
+            e.stopPropagation()
+            const animalId = honeyBtn.getAttribute("data-animal")
+            const animal = clientState.animals?.[animalId]
+            if (!animal) return
+
+            animal.isHoneyTreatToolActive = !animal.isHoneyTreatToolActive
+            updateHoneyTreatBtnUI(animalId)
+            return
+          }
+
+          // Clic en los puntos de la línea de niveles (Target Level o asignación de Honey Treat)
           const dotBtn = e.target.closest(".target-level-dot")
           if (dotBtn) {
             e.stopPropagation()
             const animalId = dotBtn.getAttribute("data-animal")
-            const newTarget = Number(dotBtn.getAttribute("data-target-level"))
+            const clickedLvl = Number(dotBtn.getAttribute("data-target-level"))
             const animal = clientState.animals?.[animalId]
-            if (animal && newTarget >= 1 && newTarget <= 15) {
-              animal.targetLevel = newTarget
+            if (!animal || clickedLvl < 1 || clickedLvl > 15) return
+
+            // Si la herramienta de Honey Treat está activa, aplicamos/quitamos miel en ese nivel
+            if (animal.isHoneyTreatToolActive) {
+              if (animal.honeyTreatLevel === clickedLvl) {
+                // Al tocar el mismo nivel de inicio, se desactiva
+                animal.honeyTreatLevel = null
+              } else {
+                // Se asigna este nivel como inicio de los 3 niveles con miel
+                animal.honeyTreatLevel = clickedLvl
+              }
+              animal.isHoneyTreatToolActive = false
               recalculateAnimalProgression(animalId)
+              return
             }
+
+            // Si la herramienta no está activa, actúa como selector de Nivel Objetivo
+            animal.targetLevel = clickedLvl
+            recalculateAnimalProgression(animalId)
             return
           }
 
