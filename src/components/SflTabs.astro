@@ -501,8 +501,8 @@ const tabs = [
 </div>
 
 <script>
-  import bettyPrices from "../content/data/sfl/betty_prices.json"
-  import sflIds from "../content/data/sfl/resources.json"
+  import { fetchMarketData, getFlowerPrice, getBettyRatio, getItemPrice, onUpdate } from "../lib/sfl/market"
+  import { calculateOilDrillCost, calculateGemCostUsd } from "../lib/sfl/constants"
 
   const applyFlowerPrice = (priceNum) => {
     if (!priceNum || isNaN(priceNum) || priceNum <= 0) return;
@@ -540,79 +540,62 @@ const tabs = [
     const initialPrice =
       window.sflInternalPrice ||
       (window.__CoinGeckoEngine && window.__CoinGeckoEngine["flower-2"] && window.__CoinGeckoEngine["flower-2"].usd) ||
+      getFlowerPrice() ||
       0.1501;
     applyFlowerPrice(initialPrice);
 
     try {
-      const response = await fetch(`/api/sfl_data.json?t=${new Date().getTime()}`)
-      if (!response.ok) return
-      const json = await response.json()
+      const data = await fetchMarketData()
+      if (!data) return
 
-      if (json.flowerPrice) {
-        applyFlowerPrice(parseFloat(json.flowerPrice));
-      } else if (window.__CoinGeckoEngine && window.__CoinGeckoEngine["flower-2"] && window.__CoinGeckoEngine["flower-2"].usd) {
-        applyFlowerPrice(window.__CoinGeckoEngine["flower-2"].usd);
+      const flowerPrice = getFlowerPrice()
+      if (flowerPrice > 0) {
+        applyFlowerPrice(flowerPrice)
       }
 
-      if (json.items) {
-        let bestCoinsPerFlower = 0
-        const marketData = json.items
-
-        Object.keys(bettyPrices).forEach(name => {
-          const itemConfig = bettyPrices[name]
-          const itemId = Object.keys(sflIds).find(key => sflIds[key] === name)
-          const internalKey = `collectibles-${itemId}`
-          const marketItem = marketData[internalKey]
-
-          const bettyPriceCoins = itemConfig.sellPrice
-          const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
-
-          if (p2pPriceFlower > 0) {
-            const coinsPerFlower = bettyPriceCoins / p2pPriceFlower
-            if (coinsPerFlower > bestCoinsPerFlower) {
-              bestCoinsPerFlower = coinsPerFlower
-            }
-          }
+      // Mejor tasa Betty centralizada desde market.ts
+      const bestCoinsPerFlower = getBettyRatio()
+      if (bestCoinsPerFlower > 0) {
+        window.__bestCoinsPerFlower = bestCoinsPerFlower
+        window.dispatchEvent(new CustomEvent("sfl:bettyBestUpdated", { detail: bestCoinsPerFlower }))
+        const displayValue = `1:${Math.round(bestCoinsPerFlower)}`
+        document.querySelectorAll(".tabBettyBest").forEach((el) => {
+          el.innerText = displayValue
+          el.classList.remove("animate-pulse")
         })
+      }
 
-        const tabBettyBestEls = document.querySelectorAll(".tabBettyBest")
-        if (tabBettyBestEls.length > 0 && bestCoinsPerFlower > 0) {
-          window.__bestCoinsPerFlower = bestCoinsPerFlower
-          window.dispatchEvent(new CustomEvent("sfl:bettyBestUpdated", { detail: bestCoinsPerFlower }))
-          const displayValue = `1:${Math.round(bestCoinsPerFlower)}`
-          tabBettyBestEls.forEach((el) => {
-            el.innerText = displayValue
-            el.classList.remove("animate-pulse")
-          })
-        }
+      // Costo oficial del Oil Drill calculado desde constants.ts
+      const oilDrillCost = calculateOilDrillCost(bestCoinsPerFlower, getItemPrice)
+      if (oilDrillCost > 0) {
+        window.sflOilDrillCost = oilDrillCost
+      }
 
-        // Calcular costo del Oil Drill en FLOWER de forma transversal
-        // Receta oficial: 20 Wood (601) + 9 Iron (603) + 10 Leather (641) + 100 Coins
-        const woodItem = marketData["collectibles-601"] || marketData["resources-601"]
-        const ironItem = marketData["collectibles-603"] || marketData["resources-603"]
-        const leatherItem = marketData["collectibles-641"] || marketData["resources-641"]
-
-        const woodPrice = woodItem ? (woodItem.currentPrice || 0) : 0
-        const ironPrice = ironItem ? (ironItem.currentPrice || 0) : 0
-        const leatherPrice = leatherItem ? (leatherItem.currentPrice || 0) : 0
-        const coinsCost = bestCoinsPerFlower > 0 ? (100 / bestCoinsPerFlower) : (100 / 1330)
-
-        const oilDrillCost = (20 * woodPrice) + (9 * ironPrice) + (10 * leatherPrice) + coinsCost
-        if (oilDrillCost > 0) {
-          window.sflOilDrillCost = oilDrillCost
-        }
-
-        // Actualizar Oil inmediatamente con el nuevo costo del drill
-        const oilInputs = document.querySelectorAll(".tab-oil-input")
-        const currentOilVal = oilInputs.length > 0 ? oilInputs[0].value : (window.sflOilMultiplier || 16.67)
-        if (window.updateTabOil) {
-          window.updateTabOil(currentOilVal)
-        }
+      // Actualizar Oil inmediatamente con el nuevo costo del drill
+      const oilInputs = document.querySelectorAll(".tab-oil-input")
+      const currentOilVal = oilInputs.length > 0 ? oilInputs[0].value : (window.sflOilMultiplier || 16.67)
+      if (window.updateTabOil) {
+        window.updateTabOil(currentOilVal)
       }
     } catch (e) {
       console.error("Error fetching SFL tab prices", e)
     }
   }
+
+  // Sincronizar automáticamente si otra vista o refresco actualiza los datos de mercado
+  onUpdate(() => {
+    const flowerPrice = getFlowerPrice()
+    if (flowerPrice > 0) applyFlowerPrice(flowerPrice)
+    const betty = getBettyRatio()
+    if (betty > 0) {
+      window.__bestCoinsPerFlower = betty
+      const displayValue = `1:${Math.round(betty)}`
+      document.querySelectorAll(".tabBettyBest").forEach((el) => {
+        el.innerText = displayValue
+        el.classList.remove("animate-pulse")
+      })
+    }
+  })
 
   const setupCopyButtons = () => {
     const copyBtns = document.querySelectorAll(".copy-donation-btn")
@@ -654,16 +637,9 @@ const tabs = [
       }
     })
 
-    const sflPrice = window.sflInternalPrice || 0.136
-    let gemCostUsd = 0.0103
-    if (window.SflConstants && typeof window.SflConstants.calculateGemCostUsd === "function") {
-      gemCostUsd = window.SflConstants.calculateGemCostUsd(val || 1).unitUsd
-    } else {
-      const gemBonus = window.sflGemBonus !== undefined ? window.sflGemBonus : 0.29
-      const gemBaseFiat = 0.0129
-      gemCostUsd = (gemBaseFiat / (1 + gemBonus)) * 0.8
-    }
-    const gemCostFlower = gemCostUsd / sflPrice
+    const sflPrice = window.sflInternalPrice || getFlowerPrice() || 0.136
+    const { unitUsd } = calculateGemCostUsd(val || 1)
+    const gemCostFlower = sflPrice > 0 ? unitUsd / sflPrice : 0
 
     const totalFlower = val * gemCostFlower
     const totalUsd = totalFlower * sflPrice
@@ -701,12 +677,12 @@ const tabs = [
       }
     })
 
-    // Costo total de 1 Oil Drill en FLOWER (dinámico si la API cargó, o fallback 1.7838 FLOWER)
+    // Costo total de 1 Oil Drill en FLOWER centralizado desde constants.ts
     const drillCost = (window.sflOilDrillCost && window.sflOilDrillCost > 0)
       ? window.sflOilDrillCost
-      : (0.107 * 16.67)
+      : calculateOilDrillCost(window.__bestCoinsPerFlower || 320, getItemPrice)
 
-    const oilFlower = drillCost / m
+    const oilFlower = m > 0 ? drillCost / m : 0
     window.sflBestOilPriceFlower = oilFlower
 
     document.querySelectorAll(".tab-oil-flower-amount").forEach((el) => {

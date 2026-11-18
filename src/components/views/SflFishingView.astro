@@ -205,8 +205,20 @@ const counts = {
     }
 
     // Calculadora Económica Dinámica (Consumiendo SflPrices y SflMarket)
+    let rodCost = 0
+    let trapCost = 0
     let baseAttemptCost = 0
     let flowerPrice = 0.0854
+
+    function getBaitUnitPrice(name) {
+      if (["Earthworm", "Grub", "Red Wiggler"].includes(name)) {
+        return 0
+      }
+      if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+        return window.SflPrices.getUnitCost(name).flower || 0
+      }
+      return 0
+    }
 
     function getChumUnitPrice(name) {
       if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
@@ -216,11 +228,32 @@ const counts = {
     }
 
     function updateCardCost(card) {
+      const isRod = card.dataset.kind === "rod"
       const isTrap = card.dataset.kind === "trap"
       const isMarket = card.dataset.kind === "market"
-      const baseLabel = isTrap ? textTrap : isMarket ? textMarket : textBase
+
+      let attemptCost = isMarket ? 0 : baseAttemptCost
+      let baseLabel = isTrap ? textTrap : isMarket ? textMarket : textBase
+
+      // Si es pesca con caña, verificar qué cebo está seleccionado
+      if (isRod) {
+        const activeBait = card.querySelector(".bait-badge.active")
+        if (activeBait) {
+          const baitName = activeBait.dataset.baitName || "Earthworm"
+          const isFree = activeBait.dataset.isFree === "true"
+          const baitPrice = getBaitUnitPrice(baitName)
+          attemptCost = rodCost + baitPrice
+          baseLabel = isFree
+            ? `Caña + <span class="text-emerald-400 font-bold">${baitName} (Gratis)</span>`
+            : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
+        }
+      } else if (isTrap) {
+        attemptCost = trapCost > 0 ? trapCost : baseAttemptCost
+      }
+
+      // Sumar Chum si está activo
       const activeBadge = card.querySelector(".chum-badge.active")
-      let totalCost = isMarket ? 0 : baseAttemptCost
+      let totalCost = attemptCost
       let breakdownHtml = baseLabel
 
       if (activeBadge) {
@@ -234,12 +267,12 @@ const counts = {
 
       const flowerEl = card.querySelector(".cost-flower-val")
       if (flowerEl) {
-        flowerEl.textContent = baseAttemptCost > 0 ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
+        flowerEl.textContent = rodCost > 0 || isMarket ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
       }
 
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
-        usdEl.textContent = baseAttemptCost > 0 ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
+        usdEl.textContent = rodCost > 0 || isMarket ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
       }
 
       const breakdownEl = card.querySelector(".cost-breakdown-label")
@@ -249,6 +282,64 @@ const counts = {
     function updateAllCards() {
       cards.forEach((card) => updateCardCost(card))
     }
+
+    // Clic en badge de Cebo (Bait Selection)
+    cards.forEach((card) => {
+      const baitBadges = card.querySelectorAll(".bait-badge")
+      baitBadges.forEach((badge) => {
+        badge.addEventListener("click", (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const isAlreadyActive = badge.classList.contains("active")
+          if (isAlreadyActive) return // Mantener siempre activo el cebo actual
+
+          const isFree = badge.dataset.isFree === "true"
+
+          baitBadges.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-emerald-500/20",
+              "border-emerald-400",
+              "text-emerald-300",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-cyan-300",
+              "ring-1",
+              "ring-emerald-400/50",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+          })
+
+          badge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+          if (isFree) {
+            badge.classList.add(
+              "active",
+              "bg-emerald-500/20",
+              "border-emerald-400",
+              "text-emerald-300",
+              "ring-1",
+              "ring-emerald-400/50",
+              "shadow-sm"
+            )
+          } else {
+            badge.classList.add(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-cyan-300",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+          }
+
+          updateCardCost(card)
+        })
+      })
+    })
 
     // Clic en badge de Chum
     cards.forEach((card) => {
@@ -345,11 +436,17 @@ const counts = {
 
       // 1. Costo Caña Base (resuelto directamente por el motor de recetas)
       const rodResolution = window.SflPrices.resolveCost("Rod")
-      const rodCost = rodResolution && rodResolution.isCraftable
+      rodCost = rodResolution && rodResolution.isCraftable
         ? rodResolution.craftCostFlower
         : window.SflPrices.getUnitCost("Rod").flower || 0
 
-      // 2. Cebo de referencia (Capsule Bait)
+      // 2. Costo Trampa (Crab Pot)
+      const trapResolution = window.SflPrices.resolveCost("Crab Pot")
+      trapCost = trapResolution && trapResolution.isCraftable
+        ? trapResolution.craftCostFlower
+        : window.SflPrices.getUnitCost("Crab Pot").flower || 0
+
+      // 3. Cebo de referencia (Capsule Bait)
       const capsuleBaitCost = window.SflPrices.getUnitCost("Capsule Bait").flower || 0
 
       baseAttemptCost = rodCost + capsuleBaitCost

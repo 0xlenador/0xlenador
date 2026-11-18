@@ -262,20 +262,41 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
       </div>
     </div>
 
-    <!-- SECCIÓN CONTEXTUAL 1: ROD FISH (Cebos y Garantías) -->
+    <!-- SECCIÓN CONTEXTUAL 1: ROD FISH (Cebos Seleccionables y Garantías) -->
     {kind === "rod" && (
       <div class="mb-2.5">
         <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
           {t("sfl.fishing.card.bait")}
         </span>
-        <div class="flex flex-wrap gap-1.5">
-          {item.baits.map((baitName: string) => {
+        <div class="flex flex-wrap gap-1.5 bait-container">
+          {item.baits.map((baitName: string, idx: number) => {
             const bImg = baitImageMap[baitName] || "/img/sunflowerland/Capsule Bait.png"
+            const isFree = ["Earthworm", "Grub", "Red Wiggler"].includes(baitName)
+            const isDefault = idx === 0
             return (
-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5 text-[11px] font-mono text-white/70">
-                <img src={bImg} alt={baitName} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                <span>{baitName}</span>
-              </span>
+              <button
+                type="button"
+                class:list={[
+                  "bait-badge group/bait inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-[11px] font-mono transition-all cursor-pointer select-none",
+                  isDefault
+                    ? "active bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-1 ring-emerald-400/50 shadow-sm"
+                    : "bg-white/[0.03] border-white/5 text-white/70 hover:border-emerald-400/40 hover:bg-white/[0.06]",
+                ]}
+                data-bait-name={baitName}
+                data-is-free={isFree ? "true" : "false"}
+                title={isFree ? `${baitName} (${t("sfl.fishing.card.freeCompost") || "Gratis / Compost"})` : baitName}
+              >
+                <img
+                  src={bImg}
+                  alt={baitName}
+                  class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0"
+                  loading="lazy"
+                />
+                <span class="bait-label font-medium">{baitName}</span>
+                {isFree && (
+                  <span class="text-[9px] font-bold text-emerald-400 ml-0.5">0★</span>
+                )}
+              </button>
             )
           })}
         </div>
