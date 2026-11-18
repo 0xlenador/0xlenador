@@ -14,6 +14,7 @@ import recipesDataRaw from "../../content/data/sfl/recipes.json"
 import agingShedDataRaw from "../../content/data/sfl/aging_shed.json"
 import blacksmithToolsDataRaw from "../../content/data/sfl/blacksmith_tools.json"
 import consumablesDataRaw from "../../content/data/sfl/animals/consumables.json"
+import fishMarketDataRaw from "../../content/data/sfl/fishing/fish_market.json"
 import { OIL_DRILL_RECIPE, DEFAULT_OIL_MULTIPLIER } from "./constants"
 
 // ---------------------------------------------------------------------------
@@ -25,7 +26,14 @@ export interface RecipeIngredient {
   amount: number
 }
 
-export type RecipeCategory = "cooking" | "aging_shed" | "blacksmith" | "animals" | "oil" | "general"
+export type RecipeCategory =
+  | "cooking"
+  | "aging_shed"
+  | "blacksmith"
+  | "animals"
+  | "oil"
+  | "fish_market"
+  | "general"
 
 export interface UnifiedRecipe {
   /** Identificador único normalizado (ej: "pizza_margherita", "aged_white_shark") */
@@ -216,6 +224,67 @@ _registerRecipe({
   coins: OIL_DRILL_RECIPE.coins,
   ingredients: OIL_DRILL_RECIPE.ingredients.map((i) => ({ name: i.name, amount: i.amount })),
 })
+
+// 6. Ingesta: Fish Market (fish_market.json) — 4 cebos especializados (Fish Flake, Fish Stick, Fish Oil, Crab Stick)
+if (Array.isArray(fishMarketDataRaw)) {
+  const seasons = ["spring", "summer", "autumn", "winter"] as const
+  for (const item of fishMarketDataRaw) {
+    if (!item.name) continue
+    const timeSec = (Number(item.craftTimeHours) || 1) * 3600
+
+    // Registrar variantes estacionales (ej: "fish_flake_spring")
+    for (const season of seasons) {
+      const seasonal =
+        (item.seasonalIngredients as Record<string, Record<string, number>>)?.[season] || {}
+      const seasonalIngredients: RecipeIngredient[] = [
+        ...Object.entries(item.baseIngredients || {}).map(([name, amount]) => ({
+          name,
+          amount: Number(amount) || 0,
+        })),
+        ...Object.entries(seasonal).map(([name, amount]) => ({
+          name,
+          amount: Number(amount) || 0,
+        })),
+      ]
+
+      _registerRecipe({
+        id: `${item.id}_${season}`,
+        name: `${item.name} (${season.charAt(0).toUpperCase() + season.slice(1)})`,
+        category: "fish_market",
+        building: "Fish Market",
+        yield: 1,
+        coins: 0,
+        ingredients: seasonalIngredients,
+        timeSeconds: timeSec,
+        image: item.image,
+      })
+    }
+
+    // Registrar versión canónica (default a primavera como base inicial de catálogo)
+    const defaultSeasonal =
+      (item.seasonalIngredients as Record<string, Record<string, number>>)?.spring || {}
+    _registerRecipe({
+      id: item.id,
+      name: item.name,
+      category: "fish_market",
+      building: "Fish Market",
+      yield: 1,
+      coins: 0,
+      ingredients: [
+        ...Object.entries(item.baseIngredients || {}).map(([name, amount]) => ({
+          name,
+          amount: Number(amount) || 0,
+        })),
+        ...Object.entries(defaultSeasonal).map(([name, amount]) => ({
+          name,
+          amount: Number(amount) || 0,
+        })),
+      ],
+      timeSeconds: timeSec,
+      image: item.image,
+    })
+  }
+}
 
 // ---------------------------------------------------------------------------
 // API Pública de Consulta del Catálogo

@@ -20,6 +20,22 @@ import {
   type AgedFishCostBreakdown,
 } from "./constants"
 import { getRecipe, getAllRecipes, type UnifiedRecipe } from "./recipes"
+import { jafarData } from "../../content/data/sfl/jafar_shop"
+
+// Catálogo indexado de tesoros de playa vendidos a Jafar (name -> coins)
+const _jafarTreasures = new Map<string, number>()
+const _jafarSellTab = (jafarData as any)?.npc?.tabs?.find((t: any) => t.id === "sell")
+if (_jafarSellTab) {
+  for (const cat of _jafarSellTab.categories) {
+    if (cat?.items) {
+      for (const item of cat.items) {
+        if (item?.name && typeof item.coins === "number") {
+          _jafarTreasures.set(item.name.toLowerCase().trim(), item.coins)
+        }
+      }
+    }
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Tipos e Interfaces Públicas
@@ -118,8 +134,11 @@ export interface CostResolution {
 
 class DagCostSolver {
   private memo = new Map<string, CostResolution>()
+  private ctx: CalculationContext
 
-  constructor(private ctx: CalculationContext = {}) {}
+  constructor(ctx: CalculationContext = {}) {
+    this.ctx = ctx
+  }
 
   private get flowerPrice(): number {
     return this.ctx.flowerPriceUsd && this.ctx.flowerPriceUsd > 0
@@ -206,7 +225,33 @@ class DagCostSolver {
       return res
     }
 
-    // 2. ¿Tiene Receta de Fabricación en el Catálogo Declarativo?
+    // 2. Tesoros de Playa vendidos a Jafar (Crab, Seaweed, Starfish, etc.)
+    const treasureCoins = _jafarTreasures.get(query)
+    if (treasureCoins !== undefined) {
+      const unitFlower = this.coinsRate > 0 ? treasureCoins / this.coinsRate : 0
+      const unitUsd = unitFlower * this.flowerPrice
+      const res: CostResolution = {
+        name: nameOrId,
+        id: query.replace(/[^a-z0-9]+/g, "_"),
+        kind: "p2p_resource",
+        category: "treasure",
+        yield: 1,
+        isCraftable: false,
+        craftCostFlower: unitFlower,
+        craftCostUsd: unitUsd,
+        hasMarketPrice: true,
+        marketPriceFlower: unitFlower,
+        marketPriceUsd: unitUsd,
+        coins: treasureCoins,
+        coinsFlower: unitFlower,
+        ingredients: [],
+        baseMaterials: [{ name: nameOrId, amount: 1, totalFlower: unitFlower }],
+      }
+      this.memo.set(memoKey, res)
+      return res
+    }
+
+    // 3. ¿Tiene Receta de Fabricación en el Catálogo Declarativo?
     const recipe = getRecipe(nameOrId)
     const marketPriceFlower = this.getBasePrice(recipe ? recipe.name : nameOrId)
     const marketPriceUsd = marketPriceFlower * this.flowerPrice

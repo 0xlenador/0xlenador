@@ -5,6 +5,9 @@ import CatalogCard, { type CatalogTab } from "../ui/CatalogCard.astro"
 import blacksmithData from "../../content/data/sfl/blacksmith_tools.json"
 import jafarData from "../../content/data/sfl/jafar_shop"
 import agingShedData from "../../content/data/sfl/aging_shed.json"
+import fishMarketData from "../../content/data/sfl/fishing/fish_market.json"
+import fishData from "../../content/data/sfl/fishing/fish.json"
+import crustaceansData from "../../content/data/sfl/fishing/crustaceans.json"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
 import sflIds from "../../content/data/sfl/resources.json"
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
@@ -151,6 +154,141 @@ const agingShedTabs: CatalogTab[] = agingShed.tabs.map((tab) => {
     })),
   }
 })
+
+// --- 4. FISH MARKET: Mapeo de cebos especializados por estación ---
+const itemImageMap: Record<string, string> = {
+  Crab: "/img/sunflowerland/fish/a/Crab.png",
+  "Crab Pot": "/img/sunflowerland/fish/a/Crab Pot.png",
+  "Mariner Pot": "/img/sunflowerland/fish/a/Mariner Pot.png",
+  Earthworm: "/img/sunflowerland/fish/a/Earthworm.png",
+  Grub: "/img/sunflowerland/fish/a/Grub.png",
+  "Red Wiggler": "/img/sunflowerland/fish/a/Red Wiggler.png",
+  "Fishing Lure": "/img/sunflowerland/fish/a/Fishing Lure.png",
+  Salt: "/img/sunflowerland/Salt.png",
+}
+fishData.forEach((f) => {
+  if (f.name && f.image) itemImageMap[f.name] = f.image
+})
+crustaceansData.forEach((c) => {
+  if (c.name && c.image) itemImageMap[c.name] = c.image
+})
+
+const seasonIcons: Record<string, string> = {
+  spring: "🌸",
+  summer: "☀️",
+  autumn: "🍂",
+  winter: "❄️",
+}
+
+const fishMarketSeasons = ["spring", "summer", "autumn", "winter"] as const
+
+// Determinación dinámica de la estación actual en el ciclo de 4 semanas de Sunflower Land
+// Rota cada lunes a las 00:00 UTC: spring -> summer -> autumn -> winter
+const SFL_SEASONS_ORDER: Array<"spring" | "summer" | "autumn" | "winter"> = [
+  "spring",
+  "summer",
+  "autumn",
+  "winter",
+]
+const referenceMondayUtc = new Date("2024-01-01T00:00:00Z").getTime()
+const oneWeekMs = 7 * 24 * 60 * 60 * 1000
+const currentWeeksDiff = Math.floor((Date.now() - referenceMondayUtc) / oneWeekMs)
+const currentSeasonIndex = ((currentWeeksDiff % 4) + 4) % 4
+const currentSeason = SFL_SEASONS_ORDER[currentSeasonIndex]
+
+// Estaciones ordenadas: primero la actual, luego las siguientes en rotación
+const orderedSeasons: Array<"spring" | "summer" | "autumn" | "winter"> = [
+  currentSeason,
+  SFL_SEASONS_ORDER[(currentSeasonIndex + 1) % 4],
+  SFL_SEASONS_ORDER[(currentSeasonIndex + 2) % 4],
+  SFL_SEASONS_ORDER[(currentSeasonIndex + 3) % 4],
+]
+
+const getFishMarketItemDescription = (item: any) => {
+  const timeHours = item.craftTimeHours || 1
+  if (lang === "en") {
+    if (item.id === "fish_flake") {
+      return `⏱️ Craft Time: ${timeHours}h. Specialized bait for fishing without chum. Guarantees 20 basic and advanced fish.`
+    }
+    if (item.id === "fish_stick") {
+      return `⏱️ Craft Time: ${timeHours}h. Specialized bait guaranteeing advanced and expert catches (Tuna, Mahi Mahi...). Used in Crab Pot & Mariner Pot.`
+    }
+    if (item.id === "fish_oil") {
+      return `⏱️ Craft Time: ${timeHours}h. High-density bait guaranteeing apex catches (Saw Shark, Coelacanth, Trout...). Attracts Anemones in traps.`
+    }
+    if (item.id === "crab_stick") {
+      return `⏱️ Craft Time: ${timeHours}h. Crustacean bait guaranteeing apex sharks (Whale Shark, White Shark, Parrotfish...). Attracts rare crabs in traps.`
+    }
+    return `⏱️ Craft Time: ${timeHours}h.`
+  } else {
+    if (item.id === "fish_flake") {
+      return `⏱️ Tiempo: ${timeHours}h. Cebo especializado para pescar sin chum garantizando 20 especies básicas y avanzadas.`
+    }
+    if (item.id === "fish_stick") {
+      return `⏱️ Tiempo: ${timeHours}h. Cebo especializado que garantiza capturas avanzadas y expertas (Tuna, Mahi Mahi...). Se usa en Crab Pot y Mariner Pot.`
+    }
+    if (item.id === "fish_oil") {
+      return `⏱️ Tiempo: ${timeHours}h. Cebo de alta densidad que garantiza capturas apex (Saw Shark, Coelacanth, Trout...). Atrae Anémonas en trampas.`
+    }
+    if (item.id === "crab_stick") {
+      return `⏱️ Tiempo: ${timeHours}h. Cebo de crustáceos que garantiza tiburones gigantes (Whale Shark, White Shark, Parrotfish...). Atrae cangrejos raros en trampas.`
+    }
+    return `⏱️ Tiempo: ${timeHours}h.`
+  }
+}
+
+const fishMarketTabs: CatalogTab[] = [
+  {
+    id: "specialty_baits",
+    name: t("sfl.constants.cat.specialty_baits"),
+    icon: "🎣",
+    type: "craft",
+    placeholderIcon: "🎣",
+    multipliers: [1, 5, 10, "max"],
+    sections: orderedSeasons.map((season, idx) => {
+      const isCurrent = idx === 0
+      const seasonName = t(`sfl.constants.tab.${season}`)
+      const currentLabel = isCurrent ? ` (${t("sfl.constants.fish_market.currentSeason")})` : ""
+
+      return {
+        id: `season_${season}`,
+        name: `${seasonIcons[season]} ${seasonName}${currentLabel}`,
+        showCount: true,
+        items: fishMarketData.map((item) => {
+          const seasonal =
+            (item.seasonalIngredients as Record<string, Record<string, number>>)[season] || {}
+          const ingredients = [
+            ...Object.entries(item.baseIngredients).map(([name, amount]) => ({
+              name,
+              amount: Number(amount),
+              image: itemImageMap[name] || `/img/sunflowerland/fish/${name}.png`,
+            })),
+            ...Object.entries(seasonal).map(([name, amount]) => ({
+              name,
+              amount: Number(amount),
+              image: itemImageMap[name] || `/img/sunflowerland/fish/${name}.png`,
+            })),
+          ]
+
+          const timeHours = item.craftTimeHours || 1
+
+          return {
+            id: `${item.id}_${season}`,
+            name: `${item.name} (${seasonName})`,
+            baseName: item.name,
+            season,
+            image: item.image,
+            coins: 0,
+            stock: 0,
+            timeSeconds: timeHours * 3600,
+            description: getFishMarketItemDescription(item),
+            ingredients,
+          }
+        }),
+      }
+    }),
+  },
+]
 
 import { getAnimalBuildings } from "../../lib/sfl/animals"
 import { caveData } from "../../content/data/sfl/cave_mining"
@@ -616,6 +754,77 @@ const animalBuildingsList = [
       labels={catalogLabels}
     />
 
+    <!-- BLOQUE 4: FISH MARKET -->
+    <CatalogCard
+      id="fish_market"
+      title={t("sfl.constants.building.fish_market")}
+      icon="/img/sunflowerland/fish/a/fish_flake.webp"
+      badgeText={t("sfl.constants.building.fish_market.badge")}
+      description={t("sfl.constants.building.fish_market.desc")}
+      tabs={fishMarketTabs}
+      labels={catalogLabels}
+    >
+      <!-- NAVBARITO: Costos Promedio de las 4 Estaciones -->
+      <div
+        slot="before-sections"
+        class="fish-market-navbarito p-2.5 rounded-xl bg-black/50 border border-white/10 flex flex-col gap-2 mb-1"
+      >
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs">⚖️</span>
+            <span class="text-[11px] font-mono font-bold text-white tracking-wider uppercase">
+              {t("sfl.constants.fish_market.avgTitle")}
+            </span>
+          </div>
+          <span class="text-[10px] font-mono text-terminal-muted px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
+            {t("sfl.constants.fish_market.avgFormula")}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+          {
+            fishMarketData.map((item) => (
+              <button
+                type="button"
+                class="fish-market-avg-btn flex items-center gap-2 p-1.5 rounded-lg bg-white/[0.03] border border-white/5 hover:border-amber-400/50 hover:bg-white/[0.06] transition-all cursor-pointer text-left select-none group"
+                data-target-bait={item.id}
+                title={`${item.name} - ${t("sfl.constants.fish_market.avgFormula")}`}
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  width="20"
+                  height="20"
+                  class="w-5 h-5 object-contain shrink-0 [image-rendering:pixelated] group-hover:scale-110 transition-transform"
+                  loading="lazy"
+                />
+                <div class="flex flex-col min-w-0 leading-none">
+                  <span class="text-[10.5px] font-bold text-white truncate group-hover:text-amber-300 transition-colors">
+                    {item.name}
+                  </span>
+                  <div class="flex items-center gap-1 mt-1">
+                    <img
+                      src="/img/sunflowerland/flower.jpg"
+                      alt="FLOWER"
+                      width="10"
+                      height="10"
+                      class="w-2.5 h-2.5 rounded-full object-cover shrink-0"
+                    />
+                    <span
+                      id={`avg-cost-${item.id}`}
+                      class="text-[9.5px] font-mono font-bold text-emerald-400"
+                    >
+                      -- FLOWER
+                    </span>
+                  </div>
+                </div>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </CatalogCard>
+
     <!-- BLOQUES DE ANIMALES (Hen House, Barn, Pigpen) reutilizando CatalogCard -->
     {
       animalBuildingsList.map(({ building, prefix, icon }) => (
@@ -826,14 +1035,16 @@ const animalBuildingsList = [
 <script>
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflConstants from "../../lib/sfl/constants"
+  import * as SflPrices from "../../lib/sfl/prices"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflConstants = SflConstants
+  ;(window as any).SflPrices = SflPrices
   // Iniciar la descarga del mercado P2P
   SflMarket.fetchMarketData()
 </script>
 
 <!-- Script interactivo de cliente -->
-<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, mudMixOptions, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free"), tLevelPrefix: t("sfl.constants.bounties.levelPrefix") }}>
+<script is:inline define:vars={{ bettyPrices, sflIds, oilDrillItem, jafarSellItems, mudMixOptions, fishMarketData, tPermanent: t("sfl.constants.detail.permanent"), tUnlimited: t("sfl.constants.detail.unlimited"), tFree: t("sfl.constants.detail.free"), tLevelPrefix: t("sfl.constants.bounties.levelPrefix") }}>
   ;(function () {
     let liveFlowerPrice = 0.144
     let effectiveFlowerPrice = 0.144
@@ -961,6 +1172,12 @@ const animalBuildingsList = [
       const treasurePrice = getTreasureUnitPrice(materialName)
       if (treasurePrice > 0) {
         return treasurePrice
+      }
+      if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+        const resolved = window.SflPrices.getUnitCost(materialName)
+        if (resolved && resolved.flower > 0) {
+          return resolved.flower
+        }
       }
       return getBaseMaterialUnitPrice(materialName)
     }
@@ -1162,10 +1379,68 @@ const animalBuildingsList = [
     initBuildingLevelSync("barn")
     initBuildingLevelSync("pigpen")
 
+    // --- CÁLCULO DE COSTO PROMEDIO DE CEBOS DEL FISH MARKET (4 ESTACIONES) ---
+    function updateFishMarketAverages() {
+      if (!fishMarketData || !Array.isArray(fishMarketData)) return
+      const seasons = ["spring", "summer", "autumn", "winter"]
+
+      fishMarketData.forEach((item) => {
+        let totalSumFlower = 0
+        seasons.forEach((season) => {
+          const seasonal = (item.seasonalIngredients && item.seasonalIngredients[season]) || {}
+          let seasonCost = 0
+          // Ingredientes base
+          if (item.baseIngredients) {
+            Object.entries(item.baseIngredients).forEach(([name, amount]) => {
+              const unitP = getMaterialUnitPrice(name) || 0
+              seasonCost += unitP * Number(amount)
+            })
+          }
+          // Ingredientes estacionales
+          Object.entries(seasonal).forEach(([name, amount]) => {
+            const unitP = getMaterialUnitPrice(name) || 0
+            seasonCost += unitP * Number(amount)
+          })
+          totalSumFlower += seasonCost
+        })
+
+        // Costo promedio sumando las 4 estaciones y dividiendo entre 4
+        const avgCostFlower = totalSumFlower / 4
+        const avgEl = document.getElementById(`avg-cost-${item.id}`)
+        if (avgEl) {
+          if (avgCostFlower > 0) {
+            avgEl.innerText =
+              avgCostFlower < 100
+                ? `${avgCostFlower.toFixed(4)}`
+                : `${avgCostFlower.toFixed(2)}`
+          } else {
+            avgEl.innerText = "-- FLOWER"
+          }
+        }
+      })
+    }
+
+    // Al hacer clic en un cebo del navbarito promedio, seleccionar el slot correspondiente en la estación actual
+    const avgButtons = document.querySelectorAll(".fish-market-avg-btn")
+    avgButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const baitId = btn.dataset.targetBait
+        if (!baitId) return
+        const marketCard = document.querySelector('[data-catalog-id="fish_market"]')
+        if (!marketCard) return
+        const slot = marketCard.querySelector('[data-item-data*="' + baitId + '_"]')
+        if (slot) {
+          slot.click()
+          slot.scrollIntoView({ behavior: "smooth", block: "nearest" })
+        }
+      })
+    })
+
     function updateAll() {
       updateOilPriceDisplay()
       calculateCaveOptimalPrices()
       updateAnimalBuildings()
+      updateFishMarketAverages()
 
       // Sincronizar variables en window para que CatalogCard las consuma en tiempo real
       window.__flowerPrice = effectiveFlowerPrice

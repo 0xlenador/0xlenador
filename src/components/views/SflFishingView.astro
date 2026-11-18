@@ -4,7 +4,6 @@ import { getLangFromUrl, useTranslations } from "../../i18n/utils"
 import fishData from "../../content/data/sfl/fishing/fish.json"
 import crustaceansData from "../../content/data/sfl/fishing/crustaceans.json"
 import marvelsData from "../../content/data/sfl/fishing/marine_marvels.json"
-import marketData from "../../content/data/sfl/fishing/fish_market.json"
 
 import SflFishingDashboard from "../sfl/fishing/SflFishingDashboard.astro"
 import SflFishingFilters from "../sfl/fishing/SflFishingFilters.astro"
@@ -13,14 +12,13 @@ import SflFishingCard from "../sfl/fishing/SflFishingCard.astro"
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
-// Unificar todos los ítems marinos para el renderizado
+// Unificar todos los ítems marinos para el renderizado (sin Fish Market)
 const allMarvels = [...marvelsData.permanent, ...marvelsData.chapters]
 
 const allItems = [
   ...fishData.map((f) => ({ ...f, kind: "rod" as const })),
   ...crustaceansData.map((c) => ({ ...c, kind: "trap" as const })),
   ...allMarvels.map((m) => ({ ...m, kind: "marvel" as const })),
-  ...marketData.map((mk) => ({ ...mk, kind: "market" as const })),
 ]
 
 // Conteos reales para los filtros
@@ -32,7 +30,6 @@ const counts = {
   expert: fishData.filter((f) => f.tier === "expert").length,
   trap: crustaceansData.length,
   marvel: allMarvels.length,
-  market: marketData.length,
 }
 ---
 
@@ -92,7 +89,6 @@ const counts = {
   define:vars={{
     textBase: t("sfl.fishing.card.breakdownBase"),
     textTrap: t("sfl.fishing.card.breakdownTrap"),
-    textMarket: t("sfl.fishing.card.breakdownMarket"),
     textChumLabel: t("sfl.fishing.card.chumLabel"),
   }}
 >
@@ -206,7 +202,8 @@ const counts = {
 
     // Calculadora Económica Dinámica (Consumiendo SflPrices y SflMarket)
     let rodCost = 0
-    let trapCost = 0
+    let crabPotCost = 0
+    let marinerPotCost = 0
     let baseAttemptCost = 0
     let flowerPrice = 0.0854
 
@@ -230,12 +227,11 @@ const counts = {
     function updateCardCost(card) {
       const isRod = card.dataset.kind === "rod"
       const isTrap = card.dataset.kind === "trap"
-      const isMarket = card.dataset.kind === "market"
 
-      let attemptCost = isMarket ? 0 : baseAttemptCost
-      let baseLabel = isTrap ? textTrap : isMarket ? textMarket : textBase
+      let attemptCost = baseAttemptCost
+      let baseLabel = textBase
 
-      // Si es pesca con caña, verificar qué cebo está seleccionado
+      // 1. Si es pesca con caña, verificar qué cebo está seleccionado
       if (isRod) {
         const activeBait = card.querySelector(".bait-badge.active")
         if (activeBait) {
@@ -248,10 +244,21 @@ const counts = {
             : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
         }
       } else if (isTrap) {
-        attemptCost = trapCost > 0 ? trapCost : baseAttemptCost
+        // 2. Si es trampa de agua, calcular según la trampa específica (Crab Pot o Mariner Pot)
+        const trapType = card.dataset.trap || "Crab Pot"
+        const isMariner = trapType.toLowerCase().includes("mariner")
+        const currentTrapCost = isMariner ? marinerPotCost : crabPotCost
+        attemptCost = currentTrapCost > 0 ? currentTrapCost : baseAttemptCost
+        baseLabel = `Trampa (<span class="text-orange-400 font-bold">${trapType}</span>)`
+
+        // Actualizar el valor de costo en el bloque visual de trampa
+        const trapCostEl = card.querySelector(".trap-cost-val")
+        if (trapCostEl && currentTrapCost > 0) {
+          trapCostEl.textContent = `${currentTrapCost.toFixed(4)} FLOWER`
+        }
       }
 
-      // Sumar Chum si está activo
+      // 3. Sumar Chum si está activo
       const activeBadge = card.querySelector(".chum-badge.active")
       let totalCost = attemptCost
       let breakdownHtml = baseLabel
@@ -267,12 +274,12 @@ const counts = {
 
       const flowerEl = card.querySelector(".cost-flower-val")
       if (flowerEl) {
-        flowerEl.textContent = rodCost > 0 || isMarket ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
+        flowerEl.textContent = rodCost > 0 || isTrap ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
       }
 
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
-        usdEl.textContent = rodCost > 0 || isMarket ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
+        usdEl.textContent = rodCost > 0 || isTrap ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
       }
 
       const breakdownEl = card.querySelector(".cost-breakdown-label")
@@ -385,42 +392,91 @@ const counts = {
       })
     })
 
+    // Seleccionar automáticamente el Chum más económico por tarjeta (solo rod y trap, excluye marvel)
+    function selectCheapestChum(card) {
+      if (!card || card.dataset.kind === "marvel") return
+
+      const badges = Array.from(card.querySelectorAll(".chum-badge"))
+      if (badges.length === 0) return
+
+      let cheapestBadge = null
+      let lowestCost = Infinity
+
+      badges.forEach((badge) => {
+        const chumName = badge.dataset.chumName
+        const amount = parseFloat(badge.dataset.chumAmount) || 1
+        const unitPrice = getChumUnitPrice(chumName)
+        const totalCost = unitPrice * amount
+
+        if (totalCost < lowestCost) {
+          lowestCost = totalCost
+          cheapestBadge = badge
+        }
+      })
+
+      // Fallback al primer badge si todos dieron 0 o no se encontró
+      if (!cheapestBadge && badges.length > 0) {
+        cheapestBadge = badges[0]
+      }
+
+      badges.forEach((b) => {
+        b.classList.remove(
+          "active",
+          "bg-cyan-500/20",
+          "border-cyan-400",
+          "text-cyan-300",
+          "ring-1",
+          "ring-cyan-400/50",
+          "shadow-sm"
+        )
+        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+        const check = b.querySelector(".chum-check")
+        if (check) check.classList.add("hidden")
+      })
+
+      if (cheapestBadge) {
+        cheapestBadge.classList.add(
+          "active",
+          "bg-cyan-500/20",
+          "border-cyan-400",
+          "text-cyan-300",
+          "ring-1",
+          "ring-cyan-400/50",
+          "shadow-sm"
+        )
+        cheapestBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        const check = cheapestBadge.querySelector(".chum-check")
+        if (check) check.classList.remove("hidden")
+      }
+    }
+
     // Toggle Global de Chum
     const globalChumToggle = document.getElementById("globalChumToggle")
     if (globalChumToggle) {
+      globalChumToggle.checked = true
       globalChumToggle.addEventListener("change", (e) => {
         const enableAll = e.target.checked
         cards.forEach((card) => {
-          const badges = card.querySelectorAll(".chum-badge")
-          badges.forEach((b) => {
-            b.classList.remove(
-              "active",
-              "bg-cyan-500/20",
-              "border-cyan-400",
-              "text-cyan-300",
-              "ring-1",
-              "ring-cyan-400/50",
-              "shadow-sm"
-            )
-            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
-            const check = b.querySelector(".chum-check")
-            if (check) check.classList.add("hidden")
-          })
+          if (card.dataset.kind === "marvel") return
 
-          if (enableAll && badges.length > 0) {
-            const first = badges[0]
-            first.classList.add(
-              "active",
-              "bg-cyan-500/20",
-              "border-cyan-400",
-              "text-cyan-300",
-              "ring-1",
-              "ring-cyan-400/50",
-              "shadow-sm"
-            )
-            first.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
-            const check = first.querySelector(".chum-check")
-            if (check) check.classList.remove("hidden")
+          const badges = card.querySelectorAll(".chum-badge")
+          if (enableAll) {
+            selectCheapestChum(card)
+          } else {
+            badges.forEach((b) => {
+              b.classList.remove(
+                "active",
+                "bg-cyan-500/20",
+                "border-cyan-400",
+                "text-cyan-300",
+                "ring-1",
+                "ring-cyan-400/50",
+                "shadow-sm"
+              )
+              b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+              const check = b.querySelector(".chum-check")
+              if (check) check.classList.add("hidden")
+            })
           }
 
           updateCardCost(card)
@@ -440,13 +496,19 @@ const counts = {
         ? rodResolution.craftCostFlower
         : window.SflPrices.getUnitCost("Rod").flower || 0
 
-      // 2. Costo Trampa (Crab Pot)
-      const trapResolution = window.SflPrices.resolveCost("Crab Pot")
-      trapCost = trapResolution && trapResolution.isCraftable
-        ? trapResolution.craftCostFlower
+      // 2. Costo Crab Pot
+      const crabPotResolution = window.SflPrices.resolveCost("Crab Pot")
+      crabPotCost = crabPotResolution && crabPotResolution.isCraftable
+        ? crabPotResolution.craftCostFlower
         : window.SflPrices.getUnitCost("Crab Pot").flower || 0
 
-      // 3. Cebo de referencia (Capsule Bait)
+      // 3. Costo Mariner Pot
+      const marinerPotResolution = window.SflPrices.resolveCost("Mariner Pot")
+      marinerPotCost = marinerPotResolution && marinerPotResolution.isCraftable
+        ? marinerPotResolution.craftCostFlower
+        : window.SflPrices.getUnitCost("Mariner Pot").flower || 0
+
+      // 4. Cebo de referencia (Capsule Bait)
       const capsuleBaitCost = window.SflPrices.getUnitCost("Capsule Bait").flower || 0
 
       baseAttemptCost = rodCost + capsuleBaitCost
@@ -469,6 +531,11 @@ const counts = {
 
       const statFlower = document.getElementById("statFlowerPrice")
       if (statFlower) statFlower.innerText = `$${flowerPrice.toFixed(4)}`
+
+      // Preseleccionar el Chum más barato para peces y trampas (excluye marvel)
+      cards.forEach((card) => {
+        selectCheapestChum(card)
+      })
 
       updateAllCards()
     }

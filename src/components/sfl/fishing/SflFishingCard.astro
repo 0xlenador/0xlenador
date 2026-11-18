@@ -3,7 +3,7 @@ import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
 
 export interface Props {
   item: any
-  kind: "rod" | "trap" | "marvel" | "market"
+  kind: "rod" | "trap" | "marvel"
 }
 
 const { item, kind } = Astro.props
@@ -124,11 +124,6 @@ const tierVisuals: Record<string, { label: string; badgeClass: string; glowClass
     badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
     glowClass: "bg-amber-500/10",
   },
-  market: {
-    label: t("sfl.fishing.filter.market"),
-    badgeClass: "bg-teal-500/10 text-teal-300 border-teal-500/20",
-    glowClass: "bg-teal-500/10",
-  },
 }
 
 const visualKey = kind === "rod" ? (item.tier || "basic") : kind
@@ -148,6 +143,7 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
   data-kind={kind}
   data-seasons={filterSeasons}
   data-name={item.name.toLowerCase()}
+  data-trap={item.trap || ""}
   data-bait={filterBaits}
   data-chum={filterChum}
   data-guaranteed={filterGuaranteed}
@@ -179,12 +175,6 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
       {kind === "marvel" && (
         <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 uppercase tracking-wider">
           {item.chapter || t("sfl.fishing.card.permanent")}
-        </span>
-      )}
-
-      {kind === "market" && (
-        <span class="text-[10px] font-mono text-teal-300 font-bold bg-teal-500/10 px-2 py-0.5 rounded-md border border-teal-500/20">
-          ⏱ {item.craftTimeHours}h
         </span>
       )}
     </div>
@@ -222,13 +212,8 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
 
         <!-- Subtítulo contextual -->
         {kind === "trap" && (
-          <span class="text-[10px] font-mono text-white/50 block mt-0.5">
+          <span class="text-[10px] font-mono text-orange-400/80 block mt-0.5">
             {item.trap}
-          </span>
-        )}
-        {kind === "market" && (
-          <span class="text-[10px] font-mono text-teal-400/80 block mt-0.5">
-            {t("sfl.fishing.card.method.market")}
           </span>
         )}
         {kind === "marvel" && item.inTime && (
@@ -257,7 +242,7 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
 
       <div class="pt-1 border-t border-white/[0.04] text-[10px] font-mono">
         <span class="cost-breakdown-label text-white/70 block truncate">
-          {kind === "trap" ? t("sfl.fishing.card.breakdownTrap") : kind === "market" ? t("sfl.fishing.card.breakdownMarket") : t("sfl.fishing.card.breakdownBase")}
+          {kind === "trap" ? t("sfl.fishing.card.breakdownTrap") : t("sfl.fishing.card.breakdownBase")}
         </span>
       </div>
     </div>
@@ -374,27 +359,34 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
       </div>
     )}
 
-    <!-- SECCIÓN CONTEXTUAL 4: FISH MARKET DETAILS (Ingredientes y Capturas) -->
-    {kind === "market" && (
-      <div class="space-y-2 mb-2">
-        <!-- Ingredientes Base -->
-        <div class="p-2 rounded-lg bg-white/[0.02] border border-white/[0.05] text-[10px] font-mono">
-          <span class="text-white/40 block mb-1 uppercase tracking-wider">{t("sfl.fishing.card.baseIngredients")}</span>
-          <div class="flex flex-wrap gap-1.5">
-            {Object.entries(item.baseIngredients).map(([name, qty]) => (
-              <span class="px-1.5 py-0.5 rounded bg-white/[0.03] border border-white/5 text-amber-300">
-                {qty}x {name}
+    <!-- SECCIÓN CONTEXTUAL 4: TRAMPAS DE AGUA (Trampa Requerida & Receta) -->
+    {kind === "trap" && (
+      <div class="mb-2.5">
+        <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
+          {t("sfl.fishing.card.trapType") || "Trampa requerida:"}
+        </span>
+        <div class="p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center p-1 shrink-0">
+              <img
+                src={item.trap === "Mariner Pot" ? "/img/sunflowerland/tools/Mariner Pot.png" : "/img/sunflowerland/tools/Crab Pot.png"}
+                alt={item.trap}
+                class="w-full h-full object-contain [image-rendering:pixelated]"
+                loading="lazy"
+              />
+            </div>
+            <div class="min-w-0">
+              <span class="text-xs font-mono font-bold text-orange-300 block truncate">
+                {item.trap}
               </span>
-            ))}
+              <span class="text-[10px] font-mono text-white/60 block truncate">
+                {item.trap === "Mariner Pot" ? "10x Feather • 10x Merino Wool • 500 Coins" : "5x Feather • 3x Wool • 250 Coins"}
+              </span>
+            </div>
           </div>
-        </div>
-
-        <!-- Capturas Garantizadas -->
-        <div class="p-2 rounded-lg bg-teal-500/5 border border-teal-500/20 text-[10px] font-mono">
-          <span class="text-teal-400 font-bold block mb-1">{t("sfl.fishing.card.guaranteedPool")}</span>
-          <p class="text-white/70 line-clamp-2 leading-relaxed">
-            {item.guaranteedCatchPool.join(", ")}
-          </p>
+          <span class="trap-cost-val text-[11px] font-mono font-bold text-amber-400 bg-white/5 px-2 py-1 rounded-md border border-white/10 shrink-0">
+            -- FLOWER
+          </span>
         </div>
       </div>
     )}

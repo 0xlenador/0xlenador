@@ -10,7 +10,6 @@ interface Props {
     expert: number
     trap: number
     marvel: number
-    market: number
   }
 }
 
@@ -91,16 +90,6 @@ const seasons = [
       <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
       <span>{t("sfl.fishing.filter.marvel")}</span>
       <span class="ml-1 text-[10px] text-white/40">({counts.marvel})</span>
-    </button>
-
-    <button
-      type="button"
-      class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-      data-tier="market"
-    >
-      <span class="w-2 h-2 rounded-full inline-block bg-teal-400 mr-1.5"></span>
-      <span>{t("sfl.fishing.filter.market")}</span>
-      <span class="ml-1 text-[10px] text-white/40">({counts.market})</span>
     </button>
   </div>
 

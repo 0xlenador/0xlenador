@@ -16,6 +16,52 @@
 // ---------------------------------------------------------------------------
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
 import sflIds from "../../content/data/sfl/resources.json"
+import sflPowerUps from "../../content/data/sfl/powerups.json"
+import sflCosmetics from "../../content/data/sfl/cosmetics.json"
+
+// Índice invertido de nombres de ítems a claves P2P (collectibles-*, resources-*, wearables-*)
+const _itemKeysByName = new Map<string, string[]>()
+
+function _registerItemKey(name: string, key: string): void {
+  if (!name) return
+  const norm = name.toLowerCase().trim()
+  const list = _itemKeysByName.get(norm)
+  if (list) {
+    if (!list.includes(key)) list.push(key)
+  } else {
+    _itemKeysByName.set(norm, [key])
+  }
+}
+
+// 1. Recursos básicos y cosechas (resources.json)
+Object.entries(sflIds as Record<string, string>).forEach(([id, name]) => {
+  _registerItemKey(name, `collectibles-${id}`)
+  _registerItemKey(name, `resources-${id}`)
+})
+
+// 2. Power-ups y Collectibles (powerups.json)
+if ((sflPowerUps as any)?.power_ups?.collectibles) {
+  Object.entries((sflPowerUps as any).power_ups.collectibles).forEach(([id, item]: [string, any]) => {
+    if (item?.name) _registerItemKey(item.name, `collectibles-${id}`)
+  })
+}
+if ((sflPowerUps as any)?.power_ups?.wearables) {
+  Object.entries((sflPowerUps as any).power_ups.wearables).forEach(([id, item]: [string, any]) => {
+    if (item?.name) _registerItemKey(item.name, `wearables-${id}`)
+  })
+}
+
+// 3. Cosméticos (cosmetics.json)
+if ((sflCosmetics as any)?.cosmetics?.collectibles) {
+  Object.entries((sflCosmetics as any).cosmetics.collectibles).forEach(([id, item]: [string, any]) => {
+    if (item?.name) _registerItemKey(item.name, `collectibles-${id}`)
+  })
+}
+if ((sflCosmetics as any)?.cosmetics?.wearables) {
+  Object.entries((sflCosmetics as any).cosmetics.wearables).forEach(([id, item]: [string, any]) => {
+    if (item?.name) _registerItemKey(item.name, `wearables-${id}`)
+  })
+}
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -82,15 +128,20 @@ export async function fetchMarketData(forceRefresh = false): Promise<MarketData 
 }
 
 /**
- * Devuelve el precio P2P en FLOWER de un recurso por su nombre.
- * Ej: getItemPrice("Wood") → 0.0025
+ * Devuelve el precio P2P en FLOWER de un recurso, collectible, powerup o wearable por su nombre.
+ * Ej: getItemPrice("Wood") → 0.0025, getItemPrice("Rich Chicken") → 30.5
  */
 export function getItemPrice(name: string): number {
-  if (!state.raw?.items) return 0
-  const itemId = Object.keys(sflIds).find((k) => (sflIds as Record<string, string>)[k] === name)
-  if (!itemId) return 0
-  const item = state.raw.items[`collectibles-${itemId}`] || state.raw.items[`resources-${itemId}`]
-  return item?.currentPrice ? parseFloat(String(item.currentPrice)) : 0
+  if (!state.raw?.items || !name) return 0
+  const keys = _itemKeysByName.get(name.toLowerCase().trim())
+  if (!keys) return 0
+  for (const k of keys) {
+    const item = state.raw.items[k]
+    if (item && item.currentPrice) {
+      return parseFloat(String(item.currentPrice))
+    }
+  }
+  return 0
 }
 
 /**
