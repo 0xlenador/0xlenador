@@ -659,7 +659,15 @@ const defaultLabels: CatalogLabels = {
 
           let qty = isSingle ? 1 : isUnlimited ? (typeof currentMultiplier === "number" ? currentMultiplier : 1) : currentMultiplier === "max" ? stock : Math.min(parseInt(currentMultiplier, 10) || 1, stock)
           if (titleEl) titleEl.innerText = selectedItem.name
-          if (descEl) descEl.innerText = selectedItem.description || ""
+          if (descEl) {
+            if (selectedItem.description) {
+              descEl.innerText = selectedItem.description
+              descEl.classList.remove("hidden")
+            } else {
+              descEl.innerText = ""
+              descEl.classList.add("hidden")
+            }
+          }
           if (imgEl) {
             imgEl.src = selectedItem.image
             imgEl.alt = selectedItem.name
