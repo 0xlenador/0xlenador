@@ -224,16 +224,3 @@ function _notify(): void {
     }
   })
 }
-
-// ---------------------------------------------------------------------------
-// Re-exportaciones de Constantes y Conversiones (para retrocompatibilidad)
-// La lógica central reside en src/lib/sfl/constants.ts
-// ---------------------------------------------------------------------------
-export {
-  getGemFiatPrice,
-  calculateGemCostUsd,
-  getGemFlowerPrice,
-  getRefinedSaltPrice,
-  getHoneyTreatPrice,
-  getHoneyTreatPriceUsd,
-} from "./constants"

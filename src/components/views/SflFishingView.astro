@@ -5,8 +5,6 @@ import fishData from "../../content/data/sfl/fishing/fish.json"
 import crustaceansData from "../../content/data/sfl/fishing/crustaceans.json"
 import marvelsData from "../../content/data/sfl/fishing/marine_marvels.json"
 import marketData from "../../content/data/sfl/fishing/fish_market.json"
-import resourcesData from "../../content/data/sfl/resources.json"
-import bettyPricesData from "../../content/data/sfl/betty_prices.json"
 
 import SflFishingDashboard from "../sfl/fishing/SflFishingDashboard.astro"
 import SflFishingFilters from "../sfl/fishing/SflFishingFilters.astro"
@@ -81,10 +79,17 @@ const counts = {
   </div>
 </SflToolLayout>
 
+<!-- Motor Centralizado de Mercado y Precios -->
+<script>
+  import * as SflMarket from "../../lib/sfl/market"
+  import * as SflPrices from "../../lib/sfl/prices"
+  ;(window as any).SflMarket = SflMarket
+  ;(window as any).SflPrices = SflPrices
+  SflMarket.fetchMarketData()
+</script>
+
 <script
   define:vars={{
-    resourcesData,
-    bettyPricesData,
     textBase: t("sfl.fishing.card.breakdownBase"),
     textTrap: t("sfl.fishing.card.breakdownTrap"),
     textMarket: t("sfl.fishing.card.breakdownMarket"),
@@ -199,10 +204,16 @@ const counts = {
       })
     }
 
-    // Calculadora Económica Dinámica
-    const priceDict = {}
+    // Calculadora Económica Dinámica (Consumiendo SflPrices y SflMarket)
     let baseAttemptCost = 0
     let flowerPrice = 0.0854
+
+    function getChumUnitPrice(name) {
+      if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+        return window.SflPrices.getUnitCost(name).flower || 0
+      }
+      return 0
+    }
 
     function updateCardCost(card) {
       const isTrap = card.dataset.kind === "trap"
@@ -215,7 +226,7 @@ const counts = {
       if (activeBadge) {
         const chumName = activeBadge.dataset.chumName
         const amount = parseFloat(activeBadge.dataset.chumAmount) || 1
-        const unitPrice = priceDict[chumName] || 0
+        const unitPrice = getChumUnitPrice(chumName)
         const chumCost = unitPrice * amount
         totalCost += chumCost
         breakdownHtml = `${baseLabel} + <span class="text-cyan-400 font-bold">${textChumLabel} (${amount}x ${chumName})</span>`
@@ -326,81 +337,52 @@ const counts = {
       })
     }
 
-    // Precios en vivo
-    async function loadPrices() {
-      try {
-        const res = await fetch("/api/sfl_data.json")
-        if (!res.ok) return
-        const json = await res.json()
+    // Sincronización con SflPrices y SflMarket
+    function syncMarketPrices() {
+      if (!window.SflPrices || !window.SflMarket) return
 
-        if (json.items) {
-          Object.values(json.items).forEach((item) => {
-            const idMatch = item.key.match(/(?:collectibles|resources)-(\d+)$/)
-            if (idMatch) {
-              const id = idMatch[1]
-              const name = resourcesData[id]
-              if (name) {
-                priceDict[name] = item.currentPrice
-              }
-            }
-          })
-        }
+      flowerPrice = window.SflMarket.getFlowerPrice() || 0.0854
 
-        if (json.flowerPrice) {
-          flowerPrice = parseFloat(json.flowerPrice)
-        }
+      // 1. Costo Caña Base (resuelto directamente por el motor de recetas)
+      const rodResolution = window.SflPrices.resolveCost("Rod")
+      const rodCost = rodResolution && rodResolution.isCraftable
+        ? rodResolution.craftCostFlower
+        : window.SflPrices.getUnitCost("Rod").flower || 0
 
-        // Ratio Coins/FLOWER (Betty)
-        let bestCoinsPerFlower = 0
-        if (json.items && bettyPricesData) {
-          Object.keys(bettyPricesData).forEach((name) => {
-            const itemConfig = bettyPricesData[name]
-            const itemId = Object.keys(resourcesData).find((key) => resourcesData[key] === name)
-            if (!itemId) return
-            const internalKey = `collectibles-${itemId}`
-            const marketItem = json.items[internalKey]
-            const bettyPriceCoins = itemConfig.sellPrice
-            const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0
-            if (p2pPriceFlower > 0) {
-              const ratio = bettyPriceCoins / p2pPriceFlower
-              if (ratio > bestCoinsPerFlower) bestCoinsPerFlower = ratio
-            }
-          })
-        }
-        if (bestCoinsPerFlower <= 0) bestCoinsPerFlower = 1330
+      // 2. Cebo de referencia (Capsule Bait)
+      const capsuleBaitCost = window.SflPrices.getUnitCost("Capsule Bait").flower || 0
 
-        // Costo Caña Base (1 Stone + 3 Wood + 20 Coins)
-        const stonePrice = priceDict["Stone"] || json.items?.["collectibles-602"]?.currentPrice || 0
-        const woodPrice = priceDict["Wood"] || json.items?.["collectibles-601"]?.currentPrice || 0
-        const rodCost = (1 * stonePrice) + (3 * woodPrice) + (20 / bestCoinsPerFlower)
+      baseAttemptCost = rodCost + capsuleBaitCost
 
-        // Cebo de referencia
-        const capsuleBaitCost = priceDict["Capsule Bait"] || json.items?.["collectibles-2986"]?.currentPrice || 0
+      const statRod = document.getElementById("statRodCost")
+      if (statRod) statRod.innerText = rodCost > 0 ? `${rodCost.toFixed(4)} FLOWER` : "-- FLOWER"
 
-        baseAttemptCost = rodCost + capsuleBaitCost
+      const statBait = document.getElementById("statBaitCost")
+      if (statBait) statBait.innerText = capsuleBaitCost > 0 ? `${capsuleBaitCost.toFixed(4)} FLOWER` : "-- FLOWER"
 
-        const statRod = document.getElementById("statRodCost")
-        if (statRod) statRod.innerText = `${rodCost.toFixed(4)} FLOWER`
+      const statBase = document.getElementById("statBaseCost")
+      if (statBase) statBase.innerText = baseAttemptCost > 0 ? `${baseAttemptCost.toFixed(4)} FLOWER` : "-- FLOWER"
 
-        const statBait = document.getElementById("statBaitCost")
-        if (statBait) statBait.innerText = `${capsuleBaitCost.toFixed(4)} FLOWER`
-
-        const statBase = document.getElementById("statBaseCost")
-        if (statBase) statBase.innerText = `${baseAttemptCost.toFixed(4)} FLOWER`
-
-        const statBaseUsd = document.getElementById("statBaseCostUsd")
-        if (statBaseUsd) statBaseUsd.innerText = `≈ $${(baseAttemptCost * flowerPrice).toFixed(3)} USD`
-
-        const statFlower = document.getElementById("statFlowerPrice")
-        if (statFlower) statFlower.innerText = `$${flowerPrice.toFixed(4)}`
-
-        updateAllCards()
-      } catch (err) {
-        console.warn("Error cargando precios de pesca:", err)
+      const statBaseUsd = document.getElementById("statBaseCostUsd")
+      if (statBaseUsd) {
+        statBaseUsd.innerText = baseAttemptCost > 0
+          ? `≈ $${(baseAttemptCost * flowerPrice).toFixed(3)} USD`
+          : "--"
       }
+
+      const statFlower = document.getElementById("statFlowerPrice")
+      if (statFlower) statFlower.innerText = `$${flowerPrice.toFixed(4)}`
+
+      updateAllCards()
     }
 
-    loadPrices()
+    // Escuchar el evento reactivo de actualización de mercado
+    window.addEventListener("sfl:marketUpdated", syncMarketPrices)
+
+    // Si el estado de mercado ya está listo en memoria, sincronizar de inmediato
+    if (window.__sflMarketState || (window.SflMarket && window.SflMarket.getState().raw)) {
+      syncMarketPrices()
+    }
   }
 
   document.addEventListener("DOMContentLoaded", initFishing)

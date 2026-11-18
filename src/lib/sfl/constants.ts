@@ -79,7 +79,7 @@ export function getGemFlowerPrice(gems: number = 1, flowerPrice?: number): numbe
 export function calculateGems(
   gems: number = 1,
   customBonus?: number | null,
-  flowerPrice?: number
+  flowerPrice?: number,
 ): GemCalculation {
   let unitFiat = BASE_GEM_FIAT_PRICE
   let bonus = 0
@@ -119,7 +119,7 @@ export type MaterialPriceResolver = (materialName: string) => number
  */
 export function calculateOilDrillCost(
   coinsPerFlower: number = OFFICIAL_COINS_PER_FLOWER,
-  resolveMaterialPrice?: MaterialPriceResolver
+  resolveMaterialPrice?: MaterialPriceResolver,
 ): number {
   const coinsFlower = coinsPerFlower > 0 ? OIL_DRILL_RECIPE.coins / coinsPerFlower : 0
   const getPrice = resolveMaterialPrice || getItemPrice
@@ -139,7 +139,7 @@ export function calculateOilDrillCost(
 export function calculateOilUnitPrice(
   coinsPerFlower: number = OFFICIAL_COINS_PER_FLOWER,
   multiplier: number = DEFAULT_OIL_MULTIPLIER,
-  resolveMaterialPrice?: MaterialPriceResolver
+  resolveMaterialPrice?: MaterialPriceResolver,
 ): number {
   if (multiplier <= 0) return 0
   const drillCost = calculateOilDrillCost(coinsPerFlower, resolveMaterialPrice)
@@ -167,7 +167,7 @@ export function getHoneyTreatBatchPrice(resolveMaterialPrice?: MaterialPriceReso
   const getPrice = resolveMaterialPrice || getItemPrice
   const refinedSaltPrice = getRefinedSaltPrice(getPrice)
   const honeyPrice = getPrice("Honey") || 0
-  return (refinedSaltPrice * 5) + (honeyPrice * 5)
+  return refinedSaltPrice * 5 + honeyPrice * 5
 }
 
 /**
@@ -182,7 +182,7 @@ export function getHoneyTreatPrice(resolveMaterialPrice?: MaterialPriceResolver)
  */
 export function getHoneyTreatPriceUsd(
   flowerPrice?: number,
-  resolveMaterialPrice?: MaterialPriceResolver
+  resolveMaterialPrice?: MaterialPriceResolver,
 ): number {
   const effFlowerPrice = flowerPrice && flowerPrice > 0 ? flowerPrice : getFlowerPrice()
   return getHoneyTreatPrice(resolveMaterialPrice) * effFlowerPrice
@@ -192,11 +192,13 @@ export function getHoneyTreatPriceUsd(
  * Devuelve el costo de 1 lote crafteado de Truffle Seasoning (5 Refined Salt + 10 Truffle).
  * Cada crafteo produce 6 unidades.
  */
-export function getTruffleSeasoningBatchPrice(resolveMaterialPrice?: MaterialPriceResolver): number {
+export function getTruffleSeasoningBatchPrice(
+  resolveMaterialPrice?: MaterialPriceResolver,
+): number {
   const getPrice = resolveMaterialPrice || getItemPrice
   const refinedSaltPrice = getRefinedSaltPrice(getPrice)
   const trufflePrice = getPrice("Truffle") || 0
-  return (refinedSaltPrice * 5) + (trufflePrice * 10)
+  return refinedSaltPrice * 5 + trufflePrice * 10
 }
 
 /**
@@ -211,7 +213,7 @@ export function getTruffleSeasoningPrice(resolveMaterialPrice?: MaterialPriceRes
  */
 export function getTruffleSeasoningPriceUsd(
   flowerPrice?: number,
-  resolveMaterialPrice?: MaterialPriceResolver
+  resolveMaterialPrice?: MaterialPriceResolver,
 ): number {
   const effFlowerPrice = flowerPrice && flowerPrice > 0 ? flowerPrice : getFlowerPrice()
   return getTruffleSeasoningPrice(resolveMaterialPrice) * effFlowerPrice
@@ -239,14 +241,72 @@ export function getSaltLickPrice(resolveMaterialPrice?: MaterialPriceResolver): 
  */
 export function getSaltLickPriceUsd(
   flowerPrice?: number,
-  resolveMaterialPrice?: MaterialPriceResolver
+  resolveMaterialPrice?: MaterialPriceResolver,
 ): number {
   const effFlowerPrice = flowerPrice && flowerPrice > 0 ? flowerPrice : getFlowerPrice()
   return getSaltLickPrice(resolveMaterialPrice) * effFlowerPrice
 }
 
 // ============================================================================
-// 4. CRAFTING & RESOLUCIÓN UNIVERSAL DE MATERIALES
+// 4. AGING SHED — Costo de curado de peces envejecidos
+// ============================================================================
+
+export interface AgedFishCostBreakdown {
+  fishId: string
+  fishName: string
+  saltRequired: number
+  timeSeconds: number
+  rawFishFlower: number
+  saltFlower: number
+  totalFlower: number
+  totalUsd: number
+  agedXp: number
+  primeAgedXp: number
+}
+
+/**
+ * Calcula el desglose de costo de envejecer un pez en la Aging Shed.
+ * Costo total = Precio del pez crudo (P2P) + (cantidad de sal × precio unitario de Salt P2P).
+ */
+export function calculateAgedFishCost(
+  fish: {
+    id: string
+    name: string
+    salt: number
+    timeSeconds: number
+    agedXp: number
+    primeAgedXp: number
+  },
+  resolvePrice?: MaterialPriceResolver,
+  flowerPriceUsd?: number,
+): AgedFishCostBreakdown {
+  const getPrice = resolvePrice || getItemPrice
+  const effFlowerPrice = flowerPriceUsd && flowerPriceUsd > 0 ? flowerPriceUsd : getFlowerPrice()
+
+  // El nombre del pez crudo se extrae quitando el prefijo "Aged "
+  const rawFishName = fish.name.replace(/^Aged\s+/, "")
+  const rawFishFlower = getPrice(rawFishName) || 0
+  const saltFlower = (getPrice("Salt") || 0) * fish.salt
+
+  const totalFlower = rawFishFlower + saltFlower
+  const totalUsd = totalFlower * effFlowerPrice
+
+  return {
+    fishId: fish.id,
+    fishName: fish.name,
+    saltRequired: fish.salt,
+    timeSeconds: fish.timeSeconds,
+    rawFishFlower,
+    saltFlower,
+    totalFlower,
+    totalUsd,
+    agedXp: fish.agedXp,
+    primeAgedXp: fish.primeAgedXp,
+  }
+}
+
+// ============================================================================
+// 5. CRAFTING & RESOLUCIÓN UNIVERSAL DE MATERIALES
 // ============================================================================
 
 export interface CraftingContext {
@@ -261,16 +321,13 @@ export interface CraftingContext {
 /**
  * Resuelve el costo unitario en FLOWER de cualquier material (Oil, Gem, Tesoros de Jafar o P2P).
  */
-export function resolveMaterialFlowerCost(
-  materialName: string,
-  ctx: CraftingContext
-): number {
+export function resolveMaterialFlowerCost(materialName: string, ctx: CraftingContext): number {
   // 1. Oil
   if (materialName === "Oil") {
     return calculateOilUnitPrice(
       ctx.coinsPerFlower,
       ctx.oilMultiplier ?? DEFAULT_OIL_MULTIPLIER,
-      ctx.resolveBasePrice || getItemPrice
+      ctx.resolveBasePrice || getItemPrice,
     )
   }
 
@@ -321,7 +378,7 @@ export interface CraftCostBreakdown {
 export function calculateItemCraftCost(
   item: { coins?: number; ingredients?: Array<{ name: string; amount: number }> },
   qty: number = 1,
-  ctx: CraftingContext
+  ctx: CraftingContext,
 ): CraftCostBreakdown {
   const unitCoins = item.coins || 0
   const totalCoins = unitCoins * qty
