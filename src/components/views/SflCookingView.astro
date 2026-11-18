@@ -29,6 +29,42 @@ const sflOthers = sflBuffsRaw.others || {}
 const sflConsumables = sflBuffsRaw.consumables || {}
 import levelExperience from "../../content/data/sfl/level_experience.json"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
+import agingShedData from "../../content/data/sfl/aging_shed.json"
+
+// Extraer recetas de peces envejecidos de la Aging Shed (alimentos de Bumpkin)
+const agedFishRecipes: any[] = []
+const agingTab = (agingShedData as any)?.building?.tabs?.find((t: any) => t.id === "aging")
+if (agingTab?.categories) {
+  agingTab.categories.forEach((cat: any) => {
+    (cat.items || []).forEach((item: any) => {
+      const rawFish = item.name.replace(/^Aged\s+/, "")
+      const sec = Number(item.timeSeconds) || 0
+      const h = String(Math.floor(sec / 3600)).padStart(2, "0")
+      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0")
+      const s = String(sec % 60).padStart(2, "0")
+      const agedXp = Number(item.agedXp) || 0
+      const primeXp = Number(item.primeAgedXp) || Math.round(agedXp * 1.3)
+      // Esperanza matemática: 90% aged + 10% prime
+      const expectedXp = Math.round(agedXp * 0.9 + primeXp * 0.1)
+      agedFishRecipes.push({
+        name: item.name,
+        building: "Aging Shed",
+        time: `${h}:${m}:${s}`,
+        xp: expectedXp,
+        ingredients: [
+          { name: rawFish, amount: 1 },
+          { name: "Salt", amount: Number(item.salt) || 0 },
+        ],
+        image: item.image || `/img/sunflowerland/fish/${rawFish}.png`,
+      })
+    })
+  })
+}
+
+const allSflRecipes = {
+  ...sflRecipes,
+  recipes: [...(sflRecipes.recipes || []), ...agedFishRecipes],
+}
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -894,6 +930,7 @@ const formatAstroDescription = (skill) => {
           <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Deli">Deli</button>
           <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Smoothie Shack">Smoothie Shack</button>
           <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Bakery">Bakery</button>
+          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Aging Shed">Aging Shed</button>
         </div>
 
         <div class="flex flex-col gap-3 w-full xl:w-auto">
@@ -1112,9 +1149,21 @@ const formatAstroDescription = (skill) => {
   }
 </style>
 
+<!-- Motor Centralizado de Mercado, Constantes y Precios -->
+<script>
+  import * as SflMarket from "../../lib/sfl/market"
+  import * as SflConstants from "../../lib/sfl/constants"
+  import * as SflPrices from "../../lib/sfl/prices"
+  ;(window as any).SflMarket = SflMarket
+  ;(window as any).SflConstants = SflConstants
+  ;(window as any).SflPrices = SflPrices
+  // Iniciar la descarga o reusar el mercado P2P centralizado
+  SflMarket.fetchMarketData()
+</script>
+
 <script
   define:vars={{
-    sflRecipes,
+    sflRecipes: allSflRecipes,
     sflIds,
       sflBuffs: { ...sflBuffs, ...sflShrines },
     sflSkills,
@@ -1171,7 +1220,8 @@ const formatAstroDescription = (skill) => {
     if (name === 'Crab Stick') return '/img/sunflowerland/fish/a/Crab Stick.png';
     if (name === 'Fish Oil') return '/img/sunflowerland/fish/a/fish_oil.webp';
     if (name === 'Truffle') return '/img/sunflowerland/truffle.webp';
-    if (fishList.includes(name)) return `/img/sunflowerland/fish/${name}.png`;
+    if (name === 'Salt') return '/img/sunflowerland/Salt.png';
+    if (fishList.includes(name) || (window.SflConstants && typeof window.SflConstants.isFish === 'function' && window.SflConstants.isFish(name))) return `/img/sunflowerland/fish/${name}.png`;
     return `/img/sunflowerland/${name}.png`;
   }
 
@@ -1186,6 +1236,12 @@ const formatAstroDescription = (skill) => {
   window.currentSort = { column: "xpsfl", direction: "desc" }
   let currentCategory = "all"
   
+  let renderTable = (searchTerm = "") => {
+    if (typeof window.renderTable === "function") {
+      window.renderTable(searchTerm);
+    }
+  };
+
   window.currentHideXpLimit = 2500;
   window.setHideXpLimit = (limit) => {
     window.currentHideXpLimit = limit;
@@ -1503,10 +1559,26 @@ const formatAstroDescription = (skill) => {
     ];
 
     for (const ing of ingredients) {
-      if (priceDict[ing.name]) {
-        total += priceDict[ing.name] * ing.amount
-      } else if (fishNames.includes(ing.name) && window.sflRodCost) {
-        total += window.sflRodCost * ing.amount;
+      const isKnownFish = fishNames.includes(ing.name) || (window.SflConstants && typeof window.SflConstants.isFish === "function" && window.SflConstants.isFish(ing.name));
+      const marketPrice = (priceDict[ing.name] !== undefined)
+        ? priceDict[ing.name]
+        : (window.SflMarket && typeof window.SflMarket.getItemPrice === "function" ? window.SflMarket.getItemPrice(ing.name) : 0);
+
+      if (marketPrice > 0) {
+        total += marketPrice * ing.amount
+      } else if (isKnownFish) {
+        let fishCost = window.sflRodCost || 0;
+        if (window.SflConstants && typeof window.SflConstants.calculateFishCatchCost === "function") {
+          const catchObj = window.SflConstants.calculateFishCatchCost(ing.name, {
+            coinsPerFlower: window.sflBestCoinsPerFlower || 1330,
+            flowerPriceUsd: window.sflFlowerPrice || 0.0854,
+            resolveBasePrice: (n) => priceDict[n] || (window.SflMarket ? window.SflMarket.getItemPrice(n) : 0),
+          });
+          if (catchObj && catchObj.totalFlower > 0) {
+            fishCost = catchObj.totalFlower;
+          }
+        }
+        total += fishCost * ing.amount;
       } else if (ing.name === "Fish Flake") {
         const flakeCost = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined)
           ? window.sflCustomFishFlakeCost
@@ -1565,7 +1637,8 @@ const formatAstroDescription = (skill) => {
     return { total: total * costMultiplier, missing, baseTotal: total }
   }
 
-  window.renderTable = (searchTerm = "") => {
+  renderTable = (searchTerm = "") => {
+    window.renderTable = renderTable;
     let doubleNomMultiplier = 1;
     if (activeSkills && activeSkills["Double Nom"]) {
       const rank = activeSkills["Double Nom"];
@@ -1675,6 +1748,7 @@ const formatAstroDescription = (skill) => {
                       ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium ${isEventEnded(item) ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30' : 'bg-purple-500/20 text-purple-300 border border-purple-500/40'}" title="${item.eventDate ? `${item.event} • ${item.eventDate}` : item.event}">✨ ${item.event}${isEventEnded(item) ? ` (${item.eventDate || tEventEnded})` : ''}</span>`
                       : ""
                   }
+
                 </div>
                 <div class="flex items-center justify-between lg:justify-start w-full">
                   <span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>
@@ -2071,15 +2145,19 @@ const formatAstroDescription = (skill) => {
     }
   };
 
-  const fetchPrices = async () => {
+  const syncWithMarketData = (marketPayload) => {
+    if (!marketPayload) return;
+    const json = marketPayload.raw || (marketPayload.items ? marketPayload : null);
+    if (!json || !json.items) return;
+
     try {
-      loadingState.classList.remove("hidden")
-      dataContainer.classList.add("hidden")
-
-      const response = await fetch("/api/sfl_data.json")
-      if (!response.ok) throw new Error("Error loading data")
-
-      const json = await response.json()
+      // Sincronizar catálogo P2P con SflMarket si está disponible
+      if (window.SflMarket && typeof window.SflMarket.getItemPrice === "function") {
+        Object.values(sflIds).forEach((name) => {
+          const p = window.SflMarket.getItemPrice(name);
+          if (p > 0) priceDict[name] = p;
+        });
+      }
 
       Object.values(json.items).forEach((data) => {
         const idMatch = data.key.match(/collectibles-(\d+)$/)
@@ -2100,45 +2178,51 @@ const formatAstroDescription = (skill) => {
         }
       })
 
-      // 1. Precio de FLOWER (USD)
-      const flowerPrice = json.flowerPrice ? parseFloat(json.flowerPrice) : 0.0854;
+      // 1. Precio de FLOWER (USD) vía SflMarket
+      const flowerPrice = window.SflMarket && typeof window.SflMarket.getFlowerPrice === "function"
+        ? window.SflMarket.getFlowerPrice()
+        : (json.flowerPrice ? parseFloat(json.flowerPrice) : 0.0854);
       window.sflFlowerPrice = flowerPrice;
       const flowerDisplay = document.getElementById("quickFlowerPriceDisplay");
       if (flowerDisplay) {
         flowerDisplay.innerText = "$" + flowerPrice.toFixed(4);
       }
 
-      // 2. Precio de Coins (Ratio P2P)
-      let bestCoinsPerFlower = 0;
-      if (json.items && bettyPrices) {
-        Object.keys(bettyPrices).forEach((name) => {
-          const itemConfig = bettyPrices[name];
-          const itemId = Object.keys(sflIds).find((key) => sflIds[key] === name);
-          if (!itemId) return;
-          const internalKey = `collectibles-${itemId}`;
-          const marketItem = json.items[internalKey];
-          const bettyPriceCoins = itemConfig.sellPrice;
-          const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0;
-          if (p2pPriceFlower > 0) {
-            const coinsPerFlower = bettyPriceCoins / p2pPriceFlower;
-            if (coinsPerFlower > bestCoinsPerFlower) {
-              bestCoinsPerFlower = coinsPerFlower;
+      // 2. Precio de Coins (Ratio P2P) vía SflMarket
+      let bestCoinsPerFlower = window.SflMarket && typeof window.SflMarket.getBettyRatio === "function"
+        ? window.SflMarket.getBettyRatio()
+        : 0;
+      if (bestCoinsPerFlower <= 0) {
+        if (json.items && bettyPrices) {
+          Object.keys(bettyPrices).forEach((name) => {
+            const itemConfig = bettyPrices[name];
+            const itemId = Object.keys(sflIds).find((key) => sflIds[key] === name);
+            if (!itemId) return;
+            const internalKey = `collectibles-${itemId}`;
+            const marketItem = json.items[internalKey];
+            const bettyPriceCoins = itemConfig.sellPrice;
+            const p2pPriceFlower = marketItem ? marketItem.currentPrice : 0;
+            if (p2pPriceFlower > 0) {
+              const coinsPerFlower = bettyPriceCoins / p2pPriceFlower;
+              if (coinsPerFlower > bestCoinsPerFlower) {
+                bestCoinsPerFlower = coinsPerFlower;
+              }
             }
-          }
-        });
+          });
+        }
       }
       if (bestCoinsPerFlower <= 0) bestCoinsPerFlower = 1330;
       window.sflAutoCoinsPerFlower = bestCoinsPerFlower;
 
       // 3. Caña de Pescar (1 Stone + 3 Wood + 20 Coins)
-      const stonePrice = priceDict["Stone"] || (json.items['collectibles-602']?.currentPrice) || 0;
-      const woodPrice = priceDict["Wood"] || (json.items['collectibles-601']?.currentPrice) || 0;
+      const stonePrice = (window.SflMarket && window.SflMarket.getItemPrice("Stone")) || priceDict["Stone"] || (json.items['collectibles-602']?.currentPrice) || 0;
+      const woodPrice = (window.SflMarket && window.SflMarket.getItemPrice("Wood")) || priceDict["Wood"] || (json.items['collectibles-601']?.currentPrice) || 0;
       window.sflStonePrice = stonePrice;
       window.sflWoodPrice = woodPrice;
 
-      // 4. Petróleo / Oil (Oil Drill: 20 Wood + 9 Iron + 10 Leather + 100 Coins -> rinde 16.67 Oil)
-      const ironPrice = priceDict["Iron"] || (json.items['collectibles-603']?.currentPrice) || 0;
-      const leatherPrice = priceDict["Leather"] || (json.items['collectibles-641']?.currentPrice) || 0;
+      // 4. Petróleo / Oil (Materiales base)
+      const ironPrice = (window.SflMarket && window.SflMarket.getItemPrice("Iron")) || priceDict["Iron"] || (json.items['collectibles-603']?.currentPrice) || 0;
+      const leatherPrice = (window.SflMarket && window.SflMarket.getItemPrice("Leather")) || priceDict["Leather"] || (json.items['collectibles-641']?.currentPrice) || 0;
       window.sflIronPrice = ironPrice;
       window.sflLeatherPrice = leatherPrice;
 
@@ -2156,18 +2240,52 @@ const formatAstroDescription = (skill) => {
         gemsDisplay.innerText = formatNumber(gemCostFlower, 4);
       }
 
-      loadingState.classList.add("hidden")
-      dataContainer.classList.remove("hidden")
+      loadingState.classList.add("hidden");
+      dataContainer.classList.remove("hidden");
 
-      renderTable()
-      updateSkillCalculator()
+      renderTable();
+      updateSkillCalculator();
     } catch (err) {
-      console.error(err)
-      loadingState.innerHTML = `<p class="text-red-500 text-sm">${tError}</p>`
+      console.error(err);
+      loadingState.innerHTML = `<p class="text-red-500 text-sm">${tError}</p>`;
     }
-  }
+  };
 
-  // Listeners para Rango de Niveles (Start Level y Target Level)
+  const fetchPrices = async () => {
+    try {
+      loadingState.classList.remove("hidden");
+      dataContainer.classList.add("hidden");
+
+      let data = null;
+      if (window.SflMarket && typeof window.SflMarket.fetchMarketData === "function") {
+        data = await window.SflMarket.fetchMarketData();
+      }
+      if (!data) {
+        const response = await fetch("/api/sfl_data.json");
+        if (!response.ok) throw new Error("Error loading data");
+        data = await response.json();
+      }
+
+      if (data) {
+        syncWithMarketData(data);
+      }
+    } catch (err) {
+      console.error(err);
+      loadingState.innerHTML = `<p class="text-red-500 text-sm">${tError}</p>`;
+    }
+  };
+
+  // Reactividad global con el evento de SflMarket
+  window.addEventListener("sfl:marketUpdated", (e) => {
+    if (e && e.detail) {
+      syncWithMarketData(e.detail.raw || e.detail);
+    }
+  });
+
+  // Si ya existía estado en memoria o precargado, sincronizar de inmediato
+  if (typeof window !== "undefined" && window.__sflMarketState && window.__sflMarketState.raw) {
+    syncWithMarketData(window.__sflMarketState);
+  }
   const startRange = document.getElementById("skillStartLevelRange");
   const startInput = document.getElementById("skillStartLevelInput");
   const levelRange = document.getElementById("skillLevelRange");

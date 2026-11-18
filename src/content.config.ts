@@ -206,7 +206,7 @@ const watchlist = defineCollection({
 // Sin i18n por ahora — datos en español, se internacionalizarán en el futuro.
 // ---------------------------------------------------------------------------
 const sfl = defineCollection({
-  loader: glob({ pattern: "*.json", base: "./src/content/data/sfl" }),
+  loader: glob({ pattern: ["*.json", "!buds.json"], base: "./src/content/data/sfl" }),
   // Schema permisivo: los JSON tienen arrays de objetos con forma heterogénea.
   // Se tipará de forma estricta cuando se defina el contrato de datos SFL.
   schema: z.record(z.any()),

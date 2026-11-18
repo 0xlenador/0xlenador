@@ -30,8 +30,24 @@ import {
   type FishCatchCostBreakdown,
   type CrustaceanCatchCostBreakdown,
   type FishMarketBaitCostBreakdown,
+  isCaveResource,
+  getCanonicalCaveResourceName,
+  calculateSandShovelCost,
+  calculateCaveBatchCost,
+  calculateCaveResourceCost,
+  SAND_SHOVEL_RECIPE,
+  DEFAULT_BEETLE_FALLBACK_PRICES,
+  type CaveBatchCostBreakdown,
 } from "./constants"
-import { getRecipe, getAllRecipes, type UnifiedRecipe } from "./recipes"
+import {
+  getRecipe,
+  getAllRecipes,
+  type UnifiedRecipe,
+  CURRENT_SEASON,
+  isSeasonalTicket,
+  getCurrentSeason,
+  type SeasonConfig,
+} from "./crafting"
 import { jafarData } from "../../content/data/sfl/jafar_shop"
 
 // Catálogo indexado de tesoros de playa vendidos a Jafar (name -> coins)
@@ -237,6 +253,35 @@ class DagCostSolver {
       return res
     }
 
+    // 1.1 Boleto de Temporada Activo (Seasonal Currency: ej. Beetle Wing)
+    if (isSeasonalTicket(nameOrId)) {
+      const ticketMarketFlower = this.getBasePrice(CURRENT_SEASON.ticketName)
+      const ticketMarketUsd = ticketMarketFlower * this.flowerPrice
+      const hasTicketMarket = ticketMarketFlower > 0
+      const res: CostResolution = {
+        name: CURRENT_SEASON.ticketName,
+        id: CURRENT_SEASON.ticketName.toLowerCase().replace(/[^a-z0-9]+/g, "_"),
+        kind: "currency",
+        category: "seasonal",
+        yield: 1,
+        isCraftable: false,
+        craftCostFlower: ticketMarketFlower,
+        craftCostUsd: ticketMarketUsd,
+        hasMarketPrice: hasTicketMarket,
+        marketPriceFlower: ticketMarketFlower,
+        marketPriceUsd: ticketMarketUsd,
+        coins: 0,
+        coinsFlower: 0,
+        ingredients: [],
+        baseMaterials: hasTicketMarket
+          ? [{ name: CURRENT_SEASON.ticketName, amount: 1, totalFlower: ticketMarketFlower }]
+          : [],
+        image: CURRENT_SEASON.ticketImage,
+      }
+      this.memo.set(memoKey, res)
+      return res
+    }
+
     // 2. Tesoros de Playa vendidos a Jafar (Crab, Seaweed, Starfish, etc.)
     const treasureCoins = _jafarTreasures.get(query)
     if (treasureCoins !== undefined) {
@@ -258,6 +303,194 @@ class DagCostSolver {
         coinsFlower: unitFlower,
         ingredients: [],
         baseMaterials: [{ name: nameOrId, amount: 1, totalFlower: unitFlower }],
+      }
+      this.memo.set(memoKey, res)
+      return res
+    }
+
+    // 2.1 Sand Shovel (Herramienta de Excavación)
+    if (query === "sand shovel" || query === "sand_shovel") {
+      const coinsShovel = SAND_SHOVEL_RECIPE.coins
+      const coinsFlower = this.coinsRate > 0 ? coinsShovel / this.coinsRate : 0
+      const woodRes = this.resolve("Wood", currentVisited)
+      const stoneRes = this.resolve("Stone", currentVisited)
+
+      const woodUnit = woodRes.craftCostFlower > 0 ? woodRes.craftCostFlower : woodRes.marketPriceFlower
+      const stoneUnit = stoneRes.craftCostFlower > 0 ? stoneRes.craftCostFlower : stoneRes.marketPriceFlower
+
+      const totalCraftFlower = coinsFlower + (2 * woodUnit) + (1 * stoneUnit)
+      const totalCraftUsd = totalCraftFlower * this.flowerPrice
+
+      const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+      for (const base of woodRes.baseMaterials) {
+        const amt = base.amount * 2
+        const fl = base.totalFlower * 2
+        const ex = baseMaterialsMap.get(base.name)
+        if (ex) { ex.amount += amt; ex.totalFlower += fl }
+        else { baseMaterialsMap.set(base.name, { amount: amt, totalFlower: fl }) }
+      }
+      for (const base of stoneRes.baseMaterials) {
+        const amt = base.amount * 1
+        const fl = base.totalFlower * 1
+        const ex = baseMaterialsMap.get(base.name)
+        if (ex) { ex.amount += amt; ex.totalFlower += fl }
+        else { baseMaterialsMap.set(base.name, { amount: amt, totalFlower: fl }) }
+      }
+
+      const res: CostResolution = {
+        name: "Sand Shovel",
+        id: "sand_shovel",
+        kind: "recipe",
+        category: "tools",
+        building: "Blacksmith",
+        yield: 1,
+        isCraftable: true,
+        craftCostFlower: Number(totalCraftFlower.toFixed(6)),
+        craftCostUsd: Number(totalCraftUsd.toFixed(4)),
+        hasMarketPrice: false,
+        marketPriceFlower: 0,
+        marketPriceUsd: 0,
+        coins: coinsShovel,
+        coinsFlower: Number(coinsFlower.toFixed(6)),
+        ingredients: [
+          {
+            name: "Wood",
+            amount: 2,
+            unitPriceFlower: woodUnit,
+            totalFlower: 2 * woodUnit,
+            isBaseResource: !woodRes.isCraftable,
+          },
+          {
+            name: "Stone",
+            amount: 1,
+            unitPriceFlower: stoneUnit,
+            totalFlower: 1 * stoneUnit,
+            isBaseResource: !stoneRes.isCraftable,
+          },
+        ],
+        baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+          name: k,
+          amount: Number(v.amount.toFixed(4)),
+          totalFlower: Number(v.totalFlower.toFixed(6)),
+        })),
+      }
+      this.memo.set(memoKey, res)
+      return res
+    }
+
+    // 2.2 Recursos de Cueva (Mud, Wild Mushroom, Magic Mushroom)
+    if (isCaveResource(nameOrId)) {
+      const canonicalName = getCanonicalCaveResourceName(nameOrId)
+      const shovelRes = this.resolve("Sand Shovel", currentVisited)
+      const shovelUnitCost = shovelRes.craftCostFlower > 0 ? shovelRes.craftCostFlower : shovelRes.marketPriceFlower
+      const shovelsCount = 25
+      const shovelsTotalCost = shovelsCount * shovelUnitCost
+
+      // Ingresos esperados de Beetles
+      const greenP = this.getBasePrice("Green Beetle") || DEFAULT_BEETLE_FALLBACK_PRICES["Green Beetle"]
+      const blueP = this.getBasePrice("Blue Beetle") || DEFAULT_BEETLE_FALLBACK_PRICES["Blue Beetle"]
+      const pinkP = this.getBasePrice("Pink Beetle") || DEFAULT_BEETLE_FALLBACK_PRICES["Pink Beetle"]
+      const amberP = this.getBasePrice("Amber Beetle") || DEFAULT_BEETLE_FALLBACK_PRICES["Amber Beetle"]
+      const expectedBeetleUnitVal = (0.4 * greenP) + (0.3 * blueP) + (0.2 * pinkP) + (0.1 * amberP)
+      const expectedBeetlesRev = 2 * expectedBeetleUnitVal
+
+      // Evaluar Mud Mix con la mejor opción de cultivo
+      const caveBatch = calculateCaveBatchCost({
+        flowerPriceUsd: this.flowerPrice,
+        coinsPerFlower: this.coinsRate,
+        resolveBasePrice: (n) => this.getBasePrice(n),
+      })
+
+      const bestCropRes = this.resolve(caveBatch.bestCropName, currentVisited)
+      const bestCropUnitFlower = bestCropRes.craftCostFlower > 0
+        ? bestCropRes.craftCostFlower
+        : (bestCropRes.marketPriceFlower > 0 ? bestCropRes.marketPriceFlower : caveBatch.bestCropUnitFlower)
+      const bestCropTotalCost = bestCropUnitFlower * caveBatch.bestCropAmount
+
+      const mudBatchTotalCost = shovelsTotalCost + bestCropTotalCost
+      const mudNetDeficit = Math.max(0, mudBatchTotalCost - expectedBeetlesRev)
+      const totalItems = caveBatch.totalItemsProduced || 43
+      const unitCraftFlower = mudNetDeficit > 0 ? mudNetDeficit / totalItems : 0.005
+      const unitCraftUsd = unitCraftFlower * this.flowerPrice
+
+      // Consolidar materias primas base aplanadas (DAG flattening)
+      const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+
+      // Aplanar los materiales de 25 Sand Shovels (repartidos entre 43 ítems)
+      for (const base of shovelRes.baseMaterials) {
+        const scaledAmount = (base.amount * shovelsCount) / totalItems
+        const scaledFlower = (base.totalFlower * shovelsCount) / totalItems
+        const ex = baseMaterialsMap.get(base.name)
+        if (ex) {
+          ex.amount += scaledAmount
+          ex.totalFlower += scaledFlower
+        } else {
+          baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+        }
+      }
+
+      // Aplanar el mejor cultivo (repartido entre 43 ítems)
+      if (bestCropRes.baseMaterials.length > 0) {
+        for (const base of bestCropRes.baseMaterials) {
+          const scaledAmount = (base.amount * caveBatch.bestCropAmount) / totalItems
+          const scaledFlower = (base.totalFlower * caveBatch.bestCropAmount) / totalItems
+          const ex = baseMaterialsMap.get(base.name)
+          if (ex) {
+            ex.amount += scaledAmount
+            ex.totalFlower += scaledFlower
+          } else {
+            baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+          }
+        }
+      } else {
+        const scaledAmount = caveBatch.bestCropAmount / totalItems
+        const scaledFlower = bestCropTotalCost / totalItems
+        const ex = baseMaterialsMap.get(bestCropRes.name)
+        if (ex) {
+          ex.amount += scaledAmount
+          ex.totalFlower += scaledFlower
+        } else {
+          baseMaterialsMap.set(bestCropRes.name, { amount: scaledAmount, totalFlower: scaledFlower })
+        }
+      }
+
+      const totalCoinsShovels = (shovelRes.coins * shovelsCount) / totalItems
+
+      const res: CostResolution = {
+        name: canonicalName,
+        id: query.replace(/[^a-z0-9]+/g, "_"),
+        kind: "craftable",
+        category: "cave",
+        yield: 1,
+        isCraftable: true,
+        craftCostFlower: Number(unitCraftFlower.toFixed(6)),
+        craftCostUsd: Number(unitCraftUsd.toFixed(4)),
+        hasMarketPrice: false,
+        marketPriceFlower: 0,
+        marketPriceUsd: 0,
+        coins: Math.round(totalCoinsShovels),
+        coinsFlower: Number((totalCoinsShovels / this.coinsRate).toFixed(6)),
+        ingredients: [
+          {
+            name: "Sand Shovel",
+            amount: Number((shovelsCount / totalItems).toFixed(4)),
+            unitPriceFlower: Number(shovelUnitCost.toFixed(6)),
+            totalFlower: Number((shovelsTotalCost / totalItems).toFixed(6)),
+            isBaseResource: false,
+          },
+          {
+            name: bestCropRes.name,
+            amount: Number((caveBatch.bestCropAmount / totalItems).toFixed(4)),
+            unitPriceFlower: Number(bestCropUnitFlower.toFixed(6)),
+            totalFlower: Number((bestCropTotalCost / totalItems).toFixed(6)),
+            isBaseResource: !bestCropRes.isCraftable,
+          },
+        ],
+        baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+          name: k,
+          amount: Number(v.amount.toFixed(4)),
+          totalFlower: Number(v.totalFlower.toFixed(6)),
+        })),
       }
       this.memo.set(memoKey, res)
       return res
@@ -920,3 +1153,25 @@ export function getAllCrustaceanCosts(options?: ResolveCostOptions): CostResolut
     .map((c) => resolveCost(c.name, options))
     .filter((r): r is CostResolution => r !== null)
 }
+
+/**
+ * Devuelve el costo de un recurso de cueva (Mud, Wild Mushroom, Magic Mushroom).
+ */
+export function getCaveResourceCost(
+  nameOrId: string,
+  options?: ResolveCostOptions,
+): CostResolution | null {
+  if (!isCaveResource(nameOrId)) return null
+  return resolveCost(nameOrId, options)
+}
+
+/**
+ * Devuelve el costo de todos los recursos clave de cueva.
+ */
+export function getAllCaveResourceCosts(options?: ResolveCostOptions): CostResolution[] {
+  return ["Mud", "Wild Mushroom", "Magic Mushroom"].map((name) => resolveCost(name, options))
+}
+
+// Re-export de la temporada activa y utilidades de fabricación
+export { CURRENT_SEASON, isSeasonalTicket, getCurrentSeason, type SeasonConfig }
+export { getRecipe, getAllRecipes, getRecipesByCategory, getRecipesByBuilding } from "./crafting"

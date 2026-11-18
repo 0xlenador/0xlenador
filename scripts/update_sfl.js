@@ -391,7 +391,7 @@ async function updateSFLData() {
     await fs.writeFile(filePath, JSON.stringify(finalJSON, null, 2))
     console.log(`🚀 API en vivo procesada y optimizada en: ${filePath}`)
 
-    // 2. Buds aislados (sfl_buds.json) - Carga bajo demanda ultra-rápida
+    // 2. Buds aislados (sfl_buds.json) - Con traits y potenciadores fusionados
     const allBudKeys = new Set()
     for (const dayItems of Object.values(rawData)) {
       if (dayItems && typeof dayItems === "object") {
@@ -401,9 +401,106 @@ async function updateSFLData() {
       }
     }
 
+    // Cargar maestro de traits desde src/content/data/sfl/buds.json
+    const budsDataMasterPath = path.join(process.cwd(), "src/content/data/sfl/buds.json")
+    let existingTraits = {}
+    try {
+      existingTraits = JSON.parse(await fs.readFile(budsDataMasterPath, "utf8"))
+    } catch {
+      existingTraits = {}
+    }
+
+    const DEFAULT_TYPE_BOOSTS = {
+      Plaza: "+0.3 Basic Crops",
+      Castle: "+0.3 Medium Crops",
+      Snow: "+0.3 Advanced Crops",
+      Saphiro: "-10% Crop Time",
+      Cave: "+0.2 Minerals",
+      Beach: "+0.2 Fruit",
+      Woodlands: "+0.2 Wood",
+      Port: "+10% Fish XP",
+      Sea: "+10% Extra Fish",
+      Retreat: "Animal Speed Boost",
+    }
+
+    const missingBudIds = []
+    for (const budKey of allBudKeys) {
+      const bId = budKey.replace("buds-", "")
+      if (!existingTraits[bId]) missingBudIds.push(bId)
+    }
+
+    if (missingBudIds.length > 0) {
+      console.log(`🔍 Encontrados ${missingBudIds.length} buds nuevos sin traits. Obteniendo metadata...`)
+      for (const bId of missingBudIds.slice(0, 30)) {
+        try {
+          const res = await fetch(`https://api.sunflower-land.com/buds/metadata/${bId}`, {
+            headers: { "User-Agent": "Mozilla/5.0 (compatible; 0xLenadorBot/1.0)", Accept: "application/json" }
+          })
+          if (res.ok) {
+            const json = await res.json()
+            const attributes = json.attributes || []
+            let type = "", stem = "", aura = "", ears = "", colour = ""
+            let mainBoost = "", stemBoost = "", auraBoost = ""
+            for (const attr of attributes) {
+              if (!attr || !attr.trait_type) continue
+              if (attr.trait_type === "Type") type = attr.value || ""
+              else if (attr.trait_type === "Stem") stem = attr.value || ""
+              else if (attr.trait_type === "Aura") aura = attr.value !== "No Aura" ? attr.value : ""
+              else if (attr.trait_type === "Ears") ears = attr.value === "Ears" ? "Goblin" : "Bumpkin"
+              else if (attr.trait_type === "Colour") colour = attr.value || ""
+              else if (attr.trait_type === "Bud Boost Increase") auraBoost = `+${attr.value}% Aura`
+              else if (attr.trait_type.includes("(Stem)")) {
+                const clean = attr.trait_type.replace("Increase Yield of ", "").replace(" (Stem)", "")
+                stemBoost = `Stem: +${attr.value} ${clean}`
+              } else if (attr.display_type === "boost_percentage") {
+                if (attr.trait_type === "Reduced Crop Growth Time") mainBoost = `-${attr.value}% Crop Time`
+                else if (attr.trait_type === "XP Boost when eating Fish") mainBoost = `+${attr.value}% Fish XP`
+                else if (attr.trait_type === "Chance of getting 1 extra Fish") mainBoost = `+${attr.value}% Extra Fish`
+                else mainBoost = `+${attr.value}% ${attr.trait_type}`
+              } else if (attr.display_type === "boost_number") {
+                const clean = attr.trait_type.replace("Increase Yield of ", "")
+                mainBoost = `+${attr.value} ${clean}`
+              }
+            }
+            if (!mainBoost && type) mainBoost = DEFAULT_TYPE_BOOSTS[type] || type
+            const parts = []
+            if (mainBoost) parts.push(mainBoost)
+            if (stemBoost) parts.push(stemBoost)
+            if (auraBoost) parts.push(`(${auraBoost})`)
+            existingTraits[bId] = {
+              type,
+              stem,
+              aura,
+              ears,
+              colour,
+              boost: parts.join(" | ") || (type ? `${type} Bud` : "Bud"),
+              mainBoost,
+              stemBoost,
+              auraBoost,
+            }
+          }
+        } catch {}
+      }
+      await fs.writeFile(budsDataMasterPath, JSON.stringify(existingTraits, null, 2), "utf8")
+      console.log(`✨ Maestro src/content/data/sfl/buds.json actualizado con Buds nuevos.`)
+    }
+
     const budItems = {}
     for (const budKey of allBudKeys) {
-      budItems[budKey] = processItemKey(budKey)
+      const bId = budKey.replace("buds-", "")
+      const trait = existingTraits[bId] || {}
+      budItems[budKey] = {
+        ...processItemKey(budKey),
+        boost: trait.boost || "",
+        type: trait.type || "",
+        stem: trait.stem || "",
+        aura: trait.aura || "",
+        ears: trait.ears || "",
+        colour: trait.colour || "",
+        mainBoost: trait.mainBoost || "",
+        stemBoost: trait.stemBoost || "",
+        auraBoost: trait.auraBoost || "",
+      }
     }
 
     const budsJSON = {
@@ -414,7 +511,7 @@ async function updateSFLData() {
 
     const budsFilePath = path.join(dirPath, "sfl_buds.json")
     await fs.writeFile(budsFilePath, JSON.stringify(budsJSON, null, 2))
-    console.log(`🌸 Catálogo de Buds optimizado y guardado por separado en: ${budsFilePath}`)
+    console.log(`🌸 Catálogo de Buds fusionado (precios + potenciadores) guardado en: ${budsFilePath}`)
   } catch (error) {
     console.error("Error crítico:", error)
     process.exit(1)

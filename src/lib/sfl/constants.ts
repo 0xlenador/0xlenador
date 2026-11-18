@@ -2,6 +2,8 @@ import { getItemPrice, getFlowerPrice } from "./market"
 import rawFishList from "../../content/data/sfl/fishing/fish.json"
 import rawCrustaceansList from "../../content/data/sfl/fishing/crustaceans.json"
 import rawFishMarketList from "../../content/data/sfl/fishing/fish_market.json"
+import { caveData } from "../../content/data/sfl/cave_mining"
+import bettyPrices from "../../content/data/sfl/betty_prices.json"
 
 // ============================================================================
 // CONSTANTES BASE OFICIALES DE SUNFLOWER LAND
@@ -44,6 +46,42 @@ export const MARINER_POT_RECIPE = {
     { name: "Merino Wool", amount: 10 },
   ],
 } as const
+
+export const SAND_SHOVEL_RECIPE = {
+  coins: 20,
+  ingredients: [
+    { name: "Wood", amount: 2 },
+    { name: "Stone", amount: 1 },
+  ],
+} as const
+
+export const DEFAULT_BEETLE_FALLBACK_PRICES: Record<string, number> = {
+  "Green Beetle": 0.05,
+  "Blue Beetle": 0.1,
+  "Pink Beetle": 0.25,
+  "Amber Beetle": 0.5,
+}
+
+export const CAVE_RESOURCE_NAMES = new Set([
+  "mud",
+  "mushroom",
+  "wild mushroom",
+  "magic mushroom",
+  "magic shroom",
+])
+
+export function isCaveResource(name: string): boolean {
+  if (!name) return false
+  const norm = name.toLowerCase().trim().replace(/_/g, " ")
+  return CAVE_RESOURCE_NAMES.has(norm)
+}
+
+export function getCanonicalCaveResourceName(name: string): "Mud" | "Wild Mushroom" | "Magic Mushroom" {
+  const norm = (name || "").toLowerCase().trim().replace(/_/g, " ")
+  if (norm.includes("magic")) return "Magic Mushroom"
+  if (norm.includes("mush")) return "Wild Mushroom"
+  return "Mud"
+}
 
 export const FREE_COMPOST_BAITS = new Set(["Earthworm", "Grub", "Red Wiggler"])
 
@@ -401,7 +439,7 @@ export function resolveMaterialFlowerCost(materialName: string, ctx: CraftingCon
     }
   }
 
-  // 5. Herramientas de Pesca
+  // 5. Herramientas de Pesca y Excavación
   if (materialName === "Rod") {
     return calculateRodCost(ctx)
   }
@@ -410,6 +448,14 @@ export function resolveMaterialFlowerCost(materialName: string, ctx: CraftingCon
   }
   if (materialName === "Mariner Pot") {
     return calculateMarinerPotCost(ctx)
+  }
+  if (materialName === "Sand Shovel") {
+    return calculateSandShovelCost(ctx)
+  }
+
+  // 6. Recursos de Cueva (Mud, Wild Mushroom, Magic Mushroom)
+  if (isCaveResource(materialName)) {
+    return calculateCaveBatchCost(ctx).unitCostFlower
   }
 
   // 6. Crustáceos de Trampa
@@ -857,4 +903,124 @@ export function getAllCrustaceanCatchCosts(ctx: CraftingContext): CrustaceanCatc
     if (res) results.push(res)
   }
   return results
+}
+
+// ============================================================================
+// 10. RECURSOS DE CUEVA Y HERRAMIENTAS DE EXCAVACIÓN
+// ============================================================================
+
+export function calculateSandShovelCost(ctx: CraftingContext): number {
+  const coinsFlower = ctx.coinsPerFlower > 0 ? SAND_SHOVEL_RECIPE.coins / ctx.coinsPerFlower : 0
+  const woodPrice = resolveMaterialFlowerCost("Wood", ctx)
+  const stonePrice = resolveMaterialFlowerCost("Stone", ctx)
+  return coinsFlower + (2 * woodPrice) + (1 * stonePrice)
+}
+
+export interface CaveBatchCostBreakdown {
+  shovelsCount: number
+  shovelUnitCostFlower: number
+  shovelsTotalCostFlower: number
+  bestCropName: string
+  bestCropAmount: number
+  bestCropUnitFlower: number
+  bestCropCostFlower: number
+  expectedBeetlesRevFlower: number
+  batchNetDeficitFlower: number
+  totalItemsProduced: number
+  unitCostFlower: number
+  unitCostUsd: number
+}
+
+/**
+ * Calcula el lote óptimo global de cueva (Mud Mix con el cultivo más económico).
+ * Retorna el costo residual unitario repartido entre los 43 ítems producidos (40 Mud + 3 Mushrooms).
+ */
+export function calculateCaveBatchCost(ctxOverride?: Partial<CraftingContext>): CaveBatchCostBreakdown {
+  const ctx: CraftingContext = {
+    flowerPriceUsd: ctxOverride?.flowerPriceUsd ?? getFlowerPrice() ?? 0.144,
+    coinsPerFlower: ctxOverride?.coinsPerFlower ?? OFFICIAL_COINS_PER_FLOWER,
+    resolveBasePrice: ctxOverride?.resolveBasePrice,
+    resolveTreasureCoins: ctxOverride?.resolveTreasureCoins,
+  }
+
+  // 1. Costo de 25 Sand Shovels
+  const shovelUnitCost = calculateSandShovelCost(ctx)
+  const shovelsCount = caveData.shovelsPerBatch || 25
+  const shovelsTotalCost = shovelsCount * shovelUnitCost
+
+  // 2. Ingresos esperados de Beetles (2 escarabajos con odds: 40% Green, 30% Blue, 20% Pink, 10% Amber)
+  const greenP = resolveMaterialFlowerCost("Green Beetle", ctx) || DEFAULT_BEETLE_FALLBACK_PRICES["Green Beetle"]
+  const blueP = resolveMaterialFlowerCost("Blue Beetle", ctx) || DEFAULT_BEETLE_FALLBACK_PRICES["Blue Beetle"]
+  const pinkP = resolveMaterialFlowerCost("Pink Beetle", ctx) || DEFAULT_BEETLE_FALLBACK_PRICES["Pink Beetle"]
+  const amberP = resolveMaterialFlowerCost("Amber Beetle", ctx) || DEFAULT_BEETLE_FALLBACK_PRICES["Amber Beetle"]
+  const expectedBeetleUnitVal = (0.4 * greenP) + (0.3 * blueP) + (0.2 * pinkP) + (0.1 * amberP)
+  const expectedBeetlesRev = 2 * expectedBeetleUnitVal
+
+  // 3. Lote Óptimo Global de Cueva (Mud Mix con mejor cultivo: 40 Mud + 3 Mushrooms = 43 ítems)
+  const mudMix = caveData.mixes.find((m) => m.id === "mud_mix")
+  const mudMixOptions = mudMix?.requirement?.options || []
+
+  let lowestCropReqCost = Infinity
+  let bestCropName = "Sunflower"
+  let bestCropAmount = 500
+  let bestCropUnitFlower = 0
+
+  if (Array.isArray(mudMixOptions) && mudMixOptions.length > 0) {
+    for (const opt of mudMixOptions) {
+      let unitP = resolveMaterialFlowerCost(opt.name, ctx)
+      if (!unitP || unitP <= 0) {
+        const betty = (bettyPrices as Record<string, { sellPrice?: number }>)[opt.name]
+        const sellPrice = betty?.sellPrice ?? 0.02
+        unitP = ctx.coinsPerFlower > 0 ? sellPrice / ctx.coinsPerFlower : 0.005
+      }
+      const totalCost = unitP * opt.amount
+      if (totalCost < lowestCropReqCost) {
+        lowestCropReqCost = totalCost
+        bestCropName = opt.name
+        bestCropAmount = opt.amount
+        bestCropUnitFlower = unitP
+      }
+    }
+  }
+
+  if (!Number.isFinite(lowestCropReqCost) || lowestCropReqCost <= 0) {
+    lowestCropReqCost = 0.005
+    bestCropName = "Sunflower"
+    bestCropAmount = 500
+    bestCropUnitFlower = 0.00001
+  }
+
+  const mudBatchTotalCost = shovelsTotalCost + lowestCropReqCost
+  const mudNetDeficit = Math.max(0, mudBatchTotalCost - expectedBeetlesRev)
+  const totalItems = 43 // 40 Mud + 3 Mushrooms
+  const unitCostFlower = mudNetDeficit > 0 ? mudNetDeficit / totalItems : 0.005
+  const unitCostUsd = unitCostFlower * ctx.flowerPriceUsd
+
+  return {
+    shovelsCount,
+    shovelUnitCostFlower: shovelUnitCost,
+    shovelsTotalCostFlower: shovelsTotalCost,
+    bestCropName,
+    bestCropAmount,
+    bestCropUnitFlower,
+    bestCropCostFlower: lowestCropReqCost,
+    expectedBeetlesRevFlower: expectedBeetlesRev,
+    batchNetDeficitFlower: mudNetDeficit,
+    totalItemsProduced: totalItems,
+    unitCostFlower,
+    unitCostUsd,
+  }
+}
+
+export function calculateCaveResourceCost(
+  name: string,
+  ctx?: Partial<CraftingContext>
+): { name: string; flower: number; usd: number } {
+  const canonical = getCanonicalCaveResourceName(name)
+  const batch = calculateCaveBatchCost(ctx)
+  return {
+    name: canonical,
+    flower: batch.unitCostFlower,
+    usd: batch.unitCostUsd,
+  }
 }

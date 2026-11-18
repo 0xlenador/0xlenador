@@ -672,6 +672,7 @@ const t = useTranslations(lang)
               <div class="flex items-center gap-2 mt-0.5 text-xs text-terminal-secondary">
                 <span id="modalItemSubtitle">Sunflower Land NFT</span>
               </div>
+              <div id="modalItemBoostsContainer" class="flex flex-wrap items-center gap-1.5 mt-1.5 hidden"></div>
             </div>
           </div>
 
@@ -1182,6 +1183,17 @@ const t = useTranslations(lang)
               trades7d: data.trades7d,
               category: "buds",
               isWearable: false,
+              boost: data.boost || "",
+              budTraits: {
+                type: data.type || "",
+                stem: data.stem || "",
+                aura: data.aura || "",
+                ears: data.ears || "",
+                colour: data.colour || "",
+                mainBoost: data.mainBoost || "",
+                stemBoost: data.stemBoost || "",
+                auraBoost: data.auraBoost || "",
+              },
             })
           }
           return acc
@@ -2967,7 +2979,11 @@ const t = useTranslations(lang)
                     : ""
                 }
               </div>
-              ${item.category === "powerups" && item.boost ? `<p class="text-[9px] text-emerald-400/80 leading-tight lg:leading-none mt-1 max-w-[180px] lg:max-w-none">${item.boost}</p>` : ""}
+              ${
+                (item.category === "powerups" || item.category === "buds") && item.boost
+                  ? `<p class="text-[9px] ${item.category === "buds" ? "text-cyan-400/90 font-mono" : "text-emerald-400/80"} leading-tight lg:leading-none mt-1 max-w-[200px] lg:max-w-none truncate" title="${item.boost}">${item.boost}</p>`
+                  : ""
+              }
             </div>
           </div>
           <!-- Precio Móvil y 4 Círculos -->
@@ -3508,8 +3524,65 @@ const t = useTranslations(lang)
       badgeEl.textContent = item.category === "buds" ? "Buds NFT" : item.category === "powerups" ? "Power Up" : item.category === "cosmetics" ? "Cosmetic" : "Resource";
       badgeEl.className = `text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase shrink-0 ${item.category === "buds" ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"}`;
     }
+    const boostsContainer = document.getElementById("modalItemBoostsContainer");
+    if (boostsContainer) {
+      boostsContainer.innerHTML = "";
+      boostsContainer.classList.add("hidden");
+    }
+
     if (subTitleEl) {
-      subTitleEl.textContent = item.category === "buds" ? `NFT #${item.budId || item.name.replace(/\D/g, '')}` : "Sunflower Land P2P";
+      if (item.category === "buds") {
+        const bId = item.budId || item.name.replace(/\D/g, "");
+        const trait = item.budTraits || {};
+        const metaParts = [];
+        if (trait.type) metaParts.push(trait.type);
+        if (trait.stem) metaParts.push(trait.stem);
+        if (trait.aura) metaParts.push(`Aura ${trait.aura}`);
+        if (trait.ears) metaParts.push(trait.ears);
+        const traitText = metaParts.length > 0 ? metaParts.join(" • ") : `NFT #${bId}`;
+        subTitleEl.innerHTML = `<span class="text-white/60">${traitText}</span>`;
+
+        // Badges ordenados para potenciadores
+        let mainB = trait.mainBoost || "";
+        let stemB = trait.stemBoost || "";
+        let auraB = trait.auraBoost || "";
+
+        if (!mainB && item.boost) {
+          const parts = item.boost.split(" | ");
+          parts.forEach((p) => {
+            const cleanP = p.replace(/^\(|\)$/g, "").trim();
+            if (cleanP.includes("Stem:")) stemB = cleanP;
+            else if (cleanP.includes("Aura")) auraB = cleanP;
+            else if (!mainB) mainB = cleanP;
+          });
+        }
+
+        const badgesHtml = [];
+        if (mainB) {
+          badgesHtml.push(`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(6,182,212,0.1)] shrink-0"><span class="text-[11px]">⚡</span><span>${mainB}</span></span>`);
+        }
+        if (stemB) {
+          const cleanStem = stemB.replace(/^Stem:\s*/i, "");
+          badgesHtml.push(`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(16,185,129,0.1)] shrink-0"><span class="text-[11px]">🌱</span><span>Tallo: ${cleanStem}</span></span>`);
+        }
+        if (auraB) {
+          const cleanAura = auraB.replace(/^\(|\)$/g, "").trim();
+          badgesHtml.push(`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/30 text-purple-300 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(168,85,247,0.1)] shrink-0"><span class="text-[11px]">✨</span><span>${cleanAura}</span></span>`);
+        }
+
+        if (boostsContainer && badgesHtml.length > 0) {
+          boostsContainer.innerHTML = badgesHtml.join("");
+          boostsContainer.classList.remove("hidden");
+        }
+      } else if (item.category === "powerups" && item.boost) {
+        subTitleEl.textContent = "Sunflower Land P2P";
+        if (boostsContainer) {
+          boostsContainer.innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(168,85,247,0.1)] shrink-0"><span class="text-[11px]">⚡</span><span>${item.boost}</span></span>`;
+          boostsContainer.classList.remove("hidden");
+        }
+      } else {
+        subTitleEl.textContent = "Sunflower Land P2P";
+      }
     }
     if (linkEl) {
       const linkTextEl = document.getElementById("modalExternalLinkText");

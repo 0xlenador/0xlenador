@@ -1162,46 +1162,53 @@ const animalBuildingsList = [
 
     // Calcula el costo unitario óptimo de Mud, Wild Mushroom y Magic Mushroom desde la economía de Cueva
     function calculateCaveOptimalPrices() {
-      // 1. Costo de 1 Sand Shovel = 20 Coins + 2 Wood + 1 Stone
-      const coinsShovel = activeCoinsPerFlower > 0 ? 20 / activeCoinsPerFlower : 0
-      const woodP = getBaseMaterialUnitPrice("Wood")
-      const stoneP = getBaseMaterialUnitPrice("Stone")
-      const shovelUnitCost = coinsShovel + (2 * woodP) + (1 * stoneP)
-      const shovels25Cost = 25 * shovelUnitCost
+      let optimalGlobalResidualCost = 0.005
 
-      // 2. Ingresos esperados de Beetles (2 escarabajos con odds: 40% Green, 30% Blue, 20% Pink, 10% Amber)
-      const greenP = getBaseMaterialUnitPrice("Green Beetle") || 0.05
-      const blueP = getBaseMaterialUnitPrice("Blue Beetle") || 0.1
-      const pinkP = getBaseMaterialUnitPrice("Pink Beetle") || 0.25
-      const amberP = getBaseMaterialUnitPrice("Amber Beetle") || 0.5
-      const expectedBeetleUnitVal = (0.4 * greenP) + (0.3 * blueP) + (0.2 * pinkP) + (0.1 * amberP)
-      const expectedBeetlesRev = 2 * expectedBeetleUnitVal
-
-      // --- LOTE ÓPTIMO GLOBAL DE CUEVA (Mud Mix con mejor cultivo: 40 Mud + 3 Mushrooms = 43 items) ---
-      // Evalúa los 25 cultivos posibles para Mud Mix (Soybean, Rice, Sunflower, etc.) y elige el de menor costo real
-      let lowestCropReqCost = Infinity
-      if (mudMixOptions && Array.isArray(mudMixOptions)) {
-        mudMixOptions.forEach((opt) => {
-          let unitP = getBaseMaterialUnitPrice(opt.name)
-          if (!unitP || unitP <= 0) {
-            const betty = (typeof bettyPrices !== "undefined" && bettyPrices) ? bettyPrices[opt.name] : null
-            const sellPrice = betty ? betty.sellPrice : 0.02
-            unitP = activeCoinsPerFlower > 0 ? (sellPrice / activeCoinsPerFlower) : 0.005
-          }
-          const totalCost = unitP * opt.amount
-          if (totalCost < lowestCropReqCost) {
-            lowestCropReqCost = totalCost
-          }
+      if (window.SflConstants && typeof window.SflConstants.calculateCaveBatchCost === "function") {
+        const batch = window.SflConstants.calculateCaveBatchCost({
+          coinsPerFlower: activeCoinsPerFlower,
+          flowerPriceUsd: effectiveFlowerPrice,
+          resolveBasePrice: (name) => getBaseMaterialUnitPrice(name),
         })
-      }
-      if (lowestCropReqCost === Infinity || lowestCropReqCost <= 0) {
-        lowestCropReqCost = 0.005
-      }
+        optimalGlobalResidualCost = batch.unitCostFlower
+      } else {
+        // Fallback local preventivo
+        const coinsShovel = activeCoinsPerFlower > 0 ? 20 / activeCoinsPerFlower : 0
+        const woodP = getBaseMaterialUnitPrice("Wood")
+        const stoneP = getBaseMaterialUnitPrice("Stone")
+        const shovelUnitCost = coinsShovel + (2 * woodP) + (1 * stoneP)
+        const shovels25Cost = 25 * shovelUnitCost
 
-      const mudBatchTotalCost = shovels25Cost + lowestCropReqCost
-      const mudNetDeficit = Math.max(0, mudBatchTotalCost - expectedBeetlesRev)
-      // Costo residual unitario idéntico del lote global más eficiente (repartido entre 43 items)
-      const optimalGlobalResidualCost = mudNetDeficit > 0 ? (mudNetDeficit / 43) : 0.005
+        const greenP = getBaseMaterialUnitPrice("Green Beetle") || 0.05
+        const blueP = getBaseMaterialUnitPrice("Blue Beetle") || 0.1
+        const pinkP = getBaseMaterialUnitPrice("Pink Beetle") || 0.25
+        const amberP = getBaseMaterialUnitPrice("Amber Beetle") || 0.5
+        const expectedBeetleUnitVal = (0.4 * greenP) + (0.3 * blueP) + (0.2 * pinkP) + (0.1 * amberP)
+        const expectedBeetlesRev = 2 * expectedBeetleUnitVal
+
+        let lowestCropReqCost = Infinity
+        if (mudMixOptions && Array.isArray(mudMixOptions)) {
+          mudMixOptions.forEach((opt) => {
+            let unitP = getBaseMaterialUnitPrice(opt.name)
+            if (!unitP || unitP <= 0) {
+              const betty = (typeof bettyPrices !== "undefined" && bettyPrices) ? bettyPrices[opt.name] : null
+              const sellPrice = betty ? betty.sellPrice : 0.02
+              unitP = activeCoinsPerFlower > 0 ? (sellPrice / activeCoinsPerFlower) : 0.005
+            }
+            const totalCost = unitP * opt.amount
+            if (totalCost < lowestCropReqCost) {
+              lowestCropReqCost = totalCost
+            }
+          })
+        }
+        if (lowestCropReqCost === Infinity || lowestCropReqCost <= 0) {
+          lowestCropReqCost = 0.005
+        }
+
+        const mudBatchTotalCost = shovels25Cost + lowestCropReqCost
+        const mudNetDeficit = Math.max(0, mudBatchTotalCost - expectedBeetlesRev)
+        optimalGlobalResidualCost = mudNetDeficit > 0 ? (mudNetDeficit / 43) : 0.005
+      }
 
       calculatedMudPriceFlower = optimalGlobalResidualCost
       calculatedMushroomPriceFlower = optimalGlobalResidualCost

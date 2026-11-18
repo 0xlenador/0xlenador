@@ -1,10 +1,11 @@
 // ============================================================
-// src/lib/sfl/recipes.ts
-// Catálogo Universal y Declarativo de Recetas de Sunflower Land.
+// src/lib/sfl/crafting.ts
+// Catálogo Universal y Declarativo de Fabricación (Crafting) de Sunflower Land.
 //
 // Responsabilidad única: Extraer, normalizar e indexar todas las
 // recetas de fabricación del juego desde los archivos JSON oficiales
-// (Cocina, Aging Shed, Herrería/Herramientas, Consumibles de Animales).
+// (Cocina, Aging Shed, Herrería/Herramientas, Consumibles de Animales, Fish Market)
+// y exponer la configuración de la Temporada Activa (Season Ticket/Moneda).
 //
 // Cero código hardcodeado: Si se agrega una receta en cualquier JSON,
 // queda automáticamente disponible para todo el motor de cálculos.
@@ -16,6 +17,45 @@ import blacksmithToolsDataRaw from "../../content/data/sfl/blacksmith_tools.json
 import consumablesDataRaw from "../../content/data/sfl/animals/consumables.json"
 import fishMarketDataRaw from "../../content/data/sfl/fishing/fish_market.json"
 import { OIL_DRILL_RECIPE, DEFAULT_OIL_MULTIPLIER } from "./constants"
+
+// ============================================================================
+// 1. TEMPORADA ACTIVA DE SUNFLOWER LAND
+// Actualiza este bloque cada vez que comience una nueva temporada en el juego.
+// ============================================================================
+
+export interface SeasonConfig {
+  id: string
+  name: string
+  ticketName: string
+  ticketImage: string
+  startDate: string
+  endDate: string
+  durationLabel: string
+}
+
+export const CURRENT_SEASON: SeasonConfig = {
+  id: "cave_dwellers",
+  name: "Cave Dwellers",
+  ticketName: "Beetle Wing",
+  ticketImage: "/img/sunflowerland/others/beetle_wing.webp",
+  startDate: "2026-11-02",
+  endDate: "2027-02-02",
+  durationLabel: "2 de noviembre de 2026 – 2 de febrero de 2027",
+}
+
+export function getCurrentSeason(): SeasonConfig {
+  return CURRENT_SEASON
+}
+
+export function isSeasonalTicket(name: string): boolean {
+  if (!name) return false
+  const norm = name.toLowerCase().trim()
+  return (
+    norm === CURRENT_SEASON.ticketName.toLowerCase().trim() ||
+    norm === "seasonal ticket" ||
+    norm === "season ticket"
+  )
+}
 
 // ---------------------------------------------------------------------------
 // Tipos e Interfaces
@@ -286,12 +326,23 @@ if (Array.isArray(fishMarketDataRaw)) {
   }
 }
 
+// 7. Ingesta: Boleto de Temporada Activo
+_registerRecipe({
+  id: CURRENT_SEASON.ticketName.toLowerCase().replace(/[^a-z0-9]+/g, "_"),
+  name: CURRENT_SEASON.ticketName,
+  category: "general",
+  yield: 1,
+  coins: 0,
+  ingredients: [],
+  image: CURRENT_SEASON.ticketImage,
+})
+
 // ---------------------------------------------------------------------------
-// API Pública de Consulta del Catálogo
+// API Pública de Consulta del Catálogo de Fabricación
 // ---------------------------------------------------------------------------
 
 /**
- * Busca una receta por su ID normalizado o por su nombre visible (case-insensitive).
+ * Busca una receta de fabricación por su ID normalizado o por su nombre visible (case-insensitive).
  *
  * @example
  * getRecipe("pizza_margherita")
