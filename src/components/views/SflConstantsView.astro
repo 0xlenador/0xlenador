@@ -51,6 +51,7 @@ const catalogLabels = {
   customPlaceholder: t("sfl.constants.sell.customPlaceholder"),
   agedXpLabel: t("sfl.constants.agedXp"),
   primeAgedXpLabel: t("sfl.constants.primeAgedXp"),
+  agingTimeLabel: t("sfl.constants.agingTime"),
 }
 
 const blacksmithTabs: CatalogTab[] = [
@@ -110,19 +111,46 @@ const jafarTabs: CatalogTab[] = [
 ]
 
 const agingShed = agingShedData.building
-const agingShedTabs: CatalogTab[] = agingShed.tabs.map((tab) => ({
-  id: tab.id,
-  name: t(`sfl.constants.tab.${tab.id}`) || tab.name,
-  icon: tab.icon,
-  type: (tab.type as any) || "craft",
-  isComingSoon: (tab as any).isComingSoon || false,
-  placeholderIcon: tab.placeholderIcon,
-  sections: tab.categories.map((cat) => ({
-    id: cat.id,
-    name: t(`sfl.constants.cat.${cat.id}`) || cat.name,
-    items: cat.items,
-  })),
-}))
+const agingShedTabs: CatalogTab[] = agingShed.tabs.map((tab) => {
+  const tabDefaultChances = (tab as any).defaultChances
+  return {
+    id: tab.id,
+    name: t(`sfl.constants.tab.${tab.id}`) || tab.name,
+    icon: tab.icon,
+    type: (tab.type as any) || "craft",
+    isComingSoon: (tab as any).isComingSoon || false,
+    placeholderIcon: tab.placeholderIcon,
+    sections: tab.categories.map((cat) => ({
+      id: cat.id,
+      name: t(`sfl.constants.cat.${cat.id}`) || cat.name,
+      items: cat.items.map((item: any) => {
+        if (item.salt !== undefined) {
+          const baseFishName = item.name.replace(/^Aged\s+/i, "")
+          const baseFish = {
+            name: baseFishName,
+            amount: 1,
+            image: item.image,
+          }
+          const saltIngredient = {
+            name: "Salt",
+            amount: item.salt,
+            image: "/img/sunflowerland/Salt.png",
+          }
+          const customIngredients = Array.isArray(item.ingredients)
+            ? item.ingredients.filter((ing: any) => ing.name !== "Salt")
+            : [baseFish]
+
+          return {
+            ...item,
+            chances: item.chances || tabDefaultChances,
+            ingredients: [...customIngredients, saltIngredient],
+          }
+        }
+        return item
+      }),
+    })),
+  }
+})
 
 import { getAnimalBuildings } from "../../lib/sfl/animals"
 import { caveData } from "../../content/data/sfl/cave_mining"

@@ -56,6 +56,7 @@ export interface CatalogLabels {
   customPlaceholder?: string
   agedXpLabel?: string
   primeAgedXpLabel?: string
+  agingTimeLabel?: string
 }
 
 interface Props {
@@ -116,6 +117,7 @@ const defaultLabels: CatalogLabels = {
   customPlaceholder: "Cantidad...",
   agedXpLabel: "XP Pez Envejecido:",
   primeAgedXpLabel: "XP Pez Prime Aged:",
+  agingTimeLabel: "Tiempo de curado:",
   ...labels,
 }
 ---
@@ -374,21 +376,41 @@ const defaultLabels: CatalogLabels = {
                       </div>
                     </div>
 
-                    <!-- STATS DE XP (Aged Fish & Prime Aged Fish) -->
+                    <!-- STATS DE AGING & XP (Aged Fish & Prime Aged Fish) -->
                     <div class="catalog-detail-xp-section hidden flex-col gap-1.5 mt-2">
+                      <!-- Fila Tiempo de Curado -->
+                      <div class="catalog-detail-time-row hidden items-center justify-between py-1.5 px-3 rounded-xl bg-cyan-500/[0.05] border border-cyan-500/20 text-xs font-mono">
+                        <div class="flex items-center gap-1.5 text-cyan-300/90 font-medium">
+                          <span class="text-xs">⏱️</span>
+                          <span>{defaultLabels.agingTimeLabel}</span>
+                        </div>
+                        <span class="catalog-detail-aging-time font-bold text-cyan-300">
+                          --
+                        </span>
+                      </div>
+
+                      <!-- Fila Aged Fish con Badge de Probabilidad -->
                       <div class="flex items-center justify-between py-1.5 px-3 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 text-xs font-mono">
                         <div class="flex items-center gap-1.5 text-terminal-secondary">
                           <span class="text-xs">🐟</span>
                           <span>{defaultLabels.agedXpLabel}</span>
+                          <span class="catalog-detail-aged-chance text-[9.5px] px-1 py-0.2 rounded bg-amber-400/10 text-amber-300 font-bold border border-amber-400/20">
+                            90%
+                          </span>
                         </div>
                         <span class="catalog-detail-aged-xp font-bold text-amber-300">
                           +0 XP
                         </span>
                       </div>
+
+                      <!-- Fila Prime Aged Fish con Badge de Probabilidad -->
                       <div class="flex items-center justify-between py-1.5 px-3 rounded-xl bg-yellow-500/[0.08] border border-yellow-500/30 text-xs font-mono shadow-[0_0_12px_rgba(234,179,8,0.06)]">
                         <div class="flex items-center gap-1.5 text-yellow-300/90 font-medium">
                           <span class="text-xs">✨</span>
                           <span>{defaultLabels.primeAgedXpLabel}</span>
+                          <span class="catalog-detail-prime-chance text-[9.5px] px-1 py-0.2 rounded bg-yellow-400/15 text-yellow-300 font-bold border border-yellow-400/30">
+                            10%
+                          </span>
                         </div>
                         <span class="catalog-detail-prime-xp font-bold text-yellow-300">
                           +0 XP
@@ -550,6 +572,10 @@ const defaultLabels: CatalogLabels = {
         const xpSection = panel.querySelector<HTMLElement>(".catalog-detail-xp-section")
         const agedXpEl = panel.querySelector<HTMLElement>(".catalog-detail-aged-xp")
         const primeAgedXpEl = panel.querySelector<HTMLElement>(".catalog-detail-prime-xp")
+        const agingTimeRow = panel.querySelector<HTMLElement>(".catalog-detail-time-row")
+        const agingTimeEl = panel.querySelector<HTMLElement>(".catalog-detail-aging-time")
+        const agedChanceEl = panel.querySelector<HTMLElement>(".catalog-detail-aged-chance")
+        const primeChanceEl = panel.querySelector<HTMLElement>(".catalog-detail-prime-chance")
         const simulatorSection = panel.querySelector<HTMLElement>(".catalog-simulator-section")
         const multiplierBtns = panel.querySelectorAll<HTMLButtonElement>(".catalog-multiplier-btn")
         const customQtyInput = panel.querySelector<HTMLInputElement>(".catalog-custom-qty")
@@ -689,6 +715,16 @@ const defaultLabels: CatalogLabels = {
             }
           }
 
+          function formatDuration(seconds: number): string {
+            if (!seconds || seconds <= 0) return "--"
+            const hours = Math.floor(seconds / 3600)
+            const mins = Math.floor((seconds % 3600) / 60)
+            if (hours > 0) {
+              return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
+            }
+            return `${mins}m`
+          }
+
           if (xpSection && agedXpEl && primeAgedXpEl) {
             if (selectedItem.agedXp || selectedItem.primeAgedXp) {
               xpSection.classList.remove("hidden")
@@ -697,6 +733,25 @@ const defaultLabels: CatalogLabels = {
               const totalPrimeXp = (selectedItem.primeAgedXp || 0) * qty
               agedXpEl.innerText = `+${totalAgedXp.toLocaleString()} XP`
               primeAgedXpEl.innerText = `+${totalPrimeXp.toLocaleString()} XP`
+
+              if (agingTimeRow && agingTimeEl) {
+                if (selectedItem.timeSeconds) {
+                  agingTimeRow.classList.remove("hidden")
+                  agingTimeRow.classList.add("flex")
+                  agingTimeEl.innerText = formatDuration(selectedItem.timeSeconds)
+                } else {
+                  agingTimeRow.classList.add("hidden")
+                  agingTimeRow.classList.remove("flex")
+                }
+              }
+
+              const chances = selectedItem.chances || { aged: 90, primeAged: 10 }
+              if (agedChanceEl && chances.aged !== undefined) {
+                agedChanceEl.innerText = `${chances.aged}%`
+              }
+              if (primeChanceEl && chances.primeAged !== undefined) {
+                primeChanceEl.innerText = `${chances.primeAged}%`
+              }
             } else {
               xpSection.classList.add("hidden")
               xpSection.classList.remove("flex")
