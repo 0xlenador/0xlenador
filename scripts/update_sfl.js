@@ -255,8 +255,7 @@ async function updateSFLData() {
       else throw new Error("No se pudo obtener la data principal.")
     }
 
-    const filteredItems = {}
-    for (const itemKey of ALLOWED_KEYS) {
+    const processItemKey = (itemKey) => {
       const itemData = baseItems[itemKey] || {}
       
       const getItemPrice = (offset) => {
@@ -280,7 +279,17 @@ async function updateSFLData() {
         return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].volume : null
       }
 
-      const p0 = getItemPrice(0) || itemData.latestSale || 0
+      let p0 = getItemPrice(0) || itemData.latestSale || 0
+      if (!p0) {
+        for (let i = 1; i <= 30; i++) {
+          const fallback = getItemPrice(i)
+          if (fallback) {
+            p0 = fallback
+            break
+          }
+        }
+      }
+
       const t0 = getItemTrades(0) || itemData.trades || 0
       const t1 = getItemTrades(1) || getItemTrades(2) || getItemTrades(3) || 0
       const t7 = getItemTrades(7) || getItemTrades(8) || getItemTrades(9) || getItemTrades(10) || 0
@@ -321,7 +330,7 @@ async function updateSFLData() {
         return null
       }
 
-      filteredItems[itemKey] = {
+      return {
         key: itemKey,
         currentPrice: p0,
         low: itemData.low || p0,
@@ -366,6 +375,12 @@ async function updateSFLData() {
       }
     }
 
+    // 1. Items estándar de mercado (sfl_data.json)
+    const filteredItems = {}
+    for (const itemKey of ALLOWED_KEYS) {
+      filteredItems[itemKey] = processItemKey(itemKey)
+    }
+
     const finalJSON = {
       lastUpdated: new Date().toISOString(),
       flowerPrice: currentFlowerPrice,
@@ -374,8 +389,32 @@ async function updateSFLData() {
 
     const filePath = path.join(dirPath, "sfl_data.json")
     await fs.writeFile(filePath, JSON.stringify(finalJSON, null, 2))
-
     console.log(`🚀 API en vivo procesada y optimizada en: ${filePath}`)
+
+    // 2. Buds aislados (sfl_buds.json) - Carga bajo demanda ultra-rápida
+    const allBudKeys = new Set()
+    for (const dayItems of Object.values(rawData)) {
+      if (dayItems && typeof dayItems === "object") {
+        for (const k of Object.keys(dayItems)) {
+          if (k.startsWith("buds-")) allBudKeys.add(k)
+        }
+      }
+    }
+
+    const budItems = {}
+    for (const budKey of allBudKeys) {
+      budItems[budKey] = processItemKey(budKey)
+    }
+
+    const budsJSON = {
+      lastUpdated: new Date().toISOString(),
+      flowerPrice: currentFlowerPrice,
+      items: budItems,
+    }
+
+    const budsFilePath = path.join(dirPath, "sfl_buds.json")
+    await fs.writeFile(budsFilePath, JSON.stringify(budsJSON, null, 2))
+    console.log(`🌸 Catálogo de Buds optimizado y guardado por separado en: ${budsFilePath}`)
   } catch (error) {
     console.error("Error crítico:", error)
     process.exit(1)

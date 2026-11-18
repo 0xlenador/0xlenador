@@ -319,7 +319,7 @@ const t = useTranslations(lang)
                   <img
                     src="/img/sunflowerland/Eggplant.png"
                     alt="Resources"
-                    class="w-4 h-4 object-contain"
+                    class="w-4 h-4 object-contain pixelated"
                   />
                   Resources
                 </button>
@@ -331,7 +331,7 @@ const t = useTranslations(lang)
                   <img
                     src="/img/sunflowerland/123/energy.png"
                     alt="Power Ups"
-                    class="w-4 h-4 object-contain"
+                    class="w-4 h-4 object-contain pixelated"
                   />
                   Power Ups
                 </button>
@@ -343,15 +343,22 @@ const t = useTranslations(lang)
                   <img
                     src="/img/sunflowerland/123/bear.png"
                     alt="Cosmetics"
-                    class="w-4 h-4 object-contain"
+                    class="w-4 h-4 object-contain pixelated"
                   />
                   Cosmetics
                 </button>
                 <button
-                  class="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0 flex items-center justify-center md:flex-1 lg:flex-none"
-                  disabled
-                  title="Próximamente">Buds</button
+                  class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
+                  data-category="buds"
+                  onclick="window.handleCategory('buds')"
                 >
+                  <img
+                    src="/img/sunflowerland/123/bud.png"
+                    alt="Buds"
+                    class="w-4 h-4 object-contain pixelated"
+                  />
+                  Buds
+                </button>
                 <button
                   class="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0 flex items-center justify-center md:flex-1 lg:flex-none"
                   disabled
@@ -400,7 +407,7 @@ const t = useTranslations(lang)
                   <img
                     src="/img/sunflowerland/powerups/freya_fox.png"
                     alt="Collectibles"
-                    class="w-4 h-4 object-contain"
+                    class="w-4 h-4 object-contain pixelated"
                   />
                   <span
                     class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest"
@@ -419,7 +426,7 @@ const t = useTranslations(lang)
                   <img
                     src="/img/sunflowerland/123/hat-wearables.webp"
                     alt="Wearables"
-                    class="w-4 h-4 object-contain"
+                    class="w-4 h-4 object-contain pixelated"
                   />
                   <span
                     class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest"
@@ -631,6 +638,139 @@ const t = useTranslations(lang)
           class="grid grid-cols-1 md:grid-cols-2 lg:block gap-4 lg:gap-0 lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0"
         >
           <!-- Filas/Cards dinámicas JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL CENTRAL PRO DE TRADING -->
+    <div
+      id="tradingModal"
+      class="fixed inset-0 z-[100] hidden items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md transition-all duration-300"
+      onclick="if(event.target === this) window.closeTradingModal()"
+    >
+      <div
+        class="relative w-full max-w-4xl bg-[#141414] border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh] text-white animate-in fade-in zoom-in-95 duration-200"
+        onclick="event.stopPropagation()"
+      >
+        <!-- Modal Header -->
+        <div class="p-3.5 sm:p-4 border-b border-white/10 bg-black/40 flex flex-wrap md:flex-nowrap items-center justify-between gap-3 shrink-0">
+          <div class="flex items-center gap-3 min-w-0 shrink-0">
+            <div id="modalItemImgContainer" class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center p-1.5 overflow-hidden shrink-0 shadow-inner">
+              <img
+                id="modalItemImg"
+                src="/img/sunflowerland/123/bud.png"
+                alt=""
+                class="w-full h-full object-contain drop-shadow transition-transform duration-300 pixelated"
+                onerror="this.onerror=null; this.src='/img/sunflowerland/123/bud.png'"
+              />
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 id="modalItemName" class="text-base sm:text-lg font-bold text-white tracking-tight truncate">--</h3>
+                <span id="modalItemCategoryBadge" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase shrink-0">Buds</span>
+              </div>
+              <div class="flex items-center gap-2 mt-0.5 text-xs text-terminal-secondary">
+                <span id="modalItemSubtitle">Sunflower Land NFT</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPIs Compactos en Encabezado -->
+          <div class="flex items-center justify-between sm:justify-center gap-2 sm:gap-3 lg:gap-4 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/5 order-3 md:order-2 w-full md:w-auto">
+            <!-- Floor / Precio Actual -->
+            <div class="flex flex-col items-start sm:items-center min-w-0">
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">{t("sfl.modal.floorPrice")}</span>
+              <div class="flex items-center gap-1 mt-0.5">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
+                <span id="modalFloorPrice" class="text-xs sm:text-sm font-bold text-white font-mono leading-none">--</span>
+              </div>
+              <span id="modalFloorUsd" class="text-[9px] font-mono text-white/40 leading-none mt-0.5">~$0.00</span>
+            </div>
+
+            <div class="w-px h-6 bg-white/10 shrink-0"></div>
+
+            <!-- Cambio 24H -->
+            <div class="flex flex-col items-start sm:items-center min-w-0">
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">{t("sfl.modal.change24h")}</span>
+              <div class="flex items-center gap-1 mt-0.5">
+                <span id="modalChange24h" class="text-xs sm:text-sm font-bold font-mono leading-none text-white/50">--</span>
+              </div>
+              <span id="modalPastPrice" class="text-[9px] font-mono text-white/40 leading-none mt-0.5">Prev: --</span>
+            </div>
+
+            <div class="w-px h-6 bg-white/10 shrink-0"></div>
+
+            <!-- Volumen 7D -->
+            <div class="flex flex-col items-start sm:items-center min-w-0">
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">{t("sfl.modal.volume7d")}</span>
+              <div class="flex items-center gap-1 mt-0.5">
+                <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" alt="FLOWER" />
+                <span id="modalVolume7d" class="text-xs sm:text-sm font-bold text-white font-mono leading-none">--</span>
+              </div>
+              <span id="modalVolume7dUsd" class="text-[9px] font-mono text-white/40 leading-none mt-0.5">~$0.00</span>
+            </div>
+
+            <div class="w-px h-6 bg-white/10 shrink-0"></div>
+
+            <!-- Trades (7D) / Supply -->
+            <div class="flex flex-col items-start sm:items-center min-w-0">
+              <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">{t("sfl.activity")} (7D)</span>
+              <div class="flex items-center gap-1 mt-0.5">
+                <span id="modalTradesCount" class="text-xs sm:text-sm font-bold text-cyan-400 font-mono leading-none">--</span>
+                <span class="text-[8.5px] text-white/40 font-mono">trades</span>
+              </div>
+              <span id="modalSupply" class="text-[9px] font-mono text-white/40 leading-none mt-0.5">{t("sfl.modal.supply")}: 1 NFT</span>
+            </div>
+          </div>
+
+          <!-- Close Button -->
+          <button
+            type="button"
+            onclick="window.closeTradingModal()"
+            class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-terminal-muted hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 order-2 md:order-3 ml-auto md:ml-0"
+            title="Cerrar (Esc)"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal Body (Scrollable) -->
+        <div class="p-4 sm:p-5 overflow-y-auto space-y-4 custom-scrollbar flex-1">
+          <!-- Gráfica de Trading Avanzada -->
+          <div class="bg-black/40 border border-white/10 rounded-xl p-3.5 sm:p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2">
+                <h4 class="text-xs sm:text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
+                  <span>{t("sfl.modal.priceChart")}</span>
+                  <span id="modalPeriodBadge" class="text-[10px] font-mono font-bold text-emerald-400 px-1.5 py-0.2 rounded bg-emerald-500/10 border border-emerald-500/20">7D</span>
+                </h4>
+                <div id="modalHoverInfo" class="text-[11px] font-mono text-terminal-secondary hidden">
+                  <!-- Dynamically populated on hover -->
+                </div>
+              </div>
+              <div class="flex items-center gap-1 bg-black/60 border border-white/10 rounded-lg p-0.5">
+                <button type="button" onclick="window.setModalGraphPeriod('7d')" id="modalBtn7d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded bg-white/10 text-white transition-all cursor-pointer">7D</button>
+                <button type="button" onclick="window.setModalGraphPeriod('30d')" id="modalBtn30d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer">30D</button>
+                <button type="button" onclick="window.setModalGraphPeriod('180d')" id="modalBtn180d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer">180D</button>
+              </div>
+            </div>
+
+            <!-- Área del SVG de Gráfica Grande con Tooltip Interactivo -->
+            <div class="relative w-full h-56 sm:h-64 bg-[#0c1015]/90 rounded-lg border border-white/5 overflow-hidden flex items-center justify-center p-0 group/chart" id="modalChartWrapper">
+              <svg id="modalChartSvg" class="w-full h-full overflow-visible" viewBox="0 0 700 240" preserveAspectRatio="none">
+                <!-- Dynamic SVG Chart Content -->
+              </svg>
+              <!-- Crosshair vertical -->
+              <div id="modalChartCrosshair" class="absolute top-0 bottom-0 pointer-events-none hidden border-l border-dashed border-white/40 z-10"></div>
+              <!-- Floating Tooltip -->
+              <div id="modalChartTooltip" class="absolute pointer-events-none hidden bg-[#0c1015] border border-white/20 text-white px-2.5 py-1.5 rounded-lg shadow-2xl text-xs font-mono z-20 whitespace-nowrap"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -895,6 +1035,22 @@ const t = useTranslations(lang)
     tDashMcapTitle: t("sfl.dashboard.mcap.title"),
     tDashMcapTooltipTitle: t("sfl.dashboard.mcap.tooltip.title"),
     tDashMcapTooltipDesc: t("sfl.dashboard.mcap.tooltip.desc"),
+    tModalTradingTitle: t("sfl.modal.tradingTitle"),
+    tModalFloorPrice: t("sfl.modal.floorPrice"),
+    tModalLastSale: t("sfl.modal.lastSale"),
+    tModalVolume7d: t("sfl.modal.volume7d"),
+    tModalChange24h: t("sfl.modal.change24h"),
+    tModalListings: t("sfl.modal.listings"),
+    tModalPriceChart: t("sfl.modal.priceChart"),
+    tModalNoListings: t("sfl.modal.noListings"),
+    tModalViewOpenSea: t("sfl.modal.viewOpenSea"),
+    tModalClose: t("sfl.modal.close"),
+    tModalSeller: t("sfl.modal.seller"),
+    tModalOrders: t("sfl.modal.orders"),
+    tModalSupply: t("sfl.modal.supply"),
+    tModalLive: t("sfl.modal.live"),
+    tModalLoading: t("sfl.modal.loading"),
+    tModalViewChart: t("sfl.modal.viewChart"),
   }}
 >
   const searchInput = document.getElementById("searchInput")
@@ -909,6 +1065,9 @@ const t = useTranslations(lang)
 
   const getItemImageSrc = (item) => {
     if (!item) return "/img/sunflowerland/123/bear.png"
+    if (item.category === "buds") {
+      return item.image || (item.budId ? `https://buds.sunflower-land.com/nfts/${item.budId}.gif` : "/img/sunflowerland/123/bud.png")
+    }
     let basePath = "/img/sunflowerland/"
     if (item.category === "powerups") {
       return encodeURI(basePath + "powerups/" + (item.isWearable ? "wearables/" : "") + (item.image || item.name + ".png"))
@@ -983,7 +1142,79 @@ const t = useTranslations(lang)
   window.currentSort = { column: "trades7d", direction: "desc" }
   window.isUserSorted = false
 
-  window.handleCategory = function (category) {
+  window.__budsLoaded = false
+  window.__budsLoading = false
+
+  window.loadBudsData = async function () {
+    if (window.__budsLoaded || window.__budsLoading) return
+    window.__budsLoading = true
+
+    const tableBody = document.getElementById("tableBody")
+    if (currentCategory === "buds" && tableBody) {
+      tableBody.innerHTML = `
+        <div class="py-20 text-center flex flex-col items-center justify-center gap-3">
+          <svg class="w-8 h-8 text-cyan-400 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span class="text-xs font-mono text-cyan-400 tracking-wider uppercase font-bold">${clientLang === "es" ? "Cargando catálogo Buds NFT (678 items)..." : "Loading Buds NFT catalog (678 items)..."}</span>
+        </div>
+      `
+    }
+
+    try {
+      const cacheBuster = Math.floor(Date.now() / (5 * 60 * 1000))
+      const response = await fetch(`/api/sfl_buds.json?v=${cacheBuster}`)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      const budsJson = await response.json()
+
+      if (budsJson && budsJson.items) {
+        const budsList = Object.values(budsJson.items).reduce((acc, data) => {
+          const parts = data.key.split("-")
+          if (parts.length >= 2 && parts[0] === "buds") {
+            const id = parts[1]
+            acc.push({
+              ...data,
+              name: `Bud #${id}`,
+              budId: id,
+              image: `https://buds.sunflower-land.com/nfts/${id}.gif`,
+              supply: 1,
+              trades7d: data.trades7d,
+              category: "buds",
+              isWearable: false,
+            })
+          }
+          return acc
+        }, [])
+
+        budsList.forEach((item) => {
+          if (item.currentPrice > 0 && item.history) {
+            ["sparkline7d", "sparkline30d", "sparkline180d"].forEach((key) => {
+              if (Array.isArray(item.history[key]) && item.history[key].length > 0) {
+                item.history[key][item.history[key].length - 1] = item.currentPrice
+              }
+            })
+          }
+        })
+
+        const existingKeys = new Set(marketData.map((m) => m.key))
+        budsList.forEach((b) => {
+          if (!existingKeys.has(b.key)) {
+            marketData.push(b)
+          }
+        })
+
+        window.__budsLoaded = true
+      }
+    } catch (err) {
+      console.error("Error al cargar sfl_buds.json:", err)
+    } finally {
+      window.__budsLoading = false
+      renderTable(searchInput ? searchInput.value : "")
+    }
+  }
+
+  window.handleCategory = async function (category) {
     currentCategory = category
     currentSubCategories = ["collectibles", "wearables"]
 
@@ -1002,7 +1233,6 @@ const t = useTranslations(lang)
       }
     }
 
-
     document.querySelectorAll(".category-btn").forEach((btn) => {
       if (btn.dataset.category === category) {
         btn.className =
@@ -1012,6 +1242,11 @@ const t = useTranslations(lang)
           "category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
       }
     })
+
+    if (category === "buds" && !window.__budsLoaded) {
+      await window.loadBudsData()
+      return
+    }
 
     renderTable(searchInput ? searchInput.value : "")
   }
@@ -1437,7 +1672,7 @@ const t = useTranslations(lang)
         powerups: { vol: 0, sales: 0, label: "PWR", name: tDashCatPowerups, icon: "/img/sunflowerland/123/energy.png" },
         resources: { vol: 0, sales: 0, label: "RES", name: tDashCatResources, icon: "/img/sunflowerland/Eggplant.png" },
         cosmetics: { vol: 0, sales: 0, label: "COSM", name: tDashCatCosmetics, icon: "/img/sunflowerland/123/bear.png" },
-        buds: { vol: 0, sales: 0, label: "BUDS", name: "Buds" },
+        buds: { vol: 0, sales: 0, label: "BUDS", name: "Buds", icon: "/img/sunflowerland/123/bud.png" },
         pets: { vol: 0, sales: 0, label: "PETS", name: "Pets" }
       }
 
@@ -1451,8 +1686,8 @@ const t = useTranslations(lang)
         }
       })
 
-      const maxVol = Math.max(catData.powerups.vol, catData.resources.vol, catData.cosmetics.vol, 1)
-      const maxSales = Math.max(catData.powerups.sales, catData.resources.sales, catData.cosmetics.sales, 1)
+      const maxVol = Math.max(catData.powerups.vol, catData.resources.vol, catData.cosmetics.vol, catData.buds.vol, 1)
+      const maxSales = Math.max(catData.powerups.sales, catData.resources.sales, catData.cosmetics.sales, catData.buds.sales, 1)
       
       const renderBar = (catKey, isVol, isMuted, alignClass) => {
         const d = catData[catKey]
@@ -1485,7 +1720,7 @@ const t = useTranslations(lang)
       
       const renderGroup = (catKey, volMuted, mcMuted, index) => {
          const cat = catData[catKey];
-         const iconHtml = cat.icon ? `<img src="${cat.icon}" class="w-[11px] h-[11px] object-contain opacity-80" />` : '';
+         const iconHtml = cat.icon ? `<img src="${cat.icon}" class="w-[11px] h-[11px] object-contain opacity-80 pixelated" />` : '';
          const alignClass = index === 0 ? "left-[-8px]" : index === 4 ? "right-[-8px]" : "left-1/2 -translate-x-1/2"
          
          return `
@@ -1531,7 +1766,7 @@ const t = useTranslations(lang)
               ${renderGroup('resources', false, false, 0)}
               ${renderGroup('powerups', false, false, 1)}
               ${renderGroup('cosmetics', false, false, 2)}
-              ${renderGroup('buds', true, true, 3)}
+              ${renderGroup('buds', false, false, 3)}
               ${renderGroup('pets', true, true, 4)}
            </div>
         </div>
@@ -1608,7 +1843,7 @@ const t = useTranslations(lang)
                       };
                       const iconHTML = c === 'USD'
                          ? '<span class="text-emerald-400 font-bold text-[10px] leading-none">$</span>'
-                         : `<img src="${icons[c]}" alt="${c}" class="w-full h-full object-contain drop-shadow-sm ${c === 'FLOWER' ? 'rounded-full' : ''}" onerror="this.outerHTML='<span class=\\'text-emerald-400 font-bold text-[10px]\\'>$</span>'" />`;
+                         : `<img src="${icons[c]}" alt="${c}" class="w-full h-full object-contain drop-shadow-sm ${c === 'FLOWER' ? 'rounded-full' : 'pixelated'}" onerror="this.outerHTML='<span class=\\'text-emerald-400 font-bold text-[10px]\\'>$</span>'" />`;
                       return `
                       <label class="flex items-center gap-1.5 cursor-pointer group h-[14px]">
                          <input type="radio" name="calcCurr" value="${c}" ${c === currentCurr ? 'checked' : ''} class="hidden peer" onchange="window.updateCalc()" />
@@ -1635,7 +1870,7 @@ const t = useTranslations(lang)
              
              <div class="w-[62%] flex flex-col h-full pl-0.5">
                 <div class="w-full mb-1.5 h-[22px] bg-[#0c1015] border border-white/10 rounded px-2 shadow-inner flex items-center justify-center gap-1.5 shrink-0" id="seasonBar">
-                   <img id="seasonImg" src="" class="w-[14px] h-[14px] object-contain drop-shadow-sm" />
+                   <img id="seasonImg" src="" class="w-[14px] h-[14px] object-contain drop-shadow-sm pixelated" />
                    <span id="seasonText" class="text-[10px] font-bold uppercase tracking-wider mt-[1px] leading-none"></span>
                 </div>
                 <div class="w-full flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-1" id="calcOutputs">
@@ -1802,10 +2037,12 @@ const t = useTranslations(lang)
        const topResG = getTop("resources", true);
        const topPwrG = getTop("powerups", true);
        const topCosmG = getTop("cosmetics", true);
+       const topBudsG = getTop("buds", true);
        
        const topResL = getTop("resources", false);
        const topPwrL = getTop("powerups", false);
        const topCosmL = getTop("cosmetics", false);
+       const topBudsL = getTop("buds", false);
 
        const renderRow = (label, topItems) => {
           if (!topItems || topItems.length === 0) {
@@ -1830,7 +2067,7 @@ const t = useTranslations(lang)
               return `
                  <div class="flex items-center gap-[3px] cursor-pointer group hover:bg-white/[0.05] rounded px-[3px] py-[2px] transition-colors" data-item="${safeItemNameForHtml}" onclick="window.scrollToItem(this.dataset.item, event)" title="${safeItemNameForHtml}">
                     <div class="w-[18px] h-[18px] rounded bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden shrink-0 shadow-inner group-hover:border-white/10 transition-colors">
-                       <img src="${itemImgSrc}" class="w-[85%] h-[85%] object-contain drop-shadow-sm" onerror="this.src='/img/sunflowerland/123/bear.png'" />
+                       <img src="${itemImgSrc}" class="w-[85%] h-[85%] object-contain drop-shadow-sm pixelated" onerror="this.src='/img/sunflowerland/123/bear.png'" />
                     </div>
                     <span class="text-[9px] font-mono font-bold ${changeColor}">${changeSign}${topItem.changeVal.toFixed(1)}%</span>
                  </div>
@@ -1933,14 +2170,14 @@ const t = useTranslations(lang)
                 ${renderRow(tDashCatResources, topResG)}
                 ${renderRow(tDashCatPowerups, topPwrG)}
                 ${renderRow(tDashCatCosmetics, topCosmG)}
-                ${renderRow('Buds', null)}
+                ${renderRow('Buds', topBudsG)}
                 ${renderRow('Pets', null)}
              </div>
              <div id="slideLosers" class="flex-1 flex flex-col justify-between relative z-20 overflow-hidden w-full shrink-0 hidden">
                 ${renderRow(tDashCatResources, topResL)}
                 ${renderRow(tDashCatPowerups, topPwrL)}
                 ${renderRow(tDashCatCosmetics, topCosmL)}
-                ${renderRow('Buds', null)}
+                ${renderRow('Buds', topBudsL)}
                 ${renderRow('Pets', null)}
              </div>
           </div>
@@ -1983,7 +2220,7 @@ const t = useTranslations(lang)
                        '<!-- Fila NFT -->' +
                        '<div class="flex items-center gap-1.5">' +
                           '<div class="w-6 h-6 rounded bg-terminal-dark border border-white/5 flex items-center justify-center shrink-0 drop-shadow-md">' +
-                             '<img src="' + itemImgSrc + '" class="max-w-[80%] max-h-[80%] object-contain" onerror="this.src=\'/img/sunflowerland/123/bear.png\'" />' +
+                             '<img src="' + itemImgSrc + '" class="max-w-[80%] max-h-[80%] object-contain pixelated" onerror="this.src=\'/img/sunflowerland/123/bear.png\'" />' +
                           '</div>' +
                           '<span class="text-xs font-bold text-white/90 truncate max-w-[120px] sm:max-w-[150px] tracking-tight">' + itemName + '</span>' +
                        '</div>' +
@@ -2223,7 +2460,7 @@ const t = useTranslations(lang)
       return `
         <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" data-item="${safeItemName}" onclick="window.scrollToItem(this.dataset.item, event)" title="${safeItemName}">
           <div class="w-8 h-8 lg:w-9 lg:h-9 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
-            <img src="${imgSrc}" class="${imgSize} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            <img src="${imgSrc}" class="${imgSize} object-contain drop-shadow-sm pixelated" onerror="this.style.display='none'" />
           </div>
           <div class="flex flex-col min-w-0">
             <span class="text-white font-bold text-xs lg:text-sm leading-tight truncate">${item.name}</span>
@@ -2367,7 +2604,7 @@ const t = useTranslations(lang)
             const safeItemName = item.name.replace(/"/g, "&quot;")
             return `
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" data-item="${safeItemName}" onclick="window.scrollToItem(this.dataset.item, event)">
-            <img src="${imgSrc}" class="${isNotRes ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm" onerror="this.style.display='none'" />
+            <img src="${imgSrc}" class="${isNotRes ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm pixelated" onerror="this.style.display='none'" />
             <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-[9px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-white/20">
               ${item.name} (${item.ratio.toFixed(1)}% ${slide.tooltipSuffix})
             </div>
@@ -2683,6 +2920,7 @@ const t = useTranslations(lang)
 
     items.forEach((item) => {
       const isResources = item.category === "resources"
+      const isBuds = item.category === "buds"
       const row = document.createElement("div")
       row._itemData = item
       row.className =
@@ -2706,10 +2944,10 @@ const t = useTranslations(lang)
 
       row.innerHTML = `
         <!-- Card Header (Móvil) / Columna 1 (Desktop) -->
-        <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full cursor-pointer lg:cursor-default mobile-row-toggle">
+        <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full cursor-pointer mobile-row-toggle" onclick="if (window.innerWidth >= 1024) { window.openTradingModal(this.closest('[data-row-id]')._itemData); }">
           <div class="flex items-center gap-4 lg:gap-3">
-            <div class="relative w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-2 lg:p-1 shrink-0">
-              <img src="${getItemImageSrc(item)}" alt="${item.name}" class="${item.category !== "resources" ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm" onerror="if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = '/img/sunflowerland/' + encodeURIComponent(this.alt.toLowerCase().replace(/\\s+/g, '_') + '.webp'); } else { this.onerror=null; this.parentElement.innerHTML='📦'; }" />
+            <div class="relative w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border ${isBuds ? 'border-cyan-500/30 p-0 overflow-hidden shadow-[0_0_8px_rgba(6,182,212,0.12)]' : 'border-terminal-muted/20 p-2 lg:p-1 overflow-hidden'} flex items-center justify-center shrink-0">
+              <img src="${getItemImageSrc(item)}" alt="${item.name}" data-category="${item.category}" class="${isBuds ? 'w-full h-full object-contain scale-[2.2] group-hover:scale-[2.35] transition-transform duration-200' : (item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]')} object-contain drop-shadow-sm pixelated" onerror="if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = this.dataset.category === 'buds' ? '/img/sunflowerland/123/bud.png' : '/img/sunflowerland/' + encodeURIComponent(this.alt.toLowerCase().replace(/\\s+/g, '_') + '.webp'); } else { this.onerror=null; this.src = '/img/sunflowerland/123/bud.png'; }" />
               ${newBadgeHTML}
             </div>
             <div>
@@ -2722,8 +2960,10 @@ const t = useTranslations(lang)
                           ? "bg-amber-500/10 text-amber-500/80 border border-amber-500/20"
                           : item.category === "cosmetics"
                             ? "bg-purple-500/10 text-purple-400/80 border border-purple-500/20"
-                            : "bg-emerald-500/10 text-emerald-500/80 border border-emerald-500/20"
-                      }">${item.category === "powerups" ? "Power Up" : item.category === "cosmetics" ? "Cosmetic" : "Resource"}</span>`
+                            : item.category === "buds"
+                              ? "bg-cyan-500/10 text-cyan-400/80 border border-cyan-500/20"
+                              : "bg-emerald-500/10 text-emerald-500/80 border border-emerald-500/20"
+                      }">${item.category === "powerups" ? "Power Up" : item.category === "cosmetics" ? "Cosmetic" : item.category === "buds" ? "Buds" : "Resource"}</span>`
                     : ""
                 }
               </div>
@@ -2794,19 +3034,31 @@ const t = useTranslations(lang)
                     <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Market Cap</div>
                     <span class="text-[11px] font-medium font-sans text-white/30 italic">${clientLang === 'es' ? 'No cumple' : 'Uncapped'}</span>
                   </div>`
-                : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
+                : isBuds
+                  ? getMarketcapColumnHTML("Floor Price", item.currentPrice)
+                  : getMarketcapColumnHTML(tColMarketcap, (item.supply || 0) * item.currentPrice)}
               ${getVolColumnHTML("Vol. 7D", item)}
               ${isResources
                 ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-3" title="${clientLang === 'es' ? 'Recurso ilimitado, se genera y consume dentro del juego' : 'Unlimited resource, generated and consumed in-game'}">
                     <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Circ. Supply</div>
                     <span class="text-[15px] font-medium text-white/30">∞</span>
                   </div>`
-                : getSupplyColumnHTML("Circ. Supply", item.supply)}
+                : isBuds
+                  ? getSupplyColumnHTML("Circ. Supply", 1)
+                  : getSupplyColumnHTML("Circ. Supply", item.supply)}
               
               <div class="lg:hidden contents mobile-sparklines" data-rendered="false">
               </div>
+
+              <!-- Botón Móvil para abrir Modal de Trading -->
+              <div class="col-span-2 lg:hidden pt-2 pb-1">
+                <button type="button" onclick="event.stopPropagation(); window.openTradingModal(this.closest('[data-row-id]')._itemData);" class="w-full py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+                  <span>${tModalViewChart}</span>
+                </button>
+              </div>
               
-              <div class="hidden lg:block w-full h-full">
+              <div class="hidden lg:block w-full h-full cursor-pointer hover:opacity-90 transition-opacity" onclick="window.openTradingModal(this.closest('[data-row-id]')._itemData)" title="${tModalViewChart}">
                  <div class="desktop-graph-7d w-full h-full ${window.activeGraphPeriod === '7d' ? '' : 'hidden'}">${getCardColumnHTML(tCol7d, calculateChange(item.currentPrice, item.history["7d"]), item.history.sparkline7d, 8, false, item.currentPrice)}</div>
                  <div class="desktop-graph-30d w-full h-full ${window.activeGraphPeriod === '30d' ? '' : 'hidden'}">${getCardColumnHTML(tCol30d, calculateChange(item.currentPrice, item.history["30d"]), item.history.sparkline30d, 31, false, item.currentPrice)}</div>
                  <div class="desktop-graph-180d w-full h-full ${window.activeGraphPeriod === '180d' ? '' : 'hidden'}">${getCardColumnHTML(tCol180d, calculateChange(item.currentPrice, item.history["180d"]), item.history.sparkline180d, 181, false, item.currentPrice)}</div>
@@ -3088,6 +3340,17 @@ const t = useTranslations(lang)
                 category: "cosmetics",
                 isWearable: true,
               })
+            } else if (type === "buds") {
+              acc.push({
+                ...data,
+                name: `Bud #${id}`,
+                budId: id,
+                image: `https://buds.sunflower-land.com/nfts/${id}.gif`,
+                supply: 1,
+                trades7d: data.trades7d,
+                category: "buds",
+                isWearable: false,
+              })
             }
           }
           return acc
@@ -3201,6 +3464,383 @@ const t = useTranslations(lang)
     }
   }
 
+  // ==========================================
+  // MODAL CENTRAL PRO DE TRADING
+  // ==========================================
+  let activeModalItem = null;
+  let activeModalPeriod = "7d";
+  let activeModalChartData = null;
+
+  window.openTradingModal = (item) => {
+    if (!item) return;
+    activeModalItem = item;
+    activeModalPeriod = "7d";
+
+    const modal = document.getElementById("tradingModal");
+    if (!modal) return;
+
+    // 1. Cabecera
+    const imgEl = document.getElementById("modalItemImg");
+    const nameEl = document.getElementById("modalItemName");
+    const badgeEl = document.getElementById("modalItemCategoryBadge");
+    const linkEl = document.getElementById("modalExternalLink");
+    const subTitleEl = document.getElementById("modalItemSubtitle");
+
+    if (imgEl) {
+      imgEl.src = getItemImageSrc(item);
+      imgEl.alt = item.name;
+      const imgContainer = document.getElementById("modalItemImgContainer");
+      imgEl.style.imageRendering = "pixelated";
+      if (item.category === "buds") {
+        imgEl.style.transform = "scale(2.25)";
+        if (imgContainer) {
+          imgContainer.className = "relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-black/80 border border-cyan-500/40 flex items-center justify-center p-0 overflow-hidden shrink-0 shadow-[0_0_20px_rgba(6,182,212,0.2)]";
+        }
+      } else {
+        imgEl.style.transform = "none";
+        if (imgContainer) {
+          imgContainer.className = "relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center p-1.5 overflow-hidden shrink-0 shadow-inner";
+        }
+      }
+    }
+    if (nameEl) nameEl.textContent = item.name;
+    if (badgeEl) {
+      badgeEl.textContent = item.category === "buds" ? "Buds NFT" : item.category === "powerups" ? "Power Up" : item.category === "cosmetics" ? "Cosmetic" : "Resource";
+      badgeEl.className = `text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase shrink-0 ${item.category === "buds" ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"}`;
+    }
+    if (subTitleEl) {
+      subTitleEl.textContent = item.category === "buds" ? `NFT #${item.budId || item.name.replace(/\D/g, '')}` : "Sunflower Land P2P";
+    }
+    if (linkEl) {
+      const linkTextEl = document.getElementById("modalExternalLinkText");
+      if (item.category === "buds") {
+        const bId = item.budId || item.name.replace(/\D/g, '');
+        linkEl.href = `https://opensea.io/assets/matic/0x78a0cea8f323ff80985c5f9d1f9de18bb9e35996/${bId}`;
+        linkEl.classList.remove("hidden");
+        if (linkTextEl) linkTextEl.textContent = "OpenSea";
+      } else {
+        linkEl.href = `https://sunflower-land.com/play/#/marketplace`;
+        linkEl.classList.remove("hidden");
+        if (linkTextEl) linkTextEl.textContent = "SFL Market";
+      }
+    }
+
+    // 2. KPIs
+    const floorPriceEl = document.getElementById("modalFloorPrice");
+    const floorUsdEl = document.getElementById("modalFloorUsd");
+    const change24hEl = document.getElementById("modalChange24h");
+    const pastPriceEl = document.getElementById("modalPastPrice");
+    const vol7dEl = document.getElementById("modalVolume7d");
+    const vol7dUsdEl = document.getElementById("modalVolume7dUsd");
+    const tradesCountEl = document.getElementById("modalTradesCount");
+    const supplyEl = document.getElementById("modalSupply");
+
+    const sflUsd = window.sflUsdPrice || 0.085;
+    if (floorPriceEl) floorPriceEl.textContent = item.currentPrice > 0 ? formatNumber(item.currentPrice, 2) : "--";
+    if (floorUsdEl) floorUsdEl.textContent = item.currentPrice > 0 ? `~$${formatNumber(item.currentPrice * sflUsd, 2)}` : "$0.00";
+
+    const chg24 = calculateChange(item.currentPrice, item.history ? item.history["1d"] : null);
+    if (change24hEl) {
+      if (chg24.isPositive === null) {
+        change24hEl.textContent = "-";
+        change24hEl.className = "text-base sm:text-lg font-bold font-mono text-white/40";
+      } else {
+        change24hEl.textContent = chg24.text;
+        change24hEl.className = `text-base sm:text-lg font-bold font-mono ${chg24.isPositive ? "text-emerald-400" : "text-red-400"}`;
+      }
+    }
+    if (pastPriceEl) {
+      pastPriceEl.textContent = chg24.pastPrice ? `Prev: ${formatNumber(chg24.pastPrice, 2)}` : "Prev: --";
+    }
+
+    if (vol7dEl) vol7dEl.textContent = item.volume7d ? formatNumber(item.volume7d, 0) : "0";
+    if (vol7dUsdEl) vol7dUsdEl.textContent = item.volume7dUsd ? `~$${formatNumber(item.volume7dUsd, 0)}` : (item.volume7d ? `~$${formatNumber(item.volume7d * sflUsd, 0)}` : "$0");
+
+    if (tradesCountEl) tradesCountEl.textContent = item.trades7d !== undefined ? formatNumber(item.trades7d, 0) : (item.trades || 0);
+    if (supplyEl) supplyEl.textContent = item.category === "buds" ? `${tModalSupply}: 1 NFT` : `${tModalSupply}: ${item.supply !== undefined ? formatNumber(item.supply, 0) : "∞"}`;
+
+    // 3. Render Chart
+    window.setModalGraphPeriod("7d");
+
+    // 4. Mostrar Modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    document.body.style.overflow = "hidden";
+  };
+
+  window.closeTradingModal = () => {
+    const modal = document.getElementById("tradingModal");
+    if (!modal) return;
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    document.body.style.overflow = "";
+    activeModalItem = null;
+  };
+
+  window.setModalGraphPeriod = (period) => {
+    activeModalPeriod = period;
+    document.querySelectorAll(".modal-period-btn").forEach(b => {
+      b.classList.remove("bg-white/10", "text-white");
+      b.classList.add("text-white/40");
+    });
+    const btn = document.getElementById(`modalBtn${period}`);
+    if (btn) {
+      btn.classList.add("bg-white/10", "text-white");
+      btn.classList.remove("text-white/40");
+    }
+    const badge = document.getElementById("modalPeriodBadge");
+    if (badge) badge.textContent = period.toUpperCase();
+
+    if (activeModalItem && activeModalItem.history) {
+      const sparkKey = `sparkline${period}`;
+      const rawPoints = activeModalItem.history[sparkKey] || [];
+      renderModalChart(rawPoints, period, activeModalItem.currentPrice);
+    }
+  };
+
+  function renderModalChart(rawPoints, period, currentPrice) {
+    const svg = document.getElementById("modalChartSvg");
+    const wrapper = document.getElementById("modalChartWrapper");
+    const tooltip = document.getElementById("modalChartTooltip");
+    const crosshair = document.getElementById("modalChartCrosshair");
+    if (!svg || !wrapper) return;
+
+    // Filtrar puntos válidos
+    let points = Array.isArray(rawPoints) ? rawPoints.map(p => (p !== null && p !== undefined ? p : null)) : [];
+    if (points.length === 0 && currentPrice > 0) points = [currentPrice, currentPrice];
+    
+    // Fill gaps
+    let lastVal = currentPrice || 1;
+    for (let i = 0; i < points.length; i++) {
+      if (points[i] === null) points[i] = lastVal;
+      else lastVal = points[i];
+    }
+    if (currentPrice > 0 && points.length > 0) {
+      points[points.length - 1] = currentPrice;
+    }
+
+    activeModalChartData = points;
+
+    const width = 700;
+    const height = 240;
+    const padTop = 24;
+    const padBottom = 24;
+    const padLeft = 16;
+    const padRight = 30;
+
+    const min = Math.min(...points);
+    const max = Math.max(...points);
+    const range = (max - min) || (max * 0.1) || 1;
+
+    const getX = (i) => padLeft + (i / (points.length - 1 || 1)) * (width - padLeft - padRight);
+    const getY = (v) => padTop + (1 - (v - min) / range) * (height - padTop - padBottom);
+
+    const isPositive = points[points.length - 1] >= points[0];
+    const strokeColor = isPositive ? "#10b981" : "#ef4444";
+    const fillGradientId = `modalGrad_${isPositive ? "green" : "red"}`;
+
+    // Path del trazo principal
+    let dLine = `M ${getX(0)} ${getY(points[0])}`;
+    for (let i = 1; i < points.length; i++) {
+      dLine += ` L ${getX(i)} ${getY(points[i])}`;
+    }
+
+    // Path del área sombreada con degradado
+    const dArea = `${dLine} L ${getX(points.length - 1)} ${height - padBottom} L ${getX(0)} ${height - padBottom} Z`;
+
+    const midPrice = min + range / 2;
+    const sflUsd = window.sflUsdPrice || 0.085;
+
+    svg.innerHTML = `
+      <defs>
+        <linearGradient id="${fillGradientId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.3" />
+          <stop offset="85%" stop-color="${strokeColor}" stop-opacity="0.02" />
+          <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Guías horizontales y precios de escala -->
+      <line x1="${padLeft}" y1="${getY(max)}" x2="${width - padRight}" y2="${getY(max)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
+      <text x="${width - padRight}" y="${getY(max) - 6}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatNumber(max, 1)}</text>
+
+      <line x1="${padLeft}" y1="${getY(midPrice)}" x2="${width - padRight}" y2="${getY(midPrice)}" stroke="rgba(255,255,255,0.04)" stroke-dasharray="3,3" />
+      <text x="${width - padRight}" y="${getY(midPrice) - 6}" fill="rgba(255,255,255,0.25)" font-size="10" font-family="monospace" text-anchor="end">${formatNumber(midPrice, 1)}</text>
+
+      <line x1="${padLeft}" y1="${getY(min)}" x2="${width - padRight}" y2="${getY(min)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
+      <text x="${width - padRight}" y="${getY(min) + 14}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatNumber(min, 1)}</text>
+
+      <!-- Área y Trazo -->
+      <path d="${dArea}" fill="url(#${fillGradientId})" />
+      <path d="${dLine}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+
+      <!-- Punto final actual -->
+      <circle cx="${getX(points.length - 1)}" cy="${getY(points[points.length - 1])}" r="4.5" fill="${strokeColor}" stroke="#141414" stroke-width="2" />
+
+      <!-- Punto interactivo activo en hover -->
+      <circle id="modalHoverDot" cx="0" cy="0" r="5" fill="#ffffff" stroke="${strokeColor}" stroke-width="2.5" class="hidden pointer-events-none" />
+    `;
+
+    // Interacción MouseMove con Crosshair y Tooltip
+    wrapper.onmousemove = (e) => {
+      const rect = wrapper.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const svgX = (mouseX / rect.width) * width;
+      const clampedX = Math.max(padLeft, Math.min(width - padRight, svgX));
+
+      const dataWidth = (width - padLeft - padRight) || 1;
+      const ratio = (clampedX - padLeft) / dataWidth;
+
+      const idx = Math.round(ratio * (points.length - 1));
+      const val = points[idx];
+      if (val === undefined) return;
+
+      const ptSvgX = getX(idx);
+      const ptSvgY = getY(val);
+
+      const pxX = (ptSvgX / width) * rect.width;
+      const pxY = (ptSvgY / height) * rect.height;
+
+      if (crosshair) {
+        crosshair.style.left = `${pxX}px`;
+        crosshair.classList.remove("hidden");
+      }
+
+      const hoverDot = document.getElementById("modalHoverDot");
+      if (hoverDot) {
+        hoverDot.setAttribute("cx", ptSvgX);
+        hoverDot.setAttribute("cy", ptSvgY);
+        hoverDot.setAttribute("stroke", strokeColor);
+        hoverDot.classList.remove("hidden");
+      }
+
+      if (tooltip) {
+        const usdVal = val * sflUsd;
+        const daysAgo = points.length - 1 - idx;
+        const dateLabel = daysAgo === 0 ? (clientLang === 'es' ? 'Hoy' : 'Today') : (clientLang === 'es' ? `Hace ${daysAgo}d` : `${daysAgo}d ago`);
+        
+        tooltip.innerHTML = `
+          <div class="flex items-center gap-1.5 font-bold">
+            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
+            <span class="text-white">${formatNumber(val, 2)} FLOWER</span>
+          </div>
+          <div class="text-[10px] text-white/50 mt-0.5 flex justify-between gap-3">
+            <span>~$${formatNumber(usdVal, 2)}</span>
+            <span class="text-cyan-400 font-bold">${dateLabel}</span>
+          </div>
+        `;
+        
+        // Posicionar tooltip asegurando que nunca desborde
+        let leftPos = pxX + 15;
+        if (leftPos + 150 > rect.width) {
+          leftPos = pxX - 160;
+        }
+        tooltip.style.left = `${Math.max(10, Math.min(rect.width - 150, leftPos))}px`;
+        tooltip.style.top = `${Math.max(10, Math.min(rect.height - 65, pxY - 35))}px`;
+        tooltip.classList.remove("hidden");
+      }
+    };
+
+    wrapper.onmouseleave = () => {
+      if (crosshair) crosshair.classList.add("hidden");
+      if (tooltip) tooltip.classList.add("hidden");
+      const hoverDot = document.getElementById("modalHoverDot");
+      if (hoverDot) hoverDot.classList.add("hidden");
+    };
+  }
+
+  window.fetchModalListings = async (item) => {
+    const container = document.getElementById("modalListingsContainer");
+    const countBadge = document.getElementById("modalListingsCountBadge");
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="py-6 flex flex-col items-center justify-center text-center">
+        <svg class="w-6 h-6 text-emerald-400 animate-spin mb-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+        <span class="text-xs font-mono text-terminal-muted">${tModalLoading}</span>
+      </div>
+    `;
+
+    try {
+      const collection = item.category === "buds" ? "buds" : item.category === "wearables" ? "wearables" : "collectibles";
+      const id = item.budId || (item.key ? item.key.split("-")[1] : "0");
+      const url = `https://api.sunflower-land.com/community/data?type=tradeable&collection=${collection}&id=${id}`;
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+
+      if (json && json.data) {
+        const data = json.data;
+        const listings = Array.isArray(data.listings) ? data.listings : [];
+        if (countBadge) countBadge.textContent = listings.length;
+
+        if (listings.length === 0) {
+          container.innerHTML = `
+            <div class="py-6 px-4 rounded-xl bg-white/[0.01] border border-dashed border-white/10 text-center">
+              <span class="text-xs font-mono text-terminal-muted">${tModalNoListings}</span>
+              ${data.floor ? `<div class="mt-2 text-xs font-mono text-white/50">Floor detectado: <strong class="text-emerald-400">${data.floor} FLOWER</strong></div>` : ''}
+            </div>
+          `;
+        } else {
+          const sflUsd = window.sflUsdPrice || 0.085;
+          container.innerHTML = listings.map(l => {
+            const username = l.listedBy?.username || "Granjero";
+            const bumpkinUri = l.listedBy?.bumpkinUri;
+            const avatar = bumpkinUri ? `https://animations.sunflower-land.com/bumpkin_image/${bumpkinUri}/100` : "/img/sunflowerland/123/bear.png";
+            const dateStr = l.listedAt ? new Date(l.listedAt).toLocaleDateString(clientLang === 'es' ? 'es-ES' : 'en-US', { day: '2-digit', month: 'short' }) : "--";
+            const price = l.sfl || 0;
+            const priceUsd = price * sflUsd;
+
+            return `
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full bg-black/50 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                    <img src="${avatar}" alt="${username}" class="w-full h-full object-cover object-top" onerror="this.src='/img/sunflowerland/123/bear.png'" />
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-white block leading-tight">${username}</span>
+                    <span class="text-[9px] font-mono text-white/40">${tModalSeller} • ${dateStr}</span>
+                  </div>
+                </div>
+                <div class="flex flex-col items-end">
+                  <div class="flex items-center gap-1.5">
+                    <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
+                    <span class="text-xs sm:text-sm font-bold text-emerald-400 font-mono">${formatNumber(price, 0)} FLOWER</span>
+                  </div>
+                  <span class="text-[9.5px] font-mono text-white/40 mt-0.5">~$${formatNumber(priceUsd, 2)}</span>
+                </div>
+              </div>
+            `;
+          }).join("");
+        }
+      } else {
+        throw new Error("No data in response");
+      }
+    } catch (err) {
+      if (countBadge) countBadge.textContent = "0";
+      const sflUsd = window.sflUsdPrice || 0.085;
+      container.innerHTML = `
+        <div class="py-4 px-4 rounded-xl bg-white/[0.01] border border-white/5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-white/70 font-sans">Floor de mercado actual</span>
+          </div>
+          <div class="flex items-center gap-1.5 font-mono">
+            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
+            <span class="text-xs font-bold text-emerald-400">${item.currentPrice > 0 ? formatNumber(item.currentPrice, 2) : "--"} FLOWER</span>
+            <span class="text-[10px] text-white/40">(~$${formatNumber((item.currentPrice || 0) * sflUsd, 2)})</span>
+          </div>
+        </div>
+      `;
+    }
+  };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      window.closeTradingModal();
+    }
+  });
+
   // Prevenir inicializaciones dobles en Astro
   const init = () => {
     // Evitar que el navegador salte al fondo durante las recargas asíncronas
@@ -3280,6 +3920,14 @@ const t = useTranslations(lang)
       let debounceTimeout
       searchInput.addEventListener("input", (e) => {
         const val = e.target.value
+
+        // Si el usuario busca "bud" o números de ID, cargar buds bajo demanda
+        if (val.trim().length > 0 && !window.__budsLoaded) {
+          const lowerVal = val.toLowerCase()
+          if (lowerVal.includes("bud") || /^\d+$/.test(val.trim()) || val.includes("#")) {
+            window.loadBudsData()
+          }
+        }
 
         clearTimeout(debounceTimeout)
         debounceTimeout = setTimeout(() => {

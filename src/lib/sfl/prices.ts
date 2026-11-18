@@ -18,6 +18,18 @@ import {
   OFFICIAL_COINS_PER_FLOWER,
   type MaterialPriceResolver,
   type AgedFishCostBreakdown,
+  isFish,
+  isCrustacean,
+  isFishMarketBait,
+  getFishData,
+  getCrustaceanData,
+  getFishMarketData,
+  FREE_COMPOST_BAITS,
+  getAllFishCatchCosts,
+  getAllCrustaceanCatchCosts,
+  type FishCatchCostBreakdown,
+  type CrustaceanCatchCostBreakdown,
+  type FishMarketBaitCostBreakdown,
 } from "./constants"
 import { getRecipe, getAllRecipes, type UnifiedRecipe } from "./recipes"
 import { jafarData } from "../../content/data/sfl/jafar_shop"
@@ -257,6 +269,260 @@ class DagCostSolver {
     const marketPriceUsd = marketPriceFlower * this.flowerPrice
     const hasMarketPrice = marketPriceFlower > 0
 
+    // 4. ¿Es un Pez Regular de Caña (fish.json)?
+    if (isFish(nameOrId)) {
+      const fishData = getFishData(nameOrId)
+      if (fishData) {
+        const rodRes = this.resolve("Rod", currentVisited)
+
+        // Cebo más económico (min Baits)
+        let bestBaitName = fishData.baits[0] || "Earthworm"
+        let bestBaitFlower = Infinity
+        let bestBaitRes: CostResolution | null = null
+
+        for (const b of fishData.baits) {
+          if (FREE_COMPOST_BAITS.has(b)) {
+            bestBaitName = b
+            bestBaitFlower = 0
+            bestBaitRes = null
+            break
+          }
+          const sub = this.resolve(b, currentVisited)
+          const cost = sub.craftCostFlower > 0 ? sub.craftCostFlower : sub.marketPriceFlower
+          if (cost < bestBaitFlower) {
+            bestBaitFlower = cost
+            bestBaitName = b
+            bestBaitRes = sub
+          }
+        }
+        if (!Number.isFinite(bestBaitFlower)) {
+          bestBaitFlower = 0
+        }
+
+        // Chum más económico (min Chum)
+        let bestChumRes: { res: CostResolution; amount: number; totalFlower: number } | null = null
+        let bestChumFlower = 0
+
+        if (fishData.chum && fishData.chum.length > 0) {
+          bestChumFlower = Infinity
+          for (const opt of fishData.chum) {
+            const sub = this.resolve(opt.item, currentVisited)
+            const unitCost = sub.craftCostFlower > 0 ? sub.craftCostFlower : sub.marketPriceFlower
+            const optTotal = unitCost * opt.amount
+            if (optTotal < bestChumFlower) {
+              bestChumFlower = optTotal
+              bestChumRes = { res: sub, amount: opt.amount, totalFlower: optTotal }
+            }
+          }
+          if (!Number.isFinite(bestChumFlower)) {
+            bestChumFlower = 0
+          }
+        }
+
+        const totalFishFlower = rodRes.craftCostFlower + bestBaitFlower + bestChumFlower
+        const totalFishUsd = totalFishFlower * this.flowerPrice
+
+        const ingredientsBreakdown: IngredientBreakdown[] = [
+          {
+            name: rodRes.name,
+            amount: 1,
+            unitPriceFlower: rodRes.craftCostFlower,
+            totalFlower: rodRes.craftCostFlower,
+            isBaseResource: false,
+          },
+        ]
+
+        const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+
+        // Aplanar materiales base de la Caña
+        for (const base of rodRes.baseMaterials) {
+          baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+        }
+
+        if (bestBaitRes && bestBaitFlower > 0) {
+          ingredientsBreakdown.push({
+            name: bestBaitRes.name,
+            amount: 1,
+            unitPriceFlower: bestBaitFlower,
+            totalFlower: bestBaitFlower,
+            isBaseResource: !bestBaitRes.isCraftable,
+          })
+          for (const base of bestBaitRes.baseMaterials) {
+            const ex = baseMaterialsMap.get(base.name)
+            if (ex) {
+              ex.amount += base.amount
+              ex.totalFlower += base.totalFlower
+            } else {
+              baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+            }
+          }
+        }
+
+        if (bestChumRes && bestChumFlower > 0) {
+          ingredientsBreakdown.push({
+            name: bestChumRes.res.name,
+            amount: bestChumRes.amount,
+            unitPriceFlower: bestChumRes.totalFlower / bestChumRes.amount,
+            totalFlower: bestChumRes.totalFlower,
+            isBaseResource: !bestChumRes.res.isCraftable,
+          })
+          if (bestChumRes.res.baseMaterials.length > 0) {
+            for (const base of bestChumRes.res.baseMaterials) {
+              const scaledAmount = base.amount * bestChumRes.amount
+              const scaledFlower = base.totalFlower * bestChumRes.amount
+              const ex = baseMaterialsMap.get(base.name)
+              if (ex) {
+                ex.amount += scaledAmount
+                ex.totalFlower += scaledFlower
+              } else {
+                baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+              }
+            }
+          } else {
+            const ex = baseMaterialsMap.get(bestChumRes.res.name)
+            if (ex) {
+              ex.amount += bestChumRes.amount
+              ex.totalFlower += bestChumRes.totalFlower
+            } else {
+              baseMaterialsMap.set(bestChumRes.res.name, {
+                amount: bestChumRes.amount,
+                totalFlower: bestChumRes.totalFlower,
+              })
+            }
+          }
+        }
+
+        const res: CostResolution = {
+          name: fishData.name,
+          id: fishData.id,
+          kind: "craftable",
+          category: "fishing",
+          yield: 1,
+          isCraftable: true,
+          craftCostFlower: totalFishFlower,
+          craftCostUsd: totalFishUsd,
+          hasMarketPrice,
+          marketPriceFlower,
+          marketPriceUsd,
+          coins: 0,
+          coinsFlower: 0,
+          ingredients: ingredientsBreakdown,
+          baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+            name: k,
+            amount: v.amount,
+            totalFlower: v.totalFlower,
+          })),
+        }
+        this.memo.set(memoKey, res)
+        return res
+      }
+    }
+
+    // 5. ¿Es un Crustáceo de Trampa (crustaceans.json)?
+    if (isCrustacean(nameOrId)) {
+      const crustData = getCrustaceanData(nameOrId)
+      if (crustData) {
+        const trapRes = this.resolve(crustData.trap, currentVisited)
+        let totalChumFlower = 0
+        const ingredientsBreakdown: IngredientBreakdown[] = [
+          {
+            name: trapRes.name,
+            amount: 1,
+            unitPriceFlower: trapRes.craftCostFlower,
+            totalFlower: trapRes.craftCostFlower,
+            isBaseResource: false,
+          },
+        ]
+
+        const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+        for (const base of trapRes.baseMaterials) {
+          baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+        }
+
+        // Chum más económico (min Chum) — son alternativas excluyentes
+        let bestChumRes: { res: CostResolution; amount: number; totalFlower: number } | null = null
+        let bestChumFlower = 0
+
+        if (crustData.chum && crustData.chum.length > 0) {
+          let minChum = Infinity
+          for (const opt of crustData.chum) {
+            const sub = this.resolve(opt.item, currentVisited)
+            const unitPrice = sub.craftCostFlower > 0 ? sub.craftCostFlower : sub.marketPriceFlower
+            const optTotal = unitPrice * opt.amount
+            if (optTotal < minChum) {
+              minChum = optTotal
+              bestChumRes = { res: sub, amount: opt.amount, totalFlower: optTotal }
+            }
+          }
+          if (Number.isFinite(minChum)) {
+            bestChumFlower = minChum
+          }
+        }
+
+        if (bestChumRes && bestChumFlower > 0) {
+          ingredientsBreakdown.push({
+            name: bestChumRes.res.name,
+            amount: bestChumRes.amount,
+            unitPriceFlower: bestChumRes.totalFlower / bestChumRes.amount,
+            totalFlower: bestChumRes.totalFlower,
+            isBaseResource: !bestChumRes.res.isCraftable,
+          })
+
+          if (bestChumRes.res.baseMaterials.length > 0) {
+            for (const base of bestChumRes.res.baseMaterials) {
+              const scaledAmount = base.amount * bestChumRes.amount
+              const scaledFlower = base.totalFlower * bestChumRes.amount
+              const ex = baseMaterialsMap.get(base.name)
+              if (ex) {
+                ex.amount += scaledAmount
+                ex.totalFlower += scaledFlower
+              } else {
+                baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+              }
+            }
+          } else {
+            const ex = baseMaterialsMap.get(bestChumRes.res.name)
+            if (ex) {
+              ex.amount += bestChumRes.amount
+              ex.totalFlower += bestChumRes.totalFlower
+            } else {
+              baseMaterialsMap.set(bestChumRes.res.name, {
+                amount: bestChumRes.amount,
+                totalFlower: bestChumRes.totalFlower,
+              })
+            }
+          }
+        }
+
+        const totalCrustFlower = trapRes.craftCostFlower + bestChumFlower
+        const totalCrustUsd = totalCrustFlower * this.flowerPrice
+
+        const res: CostResolution = {
+          name: crustData.name,
+          id: crustData.id,
+          kind: "craftable",
+          category: "fishing",
+          yield: 1,
+          isCraftable: true,
+          craftCostFlower: totalCrustFlower,
+          craftCostUsd: totalCrustUsd,
+          hasMarketPrice,
+          marketPriceFlower,
+          marketPriceUsd,
+          coins: 0,
+          coinsFlower: 0,
+          ingredients: ingredientsBreakdown,
+          baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+            name: k,
+            amount: v.amount,
+            totalFlower: v.totalFlower,
+          })),
+        }
+        this.memo.set(memoKey, res)
+        return res
+      }
+    }
+
     if (!recipe) {
       // Es un nodo terminal / Recurso Base (Wood, Salt, Gold, pez crudo, cultivo base, etc.)
       const res: CostResolution = {
@@ -276,6 +542,67 @@ class DagCostSolver {
         baseMaterials: hasMarketPrice
           ? [{ name: nameOrId, amount: 1, totalFlower: marketPriceFlower }]
           : [],
+      }
+      this.memo.set(memoKey, res)
+      return res
+    }
+
+    // 6. Cebo Canónico del Fish Market (Promedio general de las 4 estaciones Σ / 4)
+    if (recipe.category === "fish_market" && !recipe.id.includes("_")) {
+      const seasons = ["spring", "summer", "autumn", "winter"] as const
+      const seasonalResolutions: CostResolution[] = []
+      let sumSeasonalFlower = 0
+
+      for (const s of seasons) {
+        const variantId = `${recipe.id}_${s}`
+        const varRes = this.resolve(variantId, currentVisited)
+        if (varRes) {
+          seasonalResolutions.push(varRes)
+          sumSeasonalFlower += varRes.craftCostFlower
+        }
+      }
+
+      const avgCraftCostFlower =
+        seasonalResolutions.length > 0 ? sumSeasonalFlower / seasonalResolutions.length : 0
+      const avgCraftCostUsd = avgCraftCostFlower * this.flowerPrice
+
+      // Consolidar materias primas base promedio
+      const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+      for (const sRes of seasonalResolutions) {
+        for (const base of sRes.baseMaterials) {
+          const scaledAmount = base.amount / seasonalResolutions.length
+          const scaledFlower = base.totalFlower / seasonalResolutions.length
+          const ex = baseMaterialsMap.get(base.name)
+          if (ex) {
+            ex.amount += scaledAmount
+            ex.totalFlower += scaledFlower
+          } else {
+            baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+          }
+        }
+      }
+
+      const res: CostResolution = {
+        name: recipe.name,
+        id: recipe.id,
+        kind: "craftable",
+        category: "fish_market",
+        building: recipe.building,
+        yield: 1,
+        isCraftable: true,
+        craftCostFlower: avgCraftCostFlower,
+        craftCostUsd: avgCraftCostUsd,
+        hasMarketPrice,
+        marketPriceFlower,
+        marketPriceUsd,
+        coins: 0,
+        coinsFlower: 0,
+        ingredients: seasonalResolutions[0]?.ingredients || [],
+        baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+          name: k,
+          amount: v.amount,
+          totalFlower: v.totalFlower,
+        })),
       }
       this.memo.set(memoKey, res)
       return res
@@ -509,6 +836,13 @@ export function getAgedFishCost(
   const saltIng = recipe.ingredients.find((i) => i.name === "Salt")
   const saltAmount = saltIng ? saltIng.amount : 0
 
+  const effResolvePrice =
+    resolvePrice ||
+    ((name: string) => {
+      const u = getUnitCost(name, flowerPriceUsd)
+      return u.flower > 0 ? u.flower : getItemPrice(name)
+    })
+
   return calculateAgedFishCost(
     {
       id: recipe.id,
@@ -518,7 +852,7 @@ export function getAgedFishCost(
       agedXp: recipe.agedXp || 0,
       primeAgedXp: recipe.primeAgedXp || 0,
     },
-    resolvePrice || getItemPrice,
+    effResolvePrice,
     flowerPriceUsd,
   )
 }
@@ -537,4 +871,52 @@ export function getAllAgedFishCosts(
   return agingRecipes
     .map((r) => getAgedFishCost(r.name, flowerPriceUsd, resolvePrice))
     .filter((r): r is AgedFishCostBreakdown => r !== null)
+}
+
+/**
+ * Devuelve el costo de captura de un pez regular en formato CostResolution.
+ */
+export function getFishCost(
+  fishNameOrId: string,
+  options?: ResolveCostOptions,
+): CostResolution | null {
+  if (!isFish(fishNameOrId)) return null
+  return resolveCost(fishNameOrId, options)
+}
+
+/**
+ * Devuelve el costo de captura de un crustáceo de trampa en formato CostResolution.
+ */
+export function getCrustaceanCost(
+  crustaceanNameOrId: string,
+  options?: ResolveCostOptions,
+): CostResolution | null {
+  if (!isCrustacean(crustaceanNameOrId)) return null
+  return resolveCost(crustaceanNameOrId, options)
+}
+
+/**
+ * Devuelve el costo de todos los 38 peces regulares.
+ */
+export function getAllFishCosts(options?: ResolveCostOptions): CostResolution[] {
+  const allFish = getAllFishCatchCosts({
+    coinsPerFlower: options?.coinsPerFlower || getBettyRatio() || OFFICIAL_COINS_PER_FLOWER,
+    flowerPriceUsd: options?.flowerPriceUsd || getFlowerPrice(),
+  })
+  return allFish
+    .map((f) => resolveCost(f.name, options))
+    .filter((r): r is CostResolution => r !== null)
+}
+
+/**
+ * Devuelve el costo de todos los 16 crustáceos de trampa.
+ */
+export function getAllCrustaceanCosts(options?: ResolveCostOptions): CostResolution[] {
+  const allCrust = getAllCrustaceanCatchCosts({
+    coinsPerFlower: options?.coinsPerFlower || getBettyRatio() || OFFICIAL_COINS_PER_FLOWER,
+    flowerPriceUsd: options?.flowerPriceUsd || getFlowerPrice(),
+  })
+  return allCrust
+    .map((c) => resolveCost(c.name, options))
+    .filter((r): r is CostResolution => r !== null)
 }

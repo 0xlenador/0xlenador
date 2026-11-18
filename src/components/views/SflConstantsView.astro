@@ -55,6 +55,7 @@ const catalogLabels = {
   agedXpLabel: t("sfl.constants.agedXp"),
   primeAgedXpLabel: t("sfl.constants.primeAgedXp"),
   agingTimeLabel: t("sfl.constants.agingTime"),
+  catchesTitle: t("sfl.constants.catchesTitle"),
 }
 
 const blacksmithTabs: CatalogTab[] = [
@@ -206,35 +207,7 @@ const orderedSeasons: Array<"spring" | "summer" | "autumn" | "winter"> = [
 
 const getFishMarketItemDescription = (item: any) => {
   const timeHours = item.craftTimeHours || 1
-  if (lang === "en") {
-    if (item.id === "fish_flake") {
-      return `⏱️ Craft Time: ${timeHours}h. Specialized bait for fishing without chum. Guarantees 20 basic and advanced fish.`
-    }
-    if (item.id === "fish_stick") {
-      return `⏱️ Craft Time: ${timeHours}h. Specialized bait guaranteeing advanced and expert catches (Tuna, Mahi Mahi...). Used in Crab Pot & Mariner Pot.`
-    }
-    if (item.id === "fish_oil") {
-      return `⏱️ Craft Time: ${timeHours}h. High-density bait guaranteeing apex catches (Saw Shark, Coelacanth, Trout...). Attracts Anemones in traps.`
-    }
-    if (item.id === "crab_stick") {
-      return `⏱️ Craft Time: ${timeHours}h. Crustacean bait guaranteeing apex sharks (Whale Shark, White Shark, Parrotfish...). Attracts rare crabs in traps.`
-    }
-    return `⏱️ Craft Time: ${timeHours}h.`
-  } else {
-    if (item.id === "fish_flake") {
-      return `⏱️ Tiempo: ${timeHours}h. Cebo especializado para pescar sin chum garantizando 20 especies básicas y avanzadas.`
-    }
-    if (item.id === "fish_stick") {
-      return `⏱️ Tiempo: ${timeHours}h. Cebo especializado que garantiza capturas avanzadas y expertas (Tuna, Mahi Mahi...). Se usa en Crab Pot y Mariner Pot.`
-    }
-    if (item.id === "fish_oil") {
-      return `⏱️ Tiempo: ${timeHours}h. Cebo de alta densidad que garantiza capturas apex (Saw Shark, Coelacanth, Trout...). Atrae Anémonas en trampas.`
-    }
-    if (item.id === "crab_stick") {
-      return `⏱️ Tiempo: ${timeHours}h. Cebo de crustáceos que garantiza tiburones gigantes (Whale Shark, White Shark, Parrotfish...). Atrae cangrejos raros en trampas.`
-    }
-    return `⏱️ Tiempo: ${timeHours}h.`
-  }
+  return lang === "en" ? `⏱️ Craft Time: ${timeHours}h.` : `⏱️ Tiempo: ${timeHours}h.`
 }
 
 const fishMarketTabs: CatalogTab[] = [
@@ -244,7 +217,7 @@ const fishMarketTabs: CatalogTab[] = [
     icon: "🎣",
     type: "craft",
     placeholderIcon: "🎣",
-    multipliers: [1, 5, 10, "max"],
+    multipliers: [1, 5, 10],
     sections: orderedSeasons.map((season, idx) => {
       const isCurrent = idx === 0
       const seasonName = t(`sfl.constants.tab.${season}`)
@@ -271,6 +244,10 @@ const fishMarketTabs: CatalogTab[] = [
           ]
 
           const timeHours = item.craftTimeHours || 1
+          const catchPool = (item.guaranteedCatchPool || []).map((fishName: string) => ({
+            name: fishName,
+            image: `/img/sunflowerland/fish/${fishName}.png`,
+          }))
 
           return {
             id: `${item.id}_${season}`,
@@ -283,6 +260,7 @@ const fishMarketTabs: CatalogTab[] = [
             timeSeconds: timeHours * 3600,
             description: getFishMarketItemDescription(item),
             ingredients,
+            catchPool,
           }
         }),
       }

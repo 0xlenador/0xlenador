@@ -129,10 +129,41 @@ const tierVisuals: Record<string, { label: string; badgeClass: string; glowClass
 const visualKey = kind === "rod" ? (item.tier || "basic") : kind
 const visual = tierVisuals[visualKey] || tierVisuals.basic
 
+// Preparar lista unificada de cebos (incluye cebo garantizado si existe para peces de caña)
+const allBaits = [...(item.baits || [])]
+if (kind === "rod" && item.guaranteedBy && !allBaits.includes(item.guaranteedBy)) {
+  allBaits.push(item.guaranteedBy)
+}
+
+// Combinaciones oficiales de Cebo + Chum que garantizan captura al 100%
+const guaranteedChumCombos: Record<string, Record<string, string[]>> = {
+  "Anchovy": {
+    "Carrot": ["Earthworm", "Capsule Bait"],
+    "Egg": ["Earthworm", "Capsule Bait"],
+  },
+  "Tuna": {
+    "Orange": ["Grub", "Umbrella Bait"],
+    "Wild Mushroom": ["Grub", "Umbrella Bait"],
+  },
+  "Red Snapper": {
+    "Apple": ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"],
+    "Honey": ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"],
+  },
+  "Saw Shark": {
+    "Speed Chicken": ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"],
+  },
+  "White Shark": {
+    "Rich Chicken": ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"],
+  },
+  "Whale Shark": {
+    "Fat Chicken": ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"],
+  },
+}
+
 // Preparar datos para atributos HTML de filtrado
 const filterTier = kind === "rod" ? item.tier : kind
 const filterSeasons = (item.seasons || ["spring", "summer", "autumn", "winter"]).join(" ")
-const filterBaits = (item.baits || []).join(" ").toLowerCase()
+const filterBaits = allBaits.join(" ").toLowerCase()
 const filterChum = (item.chum || []).map((c: any) => c.item).join(" ").toLowerCase()
 const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : ""
 ---
@@ -247,29 +278,41 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
       </div>
     </div>
 
-    <!-- SECCIÓN CONTEXTUAL 1: ROD FISH (Cebos Seleccionables y Garantías) -->
-    {kind === "rod" && (
+    <!-- SECCIÓN CONTEXTUAL 1: ROD FISH (Cebos Seleccionables e Inclusión de Cebo Garantizado) -->
+    {kind === "rod" && allBaits.length > 0 && (
       <div class="mb-2.5">
         <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
           {t("sfl.fishing.card.bait")}
         </span>
         <div class="flex flex-wrap gap-1.5 bait-container">
-          {item.baits.map((baitName: string, idx: number) => {
+          {allBaits.map((baitName: string, idx: number) => {
             const bImg = baitImageMap[baitName] || "/img/sunflowerland/Capsule Bait.png"
             const isFree = ["Earthworm", "Grub", "Red Wiggler"].includes(baitName)
-            const isDefault = idx === 0
+            const isGuaranteed = item.guaranteedBy === baitName
+            // Prioridad inicial: el primer cebo gratis, o el primer cebo
+            const defaultIdx = allBaits.findIndex((b: string) => ["Earthworm", "Grub", "Red Wiggler"].includes(b))
+            const isDefault = defaultIdx >= 0 ? idx === defaultIdx : idx === 0
             return (
               <button
                 type="button"
                 class:list={[
                   "bait-badge group/bait inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-[11px] font-mono transition-all cursor-pointer select-none",
                   isDefault
-                    ? "active bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-1 ring-emerald-400/50 shadow-sm"
+                    ? isFree
+                      ? "active bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-1 ring-emerald-400/50 shadow-sm"
+                      : "active bg-cyan-500/20 border-cyan-400 text-cyan-300 ring-1 ring-cyan-400/50 shadow-sm"
                     : "bg-white/[0.03] border-white/5 text-white/70 hover:border-emerald-400/40 hover:bg-white/[0.06]",
                 ]}
                 data-bait-name={baitName}
                 data-is-free={isFree ? "true" : "false"}
-                title={isFree ? `${baitName} (${t("sfl.fishing.card.freeCompost") || "Gratis / Compost"})` : baitName}
+                data-is-guaranteed={isGuaranteed ? "true" : "false"}
+                title={
+                  isGuaranteed
+                    ? `${baitName} (${t("sfl.fishing.card.guaranteed") || "Garantizado 100%"})`
+                    : isFree
+                      ? `${baitName} (${t("sfl.fishing.card.freeCompost") || "Gratis / Compost"})`
+                      : baitName
+                }
               >
                 <img
                   src={bImg}
@@ -281,35 +324,38 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                 {isFree && (
                   <span class="text-[9px] font-bold text-emerald-400 ml-0.5">0★</span>
                 )}
+                {isGuaranteed && (
+                  <span class="text-[9px] font-bold text-teal-300 bg-teal-500/20 px-1 py-0.2 rounded border border-teal-500/30 ml-0.5" title={t("sfl.fishing.card.guaranteed") || "Garantizado (100%)"}>100%</span>
+                )}
               </button>
             )
           })}
         </div>
-        {item.guaranteedBy && (
-          <div class="mt-2 text-[10px] font-mono text-teal-400/90 flex items-center gap-1">
-            <span class="text-white/40">{t("sfl.fishing.card.guaranteedBy")}</span>
-            <span class="font-bold underline decoration-teal-500/40">{item.guaranteedBy}</span>
-          </div>
-        )}
       </div>
     )}
 
     <!-- SECCIÓN CONTEXTUAL 2: CHUM INTERACTIVO (para rod, trap y marvel) -->
     {item.chum && item.chum.length > 0 && (
-      <div class="mb-2.5">
+      <div class="mb-2.5 chum-section transition-opacity duration-200">
         <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
           {t("sfl.fishing.card.chum")}
         </span>
-        <div class="flex flex-wrap gap-1.5">
+        <div class="flex flex-wrap gap-1.5 chum-container">
           {item.chum.map((c: { item: string; amount: number }) => {
             const imgPath = itemImageMap[c.item] || `/img/sunflowerland/${c.item}.png`
+            const fishGuarantees = guaranteedChumCombos[item.name] || {}
+            const validBaits = fishGuarantees[c.item] || []
+            const isGuaranteedCombo = validBaits.length > 0
+            const validBaitsAttr = validBaits.join(",")
+
             return (
               <button
                 type="button"
                 class="chum-badge group/chum inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/5 hover:border-cyan-400/40 hover:bg-white/[0.06] text-[11px] font-mono text-white/70 transition-all cursor-pointer select-none"
                 data-chum-name={c.item}
                 data-chum-amount={c.amount.toString()}
-                title={`${c.amount}x ${c.item}`}
+                data-guaranteed-baits={validBaitsAttr}
+                title={`${c.amount}x ${c.item}${isGuaranteedCombo ? " (Garantizado 100% con cebo compatible)" : ""}`}
               >
                 <img
                   src={imgPath}
@@ -320,6 +366,14 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                 <span class="chum-label font-medium text-white/90">
                   {c.amount}x {c.item}
                 </span>
+                {isGuaranteedCombo && (
+                  <span
+                    class="chum-guaranteed-badge text-[9px] font-bold text-teal-300 bg-teal-500/20 px-1 py-0.2 rounded border border-teal-500/30 hidden ml-0.5"
+                    title={t("sfl.fishing.card.guaranteed") || "Garantizado (100%)"}
+                  >
+                    100%
+                  </span>
+                )}
                 <span class="chum-check text-[10px] text-cyan-400 hidden ml-0.5">✓</span>
               </button>
             )

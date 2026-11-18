@@ -820,3 +820,13 @@ input[type="range"]::-webkit-slider-thumb {
   transition: width 0.1s linear;
   border-radius: 0 2px 2px 0;
 }
+
+/* ============================================================
+   PIXEL ART RENDERING (Sprites nítidos sin borrosidad de escala)
+   ============================================================ */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+

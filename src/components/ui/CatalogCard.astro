@@ -57,6 +57,7 @@ export interface CatalogLabels {
   agedXpLabel?: string
   primeAgedXpLabel?: string
   agingTimeLabel?: string
+  catchesTitle?: string
 }
 
 interface Props {
@@ -118,6 +119,7 @@ const defaultLabels: CatalogLabels = {
   agedXpLabel: "XP Pez Envejecido:",
   primeAgedXpLabel: "XP Pez Prime Aged:",
   agingTimeLabel: "Tiempo de curado:",
+  catchesTitle: "Peces que se pueden capturar:",
   ...labels,
 }
 ---
@@ -521,6 +523,15 @@ const defaultLabels: CatalogLabels = {
                       </div>
                     </div>
                   )}
+
+                  <!-- Peces que se pueden capturar (Catch Pool) -->
+                  <div class="catalog-detail-catches-section hidden mt-3 pt-2.5 border-t border-white/10 flex-col gap-1.5">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted block">
+                      {defaultLabels.catchesTitle || "Peces que se pueden capturar:"}
+                    </span>
+                    <div class="catalog-detail-catches-grid flex flex-wrap gap-1.5 items-center">
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -578,6 +589,8 @@ const defaultLabels: CatalogLabels = {
         const agedChanceEl = panel.querySelector<HTMLElement>(".catalog-detail-aged-chance")
         const primeChanceEl = panel.querySelector<HTMLElement>(".catalog-detail-prime-chance")
         const simulatorSection = panel.querySelector<HTMLElement>(".catalog-simulator-section")
+        const catchesSection = panel.querySelector<HTMLElement>(".catalog-detail-catches-section")
+        const catchesGrid = panel.querySelector<HTMLElement>(".catalog-detail-catches-grid")
         const multiplierBtns = panel.querySelectorAll<HTMLButtonElement>(".catalog-multiplier-btn")
         const customQtyInput = panel.querySelector<HTMLInputElement>(".catalog-custom-qty")
         const popupTrigger = panel.querySelector<HTMLButtonElement>(".stock-popup-trigger")
@@ -764,6 +777,24 @@ const defaultLabels: CatalogLabels = {
             } else {
               xpSection.classList.add("hidden")
               xpSection.classList.remove("flex")
+            }
+          }
+
+          if (catchesSection && catchesGrid) {
+            if (Array.isArray(selectedItem.catchPool) && selectedItem.catchPool.length > 0) {
+              catchesSection.classList.remove("hidden")
+              catchesSection.classList.add("flex")
+              catchesGrid.innerHTML = selectedItem.catchPool
+                .map((fish: any) => {
+                  const name = typeof fish === "string" ? fish : fish.name
+                  const img = typeof fish === "string" ? `/img/sunflowerland/fish/${name}.png` : fish.image
+                  return `<div class="relative group/fish" title="${name}"><div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-black/50 border border-white/10 hover:border-cyan-400/60 hover:bg-white/[0.08] p-0.5 flex items-center justify-center transition-all cursor-pointer"><img src="${img}" alt="${name}" class="w-full h-full object-contain [image-rendering:pixelated]" loading="lazy" /></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-0.5 rounded-md bg-[#0c1015] border border-white/10 text-[10.5px] font-mono text-cyan-300 font-bold whitespace-nowrap shadow-2xl opacity-0 invisible group-hover/fish:opacity-100 group-hover/fish:visible transition-all pointer-events-none z-30">${name}</div></div>`
+                })
+                .join("")
+            } else {
+              catchesSection.classList.add("hidden")
+              catchesSection.classList.remove("flex")
+              catchesGrid.innerHTML = ""
             }
           }
         }
