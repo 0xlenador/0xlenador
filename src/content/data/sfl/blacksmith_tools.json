@@ -478,7 +478,309 @@
         {
           "id": "build",
           "name": "Build",
-          "categories": []
+          "categories": [
+            {
+              "id": "farm_buildings",
+              "name": "Farm Buildings",
+              "items": [
+                {
+                  "id": "aging_shed",
+                  "name": "Aging Shed",
+                  "description": "Age and ferment your resources into refined goods.",
+                  "boost": "Unlocks at Level 0 · Instant Build",
+                  "coins": 200,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/aging_shed.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 30, "image": "/img/sunflowerland/Wood.png" }
+                  ]
+                },
+                {
+                  "id": "pet_house",
+                  "name": "Pet House",
+                  "description": "A place to rest your pet.",
+                  "boost": "Unlocks at Level 0 · 2h Build Time",
+                  "coins": 5000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/pet_house.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 200, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 100, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "water_well",
+                  "name": "Water Well",
+                  "description": "Crops need water!",
+                  "boost": "Unlocks at Level 2 · 5m Build Time",
+                  "coins": 100,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/water_well.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 5, "image": "/img/sunflowerland/Wood.png" }
+                  ]
+                },
+                {
+                  "id": "kitchen",
+                  "name": "Kitchen",
+                  "description": "Step up your cooking game.",
+                  "boost": "Unlocks at Level 5 · 30m Build Time",
+                  "coins": 10,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/kitchen.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 30, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 5, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "hen_house",
+                  "name": "Hen House",
+                  "description": "Grow your chicken empire.",
+                  "boost": "Unlocks at Level 6 · 2h Build Time",
+                  "coins": 100,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/hen_house.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 30, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 5, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Gold", "amount": 5, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "crafting_box",
+                  "name": "Crafting Box",
+                  "description": "A box for crafting various items.",
+                  "boost": "Unlocks at Level 6 · 1h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/crafting_box.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 100, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 5, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "compost_bin",
+                  "name": "Compost Bin",
+                  "description": "Produces bait & fertiliser on a regular basis.",
+                  "boost": "Unlocks at Level 7 · 1h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/compost_bin.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 5, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 5, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "bakery",
+                  "name": "Bakery",
+                  "description": "Bake your favourite cakes.",
+                  "boost": "Unlocks at Level 8 · 4h Build Time",
+                  "coins": 200,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/bakery.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 50, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 20, "image": "/img/sunflowerland/Stone.png" },
+                    { "name": "Gold", "amount": 5, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "fish_market",
+                  "name": "Fish Market",
+                  "description": "A processing plant for your fish.",
+                  "boost": "Unlocks at Level 10 · 1h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/fish_market.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 50, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 10, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Gold", "amount": 5, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "cave",
+                  "name": "Cave",
+                  "description": "A damp cavern where mushrooms grow in the dark.",
+                  "boost": "Unlocks at Level 11 · Spring Island · 1h Build Time",
+                  "coins": 200,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/cave_entrance.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 20, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 5, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "turbo_composter",
+                  "name": "Turbo Composter",
+                  "description": "Produces advanced bait & fertiliser on a regular basis.",
+                  "boost": "Unlocks at Level 12 · 2h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/turbo_composter.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 50, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 25, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "deli",
+                  "name": "Deli",
+                  "description": "Satisfy your appetite with these delicatessen foods!",
+                  "boost": "Unlocks at Level 16 · 12h Build Time",
+                  "coins": 300,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/deli.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 50, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 50, "image": "/img/sunflowerland/Stone.png" },
+                    { "name": "Gold", "amount": 10, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "premium_composter",
+                  "name": "Premium Composter",
+                  "description": "Produces expert bait & fertiliser on a regular basis.",
+                  "boost": "Unlocks at Level 18 · 4h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/premium_composter.webp",
+                  "ingredients": [
+                    { "name": "Gold", "amount": 50, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "warehouse",
+                  "name": "Warehouse",
+                  "description": "Keeps your seeds safe. x1.2 market seed stock.",
+                  "boost": "x1.2 Market Seed Stock · Unlocks Level 20 · 2h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/warehouse.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 250, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 150, "image": "/img/sunflowerland/Stone.png" },
+                    { "name": "Potato", "amount": 5000, "image": "/img/sunflowerland/Potato.png" },
+                    { "name": "Pumpkin", "amount": 2000, "image": "/img/sunflowerland/Pumpkin.png" },
+                    { "name": "Wheat", "amount": 500, "image": "/img/sunflowerland/Wheat.png" },
+                    { "name": "Kale", "amount": 100, "image": "/img/sunflowerland/Kale.png" }
+                  ]
+                },
+                {
+                  "id": "smoothie_shack",
+                  "name": "Smoothie Shack",
+                  "description": "Freshly squeezed!",
+                  "boost": "Unlocks at Level 23 · 12h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/smoothie_shack.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 25, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 25, "image": "/img/sunflowerland/Stone.png" },
+                    { "name": "Iron", "amount": 10, "image": "/img/sunflowerland/Iron.png" }
+                  ]
+                },
+                {
+                  "id": "toolshed",
+                  "name": "Toolshed",
+                  "description": "A place for tool storage. x1.5 workbench tool stock.",
+                  "boost": "x1.5 Workbench Tool Stock · Unlocks Level 25 · 2h Build Time",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/toolshed.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 500, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 30, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Gold", "amount": 25, "image": "/img/sunflowerland/Gold.png" },
+                    { "name": "Axe", "amount": 100, "image": "/img/sunflowerland/tools/Axe.png" },
+                    { "name": "Pickaxe", "amount": 50, "image": "/img/sunflowerland/tools/Pickaxe.png" }
+                  ]
+                },
+                {
+                  "id": "barn",
+                  "name": "Barn",
+                  "description": "Nice and cosy house for your four legged friends.",
+                  "boost": "Unlocks at Level 30 · 2h Build Time",
+                  "coins": 200,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/barn.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 150, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 10, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Gold", "amount": 10, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "pigpen",
+                  "name": "Pigpen",
+                  "description": "A muddy wallow where your pigs root for truffles.",
+                  "boost": "Unlocks at Level 30 · Spring Island · 2h Build Time",
+                  "coins": 200,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/pigpen.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 150, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 10, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Gold", "amount": 10, "image": "/img/sunflowerland/Gold.png" },
+                    { "name": "Mud", "amount": 10, "image": "/img/sunflowerland/Mud.webp" }
+                  ]
+                },
+                {
+                  "id": "crop_machine",
+                  "name": "Crop Machine",
+                  "description": "Automate your crop production.",
+                  "boost": "Unlocks at Level 35 · Desert Island · 2h Build Time",
+                  "coins": 8000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/crop_machine.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 1250, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Iron", "amount": 125, "image": "/img/sunflowerland/Iron.png" },
+                    { "name": "Crimstone", "amount": 50, "image": "/img/sunflowerland/Crimstone.png" }
+                  ]
+                },
+                {
+                  "id": "greenhouse",
+                  "name": "Greenhouse",
+                  "description": "A sanctuary for sensitive crops.",
+                  "boost": "Unlocks at Level 46 · Desert Island · 4h Build Time",
+                  "coins": 4800,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/build/greenhouse.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 500, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 100, "image": "/img/sunflowerland/Stone.png" },
+                    { "name": "Crimstone", "amount": 25, "image": "/img/sunflowerland/Crimstone.png" },
+                    { "name": "Oil", "amount": 100, "image": "/img/sunflowerland/Oil.png" }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }

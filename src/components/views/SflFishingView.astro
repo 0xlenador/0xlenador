@@ -96,6 +96,9 @@ const counts = {
     textBase: t("sfl.fishing.card.breakdownBase"),
     textTrap: t("sfl.fishing.card.breakdownTrap"),
     textChumLabel: t("sfl.fishing.card.chumLabel"),
+    textCostNormal: t("sfl.fishing.card.cost"),
+    textCostMarvel: t("sfl.fishing.card.costMarvel"),
+    textCasts: t("sfl.fishing.card.casts"),
   }}
 >
   function initFishing() {
@@ -242,17 +245,37 @@ const counts = {
       if (isRod || isMarvel) {
         if (isMarvel) {
           // Para maravillas marinas, dar prioridad al disparador de mapa seleccionado si existe
+          const costTitleEl = card.querySelector(".cost-title-label")
           const activeTrigger = card.querySelector(".map-trigger-row.active")
           if (activeTrigger) {
-            const baitName = activeTrigger.dataset.baitName
-            const fishName = activeTrigger.dataset.fishName
-            const odds = activeTrigger.dataset.odds
+            const baitName = activeTrigger.dataset.baitName || ""
+            const fishName = activeTrigger.dataset.fishName || ""
+            const oddsPercent = parseFloat(activeTrigger.dataset.odds) || 0
             const baitPrice = baitName ? getBaitUnitPrice(baitName) : 0
-            attemptCost = rodCost + baitPrice
+
+            // 1 Caña + Cebo por lanzamiento individual
+            const singleAttemptCost = rodCost + baitPrice
+
+            // Para conseguir 9 fragmentos de mapa con probabilidad p:
+            // Intentos estadísticos esperados = 9 / (oddsPercent / 100)
+            const p = oddsPercent / 100
+            const expectedCasts = p > 0 ? (9 / p) : 1
+            const roundedCasts = Math.ceil(expectedCasts)
+
+            // Costo total estadístico acumulado para los 9 mapas
+            attemptCost = expectedCasts * singleAttemptCost
+
+            if (costTitleEl) {
+              costTitleEl.textContent = textCostMarvel
+            }
+
             baseLabel = baitName
-              ? `Caña + <span class="text-teal-400 font-bold">${baitName} (100% ➔ ${fishName})</span> <span class="text-cyan-400 font-mono text-[9px]">[${odds}% Mapa]</span>`
-              : `Caña ➔ <span class="text-cyan-400 font-bold">${fishName}</span> <span class="text-cyan-400 font-mono text-[9px]">[${odds}% Mapa]</span>`
+              ? `~${roundedCasts} ${textCasts} (${oddsPercent}%) · Caña + <span class="text-teal-400 font-bold">${baitName}</span> (➔ ${fishName})`
+              : `~${roundedCasts} ${textCasts} (${oddsPercent}%) · Caña ➔ <span class="text-cyan-400 font-bold">${fishName}</span>`
           } else {
+            if (costTitleEl) {
+              costTitleEl.textContent = textCostNormal
+            }
             const activeBait = card.querySelector(".bait-badge.active")
             if (activeBait) {
               const baitName = activeBait.dataset.baitName || "Earthworm"
@@ -288,14 +311,15 @@ const counts = {
         baseLabel = `Trampa (<span class="text-orange-400 font-bold">${trapType}</span>)`
 
         // Actualizar el valor de costo en el bloque visual de trampa
-        const trapCostEl = card.querySelector(".trap-cost-val")
-        if (trapCostEl && currentTrapCost > 0) {
-          trapCostEl.textContent = `${currentTrapCost.toFixed(4)} FLOWER`
+        const trapValNum = card.querySelector(".trap-val-num")
+        if (trapValNum && currentTrapCost > 0) {
+          trapValNum.textContent = `${currentTrapCost.toFixed(4)}`
         }
       }
 
-      // 3. Sumar Chum si está activo
-      const activeBadge = card.querySelector(".chum-badge.active")
+      // 3. Sumar Chum si está activo (solo para caña normal, trampas o captura directa sin trigger de mapa)
+      const isMarvelWithTrigger = isMarvel && card.querySelector(".map-trigger-row.active")
+      const activeBadge = isMarvelWithTrigger ? null : card.querySelector(".chum-badge.active")
       let totalCost = attemptCost
       let breakdownHtml = baseLabel
 
@@ -319,14 +343,14 @@ const counts = {
         }
       }
 
-      const flowerEl = card.querySelector(".cost-flower-val")
-      if (flowerEl) {
-        flowerEl.textContent = rodCost > 0 || isTrap || isMarvel ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
+      const flowerValNum = card.querySelector(".cost-val-num")
+      if (flowerValNum) {
+        flowerValNum.textContent = rodCost > 0 || isTrap || isMarvel ? `${totalCost.toFixed(4)}` : "--"
       }
 
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
-        usdEl.textContent = rodCost > 0 || isTrap || isMarvel ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
+        usdEl.textContent = rodCost > 0 || isTrap || isMarvel ? `($${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
       }
 
       const breakdownEl = card.querySelector(".cost-breakdown-label")
@@ -393,6 +417,23 @@ const counts = {
             )
           }
 
+          // Si es Maravilla Marina y se selecciona un cebo directo, deseleccionar los disparadores de mapa
+          if (card.dataset.kind === "marvel") {
+            const triggerRows = card.querySelectorAll(".map-trigger-row")
+            triggerRows.forEach((r) => {
+              r.classList.remove(
+                "active",
+                "bg-white/[0.08]",
+                "border-white/20",
+                "text-white",
+                "shadow-sm",
+                "bg-cyan-500/20",
+                "border-cyan-400"
+              )
+              r.classList.add("bg-white/[0.02]", "border-white/5", "text-white/70")
+            })
+          }
+
           // Sincronizar disponibilidad de chum (deselecciona y bloquea si el cebo es garantizado)
           syncChumAvailability(card)
 
@@ -418,32 +459,48 @@ const counts = {
           e.stopPropagation()
 
           const isAlreadyActive = row.classList.contains("active")
+          if (isAlreadyActive) return // Mantener seleccionado como opción activa
 
           triggerRows.forEach((r) => {
             r.classList.remove(
               "active",
-              "bg-cyan-500/20",
-              "border-cyan-400",
+              "bg-white/[0.08]",
+              "border-white/20",
               "text-white",
-              "ring-1",
-              "ring-cyan-400/50",
-              "shadow-sm"
+              "shadow-sm",
+              "bg-cyan-500/20",
+              "border-cyan-400"
             )
-            r.classList.add("bg-black/40", "border-white/5", "text-white/80")
+            r.classList.add("bg-white/[0.02]", "border-white/5", "text-white/70")
           })
 
-          if (!isAlreadyActive) {
-            row.classList.add(
+          row.classList.add(
+            "active",
+            "bg-white/[0.08]",
+            "border-white/20",
+            "text-white",
+            "shadow-sm"
+          )
+          row.classList.remove("bg-white/[0.02]", "border-white/5", "text-white/70")
+
+          // Deseleccionar cualquier cebo de captura directa para evitar interferencias
+          const baitBadges = card.querySelectorAll(".bait-badge")
+          baitBadges.forEach((b) => {
+            b.classList.remove(
               "active",
+              "bg-emerald-500/20",
+              "border-emerald-400",
+              "text-emerald-300",
               "bg-cyan-500/20",
               "border-cyan-400",
-              "text-white",
+              "text-cyan-300",
               "ring-1",
+              "ring-emerald-400/50",
               "ring-cyan-400/50",
               "shadow-sm"
             )
-            row.classList.remove("bg-black/40", "border-white/5", "text-white/80")
-          }
+            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+          })
 
           updateCardCost(card)
         })
@@ -940,6 +997,37 @@ const counts = {
       })
     }
 
+    // Manejo de Modales / Popup de Captura Directa (Maravillas Marinas)
+    document.querySelectorAll(".open-direct-catch-modal").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        const modalId = btn.dataset.modalId
+        if (modalId) {
+          const dialog = document.getElementById(modalId)
+          if (dialog && typeof dialog.showModal === "function") {
+            dialog.showModal()
+          }
+        }
+      })
+    })
+
+    document.querySelectorAll(".close-direct-dialog").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault()
+        const dialog = btn.closest("dialog")
+        if (dialog) dialog.close()
+      })
+    })
+
+    document.querySelectorAll("dialog.direct-catch-dialog").forEach((dialog) => {
+      dialog.addEventListener("click", (e) => {
+        if (e.target === dialog) {
+          dialog.close()
+        }
+      })
+    })
+
     // Sincronización con SflPrices y SflMarket
     function syncMarketPrices() {
       if (!window.SflPrices || !window.SflMarket) return
@@ -1005,6 +1093,10 @@ const counts = {
     }
   }
 
-  document.addEventListener("DOMContentLoaded", initFishing)
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFishing)
+  } else {
+    initFishing()
+  }
   document.addEventListener("astro:page-load", initFishing)
 </script>

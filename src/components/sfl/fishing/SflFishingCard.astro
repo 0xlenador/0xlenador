@@ -232,19 +232,34 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
           {item.name}
         </h3>
 
-        <!-- Iconos de Estaciones Climáticas (si aplica) -->
-        {item.seasons && item.seasons.length > 0 && (
-          <div class="flex items-center gap-1 mt-1">
-            {item.seasons.map((sKey: string) => {
-              const sObj = seasonIcons[sKey]
-              return (
-                <span title={sObj?.label || sKey} class="inline-flex items-center">
-                  <img src={sObj?.icon} alt={sObj?.label || sKey} class="w-3.5 h-3.5 object-contain" />
-                </span>
-              )
-            })}
-          </div>
-        )}
+        <!-- Iconos de Estaciones Climáticas (si aplica) y Buff/Decorativo -->
+        <div class="flex items-center flex-wrap gap-1.5 mt-1">
+          {item.seasons && item.seasons.length > 0 && (
+            <div class="flex items-center gap-1">
+              {item.seasons.map((sKey: string) => {
+                const sObj = seasonIcons[sKey]
+                return (
+                  <span title={sObj?.label || sKey} class="inline-flex items-center">
+                    <img src={sObj?.icon} alt={sObj?.label || sKey} class="w-3.5 h-3.5 object-contain" />
+                  </span>
+                )
+              })}
+            </div>
+          )}
+
+          {kind === "marvel" && (
+            item.buff ? (
+              <span class="inline-flex items-center gap-1 text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20" title={item.buff}>
+                <span class="text-amber-400 text-xs">★</span>
+                <span>{item.buff}</span>
+              </span>
+            ) : (
+              <span class="inline-flex items-center text-[10px] font-mono text-white/50 bg-white/[0.03] px-1.5 py-0.5 rounded border border-white/5">
+                {t("sfl.fishing.card.decorative") || "Decorativo"}
+              </span>
+            )
+          )}
+        </div>
 
         <!-- Subtítulo contextual -->
         {kind === "trap" && (
@@ -260,23 +275,43 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
       </div>
     </div>
 
-    <!-- Costo Estimado de Intento (Calculadora Dinámica) -->
-    <div class="mb-3 p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex flex-col gap-1.5 transition-colors">
+    <!-- Costo Estimado (Calculadora Dinámica - Destacado visualmente) -->
+    <div
+      class:list={[
+        "mb-3 p-2.5 rounded-xl flex flex-col gap-1.5 transition-all duration-200 border",
+        kind === "marvel"
+          ? "bg-gradient-to-br from-amber-500/[0.08] via-black/40 to-black/60 border-amber-500/25 shadow-md shadow-amber-950/20"
+          : "bg-white/[0.02] border-white/[0.06]",
+      ]}
+    >
       <div class="flex items-center justify-between">
-        <span class="text-[10px] font-mono uppercase tracking-wider text-white/50">
-          {t("sfl.fishing.card.cost")}
+        <span class:list={[
+          "cost-title-label text-[10px] font-mono uppercase tracking-wider",
+          kind === "marvel" ? "text-amber-300 font-bold" : "text-white/50"
+        ]}>
+          {kind === "marvel" ? t("sfl.fishing.card.costMarvel") : t("sfl.fishing.card.cost")}
         </span>
         <div class="flex items-center gap-1.5">
-          <span class="cost-flower-val text-xs font-mono font-bold text-amber-400">
-            -- FLOWER
-          </span>
-          <span class="cost-usd-val text-[10px] font-mono text-white/40">
+          <div class:list={[
+            "cost-flower-val font-mono font-bold text-amber-400 flex items-center gap-1",
+            kind === "marvel" ? "text-sm text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.25)]" : "text-xs"
+          ]}>
+            <span class="cost-val-num">--</span>
+            <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" />
+          </div>
+          <span class:list={[
+            "cost-usd-val text-[10px] font-mono",
+            kind === "marvel" ? "text-amber-200/60 font-medium" : "text-white/40"
+          ]}>
             (--)
           </span>
         </div>
       </div>
 
-      <div class="pt-1 border-t border-white/[0.04] text-[10px] font-mono">
+      <div class:list={[
+        "pt-1 border-t text-[10px] font-mono",
+        kind === "marvel" ? "border-amber-500/15" : "border-white/[0.04]"
+      ]}>
         <span class="cost-breakdown-label text-white/70 block truncate">
           {kind === "trap" ? t("sfl.fishing.card.breakdownTrap") : t("sfl.fishing.card.breakdownBase")}
         </span>
@@ -387,33 +422,15 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
       </div>
     )}
 
-    <!-- SECCIÓN CONTEXTUAL 3: MARINE MARVEL DETAILS (Buff, Map Puzzles, Triggers) -->
+    <!-- SECCIÓN CONTEXTUAL 3: MARINE MARVEL DETAILS (Map Triggers) -->
     {kind === "marvel" && (
-      <div class="space-y-2.5 mb-2">
-        <!-- Buff Pasivo o Trofeo -->
-        {item.buff ? (
-          <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[11px] font-mono font-medium flex items-center gap-1.5">
-            <span class="text-amber-400 text-sm">★</span>
-            <span class="leading-tight">{item.buff}</span>
-          </div>
-        ) : (
-          <div class="p-1.5 rounded-lg bg-white/[0.02] border border-white/[0.05] text-white/50 text-[10px] font-mono text-center">
-            {t("sfl.fishing.card.trophy")}
-          </div>
-        )}
-
-        <!-- 1. Peces que dropean Mapas (Prioridad máxima en Maravillas Marinas) -->
+      <div class="mb-2.5">
+        <!-- Peces que dropean Mapas (Prioridad máxima en Maravillas Marinas) -->
         {item.mapTriggers && item.mapTriggers.length > 0 && (
-          <div class="p-2.5 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-[10px] font-mono shadow-inner">
-            <div class="flex items-center justify-between mb-1 pb-1 border-b border-cyan-500/20">
-              <span class="text-cyan-300 font-bold uppercase tracking-wider text-[11px]">
-                {t("sfl.fishing.card.mapTriggers")}
-              </span>
-              <span class="text-[10px] text-amber-300 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">9x 🗺️</span>
-            </div>
-            <p class="text-[9px] text-white/60 mb-2 leading-tight">
-              {t("sfl.fishing.card.mapTriggerDesc") || "Pesca estos peces para obtener fragmentos de mapa:"}
-            </p>
+          <div class="mb-2">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
+              {t("sfl.fishing.card.mapTriggers")}
+            </span>
             <div class="space-y-1.5 map-trigger-container">
               {item.mapTriggers.map((trig: { fish: string; odds: number }, tIdx: number) => {
                 const fishObj = fishMap.get(trig.fish.toLowerCase())
@@ -428,8 +445,8 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                     class:list={[
                       "map-trigger-row group/trigger w-full text-left flex items-center justify-between gap-2 p-1.5 rounded-lg border transition-all cursor-pointer select-none",
                       isDefaultTrigger
-                        ? "active bg-cyan-500/20 border-cyan-400 text-white ring-1 ring-cyan-400/50 shadow-sm"
-                        : "bg-black/40 border-white/5 text-white/80 hover:border-cyan-500/40 hover:bg-white/[0.04]",
+                        ? "active bg-white/[0.08] border-white/20 text-white shadow-sm"
+                        : "bg-white/[0.03] border-white/5 text-white/70 hover:border-cyan-400/40 hover:bg-white/[0.06]",
                     ]}
                     data-fish-name={trig.fish}
                     data-bait-name={guaranteedBait || ""}
@@ -442,10 +459,10 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                           <img
                             src={gBaitImg}
                             alt={guaranteedBait}
-                            class="w-4 h-4 object-contain [image-rendering:pixelated]"
+                            class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
                             loading="lazy"
                           />
-                          <span class="text-[10px] font-bold text-teal-300">
+                          <span class="text-[10px] font-medium text-teal-300">
                             {guaranteedBait}
                           </span>
                         </div>
@@ -454,26 +471,24 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                       )}
 
                       <!-- Flecha separadora -->
-                      <span class="text-white/30 text-[10px]">➔</span>
+                      <span class="text-white/20 text-[10px]">➔</span>
 
                       <!-- Pez objetivo que dropea el mapa -->
                       <div class="flex items-center gap-1.5 min-w-0">
-                        <div class="w-5 h-5 rounded bg-black/50 border border-white/10 flex items-center justify-center p-0.5 shrink-0">
-                          <img
-                            src={fImg}
-                            alt={trig.fish}
-                            class="w-full h-full object-contain [image-rendering:pixelated]"
-                            loading="lazy"
-                          />
-                        </div>
-                        <span class="text-white font-medium truncate text-[11px] leading-tight">
+                        <img
+                          src={fImg}
+                          alt={trig.fish}
+                          class="w-4 h-4 object-contain [image-rendering:pixelated] shrink-0"
+                          loading="lazy"
+                        />
+                        <span class="text-white/90 font-medium truncate text-[11px] leading-tight">
                           {trig.fish}
                         </span>
                       </div>
                     </div>
 
                     <!-- Derecha: Probabilidad de dropeo de mapa -->
-                    <span class="px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 font-bold text-[10px] shrink-0">
+                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono font-bold text-[10px] shrink-0">
                       {(trig.odds * 100).toFixed(1)}%
                     </span>
                   </button>
@@ -483,59 +498,78 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
           </div>
         )}
 
-        <!-- 2. Cebos y Chum para Captura Directa (Replegado por defecto de forma minimalista) -->
+        <!-- Micro-botón discreto para abrir popup de Captura Directa -->
         {(allBaits.length > 0 || (item.chum && item.chum.length > 0)) && (
-          <details class="group/direct-catch mt-2 pt-2 border-t border-white/5">
-            <summary class="list-none flex items-center justify-between gap-2 px-2.5 py-1 rounded-lg bg-black/40 border border-white/5 hover:border-amber-500/30 text-[10px] font-mono text-white/50 hover:text-amber-300 cursor-pointer select-none transition-colors">
-              <span class="flex items-center gap-1.5 truncate">
-                <span class="text-amber-400/80 text-[10px]">⚠️</span>
-                <span class="font-medium tracking-tight truncate">{t("sfl.fishing.card.marvelDirectCatchToggle")}</span>
-              </span>
-              <span class="text-[9px] text-white/40 group-open/direct-catch:rotate-180 transition-transform shrink-0">
-                ▼
-              </span>
-            </summary>
+          <div class="flex items-center justify-end mt-1 pt-1 border-t border-white/[0.04]">
+            <button
+              type="button"
+              class="open-direct-catch-modal group/btn inline-flex items-center gap-1 text-[9px] font-mono text-white/30 hover:text-amber-300 transition-colors cursor-pointer select-none py-0.5 px-1.5 rounded hover:bg-white/[0.04]"
+              title={t("sfl.fishing.card.marvelDirectCatchToggle")}
+              data-modal-id={`modal-direct-${item.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+            >
+              <span class="text-[9px] text-amber-500/60 group-hover/btn:text-amber-400">⚠️</span>
+              <span class="text-[10px] leading-none transition-transform group-hover/btn:translate-x-0.5">➔</span>
+            </button>
+          </div>
 
-            <div class="mt-2.5 pt-2 border-t border-white/[0.04] space-y-2">
+          <!-- Popup / Modal de Captura Directa -->
+          <dialog
+            id={`modal-direct-${item.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+            class="direct-catch-dialog bg-[#18181b] text-white border border-white/10 rounded-2xl p-5 max-w-sm w-[90vw] shadow-2xl backdrop:bg-black/80 backdrop:backdrop-blur-sm m-auto"
+          >
+            <div class="flex items-start justify-between gap-3 pb-3 border-b border-white/10">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-9 h-9 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center p-1 shrink-0">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    class="w-full h-full object-contain [image-rendering:pixelated]"
+                  />
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-xs font-bold text-white truncate">{item.name}</h4>
+                  <span class="text-[10px] font-mono font-semibold text-amber-400 flex items-center gap-1">
+                    <span>⚠️</span>
+                    <span>{t("sfl.fishing.card.marvelDirectCatchToggle")}</span>
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="close-direct-dialog text-white/40 hover:text-white p-1 rounded hover:bg-white/10 transition-colors text-xs font-mono"
+                aria-label="Cerrar"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p class="text-[10px] font-mono text-white/60 my-3 leading-relaxed">
+              {t("sfl.fishing.card.marvelDirectCatchDesc")}
+            </p>
+
+            <div class="space-y-3">
               {allBaits.length > 0 && (
                 <div>
-                  <span class="text-[9px] font-mono uppercase tracking-wider text-white/40 block mb-1">
-                    {t("sfl.fishing.card.marvelDirectCatch") || "Cebos para Captura Directa (con mapa completo):"}
+                  <span class="text-[9px] font-mono uppercase tracking-wider text-white/40 block mb-1.5">
+                    {t("sfl.fishing.card.bait")}
                   </span>
-                  <div class="flex flex-wrap gap-1.5 bait-container">
-                    {allBaits.map((baitName: string, idx: number) => {
+                  <div class="flex flex-wrap gap-1.5">
+                    {allBaits.map((baitName: string) => {
                       const bImg = baitImageMap[baitName] || "/img/sunflowerland/Capsule Bait.png"
                       const isFree = ["Earthworm", "Grub", "Red Wiggler"].includes(baitName)
-                      const isGuaranteed = item.guaranteedBy === baitName
-                      const defaultIdx = allBaits.findIndex((b: string) => ["Earthworm", "Grub", "Red Wiggler"].includes(b))
-                      const isDefault = defaultIdx >= 0 ? idx === defaultIdx : idx === 0
                       return (
-                        <button
-                          type="button"
-                          class:list={[
-                            "bait-badge group/bait inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-[11px] font-mono transition-all cursor-pointer select-none",
-                            isDefault
-                              ? isFree
-                                ? "active bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-1 ring-emerald-400/50 shadow-sm"
-                                : "active bg-cyan-500/20 border-cyan-400 text-cyan-300 ring-1 ring-cyan-400/50 shadow-sm"
-                              : "bg-white/[0.03] border-white/5 text-white/70 hover:border-emerald-400/40 hover:bg-white/[0.06]",
-                          ]}
-                          data-bait-name={baitName}
-                          data-is-free={isFree ? "true" : "false"}
-                          data-is-guaranteed={isGuaranteed ? "true" : "false"}
-                          title={baitName}
-                        >
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] font-mono text-white/80">
                           <img
                             src={bImg}
                             alt={baitName}
                             class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0"
                             loading="lazy"
                           />
-                          <span class="bait-label font-medium">{baitName}</span>
+                          <span>{baitName}</span>
                           {isFree && (
                             <span class="text-[9px] font-bold text-emerald-400 ml-0.5">0★</span>
                           )}
-                        </button>
+                        </div>
                       )
                     })}
                   </div>
@@ -543,39 +577,30 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
               )}
 
               {item.chum && item.chum.length > 0 && (
-                <div class="chum-section transition-opacity duration-200">
-                  <span class="text-[9px] font-mono uppercase tracking-wider text-white/40 block mb-1">
+                <div>
+                  <span class="text-[9px] font-mono uppercase tracking-wider text-white/40 block mb-1.5">
                     {t("sfl.fishing.card.chum")}
                   </span>
-                  <div class="flex flex-wrap gap-1.5 chum-container">
+                  <div class="flex flex-wrap gap-1.5">
                     {item.chum.map((c: { item: string; amount: number }) => {
                       const imgPath = itemImageMap[c.item] || `/img/sunflowerland/${c.item}.png`
                       return (
-                        <button
-                          type="button"
-                          class="chum-badge group/chum inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/[0.03] border border-white/5 hover:border-cyan-400/40 hover:bg-white/[0.06] text-[11px] font-mono text-white/70 transition-all cursor-pointer select-none"
-                          data-chum-name={c.item}
-                          data-chum-amount={c.amount.toString()}
-                          title={`${c.amount}x ${c.item}`}
-                        >
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] font-mono text-white/80">
                           <img
                             src={imgPath}
                             alt={c.item}
                             class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0"
                             loading="lazy"
                           />
-                          <span class="chum-label font-medium text-white/90">
-                            {c.amount}x {c.item}
-                          </span>
-                          <span class="chum-check text-[10px] text-cyan-400 hidden ml-0.5">✓</span>
-                        </button>
+                          <span>{c.amount}x {c.item}</span>
+                        </div>
                       )
                     })}
                   </div>
                 </div>
               )}
             </div>
-          </details>
+          </dialog>
         )}
       </div>
     )}
@@ -605,9 +630,10 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
               </span>
             </div>
           </div>
-          <span class="trap-cost-val text-[11px] font-mono font-bold text-amber-400 bg-white/5 px-2 py-1 rounded-md border border-white/10 shrink-0">
-            -- FLOWER
-          </span>
+          <div class="trap-cost-val text-[11px] font-mono font-bold text-amber-400 bg-white/5 px-2 py-1 rounded-md border border-white/10 shrink-0 flex items-center gap-1">
+            <span class="trap-val-num">--</span>
+            <img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" />
+          </div>
         </div>
       </div>
     )}

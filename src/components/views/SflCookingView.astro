@@ -989,15 +989,9 @@ const formatAstroDescription = (skill) => {
 
   const CACHE_KEY = "sfl_cooking_state";
   const saveState = () => {
-    // Sincronizar hacia el almacén común global SflUserState
+    // SflUserState gestiona los buffs y skills de forma independiente.
+    // Aquí solo guardamos preferencias numéricas y filtros en localStorage para compatibilidad.
     if (window.SflUserState) {
-      activeBuffs.forEach(buffId => window.SflUserState.setBuffActive(buffId, true));
-      Object.keys(sflBuffs).forEach(id => {
-        if (!activeBuffs.has(id)) window.SflUserState.setBuffActive(id, false);
-      });
-      Object.entries(activeSkills).forEach(([name, rank]) => {
-        window.SflUserState.setSkillRank(name, rank);
-      });
       window.SflUserState.setPreferences({
         coinsPerFlower: window.sflCustomCoinsPerFlower,
         rodCost: window.sflCustomRodCost,
@@ -1086,16 +1080,31 @@ const formatAstroDescription = (skill) => {
     // Skills Logic for XP (Multiplicative compounding according to SFL engine)
     if (activeSkills) {
       Object.entries(activeSkills).forEach(([skillName, rank]) => {
+        if (!rank || rank <= 0) return;
+
+        // Others XP Buffs (VIP Pass, Blossom Beard, Luminous Anglerfish, Faction Pet)
+        if (skillName === "VIP Pass") {
+          boostedExp *= 1.1;
+          return;
+        }
+        if (skillName === "Blossom Beard") {
+          boostedExp *= 1.1;
+          return;
+        }
+        if (skillName === "Luminous Anglerfish" && isTargetMatch(item, "Fish")) {
+          boostedExp *= 1.5;
+          return;
+        }
+        if (skillName === "Faction Pet") {
+          const petBonus = rank === 1 ? 0.1 : rank === 2 ? 0.2 : rank === 3 ? 0.3 : 0.5;
+          boostedExp *= (1 + petBonus);
+          return;
+        }
+
         const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
         if (!skill) return;
-        const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
+        const math1 = skill.mathematics_1?.calc_by_rank?.[`rank_${rank}`] ?? skill.mathematics_1?.calc;
         if (math1 === undefined || math1 === null) return;
-        
-        // Others XP Buffs
-        if (skillName === "VIP Pass") { boostedExp *= (1 + math1); }
-        if (skillName === "Blossom Beard") { boostedExp *= (1 + math1); }
-        if (skillName === "Luminous Anglerfish" && isTargetMatch(item, "Fish")) { boostedExp *= (1 + math1); }
-        if (skillName === "Faction Pet") { boostedExp *= (1 + math1); }
         
         // Munching Mastery (+5% XP)
         if (skillName === "Munching Mastery") {
@@ -1126,6 +1135,13 @@ const formatAstroDescription = (skill) => {
           boostedExp *= (1 + math1);
         }
       });
+    }
+
+    // Fallback de buffs activos para VIP Pass (por ID 9001 o nombre)
+    if (activeBuffs && (activeBuffs.has("9001") || activeBuffs.has("VIP Pass"))) {
+      if (!activeSkills || !activeSkills["VIP Pass"]) {
+        boostedExp *= 1.1;
+      }
     }
     
     return boostedExp + additions;
@@ -2369,30 +2385,8 @@ const formatAstroDescription = (skill) => {
     if (e.key === "Escape") closeDishDropdown();
   });
 
-  document.querySelectorAll(".buff-checkbox").forEach((cb) => {
-    cb.addEventListener("change", (e) => {
-      const buffId = e.target.dataset.buffId;
-      const card = e.target.closest('label');
-      if (e.target.checked) {
-        activeBuffs.add(buffId);
-        if (card) {
-          card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active");
-          card.classList.remove("border-white/5", "bg-white/5");
-        }
-      } else {
-        activeBuffs.delete(buffId);
-        if (card) {
-          card.classList.remove("border-emerald-500/50", "bg-emerald-500/10", "active");
-          card.classList.add("border-white/5", "bg-white/5");
-        }
-      }
-      renderTable(searchInput ? searchInput.value : "");
-      updateSkillCalculator();
-      if (typeof saveState === "function") saveState();
-    });
-  });
-
   const formatSkillDescription = (skillName, rank, originalDesc) => {
+    if (!originalDesc || typeof originalDesc !== "string") return "";
     const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
     if (!skill) return originalDesc;
     
@@ -2422,91 +2416,49 @@ const formatAstroDescription = (skill) => {
   };
 
   const updateSkillUI = (skillId) => {
-    const rank = activeSkills[skillId] || 0;
-    const safeId = skillId.replace(/\s+/g, '_');
-    
-    // Update card styling
-    const card = document.querySelector(`.skill-card[data-skill-id="${skillId}"]`);
-    if (card) {
-      if (rank > 0) {
-        card.classList.add("border-blue-500/50", "bg-blue-500/10", "active");
-        card.classList.remove("border-white/5", "bg-white/5");
-      } else {
-        card.classList.remove("border-blue-500/50", "bg-blue-500/10", "active");
-        card.classList.add("border-white/5", "bg-white/5");
-      }
+    try {
+      const rank = activeSkills[skillId] || 0;
+      const safeId = skillId.replace(/\s+/g, '_');
       
-      const descSpan = card.querySelector('.skill-description-text');
-      let updatedDesc = "";
-      if (descSpan) {
-        updatedDesc = formatSkillDescription(skillId, rank, descSpan.dataset.original);
-        descSpan.textContent = updatedDesc;
-      }
-      
-      const compactSpan = card.querySelector('.compact-view span');
-      if (compactSpan) {
-        if (skillId === "Faction Pet") {
-          const labels = ["10%", "20%", "30%", "50%"];
-          const displayVal = rank > 0 ? "+" + labels[rank - 1] : "?";
-          compactSpan.textContent = compactSpan.textContent.replace(/^[^\s]+/, displayVal);
-        } else if (descSpan) {
-          const descToParse = rank === 0 ? formatSkillDescription(skillId, 1, descSpan.dataset.original) : updatedDesc;
-          const match = descToParse.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i);
-          if (match) {
-            let newVal = match[1].trim();
-            if (newVal.toLowerCase().endsWith('x')) newVal = 'x' + newVal.slice(0, -1);
-            compactSpan.textContent = compactSpan.textContent.replace(/^[^\s]+/, newVal);
+      const card = document.querySelector(`.skill-card[data-skill-id="${skillId}"]`);
+      if (card) {
+        const descSpan = card.querySelector('.skill-description-text');
+        const originalText = descSpan?.dataset?.original || descSpan?.getAttribute("title") || descSpan?.textContent || "";
+        let updatedDesc = originalText;
+        if (descSpan && originalText) {
+          updatedDesc = formatSkillDescription(skillId, rank, originalText) || originalText;
+          descSpan.textContent = updatedDesc;
+        }
+        
+        const compactSpan = card.querySelector('.compact-view span');
+        if (compactSpan) {
+          if (skillId === "Faction Pet") {
+            const labels = ["10%", "20%", "30%", "50%"];
+            const displayVal = rank > 0 ? "+" + labels[rank - 1] : "?";
+            compactSpan.textContent = compactSpan.textContent.replace(/^[^\s]+/, displayVal);
+          } else if (originalText) {
+            const descToParse = rank === 0 ? formatSkillDescription(skillId, 1, originalText) : updatedDesc;
+            if (descToParse && typeof descToParse === "string") {
+              const match = descToParse.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i);
+              if (match) {
+                let newVal = match[1].trim();
+                if (newVal.toLowerCase().endsWith('x')) newVal = 'x' + newVal.slice(0, -1);
+                compactSpan.textContent = compactSpan.textContent.replace(/^[^\s]+/, newVal);
+              }
+            }
           }
         }
       }
-    }
-    
-    // Update checkboxes progressively
-    document.querySelectorAll(`.rank-input-${safeId}`).forEach((cb) => {
-      const cbRank = parseInt(cb.dataset.rank);
-      cb.checked = skillId === "Faction Pet" ? cbRank === rank : cbRank <= rank;
-    });
-  };
-
-  document.querySelectorAll(".skill-card").forEach((card) => {
-    card.addEventListener("click", (e) => {
-      const skillId = card.dataset.skillId;
-      if (activeSkills[skillId]) {
-        delete activeSkills[skillId]; // Turn off
-      } else {
-        activeSkills[skillId] = 1; // Turn on to rank 1
-      }
-      updateSkillUI(skillId);
-      renderTable(searchInput ? searchInput.value : "");
-      updateSkillCalculator();
-      if (typeof saveState === "function") saveState();
-    });
-  });
-
-  document.querySelectorAll(".skill-rank-checkbox").forEach((cb) => {
-    cb.addEventListener("change", (e) => {
-      const skillId = e.target.dataset.skillId;
-      const rank = parseInt(e.target.value);
       
-      if (e.target.checked) {
-        // Turning ON a rank => set skill to that rank
-        activeSkills[skillId] = rank;
-      } else {
-        // Turning OFF a rank => set skill to rank-1 (or delete if 0)
-        if (skillId === "Faction Pet") {
-          delete activeSkills[skillId];
-        } else if (rank - 1 > 0) {
-          activeSkills[skillId] = rank - 1;
-        } else {
-          delete activeSkills[skillId];
-        }
-      }
-      updateSkillUI(skillId);
-      renderTable(searchInput ? searchInput.value : "");
-      updateSkillCalculator();
-      if (typeof saveState === "function") saveState();
-    });
-  });
+      // Update checkboxes progressively
+      document.querySelectorAll(`.rank-input-${safeId}`).forEach((cb) => {
+        const cbRank = parseInt(cb.dataset.rank || cb.value || "1", 10);
+        cb.checked = skillId === "Faction Pet" ? cbRank === rank : cbRank <= rank;
+      });
+    } catch (err) {
+      console.warn("Error updating skill UI for", skillId, err);
+    }
+  };
 
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -2548,41 +2500,45 @@ const formatAstroDescription = (skill) => {
 
   const loadState = () => {
     // 1. Cargar buffs, skills y preferencias desde el almacén global SflUserState
-    if (window.SflUserState) {
-      const globalState = window.SflUserState.getState();
-      if (globalState.buffs) {
-        Object.keys(globalState.buffs).forEach(buffId => {
-          if (globalState.buffs[buffId]) {
-            activeBuffs.add(buffId);
-          }
-        });
+    // Leemos de forma síncrona desde localStorage para no depender del timing de carga de módulos
+    try {
+      const rawGlobal = localStorage.getItem("sfl_user_game_state_v1");
+      if (rawGlobal) {
+        const globalState = JSON.parse(rawGlobal);
+        if (globalState.buffs) {
+          Object.entries(globalState.buffs).forEach(([buffId, active]) => {
+            if (active) activeBuffs.add(String(buffId));
+          });
+        }
+        if (globalState.skills) {
+          Object.entries(globalState.skills).forEach(([name, rank]) => {
+            if (rank > 0) activeSkills[name] = rank;
+          });
+        }
+        if (globalState.preferences) {
+          if (globalState.preferences.coinsPerFlower) window.sflCustomCoinsPerFlower = globalState.preferences.coinsPerFlower;
+          if (globalState.preferences.rodCost) window.sflCustomRodCost = globalState.preferences.rodCost;
+          if (globalState.preferences.customFishFlakeCost !== undefined && globalState.preferences.customFishFlakeCost !== null) window.sflCustomFishFlakeCost = globalState.preferences.customFishFlakeCost;
+          if (globalState.preferences.customFishStickCost !== undefined && globalState.preferences.customFishStickCost !== null) window.sflCustomFishStickCost = globalState.preferences.customFishStickCost;
+          if (globalState.preferences.customCrabStickCost !== undefined && globalState.preferences.customCrabStickCost !== null) window.sflCustomCrabStickCost = globalState.preferences.customCrabStickCost;
+          if (globalState.preferences.customFishOilCost !== undefined && globalState.preferences.customFishOilCost !== null) window.sflCustomFishOilCost = globalState.preferences.customFishOilCost;
+        }
       }
-      if (globalState.skills) {
-        Object.entries(globalState.skills).forEach(([name, rank]) => {
-          if (rank > 0) activeSkills[name] = rank;
-        });
-      }
-      if (globalState.preferences) {
-        if (globalState.preferences.coinsPerFlower) window.sflCustomCoinsPerFlower = globalState.preferences.coinsPerFlower;
-        if (globalState.preferences.rodCost) window.sflCustomRodCost = globalState.preferences.rodCost;
-        if (globalState.preferences.customFishFlakeCost !== undefined && globalState.preferences.customFishFlakeCost !== null) window.sflCustomFishFlakeCost = globalState.preferences.customFishFlakeCost;
-        if (globalState.preferences.customFishStickCost !== undefined && globalState.preferences.customFishStickCost !== null) window.sflCustomFishStickCost = globalState.preferences.customFishStickCost;
-        if (globalState.preferences.customCrabStickCost !== undefined && globalState.preferences.customCrabStickCost !== null) window.sflCustomCrabStickCost = globalState.preferences.customCrabStickCost;
-        if (globalState.preferences.customFishOilCost !== undefined && globalState.preferences.customFishOilCost !== null) window.sflCustomFishOilCost = globalState.preferences.customFishOilCost;
-      }
+    } catch (e) {
+      console.warn("Failed to load sfl_user_game_state_v1 in loadState", e);
     }
 
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
       try {
         const state = JSON.parse(cached);
-        if (state.activeBuffs && (!window.SflUserState || Object.keys(window.SflUserState.getState().buffs).length === 0)) {
+        if (state.activeBuffs && activeBuffs.size === 0) {
           state.activeBuffs.forEach(buffId => {
-            activeBuffs.add(buffId);
+            activeBuffs.add(String(buffId));
           });
         }
-        if (state.activeSkills && (!window.SflUserState || Object.keys(window.SflUserState.getState().skills).length === 0)) {
-          activeSkills = state.activeSkills;
+        if (state.activeSkills && Object.keys(activeSkills).length === 0) {
+          activeSkills = { ...state.activeSkills };
         }
 
         // Marcar checkboxes y clases activas para los buffs cargados
@@ -2590,9 +2546,15 @@ const formatAstroDescription = (skill) => {
           const cb = document.querySelector(`.buff-checkbox[data-buff-id="${buffId}"]`);
           if (cb) {
             cb.checked = true;
-            const card = cb.closest('label');
+            const card = cb.closest('.buff-card');
             if (card) {
-              card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active");
+              const isOrange = card.classList.contains("hover:border-orange-500/30");
+              card.classList.add("active");
+              if (isOrange) {
+                card.classList.add("border-orange-500/50", "bg-orange-500/10");
+              } else {
+                card.classList.add("border-emerald-500/50", "bg-emerald-500/10");
+              }
               card.classList.remove("border-white/5", "bg-white/5");
             }
           }
@@ -2659,6 +2621,7 @@ const formatAstroDescription = (skill) => {
       window.toggleBoostFilter('all');
       window.setViewStyle('detailed');
     }
+    Object.keys(activeSkills).forEach(skillId => updateSkillUI(skillId));
   };
 
   window.updateKeyPrices = function() {
@@ -2822,48 +2785,59 @@ const formatAstroDescription = (skill) => {
   loadState();
   fetchPrices();
 
-  // Sincronización en vivo con el almacén global SflUserState
-  if (window.SflUserState) {
-    window.SflUserState.subscribe((newState) => {
-      let hasChanges = false;
-      if (newState.buffs) {
-        Object.keys(sflBuffs).forEach(id => {
-          const isActive = Boolean(newState.buffs[id]);
-          if (isActive && !activeBuffs.has(id)) {
-            activeBuffs.add(id);
-            hasChanges = true;
-            const cb = document.querySelector(`.buff-checkbox[data-buff-id="${id}"]`);
-            if (cb) {
-              cb.checked = true;
-              const card = cb.closest('label');
-              if (card) { card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active"); card.classList.remove("border-white/5", "bg-white/5"); }
-            }
-          } else if (!isActive && activeBuffs.has(id)) {
-            activeBuffs.delete(id);
-            hasChanges = true;
-            const cb = document.querySelector(`.buff-checkbox[data-buff-id="${id}"]`);
-            if (cb) {
-              cb.checked = false;
-              const card = cb.closest('label');
-              if (card) { card.classList.remove("border-emerald-500/50", "bg-emerald-500/10", "active"); card.classList.add("border-white/5", "bg-white/5"); }
-            }
-          }
-        });
+  // Sincronización en vivo con el almacén global SflUserState (vía CustomEvent nativo)
+  const syncCookingFromGlobalState = (newState) => {
+    if (!newState) return;
+    let hasChanges = false;
+
+    // Sincronizar activeBuffs
+    if (newState.buffs) {
+      const nextBuffs = new Set();
+      Object.entries(newState.buffs).forEach(([id, active]) => {
+        if (active) nextBuffs.add(String(id));
+      });
+      if (nextBuffs.size !== activeBuffs.size || Array.from(nextBuffs).some((id) => !activeBuffs.has(id))) {
+        activeBuffs = nextBuffs;
+        hasChanges = true;
       }
-      if (newState.skills) {
-        Object.entries(newState.skills).forEach(([sName, sRank]) => {
-          if (activeSkills[sName] !== sRank) {
-            activeSkills[sName] = sRank;
-            hasChanges = true;
-            updateSkillUI(sName);
-          }
-        });
-      }
-      if (hasChanges) {
-        renderTable(searchInput ? searchInput.value : "");
-        updateSkillCalculator();
-      }
-    });
+    }
+
+    // Sincronizar activeSkills (incluyendo eliminación de habilidades desactivadas)
+    if (newState.skills) {
+      const currentSkillKeys = Object.keys(activeSkills);
+      currentSkillKeys.forEach((k) => {
+        if (!newState.skills[k] || newState.skills[k] <= 0) {
+          delete activeSkills[k];
+          hasChanges = true;
+          updateSkillUI(k);
+        }
+      });
+      Object.entries(newState.skills).forEach(([sName, sRank]) => {
+        if (sRank > 0 && activeSkills[sName] !== sRank) {
+          activeSkills[sName] = sRank;
+          hasChanges = true;
+          updateSkillUI(sName);
+        }
+      });
+    }
+
+    if (hasChanges) {
+      const searchInput = document.getElementById("searchInput");
+      renderTable(searchInput ? searchInput.value : "");
+      updateSkillCalculator();
+    }
+  };
+
+  // Escuchar el evento nativo del navegador inmediatamente (funciona sin importar el orden de carga)
+  window.addEventListener("sfl:stateUpdated", (e) => {
+    if (e && e.detail) {
+      syncCookingFromGlobalState(e.detail);
+    }
+  });
+
+  // Suscripción de respaldo si SflUserState ya está disponible
+  if (window.SflUserState && typeof window.SflUserState.subscribe === "function") {
+    window.SflUserState.subscribe(syncCookingFromGlobalState);
   }
 </script>
 

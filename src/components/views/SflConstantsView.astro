@@ -23,9 +23,12 @@ const toolsTab = blacksmith.tabs.find((tab) => tab.id === "tools")
 const categories = toolsTab ? toolsTab.categories : []
 const boostsTab = blacksmith.tabs.find((tab) => tab.id === "boosts")
 const boostCategories = boostsTab ? boostsTab.categories : []
+const buildTab = blacksmith.tabs.find((tab) => tab.id === "build")
+const buildCategories = buildTab ? buildTab.categories : []
 const totalBlacksmithTools = categories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
 const totalBlacksmithBoosts = boostCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
-const totalBlacksmithItems = totalBlacksmithTools + totalBlacksmithBoosts
+const totalBlacksmithBuild = buildCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
+const totalBlacksmithItems = totalBlacksmithTools + totalBlacksmithBoosts + totalBlacksmithBuild
 const landCat = categories.find((cat) => cat.id === "land")
 const oilDrillItem = landCat?.items.find((item) => item.id === "oil_drill")
 
@@ -96,7 +99,13 @@ const blacksmithTabs: CatalogTab[] = [
     id: "build",
     name: t("sfl.constants.tab.build"),
     icon: "🔨",
-    isComingSoon: true,
+    type: "craft",
+    placeholderIcon: "🔨",
+    sections: buildCategories.map((cat) => ({
+      id: cat.id,
+      name: t(`sfl.constants.cat.${cat.id}`) || cat.name,
+      items: cat.items,
+    })),
   },
 ]
 

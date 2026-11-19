@@ -425,18 +425,19 @@
         "categories": [
           {
             "id": "fermented_goods",
-            "name": "Cultivos y Alimentos Fermentados",
+            "name": "Cultivos Encurtidos (Pickled Crops)",
             "items": [
               {
-                "id": "fermented_carrots",
-                "name": "Fermented Carrots",
-                "description": "Zanahorias fermentadas en salmuera. Otorgan 2x de experiencia al Bumpkin.",
-                "image": "/img/sunflowerland/food/Fermented Carrots.png",
+                "id": "pickled_radish",
+                "name": "Pickled Radish",
+                "description": "Crunchy radish preserved in brine.",
+                "image": "/img/sunflowerland/fermentation/pickled_radish.webp",
+                "timeSeconds": 3600,
                 "ingredients": [
                   {
-                    "name": "Carrot",
-                    "amount": 50,
-                    "image": "/img/sunflowerland/Carrot.png"
+                    "name": "Radish",
+                    "amount": 10,
+                    "image": "/img/sunflowerland/Radish.png"
                   },
                   {
                     "name": "Salt",
@@ -446,15 +447,16 @@
                 ]
               },
               {
-                "id": "fermented_fish",
-                "name": "Fermented Fish",
-                "description": "Pescado fermentado tradicional utilizado en preparaciones y powerups.",
-                "image": "/img/sunflowerland/food/Fermented Fish.png",
+                "id": "pickled_zucchini",
+                "name": "Pickled Zucchini",
+                "description": "Zucchini preserved in brine.",
+                "image": "/img/sunflowerland/fermentation/pickled_zucchini.webp",
+                "timeSeconds": 3600,
                 "ingredients": [
                   {
-                    "name": "Anchovy",
-                    "amount": 1,
-                    "image": "/img/sunflowerland/fish/Anchovy.png"
+                    "name": "Zucchini",
+                    "amount": 75,
+                    "image": "/img/sunflowerland/Zucchini.png"
                   },
                   {
                     "name": "Salt",
@@ -464,15 +466,73 @@
                 ]
               },
               {
-                "id": "sauerkraut",
-                "name": "Sauerkraut",
-                "description": "Col fermentada en sal para conservación prolongada y nutrición de mascotas.",
-                "image": "/img/sunflowerland/Cabbage.png",
+                "id": "pickled_tomato",
+                "name": "Pickled Tomato",
+                "description": "Juicy tomato preserved in brine.",
+                "image": "/img/sunflowerland/fermentation/pickled_tomato.webp",
+                "timeSeconds": 3600,
                 "ingredients": [
                   {
-                    "name": "Cabbage",
+                    "name": "Tomato",
+                    "amount": 15,
+                    "image": "/img/sunflowerland/Tomato.png"
+                  },
+                  {
+                    "name": "Salt",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Salt.png"
+                  }
+                ]
+              },
+              {
+                "id": "pickled_broccoli",
+                "name": "Pickled Broccoli",
+                "description": "Fresh broccoli preserved in brine.",
+                "image": "/img/sunflowerland/fermentation/pickled_broccoli.webp",
+                "timeSeconds": 3600,
+                "ingredients": [
+                  {
+                    "name": "Broccoli",
                     "amount": 20,
-                    "image": "/img/sunflowerland/Cabbage.png"
+                    "image": "/img/sunflowerland/Broccoli.png"
+                  },
+                  {
+                    "name": "Salt",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Salt.png"
+                  }
+                ]
+              },
+              {
+                "id": "pickled_onion",
+                "name": "Pickled Onion",
+                "description": "Flavorful onion preserved in brine.",
+                "image": "/img/sunflowerland/fermentation/pickled_onion.webp",
+                "timeSeconds": 3600,
+                "ingredients": [
+                  {
+                    "name": "Onion",
+                    "amount": 10,
+                    "image": "/img/sunflowerland/Onion.png"
+                  },
+                  {
+                    "name": "Salt",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Salt.png"
+                  }
+                ]
+              },
+              {
+                "id": "pickled_pepper",
+                "name": "Pickled Pepper",
+                "description": "Spicy pepper preserved in brine.",
+                "image": "/img/sunflowerland/fermentation/pickled_pepper.webp",
+                "timeSeconds": 3600,
+                "ingredients": [
+                  {
+                    "name": "Pepper",
+                    "amount": 30,
+                    "image": "/img/sunflowerland/Pepper.png"
                   },
                   {
                     "name": "Salt",
@@ -482,9 +542,212 @@
                 ]
               }
             ]
+          },
+          {
+            "id": "greenhouse_treats",
+            "name": "Tratos de Invernadero (Greenhouse Treats)",
+            "items": [
+              {
+                "id": "greenhouse_glow",
+                "name": "Greenhouse Glow",
+                "description": "Fermented boost for the greenhouse.",
+                "boost": "-20% Greenhouse crop growth time",
+                "image": "/img/sunflowerland/fermentation/greenhouse_glow.webp",
+                "timeSeconds": 7200,
+                "ingredients": [
+                  {
+                    "name": "Pickled Tomato",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fermentation/pickled_tomato.webp"
+                  },
+                  {
+                    "name": "Refined Salt",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/Refined Salt.png"
+                  }
+                ]
+              },
+              {
+                "id": "greenhouse_goodie",
+                "name": "Greenhouse Goodie",
+                "description": "Fermented treat for the greenhouse.",
+                "boost": "+0.2 Greenhouse crop yield",
+                "image": "/img/sunflowerland/fermentation/greenhouse_goodie.webp",
+                "timeSeconds": 7200,
+                "ingredients": [
+                  {
+                    "name": "Pickled Radish",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fermentation/pickled_radish.webp"
+                  },
+                  {
+                    "name": "Refined Salt",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/Refined Salt.png"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fermented_fertilizers",
+            "name": "Fertilizantes Fermentados",
+            "items": [
+              {
+                "id": "sproutroot_surprise",
+                "name": "Sproutroot Surprise",
+                "description": "Increases plot crop yield by +0.2 and reduces growth time by 50%.",
+                "boost": "+0.2 Crop Yield & -50% Growth Time",
+                "image": "/img/sunflowerland/fermentation/sproutroot_surprise.webp",
+                "yield": 5,
+                "timeSeconds": 120,
+                "ingredients": [
+                  {
+                    "name": "Sprout Mix",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Sprout Mix.png"
+                  },
+                  {
+                    "name": "Rapid Root",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Rapid Root.png"
+                  },
+                  {
+                    "name": "Refined Salt",
+                    "amount": 2,
+                    "image": "/img/sunflowerland/Refined Salt.png"
+                  }
+                ]
+              },
+              {
+                "id": "turbofruit_mix",
+                "name": "Turbofruit Mix",
+                "description": "Increases fruit patch yield by +0.1 and grows fruit 1.25x faster.",
+                "boost": "+0.1 Fruit Yield & 1.25x Speed",
+                "image": "/img/sunflowerland/fermentation/turbofruit_mix.webp",
+                "yield": 5,
+                "timeSeconds": 120,
+                "ingredients": [
+                  {
+                    "name": "Rapid Root",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Rapid Root.png"
+                  },
+                  {
+                    "name": "Fruitful Blend",
+                    "amount": 5,
+                    "image": "/img/sunflowerland/Fruitful Blend.png"
+                  },
+                  {
+                    "name": "Refined Salt",
+                    "amount": 2,
+                    "image": "/img/sunflowerland/Refined Salt.png"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fermented_baits",
+            "name": "Cebos Fermentados",
+            "items": [
+              {
+                "id": "capsule_bait",
+                "name": "Capsule Bait",
+                "description": "Works like an earthworm for fishing.",
+                "boost": "Yields 5 with Aged Fish (10 with Prime)",
+                "image": "/img/sunflowerland/fermentation/capsule_bait.webp",
+                "yield": 5,
+                "timeSeconds": 300,
+                "ingredients": [
+                  {
+                    "name": "Aged Anchovy",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fish/aged/Aged Anchovy.webp"
+                  },
+                  {
+                    "name": "Pickled Zucchini",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fermentation/pickled_zucchini.webp"
+                  }
+                ],
+                "catchPool": [
+                  "Anchovy",
+                  "Butterflyfish",
+                  "Blowfish",
+                  "Clownfish",
+                  "Sea Bass",
+                  "Horse Mackerel",
+                  "Halibut",
+                  "Squid"
+                ]
+              },
+              {
+                "id": "umbrella_bait",
+                "name": "Umbrella Bait",
+                "description": "Works like a grub for fishing.",
+                "boost": "Yields 5 with Aged Fish (10 with Prime)",
+                "image": "/img/sunflowerland/fermentation/umbrella_bait.webp",
+                "yield": 5,
+                "timeSeconds": 300,
+                "ingredients": [
+                  {
+                    "name": "Aged Red Snapper",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fish/aged/Aged Red Snapper.webp"
+                  },
+                  {
+                    "name": "Pickled Broccoli",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fermentation/pickled_broccoli.webp"
+                  }
+                ],
+                "catchPool": [
+                  "Red Snapper",
+                  "Moray Eel",
+                  "Olive Flounder",
+                  "Napoleanfish",
+                  "Surgeonfish",
+                  "Zebra Turkeyfish",
+                  "Ray"
+                ]
+              },
+              {
+                "id": "crimson_baitfish",
+                "name": "Crimson Baitfish",
+                "description": "Works like a red wiggler for fishing.",
+                "boost": "Yields 5 with Aged Fish (10 with Prime)",
+                "image": "/img/sunflowerland/fermentation/crimson_baitfish.webp",
+                "yield": 5,
+                "timeSeconds": 300,
+                "ingredients": [
+                  {
+                    "name": "Aged Tuna",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fish/aged/Aged Tuna.webp"
+                  },
+                  {
+                    "name": "Pickled Radish",
+                    "amount": 1,
+                    "image": "/img/sunflowerland/fermentation/pickled_radish.webp"
+                  }
+                ],
+                "catchPool": [
+                  "Tuna",
+                  "Mahi Mahi",
+                  "Blue Marlin",
+                  "Oarfish",
+                  "Football fish",
+                  "Sunfish",
+                  "Coelacanth",
+                  "Whale Shark",
+                  "Saw Shark",
+                  "White Shark"
+                ]
+              }
+            ]
           }
-        ],
-        "isComingSoon": true
+        ]
       },
       {
         "id": "spice",

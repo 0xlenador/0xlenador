@@ -457,7 +457,7 @@ const defaultLabels: CatalogLabels = {
                       </div>
 
                       <!-- Fila Aged Fish con Badge de Probabilidad -->
-                      <div class="flex items-center justify-between py-1.5 px-3 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 text-xs font-mono">
+                      <div class="catalog-detail-aged-row hidden items-center justify-between py-1.5 px-3 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 text-xs font-mono">
                         <div class="flex items-center gap-1.5 text-terminal-secondary">
                           <span class="text-xs">🐟</span>
                           <span>{defaultLabels.agedXpLabel}</span>
@@ -471,7 +471,7 @@ const defaultLabels: CatalogLabels = {
                       </div>
 
                       <!-- Fila Prime Aged Fish con Badge de Probabilidad -->
-                      <div class="flex items-center justify-between py-1.5 px-3 rounded-xl bg-yellow-500/[0.08] border border-yellow-500/30 text-xs font-mono shadow-[0_0_12px_rgba(234,179,8,0.06)]">
+                      <div class="catalog-detail-prime-row hidden items-center justify-between py-1.5 px-3 rounded-xl bg-yellow-500/[0.08] border border-yellow-500/30 text-xs font-mono shadow-[0_0_12px_rgba(234,179,8,0.06)]">
                         <div class="flex items-center gap-1.5 text-yellow-300/90 font-medium">
                           <span class="text-xs">✨</span>
                           <span>{defaultLabels.primeAgedXpLabel}</span>
@@ -650,6 +650,8 @@ const defaultLabels: CatalogLabels = {
         const usdTotalEl = panel.querySelector<HTMLElement>(".catalog-detail-usd-total")
         const unitCostEl = panel.querySelector<HTMLElement>(".catalog-detail-unit-cost")
         const xpSection = panel.querySelector<HTMLElement>(".catalog-detail-xp-section")
+        const agedRow = panel.querySelector<HTMLElement>(".catalog-detail-aged-row")
+        const primeRow = panel.querySelector<HTMLElement>(".catalog-detail-prime-row")
         const agedXpEl = panel.querySelector<HTMLElement>(".catalog-detail-aged-xp")
         const primeAgedXpEl = panel.querySelector<HTMLElement>(".catalog-detail-prime-xp")
         const rawRow = panel.querySelector<HTMLElement>(".catalog-detail-raw-row")
@@ -859,17 +861,16 @@ const defaultLabels: CatalogLabels = {
             return `${mins}m`
           }
 
-          if (xpSection && agedXpEl && primeAgedXpEl) {
-            if (selectedItem.agedXp || selectedItem.primeAgedXp) {
+          const hasXp = Boolean(selectedItem.agedXp || selectedItem.primeAgedXp)
+          const hasTime = Boolean(selectedItem.timeSeconds)
+
+          if (xpSection) {
+            if (hasXp || hasTime) {
               xpSection.classList.remove("hidden")
               xpSection.classList.add("flex")
-              const totalAgedXp = (selectedItem.agedXp || 0) * qty
-              const totalPrimeXp = (selectedItem.primeAgedXp || 0) * qty
-              agedXpEl.innerText = `+${totalAgedXp.toLocaleString()} XP`
-              primeAgedXpEl.innerText = `+${totalPrimeXp.toLocaleString()} XP`
 
               if (agingTimeRow && agingTimeEl) {
-                if (selectedItem.timeSeconds) {
+                if (hasTime) {
                   agingTimeRow.classList.remove("hidden")
                   agingTimeRow.classList.add("flex")
                   agingTimeEl.innerText = formatDuration(selectedItem.timeSeconds)
@@ -891,12 +892,36 @@ const defaultLabels: CatalogLabels = {
                 }
               }
 
-              const chances = selectedItem.chances || { aged: 90, primeAged: 10 }
-              if (agedChanceEl && chances.aged !== undefined) {
-                agedChanceEl.innerText = `${chances.aged}%`
+              if (agedRow && agedXpEl) {
+                if (hasXp) {
+                  agedRow.classList.remove("hidden")
+                  agedRow.classList.add("flex")
+                  const totalAgedXp = (selectedItem.agedXp || 0) * qty
+                  agedXpEl.innerText = `+${totalAgedXp.toLocaleString()} XP`
+                  const chances = selectedItem.chances || { aged: 90, primeAged: 10 }
+                  if (agedChanceEl && chances.aged !== undefined) {
+                    agedChanceEl.innerText = `${chances.aged}%`
+                  }
+                } else {
+                  agedRow.classList.add("hidden")
+                  agedRow.classList.remove("flex")
+                }
               }
-              if (primeChanceEl && chances.primeAged !== undefined) {
-                primeChanceEl.innerText = `${chances.primeAged}%`
+
+              if (primeRow && primeAgedXpEl) {
+                if (hasXp) {
+                  primeRow.classList.remove("hidden")
+                  primeRow.classList.add("flex")
+                  const totalPrimeXp = (selectedItem.primeAgedXp || 0) * qty
+                  primeAgedXpEl.innerText = `+${totalPrimeXp.toLocaleString()} XP`
+                  const chances = selectedItem.chances || { aged: 90, primeAged: 10 }
+                  if (primeChanceEl && chances.primeAged !== undefined) {
+                    primeChanceEl.innerText = `${chances.primeAged}%`
+                  }
+                } else {
+                  primeRow.classList.add("hidden")
+                  primeRow.classList.remove("flex")
+                }
               }
             } else {
               xpSection.classList.add("hidden")
