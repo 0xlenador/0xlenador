@@ -129,7 +129,7 @@ const tierVisuals: Record<string, { label: string; badgeClass: string; glowClass
 const visualKey = kind === "rod" ? (item.tier || "basic") : kind
 const visual = tierVisuals[visualKey] || tierVisuals.basic
 
-// Preparar lista unificada de cebos (incluye cebo garantizado si existe para peces de caña)
+// Preparar lista unificada de cebos (incluye cebo garantizado del Fish Market si existe)
 const allBaits = [...(item.baits || [])]
 if (kind === "rod" && item.guaranteedBy && !allBaits.includes(item.guaranteedBy)) {
   allBaits.push(item.guaranteedBy)

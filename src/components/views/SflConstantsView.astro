@@ -685,8 +685,75 @@ const animalBuildingsList = [
       </div>
     </div>
 
-    <!-- COLUMNA 3 (20%): Vacío -->
-    <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
+    <!-- COLUMNA 3 (20%): Recursos de NPCs (Finn: Fishing Lure) -->
+    <div
+      class="bg-[#18181b]/95 border border-white/10 rounded-xl p-2 sm:p-2.5 shadow-lg backdrop-blur-md flex flex-col justify-between gap-1.5 font-mono text-[11px] overflow-hidden"
+    >
+      <!-- Cabecera -->
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-bold text-white tracking-wider flex items-center gap-1.5 shrink-0">
+          <Icon name="lucide:map" class="w-3.5 h-3.5 text-sky-400 shrink-0" />
+          <span>{t("sfl.constants.dash2.npc.title")}</span>
+        </span>
+      </div>
+
+      <!-- Fila 1: Fishing Lure (Finn) -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <img
+            src="/img/sunflowerland/fish/a/Fishing Lure.png"
+            alt="Fishing Lure"
+            width="14"
+            height="14"
+            class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+          />
+          <span class="text-[10px] text-terminal-muted font-bold whitespace-nowrap">Fishing Lure</span>
+          <button
+            type="button"
+            id="npcFinnBadge"
+            class="inline-flex items-center gap-1 text-[8.5px] px-1.5 py-0.5 rounded font-mono font-bold transition-all bg-amber-500/15 text-amber-400 border border-amber-500/30 whitespace-nowrap cursor-pointer hover:brightness-125 leading-none select-none"
+            title={t("sfl.constants.dash2.npc.finnTooltip")}
+          >
+            <img
+              id="npcFinnBadgeIcon"
+              src="/img/sunflowerland/Feather.png"
+              alt="Feather"
+              width="10"
+              height="10"
+              class="w-2.5 h-2.5 object-contain [image-rendering:pixelated]"
+            />
+            <span id="npcFinnBadgeText">100</span>
+          </button>
+        </div>
+        <div class="inline-flex items-center gap-1 shrink-0">
+          <img src="/img/sunflowerland/123/flower.jpg" alt="FLOWER" width="10" height="10" class="w-2.5 h-2.5 rounded-full object-cover shrink-0" />
+          <span id="npcFishingLurePriceDisplay" class="text-[10px] text-terminal-secondary font-mono font-medium">--</span>
+          <span id="npcFishingLureUsdDisplay" class="text-[8.5px] text-white/40 font-mono">($0.00)</span>
+        </div>
+      </div>
+
+      <!-- Fila 2: Placeholder 1 (Próximamente) -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0 opacity-35">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <div class="w-3.5 h-3.5 rounded border border-dashed border-white/20 flex items-center justify-center text-[8px] text-white/30 font-bold">?</div>
+          <span class="text-[10px] text-white/30 font-bold whitespace-nowrap italic">{t("sfl.constants.dash2.npc.placeholder")}</span>
+        </div>
+        <div class="inline-flex items-center gap-1 shrink-0 text-white/20 text-[9px] font-mono">
+          --
+        </div>
+      </div>
+
+      <!-- Fila 3: Placeholder 2 (Próximamente) -->
+      <div class="flex items-center justify-between gap-1 w-full min-w-0 opacity-35">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <div class="w-3.5 h-3.5 rounded border border-dashed border-white/20 flex items-center justify-center text-[8px] text-white/30 font-bold">?</div>
+          <span class="text-[10px] text-white/30 font-bold whitespace-nowrap italic">{t("sfl.constants.dash2.npc.placeholder")}</span>
+        </div>
+        <div class="inline-flex items-center gap-1 shrink-0 text-white/20 text-[9px] font-mono">
+          --
+        </div>
+      </div>
+    </div>
 
     <!-- COLUMNA 4 (20%): Vacío -->
     <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
@@ -1047,6 +1114,15 @@ const animalBuildingsList = [
     const caveMagicMushroomPriceDisplay = document.getElementById("caveMagicMushroomPriceDisplay")
     const caveMagicMushroomUsdDisplay = document.getElementById("caveMagicMushroomUsdDisplay")
 
+    let npcFinnPaymentMode = "feathers" // "feathers" (100 Plumas por defecto) | "gems" (10 Gemas)
+    let calculatedFishingLureFlower = 0
+    // Elementos de Recursos de NPCs (Dashboard Columna 3)
+    const npcFishingLurePriceDisplay = document.getElementById("npcFishingLurePriceDisplay")
+    const npcFishingLureUsdDisplay = document.getElementById("npcFishingLureUsdDisplay")
+    const npcFinnBadge = document.getElementById("npcFinnBadge")
+    const npcFinnBadgeIcon = document.getElementById("npcFinnBadgeIcon")
+    const npcFinnBadgeText = document.getElementById("npcFinnBadgeText")
+
     // Helper para obtener el precio en FLOWER de un material base (usa el motor SflMarket)
     function getBaseMaterialUnitPrice(materialName) {
       if (window.SflMarket && typeof window.SflMarket.getItemPrice === "function") {
@@ -1087,11 +1163,11 @@ const animalBuildingsList = [
 
     // Helper para obtener el precio en FLOWER de un tesoro según su valor en Coins y la tasa Betty
     function getTreasureUnitPrice(materialName) {
-      // 1. Intentar obtener el valor dinámico desde los slots activos en el DOM
-      const sellSlots = document.querySelectorAll(".jafar-sell-slot")
+      // 1. Intentar obtener el valor dinámico desde los slots activos de Jafar
+      const sellSlots = document.querySelectorAll('[data-catalog-id="jafar"] .catalog-item-slot')
       for (const slot of sellSlots) {
         try {
-          const item = JSON.parse(slot.dataset.toolData)
+          const item = JSON.parse(slot.dataset.itemData)
           if (item && item.name && item.name.toLowerCase() === materialName.toLowerCase()) {
             const coins = parseFloat(item.coins) || 0
             if (coins > 0 && activeCoinsPerFlower > 0) {
@@ -1127,6 +1203,9 @@ const animalBuildingsList = [
       }
       if (materialName === "Magic Mushroom") {
         return calculatedMagicMushroomPriceFlower
+      }
+      if (materialName === "Fishing Lure" || materialName === "fishing_lure") {
+        return calculatedFishingLureFlower
       }
       if (materialName === "Refined Salt") {
         const saltPrice = getBaseMaterialUnitPrice("Salt")
@@ -1237,6 +1316,45 @@ const animalBuildingsList = [
       if (caveMagicMushroomUsdDisplay) {
         const usd = calculatedMagicMushroomPriceFlower * effectiveFlowerPrice
         caveMagicMushroomUsdDisplay.innerText = `($${usd < 0.01 ? usd.toFixed(4) : usd.toFixed(2)})`
+      }
+    }
+
+    // Actualiza los recursos vendidos por NPCs (Finn: Fishing Lure)
+    function updateNpcResources() {
+      if (window.SflConstants && typeof window.SflConstants.calculateFishingLureCost === "function") {
+        const lureCost = window.SflConstants.calculateFishingLureCost({
+          coinsPerFlower: activeCoinsPerFlower,
+          flowerPriceUsd: effectiveFlowerPrice,
+          gemUsd: effectiveGemUsd,
+          resolveBasePrice: (name) => getBaseMaterialUnitPrice(name),
+        }, npcFinnPaymentMode)
+
+        const isGems = npcFinnPaymentMode === "gems"
+        const selectedFlower = isGems ? lureCost.gemsOption.totalFlower : lureCost.feathersOption.totalFlower
+        const selectedUsd = isGems ? lureCost.gemsOption.totalUsd : lureCost.feathersOption.totalUsd
+
+        calculatedFishingLureFlower = selectedFlower
+
+        if (npcFishingLurePriceDisplay) {
+          npcFishingLurePriceDisplay.innerText = selectedFlower > 0 ? selectedFlower.toFixed(4) : "--"
+        }
+        if (npcFishingLureUsdDisplay) {
+          npcFishingLureUsdDisplay.innerText = `($${selectedUsd < 0.01 ? selectedUsd.toFixed(4) : selectedUsd.toFixed(2)})`
+        }
+
+        if (npcFinnBadge) {
+          if (isGems) {
+            if (npcFinnBadgeIcon) npcFinnBadgeIcon.src = "/img/sunflowerland/123/Gem.png"
+            if (npcFinnBadgeText) npcFinnBadgeText.innerText = "10"
+            npcFinnBadge.className = "inline-flex items-center gap-1 text-[8.5px] px-1.5 py-0.5 rounded font-mono font-bold transition-all bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 whitespace-nowrap cursor-pointer hover:brightness-125 leading-none select-none"
+            npcFinnBadge.title = `Pagando con 10 Gemas ($${lureCost.gemsOption.totalUsd.toFixed(3)} USD). Clic para cambiar a 100 Plumas ($${lureCost.feathersOption.totalUsd.toFixed(3)} USD).`
+          } else {
+            if (npcFinnBadgeIcon) npcFinnBadgeIcon.src = "/img/sunflowerland/Feather.png"
+            if (npcFinnBadgeText) npcFinnBadgeText.innerText = "100"
+            npcFinnBadge.className = "inline-flex items-center gap-1 text-[8.5px] px-1.5 py-0.5 rounded font-mono font-bold transition-all bg-amber-500/15 text-amber-400 border border-amber-500/30 whitespace-nowrap cursor-pointer hover:brightness-125 leading-none select-none"
+            npcFinnBadge.title = `Pagando con 100 Plumas ($${lureCost.feathersOption.totalUsd.toFixed(3)} USD). Clic para cambiar a 10 Gemas ($${lureCost.gemsOption.totalUsd.toFixed(3)} USD).`
+          }
+        }
       }
     }
 
@@ -1424,6 +1542,7 @@ const animalBuildingsList = [
     function updateAll() {
       updateOilPriceDisplay()
       calculateCaveOptimalPrices()
+      updateNpcResources()
       updateAnimalBuildings()
       updateFishMarketAverages()
 
@@ -1714,6 +1833,13 @@ const animalBuildingsList = [
           }
           updateCurrencyUI()
         }
+      })
+    }
+
+    if (npcFinnBadge) {
+      npcFinnBadge.addEventListener("click", () => {
+        npcFinnPaymentMode = npcFinnPaymentMode === "feathers" ? "gems" : "feathers"
+        updateAll()
       })
     }
 

@@ -458,6 +458,11 @@ export function resolveMaterialFlowerCost(materialName: string, ctx: CraftingCon
     return calculateCaveBatchCost(ctx).unitCostFlower
   }
 
+  // 7. Recursos de NPCs (Fishing Lure comprado a Finn - Plumas por defecto)
+  if (materialName === "Fishing Lure" || materialName === "fishing_lure") {
+    return calculateFishingLureCost(ctx, "feathers").selectedFlower
+  }
+
   // 6. Crustáceos de Trampa
   if (isCrustacean(materialName)) {
     const crust = calculateCrustaceanCost(materialName, ctx)
@@ -643,8 +648,37 @@ export function calculateMarinerPotCost(ctx: CraftingContext): number {
   return calculateItemCraftCost(MARINER_POT_RECIPE, 1, ctx).totalFlower
 }
 
+export const GUARANTEED_CHUM_COMBOS: Record<string, Array<{ baits: string[]; item: string; amount: number }>> = {
+  "Anchovy": [
+    { baits: ["Earthworm", "Capsule Bait"], item: "Carrot", amount: 10 },
+    { baits: ["Earthworm", "Capsule Bait"], item: "Egg", amount: 5 },
+  ],
+  "Tuna": [
+    { baits: ["Grub", "Umbrella Bait"], item: "Orange", amount: 3 },
+    { baits: ["Grub", "Umbrella Bait"], item: "Wild Mushroom", amount: 1 },
+  ],
+  "Red Snapper": [
+    { baits: ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"], item: "Apple", amount: 3 },
+    { baits: ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"], item: "Honey", amount: 1 },
+  ],
+  "Saw Shark": [
+    { baits: ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"], item: "Speed Chicken", amount: 3 },
+  ],
+  "White Shark": [
+    { baits: ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"], item: "Rich Chicken", amount: 3 },
+  ],
+  "Whale Shark": [
+    { baits: ["Red Wiggler", "Crimson Baitfish", "Fishing Lure"], item: "Fat Chicken", amount: 3 },
+  ],
+}
+
+export const APEX_SHARKS = new Set(["White Shark", "Saw Shark", "Whale Shark"])
+
 /**
- * Calcula el costo más óptimo/económico de captura para un pez regular (caña + min cebo + min chum).
+ * Calcula el costo más óptimo/económico de captura para un pez regular:
+ * - Para los 3 Apex Sharks: usa el cebo del Fish Market (Crab Stick / Fish Oil).
+ * - Para peces con combinación garantizada Cebo + Chum oficial (Anchovy, Tuna, Red Snapper): usa el combo más económico.
+ * - Para el resto: caña + min cebo (compost gratis) + min chum disponible.
  */
 export function calculateFishCatchCost(
   fishNameOrId: string,
@@ -656,7 +690,96 @@ export function calculateFishCatchCost(
   // 1. Costo Caña (Rod)
   const rodFlower = calculateRodCost(ctx)
 
-  // 2. Cebo más económico (min Baits)
+  // Caso A: Tiburones Apex (White Shark, Saw Shark, Whale Shark) -> usa su cebo del Fish Market
+  if (APEX_SHARKS.has(fish.name) && fish.guaranteedBy) {
+    const baitFlower = resolveMaterialFlowerCost(fish.guaranteedBy, ctx)
+    const totalFlower = rodFlower + baitFlower
+    const totalUsd = totalFlower * ctx.flowerPriceUsd
+
+    return {
+      id: fish.id,
+      name: fish.name,
+      tier: fish.tier as "basic" | "advanced" | "expert",
+      rodFlower,
+      selectedBait: fish.guaranteedBy,
+      baitFlower,
+      chumFlower: 0,
+      totalFlower,
+      totalUsd,
+      xp: fish.xp || 0,
+    }
+  }
+
+  // Caso B: Pez con combinación garantizada Cebo + Chum oficial (Anchovy, Tuna, Red Snapper)
+  const guaranteedCombos = GUARANTEED_CHUM_COMBOS[fish.name]
+  if (guaranteedCombos && guaranteedCombos.length > 0) {
+    let bestCombo: {
+      bait: string
+      baitFlower: number
+      item: string
+      amount: number
+      chumFlower: number
+      totalFlower: number
+    } | null = null
+
+    for (const combo of guaranteedCombos) {
+      let comboBait = combo.baits[0] || "Earthworm"
+      let comboBaitFlower = Infinity
+
+      for (const b of combo.baits) {
+        if (FREE_COMPOST_BAITS.has(b)) {
+          comboBait = b
+          comboBaitFlower = 0
+          break
+        }
+        const bCost = resolveMaterialFlowerCost(b, ctx)
+        if (bCost < comboBaitFlower) {
+          comboBaitFlower = bCost
+          comboBait = b
+        }
+      }
+      if (!Number.isFinite(comboBaitFlower)) comboBaitFlower = 0
+
+      const unitChumFlower = resolveMaterialFlowerCost(combo.item, ctx)
+      const totalChumFlower = unitChumFlower * combo.amount
+      const comboTotal = rodFlower + comboBaitFlower + totalChumFlower
+
+      if (!bestCombo || comboTotal < bestCombo.totalFlower) {
+        bestCombo = {
+          bait: comboBait,
+          baitFlower: comboBaitFlower,
+          item: combo.item,
+          amount: combo.amount,
+          chumFlower: totalChumFlower,
+          totalFlower: comboTotal,
+        }
+      }
+    }
+
+    if (bestCombo) {
+      const totalUsd = bestCombo.totalFlower * ctx.flowerPriceUsd
+      return {
+        id: fish.id,
+        name: fish.name,
+        tier: fish.tier as "basic" | "advanced" | "expert",
+        rodFlower,
+        selectedBait: bestCombo.bait,
+        baitFlower: bestCombo.baitFlower,
+        selectedChum: {
+          item: bestCombo.item,
+          amount: bestCombo.amount,
+          unitFlower: bestCombo.chumFlower / bestCombo.amount,
+          totalFlower: bestCombo.chumFlower,
+        },
+        chumFlower: bestCombo.chumFlower,
+        totalFlower: bestCombo.totalFlower,
+        totalUsd,
+        xp: fish.xp || 0,
+      }
+    }
+  }
+
+  // Caso C: Cebo más económico (min Baits)
   let selectedBait = fish.baits[0] || "Earthworm"
   let baitFlower = Infinity
 
@@ -1022,5 +1145,105 @@ export function calculateCaveResourceCost(
     name: canonical,
     flower: batch.unitCostFlower,
     usd: batch.unitCostUsd,
+  }
+}
+
+// ============================================================================
+// 11. RECURSOS DE NPCS (FINN: FISHING LURE)
+// ============================================================================
+
+export const FINN_FISHING_LURE_TRADE = {
+  npc: "Finn",
+  item: "Fishing Lure",
+  gemsAmount: 10,
+  feathersAmount: 100,
+} as const
+
+export interface FishingLureCostBreakdown {
+  selectedMethod: "feathers" | "gems"
+  optimalMethod: "gems" | "feathers"
+  optimalFlower: number
+  optimalUsd: number
+  selectedFlower: number
+  selectedUsd: number
+  gemsOption: {
+    gems: number
+    totalFlower: number
+    totalUsd: number
+  }
+  feathersOption: {
+    feathers: number
+    featherUnitPriceFlower: number
+    totalFlower: number
+    totalUsd: number
+  }
+  savingsPercent: number
+}
+
+/**
+ * Calcula el costo de comprar Fishing Lure a Finn evaluando ambas opciones
+ * (10 Gemas vs 100 Plumas), por defecto usando Plumas (Feather) según preferencia oficial.
+ */
+export function calculateFishingLureCost(
+  ctxOverride?: Partial<CraftingContext>,
+  preferredMethod: "feathers" | "gems" | "optimal" = "feathers"
+): FishingLureCostBreakdown {
+  const ctx: CraftingContext = {
+    flowerPriceUsd: ctxOverride?.flowerPriceUsd ?? getFlowerPrice() ?? 0.144,
+    coinsPerFlower: ctxOverride?.coinsPerFlower ?? OFFICIAL_COINS_PER_FLOWER,
+    resolveBasePrice: ctxOverride?.resolveBasePrice,
+    resolveTreasureCoins: ctxOverride?.resolveTreasureCoins,
+  }
+
+  // 1. Opción A: 10 Gemas
+  const gemUsd = ctx.gemUsd ?? calculateGemCostUsd(1).unitUsd
+  const gemsTotalUsd = FINN_FISHING_LURE_TRADE.gemsAmount * gemUsd
+  const gemsTotalFlower = ctx.flowerPriceUsd > 0 ? gemsTotalUsd / ctx.flowerPriceUsd : 0
+
+  // 2. Opción B: 100 Feathers
+  let featherPriceFlower = resolveMaterialFlowerCost("Feather", ctx)
+  if (!featherPriceFlower || featherPriceFlower <= 0) {
+    featherPriceFlower = 0.0045 // Fallback preventivo P2P (Feather)
+  }
+  const feathersTotalFlower = FINN_FISHING_LURE_TRADE.feathersAmount * featherPriceFlower
+  const feathersTotalUsd = feathersTotalFlower * ctx.flowerPriceUsd
+
+  // 3. Determinar opción óptima
+  const feathersValid = feathersTotalFlower > 0
+  const gemsCheaper = !feathersValid || (gemsTotalFlower > 0 && gemsTotalFlower <= feathersTotalFlower)
+
+  const optimalMethod: "gems" | "feathers" = gemsCheaper ? "gems" : "feathers"
+  const optimalFlower = gemsCheaper ? gemsTotalFlower : feathersTotalFlower
+  const optimalUsd = gemsCheaper ? gemsTotalUsd : feathersTotalUsd
+
+  // Método seleccionado (Plumas por defecto, o Gemas si se solicita)
+  const selectedMethod: "feathers" | "gems" =
+    preferredMethod === "optimal" ? optimalMethod : preferredMethod
+  const selectedFlower = selectedMethod === "feathers" ? feathersTotalFlower : gemsTotalFlower
+  const selectedUsd = selectedMethod === "feathers" ? feathersTotalUsd : gemsTotalUsd
+
+  const maxCost = Math.max(gemsTotalFlower, feathersTotalFlower)
+  const minCost = Math.min(gemsTotalFlower, feathersTotalFlower)
+  const savingsPercent = maxCost > 0 ? ((maxCost - minCost) / maxCost) * 100 : 0
+
+  return {
+    selectedMethod,
+    optimalMethod,
+    optimalFlower,
+    optimalUsd,
+    selectedFlower,
+    selectedUsd,
+    gemsOption: {
+      gems: FINN_FISHING_LURE_TRADE.gemsAmount,
+      totalFlower: gemsTotalFlower,
+      totalUsd: gemsTotalUsd,
+    },
+    feathersOption: {
+      feathers: FINN_FISHING_LURE_TRADE.feathersAmount,
+      featherUnitPriceFlower: featherPriceFlower,
+      totalFlower: feathersTotalFlower,
+      totalUsd: feathersTotalUsd,
+    },
+    savingsPercent,
   }
 }

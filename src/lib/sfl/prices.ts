@@ -25,6 +25,8 @@ import {
   getCrustaceanData,
   getFishMarketData,
   FREE_COMPOST_BAITS,
+  GUARANTEED_CHUM_COMBOS,
+  APEX_SHARKS,
   getAllFishCatchCosts,
   getAllCrustaceanCatchCosts,
   type FishCatchCostBreakdown,
@@ -35,6 +37,9 @@ import {
   calculateSandShovelCost,
   calculateCaveBatchCost,
   calculateCaveResourceCost,
+  calculateFishingLureCost,
+  FINN_FISHING_LURE_TRADE,
+  type FishingLureCostBreakdown,
   SAND_SHOVEL_RECIPE,
   DEFAULT_BEETLE_FALLBACK_PRICES,
   type CaveBatchCostBreakdown,
@@ -496,9 +501,70 @@ class DagCostSolver {
       return res
     }
 
-    // 3. ¿Tiene Receta de Fabricación en el Catálogo Declarativo?
-    const recipe = getRecipe(nameOrId)
-    const marketPriceFlower = this.getBasePrice(recipe ? recipe.name : nameOrId)
+    // 2.3 Fishing Lure (Comprado a Finn: 100 Plumas por defecto o 10 Gemas)
+    if (query === "fishing lure" || query === "fishing_lure") {
+      const breakdown = calculateFishingLureCost(
+        {
+          flowerPriceUsd: this.flowerPrice,
+          coinsPerFlower: this.coinsRate,
+          resolveBasePrice: (n) => this.getBasePrice(n),
+        },
+        "feathers"
+      )
+
+      const isGems = breakdown.selectedMethod === "gems"
+      const totalFlower = breakdown.selectedFlower
+      const totalUsd = breakdown.selectedUsd
+
+      const ingredientsBreakdown: IngredientBreakdown[] = isGems
+        ? [
+            {
+              name: "Gem",
+              amount: 10,
+              unitPriceFlower: breakdown.gemsOption.totalFlower / 10,
+              totalFlower: breakdown.gemsOption.totalFlower,
+              isBaseResource: false,
+            },
+          ]
+        : [
+            {
+              name: "Feather",
+              amount: 100,
+              unitPriceFlower: breakdown.feathersOption.featherUnitPriceFlower,
+              totalFlower: breakdown.feathersOption.totalFlower,
+              isBaseResource: true,
+            },
+          ]
+
+      const baseMaterials = isGems
+        ? [{ name: "Gem", amount: 10, totalFlower: breakdown.gemsOption.totalFlower }]
+        : [{ name: "Feather", amount: 100, totalFlower: breakdown.feathersOption.totalFlower }]
+
+      const res: CostResolution = {
+        name: "Fishing Lure",
+        id: "fishing_lure",
+        kind: "craftable",
+        category: "fishing",
+        building: "Finn",
+        yield: 1,
+        isCraftable: true,
+        craftCostFlower: Number(totalFlower.toFixed(6)),
+        craftCostUsd: Number(totalUsd.toFixed(4)),
+        hasMarketPrice: false,
+        marketPriceFlower: 0,
+        marketPriceUsd: 0,
+        coins: 0,
+        coinsFlower: 0,
+        ingredients: ingredientsBreakdown,
+        baseMaterials,
+        image: "/img/sunflowerland/fish/a/Fishing Lure.png",
+      }
+      this.memo.set(memoKey, res)
+      return res
+    }
+
+    // 3. Precios de Mercado Base
+    const marketPriceFlower = this.getBasePrice(nameOrId)
     const marketPriceUsd = marketPriceFlower * this.flowerPrice
     const hasMarketPrice = marketPriceFlower > 0
 
@@ -508,7 +574,220 @@ class DagCostSolver {
       if (fishData) {
         const rodRes = this.resolve("Rod", currentVisited)
 
-        // Cebo más económico (min Baits)
+        // Caso A: Tiburones Apex (White Shark, Saw Shark, Whale Shark) -> usa su cebo garantizado del Fish Market
+        if (APEX_SHARKS.has(fishData.name) && fishData.guaranteedBy) {
+          const baitRes = this.resolve(fishData.guaranteedBy, currentVisited)
+          const baitCost = baitRes.craftCostFlower > 0 ? baitRes.craftCostFlower : baitRes.marketPriceFlower
+          const totalFishFlower = rodRes.craftCostFlower + baitCost
+          const totalFishUsd = totalFishFlower * this.flowerPrice
+
+          const ingredientsBreakdown: IngredientBreakdown[] = [
+            {
+              name: rodRes.name,
+              amount: 1,
+              unitPriceFlower: rodRes.craftCostFlower,
+              totalFlower: rodRes.craftCostFlower,
+              isBaseResource: false,
+            },
+            {
+              name: baitRes.name,
+              amount: 1,
+              unitPriceFlower: baitCost,
+              totalFlower: baitCost,
+              isBaseResource: !baitRes.isCraftable,
+            },
+          ]
+
+          const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+          for (const base of rodRes.baseMaterials) {
+            baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+          }
+          for (const base of baitRes.baseMaterials) {
+            const ex = baseMaterialsMap.get(base.name)
+            if (ex) {
+              ex.amount += base.amount
+              ex.totalFlower += base.totalFlower
+            } else {
+              baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+            }
+          }
+
+          const res: CostResolution = {
+            name: fishData.name,
+            id: fishData.id,
+            kind: "craftable",
+            category: "fishing",
+            yield: 1,
+            isCraftable: true,
+            craftCostFlower: totalFishFlower,
+            craftCostUsd: totalFishUsd,
+            hasMarketPrice,
+            marketPriceFlower,
+            marketPriceUsd,
+            coins: 0,
+            coinsFlower: 0,
+            ingredients: ingredientsBreakdown,
+            baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+              name: k,
+              amount: v.amount,
+              totalFlower: v.totalFlower,
+            })),
+          }
+          this.memo.set(memoKey, res)
+          return res
+        }
+
+        // Caso B: Pez con combinación garantizada Cebo + Chum oficial (Anchovy, Tuna, Red Snapper)
+        const guaranteedCombos = GUARANTEED_CHUM_COMBOS[fishData.name]
+        if (guaranteedCombos && guaranteedCombos.length > 0) {
+          let bestComboRes: {
+            baitRes: CostResolution | null
+            baitName: string
+            baitFlower: number
+            chumRes: CostResolution
+            chumAmount: number
+            chumFlower: number
+            totalFlower: number
+          } | null = null
+
+          for (const combo of guaranteedCombos) {
+            let comboBait = combo.baits[0] || "Earthworm"
+            let comboBaitFlower = Infinity
+            let comboBaitRes: CostResolution | null = null
+
+            for (const b of combo.baits) {
+              if (FREE_COMPOST_BAITS.has(b)) {
+                comboBait = b
+                comboBaitFlower = 0
+                comboBaitRes = null
+                break
+              }
+              const sub = this.resolve(b, currentVisited)
+              const cost = sub.craftCostFlower > 0 ? sub.craftCostFlower : sub.marketPriceFlower
+              if (cost < comboBaitFlower) {
+                comboBaitFlower = cost
+                comboBait = b
+                comboBaitRes = sub
+              }
+            }
+            if (!Number.isFinite(comboBaitFlower)) comboBaitFlower = 0
+
+            const chumSub = this.resolve(combo.item, currentVisited)
+            const unitChumFlower = chumSub.craftCostFlower > 0 ? chumSub.craftCostFlower : chumSub.marketPriceFlower
+            const totalChumFlower = unitChumFlower * combo.amount
+            const comboTotal = rodRes.craftCostFlower + comboBaitFlower + totalChumFlower
+
+            if (!bestComboRes || comboTotal < bestComboRes.totalFlower) {
+              bestComboRes = {
+                baitRes: comboBaitRes,
+                baitName: comboBait,
+                baitFlower: comboBaitFlower,
+                chumRes: chumSub,
+                chumAmount: combo.amount,
+                chumFlower: totalChumFlower,
+                totalFlower: comboTotal,
+              }
+            }
+          }
+
+          if (bestComboRes) {
+            const totalFishFlower = bestComboRes.totalFlower
+            const totalFishUsd = totalFishFlower * this.flowerPrice
+
+            const ingredientsBreakdown: IngredientBreakdown[] = [
+              {
+                name: rodRes.name,
+                amount: 1,
+                unitPriceFlower: rodRes.craftCostFlower,
+                totalFlower: rodRes.craftCostFlower,
+                isBaseResource: false,
+              },
+            ]
+
+            const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+            for (const base of rodRes.baseMaterials) {
+              baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+            }
+
+            if (bestComboRes.baitRes && bestComboRes.baitFlower > 0) {
+              ingredientsBreakdown.push({
+                name: bestComboRes.baitRes.name,
+                amount: 1,
+                unitPriceFlower: bestComboRes.baitFlower,
+                totalFlower: bestComboRes.baitFlower,
+                isBaseResource: !bestComboRes.baitRes.isCraftable,
+              })
+              for (const base of bestComboRes.baitRes.baseMaterials) {
+                const ex = baseMaterialsMap.get(base.name)
+                if (ex) {
+                  ex.amount += base.amount
+                  ex.totalFlower += base.totalFlower
+                } else {
+                  baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+                }
+              }
+            }
+
+            ingredientsBreakdown.push({
+              name: bestComboRes.chumRes.name,
+              amount: bestComboRes.chumAmount,
+              unitPriceFlower: bestComboRes.chumFlower / bestComboRes.chumAmount,
+              totalFlower: bestComboRes.chumFlower,
+              isBaseResource: !bestComboRes.chumRes.isCraftable,
+            })
+
+            if (bestComboRes.chumRes.baseMaterials.length > 0) {
+              for (const base of bestComboRes.chumRes.baseMaterials) {
+                const scaledAmount = base.amount * bestComboRes.chumAmount
+                const scaledFlower = base.totalFlower * bestComboRes.chumAmount
+                const ex = baseMaterialsMap.get(base.name)
+                if (ex) {
+                  ex.amount += scaledAmount
+                  ex.totalFlower += scaledFlower
+                } else {
+                  baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+                }
+              }
+            } else {
+              const ex = baseMaterialsMap.get(bestComboRes.chumRes.name)
+              if (ex) {
+                ex.amount += bestComboRes.chumAmount
+                ex.totalFlower += bestComboRes.chumFlower
+              } else {
+                baseMaterialsMap.set(bestComboRes.chumRes.name, {
+                  amount: bestComboRes.chumAmount,
+                  totalFlower: bestComboRes.chumFlower,
+                })
+              }
+            }
+
+            const res: CostResolution = {
+              name: fishData.name,
+              id: fishData.id,
+              kind: "craftable",
+              category: "fishing",
+              yield: 1,
+              isCraftable: true,
+              craftCostFlower: totalFishFlower,
+              craftCostUsd: totalFishUsd,
+              hasMarketPrice,
+              marketPriceFlower,
+              marketPriceUsd,
+              coins: 0,
+              coinsFlower: 0,
+              ingredients: ingredientsBreakdown,
+              baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+                name: k,
+                amount: v.amount,
+                totalFlower: v.totalFlower,
+              })),
+            }
+            this.memo.set(memoKey, res)
+            return res
+          }
+        }
+
+        // Caso C: Demás peces regulares (Cebo más económico min Baits + min Chum)
         let bestBaitName = fishData.baits[0] || "Earthworm"
         let bestBaitFlower = Infinity
         let bestBaitRes: CostResolution | null = null
@@ -756,6 +1035,14 @@ class DagCostSolver {
       }
     }
 
+    // 6. ¿Tiene Receta de Fabricación en el Catálogo Declarativo?
+    const recipe = getRecipe(nameOrId)
+    const effectiveMarketPriceFlower = recipe
+      ? this.getBasePrice(recipe.name) || marketPriceFlower
+      : marketPriceFlower
+    const effectiveMarketPriceUsd = effectiveMarketPriceFlower * this.flowerPrice
+    const effectiveHasMarketPrice = effectiveMarketPriceFlower > 0
+
     if (!recipe) {
       // Es un nodo terminal / Recurso Base (Wood, Salt, Gold, pez crudo, cultivo base, etc.)
       const res: CostResolution = {
@@ -764,16 +1051,16 @@ class DagCostSolver {
         kind: "p2p_resource",
         yield: 1,
         isCraftable: false,
-        craftCostFlower: marketPriceFlower,
-        craftCostUsd: marketPriceUsd,
-        hasMarketPrice,
-        marketPriceFlower,
-        marketPriceUsd,
+        craftCostFlower: effectiveMarketPriceFlower,
+        craftCostUsd: effectiveMarketPriceUsd,
+        hasMarketPrice: effectiveHasMarketPrice,
+        marketPriceFlower: effectiveMarketPriceFlower,
+        marketPriceUsd: effectiveMarketPriceUsd,
         coins: 0,
         coinsFlower: 0,
         ingredients: [],
-        baseMaterials: hasMarketPrice
-          ? [{ name: nameOrId, amount: 1, totalFlower: marketPriceFlower }]
+        baseMaterials: effectiveHasMarketPrice
+          ? [{ name: nameOrId, amount: 1, totalFlower: effectiveMarketPriceFlower }]
           : [],
       }
       this.memo.set(memoKey, res)
@@ -916,10 +1203,11 @@ class DagCostSolver {
 
     // Análisis de arbitraje si existe en P2P
     let arbitrage: CostResolution["arbitrage"] = undefined
-    if (hasMarketPrice && unitCraftFlower > 0) {
-      const spreadFlower = marketPriceFlower - unitCraftFlower
+    if (effectiveHasMarketPrice && unitCraftFlower > 0) {
+      const spreadFlower = effectiveMarketPriceFlower - unitCraftFlower
       const cheaperToCraft = spreadFlower > 0
-      const savingsPercent = marketPriceFlower > 0 ? (spreadFlower / marketPriceFlower) * 100 : 0
+      const savingsPercent =
+        effectiveMarketPriceFlower > 0 ? (spreadFlower / effectiveMarketPriceFlower) * 100 : 0
       arbitrage = {
         cheaperToCraft,
         spreadFlower: Number(spreadFlower.toFixed(6)),
@@ -937,9 +1225,9 @@ class DagCostSolver {
       isCraftable: true,
       craftCostFlower: Number(unitCraftFlower.toFixed(6)),
       craftCostUsd: Number(unitCraftUsd.toFixed(4)),
-      hasMarketPrice,
-      marketPriceFlower: Number(marketPriceFlower.toFixed(6)),
-      marketPriceUsd: Number(marketPriceUsd.toFixed(4)),
+      hasMarketPrice: effectiveHasMarketPrice,
+      marketPriceFlower: Number(effectiveMarketPriceFlower.toFixed(6)),
+      marketPriceUsd: Number(effectiveMarketPriceUsd.toFixed(4)),
       arbitrage,
       coins: coinsRequired,
       coinsFlower: Number(coinsFlower.toFixed(6)),
@@ -1174,4 +1462,5 @@ export function getAllCaveResourceCosts(options?: ResolveCostOptions): CostResol
 
 // Re-export de la temporada activa y utilidades de fabricación
 export { CURRENT_SEASON, isSeasonalTicket, getCurrentSeason, type SeasonConfig }
+export { calculateFishingLureCost, FINN_FISHING_LURE_TRADE, type FishingLureCostBreakdown }
 export { getRecipe, getAllRecipes, getRecipesByCategory, getRecipesByBuilding } from "./crafting"

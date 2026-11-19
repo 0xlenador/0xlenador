@@ -1,27 +1,525 @@
 {
   "shrines": {
+    "Sparrow Shrine": {
+      "name": "Sparrow Shrine",
+      "description": "A shrine to the sparrow",
+      "type": "shrine",
+      "image": "sparrow_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "growth_speed",
+        "target": "crop_plot",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Plot Crop Growth Speed"
+      }
+    },
+    "Badger Shrine": {
+      "name": "Badger Shrine",
+      "description": "A shrine to the badger",
+      "type": "shrine",
+      "image": "badger_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "tree",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Tree Recovery Speed"
+      },
+      "mathematics_2": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "stone",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Stone Recovery Speed"
+      }
+    },
+    "Mole Shrine": {
+      "name": "Mole Shrine",
+      "description": "A shrine to the mole",
+      "type": "shrine",
+      "image": "mole_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "iron",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Iron Recovery Speed"
+      },
+      "mathematics_2": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "gold",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Gold Recovery Speed"
+      },
+      "mathematics_3": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "crimstone",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Crimstone Recovery Speed"
+      }
+    },
+    "Toucan Shrine": {
+      "name": "Toucan Shrine",
+      "description": "A shrine to the toucan",
+      "type": "shrine",
+      "image": "toucan_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "growth_speed",
+        "target": "fruit_patch",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Fruit Patch Growth Speed"
+      }
+    },
+    "Moth Shrine": {
+      "name": "Moth Shrine",
+      "description": "A shrine to the moth",
+      "type": "shrine",
+      "image": "moth_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "growth_speed",
+        "target": "flower",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Flower Growth Speed"
+      },
+      "mathematics_2": {
+        "calc": 0.2,
+        "category": "yield",
+        "target": "flower",
+        "mathematics_operation": "chance",
+        "description": "20% chance to get +1 Flower"
+      }
+    },
+    "Stag Shrine": {
+      "name": "Stag Shrine",
+      "description": "A shrine to the majestic stag",
+      "type": "shrine",
+      "image": "stag_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "oil",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Oil Recovery Speed"
+      },
+      "mathematics_2": {
+        "calc": 15,
+        "category": "yield",
+        "target": "oil",
+        "mathematics_operation": "flat_bonus_every_3rd",
+        "description": "+15 Oil every 3rd drill"
+      }
+    },
+    "Collie Shrine": {
+      "name": "Collie Shrine",
+      "description": "A shrine to the collie",
+      "type": "shrine",
+      "image": "collie_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "sleep_speed",
+        "target": "cow",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Cow Sleep Speed"
+      },
+      "mathematics_2": {
+        "calc": 1.35,
+        "category": "sleep_speed",
+        "target": "sheep",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Sheep Sleep Speed"
+      },
+      "mathematics_3": {
+        "calc": 0.95,
+        "category": "feed_cost",
+        "target": "barn_animals",
+        "mathematics_operation": "multiply",
+        "description": "x0.95 Feed to feed barn animals"
+      }
+    },
+    "Bantam Shrine": {
+      "name": "Bantam Shrine",
+      "description": "A shrine to the bantam",
+      "type": "shrine",
+      "image": "bantam_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "sleep_speed",
+        "target": "chicken",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Chicken Sleep Speed"
+      },
+      "mathematics_2": {
+        "calc": 0.95,
+        "category": "feed_cost",
+        "target": "chicken",
+        "mathematics_operation": "multiply",
+        "description": "x0.95 Feed to feed chickens"
+      }
+    },
+    "Fox Shrine": {
+      "name": "Fox Shrine",
+      "description": "A shrine to the crafty fox",
+      "type": "shrine",
+      "image": "fox_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "crafting_speed",
+        "target": "crafting_box",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Crafting Box Speed"
+      },
+      "mathematics_2": {
+        "calc": 0.1,
+        "category": "crafting_speed",
+        "target": "crafting_box",
+        "mathematics_operation": "chance",
+        "description": "10% chance to instantly craft a recipe"
+      }
+    },
+    "Tortoise Shrine": {
+      "name": "Tortoise Shrine",
+      "description": "A shrine to the tortoise",
+      "type": "shrine",
+      "image": "tortoise_shrine.webp",
+      "mathematics_1": {
+        "calc": 1.5,
+        "category": "growth_speed",
+        "target": "greenhouse",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.5x Greenhouse Growth Speed"
+      },
+      "mathematics_2": {
+        "calc": 1.1111,
+        "category": "growth_speed",
+        "target": "crop_machine",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.11x Crop Machine Growth Speed (10/9)"
+      }
+    },
     "Boar Shrine": {
       "name": "Boar Shrine",
       "boost": "-20% Cooking Time",
+      "description": "A shrine to the hearty boar",
       "type": "shrine",
       "image": "boar_shrine.webp",
       "mathematics_1": {
         "calc": 0.8,
+        "calc_speed": 1.25,
         "category": "cooking_time",
-        "target_food": "all",
-        "mathematics_operation": "multiply"
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "description": "1.25x Cooking Speed (-20% Time)"
       }
     },
     "Legendary Shrine": {
       "name": "Legendary Shrine",
       "boost": "-50% Cooking Time",
+      "description": "A legendary shrine that buffs everything!",
       "type": "shrine",
       "image": "legendary_shrine.webp",
       "mathematics_1": {
+        "calc": 1,
+        "category": "yield",
+        "target": "crop",
+        "mathematics_operation": "flat_bonus",
+        "description": "+1 Crop Yield"
+      },
+      "mathematics_2": {
+        "calc": 1,
+        "category": "yield",
+        "target": "fruit_patch",
+        "mathematics_operation": "flat_bonus",
+        "description": "+1 Fruit Patch Yield"
+      },
+      "mathematics_3": {
+        "calc": 1,
+        "category": "yield",
+        "target": "wood",
+        "mathematics_operation": "flat_bonus",
+        "description": "+1 Wood"
+      },
+      "mathematics_4": {
+        "calc": 1,
+        "category": "yield",
+        "target": "stone",
+        "mathematics_operation": "flat_bonus",
+        "description": "+1 Stone"
+      },
+      "mathematics_5": {
+        "calc": 1,
+        "category": "yield",
+        "target": "flower",
+        "mathematics_operation": "flat_bonus",
+        "description": "+1 Flower"
+      },
+      "mathematics_6": {
         "calc": 0.5,
+        "calc_speed": 2,
         "category": "cooking_time",
-        "target_food": "all",
-        "mathematics_operation": "multiply"
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "description": "2x Cooking Speed (-50% Time)"
+      }
+    },
+    "Hound Shrine": {
+      "name": "Hound Shrine",
+      "description": "A shrine to the loyal hound",
+      "type": "shrine",
+      "image": "hound_shrine.webp",
+      "mathematics_1": {
+        "calc": 100,
+        "category": "pet_xp",
+        "target": "food_request",
+        "mathematics_operation": "flat_bonus",
+        "description": "+100 Pet XP per food request"
+      }
+    },
+    "Bear Shrine": {
+      "name": "Bear Shrine",
+      "description": "A shrine to the bear",
+      "type": "shrine",
+      "image": "bear_shrine.webp",
+      "mathematics_1": {
+        "calc": 0.5,
+        "category": "production_speed",
+        "target": "honey",
+        "mathematics_operation": "flat_bonus",
+        "description": "+0.5 Honey Production Speed"
+      },
+      "mathematics_2": {
+        "calc": 0.2,
+        "category": "bee_swarm",
+        "target": "beehive",
+        "mathematics_operation": "chance_additive",
+        "description": "+20% bee swarm chance (added to base)"
+      }
+    },
+    "Obsidian Shrine": {
+      "name": "Obsidian Shrine",
+      "description": "A shrine to the obsidian",
+      "type": "shrine",
+      "image": "obsidian_shrine.webp",
+      "mathematics_1": {
+        "calc": null,
+        "category": "utility",
+        "target": "bulk_management",
+        "mathematics_operation": "none",
+        "description": "Bulk harvest, plant and fertilise your crops, fruit and greenhouse"
+      }
+    },
+    "Trading Shrine": {
+      "name": "Trading Shrine",
+      "description": "A trading shrine",
+      "type": "shrine",
+      "image": "trading_shrine.webp",
+      "mathematics_1": {
+        "calc": -0.025,
+        "category": "trading_tax",
+        "target": "p2p_trade",
+        "mathematics_operation": "subtracted_from_base",
+        "description": "-2.5% resource tax (subtracted from base)"
+      }
+    }
+  },
+  "consumables": {
+    "Gourmet Hourglass": {
+      "id": 9007,
+      "name": "Gourmet Hourglass",
+      "description": "2x Cooking Speed (-50% Cooking Time)",
+      "image": "/img/sunflowerland/aoe/gourmet_hourglass.webp",
+      "mathematics_1": {
+        "calc": 0.5,
+        "calc_by_rank": {
+          "rank_1": 0.5
+        },
+        "category": "cooking_time",
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "description": "2x Cooking Speed (-50% Cooking Time)"
+      }
+    },
+    "Harvest Hourglass": {
+      "id": 9010,
+      "name": "Harvest Hourglass",
+      "description": "1.35x Crop Growth Speed",
+      "image": "/img/sunflowerland/aoe/harvest_hourglass.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "growth_speed",
+        "target": "crop_plot",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Crop Growth Speed"
+      }
+    },
+    "Timber Hourglass": {
+      "id": 9011,
+      "name": "Timber Hourglass",
+      "description": "1.35x Tree Recovery Speed",
+      "image": "/img/sunflowerland/aoe/timber_hourglass.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "recovery_speed",
+        "target": "tree",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Tree Recovery Speed"
+      }
+    },
+    "Ore Hourglass": {
+      "id": 9012,
+      "name": "Ore Hourglass",
+      "description": "2x Mineral Recovery Speed",
+      "image": "/img/sunflowerland/aoe/ore_hourglass.webp",
+      "mathematics_1": {
+        "calc": 2,
+        "category": "recovery_speed",
+        "target": "mineral",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Mineral Recovery Speed (Stone, Iron, Gold)"
+      }
+    },
+    "Orchard Hourglass": {
+      "id": 9013,
+      "name": "Orchard Hourglass",
+      "description": "1.35x Fruit Growth Speed",
+      "image": "/img/sunflowerland/aoe/orchard_hourglass.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "growth_speed",
+        "target": "fruit_patch",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Fruit Growth Speed"
+      }
+    },
+    "Blossom Hourglass": {
+      "id": 9014,
+      "name": "Blossom Hourglass",
+      "description": "1.35x Flower Growth Speed",
+      "image": "/img/sunflowerland/aoe/blossom_hourglass.webp",
+      "mathematics_1": {
+        "calc": 1.35,
+        "category": "growth_speed",
+        "target": "flower",
+        "mathematics_operation": "speed_multiplier",
+        "description": "1.35x Flower Growth Speed"
+      }
+    },
+    "Fisher's Hourglass": {
+      "id": 9015,
+      "name": "Fisher's Hourglass",
+      "description": "50% Chance of +1 Fish",
+      "image": "/img/sunflowerland/aoe/fishers_hourglass.webp",
+      "mathematics_1": {
+        "calc": 0.5,
+        "category": "yield",
+        "target": "fish",
+        "mathematics_operation": "chance",
+        "description": "50% Chance of +1 Fish"
+      }
+    },
+    "Time Warp Totem": {
+      "id": 9006,
+      "name": "Time Warp Totem",
+      "description": "2x speed for crops, trees, fruits, cooking & minerals (2h)",
+      "image": "/img/sunflowerland/aoe/time_warp_totem.webp",
+      "mathematics_1": {
+        "calc": 0.5,
+        "calc_by_rank": {
+          "rank_1": 0.5
+        },
+        "category": "cooking_time",
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "description": "2x Cooking Speed (-50% Cooking Time)"
+      },
+      "mathematics_2": {
+        "calc": 2,
+        "category": "growth_speed",
+        "target": "crop_plot",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Crop Growth Speed"
+      },
+      "mathematics_3": {
+        "calc": 2,
+        "category": "recovery_speed",
+        "target": "tree",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Tree Recovery Speed"
+      },
+      "mathematics_4": {
+        "calc": 2,
+        "category": "growth_speed",
+        "target": "fruit_patch",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Fruit Growth Speed"
+      },
+      "mathematics_5": {
+        "calc": 2,
+        "category": "recovery_speed",
+        "target": "mineral",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Mineral Recovery Speed"
+      },
+      "mathematics_6": {
+        "calc": 2,
+        "category": "crafting_speed",
+        "target": "crafting_box",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Crafting Box Speed"
+      }
+    },
+    "Super Totem": {
+      "id": 9016,
+      "name": "Super Totem",
+      "description": "2x speed for crops, trees, fruits, cooking & minerals (7 days)",
+      "image": "/img/sunflowerland/aoe/super_totem.webp",
+      "mathematics_1": {
+        "calc": 0.5,
+        "calc_by_rank": {
+          "rank_1": 0.5
+        },
+        "category": "cooking_time",
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "description": "2x Cooking Speed (-50% Cooking Time)"
+      },
+      "mathematics_2": {
+        "calc": 2,
+        "category": "growth_speed",
+        "target": "crop_plot",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Crop Growth Speed"
+      },
+      "mathematics_3": {
+        "calc": 2,
+        "category": "recovery_speed",
+        "target": "tree",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Tree Recovery Speed"
+      },
+      "mathematics_4": {
+        "calc": 2,
+        "category": "growth_speed",
+        "target": "fruit_patch",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Fruit Growth Speed"
+      },
+      "mathematics_5": {
+        "calc": 2,
+        "category": "recovery_speed",
+        "target": "mineral",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Mineral Recovery Speed"
+      },
+      "mathematics_6": {
+        "calc": 2,
+        "category": "crafting_speed",
+        "target": "crafting_box",
+        "mathematics_operation": "speed_multiplier",
+        "description": "2x Crafting Box Speed"
       }
     }
   },
@@ -29,8 +527,70 @@
     "VIP Pass": {
       "id": 9001,
       "name": "VIP Pass",
-      "description": "+10% Bumpkin XP",
+      "description": "VIP membership with multi-domain perks",
       "image": "/img/sunflowerland/123/vip.webp",
+      "perks": {
+        "bumpkin_xp": {
+          "calc": 1.1,
+          "category": "bumpkin_xp",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "description": "+10% Bumpkin XP on all food consumed"
+        },
+        "cooking_queue": {
+          "category": "utility",
+          "target": "cooking_buildings",
+          "description": "Unlocks cooking queue in Fire Pit, Kitchen, Bakery, Deli, Smoothie Shack"
+        },
+        "crafting_queue": {
+          "category": "utility",
+          "target": "crafting_box",
+          "description": "Unlocks crafting queue in Crafting Box"
+        },
+        "multicast_fishing": {
+          "category": "utility",
+          "target": "fishing",
+          "description": "Unlocks multi-cast fishing"
+        },
+        "expansion_coin_discount": {
+          "calc": 0.2,
+          "category": "expansion_cost",
+          "target": "land_expansion",
+          "mathematics_operation": "discount_or_flat",
+          "description": "500 coins or 20% off land expansion coins (whichever is higher)"
+        },
+        "expansion_speed": {
+          "calc": 0.9,
+          "category": "expansion_time",
+          "target": "land_expansion",
+          "mathematics_operation": "multiply",
+          "description": "-10% Expansion time (x0.90 duration)"
+        },
+        "marketplace_tax": {
+          "calc": 0.5,
+          "category": "marketplace_tax",
+          "target": "marketplace",
+          "mathematics_operation": "multiply",
+          "description": "50% reduction in marketplace resource taxes"
+        },
+        "stella_discounts": {
+          "calc": 0.5,
+          "category": "shop_discount",
+          "target": "stella_flower_shop",
+          "mathematics_operation": "multiply",
+          "description": "50% discount on Stella FLOWER purchases"
+        },
+        "daily_gift": {
+          "category": "utility",
+          "target": "daily_reward",
+          "description": "Tiered daily food gift based on Bumpkin level"
+        },
+        "chapter_airdrop": {
+          "category": "utility",
+          "target": "seasonal_content",
+          "description": "Monthly seasonal airdrop and VIP chapter track access"
+        }
+      },
       "mathematics_1": {
         "category": "bumpkin_xp",
         "target": "all",
@@ -140,36 +700,6 @@
           "rank_1": 1
         }
       }
-    }
-  },
-  "consumables": {
-    "Gourmet Hourglass": {
-      "mathematics_1": {
-        "calc_by_rank": {
-          "rank_1": 0.75
-        },
-        "category": "cooking_time",
-        "mathematics_operation": "multiply",
-        "target": "all"
-      },
-      "description": "-25% Cooking Time",
-      "name": "Gourmet Hourglass",
-      "id": 9007,
-      "image": "/img/sunflowerland/aoe/gourmet_hourglass.webp"
-    },
-    "Time Warp Totem": {
-      "mathematics_1": {
-        "calc_by_rank": {
-          "rank_1": 0.5
-        },
-        "category": "cooking_time",
-        "mathematics_operation": "multiply",
-        "target": "all"
-      },
-      "description": "-50% Cooking Time",
-      "name": "Time Warp Totem",
-      "id": 9006,
-      "image": "/img/sunflowerland/aoe/time_warp_totem.webp"
     }
   }
 }

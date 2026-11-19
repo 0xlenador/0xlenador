@@ -288,7 +288,9 @@ const defaultLabels: CatalogLabels = {
                                   class="catalog-unit-flower text-[8px] sm:text-[8.5px] font-mono font-bold text-emerald-400/90 leading-none tracking-tighter"
                                   data-coins={item.coins}
                                 >
-                                  {item.coins === 0 ? "0" : (item.coins / 320).toFixed(4)}
+                                  {item.coins && item.coins > 0
+                                    ? (item.coins / 320).toFixed(4)
+                                    : (item.ingredients && item.ingredients.length > 0 ? "--" : "0")}
                                 </span>
                               </div>
                             </button>
@@ -644,7 +646,14 @@ const defaultLabels: CatalogLabels = {
                 item.ingredients.forEach((ing: any) => (mats += resolveMaterial(ing.name) * ing.amount))
               }
               const total = coinsFlower + mats
-              badge.innerText = coinsFlower === 0 && mats === 0 ? "0" : total < 100 ? total.toFixed(4) : total.toFixed(2)
+              const hasIngredients = Array.isArray(item.ingredients) && item.ingredients.length > 0
+              if (total > 0) {
+                badge.innerText = total < 100 ? total.toFixed(4) : total.toFixed(2)
+              } else if (hasIngredients) {
+                badge.innerText = "--"
+              } else {
+                badge.innerText = "0"
+              }
             } catch (_) {}
           })
         }
@@ -713,7 +722,18 @@ const defaultLabels: CatalogLabels = {
 
           if (ingredientsEl) ingredientsEl.innerHTML = html
           const grandFlower = coinsFlower + matsFlower
-          if (flowerTotalEl) flowerTotalEl.innerText = selectedItem.coins === 0 && matsFlower === 0 ? "0" : grandFlower.toFixed(4)
+          if (flowerTotalEl) {
+            const hasIngredients =
+              Array.isArray(selectedItem.ingredients) && selectedItem.ingredients.length > 0
+            if (grandFlower > 0) {
+              flowerTotalEl.innerText =
+                grandFlower < 100 ? grandFlower.toFixed(4) : grandFlower.toFixed(2)
+            } else if (hasIngredients) {
+              flowerTotalEl.innerText = "--"
+            } else {
+              flowerTotalEl.innerText = "0"
+            }
+          }
           if (usdTotalEl) usdTotalEl.innerText = `~$${(grandFlower * flowerUsd).toFixed(4)}`
 
           if (yieldBadgeEl) {

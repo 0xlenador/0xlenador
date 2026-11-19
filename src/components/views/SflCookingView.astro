@@ -20,66 +20,36 @@ const sflIds = sflIdsEntry.data
 const sflBuffsRaw = sflBuffsEntry.data
 const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
 
-// Filtrar powerups relevantes para cocina desde powerups.json (collectibles + wearables)
-const cookingCols = Object.entries(sflPowerUpsData.collectibles || {}).filter(
-  ([_, it]: [string, any]) => {
-    const c1 = it.mathematics_1?.category
-    const c2 = it.mathematics_2?.category
-    return c1 === "bumpkin_xp" || c1 === "cooking_time" || c2 === "bumpkin_xp" || c2 === "cooking_time"
-  }
+import { getAllCookingRecipes } from "../../lib/sfl/cooking"
+import { getCookingBuffs } from "../../lib/sfl/buffs"
+
+const cookingBuffs = getCookingBuffs()
+const sflBuffs = Object.fromEntries(
+  cookingBuffs
+    .filter((b) => b.type === "collectible" || b.type === "wearable")
+    .map((b) => [String(b.id), b.raw])
 )
-const cookingWears = Object.entries(sflPowerUpsData.wearables || {}).filter(
-  ([_, it]: [string, any]) => {
-    const c1 = it.mathematics_1?.category
-    const c2 = it.mathematics_2?.category
-    return c1 === "bumpkin_xp" || c1 === "cooking_time" || c2 === "bumpkin_xp" || c2 === "cooking_time"
-  }
+const sflShrines = Object.fromEntries(
+  cookingBuffs.filter((b) => b.type === "shrine").map((b) => [b.name, b.raw])
 )
-const sflBuffs = Object.fromEntries([...cookingCols, ...cookingWears])
-const sflShrines = sflBuffsRaw.shrines || {};
+const sflConsumables = Object.fromEntries(
+  cookingBuffs.filter((b) => b.type === "consumable").map((b) => [b.name, b.raw])
+)
 const sflSkills = { ...(sflSkillsEntry.data.Cooking || {}) }
 if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
   sflSkills["Fishy Feast"] = sflSkillsEntry.data.Fishing["Fishy Feast"]
 }
+if (sflSkillsEntry.data.Aging && sflSkillsEntry.data.Aging["Speedy Aging"]) {
+  sflSkills["Speedy Aging"] = sflSkillsEntry.data.Aging["Speedy Aging"]
+}
 const sflOthers = sflBuffsRaw.others || {}
-const sflConsumables = sflBuffsRaw.consumables || {}
+
 import levelExperience from "../../content/data/sfl/level_experience.json"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
-import agingShedData from "../../content/data/sfl/aging_shed.json"
-
-// Extraer recetas de peces envejecidos de la Aging Shed (alimentos de Bumpkin)
-const agedFishRecipes: any[] = []
-const agingTab = (agingShedData as any)?.building?.tabs?.find((t: any) => t.id === "aging")
-if (agingTab?.categories) {
-  agingTab.categories.forEach((cat: any) => {
-    (cat.items || []).forEach((item: any) => {
-      const rawFish = item.name.replace(/^Aged\s+/, "")
-      const sec = Number(item.timeSeconds) || 0
-      const h = String(Math.floor(sec / 3600)).padStart(2, "0")
-      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0")
-      const s = String(sec % 60).padStart(2, "0")
-      const agedXp = Number(item.agedXp) || 0
-      const primeXp = Number(item.primeAgedXp) || Math.round(agedXp * 1.3)
-      // Esperanza matemática: 90% aged + 10% prime
-      const expectedXp = Math.round(agedXp * 0.9 + primeXp * 0.1)
-      agedFishRecipes.push({
-        name: item.name,
-        building: "Aging Shed",
-        time: `${h}:${m}:${s}`,
-        xp: expectedXp,
-        ingredients: [
-          { name: rawFish, amount: 1 },
-          { name: "Salt", amount: Number(item.salt) || 0 },
-        ],
-        image: item.image || `/img/sunflowerland/fish/${rawFish}.png`,
-      })
-    })
-  })
-}
 
 const allSflRecipes = {
   ...sflRecipes,
-  recipes: [...(sflRecipes.recipes || []), ...agedFishRecipes],
+  recipes: getAllCookingRecipes(),
 }
 
 const lang = getLangFromUrl(Astro.url)
@@ -857,16 +827,19 @@ const formatAstroDescription = (skill) => {
                 Object.entries(sflShrines).map(([id, buff]) => {
                   const mainSrc = '/img/sunflowerland/shrines/' + buff.image;
                   const fallbackSrc = '/img/cripto/sunflowerland.webp';
+                  const cookingMath = [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6]
+                    .find((m: any) => m && (m.category === "cooking_speed" || m.category === "cooking_time"));
+                  const boostText = buff.boost || cookingMath?.description || buff.description;
                   return (
-                  <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
+                  <label data-effect={getEffectType(boostText)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
                     <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50" data-buff-id={id} />
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={buff.boost} width="24" height="24" loading="lazy" decoding="async" />
+                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={boostText} width="24" height="24" loading="lazy" decoding="async" />
                     <div class="flex flex-col normal-view">
                       <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 group-hover:text-orange-400 transition-colors">{buff.name}</span>
-                      <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
+                      <span class="text-[9px] text-terminal-muted leading-tight" title={boostText}>{boostText}</span>
                     </div>
                     <div class="hidden compact-view w-full mr-2">
-                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors" title={buff.boost}>{getCompactText(buff, buff.boost, 'shrine')}</span>
+                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors" title={boostText}>{getCompactText(buff, boostText, 'shrine')}</span>
                     </div>
                   </label>
                   );
@@ -1352,7 +1325,7 @@ const formatAstroDescription = (skill) => {
     activeBuffs.forEach(id => {
       const buff = sflBuffs[id];
       if (buff) {
-        [buff.mathematics_1, buff.mathematics_2].forEach(math => {
+        [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6].forEach(math => {
           if (math && math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food || math.target || "all")) {
             if (math.mathematics_operation === "multiply") {
               boostedExp *= math.calc;
@@ -1386,8 +1359,8 @@ const formatAstroDescription = (skill) => {
         if (skillName === "Juicy Boost" && item.building === "Smoothie Shack") {
           boostedExp *= (1 + math1);
         }
-        // Double Nom (+1 food = 2x XP essentially)
-        if (skillName === "Double Nom") {
+        // Double Nom (+1 food = 2x XP essentially) - Solo para cocina, NO para Aging Shed
+        if (skillName === "Double Nom" && item.building !== "Aging Shed") {
           boostedExp *= (1 + math1);
         }
         // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
@@ -1416,6 +1389,17 @@ const formatAstroDescription = (skill) => {
     let timeSeconds = parseTime(item.time);
     if (timeSeconds === 0) return 0;
     
+    // Si el ítem es de Aging Shed, los aceleradores de cocina NO aplican!
+    if (item.building === "Aging Shed") {
+      let agingMultiplier = 1;
+      if (activeSkills && activeSkills["Speedy Aging"]) {
+        const rank = activeSkills["Speedy Aging"];
+        const ranks = [0.9, 0.85, 0.8];
+        agingMultiplier *= (ranks[rank - 1] || 0.9);
+      }
+      return timeSeconds * agingMultiplier;
+    }
+
     let timeMultiplier = 1;
     
     activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
@@ -1467,10 +1451,16 @@ const formatAstroDescription = (skill) => {
       activeBuffs.forEach(id => {
         const buff = sflBuffs[id];
         if (buff) {
-          [buff.mathematics_1, buff.mathematics_2].forEach(math => {
-            if (math && math.category === "cooking_time" && isTargetMatch(item, math.target_food || math.target || "all")) {
+          [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6].forEach(math => {
+            if (!math) return;
+            if (math.category === "cooking_time" && isTargetMatch(item, math.target_food || math.target || "all")) {
               if (math.mathematics_operation === "multiply") {
                 timeMultiplier *= math.calc;
+              }
+            }
+            if (math.category === "cooking_speed" && isTargetMatch(item, math.target || "all")) {
+              if (math.mathematics_operation === "speed_multiplier" && math.calc > 0) {
+                timeMultiplier *= (1 / math.calc);
               }
             }
           });
@@ -1568,7 +1558,7 @@ const formatAstroDescription = (skill) => {
     }).format(num)
   }
 
-  const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true) => {
+  const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true, isAgingShed = false) => {
     let total = 0
     let missing = false
     
@@ -1641,9 +1631,9 @@ const formatAstroDescription = (skill) => {
       }
     }
     
-    // Skills Logic for Cost (Debuffs)
+    // Skills Logic for Cost (Debuffs) - Solo para cocina, NO para Aging Shed
     let costMultiplier = 1;
-    if (isTopLevel) {
+    if (isTopLevel && !isAgingShed) {
       activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
         const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
         if (!skill) return;
@@ -1686,7 +1676,8 @@ const formatAstroDescription = (skill) => {
       const finalXp = getCalculatedXp(item);
       if (window.currentHideXpLimit > 0 && finalXp < window.currentHideXpLimit) continue;
 
-      const costObj = calculateRecipeCost(item.ingredients);
+      const isAgingDish = item.building === "Aging Shed";
+      const costObj = calculateRecipeCost(item.ingredients, new Set(), true, isAgingDish);
       const timeSeconds = getCalculatedTime(item);
       const xpPerSfl = costObj.total > 0 ? finalXp / costObj.total : 0;
       const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * finalXp : 0;
@@ -1742,7 +1733,9 @@ const formatAstroDescription = (skill) => {
     const rowsHtml = prepared.map(({ item, finalXp, costObj, timeSeconds, xpPerSfl, xpPerDay }) => {
       // Format visual time
       const displayTime = formatSeconds(timeSeconds);
-      const displayName = doubleNomMultiplier > 1 ? `${item.name} x${doubleNomMultiplier}` : item.name;
+      const isCookingDish = item.building !== "Aging Shed";
+      const effectiveDoubleNom = isCookingDish ? doubleNomMultiplier : 1;
+      const displayName = effectiveDoubleNom > 1 ? `${item.name} x${effectiveDoubleNom}` : item.name;
       const dishImg = item.image || `/img/sunflowerland/food/${item.name}.png`;
 
       const ingredientsHtml = item.ingredients
@@ -1753,7 +1746,7 @@ const formatAstroDescription = (skill) => {
           return `
           <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2 py-1 lg:p-0 rounded-md lg:rounded-none shrink-0 border border-white/5 lg:border-0">
             <img src="${imgSrc}" alt="${safeName}" class="w-4 h-4 object-contain drop-shadow-sm" width="16" height="16" loading="lazy" decoding="async" onerror="window.handleImgError(this)" />
-            <span class="text-[11px] lg:text-xs text-white/80">${ing.name} <span class="text-white/40 font-mono ml-0.5">x${ing.amount * doubleNomMultiplier}</span></span>
+            <span class="text-[11px] lg:text-xs text-white/80">${ing.name} <span class="text-white/40 font-mono ml-0.5">x${ing.amount * effectiveDoubleNom}</span></span>
           </div>
         `;
         })
@@ -1856,7 +1849,7 @@ const formatAstroDescription = (skill) => {
       const manualRecipe = recipesData.find((r) => r.name === window.manualSelectedDish);
       if (manualRecipe) {
         const calcXp = getCalculatedXp(manualRecipe);
-        const costObj = calculateRecipeCost(manualRecipe.ingredients);
+        const costObj = calculateRecipeCost(manualRecipe.ingredients, new Set(), true, manualRecipe.building === "Aging Shed");
         const totalCost = costObj.total;
         const efficiency = totalCost > 0 ? calcXp / totalCost : 0;
         return {
@@ -1879,7 +1872,7 @@ const formatAstroDescription = (skill) => {
       const calcXp = getCalculatedXp(recipe);
       if (!calcXp || calcXp <= 0) continue;
       if (calcXp < minXp) continue;
-      const costObj = calculateRecipeCost(recipe.ingredients);
+      const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed");
       const totalCost = costObj.total;
       if (totalCost > 0 && !costObj.missing) {
         const efficiency = calcXp / totalCost;
@@ -1896,7 +1889,7 @@ const formatAstroDescription = (skill) => {
         const calcXp = getCalculatedXp(recipe);
         if (!calcXp || calcXp <= 0) continue;
         if (calcXp < minXp) continue;
-        const costObj = calculateRecipeCost(recipe.ingredients);
+        const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed");
         const totalCost = costObj.total;
         if (totalCost > 0) {
           const efficiency = calcXp / totalCost;
@@ -2503,7 +2496,7 @@ const formatAstroDescription = (skill) => {
     const sortedDishes = recipesData
       .map((recipe) => {
         const calcXp = getCalculatedXp(recipe);
-        const costObj = calculateRecipeCost(recipe.ingredients);
+        const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed");
         const totalCost = costObj.total;
         const efficiency = totalCost > 0 ? calcXp / totalCost : 0;
         return {

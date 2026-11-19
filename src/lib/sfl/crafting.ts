@@ -364,9 +364,14 @@ export function getRecipe(nameOrId: string): UnifiedRecipe | undefined {
   const byName = _recipesByName.get(cleanName)
   if (byName) return byName
 
-  // Búsqueda tolerante quitando prefijos de envejecido
+  // Búsqueda tolerante: si buscan "Aged White Shark" pero en recetas estaba registrado como "white shark"
   const unaged = cleanName.replace(/^aged\s+/, "")
-  return _recipesByName.get(unaged) || _recipesByName.get(`aged ${unaged}`)
+  if (unaged !== cleanName) {
+    const byUnaged = _recipesByName.get(unaged)
+    if (byUnaged) return byUnaged
+  }
+
+  return undefined
 }
 
 /**

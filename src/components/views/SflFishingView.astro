@@ -513,9 +513,173 @@ const counts = {
       updateChumGuaranteedBadges(card)
     }
 
-    // Inicializar estado de Chum para todas las tarjetas
+    // Helper para activar un cebo específico en una tarjeta
+    function activateBaitBadge(card, targetBadge) {
+      const baitBadges = Array.from(card.querySelectorAll(".bait-badge"))
+      baitBadges.forEach((b) => {
+        b.classList.remove(
+          "active",
+          "bg-emerald-500/20",
+          "border-emerald-400",
+          "text-emerald-300",
+          "bg-cyan-500/20",
+          "border-cyan-400",
+          "text-cyan-300",
+          "ring-1",
+          "ring-emerald-400/50",
+          "ring-cyan-400/50",
+          "shadow-sm"
+        )
+        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+      })
+      if (targetBadge) {
+        const isFree = targetBadge.dataset.isFree === "true"
+        targetBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        if (isFree) {
+          targetBadge.classList.add(
+            "active",
+            "bg-emerald-500/20",
+            "border-emerald-400",
+            "text-emerald-300",
+            "ring-1",
+            "ring-emerald-400/50",
+            "shadow-sm"
+          )
+        } else {
+          targetBadge.classList.add(
+            "active",
+            "bg-cyan-500/20",
+            "border-cyan-400",
+            "text-cyan-300",
+            "ring-1",
+            "ring-cyan-400/50",
+            "shadow-sm"
+          )
+        }
+      }
+    }
+
+    // Helper para activar un chum específico (o ninguno si targetBadge es null)
+    function activateChumBadge(card, targetBadge) {
+      const chumBadges = Array.from(card.querySelectorAll(".chum-badge"))
+      chumBadges.forEach((b) => {
+        b.classList.remove(
+          "active",
+          "bg-cyan-500/20",
+          "border-cyan-400",
+          "text-cyan-300",
+          "ring-1",
+          "ring-cyan-400/50",
+          "shadow-sm"
+        )
+        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+        const check = b.querySelector(".chum-check")
+        if (check) check.classList.add("hidden")
+      })
+      if (targetBadge) {
+        targetBadge.classList.add(
+          "active",
+          "bg-cyan-500/20",
+          "border-cyan-400",
+          "text-cyan-300",
+          "ring-1",
+          "ring-cyan-400/50",
+          "shadow-sm"
+        )
+        targetBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        const check = targetBadge.querySelector(".chum-check")
+        if (check) check.classList.remove("hidden")
+      }
+    }
+
+    // Selecciona por defecto la opción 100% garantizada más económica (o la base más barata si no tiene garantía)
+    function selectOptimalCardSetup(card) {
+      if (!card || card.dataset.kind === "marvel") return
+
+      if (card.dataset.kind === "trap") {
+        selectCheapestChum(card)
+        return
+      }
+
+      if (card.dataset.kind !== "rod") return
+
+      const baitBadges = Array.from(card.querySelectorAll(".bait-badge"))
+      const chumBadges = Array.from(card.querySelectorAll(".chum-badge"))
+      const guaranteedOptions = []
+
+      // 1. Opciones 100% de Cebo Especializado del Fish Market (solo reservado a los 3 apex sharks de ratio superbajo)
+      const cardName = card.dataset.name || ""
+      const isApexShark = ["white shark", "saw shark", "whale shark"].includes(cardName)
+
+      if (isApexShark) {
+        baitBadges.forEach((bb) => {
+          if (bb.dataset.isGuaranteed === "true") {
+            const bName = bb.dataset.baitName
+            const bPrice = getBaitUnitPrice(bName)
+            guaranteedOptions.push({
+              type: "specialized_bait",
+              baitBadge: bb,
+              chumBadge: null,
+              cost: rodCost + bPrice,
+            })
+          }
+        })
+      }
+
+      // 2. Opciones 100% de Combinación Cebo + Chum
+      chumBadges.forEach((cb) => {
+        const validBaitsStr = cb.dataset.guaranteedBaits || ""
+        if (validBaitsStr) {
+          const validBaits = validBaitsStr.split(",")
+          let bestBait = null
+          let lowestBaitPrice = Infinity
+
+          baitBadges.forEach((bb) => {
+            const bName = bb.dataset.baitName
+            if (validBaits.includes(bName)) {
+              const isFree = bb.dataset.isFree === "true"
+              const bPrice = isFree ? 0 : getBaitUnitPrice(bName)
+              if (bPrice < lowestBaitPrice) {
+                lowestBaitPrice = bPrice
+                bestBait = bb
+              }
+            }
+          })
+
+          if (bestBait) {
+            const chumName = cb.dataset.chumName
+            const chumAmount = parseFloat(cb.dataset.chumAmount) || 1
+            const chumPrice = getChumUnitPrice(chumName) * chumAmount
+            guaranteedOptions.push({
+              type: "chum_combo",
+              baitBadge: bestBait,
+              chumBadge: cb,
+              cost: rodCost + lowestBaitPrice + chumPrice,
+            })
+          }
+        }
+      })
+
+      // 3. Evaluar y aplicar la mejor opción
+      if (guaranteedOptions.length > 0) {
+        guaranteedOptions.sort((a, b) => a.cost - b.cost)
+        const best = guaranteedOptions[0]
+        activateBaitBadge(card, best.baitBadge)
+        activateChumBadge(card, best.chumBadge)
+        syncChumAvailability(card)
+      } else {
+        selectCheapestBait(card)
+        const globalChum = document.getElementById("globalChumToggle")
+        if (globalChum && globalChum.checked) {
+          selectCheapestChum(card)
+        }
+      }
+    }
+
+    // Inicializar estado óptimo para todas las tarjetas
     cards.forEach((card) => {
-      syncChumAvailability(card)
+      selectOptimalCardSetup(card)
+      updateCardCost(card)
     })
 
     // Seleccionar automáticamente el cebo más económico por tarjeta (solo rod)
@@ -743,10 +907,9 @@ const counts = {
       const statFlower = document.getElementById("statFlowerPrice")
       if (statFlower) statFlower.innerText = `$${flowerPrice.toFixed(4)}`
 
-      // Preseleccionar el cebo más barato y el Chum más barato para peces y trampas (excluye marvel)
+      // Preseleccionar automáticamente la configuración óptima (la opción 100% garantizada más barata, o la base más económica)
       cards.forEach((card) => {
-        selectCheapestBait(card)
-        selectCheapestChum(card)
+        selectOptimalCardSetup(card)
       })
 
       updateAllCards()
