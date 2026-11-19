@@ -2591,7 +2591,7 @@ const formatAstroDescription = (skill) => {
         if (state.customFishOil !== null && state.customFishOil !== undefined) {
           window.sflCustomFishOilCost = parseFloat(state.customFishOil);
         }
-        const isFirstTimeBoosts = localStorage.getItem("sfl_boosts_expanded") !== "true";
+        const isFirstTimeBoosts = localStorage.getItem("sfl_boosts_expanded_cooking") !== "true";
         if (state.boostFilter && !isFirstTimeBoosts) {
           window.toggleBoostFilter(state.boostFilter);
         } else {

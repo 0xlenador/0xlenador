@@ -291,7 +291,7 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
         ]}>
           {kind === "marvel" ? t("sfl.fishing.card.costMarvel") : t("sfl.fishing.card.cost")}
         </span>
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5 shrink-0">
           <div class:list={[
             "cost-flower-val font-mono font-bold text-amber-400 flex items-center gap-1",
             kind === "marvel" ? "text-sm text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.25)]" : "text-xs"
@@ -428,9 +428,17 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
         <!-- Peces que dropean Mapas (Prioridad máxima en Maravillas Marinas) -->
         {item.mapTriggers && item.mapTriggers.length > 0 && (
           <div class="mb-2">
-            <span class="text-[10px] font-mono uppercase tracking-wider text-white/40 block mb-1">
-              {t("sfl.fishing.card.mapTriggers")}
-            </span>
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <img
+                src="/img/sunflowerland/fish/a/map_marine.webp"
+                alt="Map"
+                class="w-4 h-4 object-contain [image-rendering:pixelated]"
+                loading="lazy"
+              />
+              <span class="text-[10px] font-mono uppercase tracking-wider text-white/50 font-bold">
+                {t("sfl.fishing.card.mapTriggers")}
+              </span>
+            </div>
             <div class="space-y-1.5 map-trigger-container">
               {item.mapTriggers.map((trig: { fish: string; odds: number }, tIdx: number) => {
                 const fishObj = fishMap.get(trig.fish.toLowerCase())
@@ -488,9 +496,15 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                     </div>
 
                     <!-- Derecha: Probabilidad de dropeo de mapa -->
-                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono font-bold text-[10px] shrink-0">
-                      {(trig.odds * 100).toFixed(1)}%
-                    </span>
+                    <div class="flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono font-bold text-[10px] shrink-0" title={`${(trig.odds * 100).toFixed(1)}% prob. fragmento de mapa`}>
+                      <img
+                        src="/img/sunflowerland/fish/a/map_marine.webp"
+                        alt="Map"
+                        class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
+                        loading="lazy"
+                      />
+                      <span>{(trig.odds * 100).toFixed(1)}%</span>
+                    </div>
                   </button>
                 )
               })}

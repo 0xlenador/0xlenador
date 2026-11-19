@@ -27,9 +27,15 @@ interface Props {
   domain?: "cooking" | "fishing" | "animals" | "mining" | "all"
   class?: string
   idPrefix?: string
+  defaultOpen?: boolean
 }
 
-const { domain = "all", class: className = "", idPrefix = "sfl-boosts" } = Astro.props
+const {
+  domain = "all",
+  class: className = "",
+  idPrefix = "sfl-boosts",
+  defaultOpen = domain === "cooking",
+} = Astro.props
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -149,6 +155,7 @@ const getEffectType = (desc: string) => {
   class={`sfl-boosts-panel group bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden mb-6 transition-all ${className}`}
   id={`${idPrefix}-panel`}
   data-domain={domain}
+  open={defaultOpen ? true : undefined}
 >
   <summary
     class="p-4 flex flex-wrap items-center justify-between gap-3 cursor-pointer select-none bg-gradient-to-r from-white/[0.03] to-transparent hover:bg-white/[0.05] transition-colors list-none [&::-webkit-details-marker]:hidden"
@@ -592,10 +599,16 @@ const getEffectType = (desc: string) => {
       const container = panel.querySelector<HTMLElement>(".boosts-container")
       if (!container) return
 
-      // 1. Restaurar estado de acordeón
-      const isExpanded = typeof localStorage !== "undefined" && localStorage.getItem("sfl_boosts_expanded") === "true"
-      if (isExpanded) {
-        panel.open = true
+      // 1. Restaurar estado de acordeón según preferencia manual guardada
+      const panelDomain = panel.dataset.domain || "all"
+      const storageKey = `sfl_boosts_expanded_${panelDomain}`
+      if (typeof localStorage !== "undefined") {
+        const savedPreference = localStorage.getItem(storageKey)
+        if (savedPreference !== null) {
+          panel.open = savedPreference === "true"
+        } else {
+          panel.open = panelDomain === "cooking"
+        }
       }
 
       // 4. Sincronización con SflUserState
@@ -677,7 +690,8 @@ const getEffectType = (desc: string) => {
 
         panel.addEventListener("toggle", () => {
           if (typeof localStorage !== "undefined") {
-            localStorage.setItem("sfl_boosts_expanded", panel.open ? "true" : "false")
+            const dom = panel.dataset.domain || "all"
+            localStorage.setItem(`sfl_boosts_expanded_${dom}`, panel.open ? "true" : "false")
           }
         })
 
