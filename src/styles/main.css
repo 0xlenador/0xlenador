@@ -830,3 +830,10 @@ input[type="range"]::-webkit-slider-thumb {
   image-rendering: crisp-edges;
 }
 
+/* ============================================================
+   AGING SHED: Filtro para peces envejecidos (zonas oscuras más grises)
+   ============================================================ */
+.aged-fish-filter {
+  filter: grayscale(100%) brightness(1.25) contrast(0.75);
+}
+

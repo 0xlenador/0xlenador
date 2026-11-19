@@ -1558,6 +1558,10 @@ const formatAstroDescription = (skill) => {
     }).format(num)
   }
 
+  // Caché de costo de captura de peces para evitar recálculos redundantes en renderizado y filtros
+  const fishCatchCostCache = new Map();
+  window.clearFishCostCache = () => fishCatchCostCache.clear();
+
   const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true, isAgingShed = false) => {
     let total = 0
     let missing = false
@@ -1584,7 +1588,9 @@ const formatAstroDescription = (skill) => {
         total += marketPrice * ing.amount
       } else if (isKnownFish) {
         let fishCost = window.sflRodCost || 0;
-        if (window.SflConstants && typeof window.SflConstants.calculateFishCatchCost === "function") {
+        if (fishCatchCostCache.has(ing.name)) {
+          fishCost = fishCatchCostCache.get(ing.name);
+        } else if (window.SflConstants && typeof window.SflConstants.calculateFishCatchCost === "function") {
           const catchObj = window.SflConstants.calculateFishCatchCost(ing.name, {
             coinsPerFlower: window.sflBestCoinsPerFlower || 1330,
             flowerPriceUsd: window.sflFlowerPrice || 0.0854,
@@ -1593,6 +1599,7 @@ const formatAstroDescription = (skill) => {
           if (catchObj && catchObj.totalFlower > 0) {
             fishCost = catchObj.totalFlower;
           }
+          fishCatchCostCache.set(ing.name, fishCost);
         }
         total += fishCost * ing.amount;
       } else if (ing.name === "Fish Flake") {
@@ -2911,6 +2918,10 @@ const formatAstroDescription = (skill) => {
 
     const isCustomRod = window.sflCustomRodCost !== null && window.sflCustomRodCost !== undefined && window.sflCustomRodCost >= 0;
     const effectiveRod = isCustomRod ? window.sflCustomRodCost : autoRodCost;
+    // Limpiar caché de costo de peces al actualizar precios base
+    if (typeof window.clearFishCostCache === "function") {
+      window.clearFishCostCache();
+    }
     window.sflRodCost = effectiveRod;
 
     const rodInput = document.getElementById("fishingRodInput");

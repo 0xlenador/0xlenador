@@ -52,6 +52,7 @@ const catalogLabels = {
   comingSoonDesc: t("sfl.constants.comingSoon.desc"),
   customUnits: t("sfl.constants.sell.customUnits"),
   customPlaceholder: t("sfl.constants.sell.customPlaceholder"),
+  rawXpLabel: t("sfl.constants.rawXp"),
   agedXpLabel: t("sfl.constants.agedXp"),
   primeAgedXpLabel: t("sfl.constants.primeAgedXp"),
   agingTimeLabel: t("sfl.constants.agingTime"),
@@ -124,12 +125,17 @@ const agingShedTabs: CatalogTab[] = agingShed.tabs.map((tab) => {
     type: (tab.type as any) || "craft",
     isComingSoon: (tab as any).isComingSoon || false,
     placeholderIcon: tab.placeholderIcon,
+    multipliers: [1, 10, 50],
     sections: tab.categories.map((cat) => ({
       id: cat.id,
       name: t(`sfl.constants.cat.${cat.id}`) || cat.name,
       items: cat.items.map((item: any) => {
         if (item.salt !== undefined) {
           const baseFishName = item.name.replace(/^Aged\s+/i, "")
+          const rawFish = fishData.find(
+            (f: any) => f.name.toLowerCase() === baseFishName.toLowerCase()
+          )
+          const rawXp = item.rawXp || rawFish?.xp || 0
           const baseFish = {
             name: baseFishName,
             amount: 1,
@@ -146,6 +152,8 @@ const agingShedTabs: CatalogTab[] = agingShed.tabs.map((tab) => {
 
           return {
             ...item,
+            rawXp,
+            isAged: true,
             chances: item.chances || tabDefaultChances,
             ingredients: [...customIngredients, saltIngredient],
           }

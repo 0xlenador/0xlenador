@@ -54,6 +54,7 @@ export interface CatalogLabels {
   comingSoonDesc?: string
   customUnits?: string
   customPlaceholder?: string
+  rawXpLabel?: string
   agedXpLabel?: string
   primeAgedXpLabel?: string
   agingTimeLabel?: string
@@ -116,6 +117,7 @@ const defaultLabels: CatalogLabels = {
   comingSoonDesc: "La sección de {tab} estará disponible próximamente.",
   customUnits: "uds",
   customPlaceholder: "Cantidad...",
+  rawXpLabel: "XP Pez Crudo:",
   agedXpLabel: "XP Pez Envejecido:",
   primeAgedXpLabel: "XP Pez Prime Aged:",
   agingTimeLabel: "Tiempo de curado:",
@@ -267,14 +269,39 @@ const defaultLabels: CatalogLabels = {
                                 )
                               }
 
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                width="24"
-                                height="24"
-                                class="w-6 h-6 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [image-rendering:pixelated] group-hover:scale-105 transition-transform my-1"
-                                loading="lazy"
-                              />
+                              {
+                                item.isAged || item.id?.startsWith("aged_") ? (
+                                  <div class="relative w-6 h-6 my-1 group-hover:scale-105 transition-transform select-none flex items-center justify-center">
+                                    {/* Pez de abajo en color normal desplazado unos píxeles a la izquierda */}
+                                    <img
+                                      src={item.image}
+                                      alt=""
+                                      width="24"
+                                      height="24"
+                                      class="absolute inset-0 w-full h-full object-contain [image-rendering:pixelated] -translate-x-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-none"
+                                      loading="lazy"
+                                    />
+                                    {/* Pez de arriba en escala de grises sobrepuesto */}
+                                    <img
+                                      src={item.image}
+                                      alt={item.name}
+                                      width="24"
+                                      height="24"
+                                      class="relative w-full h-full object-contain aged-fish-filter grayscale brightness-125 contrast-75 [image-rendering:pixelated] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                                      loading="lazy"
+                                    />
+                                  </div>
+                                ) : (
+                                  <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    width="24"
+                                    height="24"
+                                    class="w-6 h-6 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [image-rendering:pixelated] group-hover:scale-105 transition-transform my-1"
+                                    loading="lazy"
+                                  />
+                                )
+                              }
 
                               <div class="w-full flex items-center justify-center gap-0.5 leading-none px-0.5 overflow-hidden">
                                 <img
@@ -333,13 +360,24 @@ const defaultLabels: CatalogLabels = {
                       </span>
                     </div>
                     <div class="my-2.5 flex items-center justify-center p-2.5 rounded-xl bg-white/[0.02]">
-                      <img
-                        src=""
-                        alt=""
-                        width="48"
-                        height="48"
-                        class="catalog-detail-img w-12 h-12 object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
-                      />
+                      <div class="relative w-12 h-12 flex items-center justify-center">
+                        <!-- Pez de abajo en color normal desplazado a la izquierda para items aged -->
+                        <img
+                          src=""
+                          alt=""
+                          width="48"
+                          height="48"
+                          class="catalog-detail-img-under hidden absolute inset-0 w-full h-full object-contain -translate-x-2.5 drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] [image-rendering:pixelated] pointer-events-none"
+                        />
+                        <!-- Pez de arriba en escala de grises (o imagen normal si no es aged) -->
+                        <img
+                          src=""
+                          alt=""
+                          width="48"
+                          height="48"
+                          class="catalog-detail-img relative w-full h-full object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
+                        />
+                      </div>
                     </div>
                     <p class="catalog-detail-desc text-xs text-terminal-secondary leading-relaxed mb-2.5">
                       --
@@ -391,6 +429,17 @@ const defaultLabels: CatalogLabels = {
                         </div>
                         <span class="catalog-detail-aging-time font-bold text-cyan-300">
                           --
+                        </span>
+                      </div>
+
+                      <!-- Fila XP Base Crudo (debajo de time, encima de aged) -->
+                      <div class="catalog-detail-raw-row hidden items-center justify-between py-1.5 px-3 rounded-xl bg-blue-500/[0.05] border border-blue-500/20 text-xs font-mono">
+                        <div class="flex items-center gap-1.5 text-blue-300/90 font-medium">
+                          <span class="text-xs">🎣</span>
+                          <span>{defaultLabels.rawXpLabel}</span>
+                        </div>
+                        <span class="catalog-detail-raw-xp font-bold text-blue-300">
+                          +0 XP
                         </span>
                       </div>
 
@@ -494,7 +543,7 @@ const defaultLabels: CatalogLabels = {
                       <div class="grid grid-cols-3 gap-1.5 multiplier-grid">
                         {(
                           tab.multipliers ||
-                          (tab.type === "sell" ? [1, 10, 100] : [1, 10, "max"])
+                          (tab.type === "sell" ? [1, 10, 100] : [1, 10, 50])
                         ).map((m, mIdx) => (
                           <button
                             type="button"
@@ -578,6 +627,7 @@ const defaultLabels: CatalogLabels = {
         const titleEl = panel.querySelector<HTMLElement>(".catalog-detail-title")
         const yieldBadgeEl = panel.querySelector<HTMLElement>(".catalog-detail-yield-badge")
         const imgEl = panel.querySelector<HTMLImageElement>(".catalog-detail-img")
+        const imgUnderEl = panel.querySelector<HTMLImageElement>(".catalog-detail-img-under")
         const descEl = panel.querySelector<HTMLElement>(".catalog-detail-desc")
         const ingredientsEl = panel.querySelector<HTMLElement>(".catalog-detail-ingredients")
         const flowerTotalEl = panel.querySelector<HTMLElement>(".catalog-detail-flower-total")
@@ -586,6 +636,8 @@ const defaultLabels: CatalogLabels = {
         const xpSection = panel.querySelector<HTMLElement>(".catalog-detail-xp-section")
         const agedXpEl = panel.querySelector<HTMLElement>(".catalog-detail-aged-xp")
         const primeAgedXpEl = panel.querySelector<HTMLElement>(".catalog-detail-prime-xp")
+        const rawRow = panel.querySelector<HTMLElement>(".catalog-detail-raw-row")
+        const rawXpEl = panel.querySelector<HTMLElement>(".catalog-detail-raw-xp")
         const agingTimeRow = panel.querySelector<HTMLElement>(".catalog-detail-time-row")
         const agingTimeEl = panel.querySelector<HTMLElement>(".catalog-detail-aging-time")
         const agedChanceEl = panel.querySelector<HTMLElement>(".catalog-detail-aged-chance")
@@ -694,6 +746,21 @@ const defaultLabels: CatalogLabels = {
           if (imgEl) {
             imgEl.src = selectedItem.image
             imgEl.alt = selectedItem.name
+            const isAged = selectedItem.isAged || selectedItem.id?.startsWith("aged_")
+            if (isAged) {
+              imgEl.classList.add("aged-fish-filter", "grayscale", "brightness-125", "contrast-75")
+              imgEl.classList.remove("contrast-110")
+              if (imgUnderEl) {
+                imgUnderEl.src = selectedItem.image
+                imgUnderEl.alt = selectedItem.name
+                imgUnderEl.classList.remove("hidden")
+              }
+            } else {
+              imgEl.classList.remove("aged-fish-filter", "grayscale", "brightness-125", "contrast-75", "contrast-110")
+              if (imgUnderEl) {
+                imgUnderEl.classList.add("hidden")
+              }
+            }
           }
 
           if (popupQty) {
@@ -784,6 +851,18 @@ const defaultLabels: CatalogLabels = {
                 } else {
                   agingTimeRow.classList.add("hidden")
                   agingTimeRow.classList.remove("flex")
+                }
+              }
+
+              if (rawRow && rawXpEl) {
+                if (selectedItem.rawXp) {
+                  rawRow.classList.remove("hidden")
+                  rawRow.classList.add("flex")
+                  const totalRawXp = (selectedItem.rawXp || 0) * qty
+                  rawXpEl.innerText = `+${totalRawXp.toLocaleString()} XP`
+                } else {
+                  rawRow.classList.add("hidden")
+                  rawRow.classList.remove("flex")
                 }
               }
 
