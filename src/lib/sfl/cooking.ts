@@ -407,7 +407,11 @@ export function calculateCookingTime(
     // Otros ítems temporales en activeSkills
     else if (skillName === "Desert Gnome") {
       timeMultiplier *= 0.9
-    } else if (skillName === "Time Warp Totem" || skillName === "Gourmet Hourglass") {
+    } else if (
+      skillName === "Time Warp Totem" ||
+      skillName === "Super Totem" ||
+      skillName === "Gourmet Hourglass"
+    ) {
       timeMultiplier *= 0.5
     } else if (skillName === "Faction Medallion") {
       timeMultiplier *= 0.75
