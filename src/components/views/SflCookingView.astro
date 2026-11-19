@@ -1402,6 +1402,10 @@ const formatAstroDescription = (skill) => {
         if (skillName === "Buzzworthy Treats" && isTargetMatch(item, "Honey Foods")) {
           boostedExp *= (1 + math1);
         }
+        // Drive-Through Deli (+15%/+20%/+25% XP for Deli)
+        if (skillName === "Drive-Through Deli" && item.building === "Deli") {
+          boostedExp *= (1 + math1);
+        }
       });
     }
     
