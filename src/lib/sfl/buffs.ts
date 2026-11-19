@@ -270,13 +270,20 @@ export function getBuffsByCategory(category: BuffCategory): BuffDefinition[] {
 
 /** Buffs relevantes para cocina y experiencia de alimentos */
 export function getCookingBuffs(): BuffDefinition[] {
-  const targetCategories = new Set(["cooking_speed", "cooking_time", "bumpkin_xp"])
+  const targetCategories = new Set([
+    "cooking_speed",
+    "cooking_time",
+    "bumpkin_xp",
+    "aging_time",
+    "aging_prime",
+    "aging_yield",
+  ])
   return getAllBuffs().filter((b) => {
     // Skills del árbol de Cooking o Fishing (Fishy Feast)
     if (b.type === "skill" && (b.category === "Cooking" || b.name === "Fishy Feast")) {
       return true
     }
-    // O cualquier buff que tenga categoría de tiempo/velocidad de cocina o bumpkin_xp
+    // O cualquier buff que tenga categoría de tiempo/velocidad de cocina, bumpkin_xp o aging
     return b.effects.some((eff) => targetCategories.has(eff.category))
   })
 }
@@ -321,10 +328,13 @@ export function getWoodBuffs(): BuffDefinition[] {
   })
 }
 
-/** Buffs relevantes para minería y rocas */
+/** Buffs relevantes para minería, rocas y cuevas subterráneas */
 export function getMiningBuffs(): BuffDefinition[] {
   return getAllBuffs().filter((b) => {
-    if (b.type === "skill" && (b.category === "Rocks" || b.category === "Mining")) {
+    if (
+      b.type === "skill" &&
+      (b.category === "Rocks" || b.category === "Mining" || b.category === "Cave")
+    ) {
       return true
     }
     return b.effects.some(
@@ -333,7 +343,9 @@ export function getMiningBuffs(): BuffDefinition[] {
         eff.target === "iron" ||
         eff.target === "gold" ||
         eff.target === "crimstone" ||
-        eff.target === "mineral"
+        eff.target === "mineral" ||
+        eff.target === "mushroom" ||
+        eff.target === "Wild Mushroom"
     )
   })
 }

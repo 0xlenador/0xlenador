@@ -40,6 +40,8 @@ export interface CookingRecipe {
   event?: string
   eventDate?: string
   instant?: number
+  agedXp?: number
+  primeAgedXp?: number
 }
 
 export interface CookingCostResult {
@@ -182,6 +184,8 @@ export function getAgedFishRecipes(): CookingRecipe[] {
           building: "Aging Shed",
           time: `${h}:${m}:${s}`,
           xp: expectedXp,
+          agedXp,
+          primeAgedXp: primeXp,
           ingredients: [
             { name: rawFish, amount: 1 },
             { name: "Salt", amount: Number(item.salt) || 0 },
@@ -257,7 +261,23 @@ export function calculateCookingXp(
   activeBuffDefinitions: BuffDefinition[],
   activeSkills: Record<string, number> = {}
 ): number {
-  let boostedExp = recipe.xp
+  let baseExp = recipe.xp
+
+  // Si es Aging Shed, recalcular esperanza matemática si hay buffs de prime chance activos
+  if (recipe.building === "Aging Shed" && recipe.agedXp && recipe.primeAgedXp) {
+    let primeChance = 0.1 // Base 10%
+    for (const buff of activeBuffDefinitions) {
+      for (const eff of buff.effects) {
+        if (eff.category === "aging_prime" && eff.calc) {
+          primeChance += eff.calc / 100
+        }
+      }
+    }
+    primeChance = Math.min(1, Math.max(0, primeChance))
+    baseExp = Math.round(recipe.agedXp * (1 - primeChance) + recipe.primeAgedXp * primeChance)
+  }
+
+  let boostedExp = baseExp
   let additions = 0
 
   const targetContext = {

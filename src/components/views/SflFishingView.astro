@@ -8,6 +8,7 @@ import marvelsData from "../../content/data/sfl/fishing/marine_marvels.json"
 import SflFishingDashboard from "../sfl/fishing/SflFishingDashboard.astro"
 import SflFishingFilters from "../sfl/fishing/SflFishingFilters.astro"
 import SflFishingCard from "../sfl/fishing/SflFishingCard.astro"
+import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -48,6 +49,9 @@ const counts = {
   <!-- Dashboard Económico de Pesca -->
   <SflFishingDashboard />
 
+  <!-- Configuración de Boosts & Habilidades de Pesca -->
+  <SflBoostsConfig domain="fishing" />
+
   <!-- Panel de Control: Filtros & Búsqueda -->
   <SflFishingFilters counts={counts} />
 
@@ -80,8 +84,10 @@ const counts = {
 <script>
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflPrices from "../../lib/sfl/prices"
+  import { SflUserState } from "../../lib/sfl/state"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflPrices = SflPrices
+  ;(window as any).SflUserState = SflUserState
   SflMarket.fetchMarketData()
 </script>
 
@@ -227,24 +233,51 @@ const counts = {
     function updateCardCost(card) {
       const isRod = card.dataset.kind === "rod"
       const isTrap = card.dataset.kind === "trap"
+      const isMarvel = card.dataset.kind === "marvel"
 
       let attemptCost = baseAttemptCost
       let baseLabel = textBase
 
-      // 1. Si es pesca con caña, verificar qué cebo está seleccionado
-      if (isRod) {
-        const activeBait = card.querySelector(".bait-badge.active")
-        if (activeBait) {
-          const baitName = activeBait.dataset.baitName || "Earthworm"
-          const isFree = activeBait.dataset.isFree === "true"
-          const isGuaranteed = activeBait.dataset.isGuaranteed === "true"
-          const baitPrice = getBaitUnitPrice(baitName)
-          attemptCost = rodCost + baitPrice
-          baseLabel = isFree
-            ? `Caña + <span class="text-emerald-400 font-bold">${baitName} (Gratis)</span>`
-            : isGuaranteed
-              ? `Caña + <span class="text-teal-400 font-bold">${baitName} (100%)</span>`
-              : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
+      // 1. Si es pesca con caña o maravilla marina, verificar qué cebo está seleccionado
+      if (isRod || isMarvel) {
+        if (isMarvel) {
+          // Para maravillas marinas, dar prioridad al disparador de mapa seleccionado si existe
+          const activeTrigger = card.querySelector(".map-trigger-row.active")
+          if (activeTrigger) {
+            const baitName = activeTrigger.dataset.baitName
+            const fishName = activeTrigger.dataset.fishName
+            const odds = activeTrigger.dataset.odds
+            const baitPrice = baitName ? getBaitUnitPrice(baitName) : 0
+            attemptCost = rodCost + baitPrice
+            baseLabel = baitName
+              ? `Caña + <span class="text-teal-400 font-bold">${baitName} (100% ➔ ${fishName})</span> <span class="text-cyan-400 font-mono text-[9px]">[${odds}% Mapa]</span>`
+              : `Caña ➔ <span class="text-cyan-400 font-bold">${fishName}</span> <span class="text-cyan-400 font-mono text-[9px]">[${odds}% Mapa]</span>`
+          } else {
+            const activeBait = card.querySelector(".bait-badge.active")
+            if (activeBait) {
+              const baitName = activeBait.dataset.baitName || "Earthworm"
+              const isFree = activeBait.dataset.isFree === "true"
+              const baitPrice = getBaitUnitPrice(baitName)
+              attemptCost = rodCost + baitPrice
+              baseLabel = isFree
+                ? `Caña + <span class="text-emerald-400 font-bold">${baitName} (Gratis)</span>`
+                : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
+            }
+          }
+        } else {
+          const activeBait = card.querySelector(".bait-badge.active")
+          if (activeBait) {
+            const baitName = activeBait.dataset.baitName || "Earthworm"
+            const isFree = activeBait.dataset.isFree === "true"
+            const isGuaranteed = activeBait.dataset.isGuaranteed === "true"
+            const baitPrice = getBaitUnitPrice(baitName)
+            attemptCost = rodCost + baitPrice
+            baseLabel = isFree
+              ? `Caña + <span class="text-emerald-400 font-bold">${baitName} (Gratis)</span>`
+              : isGuaranteed
+                ? `Caña + <span class="text-teal-400 font-bold">${baitName} (100%)</span>`
+                : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
+          }
         }
       } else if (isTrap) {
         // 2. Si es trampa de agua, calcular según la trampa específica (Crab Pot o Mariner Pot)
@@ -288,12 +321,12 @@ const counts = {
 
       const flowerEl = card.querySelector(".cost-flower-val")
       if (flowerEl) {
-        flowerEl.textContent = rodCost > 0 || isTrap ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
+        flowerEl.textContent = rodCost > 0 || isTrap || isMarvel ? `${totalCost.toFixed(4)} FLOWER` : "-- FLOWER"
       }
 
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
-        usdEl.textContent = rodCost > 0 || isTrap ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
+        usdEl.textContent = rodCost > 0 || isTrap || isMarvel ? `(≈ $${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
       }
 
       const breakdownEl = card.querySelector(".cost-breakdown-label")
@@ -369,6 +402,47 @@ const counts = {
             if (globalChum && globalChum.checked) {
               selectCheapestChum(card)
             }
+          }
+
+          updateCardCost(card)
+        })
+      })
+    })
+
+    // Clic en fila de Pez Disparador de Mapa (Maravillas Marinas)
+    cards.forEach((card) => {
+      const triggerRows = card.querySelectorAll(".map-trigger-row")
+      triggerRows.forEach((row) => {
+        row.addEventListener("click", (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const isAlreadyActive = row.classList.contains("active")
+
+          triggerRows.forEach((r) => {
+            r.classList.remove(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-white",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            r.classList.add("bg-black/40", "border-white/5", "text-white/80")
+          })
+
+          if (!isAlreadyActive) {
+            row.classList.add(
+              "active",
+              "bg-cyan-500/20",
+              "border-cyan-400",
+              "text-white",
+              "ring-1",
+              "ring-cyan-400/50",
+              "shadow-sm"
+            )
+            row.classList.remove("bg-black/40", "border-white/5", "text-white/80")
           }
 
           updateCardCost(card)
@@ -594,7 +668,16 @@ const counts = {
 
     // Selecciona por defecto la opción 100% garantizada más económica (o la base más barata si no tiene garantía)
     function selectOptimalCardSetup(card) {
-      if (!card || card.dataset.kind === "marvel") return
+      if (!card) return
+
+      if (card.dataset.kind === "marvel") {
+        selectCheapestBait(card)
+        const globalChum = document.getElementById("globalChumToggle")
+        if (globalChum && globalChum.checked) {
+          selectCheapestChum(card)
+        }
+        return
+      }
 
       if (card.dataset.kind === "trap") {
         selectCheapestChum(card)
@@ -682,9 +765,9 @@ const counts = {
       updateCardCost(card)
     })
 
-    // Seleccionar automáticamente el cebo más económico por tarjeta (solo rod)
+    // Seleccionar automáticamente el cebo más económico por tarjeta (rod y marvel)
     function selectCheapestBait(card) {
-      if (!card || card.dataset.kind !== "rod") return
+      if (!card || (card.dataset.kind !== "rod" && card.dataset.kind !== "marvel")) return
 
       const badges = Array.from(card.querySelectorAll(".bait-badge"))
       if (badges.length === 0) return
@@ -753,9 +836,9 @@ const counts = {
       syncChumAvailability(card)
     }
 
-    // Seleccionar automáticamente el Chum más económico por tarjeta (solo rod y trap, excluye marvel)
+    // Seleccionar automáticamente el Chum más económico por tarjeta (rod, trap y marvel)
     function selectCheapestChum(card) {
-      if (!card || card.dataset.kind === "marvel") return
+      if (!card) return
 
       // Si el cebo activo es garantizado, sincronizar disponibilidad y abortar
       const activeBait = card.querySelector(".bait-badge.active")
@@ -825,8 +908,6 @@ const counts = {
       globalChumToggle.addEventListener("change", (e) => {
         const enableAll = e.target.checked
         cards.forEach((card) => {
-          if (card.dataset.kind === "marvel") return
-
           const activeBait = card.querySelector(".bait-badge.active")
           if (activeBait && activeBait.dataset.isGuaranteed === "true") {
             syncChumAvailability(card)

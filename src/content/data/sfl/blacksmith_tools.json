@@ -178,7 +178,302 @@
         {
           "id": "boosts",
           "name": "Boosts",
-          "categories": []
+          "categories": [
+            {
+              "id": "boosts_equipment",
+              "name": "Collectibles & Boosts",
+              "items": [
+                {
+                  "id": "basic_scarecrow",
+                  "name": "Basic Scarecrow",
+                  "description": "Boosts nearby Basic Crops.",
+                  "boost": "x0.8 Basic Crops Growth Time (3x3 Area)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/aoe/basic_scarecrow.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 2, "image": "/img/sunflowerland/Wood.png" }
+                  ]
+                },
+                {
+                  "id": "scary_mike",
+                  "name": "Scary Mike",
+                  "description": "Boosts nearby Medium Crops.",
+                  "boost": "+0.2 Medium Crops (3x3 Area)",
+                  "coins": 4800,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/aoe/scary_mike.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 30, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Carrot", "amount": 50, "image": "/img/sunflowerland/Carrot.png" },
+                    { "name": "Wheat", "amount": 10, "image": "/img/sunflowerland/Wheat.png" },
+                    { "name": "Parsnip", "amount": 10, "image": "/img/sunflowerland/Parsnip.png" }
+                  ]
+                },
+                {
+                  "id": "laurie_the_chuckle_crow",
+                  "name": "Laurie the Chuckle Crow",
+                  "description": "Boosts nearby Advanced Crops.",
+                  "boost": "+0.2 Advanced Crops (3x3 Area)",
+                  "coins": 14400,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/aoe/laurie.png",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 100, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Radish", "amount": 60, "image": "/img/sunflowerland/Radish.png" },
+                    { "name": "Kale", "amount": 40, "image": "/img/sunflowerland/Kale.png" },
+                    { "name": "Wheat", "amount": 20, "image": "/img/sunflowerland/Wheat.png" }
+                  ]
+                },
+                {
+                  "id": "bale",
+                  "name": "Bale",
+                  "description": "A golden touch of the harvest.",
+                  "boost": "+0.2 Egg",
+                  "coins": 1600,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/aoe/bale.png",
+                  "ingredients": [
+                    { "name": "Egg", "amount": 200, "image": "/img/sunflowerland/Egg.png" },
+                    { "name": "Wheat", "amount": 200, "image": "/img/sunflowerland/Wheat.png" },
+                    { "name": "Wood", "amount": 100, "image": "/img/sunflowerland/Wood.png" },
+                    { "name": "Stone", "amount": 30, "image": "/img/sunflowerland/Stone.png" }
+                  ]
+                },
+                {
+                  "id": "immortal_pear",
+                  "name": "Immortal Pear",
+                  "description": "Increase the survival of your fruit patches.",
+                  "boost": "+1 Fruit Patch Harvest per seed",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/immortal_pear.webp",
+                  "ingredients": [
+                    { "name": "Gold", "amount": 5, "image": "/img/sunflowerland/Gold.png" },
+                    { "name": "Apple", "amount": 10, "image": "/img/sunflowerland/Apple.png" },
+                    { "name": "Blueberry", "amount": 10, "image": "/img/sunflowerland/Blueberry.png" },
+                    { "name": "Orange", "amount": 10, "image": "/img/sunflowerland/Orange.png" }
+                  ]
+                },
+                {
+                  "id": "squirrel",
+                  "name": "Squirrel",
+                  "description": "Squirrel likes hanging out in the forest.",
+                  "boost": "+0.1 Wood",
+                  "coins": 1000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/squirrel.webp",
+                  "ingredients": [
+                    { "name": "Wood", "amount": 100, "image": "/img/sunflowerland/Wood.png" }
+                  ]
+                },
+                {
+                  "id": "iron_beetle",
+                  "name": "Iron Beetle",
+                  "description": "Beetle made of iron.",
+                  "boost": "+0.1 Iron",
+                  "coins": 2000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/iron_beetle.webp",
+                  "ingredients": [
+                    { "name": "Iron", "amount": 20, "image": "/img/sunflowerland/Iron.png" }
+                  ]
+                },
+                {
+                  "id": "gold_beetle",
+                  "name": "Gold Beetle",
+                  "description": "Beetle made of gold.",
+                  "boost": "+0.1 Gold",
+                  "coins": 10000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/gold_beetle.webp",
+                  "ingredients": [
+                    { "name": "Gold", "amount": 20, "image": "/img/sunflowerland/Gold.png" }
+                  ]
+                },
+                {
+                  "id": "fairy_circle",
+                  "name": "Fairy Circle",
+                  "description": "Circle of fairy mushrooms.",
+                  "boost": "+0.2 Wild Mushroom",
+                  "coins": 25000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/fairy_circle.webp",
+                  "ingredients": [
+                    { "name": "Wild Mushroom", "amount": 20, "image": "/img/sunflowerland/Wild Mushroom.webp" }
+                  ]
+                },
+                {
+                  "id": "macaw",
+                  "name": "Macaw",
+                  "description": "Macaw loves picking fruits.",
+                  "boost": "+0.1 Fruit Patch Yield",
+                  "coins": 10000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/macaw.webp",
+                  "ingredients": [
+                    { "name": "Apple", "amount": 10, "image": "/img/sunflowerland/Apple.png" },
+                    { "name": "Blueberry", "amount": 10, "image": "/img/sunflowerland/Blueberry.png" },
+                    { "name": "Orange", "amount": 10, "image": "/img/sunflowerland/Orange.png" },
+                    { "name": "Banana", "amount": 10, "image": "/img/sunflowerland/Banana.png" },
+                    { "name": "Tomato", "amount": 10, "image": "/img/sunflowerland/Tomato.png" },
+                    { "name": "Lemon", "amount": 10, "image": "/img/sunflowerland/Lemon.png" }
+                  ]
+                },
+                {
+                  "id": "butterfly",
+                  "name": "Butterfly",
+                  "description": "Butterfly loves the scent of flowers.",
+                  "boost": "20% chance of +1 flower",
+                  "coins": 15000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/butterfly.webp",
+                  "ingredients": []
+                },
+                {
+                  "id": "salt_sculpture",
+                  "name": "Salt Sculpture",
+                  "description": "A progressive sculpture providing Salt & Aging buffs.",
+                  "boost": "Cumulative Salt & Aging buffs per level",
+                  "coins": 2000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/powerups/salt_sculpture.webp",
+                  "ingredients": [
+                    { "name": "Refined Salt", "amount": 30, "image": "/img/sunflowerland/123/Refined Salt.png" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "craft_with_friends",
+              "name": "Craft with Friends",
+              "items": [
+                {
+                  "id": "basic_cooking_pot",
+                  "name": "Basic Cooking Pot",
+                  "description": "Community cooking pot project. Requires 10 cheers to complete.",
+                  "boost": "Reward: 2x Bronze Food Box (Requires Level 20 & 10 Cheers)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/basic_cooking_pot.webp",
+                  "ingredients": [
+                    { "name": "Gem", "amount": 10, "image": "/img/sunflowerland/123/Gem.png" }
+                  ]
+                },
+                {
+                  "id": "expert_cooking_pot",
+                  "name": "Expert Cooking Pot",
+                  "description": "Community cooking pot project. Requires 50 cheers to complete.",
+                  "boost": "Reward: 2x Silver Food Box (Requires Level 40 & 50 Cheers)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/expert_cooking_pot.webp",
+                  "ingredients": [
+                    { "name": "Gem", "amount": 50, "image": "/img/sunflowerland/123/Gem.png" }
+                  ]
+                },
+                {
+                  "id": "advanced_cooking_pot",
+                  "name": "Advanced Cooking Pot",
+                  "description": "Community cooking pot project. Requires 100 cheers to complete.",
+                  "boost": "Reward: 2x Gold Food Box (Requires Level 60 & 100 Cheers)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/advanced_cooking_pot.webp",
+                  "ingredients": [
+                    { "name": "Gem", "amount": 500, "image": "/img/sunflowerland/123/Gem.png" }
+                  ]
+                },
+                {
+                  "id": "big_orange",
+                  "name": "Big Orange",
+                  "description": "Giant community orange project. Requires 25 cheers.",
+                  "boost": "Reward: 1x Giant Orange (Requires Level 16 & 25 Cheers)",
+                  "coins": 500,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/big_orange.webp",
+                  "ingredients": []
+                },
+                {
+                  "id": "big_apple",
+                  "name": "Big Apple",
+                  "description": "Giant community apple project. Requires 50 cheers.",
+                  "boost": "Reward: 1x Giant Apple (Requires Level 30 & 50 Cheers)",
+                  "coins": 1500,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/big_apple.webp",
+                  "ingredients": []
+                },
+                {
+                  "id": "big_banana",
+                  "name": "Big Banana",
+                  "description": "Giant community banana project. Requires 200 cheers.",
+                  "boost": "Reward: 1x Giant Banana (Requires Level 50 & 200 Cheers)",
+                  "coins": 4000,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/big_banana.webp",
+                  "ingredients": []
+                },
+                {
+                  "id": "farmers_monument",
+                  "name": "Farmer's Monument",
+                  "description": "Monument honoring hardworking farmers. Requires 100 cheers.",
+                  "boost": "+1 Daily Social Help Limit (Requires Level 10 & 100 Cheers)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/shovel_monument.webp",
+                  "ingredients": [
+                    { "name": "Gem", "amount": 100, "image": "/img/sunflowerland/123/Gem.png" }
+                  ]
+                },
+                {
+                  "id": "woodcutters_monument",
+                  "name": "Woodcutter's Monument",
+                  "description": "Monument honoring dedicated lumberjacks. Requires 1,000 cheers.",
+                  "boost": "+1 Daily Social Help Limit (Requires Level 20 & 1,000 Cheers)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/axe_monument.webp",
+                  "ingredients": [
+                    { "name": "Gem", "amount": 500, "image": "/img/sunflowerland/123/Gem.png" }
+                  ]
+                },
+                {
+                  "id": "miners_monument",
+                  "name": "Miner's Monument",
+                  "description": "Monument honoring steadfast miners. Requires 10,000 cheers.",
+                  "boost": "+1 Daily Social Help Limit (Requires Level 30 & 10,000 Cheers)",
+                  "coins": 0,
+                  "stock": 1,
+                  "isPermanent": true,
+                  "image": "/img/sunflowerland/monuments/pickaxe_monument.webp",
+                  "ingredients": [
+                    { "name": "Gem", "amount": 1000, "image": "/img/sunflowerland/123/Gem.png" }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "build",

@@ -55,10 +55,12 @@ export interface CatalogLabels {
   customUnits?: string
   customPlaceholder?: string
   rawXpLabel?: string
+  rawBadgeLabel?: string
   agedXpLabel?: string
   primeAgedXpLabel?: string
   agingTimeLabel?: string
   catchesTitle?: string
+  boostLabel?: string
 }
 
 interface Props {
@@ -118,10 +120,12 @@ const defaultLabels: CatalogLabels = {
   customUnits: "uds",
   customPlaceholder: "Cantidad...",
   rawXpLabel: "XP Pez Crudo:",
+  rawBadgeLabel: "Crudo",
   agedXpLabel: "XP Pez Envejecido:",
   primeAgedXpLabel: "XP Pez Prime Aged:",
   agingTimeLabel: "Tiempo de curado:",
   catchesTitle: "Peces que se pueden capturar:",
+  boostLabel: "POTENCIADOR / EFECTO",
   ...labels,
 }
 ---
@@ -270,38 +274,31 @@ const defaultLabels: CatalogLabels = {
                               }
 
                               {
-                                item.isAged || item.id?.startsWith("aged_") ? (
-                                  <div class="relative w-6 h-6 my-1 group-hover:scale-105 transition-transform select-none flex items-center justify-center">
-                                    {/* Pez de abajo en color normal desplazado unos píxeles a la izquierda */}
+                                (item.isAged || item.id?.startsWith("aged_")) && (
+                                  <div
+                                    class="absolute top-1 left-1 w-3.5 h-3.5 rounded-full bg-black/90 border border-white/25 p-0.5 flex items-center justify-center pointer-events-none z-10 shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
+                                    title={item.name.replace(/^Aged\s+/i, "")}
+                                  >
                                     <img
                                       src={item.image}
                                       alt=""
-                                      width="24"
-                                      height="24"
-                                      class="absolute inset-0 w-full h-full object-contain [image-rendering:pixelated] -translate-x-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-none"
-                                      loading="lazy"
-                                    />
-                                    {/* Pez de arriba en escala de grises sobrepuesto */}
-                                    <img
-                                      src={item.image}
-                                      alt={item.name}
-                                      width="24"
-                                      height="24"
-                                      class="relative w-full h-full object-contain aged-fish-filter grayscale brightness-125 contrast-75 [image-rendering:pixelated] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                                      width="14"
+                                      height="14"
+                                      class="w-full h-full object-contain [image-rendering:pixelated]"
                                       loading="lazy"
                                     />
                                   </div>
-                                ) : (
-                                  <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    width="24"
-                                    height="24"
-                                    class="w-6 h-6 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [image-rendering:pixelated] group-hover:scale-105 transition-transform my-1"
-                                    loading="lazy"
-                                  />
                                 )
                               }
+
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                width="24"
+                                height="24"
+                                class={`w-6 h-6 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [image-rendering:pixelated] group-hover:scale-105 transition-transform my-1 ${item.isAged || item.id?.startsWith("aged_") ? "aged-fish-filter" : ""}`}
+                                loading="lazy"
+                              />
 
                               <div class="w-full flex items-center justify-center gap-0.5 leading-none px-0.5 overflow-hidden">
                                 <img
@@ -359,29 +356,45 @@ const defaultLabels: CatalogLabels = {
                         x6
                       </span>
                     </div>
-                    <div class="my-2.5 flex items-center justify-center p-2.5 rounded-xl bg-white/[0.02]">
-                      <div class="relative w-12 h-12 flex items-center justify-center">
-                        <!-- Pez de abajo en color normal desplazado a la izquierda para items aged -->
+                    <div class="my-2.5 relative flex items-center justify-center p-2.5 rounded-xl bg-white/[0.02]">
+                      <!-- Micro-badge con el pez crudo original en la esquina superior izquierda -->
+                      <div class="catalog-detail-raw-badge hidden absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/80 border border-white/20 text-[9px] font-mono text-terminal-muted pointer-events-none z-10 shadow-sm">
                         <img
                           src=""
                           alt=""
-                          width="48"
-                          height="48"
-                          class="catalog-detail-img-under hidden absolute inset-0 w-full h-full object-contain -translate-x-2.5 drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] [image-rendering:pixelated] pointer-events-none"
+                          width="14"
+                          height="14"
+                          class="catalog-detail-raw-badge-img w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
                         />
-                        <!-- Pez de arriba en escala de grises (o imagen normal si no es aged) -->
-                        <img
-                          src=""
-                          alt=""
-                          width="48"
-                          height="48"
-                          class="catalog-detail-img relative w-full h-full object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
-                        />
+                        <span class="text-[8.5px] text-white/70 font-sans">{defaultLabels.rawBadgeLabel}</span>
                       </div>
+
+                      <!-- Imagen principal del pez en escala de grises centrada -->
+                      <img
+                        src=""
+                        alt=""
+                        width="48"
+                        height="48"
+                        class="catalog-detail-img w-12 h-12 object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] [image-rendering:pixelated]"
+                      />
                     </div>
                     <p class="catalog-detail-desc text-xs text-terminal-secondary leading-relaxed mb-2.5">
                       --
                     </p>
+
+                    <!-- CAJA DE BOOST / EFECTO -->
+                    <div class="catalog-detail-boost-box hidden items-start gap-2 p-2.5 rounded-xl bg-amber-500/[0.08] border border-amber-500/25 mb-2.5">
+                      <span class="text-sm shrink-0 leading-none mt-0.5">⚡</span>
+                      <div class="flex flex-col">
+                        <span class="text-[9.5px] font-mono uppercase font-bold text-amber-400/90 tracking-wider">
+                          {defaultLabels.boostLabel || "POTENCIADOR"}
+                        </span>
+                        <span class="catalog-detail-boost-text text-xs text-amber-200 font-medium leading-snug">
+                          --
+                        </span>
+                      </div>
+                    </div>
+
                     <div class="border-t border-white/10 my-2.5" />
 
                     <div class="mb-3">
@@ -627,8 +640,11 @@ const defaultLabels: CatalogLabels = {
         const titleEl = panel.querySelector<HTMLElement>(".catalog-detail-title")
         const yieldBadgeEl = panel.querySelector<HTMLElement>(".catalog-detail-yield-badge")
         const imgEl = panel.querySelector<HTMLImageElement>(".catalog-detail-img")
-        const imgUnderEl = panel.querySelector<HTMLImageElement>(".catalog-detail-img-under")
+        const rawBadgeEl = panel.querySelector<HTMLElement>(".catalog-detail-raw-badge")
+        const rawBadgeImg = panel.querySelector<HTMLImageElement>(".catalog-detail-raw-badge-img")
         const descEl = panel.querySelector<HTMLElement>(".catalog-detail-desc")
+        const boostBox = panel.querySelector<HTMLElement>(".catalog-detail-boost-box")
+        const boostText = panel.querySelector<HTMLElement>(".catalog-detail-boost-text")
         const ingredientsEl = panel.querySelector<HTMLElement>(".catalog-detail-ingredients")
         const flowerTotalEl = panel.querySelector<HTMLElement>(".catalog-detail-flower-total")
         const usdTotalEl = panel.querySelector<HTMLElement>(".catalog-detail-usd-total")
@@ -743,22 +759,31 @@ const defaultLabels: CatalogLabels = {
               descEl.classList.add("hidden")
             }
           }
+          if (boostBox && boostText) {
+            if (selectedItem.boost) {
+              boostText.innerText = selectedItem.boost
+              boostBox.classList.remove("hidden")
+              boostBox.classList.add("flex")
+            } else {
+              boostBox.classList.add("hidden")
+              boostBox.classList.remove("flex")
+            }
+          }
           if (imgEl) {
             imgEl.src = selectedItem.image
             imgEl.alt = selectedItem.name
             const isAged = selectedItem.isAged || selectedItem.id?.startsWith("aged_")
             if (isAged) {
-              imgEl.classList.add("aged-fish-filter", "grayscale", "brightness-125", "contrast-75")
-              imgEl.classList.remove("contrast-110")
-              if (imgUnderEl) {
-                imgUnderEl.src = selectedItem.image
-                imgUnderEl.alt = selectedItem.name
-                imgUnderEl.classList.remove("hidden")
+              imgEl.classList.add("aged-fish-filter")
+              if (rawBadgeEl && rawBadgeImg) {
+                rawBadgeImg.src = selectedItem.image
+                rawBadgeImg.alt = selectedItem.name
+                rawBadgeEl.classList.remove("hidden")
               }
             } else {
-              imgEl.classList.remove("aged-fish-filter", "grayscale", "brightness-125", "contrast-75", "contrast-110")
-              if (imgUnderEl) {
-                imgUnderEl.classList.add("hidden")
+              imgEl.classList.remove("aged-fish-filter")
+              if (rawBadgeEl) {
+                rawBadgeEl.classList.add("hidden")
               }
             }
           }

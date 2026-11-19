@@ -22,6 +22,7 @@ const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
 
 import { getAllCookingRecipes } from "../../lib/sfl/cooking"
 import { getCookingBuffs } from "../../lib/sfl/buffs"
+import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 
 const cookingBuffs = getCookingBuffs()
 const sflBuffs = Object.fromEntries(
@@ -81,7 +82,9 @@ const getCompactText = (data, formattedDesc, typeName) => {
 
   let effectType = "";
   const descLower = formattedDesc.toLowerCase();
-  if (descLower.includes("xp")) {
+  if (descLower.includes("prime")) {
+    effectType = " Prime";
+  } else if (descLower.includes("xp")) {
     effectType = " XP";
   } else if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) {
     effectType = " Time";
@@ -109,7 +112,7 @@ const getEffectType = (desc) => {
   if (!desc) return "other";
   const descLower = desc.toLowerCase();
   const effects = [];
-  if (descLower.includes("xp") || descLower.includes("yield") || (descLower.includes("food") && !descLower.includes("revenue"))) effects.push("xp");
+  if (descLower.includes("xp") || descLower.includes("prime") || descLower.includes("yield") || (descLower.includes("food") && !descLower.includes("revenue"))) effects.push("xp");
   if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed")) effects.push("time");
   return effects.length > 0 ? effects.join(" ") : "other";
 };
@@ -613,303 +616,8 @@ const formatAstroDescription = (skill) => {
 
     </div>
 
-    <!-- Boosts (PowerUps & Skills) -->
-    <details class="group w-full mb-8 bg-white/[0.02] border border-white/5 rounded-2xl" open>
-      <summary class="flex flex-col xl:flex-row xl:items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors rounded-2xl list-none gap-4">
-        <div class="flex items-center gap-2 shrink-0">
-           <svg class="w-2.5 h-2.5 text-emerald-500 transition-transform duration-200 group-open:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-             <path d="M8 5v14l11-7z" />
-           </svg>
-           <h2 class="text-sm font-bold text-white uppercase tracking-wider inline-flex items-center">{t("sfl.cooking.boosts.title")}</h2>
-        </div>
-        
-        <div class="text-[10px] text-white/40 font-mono group-open:hidden uppercase tracking-widest border border-white/10 px-2 py-1 rounded-md xl:ml-auto w-max">{t("sfl.cooking.boosts.tapToExpand")}</div>
-
-        <!-- Filters (Desktop Only: appears on same line as title) -->
-        <div class="hidden group-open:xl:flex overflow-x-auto no-scrollbar w-full xl:w-auto pb-2 xl:pb-0 -mx-4 px-4 xl:mx-0 xl:px-0" onclick="event.preventDefault();">
-            <div class="flex items-center gap-3 w-max shrink-0 mx-auto xl:mx-0 xl:ml-auto">
-              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
-                <button class="filter-boost-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="all" onclick="toggleBoostFilter('all'); event.stopPropagation();">{t("sfl.cooking.boosts.filterAll")}</button>
-                <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="xp" onclick="toggleBoostFilter('xp'); event.stopPropagation();">{t("sfl.cooking.boosts.filterXp")}</button>
-                <button class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-filter="time" onclick="toggleBoostFilter('time'); event.stopPropagation();">{t("sfl.cooking.boosts.filterTime")}</button>
-              </div>
-              <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
-                <button class="view-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="detailed" onclick="setViewStyle('detailed'); event.stopPropagation();">{t("sfl.cooking.boosts.viewDetailed")}</button>
-                <button class="view-switch-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0" data-action="compact" onclick="setViewStyle('compact'); event.stopPropagation();">{t("sfl.cooking.boosts.viewCompact")}</button>
-              </div>
-            </div>
-        </div>
-      </summary>
-      
-      <div class="p-4 pt-0 relative">
-        <div id="boosts-peek-wrapper" class="relative">
-          <div id="boosts-container" class="relative z-10">
-            <!-- Filters (Mobile Only: appears inside container) -->
-            <div class="flex items-center justify-end mb-5 xl:hidden">
-              <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
-                <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
-                  <button class="filter-boost-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="all" onclick="toggleBoostFilter('all')">{t("sfl.cooking.boosts.filterAll")}</button>
-                  <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="xp" onclick="toggleBoostFilter('xp')">{t("sfl.cooking.boosts.filterXp")}</button>
-                  <button class="filter-boost-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-filter="time" onclick="toggleBoostFilter('time')">{t("sfl.cooking.boosts.filterTime")}</button>
-                </div>
-                <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-center shadow-inner">
-                  <button class="view-switch-btn active flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="detailed" onclick="setViewStyle('detailed')">{t("sfl.cooking.boosts.viewDetailed")}</button>
-                  <button class="view-switch-btn flex-1 sm:flex-none px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all" data-action="compact" onclick="setViewStyle('compact')">{t("sfl.cooking.boosts.viewCompact")}</button>
-                </div>
-              </div>
-            </div>
-          
-          <div class="flex flex-col items-start w-full mt-2">
-          <!-- PowerUps Sub-group -->
-      <details class="group/sub w-full mb-1 open:mb-6" open>
-        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-emerald-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-          <svg class="w-2.5 h-2.5 mr-2 text-emerald-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-          PowerUps
-        </summary>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-          {
-            Object.entries(sflBuffs).map(([id, buff]) => {
-              const powerUpItem = sflPowerUpsData.wearables?.[id] || sflPowerUpsData.collectibles?.[id];
-              const isWearable = Boolean(sflPowerUpsData.wearables?.[id]);
-              const imgFile = powerUpItem?.image || `${buff.name}.webp`;
-              const mainSrc = isWearable
-                ? `/img/sunflowerland/powerups/wearables/${imgFile}`
-                : `/img/sunflowerland/powerups/${imgFile}`;
-              const errorFallback = `/img/cripto/sunflowerland.webp`;
-              
-              return (
-              <label data-effect={getEffectType(buff.boost)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all">
-                <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50" data-buff-id={id} />
-                <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform" onerror={`this.onerror=null; this.src='${errorFallback}';`} alt={buff.name} title={buff.boost} width="24" height="24" loading="lazy" decoding="async" />
-                <div class="flex flex-col normal-view">
-                  <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors">{buff.name}</span>
-                  <span class="text-[9px] text-terminal-muted leading-tight" title={buff.boost}>{buff.boost}</span>
-                </div>
-                <div class="hidden compact-view w-full">
-                  <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-emerald-400 transition-colors" title={buff.boost}>{getCompactText(buff, buff.boost, buff.type || 'buff')}</span>
-                </div>
-              </label>
-              );
-            })
-          }
-        </div>
-      </details>
-
-      <!-- Skills Sub-group -->
-      <details class="group/sub w-full mb-1 open:mb-6" open>
-        <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-blue-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-          <svg class="w-2.5 h-2.5 mr-2 text-blue-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-          Skills
-        </summary>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-          {
-            Object.entries(sflSkills).map(([skillName, skillData]) => {
-              const mainSrc = skillData.image;
-              const fallbackSrc = `/img/cripto/sunflowerland.webp`;
-                const formattedDesc = formatAstroDescription(skillData);
-              
-              return (
-
-              <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
-                <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                  <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} width="24" height="24" loading="lazy" decoding="async" />
-                  <div class="flex flex-col normal-view">
-                    <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors">{skillName}</span>
-                    <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
-                  </div>
-                  <div class="hidden compact-view w-full mr-2">
-                    <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors" title={formattedDesc}>{getCompactText(skillData, formattedDesc, 'skill')}</span>
-                  </div>
-                </div>
-                
-                {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
-                  <div class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10" onclick="event.stopPropagation()">
-                    {Object.keys(skillData.cost_by_rank).map((rankKey, idx) => (
-                      <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
-                        <input type="checkbox" value={idx + 1} class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500/50 rank-input-${skillName.replace(/\s+/g, '_')}`} data-skill-id={skillName} data-rank={idx + 1} />
-                        <span class="text-[8px] font-mono font-bold text-white/50">R{idx + 1}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-              );
-            })
-          }
-        </div>
-      </details>
-
-        <details class="group/sub w-full mb-1 open:mb-6" open>
-          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-purple-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-            <svg class="w-2.5 h-2.5 mr-2 text-purple-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-            Others
-          </summary>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-            {
-              Object.entries(sflOthers).map(([skillName, skillData]) => {
-                const mainSrc = skillData.image;
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`;
-                const formattedDesc = formatAstroDescription(skillData);
-                
-                return (
-                <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
-                  <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} width="24" height="24" loading="lazy" decoding="async" />
-                    <div class="flex flex-col normal-view">
-                      <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 transition-colors">{skillName}</span>
-                      <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
-                    </div>
-                    <div class="hidden compact-view w-full mr-2">
-                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-purple-400 transition-colors" title={formattedDesc}>{getCompactText(skillData, formattedDesc, 'skill')}</span>
-                    </div>
-                  </div>
-                  
-                  {skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0 && (
-                    <div class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10" onclick="event.stopPropagation()">
-                      {Object.keys(skillData.cost_by_rank).map((rankKey, idx) => {
-                        const isFaction = skillName === "Faction Pet";
-                        const labels = ["10%", "20%", "30%", "50%"];
-                        const labelText = isFaction ? labels[idx] : `R${idx + 1}`;
-                        
-                        return (
-                        <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
-                          <input type="checkbox" value={idx + 1} class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-purple-500 bg-white/5 border-white/20 focus:ring-purple-500/50 rank-input-${skillName.replace(/\s+/g, '_')}`} data-skill-id={skillName} data-rank={idx + 1} />
-                          <span class="text-[8px] font-mono font-bold text-white/50">{labelText}</span>
-                        </label>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-                );
-              })
-            }
-          </div>
-        </details>
-
-        <details class="group/sub w-full mb-1 open:mb-6" open>
-          <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-orange-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-            <svg class="w-2.5 h-2.5 mr-2 text-orange-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-            Consumables
-          </summary>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-            {
-              Object.entries(sflConsumables).map(([skillName, skillData]) => {
-                const mainSrc = skillData.image;
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`;
-                const formattedDesc = formatAstroDescription(skillData);
-                
-                return (
-                <div data-effect={getEffectType(formattedDesc)} class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${skillData.disabled ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"}`} data-skill-id={skillName} style={skillData.disabled ? "pointer-events: none;" : ""}>
-                  <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={`this.onerror=null; this.src='${fallbackSrc}';`} alt={skillName} title={formattedDesc} width="24" height="24" loading="lazy" decoding="async" />
-                    <div class="flex flex-col normal-view">
-                      <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 transition-colors">{skillName}</span>
-                      <span class="skill-description-text text-[9px] text-terminal-muted leading-tight" title={formattedDesc} data-original={skillData.description}>{formattedDesc}</span>
-                    </div>
-                    <div class="hidden compact-view w-full mr-2">
-                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors" title={formattedDesc}>{getCompactText(skillData, formattedDesc, 'consumable')}</span>
-                    </div>
-                  </div>
-                </div>
-                );
-              })
-            }
-              {
-                Object.entries(sflShrines).map(([id, buff]) => {
-                  const mainSrc = '/img/sunflowerland/shrines/' + buff.image;
-                  const fallbackSrc = '/img/cripto/sunflowerland.webp';
-                  const cookingMath = [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6]
-                    .find((m: any) => m && (m.category === "cooking_speed" || m.category === "cooking_time"));
-                  const boostText = buff.boost || cookingMath?.description || buff.description;
-                  return (
-                  <label data-effect={getEffectType(boostText)} class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all">
-                    <input type="checkbox" class="hidden buff-checkbox w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50" data-buff-id={id} />
-                    <img src={mainSrc} class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0" onerror={"this.onerror=null; this.src='" + fallbackSrc + "';"} alt={buff.name} title={boostText} width="24" height="24" loading="lazy" decoding="async" />
-                    <div class="flex flex-col normal-view">
-                      <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 group-hover:text-orange-400 transition-colors">{buff.name}</span>
-                      <span class="text-[9px] text-terminal-muted leading-tight" title={boostText}>{boostText}</span>
-                    </div>
-                    <div class="hidden compact-view w-full mr-2">
-                      <span class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors" title={boostText}>{getCompactText(buff, boostText, 'shrine')}</span>
-                    </div>
-                  </label>
-                  );
-                })
-              }
-          </div>
-        </details>
-      </div>
-    </div>
-  </div>
-
-      <!-- Overlay con degradado suave y botón "Ver todo" (solo se muestra la primera vez hasta que el usuario lo expanda) -->
-      <div
-        id="boosts-fade-overlay"
-        class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#141414] via-[#141414]/90 to-transparent flex items-end justify-center pb-3 z-20 pointer-events-none rounded-b-2xl transition-all duration-300"
-      >
-        <button
-          type="button"
-          id="boosts-expand-btn"
-          onclick="window.expandBoosts ? window.expandBoosts() : (document.getElementById('boosts-peek-wrapper')?.classList.remove('is-peek'), document.getElementById('boosts-fade-overlay')?.remove());"
-          class="pointer-events-auto px-4 py-1.5 rounded-full bg-[#1e1e1e]/95 hover:bg-emerald-500/20 text-white/80 hover:text-emerald-400 border border-white/10 hover:border-emerald-500/40 text-xs font-mono font-medium transition-all shadow-xl flex items-center gap-1.5 cursor-pointer backdrop-blur-md group/btn"
-        >
-          <span>{t("sfl.cooking.boosts.viewAll")}</span>
-          <svg class="w-3.5 h-3.5 text-emerald-400 group-hover/btn:translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </details>
-
-  <script is:inline>
-    // Función global inmediata para expandir al 100% sin importar qué script se cargue después:
-    window.expandBoosts = function() {
-      var wrap = document.getElementById("boosts-peek-wrapper");
-      var ov = document.getElementById("boosts-fade-overlay");
-      if (wrap) {
-        wrap.classList.remove("is-peek");
-        wrap.style.maxHeight = "none";
-        wrap.style.overflow = "visible";
-      }
-      if (ov) {
-        ov.style.display = "none";
-        ov.remove();
-      }
-      try {
-        localStorage.setItem("sfl_boosts_expanded", "true");
-      } catch (e) {}
-    };
-
-    // Inicialización inmediata para evitar parpadeos:
-    (function() {
-      var isExpanded = typeof localStorage !== "undefined" && localStorage.getItem("sfl_boosts_expanded") === "true";
-      var wrap = document.getElementById("boosts-peek-wrapper");
-      var ov = document.getElementById("boosts-fade-overlay");
-      if (isExpanded) {
-        if (wrap) {
-          wrap.classList.remove("is-peek");
-          wrap.style.maxHeight = "none";
-          wrap.style.overflow = "visible";
-        }
-        if (ov) {
-          ov.style.display = "none";
-          ov.remove();
-        }
-      } else {
-        if (wrap) wrap.classList.add("is-peek");
-      }
-    })();
-  </script>
+    <!-- Configuración Centralizada de Boosts y Buffs -->
+    <SflBoostsConfig domain="cooking" idPrefix="cooking-boosts" />
 
     <!-- Controles y Filtros (Sticky Header) -->
     <div class="sticky top-0 z-40 bg-[#06080A]/95 backdrop-blur-md py-4 border-b border-white/5 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:border-0 sm:static sm:py-0">
@@ -1146,9 +854,11 @@ const formatAstroDescription = (skill) => {
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflConstants from "../../lib/sfl/constants"
   import * as SflPrices from "../../lib/sfl/prices"
+  import { SflUserState } from "../../lib/sfl/state"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflConstants = SflConstants
   ;(window as any).SflPrices = SflPrices
+  ;(window as any).SflUserState = SflUserState
   // Iniciar la descarga o reusar el mercado P2P centralizado
   SflMarket.fetchMarketData()
 </script>
@@ -1279,6 +989,25 @@ const formatAstroDescription = (skill) => {
 
   const CACHE_KEY = "sfl_cooking_state";
   const saveState = () => {
+    // Sincronizar hacia el almacén común global SflUserState
+    if (window.SflUserState) {
+      activeBuffs.forEach(buffId => window.SflUserState.setBuffActive(buffId, true));
+      Object.keys(sflBuffs).forEach(id => {
+        if (!activeBuffs.has(id)) window.SflUserState.setBuffActive(id, false);
+      });
+      Object.entries(activeSkills).forEach(([name, rank]) => {
+        window.SflUserState.setSkillRank(name, rank);
+      });
+      window.SflUserState.setPreferences({
+        coinsPerFlower: window.sflCustomCoinsPerFlower,
+        rodCost: window.sflCustomRodCost,
+        customFishFlakeCost: window.sflCustomFishFlakeCost,
+        customFishStickCost: window.sflCustomFishStickCost,
+        customCrabStickCost: window.sflCustomCrabStickCost,
+        customFishOilCost: window.sflCustomFishOilCost,
+      });
+    }
+
     const state = {
       activeBuffs: Array.from(activeBuffs),
       activeSkills: activeSkills,
@@ -1319,7 +1048,24 @@ const formatAstroDescription = (skill) => {
   };
 
   const getCalculatedXp = (item) => {
-    let boostedExp = item.xp;
+    let baseExp = item.xp;
+    if (item.building === "Aging Shed" && item.agedXp && item.primeAgedXp) {
+      let primeChance = 0.10;
+      activeBuffs.forEach(id => {
+        const buff = sflBuffs[id];
+        if (buff) {
+          [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6].forEach(math => {
+            if (math && math.category === "aging_prime" && math.calc) {
+              primeChance += (math.calc / 100);
+            }
+          });
+        }
+      });
+      primeChance = Math.min(1, Math.max(0, primeChance));
+      baseExp = Math.round(item.agedXp * (1 - primeChance) + item.primeAgedXp * primeChance);
+    }
+
+    let boostedExp = baseExp;
     let additions = 0;
     
     activeBuffs.forEach(id => {
@@ -2801,28 +2547,58 @@ const formatAstroDescription = (skill) => {
   };
 
   const loadState = () => {
+    // 1. Cargar buffs, skills y preferencias desde el almacén global SflUserState
+    if (window.SflUserState) {
+      const globalState = window.SflUserState.getState();
+      if (globalState.buffs) {
+        Object.keys(globalState.buffs).forEach(buffId => {
+          if (globalState.buffs[buffId]) {
+            activeBuffs.add(buffId);
+          }
+        });
+      }
+      if (globalState.skills) {
+        Object.entries(globalState.skills).forEach(([name, rank]) => {
+          if (rank > 0) activeSkills[name] = rank;
+        });
+      }
+      if (globalState.preferences) {
+        if (globalState.preferences.coinsPerFlower) window.sflCustomCoinsPerFlower = globalState.preferences.coinsPerFlower;
+        if (globalState.preferences.rodCost) window.sflCustomRodCost = globalState.preferences.rodCost;
+        if (globalState.preferences.customFishFlakeCost !== undefined && globalState.preferences.customFishFlakeCost !== null) window.sflCustomFishFlakeCost = globalState.preferences.customFishFlakeCost;
+        if (globalState.preferences.customFishStickCost !== undefined && globalState.preferences.customFishStickCost !== null) window.sflCustomFishStickCost = globalState.preferences.customFishStickCost;
+        if (globalState.preferences.customCrabStickCost !== undefined && globalState.preferences.customCrabStickCost !== null) window.sflCustomCrabStickCost = globalState.preferences.customCrabStickCost;
+        if (globalState.preferences.customFishOilCost !== undefined && globalState.preferences.customFishOilCost !== null) window.sflCustomFishOilCost = globalState.preferences.customFishOilCost;
+      }
+    }
+
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
       try {
         const state = JSON.parse(cached);
-        if (state.activeBuffs) {
+        if (state.activeBuffs && (!window.SflUserState || Object.keys(window.SflUserState.getState().buffs).length === 0)) {
           state.activeBuffs.forEach(buffId => {
             activeBuffs.add(buffId);
-            const cb = document.querySelector(`.buff-checkbox[data-buff-id="${buffId}"]`);
-            if (cb) {
-              cb.checked = true;
-              const card = cb.closest('label');
-              if (card) {
-                card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active");
-                card.classList.remove("border-white/5", "bg-white/5");
-              }
-            }
           });
         }
-        if (state.activeSkills) {
+        if (state.activeSkills && (!window.SflUserState || Object.keys(window.SflUserState.getState().skills).length === 0)) {
           activeSkills = state.activeSkills;
-          Object.keys(activeSkills).forEach(skillId => updateSkillUI(skillId));
         }
+
+        // Marcar checkboxes y clases activas para los buffs cargados
+        activeBuffs.forEach(buffId => {
+          const cb = document.querySelector(`.buff-checkbox[data-buff-id="${buffId}"]`);
+          if (cb) {
+            cb.checked = true;
+            const card = cb.closest('label');
+            if (card) {
+              card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active");
+              card.classList.remove("border-white/5", "bg-white/5");
+            }
+          }
+        });
+        Object.keys(activeSkills).forEach(skillId => updateSkillUI(skillId));
+
         if (state.currentCategory) {
           window.handleCategory(state.currentCategory);
         }
@@ -2835,7 +2611,7 @@ const formatAstroDescription = (skill) => {
           window.manualSelectedDish = state.manualSelectedDish;
         }
         
-        if (state.customCoins) {
+        if (state.customCoins && !window.sflCustomCoinsPerFlower) {
           window.sflCustomCoinsPerFlower = parseFloat(state.customCoins);
         }
         if (state.customRod !== null && state.customRod !== undefined) {
@@ -3044,7 +2820,51 @@ const formatAstroDescription = (skill) => {
   
   // Init
   loadState();
-  fetchPrices()
+  fetchPrices();
+
+  // Sincronización en vivo con el almacén global SflUserState
+  if (window.SflUserState) {
+    window.SflUserState.subscribe((newState) => {
+      let hasChanges = false;
+      if (newState.buffs) {
+        Object.keys(sflBuffs).forEach(id => {
+          const isActive = Boolean(newState.buffs[id]);
+          if (isActive && !activeBuffs.has(id)) {
+            activeBuffs.add(id);
+            hasChanges = true;
+            const cb = document.querySelector(`.buff-checkbox[data-buff-id="${id}"]`);
+            if (cb) {
+              cb.checked = true;
+              const card = cb.closest('label');
+              if (card) { card.classList.add("border-emerald-500/50", "bg-emerald-500/10", "active"); card.classList.remove("border-white/5", "bg-white/5"); }
+            }
+          } else if (!isActive && activeBuffs.has(id)) {
+            activeBuffs.delete(id);
+            hasChanges = true;
+            const cb = document.querySelector(`.buff-checkbox[data-buff-id="${id}"]`);
+            if (cb) {
+              cb.checked = false;
+              const card = cb.closest('label');
+              if (card) { card.classList.remove("border-emerald-500/50", "bg-emerald-500/10", "active"); card.classList.add("border-white/5", "bg-white/5"); }
+            }
+          }
+        });
+      }
+      if (newState.skills) {
+        Object.entries(newState.skills).forEach(([sName, sRank]) => {
+          if (activeSkills[sName] !== sRank) {
+            activeSkills[sName] = sRank;
+            hasChanges = true;
+            updateSkillUI(sName);
+          }
+        });
+      }
+      if (hasChanges) {
+        renderTable(searchInput ? searchInput.value : "");
+        updateSkillCalculator();
+      }
+    });
+  }
 </script>
 
 

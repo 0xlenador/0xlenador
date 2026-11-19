@@ -10,6 +10,7 @@ import fishData from "../../content/data/sfl/fishing/fish.json"
 import crustaceansData from "../../content/data/sfl/fishing/crustaceans.json"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
 import sflIds from "../../content/data/sfl/resources.json"
+import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
 const lang = getLangFromUrl(Astro.url)
@@ -20,6 +21,11 @@ const bettyUrl = loc("/sfl-betty")
 const blacksmith = blacksmithData.buildings.blacksmith
 const toolsTab = blacksmith.tabs.find((tab) => tab.id === "tools")
 const categories = toolsTab ? toolsTab.categories : []
+const boostsTab = blacksmith.tabs.find((tab) => tab.id === "boosts")
+const boostCategories = boostsTab ? boostsTab.categories : []
+const totalBlacksmithTools = categories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
+const totalBlacksmithBoosts = boostCategories.reduce((acc, cat) => acc + (cat.items?.length || 0), 0)
+const totalBlacksmithItems = totalBlacksmithTools + totalBlacksmithBoosts
 const landCat = categories.find((cat) => cat.id === "land")
 const oilDrillItem = landCat?.items.find((item) => item.id === "oil_drill")
 
@@ -53,10 +59,12 @@ const catalogLabels = {
   customUnits: t("sfl.constants.sell.customUnits"),
   customPlaceholder: t("sfl.constants.sell.customPlaceholder"),
   rawXpLabel: t("sfl.constants.rawXp"),
+  rawBadgeLabel: t("sfl.constants.rawBadge"),
   agedXpLabel: t("sfl.constants.agedXp"),
   primeAgedXpLabel: t("sfl.constants.primeAgedXp"),
   agingTimeLabel: t("sfl.constants.agingTime"),
   catchesTitle: t("sfl.constants.catchesTitle"),
+  boostLabel: t("sfl.constants.detail.boost"),
 }
 
 const blacksmithTabs: CatalogTab[] = [
@@ -68,7 +76,7 @@ const blacksmithTabs: CatalogTab[] = [
     placeholderIcon: "⛏️",
     sections: categories.map((cat) => ({
       id: cat.id,
-      name: cat.name,
+      name: t(`sfl.constants.cat.${cat.id}`) || cat.name,
       items: cat.items,
     })),
   },
@@ -76,7 +84,13 @@ const blacksmithTabs: CatalogTab[] = [
     id: "boosts",
     name: t("sfl.constants.tab.boosts"),
     icon: "⚡",
-    isComingSoon: true,
+    type: "craft",
+    placeholderIcon: "⚡",
+    sections: boostCategories.map((cat) => ({
+      id: cat.id,
+      name: t(`sfl.constants.cat.${cat.id}`) || cat.name,
+      items: cat.items,
+    })),
   },
   {
     id: "build",
@@ -770,6 +784,11 @@ const animalBuildingsList = [
     <div class="bg-[#18181b]/60 border border-white/5 rounded-xl p-2.5 min-h-[110px]"></div>
   </div>
 
+  <!-- Bloque Centralizado de Buffs & Boosts (100% de items del juego) -->
+  <div class="mb-8">
+    <SflBoostsConfig domain="all" idPrefix="constants-boosts" />
+  </div>
+
   <!-- 3. Bloques por Categorías: Grid 50% en PC -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
     <!-- BLOQUE 1: BLACKSMITH -->
@@ -778,7 +797,7 @@ const animalBuildingsList = [
       title={t("sfl.constants.building.blacksmith")}
       icon={blacksmith.icon}
       iconStyle="transform: scale(1.75) translateY(10%); clip-path: inset(0 0 40% 0);"
-      badgeText="13 items"
+      badgeText={`${totalBlacksmithItems} items`}
       description={t("sfl.constants.building.blacksmith.desc")}
       tabs={blacksmithTabs}
       labels={catalogLabels}
@@ -1089,9 +1108,11 @@ const animalBuildingsList = [
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflConstants from "../../lib/sfl/constants"
   import * as SflPrices from "../../lib/sfl/prices"
+  import { SflUserState } from "../../lib/sfl/state"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflConstants = SflConstants
   ;(window as any).SflPrices = SflPrices
+  ;(window as any).SflUserState = SflUserState
   // Iniciar la descarga del mercado P2P
   SflMarket.fetchMarketData()
 </script>

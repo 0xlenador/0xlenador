@@ -831,9 +831,9 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /* ============================================================
-   AGING SHED: Filtro para peces envejecidos (zonas oscuras más grises)
+   AGING SHED: Filtro para peces envejecidos (calibrado con la paleta oficial de SFL)
    ============================================================ */
 .aged-fish-filter {
-  filter: grayscale(100%) brightness(1.25) contrast(0.75);
+  filter: grayscale(100%) sepia(35%) hue-rotate(195deg) brightness(1.08) contrast(0.82);
 }
 
