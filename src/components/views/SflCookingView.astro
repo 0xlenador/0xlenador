@@ -18,9 +18,25 @@ const sflSkillsEntry = await getEntry("sfl", "skills")
 const sflRecipes = sflRecipesEntry.data
 const sflIds = sflIdsEntry.data
 const sflBuffsRaw = sflBuffsEntry.data
-const sflBuffs = sflBuffsRaw.powerups || sflBuffsRaw;
-const sflShrines = sflBuffsRaw.shrines || {};
 const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
+
+// Filtrar powerups relevantes para cocina desde powerups.json (collectibles + wearables)
+const cookingCols = Object.entries(sflPowerUpsData.collectibles || {}).filter(
+  ([_, it]: [string, any]) => {
+    const c1 = it.mathematics_1?.category
+    const c2 = it.mathematics_2?.category
+    return c1 === "bumpkin_xp" || c1 === "cooking_time" || c2 === "bumpkin_xp" || c2 === "cooking_time"
+  }
+)
+const cookingWears = Object.entries(sflPowerUpsData.wearables || {}).filter(
+  ([_, it]: [string, any]) => {
+    const c1 = it.mathematics_1?.category
+    const c2 = it.mathematics_2?.category
+    return c1 === "bumpkin_xp" || c1 === "cooking_time" || c2 === "bumpkin_xp" || c2 === "cooking_time"
+  }
+)
+const sflBuffs = Object.fromEntries([...cookingCols, ...cookingWears])
+const sflShrines = sflBuffsRaw.shrines || {};
 const sflSkills = { ...(sflSkillsEntry.data.Cooking || {}) }
 if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
   sflSkills["Fishy Feast"] = sflSkillsEntry.data.Fishing["Fishy Feast"]
@@ -82,6 +98,9 @@ const faqItems = [
 
 const getCompactText = (data, formattedDesc, typeName) => {
   let value = "?";
+  if (!formattedDesc || typeof formattedDesc !== "string") {
+    return value;
+  }
   const match = formattedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i);
   if (match) {
     value = match[1].trim();
@@ -1320,6 +1339,9 @@ const formatAstroDescription = (skill) => {
     if (target === "Honey Foods") {
       return item.ingredients.some(ing => ing.name === "Honey");
     }
+    if (target === "Aged Fish") {
+      return item.building === "Aging Shed" || item.name.startsWith("Aged ");
+    }
     return false;
   };
 
@@ -1331,7 +1353,7 @@ const formatAstroDescription = (skill) => {
       const buff = sflBuffs[id];
       if (buff) {
         [buff.mathematics_1, buff.mathematics_2].forEach(math => {
-          if (math && math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food)) {
+          if (math && math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food || math.target || "all")) {
             if (math.mathematics_operation === "multiply") {
               boostedExp *= math.calc;
             } else if (math.mathematics_operation === "add") {
@@ -1442,7 +1464,7 @@ const formatAstroDescription = (skill) => {
         const buff = sflBuffs[id];
         if (buff) {
           [buff.mathematics_1, buff.mathematics_2].forEach(math => {
-            if (math && math.category === "cooking_time" && isTargetMatch(item, math.target_food)) {
+            if (math && math.category === "cooking_time" && isTargetMatch(item, math.target_food || math.target || "all")) {
               if (math.mathematics_operation === "multiply") {
                 timeMultiplier *= math.calc;
               }

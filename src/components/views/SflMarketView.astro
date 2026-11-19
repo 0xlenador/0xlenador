@@ -1217,6 +1217,7 @@ const t = useTranslations(lang)
         })
 
         window.__budsLoaded = true
+        if (typeof renderDashboard === "function") renderDashboard()
       }
     } catch (err) {
       console.error("Error al cargar sfl_buds.json:", err)
@@ -1697,6 +1698,12 @@ const t = useTranslations(lang)
            catData[item.category].sales += sales
         }
       })
+
+      // Si los Buds aún no están en marketData (carga lazy), usar el resumen ligero inyectado desde sfl_data.json
+      if (catData.buds.vol === 0 && catData.buds.sales === 0 && window.sflBudsSummary) {
+        catData.buds.vol = (window.sflBudsSummary.volume7d || 0) * sflUsdPrice
+        catData.buds.sales = window.sflBudsSummary.trades7d || 0
+      }
 
       const maxVol = Math.max(catData.powerups.vol, catData.resources.vol, catData.cosmetics.vol, catData.buds.vol, 1)
       const maxSales = Math.max(catData.powerups.sales, catData.resources.sales, catData.cosmetics.sales, catData.buds.sales, 1)
@@ -3242,6 +3249,10 @@ const t = useTranslations(lang)
         throw new Error(`El archivo de datos estáticos no contiene historial de items.`)
       }
 
+      if (json.budsSummary) {
+        window.sflBudsSummary = json.budsSummary
+      }
+
       let bestCoinsPerFlower = 0
       if (window.SflMarket && typeof window.SflMarket.getBettyRatio === "function") {
         bestCoinsPerFlower = window.SflMarket.getBettyRatio()
@@ -3535,17 +3546,21 @@ const t = useTranslations(lang)
         const bId = item.budId || item.name.replace(/\D/g, "");
         const trait = item.budTraits || {};
         const metaParts = [];
-        if (trait.type) metaParts.push(trait.type);
-        if (trait.stem) metaParts.push(trait.stem);
-        if (trait.aura) metaParts.push(`Aura ${trait.aura}`);
-        if (trait.ears) metaParts.push(trait.ears);
+        const type = trait.type || item.type || "";
+        const stem = trait.stem || item.stem || "";
+        const aura = trait.aura || item.aura || "";
+        const ears = trait.ears || item.ears || "";
+        if (type) metaParts.push(type);
+        if (stem) metaParts.push(stem);
+        if (aura) metaParts.push(`Aura ${aura}`);
+        if (ears) metaParts.push(ears);
         const traitText = metaParts.length > 0 ? metaParts.join(" • ") : `NFT #${bId}`;
         subTitleEl.innerHTML = `<span class="text-white/60">${traitText}</span>`;
 
         // Badges ordenados para potenciadores
-        let mainB = trait.mainBoost || "";
-        let stemB = trait.stemBoost || "";
-        let auraB = trait.auraBoost || "";
+        let mainB = trait.mainBoost || item.mainBoost || "";
+        let stemB = trait.stemBoost || item.stemBoost || "";
+        let auraB = trait.auraBoost || item.auraBoost || "";
 
         if (!mainB && item.boost) {
           const parts = item.boost.split(" | ");
@@ -3563,7 +3578,8 @@ const t = useTranslations(lang)
         }
         if (stemB) {
           const cleanStem = stemB.replace(/^Stem:\s*/i, "");
-          badgesHtml.push(`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(16,185,129,0.1)] shrink-0"><span class="text-[11px]">🌱</span><span>Tallo: ${cleanStem}</span></span>`);
+          const stemLabel = clientLang === 'es' ? 'Tallo' : 'Stem';
+          badgesHtml.push(`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(16,185,129,0.1)] shrink-0"><span class="text-[11px]">🌱</span><span>${stemLabel}: ${cleanStem}</span></span>`);
         }
         if (auraB) {
           const cleanAura = auraB.replace(/^\(|\)$/g, "").trim();

@@ -247,36 +247,55 @@ async function updateSFLData() {
     // 6. GENERAR sfl_data.json (Siempre se ejecuta para actualizar live)
     const dirPath = path.join(process.cwd(), "public", "api")
 
-    let baseItems = rawData["live"] || rawData[getDateString(0)]
-    if (!baseItems) {
-      console.log(`Intentando fallback dinámico para 0d usando datos de ayer...`)
-      const fallback = rawData[getDateString(1)]
-      if (fallback) baseItems = fallback
-      else throw new Error("No se pudo obtener la data principal.")
+    // Si aún no tenemos flowerPrice (ej. sandbox sin red), reutilizar el guardado previamente o baseline
+    if (!currentFlowerPrice) {
+      try {
+        const prevData = JSON.parse(await fs.readFile(path.join(dirPath, "sfl_data.json"), "utf8"))
+        if (prevData && prevData.flowerPrice) currentFlowerPrice = prevData.flowerPrice
+      } catch {}
+      if (!currentFlowerPrice) currentFlowerPrice = 0.125279
     }
+
+    // Detección inteligente del día base más reciente disponible
+    const hasLive = rawData["live"] && rawData["live"] !== "error" && typeof rawData["live"] === "object"
+    let baseOffset = 0
+    if (!hasLive) {
+      while (baseOffset <= 30) {
+        const dStr = getDateString(baseOffset)
+        if (rawData[dStr] && rawData[dStr] !== "error" && typeof rawData[dStr] === "object") {
+          break
+        }
+        baseOffset++
+      }
+    }
+    const baseItems = hasLive ? rawData["live"] : (rawData[getDateString(baseOffset)] || {})
+    console.log(`📅 Día base para cálculos: ${hasLive ? 'live' : getDateString(baseOffset)} (offset ${baseOffset})`)
 
     const processItemKey = (itemKey) => {
       const itemData = baseItems[itemKey] || {}
       
       const getItemPrice = (offset) => {
-        if (offset === 0 && rawData["live"])
+        if (offset === 0 && hasLive)
           return rawData["live"][itemKey] ? rawData["live"][itemKey].latestSale : null
-        const dStr = getDateString(offset)
-        return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].latestSale : null
+        const effectiveOffset = hasLive ? offset : (baseOffset + offset)
+        const dStr = getDateString(effectiveOffset)
+        return rawData[dStr] && rawData[dStr] !== "error" && rawData[dStr][itemKey] ? rawData[dStr][itemKey].latestSale : null
       }
 
       const getItemTrades = (offset) => {
-        if (offset === 0 && rawData["live"])
+        if (offset === 0 && hasLive)
           return rawData["live"][itemKey] ? rawData["live"][itemKey].trades : null
-        const dStr = getDateString(offset)
-        return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].trades : null
+        const effectiveOffset = hasLive ? offset : (baseOffset + offset)
+        const dStr = getDateString(effectiveOffset)
+        return rawData[dStr] && rawData[dStr] !== "error" && rawData[dStr][itemKey] ? rawData[dStr][itemKey].trades : null
       }
 
       const getItemVolume = (offset) => {
-        if (offset === 0 && rawData["live"])
+        if (offset === 0 && hasLive)
           return rawData["live"][itemKey] ? rawData["live"][itemKey].volume : null
-        const dStr = getDateString(offset)
-        return rawData[dStr] && rawData[dStr][itemKey] ? rawData[dStr][itemKey].volume : null
+        const effectiveOffset = hasLive ? offset : (baseOffset + offset)
+        const dStr = getDateString(effectiveOffset)
+        return rawData[dStr] && rawData[dStr] !== "error" && rawData[dStr][itemKey] ? rawData[dStr][itemKey].volume : null
       }
 
       let p0 = getItemPrice(0) || itemData.latestSale || 0
@@ -312,7 +331,8 @@ async function updateSFLData() {
         const currentVol = getItemVolume(i);
         if (currentVol !== null && currentVol > 0 && lastValidVolume >= currentVol) {
           const volumeDiff = lastValidVolume - currentVol;
-          const price = dailyUsdPrices[getDateString(i-1)] || currentFlowerPrice || 0;
+          const effectiveOffset = hasLive ? (i - 1) : (baseOffset + i - 1);
+          const price = dailyUsdPrices[getDateString(effectiveOffset)] || currentFlowerPrice || 0;
           exactVolume7dUsd += volumeDiff * price;
           
           lastValidVolume = currentVol;
@@ -375,7 +395,30 @@ async function updateSFLData() {
       }
     }
 
-    // 1. Items estándar de mercado (sfl_data.json)
+    // 1. Buds aislados (sfl_buds.json) - Con traits y potenciadores fusionados
+    const allBudKeys = new Set()
+    for (const [dateKey, dayItems] of Object.entries(rawData)) {
+      if (dayItems && typeof dayItems === "object" && dayItems !== "error") {
+        for (const k of Object.keys(dayItems)) {
+          if (k.startsWith("buds-")) allBudKeys.add(k)
+        }
+      }
+    }
+
+    // Calcular resumen agregado liviano de Buds para que viaje en sfl_data.json
+    let budsTotalVolume7d = 0
+    let budsTotalTrades7d = 0
+    let budsTotalVolume = 0
+    let budsTotalTrades = 0
+    for (const budKey of allBudKeys) {
+      const p = processItemKey(budKey)
+      budsTotalVolume7d += (p.volume7d || 0)
+      budsTotalTrades7d += (p.trades7d || 0)
+      budsTotalVolume += (p.volume || 0)
+      budsTotalTrades += (p.trades || 0)
+    }
+
+    // 2. Items estándar de mercado (sfl_data.json)
     const filteredItems = {}
     for (const itemKey of ALLOWED_KEYS) {
       filteredItems[itemKey] = processItemKey(itemKey)
@@ -384,22 +427,18 @@ async function updateSFLData() {
     const finalJSON = {
       lastUpdated: new Date().toISOString(),
       flowerPrice: currentFlowerPrice,
+      budsSummary: {
+        volume7d: budsTotalVolume7d,
+        trades7d: budsTotalTrades7d,
+        volume: budsTotalVolume,
+        trades: budsTotalTrades,
+      },
       items: filteredItems,
     }
 
     const filePath = path.join(dirPath, "sfl_data.json")
     await fs.writeFile(filePath, JSON.stringify(finalJSON, null, 2))
     console.log(`🚀 API en vivo procesada y optimizada en: ${filePath}`)
-
-    // 2. Buds aislados (sfl_buds.json) - Con traits y potenciadores fusionados
-    const allBudKeys = new Set()
-    for (const dayItems of Object.values(rawData)) {
-      if (dayItems && typeof dayItems === "object") {
-        for (const k of Object.keys(dayItems)) {
-          if (k.startsWith("buds-")) allBudKeys.add(k)
-        }
-      }
-    }
 
     // Cargar maestro de traits desde src/content/data/sfl/buds.json
     const budsDataMasterPath = path.join(process.cwd(), "src/content/data/sfl/buds.json")

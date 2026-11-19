@@ -5,1015 +5,2099 @@
         "name": "Christmas Tree",
         "boost": "Receive a Santa Airdrop on Christmas day",
         "image": "christmas_tree.png",
-        "supply": 46
+        "supply": 46,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "404": {
         "name": "Scarecrow",
         "boost": "-15% Crop Growth Time, +20% Crop Yield, Disabled if Kuebiko Active",
         "image": "scarecrow.png",
-        "supply": 5000
+        "supply": 5000,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 0.85
+        },
+        "mathematics_2": {
+          "category": "crop_yield",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "406": {
         "name": "Farm Dog",
         "boost": "-25% Sheep Sleep Time",
         "image": "farm_dog.webp",
-        "supply": 411
+        "supply": 411,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Sheep",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "407": {
         "name": "Gnome",
         "boost": "+10 yield to medium/advanced crops, Affects plot below, requires clementine and cobalt",
         "image": "gnome.png",
-        "supply": 784
+        "supply": 784,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Medium & Advanced Crops",
+          "mathematics_operation": "add",
+          "calc": 10
+        }
       },
       "408": {
         "name": "Chicken Coop",
         "boost": "+1 Egg, +5 Base Chickens, +5 Max Chickens per Hen House Upgrade",
         "image": "chicken_coop.png",
-        "supply": 1015
+        "supply": 1015,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 1
+        },
+        "mathematics_2": {
+          "category": "animal_capacity",
+          "target": "Chicken",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "409": {
         "name": "Gold Egg",
         "boost": "Feed Chickens for free",
         "image": "gold_egg.png",
-        "supply": 300
+        "supply": 300,
+        "mathematics_1": {
+          "category": "animal_feed",
+          "target": "Chicken",
+          "mathematics_operation": "free_feed",
+          "calc": 1
+        }
       },
       "410": {
         "name": "Golden Cauliflower",
         "boost": "+100% Cauliflower",
         "image": "golden_cauliflower.webp",
-        "supply": 114
+        "supply": 114,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Cauliflower",
+          "mathematics_operation": "multiply",
+          "calc": 2
+        }
       },
       "415": {
         "name": "Woody the Beaver",
         "boost": "+20% Wood",
         "image": "woody_the_beaver.gif",
-        "supply": 3330
+        "supply": 3330,
+        "mathematics_1": {
+          "category": "wood_yield",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "416": {
         "name": "Apprentice Beaver",
         "boost": "-50% Tree Recovery Time",
         "image": "apprentice_beaver.gif",
-        "supply": 2069
+        "supply": 2069,
+        "mathematics_1": {
+          "category": "tree_recovery_time",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "417": {
         "name": "Foreman Beaver",
         "boost": "Chop Trees without Axes",
         "image": "foreman_beaver.gif",
-        "supply": 308
+        "supply": 308,
+        "mathematics_1": {
+          "category": "woodcutting",
+          "target": "Axe",
+          "mathematics_operation": "free_tool",
+          "calc": 1
+        }
       },
       "418": {
         "name": "Mysterious Parsnip",
         "boost": "-50% Parsnip Growth Time",
         "image": "mysterious_parsnip.webp",
-        "supply": 512
+        "supply": 512,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "Parsnip",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "419": {
         "name": "Carrot Sword",
         "boost": "4x Chance of Mutant Crop",
         "image": "carrot_sword.png",
-        "supply": 1001
+        "supply": 1001,
+        "mathematics_1": {
+          "category": "mutant_crop_chance",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 4
+        }
       },
       "420": {
         "name": "Nancy",
         "boost": "-15% Crop Growth Time",
         "image": "nancy.png",
-        "supply": 17859
+        "supply": 17859,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 0.85
+        }
       },
       "421": {
         "name": "Kuebiko",
         "boost": "-15% Crop Growth Time, +20% Crop Yield, Free Seeds",
         "image": "kuebiko.gif",
-        "supply": 209
+        "supply": 209,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 0.85
+        },
+        "mathematics_2": {
+          "category": "crop_yield",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "427": {
         "name": "Rock Golem",
         "boost": "10% Chance of +2 Stone",
         "image": "rock_golem.webp",
-        "supply": 3020
+        "supply": 3020,
+        "mathematics_1": {
+          "category": "stone_yield",
+          "target": "Stone",
+          "mathematics_operation": "critical_chance",
+          "chance": 10,
+          "calc": 2
+        }
       },
       "428": {
         "name": "Tunnel Mole",
         "boost": "+0.25 Stone",
         "image": "tunnel_mole.gif",
-        "supply": 10000
+        "supply": 10000,
+        "mathematics_1": {
+          "category": "stone_yield",
+          "target": "Stone",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "429": {
         "name": "Rocky the Mole",
         "boost": "+0.25 iron",
         "image": "rocky_the_mole.gif",
-        "supply": 3391
+        "supply": 3391,
+        "mathematics_1": {
+          "category": "iron_yield",
+          "target": "Iron",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "430": {
         "name": "Nugget",
         "boost": "+0.25 Gold",
         "image": "nugget.gif",
-        "supply": 1020
+        "supply": 1020,
+        "mathematics_1": {
+          "category": "gold_yield",
+          "target": "Gold",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "432": {
         "name": "Victoria Sisters",
         "boost": "+20% Pumpkin",
         "image": "victoria_sisters.gif",
-        "supply": 8969
+        "supply": 8969,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Pumpkin",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "433": {
         "name": "Peeled Potato",
         "boost": "20% Chance for +1 Potato",
         "image": "peeled_potato.gif",
-        "supply": 1000
+        "supply": 1000,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Potato",
+          "mathematics_operation": "critical_chance",
+          "chance": 20,
+          "calc": 1
+        }
       },
       "434": {
         "name": "Cabbage Boy",
         "boost": "+0.25 Cabbage, +0.5 Cabbage (Cabbage Girl boost)",
         "image": "cabbage_boy.gif",
-        "supply": 1050
+        "supply": 1050,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Cabbage",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "435": {
         "name": "Cabbage Girl",
         "boost": "-50% Cabbage Plot Growth Time",
         "image": "cabbage_girl.gif",
-        "supply": 365
+        "supply": 365,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "Cabbage",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "436": {
         "name": "Wood Nymph Wendy",
         "boost": "+0.2 Wood",
         "image": "wood_nymph_wendy.gif",
-        "supply": 1000
+        "supply": 1000,
+        "mathematics_1": {
+          "category": "wood_yield",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "437": {
         "name": "Stellar Sunflower",
         "boost": "3% Chance of +10 Sunflower",
         "image": "stellar_sunflower.webp",
-        "supply": 317
+        "supply": 317,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Sunflower",
+          "mathematics_operation": "critical_chance",
+          "chance": 3.33,
+          "calc": 10
+        }
       },
       "438": {
         "name": "Potent Potato",
         "boost": "3% Chance of +10 Potato",
         "image": "potent_potato.webp",
-        "supply": 328
+        "supply": 328,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Potato",
+          "mathematics_operation": "critical_chance",
+          "chance": 3.33,
+          "calc": 10
+        }
       },
       "439": {
         "name": "Radical Radish",
         "boost": "3% Chance of +10 Radish",
         "image": "radical_radish.webp",
-        "supply": 302
+        "supply": 302,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Radish",
+          "mathematics_operation": "critical_chance",
+          "chance": 3.33,
+          "calc": 10
+        }
       },
       "442": {
         "name": "Lady Bug",
         "boost": "+0.25 Apple, -25% Onion Seed coin cost",
         "image": "lady_bug.gif",
-        "supply": 2535
+        "supply": 2535,
+        "mathematics_1": {
+          "category": "fruit_yield",
+          "target": "Apple",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "443": {
         "name": "Squirrel Monkey",
         "boost": "-50% Orange Growth Time",
         "image": "squirrel_monkey.gif",
-        "supply": 1035
+        "supply": 1035,
+        "mathematics_1": {
+          "category": "fruit_growth_time",
+          "target": "Orange",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "444": {
         "name": "Black Bearry",
         "boost": "+1 Blueberry",
         "image": "black_bearry.gif",
-        "supply": 535
+        "supply": 535,
+        "mathematics_1": {
+          "category": "fruit_yield",
+          "target": "Blueberry",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "445": {
         "name": "Ayam Cemani",
         "boost": "+0.2 Egg",
         "image": "ayam_cemani.webp",
-        "supply": 1825
+        "supply": 1825,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "446": {
         "name": "Maneki Neko",
         "boost": "1 Free Food per Day",
         "image": "maneki_neko.gif",
-        "supply": 6843
+        "supply": 6843,
+        "mathematics_1": {
+          "category": "free_daily_food",
+          "target": "Food",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "447": {
         "name": "Tiki Totem",
         "boost": "+0.1 Wood",
         "image": "tiki_totem.webp",
-        "supply": 6178
+        "supply": 6178,
+        "mathematics_1": {
+          "category": "wood_yield",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "448": {
         "name": "Lunar Calendar",
         "boost": "-10% Crop Growth Time",
         "image": "lunar_calendar.webp",
-        "supply": 6374
+        "supply": 6374,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        }
       },
       "450": {
         "name": "Heart of Davy Jones",
         "boost": "+20 daily Desert Dig attempts",
         "image": "heart_of_davy_jones.gif",
-        "supply": 1000
+        "supply": 1000,
+        "mathematics_1": {
+          "category": "desert_digs",
+          "target": "Sand",
+          "mathematics_operation": "add",
+          "calc": 20
+        }
       },
       "454": {
         "name": "Iron Idol",
         "boost": "+1 Iron",
         "image": "iron_idol.webp",
-        "supply": 200
+        "supply": 200,
+        "mathematics_1": {
+          "category": "iron_yield",
+          "target": "Iron",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "455": {
         "name": "Karkinos",
         "boost": "+0.1 Cabbage",
         "image": "karkinos.png",
-        "supply": 4280
+        "supply": 4280,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Cabbage",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "456": {
         "name": "Mushroom House",
         "boost": "+0.2 Wild Mushroom",
         "image": "mushroom_house.png",
-        "supply": 2050
+        "supply": 2050,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Wild Mushroom",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "457": {
         "name": "Purple Trail",
         "boost": "+0.2 Eggplant",
         "image": "purple_trail.png",
-        "supply": 6754
+        "supply": 6754,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Eggplant",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "458": {
         "name": "Obie",
         "boost": "-25% Eggplant Growth Time",
         "image": "obie.png",
-        "supply": 2600
+        "supply": 2600,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Eggplant Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "459": {
         "name": "Maximus",
         "boost": "+1 Eggplant",
         "image": "maximus.png",
-        "supply": 400
+        "supply": 400,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Eggplant",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "460": {
         "name": "Genie Lamp",
         "boost": "Grants 3 Wishes from the Wish list",
         "image": "genie_lamp.png",
-        "supply": 187
+        "supply": 187,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "461": {
         "name": "Hoot",
         "boost": "+0.5 Wheat, Radish, Kale, Rice, Barley",
         "image": "hoot.png",
-        "supply": 100
+        "supply": 100,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Wheat, Radish, Kale, Rice, Barley",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "463": {
         "name": "Emerald Turtle",
         "boost": "+0.5 Stone, Iron, Gold (AOE 3x3)",
         "image": "emerald_turtle.webp",
-        "supply": 100
+        "supply": 100,
+        "mathematics_1": {
+          "category": "mining_yield",
+          "target": "Stone, Iron, Gold",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "464": {
         "name": "Tin Turtle",
         "boost": "+0.1 Stone",
         "image": "tin_turtle.webp",
-        "supply": 1141
+        "supply": 1141,
+        "mathematics_1": {
+          "category": "stone_yield",
+          "target": "Stone",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "466": {
         "name": "Sir Goldensnout",
         "boost": "+0.5 crop yield, Affects plots around (4x4)",
         "image": "sir_goldensnout.webp",
-        "supply": 525
+        "supply": 525,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "469": {
         "name": "Freya Fox",
         "boost": "+0.5 Pumpkin",
         "image": "freya_fox.png",
-        "supply": 499
+        "supply": 499,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Pumpkin",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "470": {
         "name": "El Pollo Veloz",
         "boost": "-2h Chicken Sleep Time",
         "image": "el_pollo_veloz.webp",
-        "supply": 1631
+        "supply": 1631,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Chicken",
+          "mathematics_operation": "subtract_seconds",
+          "calc": 7200
+        }
       },
       "471": {
         "name": "Poppy",
         "boost": "+0.1 Corn",
         "image": "poppy.png",
-        "supply": 2282
+        "supply": 2282,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Corn",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "472": {
         "name": "Grain Grinder",
         "boost": "+20% Bumpkin XP from Cakes",
         "image": "grain_grinder.png",
-        "supply": 2734
+        "supply": 2734,
+        "mathematics_1": {
+          "calc": 1.2,
+          "category": "bumpkin_xp",
+          "target_food": "Cakes",
+          "mathematics_operation": "multiply"
+        }
       },
       "473": {
         "name": "Kernaldo",
         "boost": "-25% Corn Growth Time",
         "image": "kernaldo.png",
-        "supply": 2834
+        "supply": 2834,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Corn Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "474": {
         "name": "Queen Cornelia",
         "boost": "+1 Corn, Affects plots around (3x4)",
         "image": "queen_cornelia.png",
-        "supply": 1050
+        "supply": 1050,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Corn",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "478": {
         "name": "Walrus",
         "boost": "+1 Fish",
         "image": "walrus.webp",
-        "supply": 230
+        "supply": 230,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fish",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "479": {
         "name": "Alba",
         "boost": "50% Chance of +1 Basic Fish",
         "image": "alba.webp",
-        "supply": 800
+        "supply": 800,
+        "mathematics_1": {
+          "category": "fish_yield",
+          "target": "Chance of +1 Basic Fish",
+          "mathematics_operation": "multiply",
+          "calc": 1.5
+        }
       },
       "480": {
         "name": "Knowledge Crab",
         "boost": "Double Sprout Mix Boost Effect",
         "image": "knowledge_crab.webp",
-        "supply": 500
+        "supply": 500,
+        "mathematics_1": {
+          "category": "fertiliser_boost",
+          "target": "Sprout Mix",
+          "mathematics_operation": "multiply",
+          "calc": 2
+        }
       },
       "485": {
         "name": "Skill Shrimpy",
         "boost": "+20% Bumpkin XP from Fish",
         "image": "skill_shrimpy.webp",
-        "supply": 2327
+        "supply": 2327,
+        "mathematics_1": {
+          "calc": 1.2,
+          "category": "bumpkin_xp",
+          "target_food": "Fish",
+          "mathematics_operation": "multiply"
+        }
       },
       "486": {
         "name": "Soil Krabby",
         "boost": "-10% Composter Compost Time",
         "image": "soil_krabby.webp",
-        "supply": 1638
+        "supply": 1638,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Composter Compost Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        }
       },
       "487": {
         "name": "Nana",
         "boost": "-10% Banana Growth Time",
         "image": "nana.webp",
-        "supply": 1975
+        "supply": 1975,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Banana Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        }
       },
       "488": {
         "name": "Banana Chicken",
         "boost": "+0.1 Banana",
         "image": "banana_chicken.webp",
-        "supply": 1782
+        "supply": 1782,
+        "mathematics_1": {
+          "category": "fruit_yield",
+          "target": "Banana",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "489": {
         "name": "Grinxs Hammer",
         "boost": "Halves expansion costs",
         "image": "grinx_s_hammer.png",
-        "supply": 50
+        "supply": 50,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "490": {
         "name": "Humming Bird",
         "boost": "20% Chance for +1 Flower",
         "image": "humming_bird.webp",
-        "supply": 330
+        "supply": 330,
+        "mathematics_1": {
+          "category": "flower_growth_time",
+          "target": "all",
+          "mathematics_operation": "critical_chance",
+          "chance": 20,
+          "calc": 1
+        }
       },
       "491": {
         "name": "Queen Bee",
         "boost": "+1 Honey Production Speed",
         "image": "queen_bee.webp",
-        "supply": 215
+        "supply": 215,
+        "mathematics_1": {
+          "category": "honey_production_speed",
+          "target": "Beehive",
+          "mathematics_operation": "multiply",
+          "calc": 2
+        }
       },
       "492": {
         "name": "Flower Fox",
         "boost": "-10% Flower Growth Time",
         "image": "flower_fox.webp",
-        "supply": 3189
+        "supply": 3189,
+        "mathematics_1": {
+          "category": "honey_production_speed",
+          "target": "Beehive",
+          "mathematics_operation": "multiply",
+          "calc": 1.1
+        }
       },
       "493": {
         "name": "Hungry Caterpillar",
         "boost": "Free Flower Seeds",
         "image": "hungry_caterpillar.webp",
-        "supply": 355
+        "supply": 355,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "494": {
         "name": "Crim Peckster",
         "boost": "+0.1 Crimstone",
         "image": "crim_peckster.png",
-        "supply": 1669
+        "supply": 1669,
+        "mathematics_1": {
+          "category": "mining_yield",
+          "target": "Crimstone",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "495": {
         "name": "Turbo Sprout",
         "boost": "-50% Growth Time in Greenhouse",
         "image": "turbo_sprout.webp",
-        "supply": 155
+        "supply": 155,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Growth Time in Greenhouse",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "496": {
         "name": "Soybliss",
         "boost": "+1 Soybean",
         "image": "soybliss.webp",
-        "supply": 530
+        "supply": 530,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Soybean",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "497": {
         "name": "Grape Granny",
         "boost": "+1 Grape",
         "image": "grape_granny.webp",
-        "supply": 530
+        "supply": 530,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Grape",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "500": {
         "name": "Knight Chicken",
         "boost": "+0.1 Oil",
         "image": "knight_chicken.webp",
-        "supply": 1413
+        "supply": 1413,
+        "mathematics_1": {
+          "calc": 0.85,
+          "category": "cooking_time",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        },
+        "mathematics_2": {
+          "calc": 1.1,
+          "category": "bumpkin_xp",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        }
       },
       "610": {
         "name": "Speed Chicken",
         "boost": "-10% Chicken Sleep Time",
         "image": "speed_chicken.webp",
-        "supply": 16303
+        "supply": 16303,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Chicken",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        }
       },
       "611": {
         "name": "Fat Chicken",
         "boost": "-10% Feed to Chicken",
         "image": "fat_chicken.webp",
-        "supply": 16736
+        "supply": 16736,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "612": {
         "name": "Rich Chicken",
         "boost": "+0.1 Egg",
         "image": "rich_chicken.webp",
-        "supply": 15923
+        "supply": 15923,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "613": {
         "name": "Rooster",
         "boost": "2x Chance of Mutant Chicken",
         "image": "rooster.webp",
-        "supply": 2512
+        "supply": 2512,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "909": {
         "name": "Easter Bunny",
         "boost": "+20% Carrot",
         "image": "easter_bunny.gif",
-        "supply": 46008
+        "supply": 46008,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Carrot",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "911": {
         "name": "Observatory",
         "boost": "+5% Bumpkin XP",
         "image": "observatory.webp",
-        "supply": 5566
+        "supply": 5566,
+        "mathematics_1": {
+          "calc": 1.05,
+          "category": "bumpkin_xp",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        }
       },
       "926": {
         "name": "Pablo The Bunny",
         "boost": "+0.1 Carrot",
         "image": "pablo_the_bunny.gif",
-        "supply": 4455
+        "supply": 4455,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Carrot",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "938": {
         "name": "Hungry Hare",
         "boost": "Fermented Carrots 2x Bumpkin XP",
         "image": "hungry_hare.png",
-        "supply": 499
+        "supply": 499,
+        "mathematics_1": {
+          "calc": 2,
+          "category": "bumpkin_xp",
+          "target_food": "Fermented Carrots",
+          "mathematics_operation": "multiply"
+        }
       },
       "1114": {
         "name": "Undead Rooster",
         "boost": "+0.1 Egg",
         "image": "undead_rooster.webp",
-        "supply": 3087
+        "supply": 3087,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "1227": {
         "name": "Foliant",
         "boost": "+0.2 Kale",
         "image": "foliant.webp",
-        "supply": 1660
+        "supply": 1660,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Kale",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "1537": {
         "name": "Crimson Carp",
         "boost": "+0.05 Crimstone",
         "image": "crimson_carp.png",
-        "supply": 115
+        "supply": 115,
+        "mathematics_1": {
+          "category": "mining_yield",
+          "target": "Crimstone",
+          "mathematics_operation": "add",
+          "calc": 0.05
+        }
       },
       "1538": {
         "name": "Battle Fish",
         "boost": "+0.05 Oil",
         "image": "battle_fish.webp",
-        "supply": 200
+        "supply": 200,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Oil",
+          "mathematics_operation": "add",
+          "calc": 0.05
+        }
       },
       "1539": {
         "name": "Lemon Shark",
         "boost": "+0.2 Lemons",
         "image": "lemon_shark.webp",
-        "supply": 751
+        "supply": 751,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Lemons",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "1540": {
         "name": "Longhorn Cowfish",
         "boost": "+0.2 Milk",
         "image": "longhorn_cowfish.webp",
-        "supply": 926
+        "supply": 926,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Milk",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "1549": {
         "name": "Super Star",
         "boost": "+1 Fish during Winter",
         "image": "super_star.webp",
-        "supply": 399
+        "supply": 399,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fish during Winter",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "1551": {
         "name": "Nautilus",
         "boost": "+5 daily fishing reels",
         "image": "nautilus.webp",
-        "supply": 115
+        "supply": 115,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "daily fishing reels",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "2016": {
         "name": "Vinny",
         "boost": "+0.25 Grape",
         "image": "vinny.webp",
-        "supply": 1825
+        "supply": 1825,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Grape",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "2034": {
         "name": "Rice Panda",
         "boost": "+0.25 Rice",
         "image": "rice_panda.webp",
-        "supply": 2092
+        "supply": 2092,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Rice",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "2100": {
         "name": "Desert Rose",
         "boost": "10% Chance for +1 Flower",
         "image": "desert_rose.webp",
-        "supply": 6641
+        "supply": 6641,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Chance for +1 Flower",
+          "mathematics_operation": "multiply",
+          "calc": 1.1
+        }
       },
       "2105": {
         "name": "Cannonball",
         "boost": "-25% Tomato Growth Time",
         "image": "cannonball.webp",
-        "supply": 898
+        "supply": 898,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Tomato Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "2109": {
         "name": "Reveling Lemon",
         "boost": "+0.25 Lemon",
         "image": "reveling_lemon.gif",
-        "supply": 1825
+        "supply": 1825,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Lemon",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "2114": {
         "name": "Lemon Frog",
         "boost": "-25% Lemon Growth Time",
         "image": "lemon_frog.webp",
-        "supply": 2417
+        "supply": 2417,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Lemon Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "2116": {
         "name": "Pharaoh Chicken",
         "boost": "+1 daily Desert Dig attempt",
         "image": "pharaoh_chicken.webp",
-        "supply": 1243
+        "supply": 1243,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "daily Desert Dig attempt",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2120": {
         "name": "Pharaoh Gnome",
         "boost": "+2 Greenhouse Produce",
         "image": "pharaoh_gnome.webp",
-        "supply": 55
+        "supply": 55,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Greenhouse Produce",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "2121": {
         "name": "Lemon Tea Bath",
         "boost": "-50% Lemon Growth Time",
         "image": "lemon_tea_bath.webp",
-        "supply": 300
+        "supply": 300,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Lemon Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "2122": {
         "name": "Tomato Clown",
         "boost": "-50% Tomato Growth Time",
         "image": "tomato_clown.gif",
-        "supply": 300
+        "supply": 300,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Tomato Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "2127": {
         "name": "Camel",
         "boost": "+1 Sand, +30% Treasure Sale Price",
         "image": "camel.webp",
-        "supply": 562
+        "supply": 562,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2128": {
         "name": "Tomato Bombard",
         "boost": "+1 Tomato",
         "image": "tomato_bombard.gif",
-        "supply": 215
+        "supply": 215,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Tomato",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2129": {
         "name": "Stone Beetle",
         "boost": "+0.1 Stone",
         "image": "stone_beetle.webp",
-        "supply": 14207
+        "supply": 14207,
+        "mathematics_1": {
+          "category": "mining_yield",
+          "target": "Stone",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2152": {
         "name": "Sheaf of Plenty",
         "boost": "+2 Barley",
         "image": "sheaf_of_plenty.webp",
-        "supply": 659
+        "supply": 659,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Barley",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "2154": {
         "name": "King of Bears",
         "boost": "+0.25 Honey per Full Beehive",
         "image": "king_of_bears.png",
-        "supply": 507
+        "supply": 507,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Honey per Full Beehive",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "2155": {
         "name": "Moo-ver",
         "boost": "+0.25 Leather",
         "image": "moo_ver.webp",
-        "supply": 810
+        "supply": 810,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Leather",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "2156": {
         "name": "Swiss Whiskers",
         "boost": "+500 Bumpkin XP from Cheese Recipes",
         "image": "swiss_whiskers.webp",
-        "supply": 520
+        "supply": 520,
+        "mathematics_1": {
+          "calc": 500,
+          "category": "bumpkin_xp",
+          "target_food": "Cheese Recipes",
+          "mathematics_operation": "add"
+        }
       },
       "2157": {
         "name": "Cluckulator",
         "boost": "-25% Feed to Chicken",
         "image": "cluckulator.webp",
-        "supply": 470
+        "supply": 470,
+        "mathematics_1": {
+          "category": "animal_feed_cost",
+          "target": "Feed to Chicken",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "2159": {
         "name": "Chicory",
         "boost": "10% Chance for +1 Flower",
         "image": "chicory.webp",
-        "supply": 7050
+        "supply": 7050,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Chance for +1 Flower",
+          "mathematics_operation": "multiply",
+          "calc": 1.1
+        }
       },
       "2162": {
         "name": "Alien Chicken",
         "boost": "+0.1 Feathers",
         "image": "alien_chicken.webp",
-        "supply": 1154
+        "supply": 1154,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Feathers",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2163": {
         "name": "Mootant",
         "boost": "+0.1 Leather",
         "image": "mootant.webp",
-        "supply": 89
+        "supply": 89,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Leather",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2164": {
         "name": "Toxic Tuft",
         "boost": "+0.1 Merino Wool",
         "image": "toxic_tuft.webp",
-        "supply": 72
+        "supply": 72,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Merino Wool",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2178": {
         "name": "Golden Cow",
         "boost": "Feed cows for free!",
         "image": "golden_cow.webp",
-        "supply": 50
+        "supply": 50,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2191": {
         "name": "Mammoth",
         "boost": "-25% Cow Sleep Time",
         "image": "mammoth.webp",
-        "supply": 868
+        "supply": 868,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Cow Sleep Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "2193": {
         "name": "Golden Sheep",
         "boost": "Feed Sheeps for free!",
         "image": "golden_sheep.webp",
-        "supply": 275
+        "supply": 275,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2194": {
         "name": "Barn Blueprint",
         "boost": "+5 Base Barn Animals, +5 Max Barn Animals per Upgrade",
         "image": "barn_blueprint.webp",
-        "supply": 500
+        "supply": 500,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2199": {
         "name": "Frozen Cow",
         "boost": "Cows cannot get sick during winter",
         "image": "frozen_cow.webp",
-        "supply": 226
+        "supply": 226,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2200": {
         "name": "Frozen Sheep",
         "boost": "Sheep cannot get sick during winter",
         "image": "frozen_sheep.webp",
-        "supply": 151
+        "supply": 151,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2201": {
         "name": "Summer Chicken",
         "boost": "Chickens cannot get sick during summer",
         "image": "summer_chicken.webp",
-        "supply": 1430
+        "supply": 1430,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2203": {
         "name": "Jellyfish",
         "boost": "+1 Fish during Summer",
         "image": "jellyfish.webp",
-        "supply": 1530
+        "supply": 1530,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fish during Summer",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2254": {
         "name": "Pink Dolphin",
         "boost": "+1 Fish during Spring",
         "image": "pink_dolphin.webp",
-        "supply": 1480
+        "supply": 1480,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fish during Spring",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2256": {
         "name": "Dr Cow",
         "boost": "5% less feeding cost for cows",
         "image": "dr_cow.webp",
-        "supply": 470
+        "supply": 470,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "less feeding cost for cows",
+          "mathematics_operation": "multiply",
+          "calc": 1.05
+        }
       },
       "2257": {
         "name": "Nurse Sheep",
         "boost": "Sheep cannot get sick during summer",
         "image": "nurse_sheep.webp",
-        "supply": 218
+        "supply": 218,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2259": {
         "name": "Quarry",
         "boost": "Mine stone without pickaxes",
         "image": "quarry.webp",
-        "supply": 205
+        "supply": 205,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2260": {
         "name": "Obsidian Turtle",
         "boost": "+0.5 Obsidian",
         "image": "obsidian_turtle.webp",
-        "supply": 205
+        "supply": 205,
+        "mathematics_1": {
+          "category": "mining_yield",
+          "target": "Obsidian",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "2261": {
         "name": "Winter Guardian",
         "boost": "Winter Disaster Protection, Blessed Winter Events",
         "image": "winter_guardian.webp",
-        "supply": 325
+        "supply": 325,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2262": {
         "name": "Summer Guardian",
         "boost": "Summer Disaster Protection, Blessed Summer Events",
         "image": "summer_guardian.webp",
-        "supply": 324
+        "supply": 324,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2263": {
         "name": "Spring Guardian",
         "boost": "Spring Disaster Protection, Blessed Spring Events",
         "image": "spring_guardian.webp",
-        "supply": 325
+        "supply": 325,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2264": {
         "name": "Autumn Guardian",
         "boost": "Autumn Disaster Protection, Blessed Autumn Events",
         "image": "autumn_guardian.webp",
-        "supply": 325
+        "supply": 325,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2268": {
         "name": "Giant Yam",
         "boost": "+0.5 Yams",
         "image": "giant_yam.webp",
-        "supply": 1281
+        "supply": 1281,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Yam",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "2270": {
         "name": "Giant Zucchini",
         "boost": "-50% Zucchini Plot Growth Time",
         "image": "giant_zucchini.webp",
-        "supply": 553
+        "supply": 553,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Zucchini Plot Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "2272": {
         "name": "Giant Kale",
         "boost": "+2 Kale",
         "image": "giant_kale.webp",
-        "supply": 399
+        "supply": 399,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Kale",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "2299": {
         "name": "Reelmaster's Chair",
         "boost": "+5 daily fishing reels",
         "image": "reelmaster_s_chair.webp",
-        "supply": 1961
+        "supply": 1961,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "daily fishing reels",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "2301": {
         "name": "Fruit Tune Box",
         "boost": "-20% Fruit Patch Growth Time",
         "image": "fruit_tune_box.webp",
-        "supply": 1309
+        "supply": 1309,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Fruit Patch Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "2303": {
         "name": "Giant Artichoke",
         "boost": "+2 Artichokes",
         "image": "giant_artichoke.webp",
-        "supply": 131
+        "supply": 131,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Artichoke",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "2307": {
         "name": "Giant Onion",
         "boost": "+3 Onions",
         "image": "giant_onion.webp",
-        "supply": 400
+        "supply": 400,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Onions",
+          "mathematics_operation": "add",
+          "calc": 3
+        }
       },
       "2308": {
         "name": "Giant Turnip",
         "boost": "-50% Turnip Growth Time",
         "image": "giant_turnip.webp",
-        "supply": 350
+        "supply": 350,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Turnip Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "2309": {
         "name": "Groovy Gramophone",
         "boost": "-50% Growth Time in Crop Machine",
         "image": "groovy_gramophone.webp",
-        "supply": 310
+        "supply": 310,
+        "mathematics_1": {
+          "category": "crop_growth_time",
+          "target": "Growth Time in Crop Machine",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "2318": {
         "name": "Poseidon",
         "boost": "+1 Fish during Autumn",
         "image": "poseidon.webp",
-        "supply": 819
+        "supply": 819,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fish during Autumn",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2335": {
         "name": "Pet Bowls",
         "boost": "+10 Pet XP per food request.",
         "image": "pet_bowls.webp",
-        "supply": 6145
+        "supply": 6145,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2525": {
         "name": "Baby Cow",
         "boost": "+10 cow xp from animal affection tools",
         "image": "baby_cow.webp",
-        "supply": 490
+        "supply": 490,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "cow xp from animal affection tools",
+          "mathematics_operation": "add",
+          "calc": 10
+        }
       },
       "2528": {
         "name": "Janitor Chicken",
         "boost": "-5% chicken sleep time",
         "image": "janitor_chicken.webp",
-        "supply": 1978
+        "supply": 1978,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Chicken",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        }
       },
       "2530": {
         "name": "Sleepy Chicken",
         "boost": "Chickens cannot get sick during autumn",
         "image": "sleepy_chicken.webp",
-        "supply": 1741
+        "supply": 1741,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2532": {
         "name": "Astronaut Sheep",
         "boost": "+0.1 Wool",
         "image": "astronaut_sheep.webp",
-        "supply": 387
+        "supply": 387,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Wool",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2537": {
         "name": "Mermaid Sheep",
         "boost": "-5% Sheep Feed",
         "image": "mermaid_sheep.webp",
-        "supply": 284
+        "supply": 284,
+        "mathematics_1": {
+          "category": "animal_feed_cost",
+          "target": "Sheep",
+          "mathematics_operation": "multiply",
+          "calc": 0.95
+        }
       },
       "2538": {
         "name": "Squid Chicken",
         "boost": "+0.1 Egg",
         "image": "squid_chicken.webp",
-        "supply": 1035
+        "supply": 1035,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2539": {
         "name": "Anemone Flower",
         "boost": "+1 Fishing minigame attempt",
         "image": "anemone_flower.webp",
-        "supply": 5695
+        "supply": 5695,
+        "mathematics_1": {
+          "category": "fishing_reels",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2713": {
         "name": "Giant Gold Bone",
         "boost": "+2 Daily Cheers",
         "image": "giant_gold_bone.webp",
-        "supply": 967
+        "supply": 967,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Daily Cheers",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "2714": {
         "name": "Lunar Temple",
         "boost": "+1 help progress to player's monuments",
         "image": "lunar_temple.webp",
-        "supply": 425
+        "supply": 425,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "2715": {
         "name": "Magma Stone",
         "boost": "-15% Lava Pit Time, +0.15 Obsidian",
         "image": "magma_stone.webp",
-        "supply": 210
+        "supply": 210,
+        "mathematics_1": {
+          "category": "lava_pit_time",
+          "target": "Lava Pit",
+          "mathematics_operation": "multiply",
+          "calc": 0.85
+        },
+        "mathematics_2": {
+          "category": "obsidian_yield",
+          "target": "Obsidian",
+          "mathematics_operation": "add",
+          "calc": 0.15
+        }
       },
       "2825": {
         "name": "Oaken",
         "boost": "+0.25 Acorn",
         "image": "oaken.webp",
-        "supply": 616
+        "supply": 616,
+        "mathematics_1": {
+          "category": "wood_yield",
+          "target": "Acorn",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "2826": {
         "name": "Meerkat",
         "boost": "+5 daily Desert Digs attempts, +1 Sand",
         "image": "meerkat.webp",
-        "supply": 867
+        "supply": 867,
+        "mathematics_1": {
+          "category": "desert_digs",
+          "target": "Sand",
+          "mathematics_operation": "add",
+          "calc": 5
+        },
+        "mathematics_2": {
+          "category": "sand_yield",
+          "target": "Sand",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "2828": {
         "name": "Crimstone Clam",
         "boost": "-10% Crimstone recovery time, 10% chance for Crimstone to recover instantly",
         "image": "crimstone_clam.webp",
-        "supply": 267
+        "supply": 267,
+        "mathematics_1": {
+          "category": "crimstone_recovery_time",
+          "target": "Crimstone",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        },
+        "mathematics_2": {
+          "category": "crimstone_instant_recovery",
+          "target": "Crimstone",
+          "mathematics_operation": "critical_chance",
+          "chance": 10,
+          "calc": 1
+        }
       },
       "2992": {
         "name": "Navigation Table",
         "image": "navigation_table.webp",
         "boost": "+100% Map Piece Drop",
-        "supply": 163
+        "supply": 163,
+        "mathematics_1": {
+          "category": "map_piece_drop",
+          "target": "Map Piece",
+          "mathematics_operation": "multiply",
+          "calc": 2
+        }
       },
       "2993": {
         "name": "Royal Crab Pot",
         "image": "royal_crab_pot.webp",
         "boost": "Trap without Trap Pots",
-        "supply": 69
+        "supply": 69,
+        "mathematics_1": {
+          "category": "crustacean_trap",
+          "target": "Trap",
+          "mathematics_operation": "free_tool",
+          "calc": 1
+        }
       },
       "2994": {
         "name": "Crab House",
         "image": "crab_house.webp",
         "boost": "+2 Crustacean yield",
-        "supply": 82
+        "supply": 82,
+        "mathematics_1": {
+          "category": "crustacean_yield",
+          "target": "Crustacean",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "2995": {
         "name": "Speed Trap",
         "image": "speed_trap.webp",
         "boost": "-20% Trap Pot time",
-        "supply": 133
+        "supply": 133,
+        "mathematics_1": {
+          "category": "crustacean_trap_time",
+          "target": "Trap",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "2996": {
         "name": "Flamingo Chicken",
         "image": "flamingo_chicken.webp",
         "boost": "2.5% Chicken Sleep Time",
-        "supply": 3644
+        "supply": 3644,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Chicken",
+          "mathematics_operation": "multiply",
+          "calc": 0.975
+        }
       },
       "2997": {
         "name": "Salt Crystal Flower",
         "image": "salt_crystal_flower.webp",
         "boost": "5% chance for +1 flower",
-        "supply": 28205
+        "supply": 28205,
+        "mathematics_1": {
+          "category": "flower_yield",
+          "target": "all",
+          "mathematics_operation": "critical_chance",
+          "chance": 5,
+          "calc": 1
+        }
       },
       "2998": {
         "name": "Spa Cow",
         "image": "spa_cow.webp",
         "boost": "+0.1 Milk",
-        "supply": 721
+        "supply": 721,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Milk",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "2999": {
         "name": "Spa Sheep",
         "image": "spa_sheep.webp",
         "boost": "+5 Sheep XP",
-        "supply": 551
+        "supply": 551,
+        "mathematics_1": {
+          "category": "animal_xp",
+          "target": "Sheep",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "3001": {
         "name": "Deep Sea Slug",
         "image": "deep_sea_slug.webp",
         "boost": "+5 daily fishing casts / +1 Worm from Compost",
-        "supply": 82
+        "supply": 82,
+        "mathematics_1": {
+          "category": "fishing_reels",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 5
+        },
+        "mathematics_2": {
+          "category": "compost_yield",
+          "target": "Worm",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "3018": {
         "name": "Dino Egg Trophy",
         "image": "dino_egg_trophy.webp",
         "boost": "Speed up with Coins instead of gems (50 Coins/Gem, up to 20,000 Coins/day)",
-        "supply": 5415
+        "supply": 5415,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "3031": {
         "name": "Dumbo Octopus",
         "image": "dumbo_octopus.webp",
         "boost": "20% chance of +1 Fish",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "fish_yield",
+          "target": "all",
+          "mathematics_operation": "critical_chance",
+          "chance": 20,
+          "calc": 1
+        }
       },
       "3033": {
         "name": "Ascended Chicken",
         "image": "ascended_chicken.webp",
         "boost": "+0.1 Egg",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Egg",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "3034": {
         "name": "Ascended Cow",
         "image": "ascended_cow.webp",
         "boost": "x0.975 Cow Sleep Time",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "animal_sleep_time",
+          "target": "Cow",
+          "mathematics_operation": "multiply",
+          "calc": 0.975
+        }
       },
       "3035": {
         "name": "Ascended Sheep",
         "image": "ascended_sheep.webp",
         "boost": "+0.05 Wool",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Wool",
+          "mathematics_operation": "add",
+          "calc": 0.05
+        }
       },
       "3036": {
         "name": "Ruins Flower",
         "image": "ruins_flower.webp",
         "boost": "+0.05 Honey from full beehives",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "honey_yield",
+          "target": "Beehive",
+          "mathematics_operation": "add",
+          "calc": 0.05
+        }
       },
       "3042": {
         "name": "Ascension Monument",
         "image": "ascension_monument.webp",
         "boost": "x0.8 Expansion Time",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "expansion_time",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "3044": {
         "name": "Ascended Idol",
         "image": "ascended_idol.webp",
         "boost": "Harvest Salt without Salt Rakes",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "salt_harvest",
+          "target": "Salt Rake",
+          "mathematics_operation": "free_tool",
+          "calc": 1
+        }
       },
       "3046": {
         "name": "Astrolabe",
         "image": "astrolabe.webp",
         "boost": "15% chance to double Fermentation & Spice Rack output, x1.05 XP from Aged Fish",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "bumpkin_xp",
+          "target": "Aged Fish",
+          "mathematics_operation": "multiply",
+          "calc": 1.05
+        },
+        "mathematics_2": {
+          "category": "aging_yield",
+          "target": "Fermentation",
+          "mathematics_operation": "critical_chance",
+          "chance": 15,
+          "calc": 2
+        }
       },
       "3050": {
         "name": "Otty the Otter",
         "image": "otty_the_otter.webp",
         "boost": "+5 daily fishing reels, +1 random fish every 15th reel",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "fishing_reels",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "3051": {
         "name": "Salt Worker Gnome",
         "image": "salt_worker_gnome.webp",
         "boost": "x0.7 Salt Node recovery time, +2 Salt per harvest",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "salt_recovery_time",
+          "target": "Salt Node",
+          "mathematics_operation": "multiply",
+          "calc": 0.7
+        },
+        "mathematics_2": {
+          "category": "salt_yield",
+          "target": "Salt Node",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "3053": {
         "name": "Vibraphone",
         "image": "vibraphone.webp",
         "boost": "Animal feed buffs last twice as many harvests",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "animal_feed_buff_duration",
+          "target": "all",
+          "mathematics_operation": "multiply",
+          "calc": 2
+        }
       },
       "3054": {
         "name": "Winged Vase",
         "image": "winged_vase.webp",
         "boost": "+14% Prime Aged chance (added to base)",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "aging_prime",
+          "target": "Aged Fish",
+          "mathematics_operation": "add_percentage",
+          "calc": 14
+        }
       }
     },
     "wearables": {
@@ -1021,535 +2105,1075 @@
         "name": "Chef Apron",
         "boost": "+20% Cake Delivery Profit",
         "image": "Chef Apron.webp",
-        "supply": 3010
+        "supply": 3010,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Cake Delivery Profit",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "27": {
         "name": "Sunflower Amulet",
         "boost": "+10% Sunflower",
         "image": "Sunflower Amulet.webp",
-        "supply": 5001
+        "supply": 5001,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Sunflower",
+          "mathematics_operation": "multiply",
+          "calc": 1.1
+        }
       },
       "28": {
         "name": "Carrot Amulet",
         "boost": "x0.8 Carrot Plot Growth time",
         "image": "Carrot Amulet.webp",
-        "supply": 5000
+        "supply": 5000,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Carrot Plot Growth time",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "29": {
         "name": "Beetroot Amulet",
         "boost": "+20% Beetroot",
         "image": "Beetroot Amulet.webp",
-        "supply": 3000
+        "supply": 3000,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Beetroot",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "30": {
         "name": "Green Amulet",
         "boost": "Chance 10x Crops",
         "image": "Green Amulet.webp",
-        "supply": 800
+        "supply": 800,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "31": {
         "name": "Sunflower Shield",
         "boost": "Free Sunflower Seeds",
         "image": "Sunflower Shield.webp",
-        "supply": 68
+        "supply": 68,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "56": {
         "name": "Parsnip",
         "boost": "+20% Parsnip",
         "image": "Parsnip.webp",
-        "supply": 152
+        "supply": 152,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Parsnip",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "58": {
         "name": "Golden Spatula",
         "boost": "+10% Bumpkin XP",
         "image": "Golden Spatula.webp",
-        "supply": 405
+        "supply": 405,
+        "mathematics_1": {
+          "calc": 1.1,
+          "category": "bumpkin_xp",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        }
       },
       "72": {
         "name": "Devil Wings",
         "boost": "30% Chance of Instant Crops",
         "image": "Devil Wings.webp",
-        "supply": 25
+        "supply": 25,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Chance of Instant Crops",
+          "mathematics_operation": "multiply",
+          "calc": 1.3
+        }
       },
       "73": {
         "name": "Angel Wings",
         "boost": "30% Chance of Instant Crops",
         "image": "Angel Wings.webp",
-        "supply": 25
+        "supply": 25,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Chance of Instant Crops",
+          "mathematics_operation": "multiply",
+          "calc": 1.3
+        }
       },
       "124": {
         "name": "Eggplant Onesie",
         "boost": "+0.1 Eggplant",
         "image": "Eggplant Onesie.webp",
-        "supply": 5150
+        "supply": 5150,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Eggplant",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "128": {
         "name": "Mushroom Hat",
         "boost": "+0.1 Wild Mushroom",
         "image": "Mushroom Hat.webp",
-        "supply": 999
+        "supply": 999,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Wild Mushroom",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "161": {
         "name": "Luna's Hat",
         "boost": "x0.5 Cooking Time",
         "image": "Luna's Hat.webp",
-        "supply": 55
+        "supply": 55,
+        "mathematics_1": {
+          "calc": 0.5,
+          "category": "cooking_time",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        }
       },
       "162": {
         "name": "Infernal Pitchfork",
         "boost": "+3 Crops",
         "image": "Infernal Pitchfork.webp",
-        "supply": 20
+        "supply": 20,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Crops",
+          "mathematics_operation": "add",
+          "calc": 3
+        }
       },
       "164": {
         "name": "Cattlegrim",
         "boost": "+0.25 Animal Produce",
         "image": "Cattlegrim.webp",
-        "supply": 210
+        "supply": 210,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Animal Produce",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "174": {
         "name": "Corn Onesie",
         "boost": "+0.1 Corn",
         "image": "Corn Onesie.webp",
-        "supply": 2960
+        "supply": 2960,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Corn",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "224": {
         "name": "Ancient Rod",
         "boost": "Cast without rod",
         "image": "Ancient Rod.webp",
-        "supply": 105
+        "supply": 105,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "230": {
         "name": "Crab Trap",
         "boost": "+1 Crab when digging or drilling",
         "image": "Crab Trap.webp",
-        "supply": 611
+        "supply": 611,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Crab when digging or drilling",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "238": {
         "name": "Saw Fish",
         "boost": "+5 daily fishing reels",
         "image": "Saw Fish.webp",
-        "supply": 1213
+        "supply": 1213,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "daily fishing reels",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "250": {
         "name": "Banana Amulet",
         "boost": "+0.5 Bananas",
         "image": "Banana Amulet.webp",
-        "supply": 500
+        "supply": 500,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Bananas",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "251": {
         "name": "Banana Onesie",
         "boost": "x0.8 Banana Growth Time",
         "image": "Banana Onesie.webp",
-        "supply": 2888
+        "supply": 2888,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Banana Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "257": {
         "name": "Pickaxe Shark",
         "boost": "x0.85 Gold recovery time",
         "image": "Pickaxe Shark.webp",
-        "supply": 296
+        "supply": 296,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Gold recovery time",
+          "mathematics_operation": "multiply",
+          "calc": 0.85
+        }
       },
       "276": {
         "name": "Bee Suit",
         "boost": "+0.1 Honey per Full Beehive",
         "image": "Bee Suit.webp",
-        "supply": 2636
+        "supply": 2636,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Honey per Full Beehive",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "278": {
         "name": "Beekeeper Hat",
         "boost": "+0.2 Honey Production Speed",
         "image": "Beekeeper Hat.webp",
-        "supply": 2077
+        "supply": 2077,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Honey Production Speed",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "282": {
         "name": "Crimstone Armor",
         "boost": "+0.1 Crimstones",
         "image": "Crimstone Armor.webp",
-        "supply": 2822
+        "supply": 2822,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Crimstones",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "284": {
         "name": "Crimstone Hammer",
         "boost": "+2 Crimstones on 5th mine",
         "image": "Crimstone Hammer.webp",
-        "supply": 105
+        "supply": 105,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "285": {
         "name": "Crimstone Amulet",
         "boost": "x0.8 Crimstone Cooldown Time",
         "image": "Crimstone Amulet.webp",
-        "supply": 530
+        "supply": 530,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Crimstone Cooldown Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "291": {
         "name": "Honeycomb Shield",
         "boost": "+1 Honey per Full Beehive",
         "image": "Honeycomb Shield.webp",
-        "supply": 100
+        "supply": 100,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Honey per Full Beehive",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "292": {
         "name": "Hornet Mask",
         "boost": "2x base Bee Swarm chance",
         "image": "Hornet Mask.webp",
-        "supply": 315
+        "supply": 315,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "293": {
         "name": "Flower Crown",
         "boost": "x0.5 Flower Growth Time",
         "image": "Flower Crown.webp",
-        "supply": 105
+        "supply": 105,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Flower Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "308": {
         "name": "Oil Can",
         "boost": "+2 Oil",
         "image": "Oil Can.webp",
-        "supply": 630
+        "supply": 630,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Oil",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "309": {
         "name": "Non La Hat",
         "boost": "+1 Rice",
         "image": "Non La Hat.webp",
-        "supply": 530
+        "supply": 530,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Rice",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "310": {
         "name": "Olive Shield",
         "boost": "+1 Olive",
         "image": "Olive Shield.webp",
-        "supply": 530
+        "supply": 530,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Olive",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "311": {
         "name": "Paw Shield",
         "boost": "+25% Faction Pet Satiation and Marks Awarded",
         "image": "Paw Shield.webp",
-        "supply": 255
+        "supply": 255,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "Faction Pet Satiation and Marks Awarded",
+          "mathematics_operation": "multiply",
+          "calc": 1.25
+        }
       },
       "314": {
         "name": "Pan",
         "boost": "+25% Bumpkin XP",
         "image": "Pan.webp",
-        "supply": 60
+        "supply": 60,
+        "mathematics_1": {
+          "calc": 1.25,
+          "category": "bumpkin_xp",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        }
       },
       "317": {
         "name": "Olive Royalty Shirt",
         "boost": "+0.25 Olive",
         "image": "Olive Royalty Shirt.webp",
-        "supply": 2036
+        "supply": 2036,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Olive",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "319": {
         "name": "Tofu Mask",
         "boost": "+0.1 Soybean",
         "image": "Tofu Mask.webp",
-        "supply": 5397
+        "supply": 5397,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Soybean",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "350": {
         "name": "Camel Onesie",
         "boost": "+0.1 Fruit Patch Yield",
         "image": "Camel Onesie.webp",
-        "supply": 3070
+        "supply": 3070,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fruit Patch Yield",
+          "mathematics_operation": "add",
+          "calc": 0.1
+        }
       },
       "354": {
         "name": "Dev Wrench",
         "boost": "x0.5 Oil Regeneration Time",
         "image": "Dev Wrench.webp",
-        "supply": 55
+        "supply": 55,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Oil Regeneration Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "360": {
         "name": "Oil Overalls",
         "boost": "+10 Oil",
         "image": "Oil Overalls.webp",
-        "supply": 115
+        "supply": 115,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Oil",
+          "mathematics_operation": "add",
+          "calc": 10
+        }
       },
       "369": {
         "name": "Ancient Shovel",
         "boost": "Dig treasure without Sand Shovel",
         "image": "Ancient Shovel.webp",
-        "supply": 30
+        "supply": 30,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "370": {
         "name": "Infernal Drill",
         "boost": "Drill Oil without Oil Drill",
         "image": "Infernal Drill.webp",
-        "supply": 55
+        "supply": 55,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "371": {
         "name": "Lemon Shield",
         "boost": "+1 Lemon",
         "image": "Lemon Shield.webp",
-        "supply": 265
+        "supply": 265,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Lemon",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "373": {
         "name": "Grape Pants",
         "boost": "+0.2 Grapes",
         "image": "Grape Pants.webp",
-        "supply": 567
+        "supply": 567,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Grapes",
+          "mathematics_operation": "add",
+          "calc": 0.2
+        }
       },
       "400": {
         "name": "Infernal Bullwhip",
         "boost": "x0.5 Feed to Barn Animal",
         "image": "Infernal Bullwhip.webp",
-        "supply": 210
+        "supply": 210,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Feed to Barn Animal",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "401": {
         "name": "White Sheep Onesie",
         "boost": "+0.25 Wool",
         "image": "White Sheep Onesie.webp",
-        "supply": 2965
+        "supply": 2965,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Wool",
+          "mathematics_operation": "add",
+          "calc": 0.25
+        }
       },
       "402": {
         "name": "Black Sheep Onesie",
         "boost": "+2 Wool",
         "image": "Black Sheep Onesie.webp",
-        "supply": 270
+        "supply": 270,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Wool",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "403": {
         "name": "Chicken Suit",
         "boost": "+1 Feather",
         "image": "Chicken Suit.webp",
-        "supply": 523
+        "supply": 523,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Feather",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "405": {
         "name": "Merino Jumper",
         "boost": "+1 Merino Wool",
         "image": "Merino Jumper.webp",
-        "supply": 445
+        "supply": 445,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Merino Wool",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "406": {
         "name": "Dream Scarf",
         "boost": "x0.8 Sheep Sleep Time",
         "image": "Dream Scarf.webp",
-        "supply": 1188
+        "supply": 1188,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Sheep Sleep Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "407": {
         "name": "Cowbell Necklace",
         "boost": "+2 Milk",
         "image": "Cowbell Necklace.webp",
-        "supply": 265
+        "supply": 265,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Milk",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "408": {
         "name": "Milk Apron",
         "boost": "+0.5 Milk",
         "image": "Milk Apron.webp",
-        "supply": 717
+        "supply": 717,
+        "mathematics_1": {
+          "category": "animal_produce",
+          "target": "Milk",
+          "mathematics_operation": "add",
+          "calc": 0.5
+        }
       },
       "410": {
         "name": "Sol & Luna",
         "boost": "x0.5 Crafting Box Time",
         "image": "Sol & Luna.webp",
-        "supply": 175
+        "supply": 175,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Crafting Box Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "413": {
         "name": "Rice Shirt",
         "image": "Rice Shirt.webp",
         "boost": "x0.5 Oil to plant Rice, +1 Rice",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Oil to plant Rice, +1 Rice",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "414": {
         "name": "Sickle",
         "boost": "+2 Wheat",
         "image": "Sickle.webp",
-        "supply": 304
+        "supply": 304,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Wheat",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "422": {
         "name": "Ladybug Suit",
         "boost": "x0.75 Onion Seed coin cost",
         "image": "Ladybug Suit.webp",
-        "supply": 864
+        "supply": 864,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Onion Seed coin cost",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "424": {
         "name": "Crab Hat",
         "boost": "+1 treasure when fishing",
         "image": "Crab Hat.webp",
-        "supply": 1007
+        "supply": 1007,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "treasure when fishing",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "427": {
         "name": "Squirrel Onesie",
         "boost": "+1 Acorn",
         "image": "Squirrel Onesie.webp",
-        "supply": 450
+        "supply": 450,
+        "mathematics_1": {
+          "category": "wood_yield",
+          "target": "Acorn",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "431": {
         "name": "Solflare Aegis",
         "boost": "x0.5 Plot Crop Time in Summer",
         "image": "Solflare Aegis.webp",
-        "supply": 150
+        "supply": 150,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Plot Crop Time in Summer",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "432": {
         "name": "Blossom Ward",
         "boost": "+1 Yield to Spring Plot Crop in Spring",
         "image": "Blossom Ward.webp",
-        "supply": 300
+        "supply": 300,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Yield to Spring Plot Crop in Spring",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "433": {
         "name": "Autumn's Embrace",
         "boost": "x0.5 Plot Crop Time in Autumn",
         "image": "Autumn's Embrace.webp",
-        "supply": 150
+        "supply": 150,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Plot Crop Time in Autumn",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "434": {
         "name": "Frozen Heart",
         "boost": "+1 Yield to Winter Plot Crop in Winter",
         "image": "Frozen Heart.webp",
-        "supply": 300
+        "supply": 300,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Yield to Winter Plot Crop in Winter",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "454": {
         "name": "Broccoli Hat",
         "boost": "x0.5 Broccoli Plot Growth Time",
         "image": "Broccoli Hat.webp",
-        "supply": 350
+        "supply": 350,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Broccoli Plot Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "456": {
         "name": "Medic Apron",
         "boost": "x0.5 Medicine to heal animals",
         "image": "Medic Apron.webp",
-        "supply": 200
+        "supply": 200,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Medicine to heal animals",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "457": {
         "name": "Obsidian Necklace",
         "boost": "x0.5 Lava Pit Time",
         "image": "Obsidian Necklace.webp",
-        "supply": 205
+        "supply": 205,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Lava Pit Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "458": {
         "name": "Red Pepper Onesie",
         "boost": "x0.75 Red Pepper Growth Time",
         "image": "Red Pepper Onesie.webp",
-        "supply": 10920
+        "supply": 10920,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Red Pepper Growth Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "461": {
         "name": "Oracle Syringe",
         "boost": "Heal animals for free",
         "image": "Oracle Syringe.webp",
-        "supply": 237
+        "supply": 237,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "476": {
         "name": "Turd Topper",
         "boost": "+1 Fertiliser from Composters",
         "image": "Turd Topper.webp",
-        "supply": 9217
+        "supply": 9217,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Fertiliser from Composters",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "477": {
         "name": "Architect Ruler",
         "boost": "x0.75 Crafting Box Time",
         "image": "Architect Ruler.webp",
-        "supply": 1806
+        "supply": 1806,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Crafting Box Time",
+          "mathematics_operation": "multiply",
+          "calc": 0.75
+        }
       },
       "479": {
         "name": "Oil Gallon",
         "boost": "+5 Oil",
         "image": "Oil Gallon.webp",
-        "supply": 275
+        "supply": 275,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Oil",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "480": {
         "name": "Alchemist Apron",
         "image": "Alchemist Apron.webp",
         "boost": "x0.5 Potion House fee",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Potion House fee",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "481": {
         "name": "Lava Swimwear",
         "boost": "x0.5 Lava Pit resources",
         "image": "Lava Swimwear.webp",
-        "supply": 250
+        "supply": 250,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Lava Pit resources",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "499": {
         "name": "Luna's Crescent",
         "boost": "x0.5 Power Skill Cooldown",
         "image": "Luna's Crescent.webp",
-        "supply": 150
+        "supply": 150,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Power Skill Cooldown",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       },
       "500": {
         "name": "Master Chef's Cleaver",
         "boost": "x0.85 Cooking Time, 10% chance of +1 Food from cooking",
         "image": "Master Chef's Cleaver.webp",
-        "supply": 200
+        "supply": 200,
+        "mathematics_1": {
+          "calc": 0.85,
+          "category": "cooking_time",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        },
+        "mathematics_2": {
+          "calc": 1.1,
+          "category": "bumpkin_xp",
+          "target_food": "all",
+          "mathematics_operation": "multiply"
+        }
       },
       "501": {
         "name": "Training Whistle",
         "boost": "+1 Leather",
         "image": "Training Whistle.webp",
-        "supply": 350
+        "supply": 350,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Leather",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "518": {
         "name": "Walrus Onesie",
         "boost": "+5 Pet Energy",
         "image": "Walrus Onesie.webp",
-        "supply": 1897
+        "supply": 1897,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Pet Energy",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "519": {
         "name": "Crimstone Spikes Hair",
         "boost": "Mine crimstone without Gold Pickaxes",
         "image": "Crimstone Spikes Hair.webp",
-        "supply": 80
+        "supply": 80,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "520": {
         "name": "Paw Aura",
         "boost": "Feed pets for free",
         "image": "Paw Aura.webp",
-        "supply": 110
+        "supply": 110,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "521": {
         "name": "Victoria's Apron",
         "boost": "33% chance next reset is free after feeding pet fully.",
         "image": "Victoria's Apron.webp",
-        "supply": 200
+        "supply": 200,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "chance next reset is free after feeding pet fully.",
+          "mathematics_operation": "multiply",
+          "calc": 1.33
+        }
       },
       "522": {
         "name": "Beast Shoes",
         "boost": "Pet XP +100/+250 (Med/Hard)",
         "image": "Beast Shoes.webp",
-        "supply": 280
+        "supply": 280,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "526": {
         "name": "Corn Silk Hair",
         "boost": "+2 Corn",
         "image": "Corn Silk Hair.webp",
-        "supply": 556
+        "supply": 556,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Corn",
+          "mathematics_operation": "add",
+          "calc": 2
+        }
       },
       "555": {
         "name": "Pistol Shrimp",
         "image": "Pistol Shrimp.webp",
         "boost": "20% chance to get +1 crustacean yield",
-        "supply": 163
+        "supply": 163,
+        "mathematics_1": {
+          "category": "yield_boost",
+          "target": "chance to get +1 crustacean yield",
+          "mathematics_operation": "multiply",
+          "calc": 1.2
+        }
       },
       "559": {
         "name": "Bubble Aura",
         "image": "Bubble Aura.webp",
         "boost": "-20% Fish Market delivery time & 20% chance for +1 yield from fish processing",
-        "supply": 829
+        "supply": 829,
+        "mathematics_1": {
+          "category": "time_reduction",
+          "target": "Fish Market delivery time & 20% chance for +1 yield from fish processing",
+          "mathematics_operation": "multiply",
+          "calc": 0.8
+        }
       },
       "560": {
         "name": "Deep Sea Salt Cave Background",
         "image": "Deep Sea Salt Cave Background.webp",
         "boost": "+5 Salt per harvest",
-        "supply": 1730
+        "supply": 1730,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Salt per harvest",
+          "mathematics_operation": "add",
+          "calc": 5
+        }
       },
       "562": {
         "name": "Shrimp Onesie",
         "image": "Shrimp Onesie.webp",
         "boost": "+1 random fish every 15th reel",
-        "supply": 13554
+        "supply": 13554,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "576": {
         "name": "Ascension Staff",
         "image": "Ascension Staff.webp",
         "boost": "x0.9 Power Skill Cooldown",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Power Skill Cooldown",
+          "mathematics_operation": "multiply",
+          "calc": 0.9
+        }
       },
       "578": {
         "name": "Salt Bottle Onesie",
         "image": "Salt Bottle Onesie.webp",
         "boost": "+1 Spice Rack output",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "crop_yield",
+          "target": "Spice Rack output",
+          "mathematics_operation": "add",
+          "calc": 1
+        }
       },
       "582": {
         "name": "Moon Hair",
         "image": "Moon Hair.webp",
         "boost": "+2 Full Moon Seed stock, +0.5 Full Moon Fruit",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "utility",
+          "target": "special",
+          "mathematics_operation": "none",
+          "calc": 1
+        }
       },
       "586": {
         "name": "Surfer Hair",
         "image": "Surfer Hair.webp",
         "boost": "x0.5 Salt cost for aging fish",
-        "supply": 0
+        "supply": 0,
+        "mathematics_1": {
+          "category": "multiplier",
+          "target": "Salt cost for aging fish",
+          "mathematics_operation": "multiply",
+          "calc": 0.5
+        }
       }
     }
   }
