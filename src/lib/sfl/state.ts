@@ -186,13 +186,14 @@ export const SflUserState = {
       state.skills[skillName] = rank
     } else {
       delete state.skills[skillName]
+      delete state.buffs[skillName]
     }
     saveStateToStorage(state)
   },
 
   /** Alterna una habilidad (si está activa la apaga, si no, activa rango 1) */
   toggleSkill(skillName: string): number {
-    const current = this.getSkillRank(skillName)
+    const current = this.getSkillRank(skillName) || (this.isBuffActive(skillName) ? 1 : 0)
     const nextRank = current > 0 ? 0 : 1
     this.setSkillRank(skillName, nextRank)
     return nextRank
@@ -206,7 +207,9 @@ export const SflUserState = {
 
   /** Comprueba si un buff específico está activo */
   isBuffActive(buffIdOrName: string): boolean {
-    return Boolean(this.getState().buffs[String(buffIdOrName)])
+    const id = String(buffIdOrName)
+    const state = this.getState()
+    return Boolean(state.buffs[id] || (state.skills[id] && state.skills[id] > 0))
   },
 
   /** Activa o desactiva un buff específico */
@@ -217,6 +220,7 @@ export const SflUserState = {
       state.buffs[id] = true
     } else {
       delete state.buffs[id]
+      delete state.skills[id]
     }
     saveStateToStorage(state)
   },

@@ -1077,29 +1077,34 @@ const formatAstroDescription = (skill) => {
       }
     });
     
+    // Helper para verificar si un buff/skill/consumible/other está activo en activeSkills o activeBuffs
+    const isBuffOrSkillActive = (name, id) => {
+      return Boolean(
+        (activeSkills && activeSkills[name] && activeSkills[name] > 0) ||
+        (activeBuffs && (activeBuffs.has(name) || (id && activeBuffs.has(String(id)))))
+      );
+    };
+
+    // Others XP Buffs (VIP Pass, Blossom Beard, Luminous Anglerfish, Faction Pet)
+    if (isBuffOrSkillActive("VIP Pass", 9001)) {
+      boostedExp *= 1.1;
+    }
+    if (isBuffOrSkillActive("Blossom Beard", 9002)) {
+      boostedExp *= 1.1;
+    }
+    if (isBuffOrSkillActive("Luminous Anglerfish", 9004) && isTargetMatch(item, "Fish")) {
+      boostedExp *= 1.5;
+    }
+    if (activeSkills && activeSkills["Faction Pet"]) {
+      const petBonus = activeSkills["Faction Pet"] === 1 ? 0.1 : activeSkills["Faction Pet"] === 2 ? 0.2 : activeSkills["Faction Pet"] === 3 ? 0.3 : 0.5;
+      boostedExp *= (1 + petBonus);
+    }
+
     // Skills Logic for XP (Multiplicative compounding according to SFL engine)
     if (activeSkills) {
       Object.entries(activeSkills).forEach(([skillName, rank]) => {
         if (!rank || rank <= 0) return;
-
-        // Others XP Buffs (VIP Pass, Blossom Beard, Luminous Anglerfish, Faction Pet)
-        if (skillName === "VIP Pass") {
-          boostedExp *= 1.1;
-          return;
-        }
-        if (skillName === "Blossom Beard") {
-          boostedExp *= 1.1;
-          return;
-        }
-        if (skillName === "Luminous Anglerfish" && isTargetMatch(item, "Fish")) {
-          boostedExp *= 1.5;
-          return;
-        }
-        if (skillName === "Faction Pet") {
-          const petBonus = rank === 1 ? 0.1 : rank === 2 ? 0.2 : rank === 3 ? 0.3 : 0.5;
-          boostedExp *= (1 + petBonus);
-          return;
-        }
+        if (["VIP Pass", "Blossom Beard", "Luminous Anglerfish", "Faction Pet"].includes(skillName)) return;
 
         const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
         if (!skill) return;
@@ -1136,13 +1141,6 @@ const formatAstroDescription = (skill) => {
         }
       });
     }
-
-    // Fallback de buffs activos para VIP Pass (por ID 9001 o nombre)
-    if (activeBuffs && (activeBuffs.has("9001") || activeBuffs.has("VIP Pass"))) {
-      if (!activeSkills || !activeSkills["VIP Pass"]) {
-        boostedExp *= 1.1;
-      }
-    }
     
     return boostedExp + additions;
   };
@@ -1164,38 +1162,42 @@ const formatAstroDescription = (skill) => {
 
     let timeMultiplier = 1;
     
-    activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
-      const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
-      if (!skill) return;
-      const math1 = skill.mathematics_1?.calc_by_rank[`rank_${rank}`];
-      
-      // Others Time Buffs
-      if (skillName === "Desert Gnome") { timeMultiplier *= (math1 !== undefined ? math1 : 0.9); }
-      if (skillName === "Time Warp Totem" || skillName === "Super Totem") { timeMultiplier *= (math1 !== undefined ? math1 : 0.5); }
-      if (skillName === "Gourmet Hourglass") { timeMultiplier *= (math1 !== undefined ? math1 : 0.5); }
-      if (skillName === "Faction Medallion") { timeMultiplier *= (math1 !== undefined ? math1 : 0.75); }
-      
-      // Fast Feasts (Fire Pit and Kitchen)
-      if (skillName === "Fast Feasts" && (item.building === "Fire Pit" || item.building === "Kitchen")) {
-        timeMultiplier *= math1;
-      }
-      // Frosted Cakes (Bakery / Cakes)
-      if (skillName === "Frosted Cakes" && (item.building === "Bakery" || item.name.includes("Cake"))) {
-        timeMultiplier *= math1;
-      }
-      // Swift Sizzle (Fire Pit con oil)
-      if (skillName === "Swift Sizzle" && item.building === "Fire Pit") {
-        timeMultiplier *= math1;
-      }
-      // Turbo Fry (Kitchen con oil)
-      if (skillName === "Turbo Fry" && item.building === "Kitchen") {
-        timeMultiplier *= math1;
-      }
-      // Fry Frenzy (Deli con oil)
-      if (skillName === "Fry Frenzy" && item.building === "Deli") {
-        timeMultiplier *= math1;
-      }
-    });
+    // Helper para verificar si un buff/skill/consumible/other está activo en activeSkills o activeBuffs
+    const isTimeBuffActive = (name, id) => {
+      return Boolean(
+        (activeSkills && activeSkills[name] && activeSkills[name] > 0) ||
+        (activeBuffs && (activeBuffs.has(name) || (id && activeBuffs.has(String(id)))))
+      );
+    };
+
+    // Reducciones de tiempo de Consumibles, Otros y Santuarios
+    if (isTimeBuffActive("Desert Gnome", 9003)) { timeMultiplier *= 0.9; }
+    if (isTimeBuffActive("Time Warp Totem", 9015) || isTimeBuffActive("Super Totem", 9016)) { timeMultiplier *= 0.5; }
+    if (isTimeBuffActive("Gourmet Hourglass", 9007)) { timeMultiplier *= 0.5; }
+    if (isTimeBuffActive("Faction Medallion", 9008)) { timeMultiplier *= 0.75; }
+    if (isTimeBuffActive("Boar Shrine", 9018)) { timeMultiplier *= 0.8; }
+    if (isTimeBuffActive("Legendary Shrine", 9019)) { timeMultiplier *= 0.5; }
+
+    // Fast Feasts (Fire Pit and Kitchen)
+    if (activeSkills && activeSkills["Fast Feasts"] && (item.building === "Fire Pit" || item.building === "Kitchen")) {
+      timeMultiplier *= 0.9;
+    }
+    // Frosted Cakes (Bakery / Cakes)
+    if (activeSkills && activeSkills["Frosted Cakes"] && (item.building === "Bakery" || item.name.includes("Cake"))) {
+      timeMultiplier *= 0.8;
+    }
+    // Swift Sizzle (Fire Pit con oil)
+    if (activeSkills && activeSkills["Swift Sizzle"] && item.building === "Fire Pit") {
+      timeMultiplier *= 0.7;
+    }
+    // Turbo Fry (Kitchen con oil)
+    if (activeSkills && activeSkills["Turbo Fry"] && item.building === "Kitchen") {
+      timeMultiplier *= 0.6;
+    }
+    // Fry Frenzy (Deli con oil)
+    if (activeSkills && activeSkills["Fry Frenzy"] && item.building === "Deli") {
+      timeMultiplier *= 0.5;
+    }
 
     // Boost Base de Oil en edificios (cuando Oil está activo y no se sobreescribe por una skill superior)
     const hasOil = Boolean(activeSkills && activeSkills["Oil"]);

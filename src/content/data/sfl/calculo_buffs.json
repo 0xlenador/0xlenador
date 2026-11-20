@@ -220,76 +220,6 @@
         "calc": 1.1111
       }
     },
-    "Boar Shrine": {
-      "name": "Boar Shrine",
-      "boost": "-20% Cooking Time",
-      "description": "A shrine to the hearty boar",
-      "type": "shrine",
-      "image": "boar_shrine.webp",
-      "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
-        "calc": 0.8
-      }
-    },
-    "Legendary Shrine": {
-      "name": "Legendary Shrine",
-      "boost": "-50% Cooking Time",
-      "description": "A legendary shrine that buffs everything!",
-      "type": "shrine",
-      "image": "legendary_shrine.webp",
-      "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "flat_bonus",
-        "calc": 1
-      },
-      "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "flat_bonus",
-        "calc": 1
-      },
-      "mathematics_3": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "flat_bonus",
-        "calc": 1
-      },
-      "mathematics_4": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "flat_bonus",
-        "calc": 1
-      },
-      "mathematics_5": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "flat_bonus",
-        "calc": 1
-      },
-      "mathematics_6": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
-        "calc": 0.5
-      }
-    },
     "Hound Shrine": {
       "name": "Hound Shrine",
       "description": "A shrine to the loyal hound",
@@ -564,6 +494,42 @@
         "mathematics_operation": "speed_multiplier",
         "description": "2x Crafting Box Speed"
       }
+    },
+    "Boar Shrine": {
+      "id": 9018,
+      "name": "Boar Shrine",
+      "boost": "-20% Cooking Time",
+      "description": "-20% Cooking Time",
+      "image": "/img/sunflowerland/shrines/boar_shrine.webp",
+      "mathematics_1": {
+        "category": "cooking",
+        "subcategory": "all",
+        "effect_type": "time",
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "calc": 0.8,
+        "calc_by_rank": {
+          "rank_1": 0.8
+        }
+      }
+    },
+    "Legendary Shrine": {
+      "id": 9019,
+      "name": "Legendary Shrine",
+      "boost": "-50% Cooking Time",
+      "description": "-50% Cooking Time",
+      "image": "/img/sunflowerland/shrines/legendary_shrine.webp",
+      "mathematics_1": {
+        "category": "cooking",
+        "subcategory": "all",
+        "effect_type": "time",
+        "target": "all",
+        "mathematics_operation": "multiply",
+        "calc": 0.5,
+        "calc_by_rank": {
+          "rank_1": 0.5
+        }
+      }
     }
   },
   "others": {
@@ -691,7 +657,7 @@
         "mathematics_operation": "multiply",
         "calc": 1.5,
         "calc_by_rank": {
-          "rank_1": 0.5
+          "rank_1": 1.5
         }
       }
     },

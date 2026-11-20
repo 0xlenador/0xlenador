@@ -288,6 +288,22 @@ export function calculateCookingXp(
 
   // 1. Buffs de Collectibles, Wearables y Shrines que aplican a bumpkin_xp
   for (const buff of activeBuffDefinitions) {
+    if (buff.name === "VIP Pass" && !activeSkills["VIP Pass"]) {
+      boostedExp *= 1.1
+      continue
+    }
+    if (buff.name === "Blossom Beard" && !activeSkills["Blossom Beard"]) {
+      boostedExp *= 1.1
+      continue
+    }
+    if (
+      buff.name === "Luminous Anglerfish" &&
+      !activeSkills["Luminous Anglerfish"] &&
+      isEffectTargetMatch("Fish", targetContext)
+    ) {
+      boostedExp *= 1.5
+      continue
+    }
     for (const eff of buff.effects) {
       if (eff.category !== "bumpkin_xp") continue
       if (!isEffectTargetMatch(eff.target, targetContext)) continue
@@ -435,6 +451,10 @@ export function calculateCookingTime(
       timeMultiplier *= 0.5
     } else if (skillName === "Faction Medallion") {
       timeMultiplier *= 0.75
+    } else if (skillName === "Boar Shrine") {
+      timeMultiplier *= 0.8
+    } else if (skillName === "Legendary Shrine") {
+      timeMultiplier *= 0.5
     }
   }
 
@@ -454,6 +474,14 @@ export function calculateCookingTime(
 
   // 3. Shrines y Consumibles de activeBuffDefinitions
   for (const buff of activeBuffDefinitions) {
+    if (buff.name === "Boar Shrine") {
+      timeMultiplier *= 0.8
+      continue
+    }
+    if (buff.name === "Legendary Shrine") {
+      timeMultiplier *= 0.5
+      continue
+    }
     for (const eff of buff.effects) {
       if (!isEffectTargetMatch(eff.target, targetContext)) continue
 

@@ -885,7 +885,7 @@ const formatDescription = (skill: any) => {
         if (!buffId) return
 
         // Puede ser buff o skill
-        const isActive = Boolean(state.buffs?.[buffId] || state.skills?.[buffId])
+        const isActive = Boolean(state.buffs?.[buffId] || (state.skills?.[buffId] && state.skills[buffId] > 0))
         if (isActive) totalActive++
 
         card.classList.toggle("active", isActive)

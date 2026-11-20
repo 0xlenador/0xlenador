@@ -620,7 +620,7 @@ const getEffectType = (desc: string) => {
         container.querySelectorAll<HTMLInputElement>(".buff-checkbox").forEach((cb) => {
           const id = cb.dataset.buffId
           if (!id) return
-          const isActive = Boolean(state.buffs?.[id])
+          const isActive = Boolean(state.buffs?.[id] || (state.skills?.[id] && state.skills[id] > 0))
           cb.checked = isActive
           const card = cb.closest(".buff-card")
           if (card) {
@@ -651,7 +651,7 @@ const getEffectType = (desc: string) => {
           const skillId = card.dataset.skillId
           if (!skillId) return
           const rank = state.skills?.[skillId] || 0
-          const isActive = rank > 0
+          const isActive = rank > 0 || Boolean(state.buffs?.[skillId])
 
           if (isActive) {
             card.classList.add("active")
