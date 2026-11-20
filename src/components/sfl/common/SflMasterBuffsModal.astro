@@ -1,0 +1,1030 @@
+---
+/**
+ * 0xLeñador — SflMasterBuffsModal.astro
+ *
+ * Centro Maestro Global de Potenciadores, Habilidades y Buffs para Sunflower Land.
+ *
+ * Características:
+ * 1. Modal interactivo a casi pantalla completa con diseño moderno y switches táctiles.
+ * 2. 4 grandes categorías:
+ *    - Power Ups (Collectibles y Wearables)
+ *    - Bumpkin Skills (agrupadas por los 13 árboles del juego)
+ *    - Consumibles & Santuarios (Hourglasses, Tótems y Shrines)
+ *    - Global Phases & Perks (VIP Pass, Blossom Beard, Faction Pet, Buds, etc.)
+ * 3. Sincronización bidireccional en tiempo real con SflUserState y eventos 'sfl:stateUpdated'.
+ * 4. Totalmente modular y reutilizable en sfl-constantes o en cualquier otra vista.
+ */
+import { getEntry } from "astro:content"
+import { getLangFromUrl, useTranslations } from "../../../i18n"
+import { Icon } from "astro-icon/components"
+
+interface Props {
+  id?: string
+  class?: string
+}
+
+const { id = "sfl-master-buffs-modal", class: className = "" } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// Cargar todas las fuentes de datos oficiales
+const sflSkillsEntry = await getEntry("sfl", "skills")
+const sflPowerUpsEntry = await getEntry("sfl", "powerups")
+const sflBuffsEntry = await getEntry("sfl", "calculo_buffs")
+
+const allSkillsData: Record<string, Record<string, any>> = sflSkillsEntry?.data || {}
+const powerUpsData = sflPowerUpsEntry?.data?.power_ups || { collectibles: {}, wearables: {} }
+const calculoBuffsData = sflBuffsEntry?.data || { shrines: {}, consumables: {}, others: {} }
+
+// 1. PowerUps (Collectibles y Wearables)
+const collectiblesList = Object.entries<any>(powerUpsData.collectibles || {}).map(([key, data]) => ({
+  id: data.id !== undefined ? String(data.id) : key,
+  name: data.name || key,
+  type: "collectible" as const,
+  category: data.category || "collectible",
+  description: data.boost || data.description || "",
+  image: data.image || `${key}.webp`,
+  raw: data,
+}))
+
+const wearablesList = Object.entries<any>(powerUpsData.wearables || {}).map(([key, data]) => ({
+  id: data.id !== undefined ? String(data.id) : key,
+  name: data.name || key,
+  type: "wearable" as const,
+  category: data.category || "wearable",
+  description: data.boost || data.description || "",
+  image: data.image || `${key}.webp`,
+  raw: data,
+}))
+
+const allPowerups = [...collectiblesList, ...wearablesList]
+
+// 2. Bumpkin Skills (Agrupadas por los 13 árboles)
+const skillTrees = Object.keys(allSkillsData)
+
+// 3. Consumibles & Santuarios
+const consumablesList = Object.entries<any>(calculoBuffsData.consumables || {}).map(([key, data]) => ({
+  id: data.id !== undefined ? String(data.id) : key,
+  name: data.name || key,
+  type: "consumable" as const,
+  description: data.description || "",
+  image: data.image || `${key}.webp`,
+  raw: data,
+}))
+
+const shrinesList = Object.entries<any>(calculoBuffsData.shrines || {}).map(([key, data]) => ({
+  id: data.id !== undefined ? String(data.id) : key,
+  name: data.name || key,
+  type: "shrine" as const,
+  description: data.description || "",
+  image: data.image || `${key}.webp`,
+  raw: data,
+}))
+
+// 4. Global Phases & Perks
+const perksList = Object.entries<any>(calculoBuffsData.others || {}).map(([key, data]) => ({
+  id: data.id !== undefined ? String(data.id) : key,
+  name: data.name || key,
+  type: "perk" as const,
+  description: data.description || "",
+  image: data.image || `${key}.webp`,
+  raw: data,
+}))
+
+// Utilidades de formato
+const formatDescription = (skill: any) => {
+  let desc = skill.description || skill.boost || ""
+  if (skill.mathematics_1?.calc_by_rank?.rank_1 !== undefined) {
+    const m1 = skill.mathematics_1.calc_by_rank.rank_1
+    desc = desc
+      .replace("{math1}", m1)
+      .replace("{math1_pct}", parseFloat((m1 * 100).toFixed(2)))
+      .replace("{math1_days}", parseFloat((m1 / 86400000).toFixed(2)))
+  }
+  if (skill.mathematics_2?.calc_by_rank?.rank_1 !== undefined) {
+    const m2 = skill.mathematics_2.calc_by_rank.rank_1
+    desc = desc
+      .replace("{math2}", m2)
+      .replace("{math2_pct}", parseFloat((m2 * 100).toFixed(2)))
+      .replace("{math2_days}", parseFloat((m2 / 86400000).toFixed(2)))
+  }
+  return desc
+}
+---
+
+<!-- Master Buffs Modal -->
+<div
+  id={id}
+  class={`sfl-master-buffs-modal fixed inset-0 z-[999] hidden flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md transition-opacity duration-200 ${className}`}
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby={`${id}-title`}
+>
+  <!-- Backdrop clickeable para cerrar -->
+  <div class="master-buffs-backdrop absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <!-- Contenedor Principal de la Ventana Modal (92% Viewport Height) -->
+  <div
+    class="relative w-full max-w-7xl h-[92vh] max-h-[96vh] flex flex-col bg-[#141414] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+  >
+    <!-- 1. Header del Modal -->
+    <header class="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-white/10 bg-[#18181b]/90 flex items-center justify-between gap-3 shrink-0">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0 text-emerald-400">
+          <Icon name="lucide:sparkles" class="w-5 h-5" />
+        </div>
+        <div class="flex flex-col min-w-0">
+          <div class="flex items-center gap-2">
+            <h2 id={`${id}-title`} class="text-sm sm:text-base font-black text-white tracking-wide truncate">
+              {t("sfl.masterBuffs.title")}
+            </h2>
+            <span
+              id="masterBuffsTotalActiveBadge"
+              class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 whitespace-nowrap"
+            >
+              0 {t("sfl.masterBuffs.activeCount")}
+            </span>
+          </div>
+          <p class="text-[11px] text-terminal-muted hidden sm:block truncate">
+            {t("sfl.masterBuffs.subtitle")}
+          </p>
+        </div>
+      </div>
+
+      <!-- Acciones de Cabecera -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          id="masterBuffsResetAllBtn"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-white/50 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 bg-black/40 hover:bg-rose-500/10 transition-all cursor-pointer"
+          title="Desactiva todos los potenciadores seleccionados"
+        >
+          <Icon name="lucide:rotate-ccw" class="w-3.5 h-3.5" />
+          <span>{t("sfl.masterBuffs.resetBtn")}</span>
+        </button>
+
+        <button
+          type="button"
+          class="master-buffs-close-btn w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+          aria-label={t("sfl.masterBuffs.close")}
+        >
+          <Icon name="lucide:x" class="w-4 h-4" />
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. Barra de Navegación de Pestañas & Buscador -->
+    <div class="px-4 py-2.5 sm:px-6 border-b border-white/5 bg-[#121212] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shrink-0">
+      <!-- Pestañas Principales -->
+      <nav class="flex items-center gap-1 overflow-x-auto no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
+        <button
+          type="button"
+          class="master-tab-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-white/10 border border-white/15 transition-all whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
+          data-tab="powerups"
+        >
+          <span>🌟</span>
+          <span>{t("sfl.masterBuffs.tabPowerups")}</span>
+          <span id="tabCountPowerups" class="text-[10px] font-mono opacity-60">({allPowerups.length})</span>
+        </button>
+        <button
+          type="button"
+          class="master-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white border border-transparent hover:border-white/10 transition-all whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
+          data-tab="skills"
+        >
+          <span>🌲</span>
+          <span>{t("sfl.masterBuffs.tabSkills")}</span>
+          <span id="tabCountSkills" class="text-[10px] font-mono opacity-60">(13 árboles)</span>
+        </button>
+        <button
+          type="button"
+          class="master-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white border border-transparent hover:border-white/10 transition-all whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
+          data-tab="consumables"
+        >
+          <span>🧪</span>
+          <span>{t("sfl.masterBuffs.tabConsumables")}</span>
+          <span id="tabCountConsumables" class="text-[10px] font-mono opacity-60">({consumablesList.length + shrinesList.length})</span>
+        </button>
+        <button
+          type="button"
+          class="master-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white border border-transparent hover:border-white/10 transition-all whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
+          data-tab="perks"
+        >
+          <span>⚡</span>
+          <span>{t("sfl.masterBuffs.tabPerks")}</span>
+          <span id="tabCountPerks" class="text-[10px] font-mono opacity-60">({perksList.length})</span>
+        </button>
+      </nav>
+
+      <!-- Input de Búsqueda en Vivo -->
+      <div class="relative w-full md:w-72 shrink-0">
+        <Icon name="lucide:search" class="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <input
+          type="text"
+          id="masterBuffsSearchInput"
+          placeholder={t("sfl.masterBuffs.searchPlaceholder")}
+          class="w-full pl-9 pr-8 py-1.5 bg-black/50 border border-white/10 rounded-lg text-xs text-white placeholder-white/40 font-mono focus:outline-none focus:border-emerald-500/50 focus:bg-black/80 transition-all"
+        />
+        <button
+          type="button"
+          id="masterBuffsClearSearch"
+          class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs cursor-pointer"
+          aria-label="Limpiar búsqueda"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Contenedor de Paneles de Contenido (Scrollable) -->
+    <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-[#0f0f10]">
+      <!-- ==================================================================== -->
+      <!-- TAB 1: POWER UPS (Collectibles y Wearables)                          -->
+      <!-- ==================================================================== -->
+      <section id="panel-powerups" class="master-tab-panel flex flex-col gap-4">
+        <!-- Sub-filtros para PowerUps -->
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-white/40 uppercase tracking-wider">Tipo:</span>
+          <div class="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/5">
+            <button
+              type="button"
+              class="powerup-type-btn active px-2.5 py-1 rounded text-[10px] font-mono font-bold text-white bg-white/10 transition-all cursor-pointer"
+              data-type="all"
+            >
+              Todos ({allPowerups.length})
+            </button>
+            <button
+              type="button"
+              class="powerup-type-btn px-2.5 py-1 rounded text-[10px] font-mono font-bold text-white/50 hover:text-white transition-all cursor-pointer"
+              data-type="collectible"
+            >
+              Collectibles ({collectiblesList.length})
+            </button>
+            <button
+              type="button"
+              class="powerup-type-btn px-2.5 py-1 rounded text-[10px] font-mono font-bold text-white/50 hover:text-white transition-all cursor-pointer"
+              data-type="wearable"
+            >
+              Wearables ({wearablesList.length})
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {allPowerups.map((buff) => {
+            const isWearable = buff.type === "wearable"
+            const imgFile = buff.image
+            const mainSrc = imgFile.startsWith("/")
+              ? imgFile
+              : isWearable
+                ? `/img/sunflowerland/powerups/wearables/${imgFile}`
+                : `/img/sunflowerland/powerups/${imgFile}`
+            const fallbackSrc = `/img/cripto/sunflowerland.webp`
+
+            return (
+              <div
+                class="master-buff-card relative flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer group select-none"
+                data-buff-id={buff.id}
+                data-name={buff.name.toLowerCase()}
+                data-desc={buff.description.toLowerCase()}
+                data-powerup-type={buff.type}
+              >
+                <div class="flex items-center gap-3 min-w-0 pr-2">
+                  <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
+                    <img
+                      src={mainSrc}
+                      alt={buff.name}
+                      class="w-8 h-8 object-contain [image-rendering:pixelated]"
+                      onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-xs font-bold text-white group-[.active]:text-emerald-400 transition-colors truncate">
+                        {buff.name}
+                      </span>
+                      <span class={`text-[8.5px] px-1.5 py-0.2 rounded font-mono uppercase font-bold shrink-0 ${isWearable ? "bg-purple-500/15 text-purple-400 border border-purple-500/30" : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"}`}>
+                        {isWearable ? "Wearable" : "Col"}
+                      </span>
+                    </div>
+                    <span class="text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5" title={buff.description}>
+                      {buff.description || "Sin descripción"}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Switch Toggle -->
+                <div class="master-switch relative inline-flex items-center cursor-pointer shrink-0 ml-2 pointer-events-none">
+                  <div class="master-switch-track w-11 h-6 bg-white/10 group-[.active]:bg-emerald-500 rounded-full transition-all duration-200 p-0.5 flex items-center">
+                    <div class="master-switch-thumb w-5 h-5 bg-white/60 group-[.active]:bg-white group-[.active]:translate-x-5 rounded-full transition-transform duration-200 shadow-md"></div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 2: BUMPKIN SKILLS (Agrupadas por los 13 Árboles)                 -->
+      <!-- ==================================================================== -->
+      <section id="panel-skills" class="master-tab-panel hidden flex flex-col gap-6">
+        <!-- Selector Rápido de Árboles (Píldoras de Salto) -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-2 px-2 sm:mx-0 sm:px-0">
+          <button
+            type="button"
+            class="skill-tree-filter-btn active px-3 py-1 rounded-lg text-xs font-mono font-bold text-white bg-blue-500/20 border border-blue-500/40 transition-all whitespace-nowrap shrink-0 cursor-pointer"
+            data-tree="all"
+          >
+            Todos los Árboles
+          </button>
+          {skillTrees.map((tree) => (
+            <button
+              type="button"
+              class="skill-tree-filter-btn px-3 py-1 rounded-lg text-xs font-mono font-bold text-white/50 hover:text-white border border-white/5 bg-black/40 hover:bg-white/5 transition-all whitespace-nowrap shrink-0 cursor-pointer"
+              data-tree={tree}
+            >
+              {tree} ({Object.keys(allSkillsData[tree] || {}).length})
+            </button>
+          ))}
+        </div>
+
+        <!-- Grupos por Árbol -->
+        {skillTrees.map((treeName) => {
+          const treeSkills = allSkillsData[treeName] || {}
+          const skillEntries = Object.entries<any>(treeSkills)
+          if (!skillEntries.length) return null
+
+          return (
+            <div class="skill-tree-group flex flex-col gap-3" data-tree-group={treeName}>
+              <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-blue-400 shrink-0"></span>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+                    {treeName}
+                  </h3>
+                  <span class="text-xs font-mono text-white/40">({skillEntries.length} habilidades)</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                {skillEntries.map(([skillName, skillData]) => {
+                  const mainSrc = skillData.image || `/img/cripto/sunflowerland.webp`
+                  const fallbackSrc = `/img/cripto/sunflowerland.webp`
+                  const formattedDesc = formatDescription(skillData)
+                  const safeId = skillName.replace(/\s+/g, "_")
+                  const ranksCount =
+                    skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0
+                      ? Object.keys(skillData.cost_by_rank).length
+                      : skillData.mathematics_1?.calc_by_rank
+                        ? Object.keys(skillData.mathematics_1.calc_by_rank).length
+                        : 1
+
+                  return (
+                    <div
+                      class={`master-skill-card relative flex flex-col justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all group select-none ${
+                        skillData.disabled ? "opacity-30 grayscale pointer-events-none" : "cursor-pointer"
+                      }`}
+                      data-skill-id={skillName}
+                      data-name={skillName.toLowerCase()}
+                      data-desc={formattedDesc.toLowerCase()}
+                      data-tree={treeName}
+                    >
+                      <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-start gap-3 min-w-0">
+                          <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
+                            <img
+                              src={mainSrc}
+                              alt={skillName}
+                              class="w-8 h-8 object-contain [image-rendering:pixelated]"
+                              onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                              loading="lazy"
+                            />
+                          </div>
+                          <div class="flex flex-col min-w-0">
+                            <span class="text-xs font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
+                              {skillName}
+                            </span>
+                            <span class="text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5" title={formattedDesc}>
+                              {formattedDesc}
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Switch Toggle -->
+                        <div class="master-switch relative inline-flex items-center shrink-0 pointer-events-none">
+                          <div class="master-switch-track w-11 h-6 bg-white/10 group-[.active]:bg-blue-500 rounded-full transition-all duration-200 p-0.5 flex items-center">
+                            <div class="master-switch-thumb w-5 h-5 bg-white/60 group-[.active]:bg-white group-[.active]:translate-x-5 rounded-full transition-transform duration-200 shadow-md"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Selector de Rango Progresivo (si tiene múltiples rangos) -->
+                      {ranksCount > 1 && (
+                        <div class="flex items-center justify-between mt-3 pt-2 border-t border-white/5" onclick="event.stopPropagation();">
+                          <span class="text-[9.5px] font-mono text-white/40">Rango:</span>
+                          <div class="flex items-center gap-1.5">
+                            {Array.from({ length: ranksCount }).map((_, idx) => (
+                              <button
+                                type="button"
+                                class={`master-rank-pill rank-pill-${safeId} px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-white/5 border border-white/10 text-white/50 hover:text-white transition-all cursor-pointer`}
+                                data-skill-id={skillName}
+                                data-rank={idx + 1}
+                              >
+                                R{idx + 1}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 3: CONSUMIBLES & SANTUARIOS (Hourglasses, Totems y Shrines)      -->
+      <!-- ==================================================================== -->
+      <section id="panel-consumables" class="master-tab-panel hidden flex flex-col gap-6">
+        <!-- Bloque 1: Consumibles y Tótems -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-2 border-b border-white/10 pb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+              Consumibles, Relojes de Arena & Tótems
+            </h3>
+            <span class="text-xs font-mono text-white/40">({consumablesList.length} items)</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {consumablesList.map((item) => {
+              const mainSrc = item.image || `/img/cripto/sunflowerland.webp`
+              const fallbackSrc = `/img/cripto/sunflowerland.webp`
+              const formattedDesc = formatDescription(item.raw || item)
+
+              return (
+                <div
+                  class="master-buff-card relative flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer group select-none"
+                  data-buff-id={item.name}
+                  data-name={item.name.toLowerCase()}
+                  data-desc={formattedDesc.toLowerCase()}
+                >
+                  <div class="flex items-center gap-3 min-w-0 pr-2">
+                    <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
+                      <img
+                        src={mainSrc}
+                        alt={item.name}
+                        class="w-8 h-8 object-contain [image-rendering:pixelated]"
+                        onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                      <span class="text-xs font-bold text-white group-[.active]:text-amber-400 transition-colors truncate">
+                        {item.name}
+                      </span>
+                      <span class="text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5" title={formattedDesc}>
+                        {formattedDesc}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="master-switch relative inline-flex items-center cursor-pointer shrink-0 ml-2 pointer-events-none">
+                    <div class="master-switch-track w-11 h-6 bg-white/10 group-[.active]:bg-amber-500 rounded-full transition-all duration-200 p-0.5 flex items-center">
+                      <div class="master-switch-thumb w-5 h-5 bg-white/60 group-[.active]:bg-white group-[.active]:translate-x-5 rounded-full transition-transform duration-200 shadow-md"></div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <!-- Bloque 2: Santuarios (Shrines) -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-2 border-b border-white/10 pb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-orange-400 shrink-0"></span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+              Santuarios (Shrines)
+            </h3>
+            <span class="text-xs font-mono text-white/40">({shrinesList.length} santuarios)</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {shrinesList.map((shrine) => {
+              const imgFile = shrine.image || `${shrine.name}.webp`
+              const mainSrc = imgFile.startsWith("/") ? imgFile : `/img/sunflowerland/shrines/${imgFile}`
+              const fallbackSrc = `/img/cripto/sunflowerland.webp`
+              const formattedDesc = formatDescription(shrine.raw || shrine)
+
+              return (
+                <div
+                  class="master-buff-card relative flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer group select-none"
+                  data-buff-id={shrine.name}
+                  data-name={shrine.name.toLowerCase()}
+                  data-desc={formattedDesc.toLowerCase()}
+                >
+                  <div class="flex items-center gap-3 min-w-0 pr-2">
+                    <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
+                      <img
+                        src={mainSrc}
+                        alt={shrine.name}
+                        class="w-8 h-8 object-contain [image-rendering:pixelated]"
+                        onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                      <span class="text-xs font-bold text-white group-[.active]:text-orange-400 transition-colors truncate">
+                        {shrine.name}
+                      </span>
+                      <span class="text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5" title={formattedDesc}>
+                        {formattedDesc}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="master-switch relative inline-flex items-center cursor-pointer shrink-0 ml-2 pointer-events-none">
+                    <div class="master-switch-track w-11 h-6 bg-white/10 group-[.active]:bg-orange-500 rounded-full transition-all duration-200 p-0.5 flex items-center">
+                      <div class="master-switch-thumb w-5 h-5 bg-white/60 group-[.active]:bg-white group-[.active]:translate-x-5 rounded-full transition-transform duration-200 shadow-md"></div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- TAB 4: GLOBAL PHASES & PERKS (VIP Pass, Blossom Beard, Faction Pet) -->
+      <!-- ==================================================================== -->
+      <section id="panel-perks" class="master-tab-panel hidden flex flex-col gap-4">
+        <div class="border-b border-white/10 pb-2">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
+            <span>Global Phases, Perks & Pase VIP</span>
+          </h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {perksList.map((item) => {
+            const isFactionPet = item.name === "Faction Pet"
+            const imgFile = item.image || `${item.name}.webp`
+            const mainSrc = imgFile.startsWith("/")
+              ? imgFile
+              : isFactionPet
+                ? `/img/sunflowerland/powerups/${imgFile}`
+                : `/img/sunflowerland/powerups/${imgFile}`
+            const fallbackSrc = `/img/cripto/sunflowerland.webp`
+            const formattedDesc = formatDescription(item.raw || item)
+
+            return (
+              <div
+                class="master-buff-card relative flex flex-col justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer group select-none"
+                data-buff-id={item.name}
+                data-skill-id={isFactionPet ? item.name : undefined}
+                data-is-faction-pet={isFactionPet ? "true" : undefined}
+                data-name={item.name.toLowerCase()}
+                data-desc={formattedDesc.toLowerCase()}
+              >
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-start gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
+                      <img
+                        src={mainSrc}
+                        alt={item.name}
+                        class="w-8 h-8 object-contain [image-rendering:pixelated]"
+                        onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                      <span class="text-xs font-bold text-white group-[.active]:text-purple-400 transition-colors truncate">
+                        {item.name}
+                      </span>
+                      <span class="text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5" title={formattedDesc}>
+                        {formattedDesc}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="master-switch relative inline-flex items-center shrink-0 pointer-events-none">
+                    <div class="master-switch-track w-11 h-6 bg-white/10 group-[.active]:bg-purple-500 rounded-full transition-all duration-200 p-0.5 flex items-center">
+                      <div class="master-switch-thumb w-5 h-5 bg-white/60 group-[.active]:bg-white group-[.active]:translate-x-5 rounded-full transition-transform duration-200 shadow-md"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Selector de Facción para Faction Pet -->
+                {isFactionPet && (
+                  <div class="flex items-center justify-between mt-3 pt-2 border-t border-white/5" onclick="event.stopPropagation();">
+                    <span class="text-[9.5px] font-mono text-white/40">Facción:</span>
+                    <div class="flex items-center gap-1">
+                      {[
+                        { rank: 1, label: "Bulls" },
+                        { rank: 2, label: "Sunflorians" },
+                        { rank: 3, label: "Goblins" },
+                        { rank: 4, label: "Nightshades" },
+                      ].map((fac) => (
+                        <button
+                          type="button"
+                          class="faction-pet-pill px-2 py-0.5 rounded text-[8.5px] font-mono font-bold bg-white/5 border border-white/10 text-white/50 hover:text-white transition-all cursor-pointer"
+                          data-faction-rank={fac.rank}
+                        >
+                          {fac.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      <!-- Estado vacío para búsquedas -->
+      <div id="masterBuffsEmptyState" class="hidden py-16 text-center">
+        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3 text-white/30">
+          <Icon name="lucide:search-x" class="w-6 h-6" />
+        </div>
+        <p class="text-sm text-white/60 font-mono">
+          {t("sfl.masterBuffs.empty")}
+        </p>
+      </div>
+    </div>
+
+    <!-- 4. Footer del Modal -->
+    <footer class="px-4 py-3 sm:px-6 border-t border-white/10 bg-[#141414] flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <div class="flex items-center gap-2 text-xs text-terminal-muted font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Sincronizado en tiempo real con todas las calculadoras</span>
+      </div>
+
+      <button
+        type="button"
+        class="master-buffs-close-btn px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-emerald-500/20 active:scale-95"
+      >
+        Listo / Cerrar
+      </button>
+    </footer>
+  </div>
+</div>
+
+<script>
+  import { SflUserState } from "../../../lib/sfl/state"
+
+  if (typeof window !== "undefined") {
+    ;(window as any).SflUserState = SflUserState
+  }
+
+  function initMasterBuffsModal() {
+    const modal = document.querySelector<HTMLElement>(".sfl-master-buffs-modal")
+    if (!modal) return
+
+    // Prevenir inicializaciones dobles
+    if ((modal as any).__masterModalInitialized) {
+      ;(modal as any).__syncUI?.()
+      return
+    }
+    ;(modal as any).__masterModalInitialized = true
+
+    // Elementos Clave
+    const closeButtons = modal.querySelectorAll(".master-buffs-close-btn, .master-buffs-backdrop")
+    const searchInput = modal.querySelector<HTMLInputElement>("#masterBuffsSearchInput")
+    const clearSearchBtn = modal.querySelector<HTMLButtonElement>("#masterBuffsClearSearch")
+    const emptyState = modal.querySelector<HTMLElement>("#masterBuffsEmptyState")
+    const resetAllBtn = modal.querySelector<HTMLButtonElement>("#masterBuffsResetAllBtn")
+    const totalActiveBadge = modal.querySelector<HTMLElement>("#masterBuffsTotalActiveBadge")
+    const dashBadge = document.getElementById("dashMasterBuffsCountBadge")
+
+    // 1. Funciones de Apertura y Cierre
+    const openModal = () => {
+      modal.classList.remove("hidden")
+      document.body.style.overflow = "hidden"
+      syncUI()
+      searchInput?.focus()
+    }
+
+    const closeModal = () => {
+      modal.classList.add("hidden")
+      document.body.style.overflow = ""
+    }
+
+    // Exponer en window para llamadas externas
+    ;(window as any).openMasterBuffsModal = openModal
+    ;(window as any).closeMasterBuffsModal = closeModal
+
+    // Listeners de cierre
+    closeButtons.forEach((btn) => btn.addEventListener("click", closeModal))
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+        closeModal()
+      }
+    })
+
+    // Listeners para botones externos con [data-open-master-buffs]
+    document.querySelectorAll("[data-open-master-buffs]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault()
+        openModal()
+      })
+    })
+
+    // 2. Control de Pestañas Principales
+    const tabButtons = modal.querySelectorAll<HTMLButtonElement>(".master-tab-btn")
+    const tabPanels = modal.querySelectorAll<HTMLElement>(".master-tab-panel")
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab
+        tabButtons.forEach((b) => {
+          b.classList.remove("active", "text-white", "bg-white/10", "border-white/15")
+          b.classList.add("text-white/50", "border-transparent")
+        })
+        btn.classList.add("active", "text-white", "bg-white/10", "border-white/15")
+        btn.classList.remove("text-white/50", "border-transparent")
+
+        tabPanels.forEach((p) => {
+          if (p.id === `panel-${tab}`) {
+            p.classList.remove("hidden")
+          } else {
+            p.classList.add("hidden")
+          }
+        })
+
+        // Reaplicar filtro de búsqueda
+        applySearch()
+      })
+    })
+
+    // 3. Sub-filtro de PowerUps (All / Collectibles / Wearables)
+    const powerupTypeButtons = modal.querySelectorAll<HTMLButtonElement>(".powerup-type-btn")
+    powerupTypeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.type
+        powerupTypeButtons.forEach((b) => {
+          b.classList.remove("active", "text-white", "bg-white/10")
+          b.classList.add("text-white/50")
+        })
+        btn.classList.add("active", "text-white", "bg-white/10")
+        btn.classList.remove("text-white/50")
+
+        modal.querySelectorAll<HTMLElement>("#panel-powerups .master-buff-card").forEach((card) => {
+          if (type === "all" || card.dataset.powerupType === type) {
+            card.style.display = ""
+          } else {
+            card.style.display = "none"
+          }
+        })
+      })
+    })
+
+    // 4. Sub-filtro de Skills por Árbol
+    const treeFilterButtons = modal.querySelectorAll<HTMLButtonElement>(".skill-tree-filter-btn")
+    treeFilterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tree = btn.dataset.tree
+        treeFilterButtons.forEach((b) => {
+          b.classList.remove("active", "text-white", "bg-blue-500/20", "border-blue-500/40")
+          b.classList.add("text-white/50", "border-white/5")
+        })
+        btn.classList.add("active", "text-white", "bg-blue-500/20", "border-blue-500/40")
+        btn.classList.remove("text-white/50", "border-white/5")
+
+        modal.querySelectorAll<HTMLElement>(".skill-tree-group").forEach((group) => {
+          if (tree === "all" || group.dataset.treeGroup === tree) {
+            group.style.display = ""
+          } else {
+            group.style.display = "none"
+          }
+        })
+      })
+    })
+
+    // 5. Búsqueda en Vivo
+    const applySearch = () => {
+      const q = (searchInput?.value || "").trim().toLowerCase()
+      if (clearSearchBtn) {
+        clearSearchBtn.classList.toggle("hidden", q.length === 0)
+      }
+
+      const activePanel = modal.querySelector<HTMLElement>(".master-tab-panel:not(.hidden)")
+      if (!activePanel) return
+
+      let visibleCount = 0
+      const cards = activePanel.querySelectorAll<HTMLElement>(".master-buff-card, .master-skill-card")
+
+      cards.forEach((card) => {
+        const name = card.dataset.name || ""
+        const desc = card.dataset.desc || ""
+        const matches = q.length === 0 || name.includes(q) || desc.includes(q)
+        if (matches) {
+          card.style.display = ""
+          visibleCount++
+        } else {
+          card.style.display = "none"
+        }
+      })
+
+      // Ocultar encabezados de grupos vacíos en skills
+      if (activePanel.id === "panel-skills") {
+        activePanel.querySelectorAll<HTMLElement>(".skill-tree-group").forEach((group) => {
+          const hasVisible = Array.from(group.querySelectorAll<HTMLElement>(".master-skill-card")).some(
+            (c) => c.style.display !== "none"
+          )
+          group.style.display = hasVisible ? "" : "none"
+        })
+      }
+
+      if (emptyState) {
+        emptyState.classList.toggle("hidden", visibleCount > 0 || cards.length === 0)
+      }
+    }
+
+    searchInput?.addEventListener("input", applySearch)
+    clearSearchBtn?.addEventListener("click", () => {
+      if (searchInput) searchInput.value = ""
+      applySearch()
+      searchInput?.focus()
+    })
+
+    // 6. Sincronización de UI con SflUserState
+    const syncUI = () => {
+      const state = SflUserState.getState()
+      let totalActive = 0
+
+      // Sincronizar Buffs (PowerUps, Consumibles, Shrines, Perks)
+      modal.querySelectorAll<HTMLElement>(".master-buff-card").forEach((card) => {
+        const isFactionPet = card.dataset.isFactionPet === "true"
+        if (isFactionPet) {
+          const rank = state.skills?.["Faction Pet"] || 0
+          const isActive = rank > 0
+          if (isActive) totalActive++
+          card.classList.toggle("active", isActive)
+          card.classList.toggle("border-purple-500/50", isActive)
+          card.classList.toggle("bg-purple-500/10", isActive)
+          card.querySelectorAll<HTMLElement>(".faction-pet-pill").forEach((pill) => {
+            const pRank = parseInt(pill.dataset.factionRank || "0", 10)
+            const isSelected = pRank === rank
+            pill.classList.toggle("bg-purple-500/30", isSelected)
+            pill.classList.toggle("text-purple-300", isSelected)
+            pill.classList.toggle("border-purple-500/50", isSelected)
+          })
+          return
+        }
+
+        const buffId = card.dataset.buffId
+        if (!buffId) return
+
+        // Puede ser buff o skill
+        const isActive = Boolean(state.buffs?.[buffId] || state.skills?.[buffId])
+        if (isActive) totalActive++
+
+        card.classList.toggle("active", isActive)
+        card.classList.toggle("border-emerald-500/50", isActive)
+        card.classList.toggle("bg-emerald-500/10", isActive)
+      })
+
+      // Sincronizar Skills
+      modal.querySelectorAll<HTMLElement>(".master-skill-card").forEach((card) => {
+        const skillId = card.dataset.skillId
+        if (!skillId) return
+
+        const rank = state.skills?.[skillId] || 0
+        const isActive = rank > 0
+        if (isActive) totalActive++
+
+        card.classList.toggle("active", isActive)
+        card.classList.toggle("border-blue-500/50", isActive)
+        card.classList.toggle("bg-blue-500/10", isActive)
+
+        // Píldoras de rango
+        card.querySelectorAll<HTMLElement>(".master-rank-pill").forEach((pill) => {
+          const pRank = parseInt(pill.dataset.rank || "1", 10)
+          const isSelected = pRank <= rank
+          pill.classList.toggle("bg-blue-500/30", isSelected)
+          pill.classList.toggle("text-blue-300", isSelected)
+          pill.classList.toggle("border-blue-500/50", isSelected)
+        })
+      })
+
+      // Actualizar Badges
+      if (totalActiveBadge) {
+        totalActiveBadge.textContent = `${totalActive} activos`
+      }
+      if (dashBadge) {
+        dashBadge.textContent = `${totalActive} activos`
+      }
+    }
+
+    ;(modal as any).__syncUI = syncUI
+
+    // 7. Manejadores de Click en Tarjetas
+    modal.querySelectorAll<HTMLElement>(".master-buff-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const isFactionPet = card.dataset.isFactionPet === "true"
+        if (isFactionPet) {
+          const current = SflUserState.getSkillRank("Faction Pet")
+          SflUserState.setSkillRank("Faction Pet", current > 0 ? 0 : 1)
+          return
+        }
+
+        const buffId = card.dataset.buffId
+        if (!buffId) return
+        SflUserState.toggleBuff(buffId)
+      })
+    })
+
+    // Faction Pet Pills
+    modal.querySelectorAll<HTMLElement>(".faction-pet-pill").forEach((pill) => {
+      pill.addEventListener("click", (e) => {
+        e.stopPropagation()
+        const rank = parseInt(pill.dataset.factionRank || "1", 10)
+        const current = SflUserState.getSkillRank("Faction Pet")
+        SflUserState.setSkillRank("Faction Pet", current === rank ? 0 : rank)
+      })
+    })
+
+    // Manejadores de Click en Skills
+    modal.querySelectorAll<HTMLElement>(".master-skill-card").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).closest(".master-rank-pill")) return
+        const skillId = card.dataset.skillId
+        if (!skillId) return
+        SflUserState.toggleSkill(skillId)
+      })
+    })
+
+    // Píldoras de Rango de Skills
+    modal.querySelectorAll<HTMLElement>(".master-rank-pill").forEach((pill) => {
+      pill.addEventListener("click", (e) => {
+        e.stopPropagation()
+        const skillId = pill.dataset.skillId
+        const rank = parseInt(pill.dataset.rank || "1", 10)
+        if (!skillId) return
+
+        const current = SflUserState.getSkillRank(skillId)
+        if (current === rank) {
+          SflUserState.setSkillRank(skillId, rank - 1)
+        } else {
+          SflUserState.setSkillRank(skillId, rank)
+        }
+      })
+    })
+
+    // 8. Botón Desactivar Todo
+    resetAllBtn?.addEventListener("click", () => {
+      if (confirm("¿Estás seguro de que deseas desactivar todos los buffs y habilidades seleccionados?")) {
+        const state = SflUserState.getState()
+        state.buffs = {}
+        state.skills = {}
+        // Guardar sin perder preferencias de divisas
+        ;(window as any).SflUserState.setPreferences({})
+        // Disparar reseteo guardando estado
+        localStorage.setItem("sfl_user_game_state_v1", JSON.stringify(state))
+        window.dispatchEvent(new CustomEvent("sfl:stateUpdated", { detail: state }))
+      }
+    })
+
+    // 9. Suscribirse a eventos externos
+    SflUserState.subscribe(() => syncUI())
+
+    // Sincronización inicial
+    syncUI()
+  }
+
+  // Inicializar en DOMContentLoaded y en transiciones de página de Astro
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initMasterBuffsModal)
+    } else {
+      initMasterBuffsModal()
+    }
+    document.addEventListener("astro:page-load", initMasterBuffsModal)
+  }
+</script>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+</style>
