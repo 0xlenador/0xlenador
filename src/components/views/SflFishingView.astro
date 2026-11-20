@@ -228,6 +228,11 @@ const counts = {
           const parsed = JSON.parse(raw)
           activeBuffs = new Set(Object.keys(parsed.buffs || {}).filter(k => parsed.buffs[k]))
           activeSkills = parsed.skills || {}
+          hasAncientRod = Boolean(
+            activeBuffs.has("Ancient Rod") ||
+            activeBuffs.has("224") ||
+            activeSkills["Ancient Rod"]
+          )
         }
       } catch (e) {
         console.warn("[Fishing] Error al leer SflUserState", e)
@@ -241,6 +246,11 @@ const counts = {
         const state = e.detail
         activeBuffs = new Set(Object.keys(state.buffs || {}).filter(k => state.buffs[k]))
         activeSkills = state.skills || {}
+        hasAncientRod = Boolean(
+          activeBuffs.has("Ancient Rod") ||
+          activeBuffs.has("224") ||
+          activeSkills["Ancient Rod"]
+        )
         syncMarketPrices()
       }
     })
@@ -465,18 +475,32 @@ const counts = {
       // Costo unitario efectivo por pez capturado
       const effectiveUnitCost = totalCost / fishYield
 
+      const isReady =
+        hasAncientRod ||
+        rodCost > 0 ||
+        isTrap ||
+        isMarvel ||
+        Boolean(
+          window.SflPrices &&
+            (window.SflPrices.resolveCost("Rod") || window.SflPrices.getUnitCost("Rod"))
+        )
+
       const flowerValNum = card.querySelector(".cost-val-num")
       if (flowerValNum) {
-        flowerValNum.textContent = rodCost > 0 || isTrap || isMarvel || hasAncientRod
-          ? (fishYield > 1 ? `${effectiveUnitCost.toFixed(4)}` : `${totalCost.toFixed(4)}`)
+        flowerValNum.textContent = isReady
+          ? fishYield > 1
+            ? `${effectiveUnitCost.toFixed(4)}`
+            : `${totalCost.toFixed(4)}`
           : "--"
       }
 
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
         const effectiveUsd = effectiveUnitCost * flowerPrice
-        usdEl.textContent = rodCost > 0 || isTrap || isMarvel || hasAncientRod
-          ? (fishYield > 1 ? `($${effectiveUsd.toFixed(3)}/u)` : `($${(totalCost * flowerPrice).toFixed(3)})`)
+        usdEl.textContent = isReady
+          ? fishYield > 1
+            ? `($${effectiveUsd.toFixed(3)}/u)`
+            : `($${(totalCost * flowerPrice).toFixed(3)})`
           : "(--)"
       }
 
@@ -1180,7 +1204,7 @@ const counts = {
         : window.SflPrices.getUnitCost("Rod").flower || 0
 
       // Ancient Rod check
-      const hasAncientRod = Boolean(
+      hasAncientRod = Boolean(
         activeBuffs.has("Ancient Rod") ||
         activeBuffs.has("224") ||
         activeSkills["Ancient Rod"]
@@ -1233,11 +1257,11 @@ const counts = {
       if (statBait) statBait.innerText = capsuleBaitCost > 0 ? `${capsuleBaitCost.toFixed(4)} FLOWER` : "-- FLOWER"
 
       const statBase = document.getElementById("statBaseCost")
-      if (statBase) statBase.innerText = baseAttemptCost > 0 ? `${baseAttemptCost.toFixed(4)} FLOWER` : "-- FLOWER"
+      if (statBase) statBase.innerText = (baseAttemptCost > 0 || hasAncientRod) ? `${baseAttemptCost.toFixed(4)} FLOWER` : "-- FLOWER"
 
       const statBaseUsd = document.getElementById("statBaseCostUsd")
       if (statBaseUsd) {
-        statBaseUsd.innerText = baseAttemptCost > 0
+        statBaseUsd.innerText = (baseAttemptCost > 0 || hasAncientRod)
           ? `≈ $${(baseAttemptCost * flowerPrice).toFixed(3)} USD`
           : "--"
       }

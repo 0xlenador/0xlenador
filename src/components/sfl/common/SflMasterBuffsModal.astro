@@ -1033,6 +1033,18 @@ const formatDescription = (skill: any) => {
     color: #34d399 !important;
   }
 
+  /* Consumibles en Modal (Marrón / Ámbar) */
+  .master-buff-card.active:has([class*="amber"]) .master-switch-track {
+    background-color: #d97706 !important;
+  }
+  .master-buff-card.active:has([class*="amber"]) {
+    border-color: rgba(180, 83, 9, 0.7) !important;
+    background-color: rgba(180, 83, 9, 0.12) !important;
+  }
+  .master-buff-card.active:has([class*="amber"]) span.text-white {
+    color: #fbbf24 !important;
+  }
+
   /* Shrines en Modal (Naranja) */
   .master-buff-card.active:has([class*="orange"]) .master-switch-track {
     background-color: #f97316 !important;

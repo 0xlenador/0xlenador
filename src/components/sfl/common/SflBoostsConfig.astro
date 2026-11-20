@@ -419,8 +419,10 @@ const getEffectType = (desc: string) => {
                 return (
                   <div
                     data-effect={getEffectType(formattedDesc)}
-                    class="skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-orange-500/30 hover:bg-orange-500/5 cursor-pointer"
+                    class="skill-card is-consumable flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-amber-600/40 hover:bg-amber-600/10 cursor-pointer"
                     data-skill-id={item.name}
+                    data-buff-id={item.id ? String(item.id) : undefined}
+                    data-type="consumable"
                   >
                     <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                       <img
@@ -435,7 +437,7 @@ const getEffectType = (desc: string) => {
                         decoding="async"
                       />
                       <div class="flex flex-col normal-view min-w-0">
-                        <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 transition-colors truncate">
+                        <span class="text-[10px] font-bold text-white group-[.active]:text-amber-400 transition-colors truncate">
                           {item.name}
                         </span>
                         <span class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2" title={formattedDesc} data-original={formattedDesc}>
@@ -444,7 +446,7 @@ const getEffectType = (desc: string) => {
                       </div>
                       <div class="hidden compact-view w-full">
                         <span
-                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors"
+                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-amber-400 transition-colors"
                           title={formattedDesc}
                         >
                           {getCompactText(item.raw || item, formattedDesc)}
@@ -535,10 +537,6 @@ const getEffectType = (desc: string) => {
                     data-buff-id={item.id ? String(item.id) : undefined}
                     data-type="other"
                   >
-                    <!-- Indicador visual activo (check badge) -->
-                    <div class="active-indicator-other hidden absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-purple-500 text-white items-center justify-center text-[8px] font-bold shadow-sm pointer-events-none">
-                      ✓
-                    </div>
                     <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                       <img
                         src={mainSrc}
@@ -761,6 +759,12 @@ const getEffectType = (desc: string) => {
           card.addEventListener("click", (e) => {
             // Si el click fue en un checkbox de rango específico o contenedor de rangos, dejar que su handler lo procese
             if ((e.target as HTMLElement).closest(".skill-rank-checkbox, .skill-ranks-container")) return
+            const type = card.dataset.type
+            if (type === "consumable") {
+              const buffId = card.dataset.buffId || card.dataset.skillId
+              if (buffId) SflUserState.toggleBuff(buffId)
+              return
+            }
             const skillId = card.dataset.skillId
             if (!skillId) return
             SflUserState.toggleSkill(skillId)
@@ -843,6 +847,18 @@ const getEffectType = (desc: string) => {
     color: #60a5fa !important;
   }
 
+  /* Consumibles y Tótems (Marrón / Ámbar Cálido) */
+  .skill-card.is-consumable.active,
+  .skill-card[data-type="consumable"].active {
+    border-color: rgba(180, 83, 9, 0.8) !important;
+    background-color: rgba(180, 83, 9, 0.2) !important;
+    box-shadow: 0 0 10px rgba(180, 83, 9, 0.3) !important;
+  }
+  .skill-card.is-consumable.active span.font-bold,
+  .skill-card[data-type="consumable"].active span.font-bold {
+    color: #fbbf24 !important;
+  }
+
   /* Global Phases & Perks (Púrpura) */
   .skill-card.is-other.active,
   .skill-card[data-type="other"].active {
@@ -853,10 +869,6 @@ const getEffectType = (desc: string) => {
   .skill-card.is-other.active span.font-bold,
   .skill-card[data-type="other"].active span.font-bold {
     color: #c084fc !important;
-  }
-  .skill-card.is-other.active .active-indicator-other,
-  .skill-card[data-type="other"].active .active-indicator-other {
-    display: flex !important;
   }
 
   .boosts-container[data-filter="xp"] .buff-card:not([data-effect*="xp"]),
