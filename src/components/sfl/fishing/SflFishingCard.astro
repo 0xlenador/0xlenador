@@ -458,6 +458,7 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                     ]}
                     data-fish-name={trig.fish}
                     data-bait-name={guaranteedBait || ""}
+                    data-base-odds={(trig.odds * 100).toFixed(1)}
                     data-odds={(trig.odds * 100).toFixed(1)}
                   >
                     <!-- Izquierda: Cebo del Fish Market (o Caña base) -->
@@ -496,14 +497,14 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
                     </div>
 
                     <!-- Derecha: Probabilidad de dropeo de mapa -->
-                    <div class="flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono font-bold text-[10px] shrink-0" title={`${(trig.odds * 100).toFixed(1)}% prob. fragmento de mapa`}>
+                    <div class="map-odds-badge flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono font-bold text-[10px] shrink-0 transition-all" title={`${(trig.odds * 100).toFixed(1)}% prob. fragmento de mapa`}>
                       <img
                         src="/img/sunflowerland/fish/a/map_marine.webp"
                         alt="Map"
                         class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]"
                         loading="lazy"
                       />
-                      <span>{(trig.odds * 100).toFixed(1)}%</span>
+                      <span class="map-odds-val">{(trig.odds * 100).toFixed(1)}%</span>
                     </div>
                   </button>
                 )

@@ -213,13 +213,34 @@ export const SflUserState = {
         state.buffs["9020"] = true
         state.skills["Fish Frenzy"] = 1
       }
+      // Si se activa Summer Guardian, activar automáticamente Full Moon
+      if (skillName === "Summer Guardian" || skillName === "2262") {
+        state.buffs["Summer Guardian"] = true
+        state.buffs["2262"] = true
+        state.buffs["Full Moon"] = true
+        state.buffs["9023"] = true
+        state.skills["Full Moon"] = 1
+      }
     } else {
       delete state.skills[skillName]
       delete state.buffs[skillName]
-      if (skillName === "Fish Frenzy") {
+      if (skillName === "Fish Frenzy" || skillName === "9020") {
         delete state.buffs["Fish Frenzy"]
         delete state.buffs["9020"]
         delete state.skills["Fish Frenzy"]
+      }
+      if (skillName === "Full Moon" || skillName === "9023") {
+        delete state.buffs["Full Moon"]
+        delete state.buffs["9023"]
+        delete state.skills["Full Moon"]
+        delete state.buffs["Summer Guardian"]
+        delete state.buffs["2262"]
+        delete state.skills["Summer Guardian"]
+      }
+      if (skillName === "Summer Guardian" || skillName === "2262") {
+        delete state.buffs["Summer Guardian"]
+        delete state.buffs["2262"]
+        delete state.skills["Summer Guardian"]
       }
     }
     saveStateToStorage(state)
@@ -272,6 +293,28 @@ export const SflUserState = {
         state.buffs["9020"] = true
         state.skills["Fish Frenzy"] = 1
       }
+      // Si se activa Summer Guardian, activar automáticamente Full Moon
+      if (id === "Summer Guardian" || id === "2262") {
+        state.buffs["Summer Guardian"] = true
+        state.buffs["2262"] = true
+        state.buffs["Full Moon"] = true
+        state.buffs["9023"] = true
+        state.skills["Full Moon"] = 1
+      }
+      if (id === "Full Moon" || id === "9023") {
+        state.buffs["Full Moon"] = true
+        state.buffs["9023"] = true
+        state.skills["Full Moon"] = 1
+      }
+      if (id === "Navigation Table" || id === "2992") {
+        state.buffs["Navigation Table"] = true
+        state.buffs["2992"] = true
+      }
+      if (id === "Deep Sea Helm" || id === "9024") {
+        state.buffs["Deep Sea Helm"] = true
+        state.buffs["9024"] = true
+        state.skills["Deep Sea Helm"] = 1
+      }
     } else {
       delete state.buffs[id]
       delete state.skills[id]
@@ -279,6 +322,28 @@ export const SflUserState = {
         delete state.buffs["Fish Frenzy"]
         delete state.buffs["9020"]
         delete state.skills["Fish Frenzy"]
+      }
+      if (id === "Full Moon" || id === "9023") {
+        delete state.buffs["Full Moon"]
+        delete state.buffs["9023"]
+        delete state.skills["Full Moon"]
+        delete state.buffs["Summer Guardian"]
+        delete state.buffs["2262"]
+        delete state.skills["Summer Guardian"]
+      }
+      if (id === "Summer Guardian" || id === "2262") {
+        delete state.buffs["Summer Guardian"]
+        delete state.buffs["2262"]
+        delete state.skills["Summer Guardian"]
+      }
+      if (id === "Navigation Table" || id === "2992") {
+        delete state.buffs["Navigation Table"]
+        delete state.buffs["2992"]
+      }
+      if (id === "Deep Sea Helm" || id === "9024") {
+        delete state.buffs["Deep Sea Helm"]
+        delete state.buffs["9024"]
+        delete state.skills["Deep Sea Helm"]
       }
       const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
         subgroup.includes(id)

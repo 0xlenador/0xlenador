@@ -342,6 +342,8 @@ const getEffectType = (desc: string) => {
                     }`}
                     data-skill-id={skillName}
                     data-type="skill"
+                    data-math1={JSON.stringify(skillData.mathematics_1?.calc_by_rank || {})}
+                    data-math2={JSON.stringify(skillData.mathematics_2?.calc_by_rank || {})}
                     style={skillData.disabled ? "pointer-events: none;" : ""}
                   >
                     <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
@@ -370,7 +372,7 @@ const getEffectType = (desc: string) => {
                       </div>
                       <div class="hidden compact-view w-full">
                         <span
-                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors"
+                          class="compact-description-text text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors"
                           title={formattedDesc}
                         >
                           {getCompactText(skillData, formattedDesc)}
@@ -679,6 +681,55 @@ const getEffectType = (desc: string) => {
             card.classList.add("border-white/5", "bg-white/5")
           }
 
+          // Actualizar descripción dinámica según el rango activo
+          const descSpan = card.querySelector<HTMLElement>(".skill-description-text")
+          const compactSpan = card.querySelector<HTMLElement>(".compact-description-text")
+          const originalDesc = descSpan?.dataset.original || ""
+
+          if (descSpan && originalDesc) {
+            const effectiveRank = rank === 0 ? 1 : rank
+            let updatedDesc = originalDesc
+
+            try {
+              const m1Data = JSON.parse(card.dataset.math1 || "{}")
+              const m1 = m1Data[`rank_${effectiveRank}`]
+              if (m1 !== undefined) {
+                updatedDesc = updatedDesc
+                  .replace("{math1}", m1)
+                  .replace("{math1_pct}", parseFloat((m1 * 100).toFixed(2)).toString())
+                  .replace("{math1_days}", parseFloat((m1 / 86400000).toFixed(2)).toString())
+              }
+            } catch (e) {}
+
+            try {
+              const m2Data = JSON.parse(card.dataset.math2 || "{}")
+              const m2 = m2Data[`rank_${effectiveRank}`]
+              if (m2 !== undefined) {
+                updatedDesc = updatedDesc
+                  .replace("{math2}", m2)
+                  .replace("{math2_pct}", parseFloat((m2 * 100).toFixed(2)).toString())
+                  .replace("{math2_days}", parseFloat((m2 / 86400000).toFixed(2)).toString())
+              }
+            } catch (e) {}
+
+            if (skillId === "Frenzied Fish" && rank === 3) {
+              updatedDesc = updatedDesc.replace(" and 0% chance of +1 fish", "")
+            }
+
+            descSpan.textContent = updatedDesc
+            descSpan.title = updatedDesc
+
+            if (compactSpan) {
+              compactSpan.title = updatedDesc
+              const match = updatedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i)
+              if (match) {
+                let val = match[1].trim()
+                if (val.toLowerCase().endsWith("x")) val = "x" + val.slice(0, -1)
+                compactSpan.textContent = val
+              }
+            }
+          }
+
           // Checkboxes de rango progresivo (o selección única para Faction Pet)
           card.querySelectorAll<HTMLInputElement>(".skill-rank-checkbox").forEach((cb) => {
             const cbRank = parseInt(cb.dataset.rank || cb.value || "1", 10)
@@ -760,7 +811,7 @@ const getEffectType = (desc: string) => {
             // Si el click fue en un checkbox de rango específico o contenedor de rangos, dejar que su handler lo procese
             if ((e.target as HTMLElement).closest(".skill-rank-checkbox, .skill-ranks-container")) return
             const type = card.dataset.type
-            if (type === "consumable") {
+            if (type === "consumable" || type === "other") {
               const buffId = card.dataset.buffId || card.dataset.skillId
               if (buffId) SflUserState.toggleBuff(buffId)
               return

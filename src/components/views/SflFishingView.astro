@@ -283,22 +283,85 @@ const counts = {
       // 1. Si es pesca con caña o maravilla marina, verificar qué cebo está seleccionado
       if (isRod || isMarvel) {
         if (isMarvel) {
+          // Multiplicador de mapas por potenciadores activos (Full Moon + Deep Sea Helm + Summer Guardian + Navigation Table)
+          const hasFullMoon =
+            activeBuffs.has("Full Moon") || activeBuffs.has("9023") || activeSkills["Full Moon"]
+          const hasSummerGuardian =
+            activeBuffs.has("Summer Guardian") ||
+            activeBuffs.has("2262") ||
+            activeSkills["Summer Guardian"]
+          const hasNavigationTable =
+            activeBuffs.has("Navigation Table") ||
+            activeBuffs.has("2992") ||
+            activeSkills["Navigation Table"]
+          const hasDeepSeaHelm =
+            activeBuffs.has("Deep Sea Helm") ||
+            activeBuffs.has("9024") ||
+            activeSkills["Deep Sea Helm"]
+
+          let mapMultiplier = 1.0
+          const mapTags = []
+          if (hasFullMoon) {
+            mapMultiplier += 1.0
+            mapTags.push("+100% Luna Llena")
+          }
+          if (hasSummerGuardian && hasFullMoon) {
+            mapMultiplier += 1.0
+            mapTags.push("+100% Summer Guardian")
+          }
+          if (hasNavigationTable) {
+            mapMultiplier += 1.0
+            mapTags.push("+100% Navigation Table")
+          }
+          if (hasDeepSeaHelm) {
+            mapMultiplier += 1.0
+            mapTags.push("+100% Deep Sea Helm")
+          }
+
+          // Reflejar el porcentaje potenciado en CADA fila de disparador de mapa (map-odds-val)
+          const triggerRows = card.querySelectorAll(".map-trigger-row")
+          triggerRows.forEach((row) => {
+            const baseOdds = parseFloat(row.dataset.baseOdds || row.dataset.odds) || 0
+            if (!row.dataset.baseOdds) {
+              row.dataset.baseOdds = baseOdds.toString()
+            }
+            const effectiveOddsVal = Math.min(100, baseOdds * mapMultiplier)
+            const effectiveOdds = effectiveOddsVal.toFixed(1)
+            row.dataset.odds = effectiveOdds
+
+            const oddsValEl = row.querySelector(".map-odds-val")
+            if (oddsValEl) {
+              oddsValEl.textContent = `${effectiveOdds}%`
+            }
+
+            const oddsBadgeEl = row.querySelector(".map-odds-badge")
+            if (oddsBadgeEl) {
+              if (mapMultiplier > 1) {
+                oddsBadgeEl.title = `${effectiveOdds}% prob. fragmento de mapa [${mapTags.join(" + ")}]`
+                oddsBadgeEl.classList.add("bg-cyan-500/25", "border-cyan-400", "shadow-[0_0_8px_rgba(34,211,238,0.25)]")
+              } else {
+                oddsBadgeEl.title = `${baseOdds.toFixed(1)}% prob. fragmento de mapa`
+                oddsBadgeEl.classList.remove("bg-cyan-500/25", "border-cyan-400", "shadow-[0_0_8px_rgba(34,211,238,0.25)]")
+              }
+            }
+          })
+
           // Para maravillas marinas, dar prioridad al disparador de mapa seleccionado si existe
           const costTitleEl = card.querySelector(".cost-title-label")
           const activeTrigger = card.querySelector(".map-trigger-row.active")
           if (activeTrigger) {
             const baitName = activeTrigger.dataset.baitName || ""
             const fishName = activeTrigger.dataset.fishName || ""
-            const oddsPercent = parseFloat(activeTrigger.dataset.odds) || 0
+            const baseOdds = parseFloat(activeTrigger.dataset.baseOdds || activeTrigger.dataset.odds) || 0
             const baitPrice = baitName ? getBaitUnitPrice(baitName) : 0
 
             // 1 Caña + Cebo por lanzamiento individual
             const singleAttemptCost = rodCost + baitPrice
 
-            // Para conseguir 9 fragmentos de mapa con probabilidad p:
-            // Intentos estadísticos esperados = 9 / (oddsPercent / 100)
-            const p = oddsPercent / 100
-            const expectedCasts = p > 0 ? (9 / p) : 1
+            // Para conseguir 9 fragmentos de mapa con probabilidad efectiva p:
+            const effectiveOddsVal = Math.min(100, baseOdds * mapMultiplier)
+            const p = Math.min(1.0, effectiveOddsVal / 100)
+            const expectedCasts = p > 0 ? 9 / p : 1
             const roundedCasts = Math.ceil(expectedCasts)
 
             // Costo total estadístico acumulado para los 9 mapas
@@ -308,9 +371,15 @@ const counts = {
               costTitleEl.textContent = textCostMarvel
             }
 
+            const effectiveOdds = effectiveOddsVal.toFixed(1)
+            const mapTagStr =
+              mapTags.length > 0
+                ? ` · <span class="text-purple-400 font-bold">[${mapTags.join(" + ")}]</span>`
+                : ""
+
             baseLabel = baitName
-              ? `~${roundedCasts} ${textCasts} (${oddsPercent}%) · Caña + <span class="text-teal-400 font-bold">${baitName}</span> (➔ ${fishName})`
-              : `~${roundedCasts} ${textCasts} (${oddsPercent}%) · Caña ➔ <span class="text-cyan-400 font-bold">${fishName}</span>`
+              ? `~${roundedCasts} ${textCasts} (${effectiveOdds}%) · Caña + <span class="text-teal-400 font-bold">${baitName}</span> (➔ ${fishName})${mapTagStr}`
+              : `~${roundedCasts} ${textCasts} (${effectiveOdds}%) · Caña ➔ <span class="text-cyan-400 font-bold">${fishName}</span>${mapTagStr}`
           } else {
             if (costTitleEl) {
               costTitleEl.textContent = textCostNormal
@@ -412,6 +481,30 @@ const counts = {
         if (activeBuffs.has("Fisher's Hourglass") || activeBuffs.has("9015") || activeSkills["Fisher's Hourglass"]) {
           fishYield += 0.5
           bonusTags.push("+50% Hourglass")
+        }
+
+        // Shrimp Onesie (+1 pez aleatorio cada 15 lanzamientos = +0.0667 pez/tiro / ~6.67%)
+        if (activeBuffs.has("Shrimp Onesie") || activeBuffs.has("562") || activeSkills["Shrimp Onesie"]) {
+          fishYield += (1 / 15)
+          bonusTags.push("+1/15 Pez Shrimp Onesie")
+        }
+
+        // Otty the Otter (+1 pez aleatorio cada 15 lanzamientos = +0.0667 pez/tiro / ~6.67%)
+        if (activeBuffs.has("Otty the Otter") || activeBuffs.has("3050") || activeSkills["Otty the Otter"]) {
+          fishYield += (1 / 15)
+          bonusTags.push("+1/15 Pez Otty")
+        }
+
+        // Sunflower Rod (+10% probabilidad de +1 pez)
+        if (activeBuffs.has("Sunflower Rod") || activeBuffs.has("9021") || activeSkills["Sunflower Rod"]) {
+          fishYield += 0.10
+          bonusTags.push("+10% Sunflower Rod")
+        }
+
+        // Trident (+20% probabilidad de +1 pez)
+        if (activeBuffs.has("Trident") || activeBuffs.has("9022") || activeSkills["Trident"]) {
+          fishYield += 0.20
+          bonusTags.push("+20% Trident")
         }
 
         // Estacionales (+1 pez en temporada)

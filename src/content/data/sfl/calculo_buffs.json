@@ -760,6 +760,74 @@
           "rank_1": 1
         }
       }
+    },
+    "Sunflower Rod": {
+      "id": 9021,
+      "name": "Sunflower Rod",
+      "description": "+10% Chance +1 Fish",
+      "image": "/img/sunflowerland/fish/a/sunflower_rod.webp",
+      "mathematics_1": {
+        "category": "fishing",
+        "subcategory": "all",
+        "effect_type": "chance",
+        "target": "all",
+        "mathematics_operation": "add",
+        "calc": 0.1,
+        "calc_by_rank": {
+          "rank_1": 0.1
+        }
+      }
+    },
+    "Trident": {
+      "id": 9022,
+      "name": "Trident",
+      "description": "+20% Chance +1 Fish",
+      "image": "/img/sunflowerland/fish/a/tirdent.webp",
+      "mathematics_1": {
+        "category": "fishing",
+        "subcategory": "all",
+        "effect_type": "chance",
+        "target": "all",
+        "mathematics_operation": "add",
+        "calc": 0.2,
+        "calc_by_rank": {
+          "rank_1": 0.2
+        }
+      }
+    },
+    "Full Moon": {
+      "id": 9023,
+      "name": "Full Moon",
+      "description": "+100% chance to find Marvel map pieces",
+      "image": "/img/sunflowerland/fish/a/full_moon.png",
+      "mathematics_1": {
+        "category": "fishing",
+        "subcategory": "Marines_Marvel",
+        "effect_type": "chance",
+        "target": "map_pieces",
+        "mathematics_operation": "add",
+        "calc": 1,
+        "calc_by_rank": {
+          "rank_1": 1
+        }
+      }
+    },
+    "Deep Sea Helm": {
+      "id": 9024,
+      "name": "Deep Sea Helm",
+      "description": "+100% chance to find Marvel map pieces",
+      "image": "/img/sunflowerland/fish/a/deep_sea_helm.webp",
+      "mathematics_1": {
+        "category": "fishing",
+        "subcategory": "Marines_Marvel",
+        "effect_type": "chance",
+        "target": "map_pieces",
+        "mathematics_operation": "add",
+        "calc": 1,
+        "calc_by_rank": {
+          "rank_1": 1
+        }
+      }
     }
   }
 }

@@ -1719,11 +1719,11 @@
         "image": "summer_guardian.webp",
         "supply": 324,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "none",
+          "category": "fishing",
+          "subcategory": "Marines_Marvel",
+          "effect_type": "chance",
+          "target": "map_pieces",
+          "mathematics_operation": "add",
           "calc": 1
         }
       },
@@ -2124,12 +2124,12 @@
         "boost": "+100% Map Piece Drop",
         "supply": 163,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "multiply",
-          "calc": 2
+          "category": "fishing",
+          "subcategory": "Marines_Marvel",
+          "effect_type": "chance",
+          "target": "map_pieces",
+          "mathematics_operation": "add",
+          "calc": 1
         }
       },
       "2993": {
@@ -2395,14 +2395,13 @@
         "image": "otty_the_otter.webp",
         "boost": "+5 daily fishing reels, +1 random fish every 15th reel",
         "supply": 0,
-        "disabled": true,
         "mathematics_1": {
           "category": "fishing",
-          "subcategory": "reels",
-          "effect_type": "reels",
-          "target": "reels",
-          "mathematics_operation": "none",
-          "calc": null
+          "subcategory": "all",
+          "effect_type": "chance",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 0.0667
         }
       },
       "3051": {
@@ -3648,14 +3647,13 @@
         "image": "Shrimp Onesie.webp",
         "boost": "+1 random fish every 15th reel",
         "supply": 13554,
-        "disabled": true,
         "mathematics_1": {
           "category": "fishing",
-          "subcategory": "reels",
-          "effect_type": "reels",
-          "target": "reels",
-          "mathematics_operation": "none",
-          "calc": null
+          "subcategory": "all",
+          "effect_type": "chance",
+          "target": "all",
+          "mathematics_operation": "add",
+          "calc": 0.0667
         }
       },
       "576": {

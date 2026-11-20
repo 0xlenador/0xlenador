@@ -394,6 +394,8 @@ const formatDescription = (skill: any) => {
                       data-name={skillName.toLowerCase()}
                       data-desc={formattedDesc.toLowerCase()}
                       data-tree={treeName}
+                      data-math1={JSON.stringify(skillData.mathematics_1?.calc_by_rank || {})}
+                      data-math2={JSON.stringify(skillData.mathematics_2?.calc_by_rank || {})}
                     >
                       <div class="flex items-start justify-between gap-2">
                         <div class="flex items-start gap-3 min-w-0">
@@ -410,7 +412,11 @@ const formatDescription = (skill: any) => {
                             <span class="text-xs font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
                               {skillName}
                             </span>
-                            <span class="text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5" title={formattedDesc}>
+                            <span
+                              class="master-skill-description-text text-[10px] text-terminal-muted leading-tight line-clamp-2 mt-0.5"
+                              title={formattedDesc}
+                              data-original={skillData.description}
+                            >
                               {formattedDesc}
                             </span>
                           </div>
@@ -909,6 +915,43 @@ const formatDescription = (skill: any) => {
         card.classList.toggle("active", isActive)
         card.classList.toggle("border-blue-500/50", isActive)
         card.classList.toggle("bg-blue-500/10", isActive)
+
+        // Actualizar descripción dinámica según el rango activo
+        const descSpan = card.querySelector<HTMLElement>(".master-skill-description-text")
+        const originalDesc = descSpan?.dataset.original || ""
+        if (descSpan && originalDesc) {
+          const effectiveRank = rank === 0 ? 1 : rank
+          let updatedDesc = originalDesc
+
+          try {
+            const m1Data = JSON.parse(card.dataset.math1 || "{}")
+            const m1 = m1Data[`rank_${effectiveRank}`]
+            if (m1 !== undefined) {
+              updatedDesc = updatedDesc
+                .replace("{math1}", m1)
+                .replace("{math1_pct}", parseFloat((m1 * 100).toFixed(2)).toString())
+                .replace("{math1_days}", parseFloat((m1 / 86400000).toFixed(2)).toString())
+            }
+          } catch (e) {}
+
+          try {
+            const m2Data = JSON.parse(card.dataset.math2 || "{}")
+            const m2 = m2Data[`rank_${effectiveRank}`]
+            if (m2 !== undefined) {
+              updatedDesc = updatedDesc
+                .replace("{math2}", m2)
+                .replace("{math2_pct}", parseFloat((m2 * 100).toFixed(2)).toString())
+                .replace("{math2_days}", parseFloat((m2 / 86400000).toFixed(2)).toString())
+            }
+          } catch (e) {}
+
+          if (skillId === "Frenzied Fish" && rank === 3) {
+            updatedDesc = updatedDesc.replace(" and 0% chance of +1 fish", "")
+          }
+
+          descSpan.textContent = updatedDesc
+          descSpan.title = updatedDesc
+        }
 
         // Píldoras de rango
         card.querySelectorAll<HTMLElement>(".master-rank-pill").forEach((pill) => {
