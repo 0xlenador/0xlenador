@@ -301,19 +301,25 @@ export function getCaveBuffs(): BuffDefinition[] {
   })
 }
 
-/** Buffs relevantes para pesca (rendimiento de peces, XP de pescado, multi-cast) */
+/** Buffs relevantes para pesca (rendimiento de peces, costo de caña, consumibles de pesca) */
 export function getFishingBuffs(): BuffDefinition[] {
   return getAllBuffs().filter((b) => {
+    // 1. Exclusiones explícitas (Pertenecen a cocina, tesoros o entregas)
+    if (
+      b.name === "Skill Shrimpy" ||
+      b.name === "Luminous Anglerfish" ||
+      b.name === "Fishy Feast" ||
+      b.name === "Fishy Fortune" ||
+      b.name === "Crab Hat"
+    ) {
+      return false
+    }
+    // 2. Skills de pesca
     if (b.type === "skill" && b.category === "Fishing") return true
+    // 3. Consumible Fisher's Hourglass
     if (b.name === "Fisher's Hourglass") return true
-    if (b.name === "Luminous Anglerfish") return true
-    if (b.perks?.multicast_fishing) return true
-    return b.effects.some(
-      (eff) =>
-        eff.target === "fish" ||
-        eff.target === "Fish" ||
-        eff.target === "fishing"
-    )
+    // 4. Buffs con categoría explícita "fishing"
+    return b.effects.some((eff) => eff.category === "fishing")
   })
 }
 

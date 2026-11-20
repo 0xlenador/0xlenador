@@ -273,6 +273,7 @@ const formatDescription = (skill: any) => {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {allPowerups.map((buff) => {
             const isWearable = buff.type === "wearable"
+            const isDisabled = Boolean(buff.raw?.disabled)
             const imgFile = buff.image
             const mainSrc = imgFile.startsWith("/")
               ? imgFile
@@ -283,11 +284,14 @@ const formatDescription = (skill: any) => {
 
             return (
               <div
-                class="master-buff-card relative flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all cursor-pointer group select-none"
+                class={`master-buff-card relative flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] transition-all select-none ${
+                  isDisabled ? "opacity-30 grayscale pointer-events-none" : "hover:bg-white/[0.04] hover:border-white/10 cursor-pointer group"
+                }`}
                 data-buff-id={buff.id}
                 data-name={buff.name.toLowerCase()}
                 data-desc={buff.description.toLowerCase()}
                 data-powerup-type={buff.type}
+                style={isDisabled ? "pointer-events: none;" : ""}
               >
                 <div class="flex items-center gap-3 min-w-0 pr-2">
                   <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
@@ -1013,6 +1017,55 @@ const formatDescription = (skill: any) => {
 </script>
 
 <style>
+  /* Estados Activos para Tarjetas y Switches en el Modal */
+  .master-buff-card.active {
+    border-color: rgba(16, 185, 129, 0.6) !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+  }
+  .master-buff-card.active .master-switch-track {
+    background-color: #10b981 !important;
+  }
+  .master-buff-card.active .master-switch-thumb {
+    background-color: #ffffff !important;
+    transform: translateX(1.25rem) !important;
+  }
+  .master-buff-card.active span.text-white {
+    color: #34d399 !important;
+  }
+
+  /* Shrines en Modal (Naranja) */
+  .master-buff-card.active:has([class*="orange"]) .master-switch-track {
+    background-color: #f97316 !important;
+  }
+  .master-buff-card.active:has([class*="orange"]) {
+    border-color: rgba(249, 115, 22, 0.6) !important;
+    background-color: rgba(249, 115, 22, 0.1) !important;
+  }
+  .master-buff-card.active:has([class*="orange"]) span.text-white {
+    color: #fb923c !important;
+  }
+
+  /* Global Phases / Perks en Modal (Púrpura) */
+  .master-buff-card.active:has([class*="purple"]) .master-switch-track {
+    background-color: #a855f7 !important;
+  }
+  .master-buff-card.active:has([class*="purple"]) {
+    border-color: rgba(168, 85, 247, 0.6) !important;
+    background-color: rgba(168, 85, 247, 0.1) !important;
+  }
+  .master-buff-card.active:has([class*="purple"]) span.text-white {
+    color: #c084fc !important;
+  }
+
+  /* Skills en Modal (Azul) */
+  .master-skill-card.active {
+    border-color: rgba(59, 130, 246, 0.6) !important;
+    background-color: rgba(59, 130, 246, 0.08) !important;
+  }
+  .master-skill-card.active span.text-white {
+    color: #60a5fa !important;
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
     height: 6px;

@@ -159,6 +159,15 @@ function initSync(): void {
 // API Pública del Administrador de Estado
 // ----------------------------------------------------------------------------
 
+// Grupos de buffs mutuamente excluyentes (activar uno desactiva automáticamente a los demás del grupo)
+const MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS: string[][] = [
+  // Estaciones de Pesca (solo 1 estación activa a la vez)
+  ["Pink Dolphin", "2254"], // Primavera
+  ["Jellyfish", "2203"],    // Verano
+  ["Poseidon", "2318"],     // Otoño
+  ["Super Star", "1549"],   // Invierno
+]
+
 export const SflUserState = {
   /** Devuelve una copia del estado completo del usuario */
   getState(): SflUserGameState {
@@ -183,10 +192,35 @@ export const SflUserState = {
   setSkillRank(skillName: string, rank: number): void {
     const state = this.getState()
     if (rank > 0) {
+      const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
+        subgroup.includes(skillName)
+      )
+      if (currentSubgroupIdx !== -1) {
+        MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.forEach((subgroup, idx) => {
+          if (idx !== currentSubgroupIdx) {
+            subgroup.forEach((member) => {
+              delete state.buffs[member]
+              delete state.skills[member]
+            })
+          }
+        })
+      }
       state.skills[skillName] = rank
+
+      // Si se activa la habilidad Frenzied Fish, activar automáticamente el evento Fish Frenzy
+      if (skillName === "Frenzied Fish") {
+        state.buffs["Fish Frenzy"] = true
+        state.buffs["9020"] = true
+        state.skills["Fish Frenzy"] = 1
+      }
     } else {
       delete state.skills[skillName]
       delete state.buffs[skillName]
+      if (skillName === "Fish Frenzy") {
+        delete state.buffs["Fish Frenzy"]
+        delete state.buffs["9020"]
+        delete state.skills["Fish Frenzy"]
+      }
     }
     saveStateToStorage(state)
   },
@@ -217,10 +251,44 @@ export const SflUserState = {
     const state = this.getState()
     const id = String(buffIdOrName)
     if (active) {
+      // Si pertenece a un subgrupo mutuamente exclusivo, apagar los miembros de los otros subgrupos
+      const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
+        subgroup.includes(id)
+      )
+      if (currentSubgroupIdx !== -1) {
+        MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.forEach((subgroup, idx) => {
+          if (idx !== currentSubgroupIdx) {
+            subgroup.forEach((member) => {
+              delete state.buffs[member]
+              delete state.skills[member]
+            })
+          }
+        })
+      }
       state.buffs[id] = true
+      // Si se activa Frenzied Fish, activar automáticamente el evento Fish Frenzy
+      if (id === "Frenzied Fish") {
+        state.buffs["Fish Frenzy"] = true
+        state.buffs["9020"] = true
+        state.skills["Fish Frenzy"] = 1
+      }
     } else {
       delete state.buffs[id]
       delete state.skills[id]
+      if (id === "Fish Frenzy" || id === "9020") {
+        delete state.buffs["Fish Frenzy"]
+        delete state.buffs["9020"]
+        delete state.skills["Fish Frenzy"]
+      }
+      const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
+        subgroup.includes(id)
+      )
+      if (currentSubgroupIdx !== -1) {
+        MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS[currentSubgroupIdx].forEach((member) => {
+          delete state.buffs[member]
+          delete state.skills[member]
+        })
+      }
     }
     saveStateToStorage(state)
   },

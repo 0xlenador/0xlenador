@@ -62,7 +62,10 @@ if (domain === "cooking") {
   targetSkills = allSkillsData.Cave || {}
 } else if (domain === "fishing") {
   rawBuffs = getFishingBuffs()
-  targetSkills = allSkillsData.Fishing || {}
+  const fishingSkills = { ...(allSkillsData.Fishing || {}) }
+  delete fishingSkills["Fishy Feast"] // Pertenece a cocina
+  delete fishingSkills["Fishy Fortune"] // Entregas de Corale
+  targetSkills = fishingSkills
 } else if (domain === "animals") {
   rawBuffs = getAnimalBuffs()
   targetSkills = allSkillsData.Animals || {}
@@ -255,12 +258,18 @@ const getEffectType = (desc: string) => {
                     : `/img/sunflowerland/powerups/${imgFile}`
                 const fallbackSrc = `/img/cripto/sunflowerland.webp`
                 const boostText = buff.raw?.boost || buff.description || ""
+                const isDisabled = Boolean(powerUpItem?.disabled || buff.raw?.disabled)
 
                 return (
                   <div
                     data-effect={getEffectType(boostText)}
-                    class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 rounded-lg p-1.5 transition-all"
+                    class={`buff-card group flex items-center gap-2 bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all ${
+                      isDisabled
+                        ? "opacity-30 grayscale cursor-not-allowed pointer-events-none"
+                        : "cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/10"
+                    }`}
                     data-buff-id={strId}
+                    style={isDisabled ? "pointer-events: none;" : ""}
                   >
                     <input
                       type="checkbox"
@@ -326,12 +335,13 @@ const getEffectType = (desc: string) => {
                 return (
                   <div
                     data-effect={getEffectType(formattedDesc)}
-                    class={`skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${
+                    class={`skill-card is-skill flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${
                       skillData.disabled
                         ? "opacity-30 grayscale cursor-not-allowed"
                         : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"
                     }`}
                     data-skill-id={skillName}
+                    data-type="skill"
                     style={skillData.disabled ? "pointer-events: none;" : ""}
                   >
                     <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
@@ -520,9 +530,15 @@ const getEffectType = (desc: string) => {
                 return (
                   <div
                     data-effect={getEffectType(formattedDesc)}
-                    class="skill-card flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer"
+                    class="skill-card is-other flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer relative"
                     data-skill-id={item.name}
+                    data-buff-id={item.id ? String(item.id) : undefined}
+                    data-type="other"
                   >
+                    <!-- Indicador visual activo (check badge) -->
+                    <div class="active-indicator-other hidden absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-purple-500 text-white items-center justify-center text-[8px] font-bold shadow-sm pointer-events-none">
+                      ✓
+                    </div>
                     <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                       <img
                         src={mainSrc}
@@ -650,37 +666,40 @@ const getEffectType = (desc: string) => {
         container.querySelectorAll<HTMLElement>(".skill-card").forEach((card) => {
           const skillId = card.dataset.skillId
           if (!skillId) return
+          const buffId = card.dataset.buffId
           const rank = state.skills?.[skillId] || 0
-          const isActive = rank > 0 || Boolean(state.buffs?.[skillId])
+          const isActive =
+            rank > 0 ||
+            Boolean(state.buffs?.[skillId]) ||
+            Boolean(buffId && state.buffs?.[buffId])
 
           if (isActive) {
             card.classList.add("active")
-            if (card.classList.contains("hover:border-purple-500/30")) {
-              card.classList.add("border-purple-500/50", "bg-purple-500/10")
-            } else if (card.classList.contains("hover:border-orange-500/30")) {
-              card.classList.add("border-orange-500/50", "bg-orange-500/10")
-            } else {
-              card.classList.add("border-blue-500/50", "bg-blue-500/10")
-            }
             card.classList.remove("border-white/5", "bg-white/5")
           } else {
-            card.classList.remove(
-              "active",
-              "border-blue-500/50",
-              "bg-blue-500/10",
-              "border-purple-500/50",
-              "bg-purple-500/10",
-              "border-orange-500/50",
-              "bg-orange-500/10"
-            )
+            card.classList.remove("active")
             card.classList.add("border-white/5", "bg-white/5")
           }
 
           // Checkboxes de rango progresivo (o selección única para Faction Pet)
-          const safeId = skillId.replace(/\s+/g, "_")
-          container.querySelectorAll<HTMLInputElement>(`.rank-input-${safeId}`).forEach((cb) => {
+          card.querySelectorAll<HTMLInputElement>(".skill-rank-checkbox").forEach((cb) => {
             const cbRank = parseInt(cb.dataset.rank || cb.value || "1", 10)
-            cb.checked = skillId === "Faction Pet" ? cbRank === rank : cbRank <= rank
+            const isChecked = skillId === "Faction Pet" ? cbRank === rank : cbRank <= rank
+            cb.checked = isChecked
+
+            const label = cb.closest("label")
+            if (label) {
+              const textSpan = label.querySelector("span")
+              if (textSpan) {
+                if (isChecked) {
+                  textSpan.classList.add("text-blue-400", "font-bold")
+                  textSpan.classList.remove("text-white/50")
+                } else {
+                  textSpan.classList.remove("text-blue-400", "font-bold")
+                  textSpan.classList.add("text-white/50")
+                }
+              }
+            }
           })
         })
       }
@@ -792,6 +811,54 @@ const getEffectType = (desc: string) => {
 </script>
 
 <style>
+  /* Estados Activos con bordes, resplandor y textos destacados */
+  .buff-card.active {
+    border-color: rgba(16, 185, 129, 0.7) !important;
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.25) !important;
+  }
+  .buff-card.active span.font-bold {
+    color: #34d399 !important;
+  }
+
+  /* Shrines (Naranja) */
+  .buff-card.active.hover\:border-orange-500\/30 {
+    border-color: rgba(249, 115, 22, 0.7) !important;
+    background-color: rgba(249, 115, 22, 0.15) !important;
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.25) !important;
+  }
+  .buff-card.active.hover\:border-orange-500\/30 span.font-bold {
+    color: #fb923c !important;
+  }
+
+  /* Skills de Bumpkin (Azul) */
+  .skill-card.is-skill.active,
+  .skill-card[data-type="skill"].active {
+    border-color: rgba(59, 130, 246, 0.7) !important;
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.25) !important;
+  }
+  .skill-card.is-skill.active span.font-bold,
+  .skill-card[data-type="skill"].active span.font-bold {
+    color: #60a5fa !important;
+  }
+
+  /* Global Phases & Perks (Púrpura) */
+  .skill-card.is-other.active,
+  .skill-card[data-type="other"].active {
+    border-color: rgba(168, 85, 247, 0.8) !important;
+    background-color: rgba(168, 85, 247, 0.2) !important;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.3) !important;
+  }
+  .skill-card.is-other.active span.font-bold,
+  .skill-card[data-type="other"].active span.font-bold {
+    color: #c084fc !important;
+  }
+  .skill-card.is-other.active .active-indicator-other,
+  .skill-card[data-type="other"].active .active-indicator-other {
+    display: flex !important;
+  }
+
   .boosts-container[data-filter="xp"] .buff-card:not([data-effect*="xp"]),
   .boosts-container[data-filter="xp"] .skill-card:not([data-effect*="xp"]) {
     display: none !important;

@@ -750,10 +750,10 @@
         "image": "walrus.webp",
         "supply": 230,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
+          "category": "fishing",
+          "subcategory": "all",
+          "effect_type": "yield",
+          "target": "all",
           "mathematics_operation": "add",
           "calc": 1
         }
@@ -764,12 +764,13 @@
         "image": "alba.webp",
         "supply": 800,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "multiply",
-          "calc": 1.5
+          "category": "fishing",
+          "subcategory": "basic",
+          "effect_type": "chance",
+          "target": "basic_fish",
+          "mathematics_operation": "chance",
+          "calc": 0.5,
+          "chance": 50
         }
       },
       "480": {
@@ -1185,10 +1186,10 @@
         "image": "super_star.webp",
         "supply": 399,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
+          "category": "fishing",
+          "subcategory": "winter",
+          "effect_type": "yield",
+          "target": "all",
           "mathematics_operation": "add",
           "calc": 1
         }
@@ -1198,13 +1199,14 @@
         "boost": "+5 daily fishing reels",
         "image": "nautilus.webp",
         "supply": 115,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "add",
-          "calc": 5
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
+          "mathematics_operation": "none",
+          "calc": null
         }
       },
       "2016": {
@@ -1619,10 +1621,10 @@
         "image": "jellyfish.webp",
         "supply": 1530,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
+          "category": "fishing",
+          "subcategory": "summer",
+          "effect_type": "yield",
+          "target": "all",
           "mathematics_operation": "add",
           "calc": 1
         }
@@ -1633,10 +1635,10 @@
         "image": "pink_dolphin.webp",
         "supply": 1480,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
+          "category": "fishing",
+          "subcategory": "spring",
+          "effect_type": "yield",
+          "target": "all",
           "mathematics_operation": "add",
           "calc": 1
         }
@@ -1800,13 +1802,14 @@
         "boost": "+5 daily fishing reels",
         "image": "reelmaster_s_chair.webp",
         "supply": 1961,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "add",
-          "calc": 5
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
+          "mathematics_operation": "none",
+          "calc": null
         }
       },
       "2301": {
@@ -1885,10 +1888,10 @@
         "image": "poseidon.webp",
         "supply": 819,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
+          "category": "fishing",
+          "subcategory": "autumn",
+          "effect_type": "yield",
+          "target": "all",
           "mathematics_operation": "add",
           "calc": 1
         }
@@ -1996,13 +1999,14 @@
         "boost": "+1 Fishing minigame attempt",
         "image": "anemone_flower.webp",
         "supply": 5695,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "add",
-          "calc": 1
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
+          "mathematics_operation": "none",
+          "calc": null
         }
       },
       "2713": {
@@ -2232,13 +2236,14 @@
         "image": "deep_sea_slug.webp",
         "boost": "+5 daily fishing casts / +1 Worm from Compost",
         "supply": 82,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "add",
-          "calc": 5
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
+          "mathematics_operation": "none",
+          "calc": null
         },
         "mathematics_2": {
           "category": "",
@@ -2269,12 +2274,12 @@
         "boost": "20% chance of +1 Fish",
         "supply": 0,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "critical_chance",
-          "calc": 1,
+          "category": "fishing",
+          "subcategory": "all",
+          "effect_type": "chance",
+          "target": "all",
+          "mathematics_operation": "chance",
+          "calc": 0.2,
           "chance": 20
         }
       },
@@ -2390,13 +2395,14 @@
         "image": "otty_the_otter.webp",
         "boost": "+5 daily fishing reels, +1 random fish every 15th reel",
         "supply": 0,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "add",
-          "calc": 5
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
+          "mathematics_operation": "none",
+          "calc": null
         }
       },
       "3051": {
@@ -2681,12 +2687,12 @@
         "image": "Ancient Rod.webp",
         "supply": 105,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "none",
-          "calc": 1
+          "category": "fishing",
+          "subcategory": "rod",
+          "effect_type": "free_rod",
+          "target": "rod",
+          "mathematics_operation": "multiply",
+          "calc": 0
         }
       },
       "230": {
@@ -2708,13 +2714,14 @@
         "boost": "+5 daily fishing reels",
         "image": "Saw Fish.webp",
         "supply": 1213,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
-          "mathematics_operation": "add",
-          "calc": 5
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
+          "mathematics_operation": "none",
+          "calc": null
         }
       },
       "250": {
@@ -3641,13 +3648,14 @@
         "image": "Shrimp Onesie.webp",
         "boost": "+1 random fish every 15th reel",
         "supply": 13554,
+        "disabled": true,
         "mathematics_1": {
-          "category": "",
-          "subcategory": "",
-          "effect_type": "",
-          "target": "",
+          "category": "fishing",
+          "subcategory": "reels",
+          "effect_type": "reels",
+          "target": "reels",
           "mathematics_operation": "none",
-          "calc": 1
+          "calc": null
         }
       },
       "576": {

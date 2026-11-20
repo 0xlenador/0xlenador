@@ -380,12 +380,13 @@
       "description": "50% Chance of +1 Fish",
       "image": "/img/sunflowerland/aoe/fishers_hourglass.webp",
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "fishing",
+        "subcategory": "all",
+        "effect_type": "chance",
+        "target": "all",
         "mathematics_operation": "chance",
-        "calc": 0.5
+        "calc": 0.5,
+        "chance": 50
       }
     },
     "Time Warp Totem": {
@@ -740,6 +741,24 @@
         "calc": 0.2,
         "subcategory": "mushroom",
         "effect_type": "yield"
+      }
+    },
+    "Fish Frenzy": {
+      "id": 9020,
+      "name": "Fish Frenzy",
+      "boost": "+1 Fish per cast",
+      "description": "+1 Fish per cast on random Frenzy days",
+      "image": "/img/sunflowerland/skills/frenzied_fish.webp",
+      "mathematics_1": {
+        "category": "fishing",
+        "subcategory": "all",
+        "effect_type": "yield",
+        "target": "all",
+        "mathematics_operation": "add",
+        "calc": 1,
+        "calc_by_rank": {
+          "rank_1": 1
+        }
       }
     }
   }

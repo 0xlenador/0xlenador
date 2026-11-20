@@ -215,6 +215,35 @@ const counts = {
     let marinerPotCost = 0
     let baseAttemptCost = 0
     let flowerPrice = 0.0854
+    let hasAncientRod = false
+
+    // Estado reactivo de Boosts y Habilidades de Pesca
+    let activeBuffs = new Set()
+    let activeSkills = {}
+
+    function loadFishingUserState() {
+      try {
+        const raw = localStorage.getItem("sfl_user_game_state_v1")
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          activeBuffs = new Set(Object.keys(parsed.buffs || {}).filter(k => parsed.buffs[k]))
+          activeSkills = parsed.skills || {}
+        }
+      } catch (e) {
+        console.warn("[Fishing] Error al leer SflUserState", e)
+      }
+    }
+
+    loadFishingUserState()
+
+    window.addEventListener("sfl:stateUpdated", (e) => {
+      if (e && e.detail) {
+        const state = e.detail
+        activeBuffs = new Set(Object.keys(state.buffs || {}).filter(k => state.buffs[k]))
+        activeSkills = state.skills || {}
+        syncMarketPrices()
+      }
+    })
 
     function getBaitUnitPrice(name) {
       if (["Earthworm", "Grub", "Red Wiggler"].includes(name)) {
@@ -343,18 +372,125 @@ const counts = {
         }
       }
 
+      // 4. Rendimiento de Captura (Fish Yield) según potenciadores y habilidades activas
+      let fishYield = 1.0
+      let bonusTags = []
+
+      if (isRod) {
+        const cardTier = card.dataset.tier || "basic"
+        const cardSeasons = (card.dataset.seasons || "").split(" ")
+
+        // Walrus (+1 pez garantizado)
+        if (activeBuffs.has("Walrus") || activeBuffs.has("478") || activeSkills["Walrus"]) {
+          fishYield += 1.0
+          bonusTags.push("+1 Walrus")
+        }
+
+        // Alba (50% probabilidad de +1 pez básico)
+        if (cardTier === "basic" && (activeBuffs.has("Alba") || activeBuffs.has("479") || activeSkills["Alba"])) {
+          fishYield += 0.5
+          bonusTags.push("+50% Alba")
+        }
+
+        // Dumbo Octopus (20% probabilidad de +1 pez)
+        if (activeBuffs.has("Dumbo Octopus") || activeBuffs.has("3031") || activeSkills["Dumbo Octopus"]) {
+          fishYield += 0.2
+          bonusTags.push("+20% Dumbo")
+        }
+
+        // Fisher's Hourglass (50% probabilidad de +1 pez)
+        if (activeBuffs.has("Fisher's Hourglass") || activeBuffs.has("9015") || activeSkills["Fisher's Hourglass"]) {
+          fishYield += 0.5
+          bonusTags.push("+50% Hourglass")
+        }
+
+        // Estacionales (+1 pez en temporada)
+        if ((activeBuffs.has("Pink Dolphin") || activeBuffs.has("2254")) && cardSeasons.includes("spring")) {
+          fishYield += 1.0
+          bonusTags.push("+1 Primavera")
+        }
+        if ((activeBuffs.has("Jellyfish") || activeBuffs.has("2203")) && cardSeasons.includes("summer")) {
+          fishYield += 1.0
+          bonusTags.push("+1 Verano")
+        }
+        if ((activeBuffs.has("Poseidon") || activeBuffs.has("2318")) && cardSeasons.includes("autumn")) {
+          fishYield += 1.0
+          bonusTags.push("+1 Otoño")
+        }
+        if ((activeBuffs.has("Super Star") || activeBuffs.has("1549")) && cardSeasons.includes("winter")) {
+          fishYield += 1.0
+          bonusTags.push("+1 Invierno")
+        }
+
+        // Habilidades del árbol de Pesca
+        if (activeSkills["Fishy Chance"] && cardTier === "basic") {
+          const rank = activeSkills["Fishy Chance"]
+          const chance = rank === 3 ? 0.15 : rank === 2 ? 0.125 : 0.10
+          fishYield += chance
+          bonusTags.push(`+${Math.round(chance * 100)}% Chance`)
+        }
+        if (activeSkills["Fishy Roll"] && cardTier === "advanced") {
+          const rank = activeSkills["Fishy Roll"]
+          const chance = rank === 3 ? 0.15 : rank === 2 ? 0.125 : 0.10
+          fishYield += chance
+          bonusTags.push(`+${Math.round(chance * 100)}% Roll`)
+        }
+        if (activeSkills["Fishy Gamble"] && cardTier === "expert") {
+          const rank = activeSkills["Fishy Gamble"]
+          const chance = rank === 3 ? 0.30 : rank === 2 ? 0.25 : 0.20
+          fishYield += chance
+          bonusTags.push(`+${Math.round(chance * 100)}% Gamble`)
+        }
+        // Evento Fish Frenzy (Frenesí de Peces) y Sinergia con la Skill Frenzied Fish
+        const hasFishFrenzy = Boolean(
+          activeBuffs.has("Fish Frenzy") ||
+          activeBuffs.has("9020") ||
+          (activeSkills && activeSkills["Fish Frenzy"])
+        )
+
+        if (hasFishFrenzy) {
+          let frenzyBonus = 1.0
+          if (activeSkills && activeSkills["Frenzied Fish"]) {
+            const rank = activeSkills["Frenzied Fish"]
+            const skillBonus = rank + 0.5
+            frenzyBonus += skillBonus
+            bonusTags.push(`+${frenzyBonus.toFixed(1)} Frenesí+Skill`)
+          } else {
+            bonusTags.push("+1 Frenesí")
+          }
+          fishYield += frenzyBonus
+        }
+      }
+
+      // Costo unitario efectivo por pez capturado
+      const effectiveUnitCost = totalCost / fishYield
+
       const flowerValNum = card.querySelector(".cost-val-num")
       if (flowerValNum) {
-        flowerValNum.textContent = rodCost > 0 || isTrap || isMarvel ? `${totalCost.toFixed(4)}` : "--"
+        flowerValNum.textContent = rodCost > 0 || isTrap || isMarvel || hasAncientRod
+          ? (fishYield > 1 ? `${effectiveUnitCost.toFixed(4)}` : `${totalCost.toFixed(4)}`)
+          : "--"
       }
 
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
-        usdEl.textContent = rodCost > 0 || isTrap || isMarvel ? `($${(totalCost * flowerPrice).toFixed(3)})` : "(--)"
+        const effectiveUsd = effectiveUnitCost * flowerPrice
+        usdEl.textContent = rodCost > 0 || isTrap || isMarvel || hasAncientRod
+          ? (fishYield > 1 ? `($${effectiveUsd.toFixed(3)}/u)` : `($${(totalCost * flowerPrice).toFixed(3)})`)
+          : "(--)"
       }
 
       const breakdownEl = card.querySelector(".cost-breakdown-label")
-      if (breakdownEl) breakdownEl.innerHTML = breakdownHtml
+      if (breakdownEl) {
+        let finalBreakdown = breakdownHtml
+        if (hasAncientRod) {
+          finalBreakdown += ` · <span class="text-emerald-400 font-bold">[Caña Gratis]</span>`
+        }
+        if (fishYield > 1) {
+          finalBreakdown += ` · <span class="text-cyan-400 font-bold" title="${bonusTags.join(', ')}">~${fishYield.toFixed(2)}x captura (${totalCost.toFixed(4)}/tiro)</span>`
+        }
+        breakdownEl.innerHTML = finalBreakdown
+      }
     }
 
     function updateAllCards() {
@@ -1030,15 +1166,38 @@ const counts = {
 
     // Sincronización con SflPrices y SflMarket
     function syncMarketPrices() {
-      if (!window.SflPrices || !window.SflMarket) return
+      if (!window.SflPrices || !window.SflMarket) {
+        updateAllCards()
+        return
+      }
 
       flowerPrice = window.SflMarket.getFlowerPrice() || 0.0854
 
       // 1. Costo Caña Base (resuelto directamente por el motor de recetas)
       const rodResolution = window.SflPrices.resolveCost("Rod")
-      rodCost = rodResolution && rodResolution.isCraftable
+      const baseRodCraft = rodResolution && rodResolution.isCraftable
         ? rodResolution.craftCostFlower
         : window.SflPrices.getUnitCost("Rod").flower || 0
+
+      // Ancient Rod check
+      const hasAncientRod = Boolean(
+        activeBuffs.has("Ancient Rod") ||
+        activeBuffs.has("224") ||
+        activeSkills["Ancient Rod"]
+      )
+
+      if (hasAncientRod) {
+        rodCost = 0
+      } else if (activeSkills && activeSkills["Reel Deal"]) {
+        const rank = activeSkills["Reel Deal"]
+        const mult = rank === 3 ? 0.4 : rank === 2 ? 0.45 : 0.5
+        const stoneP = window.SflPrices.getUnitCost("Stone").flower || 0
+        const woodP = (window.SflPrices.getUnitCost("Wood").flower || 0) * 3
+        const coinPortion = Math.max(0, baseRodCraft - stoneP - woodP)
+        rodCost = stoneP + woodP + (coinPortion * mult)
+      } else {
+        rodCost = baseRodCraft
+      }
 
       // 2. Costo Crab Pot
       const crabPotResolution = window.SflPrices.resolveCost("Crab Pot")
@@ -1058,7 +1217,17 @@ const counts = {
       baseAttemptCost = rodCost + capsuleBaitCost
 
       const statRod = document.getElementById("statRodCost")
-      if (statRod) statRod.innerText = rodCost > 0 ? `${rodCost.toFixed(4)} FLOWER` : "-- FLOWER"
+      if (statRod) {
+        if (hasAncientRod) {
+          statRod.innerText = "0.0000 FLOWER (Ancient Rod)"
+        } else if (activeSkills && activeSkills["Reel Deal"]) {
+          const rank = activeSkills["Reel Deal"]
+          const discountPct = rank === 3 ? 60 : rank === 2 ? 55 : 50
+          statRod.innerText = `${rodCost.toFixed(4)} FLOWER (-${discountPct}% Monedas)`
+        } else {
+          statRod.innerText = rodCost > 0 ? `${rodCost.toFixed(4)} FLOWER` : "-- FLOWER"
+        }
+      }
 
       const statBait = document.getElementById("statBaitCost")
       if (statBait) statBait.innerText = capsuleBaitCost > 0 ? `${capsuleBaitCost.toFixed(4)} FLOWER` : "-- FLOWER"
