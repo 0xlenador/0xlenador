@@ -15,6 +15,7 @@
 import {
   getAllBuffs,
   getCookingBuffs,
+  getCaveBuffs,
   getFishingBuffs,
   getAnimalBuffs,
   getMiningBuffs,
@@ -24,7 +25,7 @@ import { getEntry } from "astro:content"
 import { getLangFromUrl, useTranslations } from "../../../i18n"
 
 interface Props {
-  domain?: "cooking" | "fishing" | "animals" | "mining" | "all"
+  domain?: "cooking" | "fishing" | "animals" | "mining" | "cave" | "all"
   class?: string
   idPrefix?: string
   defaultOpen?: boolean
@@ -56,6 +57,9 @@ if (domain === "cooking") {
     ...(allSkillsData.Fishing?.["Fishy Feast"] ? { "Fishy Feast": allSkillsData.Fishing["Fishy Feast"] } : {}),
     ...(allSkillsData.Aging?.["Speedy Aging"] ? { "Speedy Aging": allSkillsData.Aging["Speedy Aging"] } : {}),
   }
+} else if (domain === "cave") {
+  rawBuffs = getCaveBuffs()
+  targetSkills = allSkillsData.Cave || {}
 } else if (domain === "fishing") {
   rawBuffs = getFishingBuffs()
   targetSkills = allSkillsData.Fishing || {}
@@ -64,10 +68,7 @@ if (domain === "cooking") {
   targetSkills = allSkillsData.Animals || {}
 } else if (domain === "mining") {
   rawBuffs = getMiningBuffs()
-  targetSkills = {
-    ...(allSkillsData.Mining || {}),
-    ...(allSkillsData.Cave || {}),
-  }
+  targetSkills = allSkillsData.Mining || {}
 } else {
   // "all" — 100% de los buffs y skills de todos los árboles
   rawBuffs = getAllBuffs()

@@ -93,8 +93,8 @@ const getCompactText = (name: string, boost: string) => {
     </p>
   </div>
 
-  <!-- Configuración Centralizada de Boosts de Minería & Cuevas -->
-  <SflBoostsConfig domain="mining" idPrefix="cave-boosts" />
+  <!-- Configuración Centralizada de Boosts de Cueva Subterránea -->
+  <SflBoostsConfig domain="cave" idPrefix="cave-boosts" />
 
   <!-- Segundo Bloque: Cueva Subterránea (Centrado en PC: max-w-4xl mx-auto) -->
 
@@ -794,14 +794,18 @@ const getCompactText = (name: string, boost: string) => {
       triggerCaveUpdate()
     }
 
-    if (window.SflUserState) {
-      syncCaveFromGlobalState(window.SflUserState.getState())
-      window.SflUserState.subscribe(syncCaveFromGlobalState)
-    } else {
-      window.addEventListener("sfl:stateUpdated", (e) => {
-        if (e && e.detail) syncCaveFromGlobalState(e.detail)
-      })
+    // Carga síncrona inicial desde localStorage
+    if (typeof localStorage !== "undefined") {
+      try {
+        const raw = localStorage.getItem("sfl_user_game_state_v1")
+        if (raw) syncCaveFromGlobalState(JSON.parse(raw))
+      } catch (e) {}
     }
+
+    // Escuchar eventos reactivos en vivo
+    window.addEventListener("sfl:stateUpdated", function (e) {
+      if (e && e.detail) syncCaveFromGlobalState(e.detail)
+    })
 
     let liveFlowerPrice = 0.144
     let activeCoinsPerFlower = 320 // Paridad inicial fallback

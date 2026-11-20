@@ -70,10 +70,13 @@ export interface MathEffect {
   calc?: number | null
   calc_by_rank?: Record<string, number>
   category: BuffCategory
+  subcategory?: string
+  effect_type?: string
   target?: string
   target_food?: string
   mathematics_operation: MathematicsOperation
   description?: string
+  chance?: number
 }
 
 export interface BuffDefinition {
@@ -108,15 +111,18 @@ export function extractMathEffects(rawItem: any): MathEffect[] {
 
   for (const key of mathKeys) {
     const m = rawItem[key]
-    if (m && typeof m === "object" && m.category) {
+    if (m && typeof m === "object") {
       effects.push({
         calc: m.calc !== undefined ? m.calc : null,
         calc_by_rank: m.calc_by_rank || undefined,
-        category: m.category,
+        category: m.category || "",
+        subcategory: m.subcategory || "",
+        effect_type: m.effect_type || "",
         target: m.target || m.target_food || "all",
         target_food: m.target_food || m.target || "all",
         mathematics_operation: m.mathematics_operation || "multiply",
         description: m.description || "",
+        chance: m.chance !== undefined ? m.chance : undefined,
       })
     }
   }
@@ -270,21 +276,28 @@ export function getBuffsByCategory(category: BuffCategory): BuffDefinition[] {
 
 /** Buffs relevantes para cocina y experiencia de alimentos */
 export function getCookingBuffs(): BuffDefinition[] {
-  const targetCategories = new Set([
-    "cooking_speed",
-    "cooking_time",
-    "bumpkin_xp",
-    "aging_time",
-    "aging_prime",
-    "aging_yield",
-  ])
   return getAllBuffs().filter((b) => {
-    // Skills del árbol de Cooking o Fishing (Fishy Feast)
-    if (b.type === "skill" && (b.category === "Cooking" || b.name === "Fishy Feast")) {
+    // 1. Skills del árbol de Cooking o Fishy Feast / Speedy Aging
+    if (
+      b.type === "skill" &&
+      (b.category === "Cooking" || b.name === "Fishy Feast" || b.name === "Speedy Aging")
+    ) {
       return true
     }
-    // O cualquier buff que tenga categoría de tiempo/velocidad de cocina, bumpkin_xp o aging
-    return b.effects.some((eff) => targetCategories.has(eff.category))
+    // 2. Buffs con categoría explícita "cooking"
+    return b.effects.some((eff) => eff.category === "cooking")
+  })
+}
+
+/** Buffs relevantes para Cueva Subterránea (Hongos, Lodo, Palas, Escarabajos) */
+export function getCaveBuffs(): BuffDefinition[] {
+  return getAllBuffs().filter((b) => {
+    // 1. Skills del árbol de Cave
+    if (b.type === "skill" && b.category === "Cave") {
+      return true
+    }
+    // 2. Buffs con categoría explícita "cave"
+    return b.effects.some((eff) => eff.category === "cave")
   })
 }
 
