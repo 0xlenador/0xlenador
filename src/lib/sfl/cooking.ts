@@ -12,6 +12,7 @@
 
 import recipesDataRaw from "../../content/data/sfl/recipes.json"
 import agingShedDataRaw from "../../content/data/sfl/aging_shed.json"
+import fishDataRaw from "../../content/data/sfl/fishing/fish.json"
 import levelExperienceRaw from "../../content/data/sfl/level_experience.json"
 import {
   isEffectTargetMatch,
@@ -199,14 +200,41 @@ export function getAgedFishRecipes(): CookingRecipe[] {
   return agedFishRecipes
 }
 
-/** Devuelve todas las recetas combinadas (recipes.json + Aging Shed) */
+/** Extrae las recetas de peces crudos (consumibles de pesca) */
+export function getRawFishRecipes(): CookingRecipe[] {
+  const rawFishRecipes: CookingRecipe[] = []
+  const fishList = (fishDataRaw as any) || []
+
+  fishList.forEach((fish: any) => {
+    if (!fish.name || !fish.xp) return
+    rawFishRecipes.push({
+      name: fish.name,
+      building: "Fish",
+      time: "00:00:00",
+      xp: Number(fish.xp) || 0,
+      ingredients: [
+        {
+          name: fish.name,
+          amount: 1,
+          image: fish.image || `/img/sunflowerland/fish/${fish.name}.png`,
+        },
+      ],
+      image: fish.image || `/img/sunflowerland/fish/${fish.name}.png`,
+    })
+  })
+
+  return rawFishRecipes
+}
+
+/** Devuelve todas las recetas combinadas (recipes.json + Aging Shed + Peces Crudos) */
 export function getAllCookingRecipes(): CookingRecipe[] {
   if (cachedAllRecipes) return cachedAllRecipes
 
   const baseRecipes: CookingRecipe[] = (recipesDataRaw as any)?.recipes || []
   const agedRecipes = getAgedFishRecipes()
+  const rawFishRecipes = getRawFishRecipes()
 
-  cachedAllRecipes = [...baseRecipes, ...agedRecipes]
+  cachedAllRecipes = [...baseRecipes, ...agedRecipes, ...rawFishRecipes]
   return cachedAllRecipes
 }
 

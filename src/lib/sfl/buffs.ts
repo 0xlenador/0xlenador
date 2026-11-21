@@ -454,6 +454,7 @@ export function isEffectTargetMatch(
       "Surimi Rice Bowl",
     ])
     return (
+      building === "Fish" ||
       itemName.includes("Fish") ||
       ingredients.some((ing) => fishIngs.has(ing.name)) ||
       fishSpecificDishes.has(itemName)

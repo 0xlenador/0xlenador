@@ -25,6 +25,24 @@ import { getCookingBuffs } from "../../lib/sfl/buffs"
 import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 
 const cookingBuffs = getCookingBuffs()
+const cookingBuffsCatalog = cookingBuffs.map((b) => {
+  let imgSrc = b.image || ""
+  if (imgSrc && !imgSrc.startsWith("/")) {
+    if (b.type === "wearable") imgSrc = `/img/sunflowerland/powerups/wearables/${imgSrc}`
+    else if (b.type === "collectible") imgSrc = `/img/sunflowerland/powerups/${imgSrc}`
+    else if (b.type === "shrine") imgSrc = `/img/sunflowerland/shrines/${imgSrc}`
+  }
+  if (!imgSrc) imgSrc = "/img/cripto/sunflowerland.webp"
+
+  return {
+    id: b.id !== undefined ? String(b.id) : undefined,
+    name: b.name,
+    type: b.type,
+    category: b.category,
+    image: imgSrc,
+    effects: b.effects || [],
+  }
+})
 const sflBuffs = Object.fromEntries(
   cookingBuffs
     .filter((b) => b.type === "collectible" || b.type === "wearable")
@@ -212,6 +230,9 @@ const formatAstroDescription = (skill) => {
                   <span>{t("sfl.cooking.dash.manualBadge")}</span>
                   <span class="text-blue-300/60 hover:text-white font-bold">✕</span>
                 </button>
+
+                <!-- Cuadritos de buffs activos para el Alimento Óptimo -->
+                <div id="heroActiveBuffsList" class="flex items-center flex-nowrap overflow-visible ml-1 shrink-0"></div>
               </div>
 
               <!-- Menú Desplegable Minimalista -->
@@ -631,6 +652,7 @@ const formatAstroDescription = (skill) => {
           <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Smoothie Shack">Smoothie Shack</button>
           <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Bakery">Bakery</button>
           <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Aging Shed">Aging Shed</button>
+          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fish">Fish</button>
         </div>
 
         <div class="flex flex-col gap-3 w-full xl:w-auto">
@@ -705,7 +727,7 @@ const formatAstroDescription = (skill) => {
           >
         </div>
         <div
-          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center gap-2"
+          class="lg:px-4 text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold cursor-pointer group flex items-center justify-end gap-2 text-right"
           onclick="window.handleSort('xp')"
         >
           {t("sfl.cooking.table.colXp")} <span
@@ -873,6 +895,7 @@ const formatAstroDescription = (skill) => {
     sflSkills,
       sflOthers,
       sflConsumables,
+      cookingBuffsCatalog,
     levelExperience,
     bettyPrices,
     tEmpty: t("sfl.cooking.empty"),
@@ -1032,7 +1055,7 @@ const formatAstroDescription = (skill) => {
     if (target === "Cheese Recipes") return item.name.includes("Cheese") || item.ingredients.some(ing => ing.name.includes("Cheese"));
     if (target === "Fish") {
       const fishIngs = ['Anchovy', 'Butterflyfish', 'Blowfish', 'Clownfish', 'Seaweed', 'Squid', 'Red Snapper', 'Sunfish', 'Horse Mackerel', 'Tuna', 'Olive Flounder', 'Angelfish', 'Halibut', 'Surgeonfish', 'Napoleanfish', 'Zebra Turkeyfish', 'Ray', 'Hammerhead Shark', 'Great White Shark', 'Octopus', 'Mahi Mahi', 'Blue Marlin', 'Moray Eel', 'Crab', 'Starfish', 'Seahorse', 'Crab Stick', 'Fish Stick'];
-      return item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper", "Surimi Rice Bowl"].includes(item.name);
+      return item.building === "Fish" || item.name.includes("Fish") || item.ingredients.some(ing => fishIngs.includes(ing.name)) || ["Gumbo", "Chowder", "Steamed Red Snapper", "Surimi Rice Bowl"].includes(item.name);
     }
     if (target === "Honey Foods") {
       return item.ingredients.some(ing => ing.name === "Honey");
@@ -1041,6 +1064,255 @@ const formatAstroDescription = (skill) => {
       return item.building === "Aging Shed" || item.name.startsWith("Aged ");
     }
     return false;
+  };
+
+  const isBuffActive = (buff) => {
+    const name = buff.name;
+    const id = buff.id ? String(buff.id) : null;
+    if (buff.type === "skill") {
+      return Boolean(activeSkills && activeSkills[name] && activeSkills[name] > 0);
+    }
+    if (buff.type === "collectible" || buff.type === "wearable" || buff.type === "shrine") {
+      return Boolean(activeBuffs && (activeBuffs.has(name) || (id && activeBuffs.has(id))));
+    }
+    if (buff.type === "consumable" || buff.type === "other") {
+      return Boolean(
+        (activeSkills && activeSkills[name] && activeSkills[name] > 0) ||
+        (activeBuffs && (activeBuffs.has(name) || (id && activeBuffs.has(id))))
+      );
+    }
+    return false;
+  };
+
+  const doesBuffApplyToItem = (buff, item) => {
+    const name = buff.name;
+    const building = item.building || "";
+    const isFishBuilding = building === "Fish";
+    const isAgingBuilding = building === "Aging Shed" || item.name.startsWith("Aged ");
+    const hasTime = parseTime(item.time) > 0;
+
+    // 1. Buffs de reducción de tiempo de cocina tradicional
+    if ([
+      "Desert Gnome", "Time Warp Totem", "Super Totem", "Gourmet Hourglass", 
+      "Faction Medallion", "Boar Shrine", "Legendary Shrine"
+    ].includes(name)) {
+      return !isFishBuilding && !isAgingBuilding && hasTime;
+    }
+
+    // 2. Oil
+    if (name === "Oil") {
+      return !isFishBuilding && !isAgingBuilding && ["Fire Pit", "Kitchen", "Bakery", "Deli"].includes(building);
+    }
+
+    // 3. Fast Feasts (Fire Pit y Kitchen con tiempo)
+    if (name === "Fast Feasts") {
+      return (building === "Fire Pit" || building === "Kitchen") && hasTime;
+    }
+
+    // 4. Swift Sizzle (Fire Pit con tiempo)
+    if (name === "Swift Sizzle") {
+      return building === "Fire Pit" && hasTime;
+    }
+
+    // 5. Turbo Fry (Kitchen con tiempo)
+    if (name === "Turbo Fry") {
+      return building === "Kitchen" && hasTime;
+    }
+
+    // 6. Frosted Cakes (Bakery o Cakes con tiempo)
+    if (name === "Frosted Cakes") {
+      return (building === "Bakery" || item.name.includes("Cake")) && hasTime;
+    }
+
+    // 7. Fry Frenzy (Deli con tiempo)
+    if (name === "Fry Frenzy") {
+      return building === "Deli" && hasTime;
+    }
+
+    // 8. Fiery Jackpot (Fire Pit)
+    if (name === "Fiery Jackpot") {
+      return building === "Fire Pit";
+    }
+
+    // 9. Juicy Boost (Smoothie Shack)
+    if (name === "Juicy Boost") {
+      return building === "Smoothie Shack";
+    }
+
+    // 10. Drive-Through Deli (Deli)
+    if (name === "Drive-Through Deli") {
+      return building === "Deli";
+    }
+
+    // 11. Speedy Aging (Aging Shed con tiempo)
+    if (name === "Speedy Aging") {
+      return isAgingBuilding && hasTime;
+    }
+
+    // 12. Double Nom (Cocina tradicional, no Aging Shed ni Fish crudo)
+    if (name === "Double Nom") {
+      return !isAgingBuilding && !isFishBuilding;
+    }
+
+    // 13. Fishy Feast, Luminous Anglerfish y Skill Shrimpy (Fish)
+    if (name === "Fishy Feast" || name === "Luminous Anglerfish" || name === "Skill Shrimpy") {
+      return isTargetMatch(item, "Fish");
+    }
+
+    // 14. Buzzworthy Treats (Honey Foods)
+    if (name === "Buzzworthy Treats") {
+      return isTargetMatch(item, "Honey Foods");
+    }
+
+    // 15. All-food XP buffs: VIP Pass, Blossom Beard, Faction Pet, Munching Mastery, Nom Nom
+    if (["VIP Pass", "Blossom Beard", "Faction Pet", "Munching Mastery", "Nom Nom"].includes(name)) {
+      return true;
+    }
+
+    // 16. Aging Prime buffs
+    if (buff.effects && buff.effects.some(e => e.category === "aging_prime")) {
+      return isAgingBuilding && Boolean(item.agedXp);
+    }
+
+    // 17. Genérico por MathEffects de Collectibles / Wearables
+    if (buff.effects && buff.effects.length > 0) {
+      return buff.effects.some(eff => {
+        const target = eff.target || eff.target_food || "all";
+        const cat = eff.category || "";
+        if (cat === "cooking_time" || cat === "cooking_speed") {
+          if (isFishBuilding || isAgingBuilding || !hasTime) return false;
+        }
+        return isTargetMatch(item, target);
+      });
+    }
+
+    return false;
+  };
+
+  const getActiveBuffsForItem = (item) => {
+    if (!item || typeof cookingBuffsCatalog === "undefined" || !cookingBuffsCatalog) return [];
+    return cookingBuffsCatalog.filter(b => isBuffActive(b) && doesBuffApplyToItem(b, item));
+  };
+
+  const getBuffEffectDesc = (buff, item) => {
+    const name = buff.name;
+    const building = item ? item.building : "";
+
+    // 1. Others & Consumables
+    if (name === "VIP Pass") return "+10% XP";
+    if (name === "Blossom Beard") return "+10% XP";
+    if (name === "Luminous Anglerfish") return "+50% XP";
+    if (name === "Desert Gnome") return "-10% tiempo";
+    if (name === "Gourmet Hourglass") return "-50% tiempo";
+    if (name === "Time Warp Totem") return "-50% tiempo";
+    if (name === "Super Totem") return "-50% tiempo";
+    if (name === "Faction Medallion") return "-25% tiempo";
+    if (name === "Boar Shrine") return "-20% tiempo";
+    if (name === "Legendary Shrine") return "-50% tiempo";
+
+    // 2. Oil según edificio
+    if (name === "Oil") {
+      if (building === "Fire Pit") return "-20% tiempo";
+      if (building === "Kitchen") return "-25% tiempo";
+      if (building === "Bakery") return "-35% tiempo";
+      if (building === "Deli") return "-40% tiempo";
+      return "-20% a -40% tiempo";
+    }
+
+    // 3. Faction Pet (por rango)
+    if (name === "Faction Pet") {
+      const rank = activeSkills && activeSkills["Faction Pet"] ? activeSkills["Faction Pet"] : 1;
+      const petLabels = ["+10% XP", "+20% XP", "+30% XP", "+50% XP"];
+      return petLabels[rank - 1] || "+10% XP";
+    }
+
+    // 4. Skills con rangos o fijos
+    if (name === "Speedy Aging") {
+      const rank = activeSkills && activeSkills["Speedy Aging"] ? activeSkills["Speedy Aging"] : 1;
+      const agingLabels = ["-10% tiempo", "-15% tiempo", "-20% tiempo"];
+      return agingLabels[rank - 1] || "-10% tiempo";
+    }
+    if (name === "Drive-Through Deli") {
+      const rank = activeSkills && activeSkills["Drive-Through Deli"] ? activeSkills["Drive-Through Deli"] : 1;
+      const deliLabels = ["+15% XP", "+20% XP", "+25% XP"];
+      return deliLabels[rank - 1] || "+15% XP";
+    }
+    if (name === "Munching Mastery") return "+5% XP";
+    if (name === "Nom Nom") return "+10% XP";
+    if (name === "Juicy Boost") return "+10% XP";
+    if (name === "Double Nom") return "+100% XP (x2)";
+    if (name === "Fiery Jackpot") return "+20% chance x2";
+    if (name === "Fishy Feast") return "+20% XP";
+    if (name === "Buzzworthy Treats") return "+10% XP";
+    if (name === "Fast Feasts") return "-10% tiempo";
+    if (name === "Frosted Cakes") return "-20% tiempo";
+    if (name === "Swift Sizzle") return "-30% tiempo";
+    if (name === "Turbo Fry") return "-40% tiempo";
+    if (name === "Fry Frenzy") return "-50% tiempo";
+    if (name === "Instant Gratification") return "Instantáneo";
+
+    // 5. Collectibles & Wearables
+    if (name === "Skill Shrimpy") return "+20% XP";
+    if (name === "Grain Grinder") return "+20% XP";
+    if (name === "Hungry Hare") return "+2x XP";
+    if (name === "Swiss Whiskers") return "+20 XP";
+    if (name === "Observatory") return "+5% XP";
+    if (name === "Astrolabe") return "+10% XP";
+    if (name === "Winged Vase") return "+50% XP";
+    if (name === "Golden Spatula") return "+10% XP";
+    if (name === "Luna's Hat") return "-50% tiempo";
+    if (name === "Pan") return "+25% XP";
+    if (name === "Master Chef's Cleaver") return "+10% XP";
+
+    // 6. Genérico desde effects si los hay
+    if (buff.effects && buff.effects.length > 0) {
+      const eff = buff.effects[0];
+      if (eff.calc) {
+        if (eff.mathematics_operation === "multiply" || eff.mathematics_operation === "speed_multiplier") {
+          if (eff.category === "cooking_time" && eff.calc < 1) {
+            return `-${Math.round((1 - eff.calc) * 100)}% tiempo`;
+          }
+          if (eff.calc > 1) {
+            return `+${Math.round((eff.calc - 1) * 100)}%`;
+          }
+        }
+        if (eff.mathematics_operation === "add") {
+          return `+${eff.calc} XP`;
+        }
+      }
+    }
+
+    return buff.description || "";
+  };
+
+  const renderBuffSquare = (buff, item, size = "md", idx = 0) => {
+    const desc = getBuffEffectDesc(buff, item);
+    const titleText = desc ? `${buff.name}: ${desc}` : buff.name;
+    const isSkillNoStd = Boolean(buff.type === "skill" && buff.image && !buff.image.startsWith("/img/sunflowerland/skills/"));
+    const raySize = size === "sm" ? "w-2 h-2" : "w-2.5 h-2.5";
+    const overlayRayHtml = isSkillNoStd
+      ? `<img src="/img/sunflowerland/123/energy.png" alt="Skill" class="absolute -top-1 -left-1 ${raySize} object-contain [image-rendering:pixelated] drop-shadow pointer-events-none z-10" />`
+      : "";
+
+    const containerSize = size === "sm" ? "w-4 h-4 sm:w-4.5 sm:h-4.5" : "w-5 h-5 sm:w-6 sm:h-6";
+
+    return `
+      <div
+        class="buff-square shrink-0 ${containerSize} rounded bg-[#161618] border border-white/10 p-0.5 flex items-center justify-center cursor-help"
+        style="z-index: ${idx + 1};"
+        title="${titleText}"
+      >
+        <img
+          src="${buff.image}"
+          alt="${buff.name}"
+          class="w-full h-full object-contain [image-rendering:pixelated] pointer-events-none"
+          loading="lazy"
+          decoding="async"
+          onerror="window.handleImgError(this)"
+        />
+        ${overlayRayHtml}
+      </div>
+    `;
   };
 
   const getCalculatedXp = (item) => {
@@ -1350,9 +1622,7 @@ const formatAstroDescription = (skill) => {
         ? priceDict[ing.name]
         : (window.SflMarket && typeof window.SflMarket.getItemPrice === "function" ? window.SflMarket.getItemPrice(ing.name) : 0);
 
-      if (marketPrice > 0) {
-        total += marketPrice * ing.amount
-      } else if (isKnownFish) {
+      if (isKnownFish) {
         let fishCost = window.sflRodCost || 0;
         if (fishCatchCostCache.has(ing.name)) {
           fishCost = fishCatchCostCache.get(ing.name);
@@ -1374,6 +1644,8 @@ const formatAstroDescription = (skill) => {
           fishCatchCostCache.set(ing.name, fishCost);
         }
         total += fishCost * ing.amount;
+      } else if (marketPrice > 0) {
+        total += marketPrice * ing.amount
       } else if (ing.name.startsWith("Aged ") && window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
         let agedCost = 0;
         if (fishCatchCostCache.has(ing.name)) {
@@ -1524,11 +1796,12 @@ const formatAstroDescription = (skill) => {
     const rowsHtml = prepared.map(({ item, finalXp, costObj, timeSeconds, xpPerSfl, xpPerDay }) => {
       // Format visual time
       const displayTime = formatSeconds(timeSeconds);
-      const isCookingDish = item.building !== "Aging Shed";
+      const isAging = item.building === "Aging Shed" || item.name.startsWith("Aged ");
+      const isRawFish = item.building === "Fish";
+      const isCookingDish = !isAging && !isRawFish;
       const effectiveDoubleNom = isCookingDish ? doubleNomMultiplier : 1;
       const displayName = effectiveDoubleNom > 1 ? `${item.name} x${effectiveDoubleNom}` : item.name;
       const dishImg = item.image || `/img/sunflowerland/food/${item.name}.png`;
-      const isAging = item.building === "Aging Shed" || item.name.startsWith("Aged ");
       const rawFishName = isAging ? item.name.replace(/^Aged\s+/i, "") : null;
       const rawFishImg = isAging ? (item.image || `/img/sunflowerland/fish/${rawFishName}.png`) : null;
 
@@ -1545,6 +1818,26 @@ const formatAstroDescription = (skill) => {
         `;
         })
         .join("");
+
+      const itemBuffs = getActiveBuffsForItem(item);
+      let itemBuffsHtmlDesktop = "";
+      let itemBuffsHtmlMobile = "";
+
+      if (itemBuffs.length > 0) {
+        const overlapClassDesktop = itemBuffs.length > 4 ? "-space-x-reverse -space-x-2" : itemBuffs.length > 2 ? "-space-x-reverse -space-x-1.5" : "-space-x-reverse -space-x-1";
+        itemBuffsHtmlDesktop = `
+          <div class="flex flex-row-reverse items-center justify-start ${overlapClassDesktop} mt-1 max-w-full overflow-visible flex-nowrap" title="${itemBuffs.map(b => `${b.name} (${getBuffEffectDesc(b, item)})`).join(' • ')}">
+            ${itemBuffs.map((b, idx) => renderBuffSquare(b, item, "sm", idx)).join("")}
+          </div>
+        `;
+
+        const overlapClassMobile = itemBuffs.length > 4 ? "-space-x-reverse -space-x-2" : "-space-x-reverse -space-x-1.5";
+        itemBuffsHtmlMobile = `
+          <div class="flex flex-row-reverse items-center justify-end ${overlapClassMobile} mt-1.5 relative z-10 max-w-full overflow-visible flex-nowrap" title="${itemBuffs.map(b => `${b.name} (${getBuffEffectDesc(b, item)})`).join(' • ')}">
+            ${itemBuffs.map((b, idx) => renderBuffSquare(b, item, "sm", idx)).join("")}
+          </div>
+        `;
+      }
 
       return `
         <div class="recipe-row hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-[20px] p-5 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[25%_10%_15%_15%_15%_20%] lg:items-center lg:py-3">
@@ -1573,7 +1866,11 @@ const formatAstroDescription = (skill) => {
 
                 </div>
                 <div class="flex items-center justify-between lg:justify-start w-full">
-                  <span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>
+                  ${
+                    isRawFish
+                      ? `<span class="text-[11px] text-emerald-400 font-mono mt-0.5 flex items-center gap-1">⚡ ${tInstant || "Instant"}</span>`
+                      : `<span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>`
+                  }
                   ${
                     item.instant
                       ? `<span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 ml-2"><img src="/img/sunflowerland/123/Gem.png" class="w-3 h-3 object-contain" alt="Gem" width="12" height="12" loading="lazy" decoding="async" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>`
@@ -1585,14 +1882,15 @@ const formatAstroDescription = (skill) => {
           </div>
           
           <div class="grid grid-cols-2 gap-2 mb-3 lg:hidden">
-            <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center relative overflow-hidden">
+            <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center relative overflow-visible">
               <div class="absolute -right-2 -bottom-2 text-white/5 text-4xl font-black pointer-events-none">XP</div>
               <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5 relative z-10">${tTotalXp}</span>
               <div class="flex items-center gap-1 relative z-10 flex-wrap">
                 <span class="text-white text-[15px] font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="Aged (90%): +${item.agedXp} XP · Prime (10%): +${item.primeAgedXp} XP"` : ''}>${formatNumber(finalXp, 0)}</span>
-                ${finalXp > item.xp ? `<span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(item.xp, 0)}">✨</span>` : ""}
+                ${finalXp > item.xp ? `<img src="/img/sunflowerland/123/energy.png" alt="⚡" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] inline-block shrink-0" title="Base: ${formatNumber(item.xp, 0)}" />` : ""}
                 ${isAging && item.primeAgedXp ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-yellow-400/10 text-yellow-300 border border-yellow-400/20" title="Aged: +${item.agedXp} XP (90%) · Prime: +${item.primeAgedXp} XP (10%)">🎲 90/10</span>` : ''}
               </div>
+              ${itemBuffsHtmlMobile}
             </div>
             <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center relative overflow-hidden">
               <div class="absolute -right-2 -bottom-2 text-white/5 text-4xl font-black pointer-events-none">$</div>
@@ -1612,14 +1910,17 @@ const formatAstroDescription = (skill) => {
             </div>
             <div class="bg-white/5 border border-white/5 rounded-lg p-2.5 flex flex-col justify-center">
               <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5">XP/Day</span>
-              <span class="text-blue-300/90 text-sm font-bold font-mono">${formatNumber(xpPerDay, 0)}</span>
+              <span class="text-blue-300/90 text-sm font-bold font-mono">${timeSeconds > 0 ? formatNumber(xpPerDay, 0) : '<span class="text-white/30 font-normal">—</span>'}</span>
             </div>
           </div>
 
-          <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 items-center gap-1.5 flex-wrap">
-            <span class="text-white text-sm font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="Aged (90%): +${item.agedXp} XP · Prime (10%): +${item.primeAgedXp} XP"` : ''}>${formatNumber(finalXp, 0)}</span>
-            ${finalXp > item.xp ? `<span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(item.xp, 0)}">✨</span>` : ""}
-            ${isAging && item.primeAgedXp ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-yellow-400/10 text-yellow-300 border border-yellow-400/20" title="Aged: +${item.agedXp} XP (90%) · Prime: +${item.primeAgedXp} XP (10%)">🎲 90/10</span>` : ''}
+          <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 flex-col items-end justify-center">
+            <div class="flex items-center gap-1.5 flex-wrap justify-end">
+              <span class="text-white text-sm font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="Aged (90%): +${item.agedXp} XP · Prime (10%): +${item.primeAgedXp} XP"` : ''}>${formatNumber(finalXp, 0)}</span>
+              ${finalXp > item.xp ? `<img src="/img/sunflowerland/123/energy.png" alt="⚡" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] inline-block shrink-0" title="Base: ${formatNumber(item.xp, 0)}" />` : ""}
+              ${isAging && item.primeAgedXp ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-yellow-400/10 text-yellow-300 border border-yellow-400/20" title="Aged: +${item.agedXp} XP (90%) · Prime: +${item.primeAgedXp} XP (10%)">🎲 90/10</span>` : ''}
+            </div>
+            ${itemBuffsHtmlDesktop}
           </div>
           
           <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 flex-col justify-center">
@@ -1636,7 +1937,7 @@ const formatAstroDescription = (skill) => {
           </div>
 
           <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 items-center">
-            <span class="text-white text-sm font-bold font-mono">${formatNumber(xpPerDay, 0)}</span>
+            <span class="text-white text-sm font-bold font-mono">${timeSeconds > 0 ? formatNumber(xpPerDay, 0) : '<span class="text-white/30 font-normal">—</span>'}</span>
           </div>
 
           <div class="mt-2 lg:mt-0 lg:px-4 flex flex-wrap lg:flex-col gap-1.5 justify-start lg:justify-center pt-3 lg:pt-0 border-t border-white/5 lg:border-0">
@@ -1802,6 +2103,8 @@ const formatAstroDescription = (skill) => {
       if (bestFoodEfficiencyDisplay) bestFoodEfficiencyDisplay.innerText = "...";
       if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = "...";
       if (bestFoodXpDisplay) bestFoodXpDisplay.innerText = "...";
+      const heroBuffsEmpty = document.getElementById("heroActiveBuffsList");
+      if (heroBuffsEmpty) heroBuffsEmpty.innerHTML = "";
       return;
     }
 
@@ -1949,10 +2252,11 @@ const formatAstroDescription = (skill) => {
     const baseCostDecimals = best.baseCost >= 100 ? 0 : 3;
     if (bestFoodCostDisplay) bestFoodCostDisplay.innerText = `${formatNumber(best.baseCost, baseCostDecimals)} FLOWER`;
     if (bestFoodXpDisplay) {
-      const isBoosted = best.rawBaseXp && best.xp > best.rawBaseXp;
+      const bestBuffs = getActiveBuffsForItem(best);
+      const isBoosted = (best.rawBaseXp && best.xp > best.rawBaseXp) || (bestBuffs && bestBuffs.length > 0);
       const isLowXp = best.xp < 1000;
       const labelLowXp = bestFoodXpDisplay.dataset.labelLowXp || "Baja XP (< 1,000 XP)";
-      bestFoodXpDisplay.innerHTML = `${formatNumber(best.xp, 0)}${isBoosted ? ` <span class="text-[10px] text-emerald-400 opacity-80" title="Base: ${formatNumber(best.rawBaseXp, 0)}">✨</span>` : ""}${isLowXp ? ` <span class="inline-block text-xs select-none ml-1 cursor-help" title="${labelLowXp}">😐</span>` : ""}`;
+      bestFoodXpDisplay.innerHTML = `${formatNumber(best.xp, 0)}${isBoosted ? ` <img src="/img/sunflowerland/123/energy.png" alt="⚡" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] inline-block shrink-0 ml-1" title="Base: ${formatNumber(best.rawBaseXp || best.xp, 0)}" />` : ""}${isLowXp ? ` <span class="inline-block text-xs select-none ml-1 cursor-help" title="${labelLowXp}">😐</span>` : ""}`;
     }
 
     if (bestFoodImg) {
@@ -1969,6 +2273,22 @@ const formatAstroDescription = (skill) => {
       } else {
         dishManualBadge.classList.add("hidden");
         dishManualBadge.classList.remove("inline-flex");
+      }
+    }
+
+    // Actualizar cuadritos de buffs activos para el Alimento Óptimo
+    const heroBuffsContainer = document.getElementById("heroActiveBuffsList");
+    if (heroBuffsContainer) {
+      const bestBuffs = getActiveBuffsForItem(best);
+      if (bestBuffs.length === 0) {
+        heroBuffsContainer.innerHTML = "";
+      } else {
+        const overlapClassHero = bestBuffs.length > 4 ? "-space-x-1 sm:-space-x-1.5" : "gap-1 sm:gap-1.5";
+        heroBuffsContainer.className = `flex items-center ${overlapClassHero} flex-nowrap overflow-visible ml-1.5 shrink-0`;
+        heroBuffsContainer.innerHTML = `
+          <img src="/img/sunflowerland/123/energy.png" alt="⚡" class="w-4 h-4 object-contain [image-rendering:pixelated] shrink-0 mr-0.5" title="Buffs Activos" />
+          ${bestBuffs.map((buff, idx) => renderBuffSquare(buff, best, "md", idx)).join("")}
+        `;
       }
     }
 
@@ -2980,6 +3300,18 @@ const formatAstroDescription = (skill) => {
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
+  }
+
+  /* Cuadritos de buffs: al hacer hover salta por encima de cualquier hermano adyacente */
+  .buff-square {
+    position: relative;
+    transition: transform 0.12s ease-out, border-color 0.12s ease-out, box-shadow 0.12s ease-out;
+  }
+  .buff-square:hover {
+    z-index: 9999 !important;
+    transform: scale(1.35) !important;
+    border-color: rgba(52, 211, 153, 0.9) !important;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.9), 0 0 6px rgba(52, 211, 153, 0.5) !important;
   }
 </style>
 
