@@ -84,9 +84,11 @@ const counts = {
 <script>
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflPrices from "../../lib/sfl/prices"
+  import * as SflFishing from "../../lib/sfl/fishing"
   import { SflUserState } from "../../lib/sfl/state"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflPrices = SflPrices
+  ;(window as any).SflFishing = SflFishing
   ;(window as any).SflUserState = SflUserState
   SflMarket.fetchMarketData()
 </script>
@@ -526,134 +528,15 @@ const counts = {
       let seasonalMatches = []
 
       if (isRod) {
-        const cardTier = card.dataset.tier || "basic"
-        const cardSeasons = (card.dataset.seasons || "").toLowerCase().split(" ")
-
-        // Walrus (+1 pez garantizado)
-        if (activeBuffs.has("Walrus") || activeBuffs.has("478") || activeSkills["Walrus"]) {
-          fishYield += 1.0
-          bonusTags.push("+1 Walrus")
-        }
-
-        // Alba (50% probabilidad de +1 pez básico)
-        if (cardTier === "basic" && (activeBuffs.has("Alba") || activeBuffs.has("479") || activeSkills["Alba"])) {
-          fishYield += 0.5
-          bonusTags.push("+50% Alba")
-        }
-
-        // Dumbo Octopus (20% probabilidad de +1 pez)
-        if (activeBuffs.has("Dumbo Octopus") || activeBuffs.has("3031") || activeSkills["Dumbo Octopus"]) {
-          fishYield += 0.2
-          bonusTags.push("+20% Dumbo")
-        }
-
-        // Fisher's Hourglass (50% probabilidad de +1 pez)
-        if (activeBuffs.has("Fisher's Hourglass") || activeBuffs.has("9015") || activeSkills["Fisher's Hourglass"]) {
-          fishYield += 0.5
-          bonusTags.push("+50% Hourglass")
-        }
-
-        // Shrimp Onesie (+1 pez aleatorio cada 15 lanzamientos = +0.0667 pez/tiro / ~6.67%)
-        if (activeBuffs.has("Shrimp Onesie") || activeBuffs.has("562") || activeSkills["Shrimp Onesie"]) {
-          fishYield += (1 / 15)
-          bonusTags.push("+1/15 Pez Shrimp Onesie")
-        }
-
-        // Otty the Otter (+1 pez aleatorio cada 15 lanzamientos = +0.0667 pez/tiro / ~6.67%)
-        if (activeBuffs.has("Otty the Otter") || activeBuffs.has("3050") || activeSkills["Otty the Otter"]) {
-          fishYield += (1 / 15)
-          bonusTags.push("+1/15 Pez Otty")
-        }
-
-        // Sunflower Rod (+10% probabilidad de +1 pez)
-        if (activeBuffs.has("Sunflower Rod") || activeBuffs.has("9021") || activeSkills["Sunflower Rod"]) {
-          fishYield += 0.10
-          bonusTags.push("+10% Sunflower Rod")
-        }
-
-        // Trident (+20% probabilidad de +1 pez)
-        if (activeBuffs.has("Trident") || activeBuffs.has("9022") || activeSkills["Trident"]) {
-          fishYield += 0.20
-          bonusTags.push("+20% Trident")
-        }
-
-        // Estacionales (+1 pez en temporada - Propuesta A: Máximo +1 no acumulativo)
-        seasonalMatches = []
-        if (cardSeasons.includes("spring") && (activeBuffs.has("Pink Dolphin") || activeBuffs.has("2254") || activeSkills["Pink Dolphin"])) {
-          seasonalMatches.push({
-            name: "Pink Dolphin",
-            season: "Primavera",
-            desc: "Pink Dolphin (+1 Primavera)",
-            img: "/img/sunflowerland/powerups/pink_dolphin.webp",
-          })
-        }
-        if (cardSeasons.includes("summer") && (activeBuffs.has("Jellyfish") || activeBuffs.has("2203") || activeSkills["Jellyfish"])) {
-          seasonalMatches.push({
-            name: "Jellyfish",
-            season: "Verano",
-            desc: "Jellyfish (+1 Verano)",
-            img: "/img/sunflowerland/powerups/jellyfish.webp",
-          })
-        }
-        if (cardSeasons.includes("autumn") && (activeBuffs.has("Poseidon") || activeBuffs.has("2318") || activeSkills["Poseidon"])) {
-          seasonalMatches.push({
-            name: "Poseidon",
-            season: "Otoño",
-            desc: "Poseidon (+1 Otoño)",
-            img: "/img/sunflowerland/powerups/poseidon.webp",
-          })
-        }
-        if (cardSeasons.includes("winter") && (activeBuffs.has("Super Star") || activeBuffs.has("1549") || activeSkills["Super Star"])) {
-          seasonalMatches.push({
-            name: "Super Star",
-            season: "Invierno",
-            desc: "Super Star (+1 Invierno)",
-            img: "/img/sunflowerland/powerups/super_star.webp",
-          })
-        }
-
-        if (seasonalMatches.length > 0) {
-          fishYield += 1.0
-          bonusTags.push(seasonalMatches.length === 1 ? `+1 ${seasonalMatches[0].season}` : "+1 Estacional")
-        }
-
-        // Habilidades del árbol de Pesca
-        if (activeSkills["Fishy Chance"] && cardTier === "basic") {
-          const rank = activeSkills["Fishy Chance"]
-          const chance = rank === 3 ? 0.15 : rank === 2 ? 0.125 : 0.10
-          fishYield += chance
-          bonusTags.push(`+${Math.round(chance * 100)}% Chance`)
-        }
-        if (activeSkills["Fishy Roll"] && cardTier === "advanced") {
-          const rank = activeSkills["Fishy Roll"]
-          const chance = rank === 3 ? 0.15 : rank === 2 ? 0.125 : 0.10
-          fishYield += chance
-          bonusTags.push(`+${Math.round(chance * 100)}% Roll`)
-        }
-        if (activeSkills["Fishy Gamble"] && cardTier === "expert") {
-          const rank = activeSkills["Fishy Gamble"]
-          const chance = rank === 3 ? 0.30 : rank === 2 ? 0.25 : 0.20
-          fishYield += chance
-          bonusTags.push(`+${Math.round(chance * 100)}% Gamble`)
-        }
-        // Evento Fish Frenzy (Frenesí de Peces) y Sinergia con la Skill Frenzied Fish
-        const hasFishFrenzy = Boolean(
-          activeBuffs.has("Fish Frenzy") ||
-          activeBuffs.has("9020") ||
-          (activeSkills && activeSkills["Fish Frenzy"])
-        )
-
-        if (hasFishFrenzy) {
-          let frenzyBonus = 1.0
-          if (activeSkills && activeSkills["Frenzied Fish"]) {
-            const rank = activeSkills["Frenzied Fish"]
-            const skillBonus = rank + 0.5
-            frenzyBonus += skillBonus
-            bonusTags.push(`+${frenzyBonus.toFixed(1)} Frenesí+Skill`)
-          } else {
-            bonusTags.push("+1 Frenesí")
-          }
-          fishYield += frenzyBonus
+        if (window.SflFishing && typeof window.SflFishing.calculateFishYield === "function") {
+          const yieldResult = window.SflFishing.calculateFishYield(
+            card.dataset.tier || "basic",
+            card.dataset.seasons || "",
+            window.SflUserState ? window.SflUserState.getState() : null
+          )
+          fishYield = yieldResult.yield
+          bonusTags = yieldResult.bonusTags
+          seasonalMatches = yieldResult.seasonalMatches
         }
       }
 

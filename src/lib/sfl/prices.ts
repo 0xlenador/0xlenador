@@ -12,6 +12,14 @@
 // ============================================================
 
 import { getItemPrice, getFlowerPrice, getBettyRatio } from "./market"
+import { SflUserState, type SflUserGameState } from "./state"
+import {
+  calculateFishYield,
+  calculateEffectiveRodCost,
+  isFishingBuffActive,
+  getFishingSkillRank,
+  type FishYieldResult,
+} from "./fishing"
 import {
   calculateGemCostUsd,
   calculateAgedFishCost,
@@ -88,6 +96,8 @@ export interface CalculationContext {
   resolveBasePrice?: MaterialPriceResolver
   /** Si true, si un componente intermedio se vende en P2P más barato que fabricarlo, toma el precio P2P. Default: false (calcula el costo de fabricación puro desde la raíz). */
   useOpportunityCost?: boolean
+  /** Estado opcional del jugador (buffs, skills, etc.). Si no se provee en cliente, consulta SflUserState. */
+  userState?: SflUserGameState | null
 }
 
 export interface IngredientBreakdown {
@@ -171,6 +181,16 @@ class DagCostSolver {
 
   constructor(ctx: CalculationContext = {}) {
     this.ctx = ctx
+  }
+
+  private get userState(): SflUserGameState | null {
+    if (this.ctx.userState !== undefined) {
+      return this.ctx.userState
+    }
+    if (typeof window !== "undefined" && (window as any).SflUserState) {
+      return (window as any).SflUserState.getState()
+    }
+    return SflUserState.getState()
   }
 
   private get flowerPrice(): number {
@@ -573,20 +593,31 @@ class DagCostSolver {
       const fishData = getFishData(nameOrId)
       if (fishData) {
         const rodRes = this.resolve("Rod", currentVisited)
+        const stoneRes = this.resolve("Stone", currentVisited)
+        const woodRes = this.resolve("Wood", currentVisited)
+        const effectiveRodFlower = calculateEffectiveRodCost(
+          rodRes.craftCostFlower,
+          stoneRes.craftCostFlower > 0 ? stoneRes.craftCostFlower : stoneRes.marketPriceFlower,
+          woodRes.craftCostFlower > 0 ? woodRes.craftCostFlower : woodRes.marketPriceFlower,
+          this.userState
+        )
+        const fishYieldRes = calculateFishYield(fishData.tier, fishData.seasons, this.userState)
+        const fishYield = Math.max(1.0, fishYieldRes.yield)
 
         // Caso A: Tiburones Apex (White Shark, Saw Shark, Whale Shark) -> usa su cebo garantizado del Fish Market
         if (APEX_SHARKS.has(fishData.name) && fishData.guaranteedBy) {
           const baitRes = this.resolve(fishData.guaranteedBy, currentVisited)
           const baitCost = baitRes.craftCostFlower > 0 ? baitRes.craftCostFlower : baitRes.marketPriceFlower
-          const totalFishFlower = rodRes.craftCostFlower + baitCost
+          const attemptFlower = effectiveRodFlower + baitCost
+          const totalFishFlower = attemptFlower / fishYield
           const totalFishUsd = totalFishFlower * this.flowerPrice
 
           const ingredientsBreakdown: IngredientBreakdown[] = [
             {
               name: rodRes.name,
               amount: 1,
-              unitPriceFlower: rodRes.craftCostFlower,
-              totalFlower: rodRes.craftCostFlower,
+              unitPriceFlower: effectiveRodFlower,
+              totalFlower: effectiveRodFlower,
               isBaseResource: false,
             },
             {
@@ -617,7 +648,7 @@ class DagCostSolver {
             id: fishData.id,
             kind: "craftable",
             category: "fishing",
-            yield: 1,
+            yield: fishYield,
             isCraftable: true,
             craftCostFlower: totalFishFlower,
             craftCostUsd: totalFishUsd,
@@ -675,7 +706,7 @@ class DagCostSolver {
             const chumSub = this.resolve(combo.item, currentVisited)
             const unitChumFlower = chumSub.craftCostFlower > 0 ? chumSub.craftCostFlower : chumSub.marketPriceFlower
             const totalChumFlower = unitChumFlower * combo.amount
-            const comboTotal = rodRes.craftCostFlower + comboBaitFlower + totalChumFlower
+            const comboTotal = effectiveRodFlower + comboBaitFlower + totalChumFlower
 
             if (!bestComboRes || comboTotal < bestComboRes.totalFlower) {
               bestComboRes = {
@@ -691,15 +722,15 @@ class DagCostSolver {
           }
 
           if (bestComboRes) {
-            const totalFishFlower = bestComboRes.totalFlower
+            const totalFishFlower = bestComboRes.totalFlower / fishYield
             const totalFishUsd = totalFishFlower * this.flowerPrice
 
             const ingredientsBreakdown: IngredientBreakdown[] = [
               {
                 name: rodRes.name,
                 amount: 1,
-                unitPriceFlower: rodRes.craftCostFlower,
-                totalFlower: rodRes.craftCostFlower,
+                unitPriceFlower: effectiveRodFlower,
+                totalFlower: effectiveRodFlower,
                 isBaseResource: false,
               },
             ]
@@ -766,7 +797,7 @@ class DagCostSolver {
               id: fishData.id,
               kind: "craftable",
               category: "fishing",
-              yield: 1,
+              yield: fishYield,
               isCraftable: true,
               craftCostFlower: totalFishFlower,
               craftCostUsd: totalFishUsd,
@@ -831,15 +862,16 @@ class DagCostSolver {
           }
         }
 
-        const totalFishFlower = rodRes.craftCostFlower + bestBaitFlower + bestChumFlower
+        const totalAttemptFlower = effectiveRodFlower + bestBaitFlower + bestChumFlower
+        const totalFishFlower = totalAttemptFlower / fishYield
         const totalFishUsd = totalFishFlower * this.flowerPrice
 
         const ingredientsBreakdown: IngredientBreakdown[] = [
           {
             name: rodRes.name,
             amount: 1,
-            unitPriceFlower: rodRes.craftCostFlower,
-            totalFlower: rodRes.craftCostFlower,
+            unitPriceFlower: effectiveRodFlower,
+            totalFlower: effectiveRodFlower,
             isBaseResource: false,
           },
         ]
@@ -909,7 +941,7 @@ class DagCostSolver {
           id: fishData.id,
           kind: "craftable",
           category: "fishing",
-          yield: 1,
+          yield: fishYield,
           isCraftable: true,
           craftCostFlower: totalFishFlower,
           craftCostUsd: totalFishUsd,
@@ -1464,3 +1496,4 @@ export function getAllCaveResourceCosts(options?: ResolveCostOptions): CostResol
 export { CURRENT_SEASON, isSeasonalTicket, getCurrentSeason, type SeasonConfig }
 export { calculateFishingLureCost, FINN_FISHING_LURE_TRADE, type FishingLureCostBreakdown }
 export { getRecipe, getAllRecipes, getRecipesByCategory, getRecipesByBuilding } from "./crafting"
+export * from "./fishing"

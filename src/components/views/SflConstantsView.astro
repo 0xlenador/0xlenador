@@ -1141,10 +1141,12 @@ const animalBuildingsList = [
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflConstants from "../../lib/sfl/constants"
   import * as SflPrices from "../../lib/sfl/prices"
+  import * as SflFishing from "../../lib/sfl/fishing"
   import { SflUserState } from "../../lib/sfl/state"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflConstants = SflConstants
   ;(window as any).SflPrices = SflPrices
+  ;(window as any).SflFishing = SflFishing
   ;(window as any).SflUserState = SflUserState
   // Iniciar la descarga del mercado P2P
   SflMarket.fetchMarketData()
@@ -1925,6 +1927,11 @@ const animalBuildingsList = [
       if (e.detail) {
         syncWithMarket(e.detail)
       }
+    })
+
+    // Escuchar cambios en los buffs globales (SflUserState) para actualizar catálogos como Aging Shed
+    window.addEventListener("sfl:stateUpdated", () => {
+      updateAll()
     })
 
     // 2. Si ya estaba en window o en SflMarket al cargar
