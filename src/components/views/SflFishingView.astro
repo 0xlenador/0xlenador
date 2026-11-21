@@ -99,6 +99,7 @@ const counts = {
     textTrap: t("sfl.fishing.card.breakdownTrap"),
     textChumLabel: t("sfl.fishing.card.chumLabel"),
     textCostNormal: t("sfl.fishing.card.cost"),
+    textCostPerFish: t("sfl.fishing.card.costPerFish"),
     textCostMarvel: t("sfl.fishing.card.costMarvel"),
     textCasts: t("sfl.fishing.card.casts"),
   }}
@@ -513,9 +514,12 @@ const counts = {
         const chumImgEl = activeBadge.querySelector("img")
         const chumImg = chumImgEl ? chumImgEl.getAttribute("src") : `/img/sunflowerland/${chumName}.png`
 
+        const qtyPrefix = amount > 1 ? `<span class="text-white/80 font-mono text-[10px] mr-0.5">${amount}x</span>` : ""
+
         breakdownHtml += `
           <span class="text-white/30">+</span>
           <span class="inline-flex items-center gap-1" title="${amount}x ${chumName} (${chumCost.toFixed(4)} FLOWER)">
+            ${qtyPrefix}
             <img src="${chumImg}" alt="${chumName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
             <span class="text-amber-400 font-bold">(${flowerIconHtml}${chumCost.toFixed(4)})</span>
           </span>
@@ -552,6 +556,15 @@ const counts = {
           window.SflPrices &&
             (window.SflPrices.resolveCost("Rod") || window.SflPrices.getUnitCost("Rod"))
         )
+
+      const costTitleEl = card.querySelector(".cost-title-label")
+      if (costTitleEl && !isMarvel) {
+        if (fishYield > 1) {
+          costTitleEl.textContent = textCostPerFish
+        } else {
+          costTitleEl.textContent = textCostNormal
+        }
+      }
 
       const flowerValNum = card.querySelector(".cost-val-num")
       if (flowerValNum) {
