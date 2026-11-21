@@ -159,14 +159,37 @@ function initSync(): void {
 // API Pública del Administrador de Estado
 // ----------------------------------------------------------------------------
 
-// Grupos de buffs mutuamente excluyentes (activar uno desactiva automáticamente a los demás del grupo)
-const MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS: string[][] = [
-  // Estaciones de Pesca (solo 1 estación activa a la vez)
-  ["Pink Dolphin", "2254"], // Primavera
-  ["Jellyfish", "2203"],    // Verano
-  ["Poseidon", "2318"],     // Otoño
-  ["Super Star", "1549"],   // Invierno
-]
+// Mapeo bidireccional entre IDs numéricos y nombres canónicos de buffs
+const BUFF_ID_ALIASES: Record<string, string[]> = {
+  "Fisher's Hourglass": ["9015"],
+  "9015": ["Fisher's Hourglass"],
+  "Sunflower Rod": ["9021"],
+  "9021": ["Sunflower Rod"],
+  "Trident": ["9022"],
+  "9022": ["Trident"],
+  "Full Moon": ["9023"],
+  "9023": ["Full Moon"],
+  "Deep Sea Helm": ["9024"],
+  "9024": ["Deep Sea Helm"],
+  "Fish Frenzy": ["9020"],
+  "9020": ["Fish Frenzy"],
+  "Summer Guardian": ["2262"],
+  "2262": ["Summer Guardian"],
+  "Navigation Table": ["2992"],
+  "2992": ["Navigation Table"],
+  "Ancient Rod": ["224"],
+  "224": ["Ancient Rod"],
+  "Shrimp Onesie": ["562"],
+  "562": ["Shrimp Onesie"],
+  "Otty the Otter": ["3050"],
+  "3050": ["Otty the Otter"],
+}
+
+function getAllKeysForBuff(key: string): string[] {
+  const strKey = String(key)
+  const aliases = BUFF_ID_ALIASES[strKey] || []
+  return [strKey, ...aliases]
+}
 
 export const SflUserState = {
   /** Devuelve una copia del estado completo del usuario */
@@ -191,56 +214,53 @@ export const SflUserState = {
   /** Establece el rango de una skill. Si rank <= 0, se elimina */
   setSkillRank(skillName: string, rank: number): void {
     const state = this.getState()
+    const keys = getAllKeysForBuff(skillName)
+
     if (rank > 0) {
-      const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
-        subgroup.includes(skillName)
-      )
-      if (currentSubgroupIdx !== -1) {
-        MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.forEach((subgroup, idx) => {
-          if (idx !== currentSubgroupIdx) {
-            subgroup.forEach((member) => {
-              delete state.buffs[member]
-              delete state.skills[member]
-            })
-          }
-        })
-      }
-      state.skills[skillName] = rank
+      keys.forEach((k) => {
+        state.skills[k] = rank
+      })
 
       // Si se activa la habilidad Frenzied Fish, activar automáticamente el evento Fish Frenzy
-      if (skillName === "Frenzied Fish") {
-        state.buffs["Fish Frenzy"] = true
-        state.buffs["9020"] = true
-        state.skills["Fish Frenzy"] = 1
+      if (keys.includes("Frenzied Fish")) {
+        getAllKeysForBuff("Fish Frenzy").forEach((k) => {
+          state.buffs[k] = true
+          state.skills[k] = 1
+        })
       }
       // Si se activa Summer Guardian, activar automáticamente Full Moon
-      if (skillName === "Summer Guardian" || skillName === "2262") {
-        state.buffs["Summer Guardian"] = true
-        state.buffs["2262"] = true
-        state.buffs["Full Moon"] = true
-        state.buffs["9023"] = true
-        state.skills["Full Moon"] = 1
+      if (keys.includes("Summer Guardian") || keys.includes("2262")) {
+        getAllKeysForBuff("Full Moon").forEach((k) => {
+          state.buffs[k] = true
+          state.skills[k] = 1
+        })
       }
     } else {
-      delete state.skills[skillName]
-      delete state.buffs[skillName]
-      if (skillName === "Fish Frenzy" || skillName === "9020") {
-        delete state.buffs["Fish Frenzy"]
-        delete state.buffs["9020"]
-        delete state.skills["Fish Frenzy"]
+      keys.forEach((k) => {
+        delete state.skills[k]
+        delete state.buffs[k]
+      })
+      if (keys.includes("Fish Frenzy") || keys.includes("9020")) {
+        getAllKeysForBuff("Fish Frenzy").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
       }
-      if (skillName === "Full Moon" || skillName === "9023") {
-        delete state.buffs["Full Moon"]
-        delete state.buffs["9023"]
-        delete state.skills["Full Moon"]
-        delete state.buffs["Summer Guardian"]
-        delete state.buffs["2262"]
-        delete state.skills["Summer Guardian"]
+      if (keys.includes("Full Moon") || keys.includes("9023")) {
+        getAllKeysForBuff("Full Moon").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
+        getAllKeysForBuff("Summer Guardian").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
       }
-      if (skillName === "Summer Guardian" || skillName === "2262") {
-        delete state.buffs["Summer Guardian"]
-        delete state.buffs["2262"]
-        delete state.skills["Summer Guardian"]
+      if (keys.includes("Summer Guardian") || keys.includes("2262")) {
+        getAllKeysForBuff("Summer Guardian").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
       }
     }
     saveStateToStorage(state)
@@ -262,96 +282,61 @@ export const SflUserState = {
 
   /** Comprueba si un buff específico está activo */
   isBuffActive(buffIdOrName: string): boolean {
-    const id = String(buffIdOrName)
+    const keys = getAllKeysForBuff(buffIdOrName)
     const state = this.getState()
-    return Boolean(state.buffs[id] || (state.skills[id] && state.skills[id] > 0))
+    return keys.some((k) => Boolean(state.buffs[k] || (state.skills[k] && state.skills[k] > 0)))
   },
 
   /** Activa o desactiva un buff específico */
   setBuffActive(buffIdOrName: string, active: boolean): void {
     const state = this.getState()
-    const id = String(buffIdOrName)
+    const keys = getAllKeysForBuff(buffIdOrName)
+
     if (active) {
-      // Si pertenece a un subgrupo mutuamente exclusivo, apagar los miembros de los otros subgrupos
-      const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
-        subgroup.includes(id)
-      )
-      if (currentSubgroupIdx !== -1) {
-        MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.forEach((subgroup, idx) => {
-          if (idx !== currentSubgroupIdx) {
-            subgroup.forEach((member) => {
-              delete state.buffs[member]
-              delete state.skills[member]
-            })
-          }
+      keys.forEach((k) => {
+        state.buffs[k] = true
+      })
+
+      // Si se activa Frenzied Fish, activar automáticamente el evento Fish Frenzy
+      if (keys.includes("Frenzied Fish")) {
+        getAllKeysForBuff("Fish Frenzy").forEach((k) => {
+          state.buffs[k] = true
+          state.skills[k] = 1
         })
       }
-      state.buffs[id] = true
-      // Si se activa Frenzied Fish, activar automáticamente el evento Fish Frenzy
-      if (id === "Frenzied Fish") {
-        state.buffs["Fish Frenzy"] = true
-        state.buffs["9020"] = true
-        state.skills["Fish Frenzy"] = 1
-      }
       // Si se activa Summer Guardian, activar automáticamente Full Moon
-      if (id === "Summer Guardian" || id === "2262") {
-        state.buffs["Summer Guardian"] = true
-        state.buffs["2262"] = true
-        state.buffs["Full Moon"] = true
-        state.buffs["9023"] = true
-        state.skills["Full Moon"] = 1
-      }
-      if (id === "Full Moon" || id === "9023") {
-        state.buffs["Full Moon"] = true
-        state.buffs["9023"] = true
-        state.skills["Full Moon"] = 1
-      }
-      if (id === "Navigation Table" || id === "2992") {
-        state.buffs["Navigation Table"] = true
-        state.buffs["2992"] = true
-      }
-      if (id === "Deep Sea Helm" || id === "9024") {
-        state.buffs["Deep Sea Helm"] = true
-        state.buffs["9024"] = true
-        state.skills["Deep Sea Helm"] = 1
+      if (keys.includes("Summer Guardian") || keys.includes("2262")) {
+        getAllKeysForBuff("Full Moon").forEach((k) => {
+          state.buffs[k] = true
+          state.skills[k] = 1
+        })
       }
     } else {
-      delete state.buffs[id]
-      delete state.skills[id]
-      if (id === "Fish Frenzy" || id === "9020") {
-        delete state.buffs["Fish Frenzy"]
-        delete state.buffs["9020"]
-        delete state.skills["Fish Frenzy"]
+      keys.forEach((k) => {
+        delete state.buffs[k]
+        delete state.skills[k]
+      })
+
+      if (keys.includes("Fish Frenzy") || keys.includes("9020")) {
+        getAllKeysForBuff("Fish Frenzy").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
       }
-      if (id === "Full Moon" || id === "9023") {
-        delete state.buffs["Full Moon"]
-        delete state.buffs["9023"]
-        delete state.skills["Full Moon"]
-        delete state.buffs["Summer Guardian"]
-        delete state.buffs["2262"]
-        delete state.skills["Summer Guardian"]
+      if (keys.includes("Full Moon") || keys.includes("9023")) {
+        getAllKeysForBuff("Full Moon").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
+        getAllKeysForBuff("Summer Guardian").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
+        })
       }
-      if (id === "Summer Guardian" || id === "2262") {
-        delete state.buffs["Summer Guardian"]
-        delete state.buffs["2262"]
-        delete state.skills["Summer Guardian"]
-      }
-      if (id === "Navigation Table" || id === "2992") {
-        delete state.buffs["Navigation Table"]
-        delete state.buffs["2992"]
-      }
-      if (id === "Deep Sea Helm" || id === "9024") {
-        delete state.buffs["Deep Sea Helm"]
-        delete state.buffs["9024"]
-        delete state.skills["Deep Sea Helm"]
-      }
-      const currentSubgroupIdx = MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS.findIndex((subgroup) =>
-        subgroup.includes(id)
-      )
-      if (currentSubgroupIdx !== -1) {
-        MUTUALLY_EXCLUSIVE_BUFF_SUBGROUPS[currentSubgroupIdx].forEach((member) => {
-          delete state.buffs[member]
-          delete state.skills[member]
+      if (keys.includes("Summer Guardian") || keys.includes("2262")) {
+        getAllKeysForBuff("Summer Guardian").forEach((k) => {
+          delete state.buffs[k]
+          delete state.skills[k]
         })
       }
     }

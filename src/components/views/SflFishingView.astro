@@ -273,12 +273,15 @@ const counts = {
     }
 
     function updateCardCost(card) {
-      const isRod = card.dataset.kind === "rod"
-      const isTrap = card.dataset.kind === "trap"
-      const isMarvel = card.dataset.kind === "marvel"
+      if (!card) return
+      try {
+        const isRod = card.dataset.kind === "rod"
+        const isTrap = card.dataset.kind === "trap"
+        const isMarvel = card.dataset.kind === "marvel"
 
-      let attemptCost = baseAttemptCost
-      let baseLabel = textBase
+        let attemptCost = baseAttemptCost
+        let baseLabel = textBase
+        const flowerIconHtml = `<img src="/img/sunflowerland/flower.jpg" alt="FLOWER" class="w-2.5 h-2.5 rounded-full object-cover shrink-0 inline-block align-middle -translate-y-px mr-0.5" />`
 
       // 1. Si es pesca con caña o maravilla marina, verificar qué cebo está seleccionado
       if (isRod || isMarvel) {
@@ -372,14 +375,43 @@ const counts = {
             }
 
             const effectiveOdds = effectiveOddsVal.toFixed(1)
-            const mapTagStr =
-              mapTags.length > 0
-                ? ` · <span class="text-purple-400 font-bold">[${mapTags.join(" + ")}]</span>`
-                : ""
+            const rodImg = hasAncientRod
+              ? "/img/sunflowerland/powerups/wearables/Ancient Rod.webp"
+              : "/img/sunflowerland/tools/Rod.png"
+            const rodCostVal = hasAncientRod ? "0" : rodCost.toFixed(4)
 
-            baseLabel = baitName
-              ? `~${roundedCasts} ${textCasts} (${effectiveOdds}%) · Caña + <span class="text-teal-400 font-bold">${baitName}</span> (➔ ${fishName})${mapTagStr}`
-              : `~${roundedCasts} ${textCasts} (${effectiveOdds}%) · Caña ➔ <span class="text-cyan-400 font-bold">${fishName}</span>${mapTagStr}`
+            baseLabel = `
+              <span class="text-amber-300 font-bold">~${roundedCasts} ${textCasts}</span>
+              <span class="text-white/30">·</span>
+              <span class="inline-flex items-center gap-1" title="${hasAncientRod ? 'Ancient Rod (0 FLOWER)' : 'Caña (' + rodCost.toFixed(4) + ' FLOWER)'}">
+                <img src="${rodImg}" alt="Rod" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                <span class="${hasAncientRod ? 'text-emerald-400 font-bold' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
+              </span>
+            `
+
+            if (baitName) {
+              const baitImgEl = activeTrigger.querySelector("img")
+              const baitImg = baitImgEl ? baitImgEl.getAttribute("src") : `/img/sunflowerland/fish/a/${baitName}.png`
+              baseLabel += `
+                <span class="text-white/30">+</span>
+                <span class="inline-flex items-center gap-1" title="${baitName} (${baitPrice.toFixed(4)} FLOWER)">
+                  <img src="${baitImg}" alt="${baitName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                  <span class="text-cyan-300 font-bold">(${flowerIconHtml}${baitPrice.toFixed(4)})</span>
+                </span>
+              `
+            }
+
+            const allTrigImgs = activeTrigger.querySelectorAll("img")
+            const fishImgEl = allTrigImgs.length > 1 ? allTrigImgs[1] : allTrigImgs[0]
+            const fishImg = fishImgEl ? fishImgEl.getAttribute("src") : `/img/sunflowerland/fish/${fishName}.png`
+
+            baseLabel += `
+              <span class="text-white/30 text-[9px]">➔</span>
+              <span class="inline-flex items-center gap-1" title="${fishName} (${effectiveOdds}% prob. mapa)">
+                <img src="${fishImg}" alt="${fishName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                <span class="text-purple-300 font-bold">(${effectiveOdds}%)</span>
+              </span>
+            `
           } else {
             if (costTitleEl) {
               costTitleEl.textContent = textCostNormal
@@ -390,9 +422,26 @@ const counts = {
               const isFree = activeBait.dataset.isFree === "true"
               const baitPrice = getBaitUnitPrice(baitName)
               attemptCost = rodCost + baitPrice
-              baseLabel = isFree
-                ? `Caña + <span class="text-emerald-400 font-bold">${baitName} (Gratis)</span>`
-                : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
+
+              const rodImg = hasAncientRod
+                ? "/img/sunflowerland/powerups/wearables/Ancient Rod.webp"
+                : "/img/sunflowerland/tools/Rod.png"
+              const rodCostVal = hasAncientRod ? "0" : rodCost.toFixed(4)
+              const baitImgEl = activeBait.querySelector("img")
+              const baitImg = baitImgEl ? baitImgEl.getAttribute("src") : `/img/sunflowerland/fish/a/${baitName}.png`
+              const baitCostVal = isFree ? "0" : baitPrice.toFixed(4)
+
+              baseLabel = `
+                <span class="inline-flex items-center gap-1" title="${hasAncientRod ? 'Ancient Rod (0 FLOWER)' : 'Caña (' + rodCost.toFixed(4) + ' FLOWER)'}">
+                  <img src="${rodImg}" alt="Rod" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                  <span class="${hasAncientRod ? 'text-emerald-400 font-bold' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
+                </span>
+                <span class="text-white/30">+</span>
+                <span class="inline-flex items-center gap-1" title="${baitName} (${baitCostVal} FLOWER)">
+                  <img src="${baitImg}" alt="${baitName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                  <span class="${isFree ? 'text-emerald-400 font-bold' : 'text-cyan-300 font-bold'}">(${flowerIconHtml}${baitCostVal})</span>
+                </span>
+              `
             }
           }
         } else {
@@ -403,11 +452,26 @@ const counts = {
             const isGuaranteed = activeBait.dataset.isGuaranteed === "true"
             const baitPrice = getBaitUnitPrice(baitName)
             attemptCost = rodCost + baitPrice
-            baseLabel = isFree
-              ? `Caña + <span class="text-emerald-400 font-bold">${baitName} (Gratis)</span>`
-              : isGuaranteed
-                ? `Caña + <span class="text-teal-400 font-bold">${baitName} (100%)</span>`
-                : `Caña + <span class="text-cyan-400 font-bold">${baitName}</span>`
+
+            const rodImg = hasAncientRod
+              ? "/img/sunflowerland/powerups/wearables/Ancient Rod.webp"
+              : "/img/sunflowerland/tools/Rod.png"
+            const rodCostVal = hasAncientRod ? "0" : rodCost.toFixed(4)
+            const baitImgEl = activeBait.querySelector("img")
+            const baitImg = baitImgEl ? baitImgEl.getAttribute("src") : `/img/sunflowerland/fish/a/${baitName}.png`
+            const baitCostVal = isFree ? "0" : baitPrice.toFixed(4)
+
+            baseLabel = `
+              <span class="inline-flex items-center gap-1" title="${hasAncientRod ? 'Ancient Rod (0 FLOWER)' : 'Caña (' + rodCost.toFixed(4) + ' FLOWER)'}">
+                <img src="${rodImg}" alt="Rod" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                <span class="${hasAncientRod ? 'text-emerald-400 font-bold' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
+              </span>
+              <span class="text-white/30">+</span>
+              <span class="inline-flex items-center gap-1" title="${baitName} (${baitCostVal} FLOWER)">
+                <img src="${baitImg}" alt="${baitName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+                <span class="${isFree ? 'text-emerald-400 font-bold' : isGuaranteed ? 'text-teal-300 font-bold' : 'text-cyan-300 font-bold'}">(${flowerIconHtml}${baitCostVal})</span>
+              </span>
+            `
           }
         }
       } else if (isTrap) {
@@ -416,13 +480,20 @@ const counts = {
         const isMariner = trapType.toLowerCase().includes("mariner")
         const currentTrapCost = isMariner ? marinerPotCost : crabPotCost
         attemptCost = currentTrapCost > 0 ? currentTrapCost : baseAttemptCost
-        baseLabel = `Trampa (<span class="text-orange-400 font-bold">${trapType}</span>)`
+        const trapImg = isMariner ? "/img/sunflowerland/tools/Mariner Pot.png" : "/img/sunflowerland/tools/Crab Pot.png"
 
         // Actualizar el valor de costo en el bloque visual de trampa
         const trapValNum = card.querySelector(".trap-val-num")
         if (trapValNum && currentTrapCost > 0) {
           trapValNum.textContent = `${currentTrapCost.toFixed(4)}`
         }
+
+        baseLabel = `
+          <span class="inline-flex items-center gap-1" title="${trapType} (${currentTrapCost.toFixed(4)} FLOWER)">
+            <img src="${trapImg}" alt="${trapType}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+            <span class="text-orange-400 font-bold">(${flowerIconHtml}${currentTrapCost.toFixed(4)})</span>
+          </span>
+        `
       }
 
       // 3. Sumar Chum si está activo (solo para caña normal, trampas o captura directa sin trigger de mapa)
@@ -437,27 +508,26 @@ const counts = {
         const unitPrice = getChumUnitPrice(chumName)
         const chumCost = unitPrice * amount
         totalCost += chumCost
+        const chumImgEl = activeBadge.querySelector("img")
+        const chumImg = chumImgEl ? chumImgEl.getAttribute("src") : `/img/sunflowerland/${chumName}.png`
 
-        // Verificar si la combinación actual Cebo + Chum garantiza 100% la captura
-        const activeBait = card.querySelector(".bait-badge.active")
-        const activeBaitName = activeBait ? activeBait.dataset.baitName : ""
-        const validBaitsStr = activeBadge.dataset.guaranteedBaits || ""
-        const isGuaranteedCombo = validBaitsStr && validBaitsStr.split(",").includes(activeBaitName)
-
-        if (isGuaranteedCombo) {
-          breakdownHtml = `${baseLabel} + <span class="text-teal-400 font-bold">${textChumLabel} (${amount}x ${chumName} - 100%)</span>`
-        } else {
-          breakdownHtml = `${baseLabel} + <span class="text-cyan-400 font-bold">${textChumLabel} (${amount}x ${chumName})</span>`
-        }
+        breakdownHtml += `
+          <span class="text-white/30">+</span>
+          <span class="inline-flex items-center gap-1" title="${amount}x ${chumName} (${chumCost.toFixed(4)} FLOWER)">
+            <img src="${chumImg}" alt="${chumName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
+            <span class="text-amber-400 font-bold">(${flowerIconHtml}${chumCost.toFixed(4)})</span>
+          </span>
+        `
       }
 
       // 4. Rendimiento de Captura (Fish Yield) según potenciadores y habilidades activas
       let fishYield = 1.0
       let bonusTags = []
+      let seasonalMatches = []
 
       if (isRod) {
         const cardTier = card.dataset.tier || "basic"
-        const cardSeasons = (card.dataset.seasons || "").split(" ")
+        const cardSeasons = (card.dataset.seasons || "").toLowerCase().split(" ")
 
         // Walrus (+1 pez garantizado)
         if (activeBuffs.has("Walrus") || activeBuffs.has("478") || activeSkills["Walrus"]) {
@@ -507,22 +577,44 @@ const counts = {
           bonusTags.push("+20% Trident")
         }
 
-        // Estacionales (+1 pez en temporada)
-        if ((activeBuffs.has("Pink Dolphin") || activeBuffs.has("2254")) && cardSeasons.includes("spring")) {
-          fishYield += 1.0
-          bonusTags.push("+1 Primavera")
+        // Estacionales (+1 pez en temporada - Propuesta A: Máximo +1 no acumulativo)
+        seasonalMatches = []
+        if (cardSeasons.includes("spring") && (activeBuffs.has("Pink Dolphin") || activeBuffs.has("2254") || activeSkills["Pink Dolphin"])) {
+          seasonalMatches.push({
+            name: "Pink Dolphin",
+            season: "Primavera",
+            desc: "Pink Dolphin (+1 Primavera)",
+            img: "/img/sunflowerland/powerups/pink_dolphin.webp",
+          })
         }
-        if ((activeBuffs.has("Jellyfish") || activeBuffs.has("2203")) && cardSeasons.includes("summer")) {
-          fishYield += 1.0
-          bonusTags.push("+1 Verano")
+        if (cardSeasons.includes("summer") && (activeBuffs.has("Jellyfish") || activeBuffs.has("2203") || activeSkills["Jellyfish"])) {
+          seasonalMatches.push({
+            name: "Jellyfish",
+            season: "Verano",
+            desc: "Jellyfish (+1 Verano)",
+            img: "/img/sunflowerland/powerups/jellyfish.webp",
+          })
         }
-        if ((activeBuffs.has("Poseidon") || activeBuffs.has("2318")) && cardSeasons.includes("autumn")) {
-          fishYield += 1.0
-          bonusTags.push("+1 Otoño")
+        if (cardSeasons.includes("autumn") && (activeBuffs.has("Poseidon") || activeBuffs.has("2318") || activeSkills["Poseidon"])) {
+          seasonalMatches.push({
+            name: "Poseidon",
+            season: "Otoño",
+            desc: "Poseidon (+1 Otoño)",
+            img: "/img/sunflowerland/powerups/poseidon.webp",
+          })
         }
-        if ((activeBuffs.has("Super Star") || activeBuffs.has("1549")) && cardSeasons.includes("winter")) {
+        if (cardSeasons.includes("winter") && (activeBuffs.has("Super Star") || activeBuffs.has("1549") || activeSkills["Super Star"])) {
+          seasonalMatches.push({
+            name: "Super Star",
+            season: "Invierno",
+            desc: "Super Star (+1 Invierno)",
+            img: "/img/sunflowerland/powerups/super_star.webp",
+          })
+        }
+
+        if (seasonalMatches.length > 0) {
           fishYield += 1.0
-          bonusTags.push("+1 Invierno")
+          bonusTags.push(seasonalMatches.length === 1 ? `+1 ${seasonalMatches[0].season}` : "+1 Estacional")
         }
 
         // Habilidades del árbol de Pesca
@@ -597,18 +689,185 @@ const counts = {
           : "(--)"
       }
 
+      // 5. Recopilar potenciadores y buffs activos aplicables a este pez
+      const activeBuffItems = []
+
+      // Ancient Rod
+      if (hasAncientRod && (isRod || isMarvel)) {
+        activeBuffItems.push({
+          name: "Ancient Rod",
+          desc: "Caña gratis (0 FLOWER)",
+          img: "/img/sunflowerland/powerups/wearables/Ancient Rod.webp",
+        })
+      }
+
+      if (isRod) {
+        if (activeBuffs.has("Sunflower Rod") || activeBuffs.has("9021") || activeSkills["Sunflower Rod"]) {
+          activeBuffItems.push({
+            name: "Sunflower Rod",
+            desc: "+10% prob. +1 pez",
+            img: "/img/sunflowerland/fish/a/sunflower_rod.webp",
+          })
+        }
+        if (activeBuffs.has("Trident") || activeBuffs.has("9022") || activeSkills["Trident"]) {
+          activeBuffItems.push({
+            name: "Trident",
+            desc: "+20% prob. +1 pez",
+            img: "/img/sunflowerland/fish/a/tirdent.webp",
+          })
+        }
+        if (activeBuffs.has("Fisher's Hourglass") || activeBuffs.has("9015") || activeSkills["Fisher's Hourglass"]) {
+          activeBuffItems.push({
+            name: "Fisher's Hourglass",
+            desc: "+50% prob. +1 pez",
+            img: "/img/sunflowerland/aoe/fishers_hourglass.webp",
+          })
+        }
+        if (activeBuffs.has("Shrimp Onesie") || activeBuffs.has("562") || activeSkills["Shrimp Onesie"]) {
+          activeBuffItems.push({
+            name: "Shrimp Onesie",
+            desc: "+1 pez cada 15 lances (+6.67%)",
+            img: "/img/sunflowerland/powerups/wearables/shrimp_onesie.webp",
+          })
+        }
+        if (activeBuffs.has("Otty the Otter") || activeBuffs.has("3050") || activeSkills["Otty the Otter"]) {
+          activeBuffItems.push({
+            name: "Otty the Otter",
+            desc: "+1 pez cada 15 lances (+6.67%)",
+            img: "/img/sunflowerland/powerups/otty_the_otter.webp",
+          })
+        }
+        if (activeBuffs.has("Fish Frenzy") || activeBuffs.has("9020") || activeSkills["Fish Frenzy"]) {
+          activeBuffItems.push({
+            name: "Fish Frenzy",
+            desc: "Día de Frenesí (+1 pez)",
+            img: "/img/sunflowerland/aoe/frenzied_fish.webp",
+          })
+        }
+        if (activeSkills && activeSkills["Frenzied Fish"]) {
+          activeBuffItems.push({
+            name: "Frenzied Fish",
+            desc: `Frenzied Fish R${activeSkills["Frenzied Fish"]}`,
+            img: "/img/sunflowerland/aoe/frenzied_fish.webp",
+            isSkill: true,
+          })
+        }
+        const cardTier = card.dataset.tier || ""
+        if (cardTier === "basic" && activeSkills && activeSkills["Fishy Chance"]) {
+          activeBuffItems.push({
+            name: "Fishy Chance",
+            desc: `Fishy Chance R${activeSkills["Fishy Chance"]}`,
+            img: "/img/sunflowerland/skills/fishy_chance.webp",
+            isSkill: true,
+          })
+        }
+        if (cardTier === "advanced" && activeSkills && activeSkills["Fishy Roll"]) {
+          activeBuffItems.push({
+            name: "Fishy Roll",
+            desc: `Fishy Roll R${activeSkills["Fishy Roll"]}`,
+            img: "/img/sunflowerland/skills/fishy_roll.webp",
+            isSkill: true,
+          })
+        }
+        if (activeSkills && activeSkills["Angler"]) {
+          activeBuffItems.push({
+            name: "Angler",
+            desc: `Angler R${activeSkills["Angler"]}`,
+            img: "/img/sunflowerland/skills/angler.webp",
+            isSkill: true,
+          })
+        }
+        if (seasonalMatches.length > 0) {
+          const mainSeasonMatch = seasonalMatches[0]
+          activeBuffItems.push({
+            name: mainSeasonMatch.name,
+            desc:
+              seasonalMatches.length > 1
+                ? `Bono Estacional (+1 pez en temporada: ${seasonalMatches.map((s) => s.season).join(", ")})`
+                : mainSeasonMatch.desc,
+            img: mainSeasonMatch.img,
+          })
+        }
+      }
+
+      if (isMarvel) {
+        if (activeBuffs.has("Full Moon") || activeBuffs.has("9023") || activeSkills["Full Moon"]) {
+          activeBuffItems.push({
+            name: "Full Moon",
+            desc: "+100% chance mapas",
+            img: "/img/sunflowerland/aoe/full_moon.png",
+          })
+        }
+        if ((activeBuffs.has("Summer Guardian") || activeBuffs.has("2262") || activeSkills["Summer Guardian"]) && (activeBuffs.has("Full Moon") || activeBuffs.has("9023"))) {
+          activeBuffItems.push({
+            name: "Summer Guardian",
+            desc: "+100% chance mapas (Luna Llena)",
+            img: "/img/sunflowerland/powerups/summer_guardian.webp",
+          })
+        }
+        if (activeBuffs.has("Navigation Table") || activeBuffs.has("2992") || activeSkills["Navigation Table"]) {
+          activeBuffItems.push({
+            name: "Navigation Table",
+            desc: "+100% chance mapas",
+            img: "/img/sunflowerland/powerups/navigation_table.webp",
+          })
+        }
+        if (activeBuffs.has("Deep Sea Helm") || activeBuffs.has("9024") || activeSkills["Deep Sea Helm"]) {
+          activeBuffItems.push({
+            name: "Deep Sea Helm",
+            desc: "+100% chance mapas",
+            img: "/img/sunflowerland/fish/a/deep_sea_helm.webp",
+          })
+        }
+      }
+
+      let buffsHtml = ""
+      const yieldBadgeHtml = fishYield > 1
+        ? `<span class="text-cyan-400 font-bold shrink-0 text-[10px] font-mono leading-none" title="${bonusTags.join(', ')}">(~${fishYield.toFixed(2)}x)</span>`
+        : ""
+
+      if (activeBuffItems.length > 0 || fishYield > 1) {
+        const buffImgs = activeBuffItems
+          .map((b) => {
+            const isNonStandardSkill = Boolean(b.isSkill && b.img && !b.img.startsWith("/img/sunflowerland/skills/"))
+            const overlayRayHtml = isNonStandardSkill
+              ? `<img src="/img/sunflowerland/123/energy.png" alt="Skill" class="absolute -top-1 -left-1 w-2 h-2 object-contain [image-rendering:pixelated] drop-shadow pointer-events-none z-10" />`
+              : ""
+            return `
+              <div class="relative shrink-0">
+                <img src="${b.img}" alt="${b.name}" title="${b.name}: ${b.desc}" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] rounded bg-white/5 border border-white/10 shrink-0 hover:scale-125 transition-transform cursor-help" loading="lazy" />
+                ${overlayRayHtml}
+              </div>
+            `
+          })
+          .join("")
+
+        buffsHtml = `
+          <div class="flex items-center gap-1.5 pt-1 mt-1 border-t border-white/[0.04]">
+            <img src="/img/sunflowerland/123/energy.png" alt="Energy" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0" />
+            ${yieldBadgeHtml}
+            <div class="flex items-center flex-wrap gap-1">
+              ${buffImgs}
+            </div>
+          </div>
+        `
+      }
+
       const breakdownEl = card.querySelector(".cost-breakdown-label")
       if (breakdownEl) {
-        let finalBreakdown = breakdownHtml
-        if (hasAncientRod) {
-          finalBreakdown += ` · <span class="text-emerald-400 font-bold">[Caña Gratis]</span>`
-        }
-        if (fishYield > 1) {
-          finalBreakdown += ` · <span class="text-cyan-400 font-bold" title="${bonusTags.join(', ')}">~${fishYield.toFixed(2)}x captura (${totalCost.toFixed(4)}/tiro)</span>`
-        }
-        breakdownEl.innerHTML = finalBreakdown
+        breakdownEl.innerHTML = `
+          <div class="flex flex-col w-full">
+            <div class="flex items-center flex-wrap gap-1 text-[10px] leading-tight font-mono">
+              ${breakdownHtml}
+            </div>
+            ${buffsHtml}
+          </div>
+        `
       }
+    } catch (err) {
+      console.error("Error updating card cost:", card?.dataset?.name, err)
     }
+  }
 
     function updateAllCards() {
       cards.forEach((card) => updateCardCost(card))

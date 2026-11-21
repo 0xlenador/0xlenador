@@ -331,6 +331,7 @@ const getEffectType = (desc: string) => {
                     : skillData.mathematics_1?.calc_by_rank
                       ? Object.keys(skillData.mathematics_1.calc_by_rank).length
                       : 1
+                const isOverlayRay = Boolean(skillData.image && !skillData.image.startsWith("/img/sunflowerland/skills/"))
 
                 return (
                   <div
@@ -347,17 +348,27 @@ const getEffectType = (desc: string) => {
                     style={skillData.disabled ? "pointer-events: none;" : ""}
                   >
                     <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                      <img
-                        src={mainSrc}
-                        class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
-                        onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
-                        alt={skillName}
-                        title={formattedDesc}
-                        width="24"
-                        height="24"
-                        loading="lazy"
-                        decoding="async"
-                      />
+                      <div class="relative shrink-0">
+                        <img
+                          src={mainSrc}
+                          class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
+                          onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                          alt={skillName}
+                          title={formattedDesc}
+                          width="24"
+                          height="24"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        {isOverlayRay && (
+                          <img
+                            src="/img/sunflowerland/123/energy.png"
+                            alt="Skill"
+                            class="absolute -top-1 -left-1 w-3 h-3 object-contain [image-rendering:pixelated] drop-shadow-md pointer-events-none z-10"
+                            loading="lazy"
+                          />
+                        )}
+                      </div>
                       <div class="flex flex-col normal-view min-w-0">
                         <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
                           {skillName}
@@ -812,8 +823,19 @@ const getEffectType = (desc: string) => {
             if ((e.target as HTMLElement).closest(".skill-rank-checkbox, .skill-ranks-container")) return
             const type = card.dataset.type
             if (type === "consumable" || type === "other") {
-              const buffId = card.dataset.buffId || card.dataset.skillId
-              if (buffId) SflUserState.toggleBuff(buffId)
+              const skillId = card.dataset.skillId
+              const buffId = card.dataset.buffId
+              const isActive =
+                (skillId && SflUserState.isBuffActive(skillId)) ||
+                (buffId && SflUserState.isBuffActive(buffId))
+              const nextActive = !isActive
+
+              if (buffId) SflUserState.setBuffActive(buffId, nextActive)
+              if (skillId && skillId !== buffId) SflUserState.setBuffActive(skillId, nextActive)
+              if (!nextActive) {
+                if (skillId) SflUserState.setSkillRank(skillId, 0)
+                if (buffId && buffId !== skillId) SflUserState.setSkillRank(buffId, 0)
+              }
               return
             }
             const skillId = card.dataset.skillId

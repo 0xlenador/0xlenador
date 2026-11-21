@@ -384,6 +384,7 @@ const formatDescription = (skill: any) => {
                       : skillData.mathematics_1?.calc_by_rank
                         ? Object.keys(skillData.mathematics_1.calc_by_rank).length
                         : 1
+                  const isOverlayRay = Boolean(skillData.image && !skillData.image.startsWith("/img/sunflowerland/skills/"))
 
                   return (
                     <div
@@ -399,7 +400,7 @@ const formatDescription = (skill: any) => {
                     >
                       <div class="flex items-start justify-between gap-2">
                         <div class="flex items-start gap-3 min-w-0">
-                          <div class="w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
+                          <div class="relative w-10 h-10 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 p-1 group-hover:scale-105 transition-transform">
                             <img
                               src={mainSrc}
                               alt={skillName}
@@ -407,6 +408,14 @@ const formatDescription = (skill: any) => {
                               onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
                               loading="lazy"
                             />
+                            {isOverlayRay && (
+                              <img
+                                src="/img/sunflowerland/123/energy.png"
+                                alt="Skill"
+                                class="absolute -top-1.5 -left-1.5 w-4 h-4 object-contain [image-rendering:pixelated] drop-shadow-md pointer-events-none z-10"
+                                loading="lazy"
+                              />
+                            )}
                           </div>
                           <div class="flex flex-col min-w-0">
                             <span class="text-xs font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
