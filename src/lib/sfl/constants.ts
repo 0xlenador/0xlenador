@@ -4,6 +4,8 @@ import rawCrustaceansList from "../../content/data/sfl/fishing/crustaceans.json"
 import rawFishMarketList from "../../content/data/sfl/fishing/fish_market.json"
 import { caveData } from "../../content/data/sfl/cave_mining"
 import bettyPrices from "../../content/data/sfl/betty_prices.json"
+import { calculateFishYield, calculateEffectiveRodCost } from "./fishing"
+import { SflUserState, type SflUserGameState } from "./state"
 
 // ============================================================================
 // CONSTANTES BASE OFICIALES DE SUNFLOWER LAND
@@ -396,6 +398,7 @@ export interface CraftingContext {
   gemUsd?: number
   resolveTreasureCoins?: (name: string) => number | null
   resolveBasePrice?: (name: string) => number
+  userState?: SflUserGameState | null
 }
 
 /**
@@ -687,13 +690,26 @@ export function calculateFishCatchCost(
   const fish = _fishByName.get(_normName(fishNameOrId))
   if (!fish) return null
 
-  // 1. Costo Caña (Rod)
-  const rodFlower = calculateRodCost(ctx)
+  // 1. Estado de usuario, caña efectiva y yield
+  const userState =
+    ctx.userState !== undefined
+      ? ctx.userState
+      : typeof window !== "undefined" && (window as any).SflUserState
+        ? (window as any).SflUserState.getState()
+        : SflUserState.getState()
+
+  const rawRodFlower = calculateRodCost(ctx)
+  const stoneFlower = resolveMaterialFlowerCost("Stone", ctx)
+  const woodFlower = resolveMaterialFlowerCost("Wood", ctx)
+  const rodFlower = calculateEffectiveRodCost(rawRodFlower, stoneFlower, woodFlower, userState)
+
+  const fishYieldRes = calculateFishYield(fish.tier, fish.seasons, userState)
+  const fishYield = Math.max(1, fishYieldRes.yield)
 
   // Caso A: Tiburones Apex (White Shark, Saw Shark, Whale Shark) -> usa su cebo del Fish Market
   if (APEX_SHARKS.has(fish.name) && fish.guaranteedBy) {
     const baitFlower = resolveMaterialFlowerCost(fish.guaranteedBy, ctx)
-    const totalFlower = rodFlower + baitFlower
+    const totalFlower = (rodFlower + baitFlower) / fishYield
     const totalUsd = totalFlower * ctx.flowerPriceUsd
 
     return {
@@ -757,7 +773,8 @@ export function calculateFishCatchCost(
     }
 
     if (bestCombo) {
-      const totalUsd = bestCombo.totalFlower * ctx.flowerPriceUsd
+      const totalFlower = bestCombo.totalFlower / fishYield
+      const totalUsd = totalFlower * ctx.flowerPriceUsd
       return {
         id: fish.id,
         name: fish.name,
@@ -772,7 +789,7 @@ export function calculateFishCatchCost(
           totalFlower: bestCombo.chumFlower,
         },
         chumFlower: bestCombo.chumFlower,
-        totalFlower: bestCombo.totalFlower,
+        totalFlower,
         totalUsd,
         xp: fish.xp || 0,
       }
@@ -823,7 +840,8 @@ export function calculateFishCatchCost(
     }
   }
 
-  const totalFlower = rodFlower + baitFlower + chumFlower
+  const totalAttemptFlower = rodFlower + baitFlower + chumFlower
+  const totalFlower = totalAttemptFlower / fishYield
   const totalUsd = totalFlower * ctx.flowerPriceUsd
 
   return {

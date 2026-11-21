@@ -854,10 +854,12 @@ const formatAstroDescription = (skill) => {
   import * as SflMarket from "../../lib/sfl/market"
   import * as SflConstants from "../../lib/sfl/constants"
   import * as SflPrices from "../../lib/sfl/prices"
+  import * as SflFishing from "../../lib/sfl/fishing"
   import { SflUserState } from "../../lib/sfl/state"
   ;(window as any).SflMarket = SflMarket
   ;(window as any).SflConstants = SflConstants
   ;(window as any).SflPrices = SflPrices
+  ;(window as any).SflFishing = SflFishing
   ;(window as any).SflUserState = SflUserState
   // Iniciar la descarga o reusar el mercado P2P centralizado
   SflMarket.fetchMarketData()
@@ -1354,6 +1356,12 @@ const formatAstroDescription = (skill) => {
         let fishCost = window.sflRodCost || 0;
         if (fishCatchCostCache.has(ing.name)) {
           fishCost = fishCatchCostCache.get(ing.name);
+        } else if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+          const costObj = window.SflPrices.getUnitCost(ing.name, window.sflFlowerPrice);
+          if (costObj && costObj.flower > 0) {
+            fishCost = costObj.flower;
+          }
+          fishCatchCostCache.set(ing.name, fishCost);
         } else if (window.SflConstants && typeof window.SflConstants.calculateFishCatchCost === "function") {
           const catchObj = window.SflConstants.calculateFishCatchCost(ing.name, {
             coinsPerFlower: window.sflBestCoinsPerFlower || 1330,
@@ -1366,6 +1374,18 @@ const formatAstroDescription = (skill) => {
           fishCatchCostCache.set(ing.name, fishCost);
         }
         total += fishCost * ing.amount;
+      } else if (ing.name.startsWith("Aged ") && window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+        let agedCost = 0;
+        if (fishCatchCostCache.has(ing.name)) {
+          agedCost = fishCatchCostCache.get(ing.name);
+        } else {
+          const costObj = window.SflPrices.getUnitCost(ing.name, window.sflFlowerPrice);
+          if (costObj && costObj.flower > 0) {
+            agedCost = costObj.flower;
+          }
+          fishCatchCostCache.set(ing.name, agedCost);
+        }
+        total += agedCost * ing.amount;
       } else if (ing.name === "Fish Flake") {
         const flakeCost = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined)
           ? window.sflCustomFishFlakeCost
@@ -2790,6 +2810,7 @@ const formatAstroDescription = (skill) => {
   // Sincronización en vivo con el almacén global SflUserState (vía CustomEvent nativo)
   const syncCookingFromGlobalState = (newState) => {
     if (!newState) return;
+    fishCatchCostCache.clear();
     let hasChanges = false;
 
     // Sincronizar activeBuffs
@@ -2823,11 +2844,10 @@ const formatAstroDescription = (skill) => {
       });
     }
 
-    if (hasChanges) {
-      const searchInput = document.getElementById("searchInput");
-      renderTable(searchInput ? searchInput.value : "");
-      updateSkillCalculator();
-    }
+    // Siempre re-renderizar tabla y calculadora ante cambios de estado global (para reflejar yields y costos dinámicos de pesca/aging)
+    const searchInput = document.getElementById("searchInput");
+    renderTable(searchInput ? searchInput.value : "");
+    updateSkillCalculator();
   };
 
   // Escuchar el evento nativo del navegador inmediatamente (funciona sin importar el orden de carga)
