@@ -96,6 +96,7 @@ export interface RecipeCostOptions {
   allRecipes?: CookingRecipe[]
   resolveFishCatchCost?: (fishName: string) => number | null
   isAgingShed?: boolean
+  isFish?: boolean
 }
 
 // ----------------------------------------------------------------------------
@@ -368,7 +369,11 @@ export function calculateCookingXp(
       boostedExp *= 1.05
     } else if (skillName === "Juicy Boost" && recipe.building === "Smoothie Shack") {
       boostedExp *= 1.1
-    } else if (skillName === "Double Nom" && recipe.building !== "Aging Shed") {
+    } else if (
+      skillName === "Double Nom" &&
+      recipe.building !== "Aging Shed" &&
+      recipe.building !== "Fish"
+    ) {
       boostedExp *= 2
     } else if (skillName === "Fiery Jackpot" && recipe.building === "Fire Pit") {
       boostedExp *= 1.2
@@ -626,9 +631,9 @@ export function calculateRecipeCost(
   }
 
   // Modificadores de costo por habilidades (Debuffs de Double Nom o Instant Gratification)
-  // Solo aplican a recetas de cocina, NO a Aging Shed
+  // Solo aplican a recetas de cocina, NO a Aging Shed ni a peces crudos
   let costMultiplier = 1
-  if (isTopLevel && !options.isAgingShed) {
+  if (isTopLevel && !options.isAgingShed && !options.isFish) {
     if (activeSkills["Double Nom"]) {
       costMultiplier *= 2
     }
@@ -668,12 +673,14 @@ export function calculateRecipeMetrics(
   } = options
 
   const isAgingShed = recipe.building === "Aging Shed"
+  const isFish = recipe.building === "Fish"
   const finalXp = calculateCookingXp(recipe, activeBuffDefinitions, activeSkills)
   const timeSeconds = calculateCookingTime(recipe, activeBuffDefinitions, activeSkills)
   const cost = calculateRecipeCost(recipe.ingredients, {
     ...costOptions,
     activeSkills,
     isAgingShed,
+    isFish,
   })
 
   const xpPerSfl = cost.total > 0 ? finalXp / cost.total : 0

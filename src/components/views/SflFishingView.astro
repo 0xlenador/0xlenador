@@ -854,6 +854,7 @@ const counts = {
           }
 
           updateCardCost(card)
+          persistCardCombo(card)
         })
       })
     })
@@ -911,6 +912,7 @@ const counts = {
           })
 
           updateCardCost(card)
+          persistCardCombo(card)
         })
       })
     })
@@ -962,9 +964,33 @@ const counts = {
           }
 
           updateCardCost(card)
+          persistCardCombo(card)
         })
       })
     })
+
+    // Persiste en el perfil global del usuario (SflUserState) la combinación activa de cebo/chum para este pez
+    function persistCardCombo(card) {
+      if (!card || !window.SflUserState || typeof window.SflUserState.setFishCombo !== "function") return
+      const rawName = card.dataset.rawName || card.dataset.name
+      if (!rawName) return
+
+      const activeBait = card.querySelector(".bait-badge.active")
+      const baitName = activeBait ? activeBait.dataset.baitName : (card.dataset.kind === "trap" ? (card.dataset.trap || "Crab Pot") : null)
+
+      const isMarvelWithTrigger = card.dataset.kind === "marvel" && card.querySelector(".map-trigger-row.active")
+      const activeChum = isMarvelWithTrigger ? null : card.querySelector(".chum-badge.active")
+      const chumName = activeChum ? activeChum.dataset.chumName : null
+      const chumAmount = activeChum ? (parseFloat(activeChum.dataset.chumAmount) || 1) : null
+
+      if (baitName) {
+        window.SflUserState.setFishCombo(rawName, {
+          bait: baitName,
+          chum: chumName || null,
+          chumAmount: chumAmount || null,
+        })
+      }
+    }
 
     // Actualiza dinámicamente los badges 100% de los Chums según el cebo actualmente seleccionado
     function updateChumGuaranteedBadges(card) {
@@ -1134,6 +1160,34 @@ const counts = {
     // Selecciona por defecto la opción 100% garantizada más económica (o la base más barata si no tiene garantía)
     function selectOptimalCardSetup(card) {
       if (!card) return
+
+      // Prioridad 0: Si el usuario ya configuró y guardó una combinación personalizada para este pez
+      const rawName = card.dataset.rawName || card.dataset.name
+      if (window.SflUserState && typeof window.SflUserState.getFishCombo === "function" && rawName) {
+        const savedCombo = window.SflUserState.getFishCombo(rawName) || window.SflUserState.getFishCombo(card.dataset.name)
+        if (savedCombo) {
+          if (card.dataset.kind === "trap") {
+            if (savedCombo.chum) {
+              const targetChum = card.querySelector(`.chum-badge[data-chum-name="${savedCombo.chum}"]`)
+              if (targetChum) activateChumBadge(card, targetChum)
+            } else {
+              activateChumBadge(card, null)
+            }
+            return
+          } else if (savedCombo.bait) {
+            const targetBait = card.querySelector(`.bait-badge[data-bait-name="${savedCombo.bait}"]`)
+            if (targetBait) activateBaitBadge(card, targetBait)
+            if (savedCombo.chum) {
+              const targetChum = card.querySelector(`.chum-badge[data-chum-name="${savedCombo.chum}"]`)
+              if (targetChum) activateChumBadge(card, targetChum)
+            } else {
+              activateChumBadge(card, null)
+            }
+            syncChumAvailability(card)
+            return
+          }
+        }
+      }
 
       if (card.dataset.kind === "marvel") {
         selectCheapestBait(card)
@@ -1401,6 +1455,7 @@ const counts = {
           }
 
           updateCardCost(card)
+          persistCardCombo(card)
         })
       })
     }

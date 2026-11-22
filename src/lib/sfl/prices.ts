@@ -604,6 +604,135 @@ class DagCostSolver {
         const fishYieldRes = calculateFishYield(fishData.tier, fishData.seasons, this.userState)
         const fishYield = Math.max(1.0, fishYieldRes.yield)
 
+        // Caso 0: Combinación personalizada de Cebo y Chum configurada por el usuario en sfl-fishing
+        const userFishingCombos = this.userState?.preferences?.fishingCombos
+        const userCustomCombo =
+          userFishingCombos?.[fishData.name] ||
+          userFishingCombos?.[fishData.name.toLowerCase()] ||
+          userFishingCombos?.[fishData.id]
+
+        if (userCustomCombo && userCustomCombo.bait) {
+          let customBaitFlower = 0
+          let customBaitRes: CostResolution | null = null
+          if (!FREE_COMPOST_BAITS.has(userCustomCombo.bait)) {
+            customBaitRes = this.resolve(userCustomCombo.bait, currentVisited)
+            customBaitFlower =
+              customBaitRes.craftCostFlower > 0
+                ? customBaitRes.craftCostFlower
+                : customBaitRes.marketPriceFlower
+          }
+
+          let customChumFlower = 0
+          let customChumRes: CostResolution | null = null
+          const chumAmount = Number(userCustomCombo.chumAmount) || 1
+          if (userCustomCombo.chum) {
+            customChumRes = this.resolve(userCustomCombo.chum, currentVisited)
+            const unitChum =
+              customChumRes.craftCostFlower > 0
+                ? customChumRes.craftCostFlower
+                : customChumRes.marketPriceFlower
+            customChumFlower = unitChum * chumAmount
+          }
+
+          const attemptFlower = effectiveRodFlower + customBaitFlower + customChumFlower
+          const totalFishFlower = attemptFlower / fishYield
+          const totalFishUsd = totalFishFlower * this.flowerPrice
+
+          const ingredientsBreakdown: IngredientBreakdown[] = [
+            {
+              name: rodRes.name,
+              amount: 1,
+              unitPriceFlower: effectiveRodFlower,
+              totalFlower: effectiveRodFlower,
+              isBaseResource: false,
+            },
+          ]
+
+          const baseMaterialsMap = new Map<string, { amount: number; totalFlower: number }>()
+          for (const base of rodRes.baseMaterials) {
+            baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+          }
+
+          if (userCustomCombo.bait) {
+            ingredientsBreakdown.push({
+              name: userCustomCombo.bait,
+              amount: 1,
+              unitPriceFlower: customBaitFlower,
+              totalFlower: customBaitFlower,
+              isBaseResource: !customBaitRes || !customBaitRes.isCraftable,
+            })
+            if (customBaitRes && customBaitRes.baseMaterials) {
+              for (const base of customBaitRes.baseMaterials) {
+                const ex = baseMaterialsMap.get(base.name)
+                if (ex) {
+                  ex.amount += base.amount
+                  ex.totalFlower += base.totalFlower
+                } else {
+                  baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+                }
+              }
+            }
+          }
+
+          if (customChumRes && customChumFlower > 0) {
+            ingredientsBreakdown.push({
+              name: customChumRes.name,
+              amount: chumAmount,
+              unitPriceFlower: customChumFlower / chumAmount,
+              totalFlower: customChumFlower,
+              isBaseResource: !customChumRes.isCraftable,
+            })
+            if (customChumRes.baseMaterials.length > 0) {
+              for (const base of customChumRes.baseMaterials) {
+                const scaledAmount = base.amount * chumAmount
+                const scaledFlower = base.totalFlower * chumAmount
+                const ex = baseMaterialsMap.get(base.name)
+                if (ex) {
+                  ex.amount += scaledAmount
+                  ex.totalFlower += scaledFlower
+                } else {
+                  baseMaterialsMap.set(base.name, { amount: scaledAmount, totalFlower: scaledFlower })
+                }
+              }
+            } else {
+              const ex = baseMaterialsMap.get(customChumRes.name)
+              if (ex) {
+                ex.amount += chumAmount
+                ex.totalFlower += customChumFlower
+              } else {
+                baseMaterialsMap.set(customChumRes.name, {
+                  amount: chumAmount,
+                  totalFlower: customChumFlower,
+                })
+              }
+            }
+          }
+
+          const res: CostResolution = {
+            name: fishData.name,
+            id: fishData.id,
+            kind: "craftable",
+            category: "fishing",
+            yield: fishYield,
+            isCraftable: true,
+            craftCostFlower: totalFishFlower,
+            craftCostUsd: totalFishUsd,
+            hasMarketPrice,
+            marketPriceFlower,
+            marketPriceUsd,
+            coins: 0,
+            coinsFlower: 0,
+            ingredients: ingredientsBreakdown,
+            baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
+              name: k,
+              amount: v.amount,
+              totalFlower: v.totalFlower,
+            })),
+          }
+          this.memo.set(memoKey, res)
+          return res
+        }
+
         // Caso A: Tiburones Apex (White Shark, Saw Shark, Whale Shark) -> usa su cebo garantizado del Fish Market
         if (APEX_SHARKS.has(fishData.name) && fishData.guaranteedBy) {
           const baitRes = this.resolve(fishData.guaranteedBy, currentVisited)
@@ -883,21 +1012,23 @@ class DagCostSolver {
           baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
         }
 
-        if (bestBaitRes && bestBaitFlower > 0) {
+        if (bestBaitName) {
           ingredientsBreakdown.push({
-            name: bestBaitRes.name,
+            name: bestBaitName,
             amount: 1,
             unitPriceFlower: bestBaitFlower,
             totalFlower: bestBaitFlower,
-            isBaseResource: !bestBaitRes.isCraftable,
+            isBaseResource: !bestBaitRes || !bestBaitRes.isCraftable,
           })
-          for (const base of bestBaitRes.baseMaterials) {
-            const ex = baseMaterialsMap.get(base.name)
-            if (ex) {
-              ex.amount += base.amount
-              ex.totalFlower += base.totalFlower
-            } else {
-              baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+          if (bestBaitRes && bestBaitRes.baseMaterials) {
+            for (const base of bestBaitRes.baseMaterials) {
+              const ex = baseMaterialsMap.get(base.name)
+              if (ex) {
+                ex.amount += base.amount
+                ex.totalFlower += base.totalFlower
+              } else {
+                baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
+              }
             }
           }
         }
@@ -983,11 +1114,24 @@ class DagCostSolver {
           baseMaterialsMap.set(base.name, { amount: base.amount, totalFlower: base.totalFlower })
         }
 
-        // Chum más económico (min Chum) — son alternativas excluyentes
+        // Chum para trampa: si el usuario configuró uno en sfl-fishing o si no, el más económico
         let bestChumRes: { res: CostResolution; amount: number; totalFlower: number } | null = null
         let bestChumFlower = 0
 
-        if (crustData.chum && crustData.chum.length > 0) {
+        const userCrustCombos = this.userState?.preferences?.fishingCombos
+        const userCrustCombo =
+          userCrustCombos?.[crustData.name] ||
+          userCrustCombos?.[crustData.name.toLowerCase()] ||
+          userCrustCombos?.[crustData.id]
+
+        if (userCrustCombo && userCrustCombo.chum) {
+          const sub = this.resolve(userCrustCombo.chum, currentVisited)
+          const unitPrice = sub.craftCostFlower > 0 ? sub.craftCostFlower : sub.marketPriceFlower
+          const amount = Number(userCrustCombo.chumAmount) || 1
+          const optTotal = unitPrice * amount
+          bestChumRes = { res: sub, amount, totalFlower: optTotal }
+          bestChumFlower = optTotal
+        } else if (crustData.chum && crustData.chum.length > 0) {
           let minChum = Infinity
           for (const opt of crustData.chum) {
             const sub = this.resolve(opt.item, currentVisited)

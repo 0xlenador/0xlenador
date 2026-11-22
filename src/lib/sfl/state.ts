@@ -10,6 +10,12 @@
  * - Sincronización cross-tab nativa vía listener de 'storage'.
  */
 
+export interface CustomFishingCombo {
+  bait: string
+  chum?: string | null
+  chumAmount?: number | null
+}
+
 export interface SflUserPreferences {
   flowerPriceUsd?: number
   coinsPerFlower?: number
@@ -18,6 +24,8 @@ export interface SflUserPreferences {
   customFishStickCost?: number | null
   customCrabStickCost?: number | null
   customFishOilCost?: number | null
+  /** Combinaciones personalizadas de cebo y chum por pez configuradas en sfl-fishing */
+  fishingCombos?: Record<string, CustomFishingCombo>
 }
 
 export interface SflUserGameState {
@@ -364,6 +372,41 @@ export const SflUserState = {
       ...updates,
     }
     saveStateToStorage(state)
+  },
+
+  /** Establece o actualiza la combinación personalizada de captura para un pez */
+  setFishCombo(fishName: string, combo: CustomFishingCombo): void {
+    const state = this.getState()
+    const combos = { ...(state.preferences.fishingCombos || {}) }
+    combos[fishName] = combo
+    state.preferences = {
+      ...state.preferences,
+      fishingCombos: combos,
+    }
+    saveStateToStorage(state)
+  },
+
+  /** Elimina la combinación personalizada de un pez (vuelve al fallback por defecto) */
+  removeFishCombo(fishName: string): void {
+    const state = this.getState()
+    if (!state.preferences.fishingCombos || !state.preferences.fishingCombos[fishName]) return
+    const combos = { ...state.preferences.fishingCombos }
+    delete combos[fishName]
+    state.preferences = {
+      ...state.preferences,
+      fishingCombos: combos,
+    }
+    saveStateToStorage(state)
+  },
+
+  /** Obtiene la combinación personalizada para un pez si existe */
+  getFishCombo(fishName: string): CustomFishingCombo | undefined {
+    return this.getState().preferences.fishingCombos?.[fishName]
+  },
+
+  /** Obtiene todas las combinaciones personalizadas de pesca */
+  getAllFishCombos(): Record<string, CustomFishingCombo> {
+    return this.getState().preferences.fishingCombos || {}
   },
 
   /**

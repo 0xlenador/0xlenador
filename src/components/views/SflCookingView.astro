@@ -22,6 +22,7 @@ const sflPowerUpsData = sflPowerUpsDataEntry.data.power_ups
 
 import { getAllCookingRecipes } from "../../lib/sfl/cooking"
 import { getCookingBuffs } from "../../lib/sfl/buffs"
+import rawFishList from "../../content/data/sfl/fishing/fish.json"
 import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 
 const cookingBuffs = getCookingBuffs()
@@ -908,6 +909,8 @@ const formatAstroDescription = (skill) => {
     tFlowerCost: t("sfl.cooking.table.colCost"),
     tIncompletePrice: t("sfl.cooking.table.incompletePrice"),
     tIncompleteTooltip: t("sfl.cooking.table.incompletePriceTooltip"),
+    tToggleCurrency: t("sfl.cooking.table.togglePriceCurrency"),
+    rawFishList,
   }}
 >
   window.handleImgError = function(img) {
@@ -928,11 +931,206 @@ const formatAstroDescription = (skill) => {
     return true;
   };
 
-  const fishList = [
-    'Anchovy', 'Angelfish', 'Blowfish', 'Butterflyfish', 'Halibut', 
-    'Horse Mackerel', 'Napoleanfish', 'Olive Flounder', 'Red Snapper', 
-    'Squid', 'Sunfish', 'Surgeonfish', 'Tuna'
+  const FISH_NAMES_FULL = [
+    'Anchovy', 'Angelfish', 'Barred Knifejaw', 'Blowfish', 'Blue Marlin', 'Butterflyfish', 
+    'Clownfish', 'Cobia', 'Coelacanth', 'Football fish', 'Halibut', 'Hammerhead shark', 
+    'Horse Mackerel', 'Mahi Mahi', 'Napoleanfish', 'Oarfish', 'Olive Flounder', 'Parrotfish', 
+    'Phantom Barracuda', 'Porgy', 'Ray', 'Red Snapper', 'Rock Blackfish', 'Saw Shark', 
+    'Sea Bass', 'Sea Horse', 'Squid', 'Sunfish', 'Surgeonfish', 'Tilapia', 'Trout', 
+    'Tuna', 'Walleye', 'Weakfish', 'Whale Shark', 'White Shark', 'Zebra Turkeyfish',
+    'Crystal Shrimp', 'Deep Sea Pig', 'Deep Sea Slug', 'Dollocaris', 'Garden Eel', 
+    'Giant Isopod', 'Gilded Swordfish', 'Longhorn Cowfish', 'Nautilus', 'Twilight Anglerfish',
+    'Octopus', 'Moray Eel',
+    'Crab', 'Blue Crab', 'Hermit Crab', 'Sea Slug', 'Mussel', 'Isopod', 'Sea Snail',
+    'Shrimp', 'Lobster', 'Barnacle', 'Oyster'
   ];
+  const KNOWN_FISH_SET = new Set(FISH_NAMES_FULL.map(f => f.toLowerCase()));
+
+  function isFishOrCrust(name) {
+    if (!name) return false;
+    if (KNOWN_FISH_SET.has(name.toLowerCase())) return true;
+    if (window.SflConstants) {
+      if (typeof window.SflConstants.isFish === "function" && window.SflConstants.isFish(name)) return true;
+      if (typeof window.SflConstants.isCrustacean === "function" && window.SflConstants.isCrustacean(name)) return true;
+    }
+    return false;
+  }
+
+  const fishDataMap = new Map();
+  if (Array.isArray(rawFishList)) {
+    rawFishList.forEach(f => {
+      if (f && f.name) {
+        fishDataMap.set(f.name.toLowerCase().trim(), f);
+        if (f.id) fishDataMap.set(String(f.id).toLowerCase().trim(), f);
+      }
+    });
+  }
+
+  function getFishData(name) {
+    if (!name) return null;
+    const clean = String(name).toLowerCase().trim();
+    if (fishDataMap.has(clean)) return fishDataMap.get(clean);
+    if (window.SflConstants && typeof window.SflConstants.getFishData === "function") {
+      return window.SflConstants.getFishData(name);
+    }
+    return null;
+  }
+
+  function getFishYieldAndBuffs(fishName) {
+    const fishInfo = getFishData(fishName);
+    const tier = fishInfo?.tier || "basic";
+    const seasons = fishInfo?.seasons || [];
+
+    const userState = window.SflUserState && typeof window.SflUserState.getState === "function"
+      ? window.SflUserState.getState()
+      : null;
+
+    let fishYield = 1.0;
+    let bonusTags = [];
+    let seasonalMatches = [];
+
+    if (window.SflFishing && typeof window.SflFishing.calculateFishYield === "function") {
+      const yieldRes = window.SflFishing.calculateFishYield(tier, seasons, userState);
+      fishYield = Math.max(1, yieldRes.yield || 1);
+      bonusTags = yieldRes.bonusTags || [];
+      seasonalMatches = yieldRes.seasonalMatches || [];
+    }
+
+    const hasAncientRod = Boolean(
+      window.sflHasAncientRod ||
+      (activeBuffs && (activeBuffs.has("Ancient Rod") || activeBuffs.has("224"))) ||
+      (activeSkills && activeSkills["Ancient Rod"])
+    );
+
+    const activeBuffItems = [];
+
+    if (hasAncientRod) {
+      activeBuffItems.push({
+        name: "Ancient Rod",
+        desc: "Caña gratis (0 FLOWER)",
+        img: "/img/sunflowerland/powerups/wearables/Ancient Rod.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Walrus") || activeBuffs.has("9025") || (activeSkills && activeSkills["Walrus"]))) {
+      activeBuffItems.push({
+        name: "Walrus",
+        desc: "+1 pez garantizado",
+        img: "/img/sunflowerland/powerups/walrus.webp",
+      });
+    }
+    if (tier === "basic" && activeBuffs && (activeBuffs.has("Alba") || activeBuffs.has("9026") || (activeSkills && activeSkills["Alba"]))) {
+      activeBuffItems.push({
+        name: "Alba",
+        desc: "+50% prob. +1 pez básico",
+        img: "/img/sunflowerland/powerups/alba.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Dumbo Octopus") || activeBuffs.has("9027") || (activeSkills && activeSkills["Dumbo Octopus"]))) {
+      activeBuffItems.push({
+        name: "Dumbo Octopus",
+        desc: "+20% prob. +1 pez",
+        img: "/img/sunflowerland/powerups/dumbo_octopus.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Sunflower Rod") || activeBuffs.has("9021") || (activeSkills && activeSkills["Sunflower Rod"]))) {
+      activeBuffItems.push({
+        name: "Sunflower Rod",
+        desc: "+10% prob. +1 pez",
+        img: "/img/sunflowerland/fish/a/sunflower_rod.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Trident") || activeBuffs.has("9022") || (activeSkills && activeSkills["Trident"]))) {
+      activeBuffItems.push({
+        name: "Trident",
+        desc: "+20% prob. +1 pez",
+        img: "/img/sunflowerland/fish/a/tirdent.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Fisher's Hourglass") || activeBuffs.has("9015") || (activeSkills && activeSkills["Fisher's Hourglass"]))) {
+      activeBuffItems.push({
+        name: "Fisher's Hourglass",
+        desc: "+50% prob. +1 pez",
+        img: "/img/sunflowerland/aoe/fishers_hourglass.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Shrimp Onesie") || activeBuffs.has("562") || (activeSkills && activeSkills["Shrimp Onesie"]))) {
+      activeBuffItems.push({
+        name: "Shrimp Onesie",
+        desc: "+1 pez cada 15 lances (+6.67%)",
+        img: "/img/sunflowerland/powerups/wearables/shrimp_onesie.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Otty the Otter") || activeBuffs.has("3050") || (activeSkills && activeSkills["Otty the Otter"]))) {
+      activeBuffItems.push({
+        name: "Otty the Otter",
+        desc: "+1 pez cada 15 lances (+6.67%)",
+        img: "/img/sunflowerland/powerups/otty_the_otter.webp",
+      });
+    }
+    if (activeBuffs && (activeBuffs.has("Fish Frenzy") || activeBuffs.has("9020") || (activeSkills && activeSkills["Fish Frenzy"]))) {
+      activeBuffItems.push({
+        name: "Fish Frenzy",
+        desc: "Día de Frenesí (+1 pez)",
+        img: "/img/sunflowerland/aoe/frenzied_fish.webp",
+      });
+    }
+    if (activeSkills && activeSkills["Frenzied Fish"]) {
+      activeBuffItems.push({
+        name: "Frenzied Fish",
+        desc: `Frenzied Fish R${activeSkills["Frenzied Fish"]}`,
+        img: "/img/sunflowerland/aoe/frenzied_fish.webp",
+        isSkill: true,
+      });
+    }
+    if (tier === "basic" && activeSkills && activeSkills["Fishy Chance"]) {
+      activeBuffItems.push({
+        name: "Fishy Chance",
+        desc: `Fishy Chance R${activeSkills["Fishy Chance"]}`,
+        img: "/img/sunflowerland/skills/fishy_chance.webp",
+        isSkill: true,
+      });
+    }
+    if (tier === "advanced" && activeSkills && activeSkills["Fishy Roll"]) {
+      activeBuffItems.push({
+        name: "Fishy Roll",
+        desc: `Fishy Roll R${activeSkills["Fishy Roll"]}`,
+        img: "/img/sunflowerland/skills/fishy_roll.webp",
+        isSkill: true,
+      });
+    }
+    if (tier === "expert" && activeSkills && activeSkills["Fishy Gamble"]) {
+      activeBuffItems.push({
+        name: "Fishy Gamble",
+        desc: `Fishy Gamble R${activeSkills["Fishy Gamble"]}`,
+        img: "/img/sunflowerland/skills/fishy_gamble.webp",
+        isSkill: true,
+      });
+    }
+    if (activeSkills && activeSkills["Angler"]) {
+      activeBuffItems.push({
+        name: "Angler",
+        desc: `Angler R${activeSkills["Angler"]}`,
+        img: "/img/sunflowerland/skills/angler.webp",
+        isSkill: true,
+      });
+    }
+    if (seasonalMatches.length > 0) {
+      const mainMatch = seasonalMatches[0];
+      activeBuffItems.push({
+        name: mainMatch.name,
+        desc: seasonalMatches.length > 1
+          ? `Bono Estacional (+1 pez en temporada: ${seasonalMatches.map((s) => s.season).join(", ")})`
+          : mainMatch.desc,
+        img: mainMatch.img,
+      });
+    }
+
+    return {
+      fishYield,
+      bonusTags,
+      activeBuffItems,
+    };
+  }
 
   function getIngredientImg(ing) {
     if (ing && typeof ing === 'object' && ing.image) return ing.image;
@@ -948,8 +1146,183 @@ const formatAstroDescription = (skill) => {
     if (name === 'Fish Oil') return '/img/sunflowerland/fish/a/fish_oil.webp';
     if (name === 'Truffle') return '/img/sunflowerland/truffle.webp';
     if (name === 'Salt') return '/img/sunflowerland/Salt.png';
-    if (fishList.includes(name) || (window.SflConstants && typeof window.SflConstants.isFish === 'function' && window.SflConstants.isFish(name))) return `/img/sunflowerland/fish/${name}.png`;
+    if (name === 'Rod') return '/img/sunflowerland/tools/Rod.png';
+    if (name === 'Ancient Rod') return '/img/sunflowerland/powerups/wearables/Ancient Rod.webp';
+    if (name === 'Crab Pot') return '/img/sunflowerland/tools/Crab Pot.png';
+    if (name === 'Mariner Pot') return '/img/sunflowerland/tools/Mariner Pot.png';
+    if (name === 'Earthworm') return '/img/sunflowerland/fish/a/Earthworm.png';
+    if (name === 'Grub') return '/img/sunflowerland/fish/a/Grub.png';
+    if (name === 'Red Wiggler') return '/img/sunflowerland/fish/a/Red Wiggler.png';
+    if (name === 'Fishing Lure') return '/img/sunflowerland/fish/a/Fishing Lure.png';
+    if (name === 'Capsule Bait') return '/img/sunflowerland/Capsule Bait.png';
+    if (name === 'Crimson Baitfish') return '/img/sunflowerland/Crimson Baitfish.png';
+    if (name === 'Umbrella Bait') return '/img/sunflowerland/Umbrella Bait.png';
+    if (isFishOrCrust(name)) return `/img/sunflowerland/fish/${name}.png`;
     return `/img/sunflowerland/${name}.png`;
+  }
+
+  function getIngredientPriceInfo(ingName, amt) {
+    let unitFlower = 0;
+    const flowerUsd = window.sflFlowerPrice || 0.0854;
+    const isFish = isFishOrCrust(ingName);
+
+    if (isFish) {
+      if (fishCatchCostCache.has(ingName)) {
+        unitFlower = fishCatchCostCache.get(ingName);
+      } else if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+        const costObj = window.SflPrices.getUnitCost(ingName, flowerUsd);
+        if (costObj && costObj.flower > 0) {
+          unitFlower = costObj.flower;
+        }
+        fishCatchCostCache.set(ingName, unitFlower);
+      } else if (window.SflConstants && typeof window.SflConstants.calculateFishCatchCost === "function") {
+        const catchObj = window.SflConstants.calculateFishCatchCost(ingName, {
+          coinsPerFlower: window.sflBestCoinsPerFlower || 1330,
+          flowerPriceUsd: flowerUsd,
+          resolveBasePrice: (n) => priceDict[n] || (window.SflMarket ? window.SflMarket.getItemPrice(n) : 0),
+        });
+        if (catchObj && catchObj.totalFlower > 0) {
+          unitFlower = catchObj.totalFlower;
+        }
+        fishCatchCostCache.set(ingName, unitFlower);
+      }
+    } else if (priceDict[ingName] !== undefined && priceDict[ingName] > 0) {
+      unitFlower = priceDict[ingName];
+    } else if (window.SflMarket && typeof window.SflMarket.getItemPrice === "function" && window.SflMarket.getItemPrice(ingName) > 0) {
+      unitFlower = window.SflMarket.getItemPrice(ingName);
+    } else if (ingName.startsWith("Aged ") && window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+      if (fishCatchCostCache.has(ingName)) {
+        unitFlower = fishCatchCostCache.get(ingName);
+      } else {
+        const costObj = window.SflPrices.getUnitCost(ingName, flowerUsd);
+        if (costObj && costObj.flower > 0) {
+          unitFlower = costObj.flower;
+        }
+        fishCatchCostCache.set(ingName, unitFlower);
+      }
+    } else if (ingName === "Fish Flake") {
+      unitFlower = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined)
+        ? window.sflCustomFishFlakeCost
+        : (window.sflRodCost ? 8 * window.sflRodCost : 0);
+    } else if (ingName === "Fish Stick") {
+      unitFlower = (window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined)
+        ? window.sflCustomFishStickCost
+        : (window.sflRodCost ? 10 * window.sflRodCost : 0);
+    } else if (ingName === "Fish Oil") {
+      unitFlower = (window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined)
+        ? window.sflCustomFishOilCost
+        : (window.sflRodCost ? 14 * window.sflRodCost : 0);
+    } else if (ingName === "Crab Stick") {
+      unitFlower = (window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined)
+        ? window.sflCustomCrabStickCost
+        : 5.9;
+    } else if (ingName === "Magic Mushroom" || ingName === "Wild Mushroom") {
+      unitFlower = 0;
+    } else if ((ingName === "Rod" || ingName === "Ancient Rod") && window.sflRodCost) {
+      unitFlower = window.sflRodCost;
+    } else if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+      const costObj = window.SflPrices.getUnitCost(ingName, flowerUsd);
+      if (costObj && costObj.flower > 0) {
+        unitFlower = costObj.flower;
+      }
+    }
+
+    const totalFlower = unitFlower * amt;
+    const totalUsd = totalFlower * flowerUsd;
+
+    return {
+      unitFlower,
+      totalFlower,
+      totalUsd,
+      isFishOrCrust: isFish,
+    };
+  }
+
+  function getFishCaptureBreakdown(fishName) {
+    if (!fishName) return null;
+
+    const isTrap = window.SflConstants && typeof window.SflConstants.isCrustacean === "function" && window.SflConstants.isCrustacean(fishName);
+    const hasAncient = Boolean(
+      window.sflHasAncientRod ||
+      (activeBuffs && (activeBuffs.has("Ancient Rod") || activeBuffs.has("224"))) ||
+      (activeSkills && activeSkills["Ancient Rod"])
+    );
+    const defaultRod = isTrap ? "Crab Pot" : (hasAncient ? "Ancient Rod" : "Rod");
+
+    // 1. Verificar si el usuario tiene una combinación guardada en SflUserState
+    const userCombo = window.SflUserState && typeof window.SflUserState.getFishCombo === "function"
+      ? (window.SflUserState.getFishCombo(fishName) || window.SflUserState.getFishCombo(fishName.toLowerCase()))
+      : null;
+
+    if (userCombo && (userCombo.bait || isTrap)) {
+      const rodName = isTrap ? (userCombo.bait || "Crab Pot") : defaultRod;
+      const baitName = isTrap ? null : userCombo.bait;
+      const chumName = userCombo.chum || null;
+      const chumAmt = userCombo.chumAmount || 1;
+
+      return {
+        rod: { name: rodName, amount: 1, img: getIngredientImg(rodName) },
+        bait: baitName ? { name: baitName, amount: 1, img: getIngredientImg(baitName) } : null,
+        chum: chumName ? { name: chumName, amount: chumAmt, img: getIngredientImg(chumName) } : null,
+      };
+    }
+
+    // 2. Si no hay combo personalizado, resolver desde SflPrices.resolveCost
+    if (window.SflPrices && typeof window.SflPrices.resolveCost === "function") {
+      try {
+        const costRes = window.SflPrices.resolveCost(fishName);
+        if (costRes && costRes.ingredients && costRes.ingredients.length > 0) {
+          const first = costRes.ingredients[0];
+          const isRodOrTrap = ["Rod", "Ancient Rod", "Crab Pot", "Mariner Pot"].includes(first.name);
+          const rodName = isRodOrTrap ? first.name : defaultRod;
+
+          let baitItem = null;
+          let chumItem = null;
+
+          if (isTrap) {
+            if (costRes.ingredients.length > 1) {
+              const c = costRes.ingredients[1];
+              chumItem = { name: c.name, amount: c.amount || 1, img: getIngredientImg(c.name) };
+            }
+          } else {
+            if (costRes.ingredients.length > 1) {
+              const b = costRes.ingredients[1];
+              baitItem = { name: b.name, amount: b.amount || 1, img: getIngredientImg(b.name) };
+            }
+            if (costRes.ingredients.length > 2) {
+              const c = costRes.ingredients[2];
+              chumItem = { name: c.name, amount: c.amount || 1, img: getIngredientImg(c.name) };
+            }
+          }
+
+          return {
+            rod: { name: rodName, amount: 1, img: getIngredientImg(rodName) },
+            bait: baitItem,
+            chum: chumItem,
+          };
+        }
+      } catch (e) {
+        console.warn("[CookingView] Error resolviendo ingredientes de captura:", fishName, e);
+      }
+    }
+
+    return {
+      rod: { name: defaultRod, amount: 1, img: getIngredientImg(defaultRod) },
+      bait: isTrap ? null : { name: "Earthworm", amount: 1, img: getIngredientImg("Earthworm") },
+      chum: null,
+    };
+  }
+
+  function formatPriceDisplay(flower, usd, mode = "flower") {
+    if (mode === "usd") {
+      if (usd <= 0) return `<span class="text-emerald-400/90 font-mono text-[10px] lg:text-[11px]">~$0.00</span>`;
+      const decimals = usd >= 10 ? 2 : (usd >= 1 ? 2 : (usd >= 0.01 ? 3 : 4));
+      return `<span class="text-emerald-400/90 font-mono text-[10px] lg:text-[11px]">~$${formatNumber(usd, decimals)}</span>`;
+    }
+    const flowerImg = `<img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover shrink-0 inline-block align-middle" alt="FLOWER" />`;
+    if (flower <= 0) return `${flowerImg} <span class="text-white/80 font-mono text-[10px] lg:text-[11px]">0</span>`;
+    const decimals = flower >= 10 ? 2 : (flower >= 1 ? 2 : (flower >= 0.01 ? 3 : 4));
+    return `${flowerImg} <span class="text-white/90 font-mono text-[10px] lg:text-[11px]">${formatNumber(flower, decimals)}</span>`;
   }
 
   const searchInput = document.getElementById("searchInput")
@@ -1393,8 +1766,8 @@ const formatAstroDescription = (skill) => {
         if (skillName === "Juicy Boost" && item.building === "Smoothie Shack") {
           boostedExp *= (1 + math1);
         }
-        // Double Nom (+1 food = 2x XP essentially) - Solo para cocina, NO para Aging Shed
-        if (skillName === "Double Nom" && item.building !== "Aging Shed") {
+        // Double Nom (+1 food = 2x XP essentially) - Solo para cocina, NO para Aging Shed ni Fish crudo
+        if (skillName === "Double Nom" && item.building !== "Aging Shed" && item.building !== "Fish") {
           boostedExp *= (1 + math1);
         }
         // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
@@ -1600,7 +1973,7 @@ const formatAstroDescription = (skill) => {
   const fishCatchCostCache = new Map();
   window.clearFishCostCache = () => fishCatchCostCache.clear();
 
-  const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true, isAgingShed = false) => {
+  const calculateRecipeCost = (ingredients, visited = new Set(), isTopLevel = true, isAgingShed = false, isFish = false) => {
     let total = 0
     let missing = false
     
@@ -1694,9 +2067,9 @@ const formatAstroDescription = (skill) => {
       }
     }
     
-    // Skills Logic for Cost (Debuffs) - Solo para cocina, NO para Aging Shed
+    // Skills Logic for Cost (Debuffs) - Solo para cocina, NO para Aging Shed ni Fish crudo
     let costMultiplier = 1;
-    if (isTopLevel && !isAgingShed) {
+    if (isTopLevel && !isAgingShed && !isFish) {
       activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
         const skill = sflSkills[skillName] || sflOthers[skillName] || sflConsumables[skillName];
         if (!skill) return;
@@ -1730,7 +2103,16 @@ const formatAstroDescription = (skill) => {
 
     for (const item of recipesData) {
       const nameMatch = item.name.toLowerCase().includes(term);
-      const ingMatch = item.ingredients.some((ing) =>
+      const isRaw = item.building === "Fish";
+      let searchIngs = item.ingredients;
+      if (isRaw) {
+        const cap = getFishCaptureBreakdown(item.name);
+        if (cap) {
+          const capNames = [cap.rod?.name, cap.bait?.name, cap.chum?.name].filter(Boolean);
+          searchIngs = capNames.map((n) => ({ name: n }));
+        }
+      }
+      const ingMatch = searchIngs.some((ing) =>
         ing.name.toLowerCase().includes(term)
       );
       if (!nameMatch && !ingMatch) continue;
@@ -1740,7 +2122,8 @@ const formatAstroDescription = (skill) => {
       if (window.currentHideXpLimit > 0 && finalXp < window.currentHideXpLimit) continue;
 
       const isAgingDish = item.building === "Aging Shed";
-      const costObj = calculateRecipeCost(item.ingredients, new Set(), true, isAgingDish);
+      const isFishDish = item.building === "Fish";
+      const costObj = calculateRecipeCost(item.ingredients, new Set(), true, isAgingDish, isFishDish);
       const timeSeconds = getCalculatedTime(item);
       const xpPerSfl = costObj.total > 0 ? finalXp / costObj.total : 0;
       const xpPerDay = timeSeconds > 0 ? (86400 / timeSeconds) * finalXp : 0;
@@ -1805,17 +2188,147 @@ const formatAstroDescription = (skill) => {
       const rawFishName = isAging ? item.name.replace(/^Aged\s+/i, "") : null;
       const rawFishImg = isAging ? (item.image || `/img/sunflowerland/fish/${rawFishName}.png`) : null;
 
-      const ingredientsHtml = item.ingredients
+      let effectiveIngredients = item.ingredients;
+      let rawFishYield = 1.0;
+      let fishingBuffsBarHtml = "";
+
+      if (isRawFish) {
+        const yieldAndBuffs = getFishYieldAndBuffs(item.name);
+        rawFishYield = yieldAndBuffs.fishYield;
+
+        const yieldBadgeHtml = rawFishYield > 1
+          ? `<span class="text-cyan-400 font-bold shrink-0 text-[10px] font-mono leading-none" title="${yieldAndBuffs.bonusTags.join(', ')}">(~${rawFishYield.toFixed(2)}x)</span>`
+          : "";
+
+        if (yieldAndBuffs.activeBuffItems.length > 0 || rawFishYield > 1) {
+          const buffImgs = yieldAndBuffs.activeBuffItems
+            .map((b) => {
+              const isNonStandardSkill = Boolean(b.isSkill && b.img && !b.img.startsWith("/img/sunflowerland/skills/"));
+              const overlayRayHtml = isNonStandardSkill
+                ? `<img src="/img/sunflowerland/123/energy.png" alt="Skill" class="absolute -top-1 -left-1 w-2 h-2 object-contain [image-rendering:pixelated] drop-shadow pointer-events-none z-10" />`
+                : "";
+              return `
+                <div class="relative shrink-0">
+                  <img src="${b.img}" alt="${b.name}" title="${b.name}: ${b.desc}" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] rounded bg-white/5 border border-white/10 shrink-0 hover:scale-125 transition-transform cursor-help" loading="lazy" />
+                  ${overlayRayHtml}
+                </div>
+              `;
+            })
+            .join("");
+
+          fishingBuffsBarHtml = `
+            <div class="flex items-center gap-1.5 pt-1 mt-1 border-t border-white/[0.04] flex-wrap">
+              <img src="/img/sunflowerland/123/energy.png" alt="Energy" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0" />
+              ${yieldBadgeHtml}
+              <div class="flex items-center flex-wrap gap-1">
+                ${buffImgs}
+              </div>
+            </div>
+          `;
+        }
+
+        const capture = getFishCaptureBreakdown(item.name);
+        if (capture) {
+          const captureList = [];
+          if (capture.rod) {
+            captureList.push({
+              name: capture.rod.name,
+              amount: capture.rod.amount || 1,
+              image: capture.rod.img,
+            });
+          }
+          if (capture.bait) {
+            captureList.push({
+              name: capture.bait.name,
+              amount: capture.bait.amount || 1,
+              image: capture.bait.img,
+            });
+          }
+          if (capture.chum) {
+            captureList.push({
+              name: capture.chum.name,
+              amount: capture.chum.amount || 1,
+              image: capture.chum.img,
+            });
+          }
+          if (captureList.length > 0) {
+            effectiveIngredients = captureList;
+          }
+        }
+      }
+
+      const ingredientsHtml = effectiveIngredients
         .map((ing) => {
+          const totalAmount = ing.amount * effectiveDoubleNom;
+          const priceInfo = getIngredientPriceInfo(ing.name, totalAmount);
           const imgSrc = getIngredientImg(ing);
           const safeName = ing.name.replace(/'/g, "\\'");
 
+          // Si es pez crudo, el costo de cada ingrediente por unidad producida se divide entre rawFishYield
+          const displayFlower = isRawFish && rawFishYield > 1 ? priceInfo.totalFlower / rawFishYield : priceInfo.totalFlower;
+          const displayUsd = isRawFish && rawFishYield > 1 ? priceInfo.totalUsd / rawFishYield : priceInfo.totalUsd;
+
+          let captureHtml = "";
+          if (!isRawFish && priceInfo.isFishOrCrust) {
+            const capture = getFishCaptureBreakdown(ing.name);
+            if (capture) {
+              const parts = [];
+              if (capture.rod) {
+                parts.push(`
+                  <span class="inline-flex items-center gap-1" title="${capture.rod.name}">
+                    <img src="${capture.rod.img}" alt="${capture.rod.name}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" loading="lazy" />
+                    <span class="text-[10px] text-white/70 font-mono">${capture.rod.name}</span>
+                  </span>
+                `);
+              }
+              if (capture.bait) {
+                parts.push(`
+                  <span class="inline-flex items-center gap-1" title="${capture.bait.name}">
+                    <img src="${capture.bait.img}" alt="${capture.bait.name}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" loading="lazy" />
+                    <span class="text-[10px] text-white/70 font-mono">${capture.bait.name}</span>
+                  </span>
+                `);
+              }
+              if (capture.chum) {
+                parts.push(`
+                  <span class="inline-flex items-center gap-1" title="${capture.chum.name} x${capture.chum.amount}">
+                    <img src="${capture.chum.img}" alt="${capture.chum.name}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" loading="lazy" />
+                    <span class="text-[10px] text-white/70 font-mono">${capture.chum.amount > 1 ? `${capture.chum.amount} ` : ""}${capture.chum.name}</span>
+                  </span>
+                `);
+              }
+
+              if (parts.length > 0) {
+                captureHtml = `
+                  <div class="flex items-center gap-1.5 text-[10px] font-mono text-terminal-muted/80 pl-5.5 py-0.5 flex-wrap">
+                    ${parts.join('<span class="text-white/30 text-[10px] font-bold">+</span>')}
+                  </div>
+                `;
+              }
+            }
+          }
+
+          const currentMode = window.ingredientCurrencyMode || "flower";
+          const formattedPrice = formatPriceDisplay(displayFlower, displayUsd, currentMode);
+
           return `
-          <div class="flex items-center gap-1.5 bg-white/5 lg:bg-transparent px-2 py-1 lg:p-0 rounded-md lg:rounded-none shrink-0 border border-white/5 lg:border-0">
-            <img src="${imgSrc}" alt="${safeName}" class="w-4 h-4 object-contain drop-shadow-sm" width="16" height="16" loading="lazy" decoding="async" onerror="window.handleImgError(this)" />
-            <span class="text-[11px] lg:text-xs text-white/80">${ing.name} <span class="text-white/40 font-mono ml-0.5">x${ing.amount * effectiveDoubleNom}</span></span>
-          </div>
-        `;
+            <div class="flex flex-col py-0.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <img src="${imgSrc}" alt="${safeName}" class="w-4 h-4 object-contain drop-shadow-sm shrink-0" width="16" height="16" loading="lazy" decoding="async" onerror="window.handleImgError(this)" />
+                <span class="text-[11px] lg:text-xs text-white/80">${ing.name} <span class="text-white/40 font-mono ml-0.5">x${totalAmount}</span></span>
+                <button
+                  type="button"
+                  class="ingredient-price-btn inline-flex items-center gap-1 font-mono text-[10px] lg:text-[11px] text-white/70 hover:text-emerald-400 cursor-pointer transition-colors select-none ml-1 bg-transparent border-0 p-0"
+                  data-flower="${displayFlower}"
+                  data-usd="${displayUsd}"
+                  title="${isRawFish && rawFishYield > 1 ? `Costo unitario por pez capturado (rendimiento ~${rawFishYield.toFixed(2)}x)` : (tToggleCurrency || 'Clic para alternar entre FLOWER y USD')}"
+                >
+                  ${formattedPrice}
+                </button>
+              </div>
+              ${captureHtml}
+            </div>
+          `;
         })
         .join("");
 
@@ -1940,8 +2453,9 @@ const formatAstroDescription = (skill) => {
             <span class="text-white text-sm font-bold font-mono">${timeSeconds > 0 ? formatNumber(xpPerDay, 0) : '<span class="text-white/30 font-normal">—</span>'}</span>
           </div>
 
-          <div class="mt-2 lg:mt-0 lg:px-4 flex flex-wrap lg:flex-col gap-1.5 justify-start lg:justify-center pt-3 lg:pt-0 border-t border-white/5 lg:border-0">
+          <div class="mt-2 lg:mt-0 lg:px-4 flex flex-col justify-start lg:justify-center pt-3 lg:pt-0 border-t border-white/5 lg:border-0 w-full">
             ${ingredientsHtml}
+            ${fishingBuffsBarHtml}
           </div>
         </div>
       `;
@@ -1955,7 +2469,7 @@ const formatAstroDescription = (skill) => {
       const manualRecipe = recipesData.find((r) => r.name === window.manualSelectedDish);
       if (manualRecipe) {
         const calcXp = getCalculatedXp(manualRecipe);
-        const costObj = calculateRecipeCost(manualRecipe.ingredients, new Set(), true, manualRecipe.building === "Aging Shed");
+        const costObj = calculateRecipeCost(manualRecipe.ingredients, new Set(), true, manualRecipe.building === "Aging Shed", manualRecipe.building === "Fish");
         const totalCost = costObj.total;
         const efficiency = totalCost > 0 ? calcXp / totalCost : 0;
         return {
@@ -1978,7 +2492,7 @@ const formatAstroDescription = (skill) => {
       const calcXp = getCalculatedXp(recipe);
       if (!calcXp || calcXp <= 0) continue;
       if (calcXp < minXp) continue;
-      const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed");
+      const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed", recipe.building === "Fish");
       const totalCost = costObj.total;
       if (totalCost > 0 && !costObj.missing) {
         const efficiency = calcXp / totalCost;
@@ -1995,7 +2509,7 @@ const formatAstroDescription = (skill) => {
         const calcXp = getCalculatedXp(recipe);
         if (!calcXp || calcXp <= 0) continue;
         if (calcXp < minXp) continue;
-        const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed");
+        const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed", recipe.building === "Fish");
         const totalCost = costObj.total;
         if (totalCost > 0) {
           const efficiency = calcXp / totalCost;
@@ -2631,7 +3145,7 @@ const formatAstroDescription = (skill) => {
     const sortedDishes = recipesData
       .map((recipe) => {
         const calcXp = getCalculatedXp(recipe);
-        const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed");
+        const costObj = calculateRecipeCost(recipe.ingredients, new Set(), true, recipe.building === "Aging Shed", recipe.building === "Fish");
         const totalCost = costObj.total;
         const efficiency = totalCost > 0 ? calcXp / totalCost : 0;
         return {
@@ -3218,6 +3732,47 @@ const formatAstroDescription = (skill) => {
   // Suscripción de respaldo si SflUserState ya está disponible
   if (window.SflUserState && typeof window.SflUserState.subscribe === "function") {
     window.SflUserState.subscribe(syncCookingFromGlobalState);
+  }
+
+  // Alternar moneda global para precios de ingredientes en la columna
+  window.ingredientCurrencyMode = window.ingredientCurrencyMode || "flower";
+  window.toggleIngredientCurrency = () => {
+    window.ingredientCurrencyMode = window.ingredientCurrencyMode === "usd" ? "flower" : "usd";
+    updateAllIngredientPrices();
+  };
+
+  function updateAllIngredientPrices() {
+    const isUsd = window.ingredientCurrencyMode === "usd";
+    const headerToggle = document.getElementById("ingredientCurrencyToggleHeader");
+    if (headerToggle) {
+      headerToggle.innerText = isUsd ? "[~usd]" : "[flower]";
+    }
+
+    document.querySelectorAll(".ingredient-price-btn").forEach((btn) => {
+      const flower = parseFloat(btn.dataset.flower) || 0;
+      const usd = parseFloat(btn.dataset.usd) || 0;
+      btn.innerHTML = formatPriceDisplay(flower, usd, window.ingredientCurrencyMode);
+    });
+  }
+
+  if (tableBody) {
+    tableBody.addEventListener("click", (e) => {
+      const priceBtn = e.target.closest(".ingredient-price-btn");
+      if (priceBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleIngredientCurrency();
+      }
+    });
+  }
+
+  const headerCurrencyToggle = document.getElementById("ingredientCurrencyToggleHeader");
+  if (headerCurrencyToggle) {
+    headerCurrencyToggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.toggleIngredientCurrency();
+    });
   }
 </script>
 

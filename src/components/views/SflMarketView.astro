@@ -1104,6 +1104,56 @@ const t = useTranslations(lang)
     return encodeURI(basePath + name + ".png")
   }
 
+  const parseBoosts = (str) => {
+    if (!str) return []
+    const parts = []
+    let current = ""
+    let parenDepth = 0
+    for (let i = 0; i < str.length; i++) {
+      const ch = str[i]
+      if (ch === "(") parenDepth++
+      else if (ch === ")") parenDepth = Math.max(0, parenDepth - 1)
+
+      if (parenDepth === 0 && (ch === "," || ch === "|")) {
+        const rest = str.slice(i + 1).trim()
+        if (/^(?:[+-]|x\d|\d+[%x]|\d+\s+|Disabled|Free|Affects|requires|Blessed|Speed|[A-Z][a-z]+\s+(?:Disaster|Events|Recovery))/i.test(rest)) {
+          if (current.trim()) parts.push(current.trim())
+          current = ""
+          continue
+        }
+      }
+      current += ch
+    }
+    if (current.trim()) parts.push(current.trim())
+    return parts
+  }
+
+  const getTableBoostHTML = (item) => {
+    if (!item.boost || (item.category !== "powerups" && item.category !== "buds")) return ""
+    let parts = []
+    if (item.category === "buds") {
+      parts = item.boost.split(" | ").map(p => p.replace(/^\(|\)$/g, "").trim()).filter(Boolean)
+    } else {
+      parts = parseBoosts(item.boost)
+    }
+    if (parts.length === 0) return ""
+    const textColor = item.category === "buds" ? "text-cyan-400/90 font-mono" : "text-emerald-400/80"
+    const linesHtml = parts.map(p => `<span class="block truncate">${p}</span>`).join("")
+    return `<div class="text-[9px] ${textColor} leading-[1.1] mt-[1px]" title="${item.boost}">${linesHtml}</div>`
+  }
+
+  const formatModalPrice = (p) => {
+    if (typeof p !== "number" || isNaN(p) || p <= 0) return "--"
+    const dec = p < 0.09 ? 4 : 2
+    return formatNumber(p, dec)
+  }
+
+  const formatModalUsd = (p) => {
+    if (typeof p !== "number" || isNaN(p) || p <= 0) return "$0.00"
+    const dec = p < 0.09 ? 4 : 2
+    return `~$${formatNumber(p, dec)}`
+  }
+
   let marketData = []
   let dashboardData = null
   let currentCategory = "resources"
@@ -2968,16 +3018,16 @@ const t = useTranslations(lang)
       row.innerHTML = `
         <!-- Card Header (Móvil) / Columna 1 (Desktop) -->
         <div class="py-2 lg:py-0 lg:px-4 font-medium text-white flex items-center justify-between lg:justify-start lg:h-full cursor-pointer mobile-row-toggle" onclick="if (window.innerWidth >= 1024) { window.openTradingModal(this.closest('[data-row-id]')._itemData); }">
-          <div class="flex items-center gap-4 lg:gap-3">
+          <div class="flex items-center gap-4 lg:gap-3 min-w-0 flex-1">
             <div class="relative w-12 h-12 lg:w-8 lg:h-8 rounded-lg lg:rounded bg-terminal-dark border ${isBuds ? 'border-cyan-500/30 shadow-[0_0_8px_rgba(6,182,212,0.12)]' : 'border-terminal-muted/20'} flex items-center justify-center shrink-0">
               <div class="w-full h-full rounded-lg lg:rounded overflow-hidden flex items-center justify-center ${isBuds ? 'p-0' : 'p-2 lg:p-1'}">
                 <img src="${getItemImageSrc(item)}" alt="${item.name}" data-category="${item.category}" class="${isBuds ? 'w-full h-full object-contain scale-[2.2] group-hover:scale-[2.35] transition-transform duration-200' : (item.category !== 'resources' ? 'w-[85%] h-[85%]' : 'w-[60%] h-[60%]')} object-contain drop-shadow-sm pixelated" onerror="if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = this.dataset.category === 'buds' ? '/img/sunflowerland/123/bud.png' : '/img/sunflowerland/' + encodeURIComponent(this.alt.toLowerCase().replace(/\\s+/g, '_') + '.webp'); } else { this.onerror=null; this.src = '/img/sunflowerland/123/bud.png'; }" />
               </div>
               ${newBadgeHTML}
             </div>
-            <div>
+            <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
-                <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">${item.name}</p>
+                <p class="text-base lg:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors truncate">${item.name}</p>
                 ${
                   item.category !== currentCategory && searchInput && searchInput.value !== ""
                     ? `<span class="px-1 py-[1px] rounded-[3px] text-[8px] uppercase tracking-wider font-semibold ${
@@ -2992,11 +3042,7 @@ const t = useTranslations(lang)
                     : ""
                 }
               </div>
-              ${
-                (item.category === "powerups" || item.category === "buds") && item.boost
-                  ? `<p class="text-[9px] ${item.category === "buds" ? "text-cyan-400/90 font-mono" : "text-emerald-400/80"} leading-tight lg:leading-none mt-1 max-w-[200px] lg:max-w-none truncate" title="${item.boost}">${item.boost}</p>`
-                  : ""
-              }
+              ${getTableBoostHTML(item)}
             </div>
           </div>
           <!-- Precio Móvil y 4 Círculos -->
@@ -3602,30 +3648,6 @@ const t = useTranslations(lang)
           : (clientLang === 'es' ? 'Coleccionable' : 'Collectible');
         subTitleEl.textContent = `Sunflower Land • ${itemTypeLabel}`;
 
-        const parseBoosts = (str) => {
-          if (!str) return [];
-          const parts = [];
-          let current = "";
-          let parenDepth = 0;
-          for (let i = 0; i < str.length; i++) {
-            const ch = str[i];
-            if (ch === "(") parenDepth++;
-            else if (ch === ")") parenDepth = Math.max(0, parenDepth - 1);
-
-            if (parenDepth === 0 && (ch === "," || ch === "|")) {
-              const rest = str.slice(i + 1).trim();
-              if (/^(?:[+-]|x\d|\d+[%x]|\d+\s+|Disabled|Free|Affects|requires|Blessed|Speed|[A-Z][a-z]+\s+(?:Disaster|Events|Recovery))/i.test(rest)) {
-                if (current.trim()) parts.push(current.trim());
-                current = "";
-                continue;
-              }
-            }
-            current += ch;
-          }
-          if (current.trim()) parts.push(current.trim());
-          return parts;
-        };
-
         const parts = parseBoosts(item.boost);
         const badgesHtml = parts.map((part) => {
           const isCondition = /^(?:Disabled|requires|Affects)/i.test(part);
@@ -3671,21 +3693,21 @@ const t = useTranslations(lang)
     const supplyEl = document.getElementById("modalSupply");
 
     const sflUsd = window.sflUsdPrice || 0.085;
-    if (floorPriceEl) floorPriceEl.textContent = item.currentPrice > 0 ? formatNumber(item.currentPrice, 2) : "--";
-    if (floorUsdEl) floorUsdEl.textContent = item.currentPrice > 0 ? `~$${formatNumber(item.currentPrice * sflUsd, 2)}` : "$0.00";
+    if (floorPriceEl) floorPriceEl.textContent = item.currentPrice > 0 ? formatModalPrice(item.currentPrice) : "--";
+    if (floorUsdEl) floorUsdEl.textContent = item.currentPrice > 0 ? formatModalUsd(item.currentPrice * sflUsd) : "$0.00";
 
     const chg24 = calculateChange(item.currentPrice, item.history ? item.history["1d"] : null);
     if (change24hEl) {
       if (chg24.isPositive === null) {
         change24hEl.textContent = "-";
-        change24hEl.className = "text-base sm:text-lg font-bold font-mono text-white/40";
+        change24hEl.className = "text-xs sm:text-sm font-bold font-mono leading-none text-white/40";
       } else {
         change24hEl.textContent = chg24.text;
-        change24hEl.className = `text-base sm:text-lg font-bold font-mono ${chg24.isPositive ? "text-emerald-400" : "text-red-400"}`;
+        change24hEl.className = `text-xs sm:text-sm font-bold font-mono leading-none ${chg24.isPositive ? "text-emerald-400" : "text-red-400"}`;
       }
     }
     if (pastPriceEl) {
-      pastPriceEl.textContent = chg24.pastPrice ? `Prev: ${formatNumber(chg24.pastPrice, 2)}` : "Prev: --";
+      pastPriceEl.textContent = chg24.pastPrice ? `Prev: ${formatModalPrice(chg24.pastPrice)}` : "Prev: --";
     }
 
     if (vol7dEl) vol7dEl.textContent = item.volume7d ? formatNumber(item.volume7d, 0) : "0";
@@ -3740,21 +3762,33 @@ const t = useTranslations(lang)
     const crosshair = document.getElementById("modalChartCrosshair");
     if (!svg || !wrapper) return;
 
-    // Filtrar puntos válidos
-    let points = Array.isArray(rawPoints) ? rawPoints.map(p => (p !== null && p !== undefined ? p : null)) : [];
-    if (points.length === 0 && currentPrice > 0) points = [currentPrice, currentPrice];
-    
-    // Fill gaps
-    let lastVal = currentPrice || 1;
-    for (let i = 0; i < points.length; i++) {
-      if (points[i] === null) points[i] = lastVal;
-      else lastVal = points[i];
-    }
-    if (currentPrice > 0 && points.length > 0) {
-      points[points.length - 1] = currentPrice;
+    const expectedLength = period === "180d" ? 181 : (period === "30d" ? 31 : (Array.isArray(rawPoints) && rawPoints.length > 8 ? rawPoints.length : 8));
+
+    // Filtrar solo datos válidos reales (sin rellenar con líneas planas artificiales hacia atrás)
+    let validData = Array.isArray(rawPoints)
+      ? rawPoints.filter((p) => p !== null && p !== undefined && typeof p === "number")
+      : [];
+
+    if (validData.length === 0 && currentPrice > 0) {
+      validData = [currentPrice, currentPrice];
     }
 
-    activeModalChartData = points;
+    if (validData.length < 2 && currentPrice <= 0) {
+      svg.innerHTML = `
+        <text x="350" y="125" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">NO SALES DATA</text>
+      `;
+      wrapper.onmousemove = null;
+      wrapper.onmouseleave = null;
+      if (crosshair) crosshair.classList.add("hidden");
+      if (tooltip) tooltip.classList.add("hidden");
+      return;
+    }
+
+    if (currentPrice > 0 && validData.length > 0) {
+      validData[validData.length - 1] = currentPrice;
+    }
+
+    activeModalChartData = validData;
 
     const width = 700;
     const height = 240;
@@ -3763,28 +3797,75 @@ const t = useTranslations(lang)
     const padLeft = 16;
     const padRight = 30;
 
-    const min = Math.min(...points);
-    const max = Math.max(...points);
+    const min = Math.min(...validData);
+    const max = Math.max(...validData);
     const range = (max - min) || (max * 0.1) || 1;
 
-    const getX = (i) => padLeft + (i / (points.length - 1 || 1)) * (width - padLeft - padRight);
+    // getX calcula la posición temporal real dejando vacío el pasado de ítems nuevos (igual que en la tabla)
+    const getX = (i) => {
+      const daysAgo = validData.length - 1 - i;
+      const xProgress = 1 - (daysAgo / Math.max(1, expectedLength - 1));
+      return padLeft + xProgress * (width - padLeft - padRight);
+    };
     const getY = (v) => padTop + (1 - (v - min) / range) * (height - padTop - padBottom);
 
-    const isPositive = points[points.length - 1] >= points[0];
+    const isPositive = validData[validData.length - 1] >= validData[0];
     const strokeColor = isPositive ? "#10b981" : "#ef4444";
     const fillGradientId = `modalGrad_${isPositive ? "green" : "red"}`;
 
-    // Path del trazo principal
-    let dLine = `M ${getX(0)} ${getY(points[0])}`;
-    for (let i = 1; i < points.length; i++) {
-      dLine += ` L ${getX(i)} ${getY(points[i])}`;
-    }
+    const pointsArray = validData.map((v, i) => [getX(i), getY(v)]);
+    const startX = pointsArray[0][0];
+    const endX = pointsArray[pointsArray.length - 1][0];
 
-    // Path del área sombreada con degradado
-    const dArea = `${dLine} L ${getX(points.length - 1)} ${height - padBottom} L ${getX(0)} ${height - padBottom} Z`;
+    // Suavizado de curva tipo Catmull-Rom to Cubic Bézier
+    const getCurvePath = (pts) => {
+      if (pts.length <= 1) return "";
+      if (pts.length === 2) return ` L ${pts[1][0].toFixed(2)} ${pts[1][1].toFixed(2)}`;
+      let d = "";
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i === 0 ? 0 : i - 1];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[i + 2 >= pts.length ? i + 1 : i + 2];
+        const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+        const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+        const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+        const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+        d += ` C ${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${p2[0].toFixed(2)},${p2[1].toFixed(2)}`;
+      }
+      return d;
+    };
+
+    const dLine = `M ${startX.toFixed(2)} ${pointsArray[0][1].toFixed(2)}${getCurvePath(pointsArray)}`;
+    const dArea = `${dLine} L ${endX.toFixed(2)} ${height - padBottom} L ${startX.toFixed(2)} ${height - padBottom} Z`;
 
     const midPrice = min + range / 2;
     const sflUsd = window.sflUsdPrice || 0.085;
+
+    // Formateador de escala Y con soporte para 4 decimales cuando precio < 0.09
+    const formatAxisPrice = (v) => {
+      if (typeof v !== "number" || isNaN(v)) return "0";
+      if (v < 0.09 || range < 0.09) return formatNumber(v, 4);
+      if (v < 1 || range < 1) return formatNumber(v, 2);
+      return formatNumber(v, 1);
+    };
+
+    // Interpolador continuo suave Catmull-Rom para el hover
+    const getCatmullRomVal = (pts, i, t) => {
+      if (pts.length === 0) return 0;
+      if (pts.length === 1) return pts[0];
+      if (pts.length === 2) return pts[0] + t * (pts[1] - pts[0]);
+      const p0 = pts[Math.max(0, i - 1)];
+      const p1 = pts[i];
+      const p2 = pts[Math.min(pts.length - 1, i + 1)];
+      const p3 = pts[Math.min(pts.length - 1, i + 2)];
+      return 0.5 * (
+        (2 * p1) +
+        (-p0 + p2) * t +
+        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t +
+        (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t
+      );
+    };
 
     svg.innerHTML = `
       <defs>
@@ -3797,41 +3878,54 @@ const t = useTranslations(lang)
 
       <!-- Guías horizontales y precios de escala -->
       <line x1="${padLeft}" y1="${getY(max)}" x2="${width - padRight}" y2="${getY(max)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
-      <text x="${width - padRight}" y="${getY(max) - 6}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatNumber(max, 1)}</text>
+      <text x="${width - padRight}" y="${getY(max) - 6}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatAxisPrice(max)}</text>
 
       <line x1="${padLeft}" y1="${getY(midPrice)}" x2="${width - padRight}" y2="${getY(midPrice)}" stroke="rgba(255,255,255,0.04)" stroke-dasharray="3,3" />
-      <text x="${width - padRight}" y="${getY(midPrice) - 6}" fill="rgba(255,255,255,0.25)" font-size="10" font-family="monospace" text-anchor="end">${formatNumber(midPrice, 1)}</text>
+      <text x="${width - padRight}" y="${getY(midPrice) - 6}" fill="rgba(255,255,255,0.25)" font-size="10" font-family="monospace" text-anchor="end">${formatAxisPrice(midPrice)}</text>
 
       <line x1="${padLeft}" y1="${getY(min)}" x2="${width - padRight}" y2="${getY(min)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
-      <text x="${width - padRight}" y="${getY(min) + 14}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatNumber(min, 1)}</text>
+      <text x="${width - padRight}" y="${getY(min) + 14}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatAxisPrice(min)}</text>
 
-      <!-- Área y Trazo -->
+      <!-- Área y Trazo Suavizado (Solo en rango de existencia real) -->
       <path d="${dArea}" fill="url(#${fillGradientId})" />
       <path d="${dLine}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
 
       <!-- Punto final actual -->
-      <circle cx="${getX(points.length - 1)}" cy="${getY(points[points.length - 1])}" r="4.5" fill="${strokeColor}" stroke="#141414" stroke-width="2" />
+      <circle cx="${endX.toFixed(2)}" cy="${getY(validData[validData.length - 1]).toFixed(2)}" r="4.5" fill="${strokeColor}" stroke="#141414" stroke-width="2" />
 
-      <!-- Punto interactivo activo en hover -->
+      <!-- Punto interactivo activo en hover continuo -->
       <circle id="modalHoverDot" cx="0" cy="0" r="5" fill="#ffffff" stroke="${strokeColor}" stroke-width="2.5" class="hidden pointer-events-none" />
     `;
 
-    // Interacción MouseMove con Crosshair y Tooltip
+    // Interacción MouseMove con Crosshair y Tooltip continuos y suavizados
     wrapper.onmousemove = (e) => {
       const rect = wrapper.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const svgX = (mouseX / rect.width) * width;
-      const clampedX = Math.max(padLeft, Math.min(width - padRight, svgX));
+      const clampedSvgX = Math.max(padLeft, Math.min(width - padRight, svgX));
 
-      const dataWidth = (width - padLeft - padRight) || 1;
-      const ratio = (clampedX - padLeft) / dataWidth;
+      // Si el cursor está en el pasado donde el ítem aún no existía, ocultar elementos (igual que la tabla)
+      if (clampedSvgX < startX - 3) {
+        if (crosshair) crosshair.classList.add("hidden");
+        if (tooltip) tooltip.classList.add("hidden");
+        const hoverDot = document.getElementById("modalHoverDot");
+        if (hoverDot) hoverDot.classList.add("hidden");
+        return;
+      }
 
-      const idx = Math.round(ratio * (points.length - 1));
-      const val = points[idx];
-      if (val === undefined) return;
+      const activeSvgX = Math.max(startX, Math.min(endX, clampedSvgX));
+      const activeWidth = endX - startX || 1;
+      const progress = Math.max(0, Math.min(1, (activeSvgX - startX) / activeWidth));
 
-      const ptSvgX = getX(idx);
-      const ptSvgY = getY(val);
+      const totalSegments = Math.max(1, validData.length - 1);
+      const exactIndex = progress * totalSegments;
+      const i0 = Math.min(totalSegments - 1, Math.floor(exactIndex));
+      const t = exactIndex - i0;
+
+      // Valor continuo suavizado exactamente sobre la trayectoria
+      const val = getCatmullRomVal(validData, i0, t);
+      const ptSvgX = activeSvgX;
+      const ptSvgY = Math.max(padTop - 8, Math.min(height - padBottom + 8, getY(val)));
 
       const pxX = (ptSvgX / width) * rect.width;
       const pxY = (ptSvgY / height) * rect.height;
@@ -3843,24 +3937,34 @@ const t = useTranslations(lang)
 
       const hoverDot = document.getElementById("modalHoverDot");
       if (hoverDot) {
-        hoverDot.setAttribute("cx", ptSvgX);
-        hoverDot.setAttribute("cy", ptSvgY);
+        hoverDot.setAttribute("cx", ptSvgX.toFixed(2));
+        hoverDot.setAttribute("cy", ptSvgY.toFixed(2));
         hoverDot.setAttribute("stroke", strokeColor);
         hoverDot.classList.remove("hidden");
       }
 
       if (tooltip) {
         const usdVal = val * sflUsd;
-        const daysAgo = points.length - 1 - idx;
-        const dateLabel = daysAgo === 0 ? (clientLang === 'es' ? 'Hoy' : 'Today') : (clientLang === 'es' ? `Hace ${daysAgo}d` : `${daysAgo}d ago`);
-        
+        const daysAgo = totalSegments - exactIndex;
+        const now = new Date();
+        const datePoint = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
+        const dateOptions = {
+          day: "numeric",
+          month: "short",
+          ...(datePoint.getFullYear() !== now.getFullYear() ? { year: "numeric" } : {})
+        };
+        const dateLabel = datePoint.toLocaleDateString(clientLang === 'es' ? 'es-ES' : 'en-US', dateOptions);
+
+        const displayFlower = formatModalPrice(val);
+        const displayUsd = formatModalUsd(usdVal);
+
         tooltip.innerHTML = `
           <div class="flex items-center gap-1.5 font-bold">
             <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
-            <span class="text-white">${formatNumber(val, 2)} FLOWER</span>
+            <span class="text-white">${displayFlower} FLOWER</span>
           </div>
           <div class="text-[10px] text-white/50 mt-0.5 flex justify-between gap-3">
-            <span>~$${formatNumber(usdVal, 2)}</span>
+            <span>${displayUsd}</span>
             <span class="text-cyan-400 font-bold">${dateLabel}</span>
           </div>
         `;
@@ -3941,9 +4045,9 @@ const t = useTranslations(lang)
                 <div class="flex flex-col items-end">
                   <div class="flex items-center gap-1.5">
                     <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
-                    <span class="text-xs sm:text-sm font-bold text-emerald-400 font-mono">${formatNumber(price, 0)} FLOWER</span>
+                    <span class="text-xs sm:text-sm font-bold text-emerald-400 font-mono">${formatModalPrice(price)} FLOWER</span>
                   </div>
-                  <span class="text-[9.5px] font-mono text-white/40 mt-0.5">~$${formatNumber(priceUsd, 2)}</span>
+                  <span class="text-[9.5px] font-mono text-white/40 mt-0.5">${formatModalUsd(priceUsd)}</span>
                 </div>
               </div>
             `;
