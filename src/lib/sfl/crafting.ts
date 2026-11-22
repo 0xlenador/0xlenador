@@ -137,7 +137,7 @@ function _registerRecipe(recipe: UnifiedRecipe): void {
 // 1. Ingesta: Cocina (recipes.json) — 88 recetas (Fire Pit, Kitchen, Bakery, Deli, Smoothie Shack)
 if (recipesDataRaw && Array.isArray((recipesDataRaw as any).recipes)) {
   for (const r of (recipesDataRaw as any).recipes) {
-    if (!r.name) continue
+    if (!r.name || r.hidden) continue
     const id = r.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "_")

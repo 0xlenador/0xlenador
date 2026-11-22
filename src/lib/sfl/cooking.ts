@@ -20,6 +20,7 @@ import {
   type BuffDefinition,
   type ActiveBuffSelections,
 } from "./buffs"
+import { getUnitCost } from "./prices"
 
 // ----------------------------------------------------------------------------
 // Tipos e Interfaces
@@ -43,6 +44,7 @@ export interface CookingRecipe {
   instant?: number
   agedXp?: number
   primeAgedXp?: number
+  hidden?: boolean
 }
 
 export interface CookingCostResult {
@@ -231,7 +233,9 @@ export function getRawFishRecipes(): CookingRecipe[] {
 export function getAllCookingRecipes(): CookingRecipe[] {
   if (cachedAllRecipes) return cachedAllRecipes
 
-  const baseRecipes: CookingRecipe[] = (recipesDataRaw as any)?.recipes || []
+  const baseRecipes: CookingRecipe[] = (
+    ((recipesDataRaw as any)?.recipes || []) as CookingRecipe[]
+  ).filter((r) => !r.hidden)
   const agedRecipes = getAgedFishRecipes()
   const rawFishRecipes = getRawFishRecipes()
 
@@ -610,8 +614,6 @@ export function calculateRecipeCost(
           ? customCrabStickCost
           : 5.9
       total += crabCost * ing.amount
-    } else if (ing.name === "Magic Mushroom" || ing.name === "Wild Mushroom") {
-      total += 0
     } else {
       // Buscar si el ingrediente es en realidad otra receta
       const subRecipe = allRecipes.find((r) => r.name === ing.name)
@@ -625,7 +627,12 @@ export function calculateRecipeCost(
         if (subCost.missing) missing = true
         total += subCost.total * ing.amount
       } else {
-        missing = true
+        const unit = getUnitCost(ing.name, flowerPriceUsd)
+        if (unit && unit.flower > 0) {
+          total += unit.flower * ing.amount
+        } else {
+          missing = true
+        }
       }
     }
   }

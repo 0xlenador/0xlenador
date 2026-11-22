@@ -100,7 +100,6 @@ A continuación se presenta la lista completa de comidas disponibles en el juego
 | Shroom Syrup               | Deli           | 3x Magic Mushroom, 20x Honey                           | 10000     | 00:00:10      |
 | Blue Cheese                | Deli           | 2x Cheese, 10x Blueberry                               | 6000      | 03:00:00      |
 | Honey Cheddar              | Deli           | 3x Cheese, 5x Honey                                    | 15000     | 12:00:00      |
-| Fermented Fish             | Deli           | 6x Tuna                                                | 3000      | 1d 00:00:00   |
 | Blueberry Jam              | Deli           | 5x Blueberry                                           | 500       | 12:00:00      |
 | Fancy Fries                | Deli           | 500x Sunflower, 500x Potato                            | 1000      | 1d 00:00:00   |
 | Sauerkraut                 | Deli           | 20x Cabbage                                            | 500       | 1d 00:00:00   |

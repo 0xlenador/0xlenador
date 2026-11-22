@@ -5,9 +5,10 @@ import fishDataRaw from "../../../content/data/sfl/fishing/fish.json"
 export interface Props {
   item: any
   kind: "rod" | "trap" | "marvel"
+  index?: number
 }
 
-const { item, kind } = Astro.props
+const { item, kind, index = 0 } = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
@@ -184,6 +185,9 @@ const filterGuaranteed = item.guaranteedBy ? item.guaranteedBy.toLowerCase() : "
   data-bait={filterBaits}
   data-chum={filterChum}
   data-guaranteed={filterGuaranteed}
+  data-default-order={index}
+  data-xp={item.xp || 0}
+  data-cost="999999"
 >
   <!-- Glow temático -->
   {visual.glowClass && (

@@ -277,27 +277,27 @@ const formatAstroDescription = (skill) => {
               </button>
               <button
                 type="button"
-                class="dash-hide-xp-btn px-3 py-1 rounded-full text-xs font-mono transition-all bg-[#141414] text-white/60 hover:text-white border border-white/10"
-                data-min-xp="500"
-                title="Ocultar < 500 XP"
-              >
-                -500
-              </button>
-              <button
-                type="button"
-                class="dash-hide-xp-btn px-3 py-1 rounded-full text-xs font-mono transition-all bg-[#141414] text-white/60 hover:text-white border border-white/10"
+                class="dash-hide-xp-btn active px-3 py-1 rounded-full text-xs font-mono font-bold transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
                 data-min-xp="1000"
                 title="Ocultar < 1000 XP"
               >
-                -1000
+                &lt;1k
               </button>
               <button
                 type="button"
-                class="dash-hide-xp-btn px-3 py-1 rounded-full text-xs font-mono font-bold transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 active"
-                data-min-xp="2500"
-                title="Ocultar < 2500 XP"
+                class="dash-hide-xp-btn px-3 py-1 rounded-full text-xs font-mono transition-all bg-[#141414] text-white/60 hover:text-white border border-white/10"
+                data-min-xp="5000"
+                title="Ocultar < 5000 XP"
               >
-                -2500
+                &lt;5k
+              </button>
+              <button
+                type="button"
+                class="dash-hide-xp-btn px-3 py-1 rounded-full text-xs font-mono transition-all bg-[#141414] text-white/60 hover:text-white border border-white/10"
+                data-min-xp="10000"
+                title="Ocultar < 10000 XP"
+              >
+                &lt;10k
               </button>
               <div class="flex items-center bg-[#141414] border border-white/10 px-2.5 py-1 rounded-full text-xs font-mono text-white/60 focus-within:border-emerald-500/50">
                 <span>[</span>
@@ -305,9 +305,9 @@ const formatAstroDescription = (skill) => {
                   type="number"
                   id="dashCustomHideXp"
                   min="0"
-                  step="100"
+                  step="500"
                   placeholder="Custom"
-                  class="w-14 text-center text-emerald-400 bg-transparent outline-none placeholder:text-white/30 font-mono text-xs"
+                  class="w-20 text-center text-emerald-400 bg-transparent outline-none placeholder:text-white/30 font-mono text-xs"
                 />
                 <span>]</span>
               </div>
@@ -526,7 +526,7 @@ const formatAstroDescription = (skill) => {
           </div>
 
           <!-- 3. Fish Flake (Clic para editar costo) -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="8 Rods">
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title={t("sfl.cooking.dash.clickToEditFlake")}>
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/fish/a/fish_flake.webp" class="w-full h-full object-contain" alt="Fish Flake" onerror="window.handleImgError(this)" />
             </div>
@@ -553,7 +553,7 @@ const formatAstroDescription = (skill) => {
           </div>
 
           <!-- 4. Fish Stick (Clic para editar costo) -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="10 Rods">
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title={t("sfl.cooking.dash.clickToEditStick")}>
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/fish/a/fish_stick.webp" class="w-full h-full object-contain" alt="Fish Stick" onerror="window.handleImgError(this)" />
             </div>
@@ -580,7 +580,7 @@ const formatAstroDescription = (skill) => {
           </div>
 
           <!-- 5. Crab Stick (Clic para editar costo) -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="Promedio: 5.9 FLOWER">
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title={t("sfl.cooking.dash.clickToEditCrab")}>
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/fish/a/Crab Stick.png" class="w-full h-full object-contain" alt="Crab Stick" onerror="window.handleImgError(this)" />
             </div>
@@ -607,7 +607,7 @@ const formatAstroDescription = (skill) => {
           </div>
 
           <!-- 6. Fish Oil (Clic para editar costo) -->
-          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title="14 Rods">
+          <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0 sm:pl-3" title={t("sfl.cooking.dash.clickToEditOil")}>
             <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
               <img src="/img/sunflowerland/fish/a/fish_oil.webp" class="w-full h-full object-contain" alt="Fish Oil" />
             </div>
@@ -643,56 +643,61 @@ const formatAstroDescription = (skill) => {
 
     <!-- Controles y Filtros (Sticky Header) -->
     <div class="sticky top-0 z-40 bg-[#06080A]/95 backdrop-blur-md py-4 border-b border-white/5 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:border-0 sm:static sm:py-0">
-      <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 relative z-10">
-        <!-- Pestañas de categorías -->
-        <div class="flex gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar snap-x">
-          <button class="category-btn active snap-start px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0" data-category="all">{t("sfl.cooking.filter.all")}</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fire Pit">Fire Pit</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Kitchen">Kitchen</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Deli">Deli</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Smoothie Shack">Smoothie Shack</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Bakery">Bakery</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Aging Shed">Aging Shed</button>
-          <button class="category-btn snap-start px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fish">Fish</button>
-        </div>
+      <div class="flex flex-col gap-3 relative z-10">
+        <div class="p-2 sm:p-2.5 bg-[#101010]/90 border border-white/10 rounded-2xl shadow-xl shadow-black/50 backdrop-blur-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3">
+          <!-- Pestañas de categorías -->
+          <div class="flex gap-1.5 overflow-x-auto w-full xl:w-auto pb-1 xl:pb-0 no-scrollbar snap-x items-center">
+            <button class="category-btn active snap-start px-3.5 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-mono font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0 shadow-sm shadow-emerald-950/40" data-category="all">{t("sfl.cooking.filter.all")}</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fire Pit">Fire Pit</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Kitchen">Kitchen</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Deli">Deli</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Smoothie Shack">Smoothie Shack</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Bakery">Bakery</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Aging Shed">Aging Shed</button>
+            <button class="category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-category="Fish">Fish</button>
+          </div>
 
-        <div class="flex flex-col gap-3 w-full xl:w-auto">
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full xl:w-auto">
             <!-- Hidden XP Filter -->
-            <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar mx-auto sm:mx-0 shrink-0">
-              <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider whitespace-nowrap mr-1">{t("sfl.cooking.table.hideXp")}</span>
-              <button class="hide-xp-btn px-2.5 py-1.5 bg-white/5 text-white/40 border border-white/10 rounded-lg text-[11px] font-bold hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-xp="500"><500</button>
-              <button class="hide-xp-btn px-2.5 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-lg text-[11px] font-bold whitespace-nowrap shrink-0 active" data-xp="2500"><2.5K</button>
-              <button class="hide-xp-btn px-2.5 py-1.5 bg-white/5 text-white/40 border border-white/10 rounded-lg text-[11px] font-bold hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0" data-xp="5000"><5K</button>
-              <input type="number" id="custom-hide-xp" placeholder="Custom" class="w-16 px-2 py-1 bg-white/5 text-white/70 border border-white/10 rounded-lg text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500/50 placeholder-white/30 shrink-0" />
+            <div class="flex items-center gap-1.5 bg-black/40 border border-white/5 p-1 rounded-xl overflow-x-auto w-full sm:w-auto pb-1 sm:pb-1 no-scrollbar shrink-0">
+              <span class="text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider whitespace-nowrap px-1.5 select-none">{t("sfl.cooking.table.hideXp")}</span>
+              <button class="hide-xp-btn active px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-lg text-xs font-mono font-bold whitespace-nowrap shrink-0 shadow-sm shadow-emerald-950/40" data-xp="1000">&lt;1k</button>
+              <button class="hide-xp-btn px-2.5 py-1 bg-white/5 text-white/50 border border-white/10 rounded-lg text-xs font-mono font-bold hover:bg-white/10 hover:text-white transition-all whitespace-nowrap shrink-0" data-xp="5000">&lt;5k</button>
+              <button class="hide-xp-btn px-2.5 py-1 bg-white/5 text-white/50 border border-white/10 rounded-lg text-xs font-mono font-bold hover:bg-white/10 hover:text-white transition-all whitespace-nowrap shrink-0" data-xp="10000">&lt;10k</button>
+              <div class="relative flex items-center shrink-0">
+                <input type="number" id="custom-hide-xp" min="0" step="500" placeholder="Custom" class="w-18 px-2 py-1 bg-white/5 text-white/80 border border-white/10 rounded-lg text-xs font-mono text-center focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/5 placeholder-white/30 transition-all" />
+              </div>
             </div>
 
             <!-- Search Input -->
-            <div class="relative w-full sm:w-64 shrink-0 xl:ml-auto">
+            <div class="relative w-full sm:w-56 lg:w-60 shrink-0">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
               <input
                 type="text"
                 id="searchInput"
                 placeholder={t("sfl.cooking.search.placeholder")}
-                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all font-mono"
+                class="w-full bg-black/40 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all font-mono"
               />
             </div>
           </div>
-          
-          <!-- Ordenamiento Móvil Estilo App -->
-          <div class="relative w-[calc(100%)] lg:hidden scroll-hint-wrapper overflow-hidden pt-1">
-            <div class="w-full overflow-x-auto no-scrollbar scroll-area flex items-center justify-start">
-              <div class="flex items-center gap-1.5 w-max pr-6">
-                <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0">{t("sfl.cooking.table.sortBy")}</span>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="name" onclick="window.handleSort('name')">{t("sfl.cooking.table.colName")}<span class="sort-icon opacity-0" data-col="name">↕</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xp" onclick="window.handleSort('xp')">{t("sfl.cooking.table.colXp")}<span class="sort-icon opacity-0" data-col="xp">↕</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="cost" onclick="window.handleSort('cost')">{t("sfl.cooking.table.colCost")}<span class="sort-icon opacity-0" data-col="cost">↕</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpsfl" onclick="window.handleSort('xpsfl')">{t("sfl.cooking.table.colXpFlower")}<span class="sort-icon opacity-100 text-emerald-500" data-col="xpsfl">↓</span></button>
-                <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpday" onclick="window.handleSort('xpday')">{t("sfl.cooking.table.colXpDay")}<span class="sort-icon opacity-0" data-col="xpday">↕</span></button>
-              </div>
+        </div>
+
+        <!-- Ordenamiento Móvil Estilo App -->
+        <div class="relative w-[calc(100%)] lg:hidden scroll-hint-wrapper overflow-hidden pt-1">
+          <div class="w-full overflow-x-auto no-scrollbar scroll-area flex items-center justify-start">
+            <div class="flex items-center gap-1.5 w-max pr-6">
+              <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0">{t("sfl.cooking.table.sortBy")}</span>
+              <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="name" onclick="window.handleSort('name')">{t("sfl.cooking.table.colName")}<span class="sort-icon opacity-0" data-col="name">↕</span></button>
+              <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xp" onclick="window.handleSort('xp')">{t("sfl.cooking.table.colXp")}<span class="sort-icon opacity-0" data-col="xp">↕</span></button>
+              <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="cost" onclick="window.handleSort('cost')">{t("sfl.cooking.table.colCost")}<span class="sort-icon opacity-0" data-col="cost">↕</span></button>
+              <button class="mobile-sort-btn px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpsfl" onclick="window.handleSort('xpsfl')">{t("sfl.cooking.table.colXpFlower")}<span class="sort-icon opacity-100 text-emerald-500" data-col="xpsfl">↓</span></button>
+              <button class="mobile-sort-btn px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5" data-col="xpday" onclick="window.handleSort('xpday')">{t("sfl.cooking.table.colXpDay")}<span class="sort-icon opacity-0" data-col="xpday">↕</span></button>
             </div>
-            <div class="scroll-hint absolute right-0 top-1 bottom-0 w-12 bg-gradient-to-l from-[#06080A]/95 to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 pr-1 opacity-0">
-              <svg class="w-4 h-4 text-emerald-500/70 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </div>
+          </div>
+          <div class="scroll-hint absolute right-0 top-1 bottom-0 w-12 bg-gradient-to-l from-[#06080A]/95 to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 pr-1 opacity-0">
+            <svg class="w-4 h-4 text-emerald-500/70 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </div>
         </div>
       </div>
@@ -1132,6 +1137,41 @@ const formatAstroDescription = (skill) => {
     };
   }
 
+  function renderFishingBuffsBar(yieldAndBuffs, extraClasses = "") {
+    if (!yieldAndBuffs) return "";
+    const fishYield = yieldAndBuffs.fishYield || 1.0;
+    if (yieldAndBuffs.activeBuffItems.length === 0 && fishYield <= 1) return "";
+
+    const yieldBadgeHtml = fishYield > 1
+      ? `<span class="text-cyan-400 font-bold shrink-0 text-[10px] font-mono leading-none" title="${yieldAndBuffs.bonusTags.join(', ')}">(~${fishYield.toFixed(2)}x)</span>`
+      : "";
+
+    const buffImgs = yieldAndBuffs.activeBuffItems
+      .map((b) => {
+        const isNonStandardSkill = Boolean(b.isSkill && b.img && !b.img.startsWith("/img/sunflowerland/skills/"));
+        const overlayRayHtml = isNonStandardSkill
+          ? `<img src="/img/sunflowerland/123/energy.png" alt="Skill" class="absolute -top-1 -left-1 w-2 h-2 object-contain [image-rendering:pixelated] drop-shadow pointer-events-none z-10" />`
+          : "";
+        return `
+          <div class="relative shrink-0">
+            <img src="${b.img}" alt="${b.name}" title="${b.name}: ${b.desc}" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] rounded bg-white/5 border border-white/10 shrink-0 hover:scale-125 transition-transform cursor-help" loading="lazy" />
+            ${overlayRayHtml}
+          </div>
+        `;
+      })
+      .join("");
+
+    return `
+      <div class="flex items-center gap-1.5 text-[10px] font-mono flex-wrap ${extraClasses}">
+        <img src="/img/sunflowerland/123/energy.png" alt="Energy" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0" />
+        ${yieldBadgeHtml}
+        <div class="flex items-center flex-wrap gap-1">
+          ${buffImgs}
+        </div>
+      </div>
+    `;
+  }
+
   function getIngredientImg(ing) {
     if (ing && typeof ing === 'object' && ing.image) return ing.image;
     const name = typeof ing === 'string' ? ing : (ing?.name || '');
@@ -1201,23 +1241,21 @@ const formatAstroDescription = (skill) => {
         fishCatchCostCache.set(ingName, unitFlower);
       }
     } else if (ingName === "Fish Flake") {
-      unitFlower = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined)
+      unitFlower = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined && window.sflCustomFishFlakeCost >= 0)
         ? window.sflCustomFishFlakeCost
-        : (window.sflRodCost ? 8 * window.sflRodCost : 0);
+        : (window.sflAutoFishFlakeCost || (window.SflPrices ? window.SflPrices.getUnitCost("Fish Flake").flower : 0));
     } else if (ingName === "Fish Stick") {
-      unitFlower = (window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined)
+      unitFlower = (window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined && window.sflCustomFishStickCost >= 0)
         ? window.sflCustomFishStickCost
-        : (window.sflRodCost ? 10 * window.sflRodCost : 0);
+        : (window.sflAutoFishStickCost || (window.SflPrices ? window.SflPrices.getUnitCost("Fish Stick").flower : 0));
     } else if (ingName === "Fish Oil") {
-      unitFlower = (window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined)
+      unitFlower = (window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined && window.sflCustomFishOilCost >= 0)
         ? window.sflCustomFishOilCost
-        : (window.sflRodCost ? 14 * window.sflRodCost : 0);
+        : (window.sflAutoFishOilCost || (window.SflPrices ? window.SflPrices.getUnitCost("Fish Oil").flower : 0));
     } else if (ingName === "Crab Stick") {
-      unitFlower = (window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined)
+      unitFlower = (window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined && window.sflCustomCrabStickCost >= 0)
         ? window.sflCustomCrabStickCost
-        : 5.9;
-    } else if (ingName === "Magic Mushroom" || ingName === "Wild Mushroom") {
-      unitFlower = 0;
+        : (window.sflAutoCrabStickCost || (window.SflPrices ? window.SflPrices.getUnitCost("Crab Stick").flower : 0));
     } else if ((ingName === "Rod" || ingName === "Ancient Rod") && window.sflRodCost) {
       unitFlower = window.sflRodCost;
     } else if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
@@ -1330,7 +1368,7 @@ const formatAstroDescription = (skill) => {
   const dataContainer = document.getElementById("dataContainer")
   const tableBody = document.getElementById("tableBody")
 
-  let recipesData = sflRecipes.recipes
+  let recipesData = (sflRecipes.recipes || []).filter(r => !r.hidden)
   let priceDict = {}
 
   window.currentSort = { column: "xpsfl", direction: "desc" }
@@ -1342,27 +1380,50 @@ const formatAstroDescription = (skill) => {
     }
   };
 
-  window.currentHideXpLimit = 2500;
-  window.setHideXpLimit = (limit) => {
+  window.currentHideXpLimit = 1000;
+  window.setHideXpLimit = (limit, source = 'preset', triggerInput = null) => {
     window.currentHideXpLimit = limit;
     
-    document.querySelectorAll('.dash-hide-xp-btn, .hide-xp-btn').forEach(btn => {
-      const minXp = parseInt(btn.dataset.minXp !== undefined ? btn.dataset.minXp : btn.dataset.xp);
-      if (minXp === limit) {
+    // Botones del Dashboard
+    document.querySelectorAll('.dash-hide-xp-btn').forEach(btn => {
+      const minXp = parseInt(btn.dataset.minXp);
+      if (source !== 'custom' && minXp === limit) {
         btn.classList.add('active', 'bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
-        btn.classList.remove('bg-[#141414]', 'text-white/60', 'border-white/10', 'bg-white/5', 'text-white/50');
+        btn.classList.remove('bg-[#141414]', 'text-white/60', 'border-white/10');
       } else {
         btn.classList.remove('active', 'bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
         btn.classList.add('bg-[#141414]', 'text-white/60', 'border-white/10');
       }
     });
+
+    // Botones de la Tabla
+    document.querySelectorAll('.hide-xp-btn').forEach(btn => {
+      const xp = parseInt(btn.dataset.xp);
+      if (source !== 'custom' && xp === limit && limit > 0) {
+        btn.classList.add('active', 'bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
+        btn.classList.remove('bg-white/5', 'text-white/50', 'border-white/10');
+      } else {
+        btn.classList.remove('active', 'bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
+        btn.classList.add('bg-white/5', 'text-white/50', 'border-white/10');
+      }
+    });
     
+    // Inputs Personalizados
+    const presetValues = [1000, 5000, 10000];
     const customInputs = [document.getElementById('dashCustomHideXp'), document.getElementById('custom-hide-xp')].filter(Boolean);
     customInputs.forEach(input => {
-      if (limit === 0 || [500, 1000, 2500, 5000].includes(limit)) {
+      if (source === 'preset') {
         input.value = "";
-      } else if (parseInt(input.value) !== limit) {
-        input.value = limit;
+      } else if (source === 'init') {
+        if (limit === 0 || presetValues.includes(limit)) {
+          input.value = "";
+        } else {
+          input.value = limit;
+        }
+      } else if (source === 'custom') {
+        if (input !== triggerInput && document.activeElement !== input) {
+          input.value = limit > 0 ? limit : "";
+        }
       }
     });
 
@@ -1913,10 +1974,10 @@ const formatAstroDescription = (skill) => {
     document.querySelectorAll(".category-btn").forEach((btn) => {
       if (btn.dataset.category === category) {
         btn.className =
-          "category-btn active px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0"
+          "category-btn active snap-start px-3.5 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-mono font-bold uppercase tracking-wider hover:bg-emerald-500/30 transition-colors whitespace-nowrap shrink-0 shadow-sm shadow-emerald-950/40"
       } else {
         btn.className =
-          "category-btn px-4 py-2 bg-white/5 text-white/40 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
+          "category-btn snap-start px-3.5 py-1.5 bg-white/5 text-white/50 border border-white/10 rounded-xl text-xs font-mono font-medium uppercase tracking-wider hover:bg-white/10 hover:text-white transition-colors whitespace-nowrap shrink-0"
       }
     })
 
@@ -2032,27 +2093,25 @@ const formatAstroDescription = (skill) => {
         }
         total += agedCost * ing.amount;
       } else if (ing.name === "Fish Flake") {
-        const flakeCost = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined)
+        const flakeCost = (window.sflCustomFishFlakeCost !== null && window.sflCustomFishFlakeCost !== undefined && window.sflCustomFishFlakeCost >= 0)
           ? window.sflCustomFishFlakeCost
-          : (window.sflRodCost ? 8 * window.sflRodCost : 0);
+          : (window.sflAutoFishFlakeCost || (window.SflPrices ? window.SflPrices.getUnitCost("Fish Flake").flower : 0));
         total += flakeCost * ing.amount;
       } else if (ing.name === "Fish Stick") {
-        const stickCost = (window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined)
+        const stickCost = (window.sflCustomFishStickCost !== null && window.sflCustomFishStickCost !== undefined && window.sflCustomFishStickCost >= 0)
           ? window.sflCustomFishStickCost
-          : (window.sflRodCost ? 10 * window.sflRodCost : 0);
+          : (window.sflAutoFishStickCost || (window.SflPrices ? window.SflPrices.getUnitCost("Fish Stick").flower : 0));
         total += stickCost * ing.amount;
       } else if (ing.name === "Fish Oil") {
-        const oilCost = (window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined)
+        const oilCost = (window.sflCustomFishOilCost !== null && window.sflCustomFishOilCost !== undefined && window.sflCustomFishOilCost >= 0)
           ? window.sflCustomFishOilCost
-          : (window.sflRodCost ? 14 * window.sflRodCost : 0);
+          : (window.sflAutoFishOilCost || (window.SflPrices ? window.SflPrices.getUnitCost("Fish Oil").flower : 0));
         total += oilCost * ing.amount;
       } else if (ing.name === "Crab Stick") {
-        const crabCost = (window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined)
+        const crabCost = (window.sflCustomCrabStickCost !== null && window.sflCustomCrabStickCost !== undefined && window.sflCustomCrabStickCost >= 0)
           ? window.sflCustomCrabStickCost
-          : 5.9;
+          : (window.sflAutoCrabStickCost || (window.SflPrices ? window.SflPrices.getUnitCost("Crab Stick").flower : 0));
         total += crabCost * ing.amount;
-      } else if (ing.name === "Magic Mushroom" || ing.name === "Wild Mushroom") {
-        total += 0;
       } else {
         // Buscar si el ingrediente es en realidad otra receta
         const subRecipe = recipesData.find((r) => r.name === ing.name)
@@ -2061,6 +2120,13 @@ const formatAstroDescription = (skill) => {
           const subCost = calculateRecipeCost(subRecipe.ingredients, visited, false)
           if (subCost.missing) missing = true
           total += subCost.total * ing.amount
+        } else if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+          const costObj = window.SflPrices.getUnitCost(ing.name, window.sflFlowerPrice);
+          if (costObj && costObj.flower > 0) {
+            total += costObj.flower * ing.amount;
+          } else {
+            missing = true;
+          }
         } else {
           missing = true
         }
@@ -2195,37 +2261,7 @@ const formatAstroDescription = (skill) => {
       if (isRawFish) {
         const yieldAndBuffs = getFishYieldAndBuffs(item.name);
         rawFishYield = yieldAndBuffs.fishYield;
-
-        const yieldBadgeHtml = rawFishYield > 1
-          ? `<span class="text-cyan-400 font-bold shrink-0 text-[10px] font-mono leading-none" title="${yieldAndBuffs.bonusTags.join(', ')}">(~${rawFishYield.toFixed(2)}x)</span>`
-          : "";
-
-        if (yieldAndBuffs.activeBuffItems.length > 0 || rawFishYield > 1) {
-          const buffImgs = yieldAndBuffs.activeBuffItems
-            .map((b) => {
-              const isNonStandardSkill = Boolean(b.isSkill && b.img && !b.img.startsWith("/img/sunflowerland/skills/"));
-              const overlayRayHtml = isNonStandardSkill
-                ? `<img src="/img/sunflowerland/123/energy.png" alt="Skill" class="absolute -top-1 -left-1 w-2 h-2 object-contain [image-rendering:pixelated] drop-shadow pointer-events-none z-10" />`
-                : "";
-              return `
-                <div class="relative shrink-0">
-                  <img src="${b.img}" alt="${b.name}" title="${b.name}: ${b.desc}" onerror="this.onerror=null; this.src='/img/cripto/sunflowerland.webp';" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] rounded bg-white/5 border border-white/10 shrink-0 hover:scale-125 transition-transform cursor-help" loading="lazy" />
-                  ${overlayRayHtml}
-                </div>
-              `;
-            })
-            .join("");
-
-          fishingBuffsBarHtml = `
-            <div class="flex items-center gap-1.5 pt-1 mt-1 border-t border-white/[0.04] flex-wrap">
-              <img src="/img/sunflowerland/123/energy.png" alt="Energy" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] shrink-0" />
-              ${yieldBadgeHtml}
-              <div class="flex items-center flex-wrap gap-1">
-                ${buffImgs}
-              </div>
-            </div>
-          `;
-        }
+        fishingBuffsBarHtml = renderFishingBuffsBar(yieldAndBuffs, "pt-1 mt-1 border-t border-white/[0.04]");
 
         const capture = getFishCaptureBreakdown(item.name);
         if (capture) {
@@ -2269,10 +2305,18 @@ const formatAstroDescription = (skill) => {
           const displayUsd = isRawFish && rawFishYield > 1 ? priceInfo.totalUsd / rawFishYield : priceInfo.totalUsd;
 
           let captureHtml = "";
+          let ingFishYield = 1.0;
+          let isSubRecipe = false;
+          let subRecipeObj = null;
+
           if (!isRawFish && priceInfo.isFishOrCrust) {
+            const ingYieldAndBuffs = getFishYieldAndBuffs(ing.name);
+            ingFishYield = ingYieldAndBuffs.fishYield || 1.0;
+            const ingBuffsHtml = renderFishingBuffsBar(ingYieldAndBuffs, "pl-5.5 py-0.5");
+
             const capture = getFishCaptureBreakdown(ing.name);
+            const parts = [];
             if (capture) {
-              const parts = [];
               if (capture.rod) {
                 parts.push(`
                   <span class="inline-flex items-center gap-1" title="${capture.rod.name}">
@@ -2297,12 +2341,50 @@ const formatAstroDescription = (skill) => {
                   </span>
                 `);
               }
+            }
+
+            if (parts.length > 0 || ingBuffsHtml) {
+              captureHtml = `
+                ${parts.length > 0 ? `
+                  <div class="flex items-center gap-1.5 text-[10px] font-mono text-terminal-muted/80 pl-5.5 py-0.5 flex-wrap">
+                    ${parts.join('<span class="text-white/30 text-[10px] font-bold">+</span>')}
+                  </div>
+                ` : ''}
+                ${ingBuffsHtml}
+              `;
+            }
+          } else if (!isRawFish) {
+            subRecipeObj = recipesData.find((r) => r.name === ing.name);
+            if (subRecipeObj && subRecipeObj.ingredients && subRecipeObj.ingredients.length > 0) {
+              isSubRecipe = true;
+              const parts = [];
+              const fishBuffsList = [];
+
+              subRecipeObj.ingredients.forEach((subIng) => {
+                const scaledAmount = subIng.amount * totalAmount;
+                const subImg = getIngredientImg(subIng);
+                const isSubFish = isFishOrCrust(subIng.name);
+
+                parts.push(`
+                  <span class="inline-flex items-center gap-1" title="${subIng.name} x${scaledAmount}">
+                    <img src="${subImg}" alt="${subIng.name}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" loading="lazy" />
+                    <span class="text-[10px] text-white/70 font-mono">${scaledAmount > 1 ? `${scaledAmount} ` : ""}${subIng.name}</span>
+                  </span>
+                `);
+
+                if (isSubFish) {
+                  const subYieldAndBuffs = getFishYieldAndBuffs(subIng.name);
+                  const subBuffsHtml = renderFishingBuffsBar(subYieldAndBuffs, "pl-5.5 py-0.5");
+                  if (subBuffsHtml) fishBuffsList.push(subBuffsHtml);
+                }
+              });
 
               if (parts.length > 0) {
                 captureHtml = `
                   <div class="flex items-center gap-1.5 text-[10px] font-mono text-terminal-muted/80 pl-5.5 py-0.5 flex-wrap">
                     ${parts.join('<span class="text-white/30 text-[10px] font-bold">+</span>')}
                   </div>
+                  ${fishBuffsList.join('')}
                 `;
               }
             }
@@ -2321,7 +2403,7 @@ const formatAstroDescription = (skill) => {
                   class="ingredient-price-btn inline-flex items-center gap-1 font-mono text-[10px] lg:text-[11px] text-white/70 hover:text-emerald-400 cursor-pointer transition-colors select-none ml-1 bg-transparent border-0 p-0"
                   data-flower="${displayFlower}"
                   data-usd="${displayUsd}"
-                  title="${isRawFish && rawFishYield > 1 ? `Costo unitario por pez capturado (rendimiento ~${rawFishYield.toFixed(2)}x)` : (tToggleCurrency || 'Clic para alternar entre FLOWER y USD')}"
+                  title="${isRawFish && rawFishYield > 1 ? `Costo unitario por pez capturado (rendimiento ~${rawFishYield.toFixed(2)}x)` : (!isRawFish && priceInfo.isFishOrCrust && ingFishYield > 1 ? `Costo unitario por pez capturado (rendimiento ~${ingFishYield.toFixed(2)}x)` : (isSubRecipe && subRecipeObj ? `Sub-receta: ${subRecipeObj.ingredients.map(si => `${si.amount * totalAmount} ${si.name}`).join(' + ')}` : (tToggleCurrency || 'Clic para alternar entre FLOWER y USD')))}"
                 >
                   ${formattedPrice}
                 </button>
@@ -3077,9 +3159,9 @@ const formatAstroDescription = (skill) => {
       const minXpAttr = target.dataset.minXp !== undefined ? target.dataset.minXp : target.dataset.xp;
       const limit = parseInt(minXpAttr);
       if (window.currentHideXpLimit === limit) {
-        window.setHideXpLimit(0);
+        window.setHideXpLimit(0, 'preset');
       } else {
-        window.setHideXpLimit(limit);
+        window.setHideXpLimit(limit, 'preset');
       }
     });
   });
@@ -3089,9 +3171,9 @@ const formatAstroDescription = (skill) => {
     if (customInput) {
       customInput.addEventListener('input', (e) => {
         window.manualSelectedDish = null;
-        const val = e.target.value;
-        const limit = val ? parseInt(val) : 0;
-        window.setHideXpLimit(isNaN(limit) ? 0 : limit);
+        const val = e.target.value.trim();
+        const limit = val ? parseInt(val, 10) : 0;
+        window.setHideXpLimit(isNaN(limit) ? 0 : limit, 'custom', e.target);
       });
     }
   });
@@ -3459,9 +3541,9 @@ const formatAstroDescription = (skill) => {
           window.handleCategory(state.currentCategory);
         }
         if (state.currentHideXpLimit !== undefined) {
-          window.setHideXpLimit(state.currentHideXpLimit);
+          window.setHideXpLimit(state.currentHideXpLimit, 'init');
         } else {
-          window.setHideXpLimit(2500);
+          window.setHideXpLimit(1000, 'init');
         }
         if (state.manualSelectedDish) {
           window.manualSelectedDish = state.manualSelectedDish;
@@ -3511,7 +3593,7 @@ const formatAstroDescription = (skill) => {
         console.error("Failed to parse cached state", e);
       }
     } else {
-      window.setHideXpLimit(2500);
+      window.setHideXpLimit(1000, 'init');
       window.toggleBoostFilter('all');
       window.setViewStyle('detailed');
     }
@@ -3530,11 +3612,11 @@ const formatAstroDescription = (skill) => {
     if (coinsInput) {
       coinsInput.value = Math.round(effectiveCoins);
       if (isCustomCoins) {
-        coinsInput.classList.add("text-amber-400", "border-amber-400/50");
-        coinsInput.classList.remove("text-emerald-400");
+        coinsInput.classList.add("text-amber-400", "border-amber-400/80");
+        coinsInput.classList.remove("text-emerald-400", "border-white/20");
       } else {
-        coinsInput.classList.remove("text-amber-400", "border-amber-400/50");
-        coinsInput.classList.add("text-emerald-400");
+        coinsInput.classList.remove("text-amber-400", "border-amber-400/80");
+        coinsInput.classList.add("text-emerald-400", "border-white/20");
       }
     }
     if (resetCoinsBtn) {
@@ -3562,11 +3644,11 @@ const formatAstroDescription = (skill) => {
     if (rodInput) {
       rodInput.value = isCustomRod ? effectiveRod.toString() : formatNumber(effectiveRod, 4);
       if (isCustomRod) {
-        rodInput.classList.add("text-amber-400", "border-amber-400/50");
-        rodInput.classList.remove("text-emerald-400");
+        rodInput.classList.add("text-amber-400", "border-amber-400/80");
+        rodInput.classList.remove("text-emerald-400", "border-white/20");
       } else {
-        rodInput.classList.remove("text-amber-400", "border-amber-400/50");
-        rodInput.classList.add("text-emerald-400");
+        rodInput.classList.remove("text-amber-400", "border-amber-400/80");
+        rodInput.classList.add("text-emerald-400", "border-white/20");
       }
     }
     if (resetRodBtn) {
@@ -3583,11 +3665,11 @@ const formatAstroDescription = (skill) => {
       if (inputEl) {
         inputEl.value = isCustom ? effectiveVal.toString() : formatNumber(effectiveVal, 4);
         if (isCustom) {
-          inputEl.classList.add("text-amber-400", "border-amber-400/50");
-          inputEl.classList.remove("text-emerald-400");
+          inputEl.classList.add("text-amber-400", "border-amber-400/80");
+          inputEl.classList.remove("text-emerald-400", "border-white/20");
         } else {
-          inputEl.classList.remove("text-amber-400", "border-amber-400/50");
-          inputEl.classList.add("text-emerald-400");
+          inputEl.classList.remove("text-amber-400", "border-amber-400/80");
+          inputEl.classList.add("text-emerald-400", "border-white/20");
         }
       }
       if (resetEl) {
@@ -3596,36 +3678,70 @@ const formatAstroDescription = (skill) => {
       }
     };
 
-    // 3. Fish Flake (8 rods por defecto)
+    // Helper para obtener el costo real automático desde el motor central SflPrices
+    const getAutoFishMarketCost = (name, fallbackFactor) => {
+      if (window.SflPrices && typeof window.SflPrices.resolveCost === "function") {
+        try {
+          const res = window.SflPrices.resolveCost(name);
+          if (res) {
+            if (res.isCraftable && res.craftCostFlower > 0) return res.craftCostFlower;
+            if (res.marketPriceFlower > 0) return res.marketPriceFlower;
+          }
+        } catch (e) {}
+      }
+      if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
+        try {
+          const u = window.SflPrices.getUnitCost(name);
+          if (u && u.flower > 0) return u.flower;
+        } catch (e) {}
+      }
+      if (window.SflMarket && typeof window.SflMarket.getItemPrice === "function") {
+        const mp = window.SflMarket.getItemPrice(name);
+        if (mp > 0) return mp;
+      }
+      return fallbackFactor * effectiveRod;
+    };
+
+    const autoFishFlake = getAutoFishMarketCost("Fish Flake", 8);
+    const autoFishStick = getAutoFishMarketCost("Fish Stick", 10);
+    const autoCrabStick = getAutoFishMarketCost("Crab Stick", 30);
+    const autoFishOil = getAutoFishMarketCost("Fish Oil", 14);
+
+    window.sflAutoFishFlakeCost = autoFishFlake;
+    window.sflAutoFishStickCost = autoFishStick;
+    window.sflAutoCrabStickCost = autoCrabStick;
+    window.sflAutoFishOilCost = autoFishOil;
+
+    // 3. Fish Flake
     updateDerivedPriceInput(
       "quickFishFlakeInput",
       "resetFishFlakeBtn",
       window.sflCustomFishFlakeCost,
-      8 * effectiveRod
+      autoFishFlake
     );
 
-    // 4. Fish Stick (10 rods por defecto)
+    // 4. Fish Stick
     updateDerivedPriceInput(
       "quickFishStickInput",
       "resetFishStickBtn",
       window.sflCustomFishStickCost,
-      10 * effectiveRod
+      autoFishStick
     );
 
-    // 5. Crab Stick (5.9 FLOWER promedio por defecto)
+    // 5. Crab Stick
     updateDerivedPriceInput(
       "quickCrabStickInput",
       "resetCrabStickBtn",
       window.sflCustomCrabStickCost,
-      5.9
+      autoCrabStick
     );
 
-    // 6. Fish Oil (14 rods por defecto)
+    // 6. Fish Oil
     updateDerivedPriceInput(
       "quickFishOilInput",
       "resetFishOilBtn",
       window.sflCustomFishOilCost,
-      14 * effectiveRod
+      autoFishOil
     );
   };
 

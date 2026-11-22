@@ -58,8 +58,8 @@ const counts = {
   <!-- Grilla de Tarjetas -->
   <div id="fishGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
     {
-      allItems.map((entry) => (
-        <SflFishingCard item={entry} kind={entry.kind} />
+      allItems.map((entry, idx) => (
+        <SflFishingCard item={entry} kind={entry.kind} index={idx} />
       ))
     }
   </div>
@@ -107,6 +107,7 @@ const counts = {
   function initFishing() {
     const tierButtons = document.querySelectorAll(".filter-tier-btn")
     const seasonButtons = document.querySelectorAll(".filter-season-btn")
+    const sortButtons = document.querySelectorAll(".sort-fish-btn")
     const searchInput = document.getElementById("fishSearchInput")
     const clearBtn = document.getElementById("clearSearchBtn")
     const cards = document.querySelectorAll(".fish-card")
@@ -114,7 +115,52 @@ const counts = {
 
     let activeTier = "all"
     let activeSeason = "all"
+    let activeSort = "default"
     let searchQuery = ""
+
+    function applySort() {
+      const grid = document.getElementById("fishGrid")
+      if (!grid) return
+
+      const allCards = Array.from(grid.querySelectorAll(".fish-card"))
+
+      allCards.sort((a, b) => {
+        const defaultA = parseInt(a.dataset.defaultOrder || "0", 10)
+        const defaultB = parseInt(b.dataset.defaultOrder || "0", 10)
+
+        if (activeSort === "cheapest") {
+          const costA = parseFloat(a.dataset.cost || "999999")
+          const costB = parseFloat(b.dataset.cost || "999999")
+          if (costA !== costB) return costA - costB
+          return defaultA - defaultB
+        }
+
+        if (activeSort === "expensive") {
+          const costA = parseFloat(a.dataset.cost || "0")
+          const costB = parseFloat(b.dataset.cost || "0")
+          if (costA !== costB) return costB - costA
+          return defaultA - defaultB
+        }
+
+        if (activeSort === "xp-desc") {
+          const xpA = parseFloat(a.dataset.xp || "0")
+          const xpB = parseFloat(b.dataset.xp || "0")
+          if (xpA !== xpB) return xpB - xpA
+          return defaultA - defaultB
+        }
+
+        if (activeSort === "xp-asc") {
+          const xpA = parseFloat(a.dataset.xp || "0")
+          const xpB = parseFloat(b.dataset.xp || "0")
+          if (xpA !== xpB) return xpA - xpB
+          return defaultA - defaultB
+        }
+
+        return defaultA - defaultB
+      })
+
+      allCards.forEach((card) => grid.appendChild(card))
+    }
 
     function updateFilters() {
       let visibleCount = 0
@@ -180,14 +226,28 @@ const counts = {
     seasonButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         seasonButtons.forEach((b) => {
-          b.classList.remove("bg-white/10", "text-white", "border-white/10", "active")
-          b.classList.add("bg-transparent", "text-white/60", "border-transparent")
+          b.classList.remove("bg-white/10", "text-white", "border-white/20", "active")
+          b.classList.add("bg-transparent", "text-white/60", "border-white/5")
         })
-        btn.classList.add("bg-white/10", "text-white", "border-white/10", "active")
-        btn.classList.remove("bg-transparent", "text-white/60", "border-transparent")
+        btn.classList.add("bg-white/10", "text-white", "border-white/20", "active")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
 
         activeSeason = btn.dataset.season || "all"
         updateFilters()
+      })
+    })
+
+    sortButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        sortButtons.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-white", "border-white/20", "active")
+          b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+        })
+        btn.classList.add("bg-white/10", "text-white", "border-white/20", "active")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+
+        activeSort = btn.dataset.sort || "default"
+        applySort()
       })
     })
 
@@ -575,6 +635,11 @@ const counts = {
           : "--"
       }
 
+      const currentUnitCost = isReady
+        ? (fishYield > 1 ? effectiveUnitCost : totalCost)
+        : 999999
+      card.dataset.cost = String(currentUnitCost)
+
       const usdEl = card.querySelector(".cost-usd-val")
       if (usdEl) {
         const effectiveUsd = effectiveUnitCost * flowerPrice
@@ -767,6 +832,9 @@ const counts = {
 
     function updateAllCards() {
       cards.forEach((card) => updateCardCost(card))
+      if (activeSort !== "default") {
+        applySort()
+      }
     }
 
     // Clic en badge de Cebo (Bait Selection)
@@ -1583,10 +1651,8 @@ const counts = {
     // Escuchar el evento reactivo de actualización de mercado
     window.addEventListener("sfl:marketUpdated", syncMarketPrices)
 
-    // Si el estado de mercado ya está listo en memoria, sincronizar de inmediato
-    if (window.__sflMarketState || (window.SflMarket && window.SflMarket.getState().raw)) {
-      syncMarketPrices()
-    }
+    // Ejecutar sincronización inicial inmediata
+    syncMarketPrices()
   }
 
   if (document.readyState === "loading") {
