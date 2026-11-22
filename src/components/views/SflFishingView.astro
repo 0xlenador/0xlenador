@@ -8,6 +8,8 @@ import marvelsData from "../../content/data/sfl/fishing/marine_marvels.json"
 import SflFishingDashboard from "../sfl/fishing/SflFishingDashboard.astro"
 import SflFishingFilters from "../sfl/fishing/SflFishingFilters.astro"
 import SflFishingCard from "../sfl/fishing/SflFishingCard.astro"
+import SflFishingCardCompact from "../sfl/fishing/SflFishingCardCompact.astro"
+import SflFishingTable from "../sfl/fishing/SflFishingTable.astro"
 import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 
 const lang = getLangFromUrl(Astro.url)
@@ -25,12 +27,16 @@ const allItems = [
 // Conteos reales para los filtros
 const counts = {
   all: allItems.length,
-  rod: fishData.length,
+  fish: fishData.length,
   basic: fishData.filter((f) => f.tier === "basic").length,
   advanced: fishData.filter((f) => f.tier === "advanced").length,
   expert: fishData.filter((f) => f.tier === "expert").length,
   trap: crustaceansData.length,
+  crabPot: crustaceansData.filter((c: any) => c.trap === "Crab Pot").length,
+  marinerPot: crustaceansData.filter((c: any) => c.trap === "Mariner Pot").length,
   marvel: allMarvels.length,
+  permanent: marvelsData.permanent.length,
+  chapters: marvelsData.chapters.length,
 }
 ---
 
@@ -55,14 +61,26 @@ const counts = {
   <!-- Panel de Control: Filtros & Búsqueda -->
   <SflFishingFilters counts={counts} />
 
-  <!-- Grilla de Tarjetas -->
-  <div id="fishGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+  <!-- 1. Grilla de Tarjetas Detalladas (Original) -->
+  <div id="fishGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-6">
     {
       allItems.map((entry, idx) => (
         <SflFishingCard item={entry} kind={entry.kind} index={idx} />
       ))
     }
   </div>
+
+  <!-- 2. Grilla de Tarjetas Compactas -->
+  <div id="fishGridCompact" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 mb-6">
+    {
+      allItems.map((entry, idx) => (
+        <SflFishingCardCompact item={entry} kind={entry.kind} index={idx} />
+      ))
+    }
+  </div>
+
+  <!-- 3. Tabla de Alta Densidad -->
+  <SflFishingTable items={allItems} />
 
   <!-- Estado Vacío -->
   <div id="emptyResults" class="hidden p-12 text-center rounded-2xl border border-white/5 bg-[#18181b]/50 my-8">
@@ -105,26 +123,86 @@ const counts = {
   }}
 >
   function initFishing() {
+    const sectionButtons = document.querySelectorAll(".filter-section-btn")
     const tierButtons = document.querySelectorAll(".filter-tier-btn")
+    const trapSubButtons = document.querySelectorAll(".filter-trap-sub-btn")
+    const marvelSubButtons = document.querySelectorAll(".filter-marvel-sub-btn")
     const seasonButtons = document.querySelectorAll(".filter-season-btn")
     const sortButtons = document.querySelectorAll(".sort-fish-btn")
+    const viewButtons = document.querySelectorAll(".view-mode-btn")
     const searchInput = document.getElementById("fishSearchInput")
     const clearBtn = document.getElementById("clearSearchBtn")
+    const subfiltersFish = document.getElementById("subfiltersFish")
+    const subfiltersTrap = document.getElementById("subfiltersTrap")
+    const subfiltersMarvel = document.getElementById("subfiltersMarvel")
+    const fullGrid = document.getElementById("fishGrid")
+    const compactGrid = document.getElementById("fishGridCompact")
+    const tableContainer = document.getElementById("fishTableContainer")
     const cards = document.querySelectorAll(".fish-card")
+    const compactCards = document.querySelectorAll(".fish-card-compact")
+    const tableRows = document.querySelectorAll(".fish-table-row")
     const emptyState = document.getElementById("emptyResults")
 
+    let activeSection = "fish"
     let activeTier = "all"
+    let activeTrapSub = "all"
+    let activeMarvelSub = "all"
     let activeSeason = "all"
     let activeSort = "default"
     let searchQuery = ""
+    let activeViewMode = "normal"
 
-    function applySort() {
-      const grid = document.getElementById("fishGrid")
-      if (!grid) return
+    try {
+      const savedView = localStorage.getItem("sfl_fishing_view_mode")
+      if (savedView === "normal" || savedView === "compact" || savedView === "table") {
+        activeViewMode = savedView
+      }
+    } catch (e) {}
 
-      const allCards = Array.from(grid.querySelectorAll(".fish-card"))
+    function setViewMode(mode) {
+      activeViewMode = mode
+      try {
+        localStorage.setItem("sfl_fishing_view_mode", mode)
+      } catch (e) {}
 
-      allCards.sort((a, b) => {
+      viewButtons.forEach((btn) => {
+        const isTarget = btn.dataset.view === mode
+        if (isTarget) {
+          btn.classList.add("active", "bg-white/15", "text-cyan-300", "border-cyan-500/30", "shadow-sm")
+          btn.classList.remove("text-white/50", "border-transparent")
+        } else {
+          btn.classList.remove("active", "bg-white/15", "text-cyan-300", "border-cyan-500/30", "shadow-sm")
+          btn.classList.add("text-white/50", "border-transparent")
+        }
+      })
+
+      if (fullGrid) {
+        if (mode === "normal") fullGrid.classList.remove("hidden")
+        else fullGrid.classList.add("hidden")
+      }
+      if (compactGrid) {
+        if (mode === "compact") compactGrid.classList.remove("hidden")
+        else compactGrid.classList.add("hidden")
+      }
+      if (tableContainer) {
+        if (mode === "table") tableContainer.classList.remove("hidden")
+        else tableContainer.classList.add("hidden")
+      }
+    }
+
+    viewButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.view || "normal"
+        setViewMode(mode)
+      })
+    })
+
+    setViewMode(activeViewMode)
+
+    function sortContainerElements(container, selector) {
+      if (!container) return
+      const items = Array.from(container.querySelectorAll(selector))
+      items.sort((a, b) => {
         const defaultA = parseInt(a.dataset.defaultOrder || "0", 10)
         const defaultB = parseInt(b.dataset.defaultOrder || "0", 10)
 
@@ -158,44 +236,83 @@ const counts = {
 
         return defaultA - defaultB
       })
+      items.forEach((item) => container.appendChild(item))
+    }
 
-      allCards.forEach((card) => grid.appendChild(card))
+    function applySort() {
+      sortContainerElements(document.getElementById("fishGrid"), ".fish-card")
+      sortContainerElements(document.getElementById("fishGridCompact"), ".fish-card-compact")
+      sortContainerElements(document.getElementById("fishTableBody"), ".fish-table-row")
+    }
+
+    function checkItemMatch(el) {
+      const cardKind = el.dataset.kind || ""
+      const cardTier = el.dataset.tier || ""
+      const cardTrap = el.dataset.trap || ""
+      const cardChapter = el.dataset.chapter || ""
+      const cardSeasons = (el.dataset.seasons || "").split(" ")
+      const cardName = el.dataset.name || ""
+      const cardBait = el.dataset.bait || ""
+      const cardChum = el.dataset.chum || ""
+      const cardGuaranteed = el.dataset.guaranteed || ""
+
+      // 1. Filtro por Sección Principal
+      let matchesSection = false
+      if (activeSection === "all") {
+        matchesSection = true
+      } else if (activeSection === "fish") {
+        matchesSection = cardKind === "rod"
+      } else if (activeSection === "trap") {
+        matchesSection = cardKind === "trap"
+      } else if (activeSection === "marvel") {
+        matchesSection = cardKind === "marvel"
+      }
+
+      if (!matchesSection) return false
+
+      // 2. Subfiltros contextuales
+      if (activeSection === "fish" || (activeSection === "all" && cardKind === "rod")) {
+        if (activeTier !== "all" && cardTier !== activeTier) {
+          return false
+        }
+      }
+
+      if (activeSection === "trap") {
+        if (activeTrapSub !== "all" && cardTrap !== activeTrapSub) {
+          return false
+        }
+      }
+
+      if (activeSection === "marvel") {
+        if (activeMarvelSub !== "all" && cardChapter !== activeMarvelSub) {
+          return false
+        }
+      }
+
+      // 3. Filtro por Estación
+      const matchesSeason =
+        activeSeason === "all" ||
+        cardSeasons.includes(activeSeason) ||
+        cardSeasons.length >= 4
+
+      if (!matchesSeason) return false
+
+      // 4. Filtro por Búsqueda
+      const matchesSearch =
+        !searchQuery ||
+        cardName.includes(searchQuery) ||
+        cardBait.includes(searchQuery) ||
+        cardChum.includes(searchQuery) ||
+        cardGuaranteed.includes(searchQuery)
+
+      return matchesSearch
     }
 
     function updateFilters() {
       let visibleCount = 0
 
       cards.forEach((card) => {
-        const cardTier = card.dataset.tier || ""
-        const cardKind = card.dataset.kind || ""
-        const cardSeasons = (card.dataset.seasons || "").split(" ")
-        const cardName = card.dataset.name || ""
-        const cardBait = card.dataset.bait || ""
-        const cardChum = card.dataset.chum || ""
-        const cardGuaranteed = card.dataset.guaranteed || ""
-
-        // Filtro por Tier / Categoría
-        const matchesTier =
-          activeTier === "all" ||
-          cardTier === activeTier ||
-          cardKind === activeTier ||
-          (activeTier === "rod" && cardKind === "rod")
-
-        // Filtro por Estación
-        const matchesSeason =
-          activeSeason === "all" ||
-          cardSeasons.includes(activeSeason) ||
-          cardSeasons.length >= 4
-
-        // Filtro por Búsqueda
-        const matchesSearch =
-          !searchQuery ||
-          cardName.includes(searchQuery) ||
-          cardBait.includes(searchQuery) ||
-          cardChum.includes(searchQuery) ||
-          cardGuaranteed.includes(searchQuery)
-
-        if (matchesTier && matchesSeason && matchesSearch) {
+        if (checkItemMatch(card)) {
           card.classList.remove("hidden")
           visibleCount++
         } else {
@@ -203,11 +320,49 @@ const counts = {
         }
       })
 
+      compactCards.forEach((cCard) => {
+        if (checkItemMatch(cCard)) cCard.classList.remove("hidden")
+        else cCard.classList.add("hidden")
+      })
+
+      tableRows.forEach((row) => {
+        if (checkItemMatch(row)) row.classList.remove("hidden")
+        else row.classList.add("hidden")
+      })
+
       if (emptyState) {
         if (visibleCount === 0) emptyState.classList.remove("hidden")
         else emptyState.classList.add("hidden")
       }
     }
+
+    sectionButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        sectionButtons.forEach((b) => {
+          b.classList.remove("active", "bg-cyan-500/15", "text-cyan-300", "border-cyan-500/30", "shadow-sm", "bg-white/10", "text-white", "border-white/20")
+          b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+        })
+        btn.classList.add("active", "bg-cyan-500/15", "text-cyan-300", "border-cyan-500/30", "shadow-sm")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+
+        activeSection = btn.dataset.section || "fish"
+
+        if (subfiltersFish) {
+          if (activeSection === "fish" || activeSection === "all") subfiltersFish.classList.remove("hidden")
+          else subfiltersFish.classList.add("hidden")
+        }
+        if (subfiltersTrap) {
+          if (activeSection === "trap") subfiltersTrap.classList.remove("hidden")
+          else subfiltersTrap.classList.add("hidden")
+        }
+        if (subfiltersMarvel) {
+          if (activeSection === "marvel") subfiltersMarvel.classList.remove("hidden")
+          else subfiltersMarvel.classList.add("hidden")
+        }
+
+        updateFilters()
+      })
+    })
 
     tierButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -219,6 +374,34 @@ const counts = {
         btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
 
         activeTier = btn.dataset.tier || "all"
+        updateFilters()
+      })
+    })
+
+    trapSubButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        trapSubButtons.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-white", "border-white/20", "active")
+          b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+        })
+        btn.classList.add("bg-white/10", "text-white", "border-white/20", "active")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+
+        activeTrapSub = btn.dataset.trapSub || "all"
+        updateFilters()
+      })
+    })
+
+    marvelSubButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        marvelSubButtons.forEach((b) => {
+          b.classList.remove("bg-white/10", "text-white", "border-white/20", "active")
+          b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+        })
+        btn.classList.add("bg-white/10", "text-white", "border-white/20", "active")
+        btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+
+        activeMarvelSub = btn.dataset.marvelSub || "all"
         updateFilters()
       })
     })
@@ -824,6 +1007,65 @@ const counts = {
             ${buffsHtml}
           </div>
         `
+      }
+
+      // Sincronizar en vivo con tarjeta compacta y fila de tabla
+      const fishItemName = card.dataset.name
+      if (fishItemName) {
+        const compactCard = document.querySelector(`.fish-card-compact[data-name="${fishItemName}"]`)
+        if (compactCard) {
+          compactCard.dataset.cost = String(currentUnitCost)
+          const cVal = compactCard.querySelector(".cost-val-num")
+          if (cVal) cVal.textContent = isReady ? (fishYield > 1 ? effectiveUnitCost.toFixed(4) : totalCost.toFixed(4)) : "--"
+          const cUsd = compactCard.querySelector(".cost-usd-val")
+          if (cUsd) {
+            const effUsd = effectiveUnitCost * flowerPrice
+            cUsd.textContent = isReady ? (fishYield > 1 ? `($${effUsd.toFixed(3)}/u)` : `($${(totalCost * flowerPrice).toFixed(3)})`) : "(--)"
+          }
+          const cYield = compactCard.querySelector(".yield-badge-val")
+          if (cYield) cYield.textContent = fishYield > 1 ? `~${fishYield.toFixed(2)}x` : ""
+          const cBaitName = compactCard.querySelector(".compact-bait-name")
+          const cBaitImg = compactCard.querySelector(".compact-bait-img")
+          const activeBait = card.querySelector(".bait-badge.active") || card.querySelector(".map-trigger-row.active")
+          if (activeBait) {
+            const bName = activeBait.dataset.baitName || activeBait.dataset.fishName || card.dataset.trap || ""
+            if (cBaitName && bName) cBaitName.textContent = bName
+            const bImg = activeBait.querySelector("img")
+            if (cBaitImg && bImg) cBaitImg.src = bImg.src
+          }
+        }
+
+        const tableRow = document.querySelector(`.fish-table-row[data-name="${fishItemName}"]`)
+        if (tableRow) {
+          tableRow.dataset.cost = String(currentUnitCost)
+          const tVal = tableRow.querySelector(".cost-val-num")
+          if (tVal) tVal.textContent = isReady ? (fishYield > 1 ? effectiveUnitCost.toFixed(4) : totalCost.toFixed(4)) : "--"
+          const tUsd = tableRow.querySelector(".cost-usd-val")
+          if (tUsd) {
+            const effUsd = effectiveUnitCost * flowerPrice
+            tUsd.textContent = isReady ? (fishYield > 1 ? `($${effUsd.toFixed(3)}/u)` : `($${(totalCost * flowerPrice).toFixed(3)})`) : "(--)"
+          }
+          const tAttempt = tableRow.querySelector(".table-attempt-num")
+          if (tAttempt) tAttempt.textContent = isReady ? totalCost.toFixed(4) : "--"
+          const tYield = tableRow.querySelector(".table-yield-val")
+          if (tYield) tYield.textContent = `${fishYield.toFixed(2)}x`
+          const tRoi = tableRow.querySelector(".table-roi-val")
+          const itemXp = parseFloat(card.dataset.xp || "0")
+          if (tRoi) {
+            if (itemXp > 0 && currentUnitCost > 0 && currentUnitCost < 999999) {
+              const roi = itemXp / currentUnitCost
+              tRoi.textContent = `${Math.round(roi).toLocaleString()}`
+            } else {
+              tRoi.textContent = "—"
+            }
+          }
+          const tBaitName = tableRow.querySelector(".table-bait-name")
+          const activeBait = card.querySelector(".bait-badge.active") || card.querySelector(".map-trigger-row.active")
+          if (activeBait && tBaitName) {
+            const bName = activeBait.dataset.baitName || activeBait.dataset.fishName || card.dataset.trap || ""
+            if (bName) tBaitName.textContent = bName
+          }
+        }
       }
     } catch (err) {
       console.error("Error updating card cost:", card?.dataset?.name, err)
@@ -1653,6 +1895,7 @@ const counts = {
 
     // Ejecutar sincronización inicial inmediata
     syncMarketPrices()
+    updateFilters()
   }
 
   if (document.readyState === "loading") {

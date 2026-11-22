@@ -4,12 +4,16 @@ import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
 interface Props {
   counts: {
     all: number
-    rod: number
+    fish: number
     basic: number
     advanced: number
     expert: number
     trap: number
+    crabPot: number
+    marinerPot: number
     marvel: number
+    permanent: number
+    chapters: number
   }
 }
 
@@ -35,10 +39,142 @@ const sortOptions = [
 ---
 
 <div class="mb-6 bg-[#121214] border border-white/10 rounded-2xl p-3 sm:p-4 shadow-xl shadow-black/40 backdrop-blur-xl flex flex-col gap-3.5">
-  <!-- Fila 1: Filtro por Categorías y Buscador en Tiempo Real -->
+  <!-- Fila 1: Macro-Secciones (Dominio) + Buscador + Switcher de Vistas -->
   <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-    <!-- Categorías -->
+    <!-- Macro-Secciones Principales -->
     <div class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-thin scrollbar-thumb-white/10">
+      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+        {t("sfl.fishing.filter.section")}
+      </span>
+
+      <!-- 🐟 Peces de Caña (Activo por defecto) -->
+      <button
+        type="button"
+        class="filter-section-btn active px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer shrink-0 flex items-center gap-1.5 bg-cyan-500/15 text-cyan-300 border-cyan-500/30 shadow-sm"
+        data-section="fish"
+      >
+        <span>🐟</span>
+        <span>{t("sfl.fishing.filter.fish")}</span>
+        <span class="ml-0.5 text-[10px] text-cyan-300/70">({counts.fish})</span>
+      </button>
+
+      <!-- 🦀 Crustáceos -->
+      <button
+        type="button"
+        class="filter-section-btn px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 flex items-center gap-1.5 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-section="trap"
+      >
+        <span>🦀</span>
+        <span>{t("sfl.fishing.filter.crustaceans")}</span>
+        <span class="ml-0.5 text-[10px] text-white/40">({counts.trap})</span>
+      </button>
+
+      <!-- ⭐ Maravillas Marinas -->
+      <button
+        type="button"
+        class="filter-section-btn px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 flex items-center gap-1.5 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-section="marvel"
+      >
+        <span>⭐</span>
+        <span>{t("sfl.fishing.filter.marvels")}</span>
+        <span class="ml-0.5 text-[10px] text-white/40">({counts.marvel})</span>
+      </button>
+
+      <!-- 🌐 Todos -->
+      <button
+        type="button"
+        class="filter-section-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 flex items-center gap-1 bg-transparent text-white/40 border-white/5 hover:bg-white/5 hover:text-white"
+        data-section="all"
+        title="Mostrar todo el catálogo"
+      >
+        <span>{t("sfl.fishing.filter.all")}</span>
+        <span class="text-[10px] text-white/30">({counts.all})</span>
+      </button>
+    </div>
+
+    <!-- Buscador en tiempo real y Selector de Vistas -->
+    <div class="flex items-center gap-2 w-full lg:w-auto shrink-0">
+      <div class="relative flex-1 lg:w-60">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="w-3.5 h-3.5 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="fishSearchInput"
+          placeholder={t("sfl.fishing.search.placeholder")}
+          class="w-full bg-[#18181b]/80 border border-white/10 focus:border-cyan-400/50 rounded-xl pl-9 pr-8 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none transition-colors font-mono"
+        />
+        <button
+          id="clearSearchBtn"
+          type="button"
+          class="hidden absolute right-2.5 top-1.5 text-white/40 hover:text-white text-xs p-0.5 cursor-pointer"
+          title="Clear search"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Segmented Control de 3 Vistas -->
+      <div class="flex items-center p-0.5 bg-black/40 border border-white/10 rounded-xl shrink-0" role="group" aria-label={t("sfl.fishing.view.label")}>
+        <button
+          type="button"
+          class="view-mode-btn active px-2.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer flex items-center gap-1.5 bg-white/15 text-cyan-300 border border-cyan-500/30 shadow-sm"
+          data-view="normal"
+          title={t("sfl.fishing.view.normal")}
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          </svg>
+          <span class="hidden sm:inline">{t("sfl.fishing.view.normal")}</span>
+        </button>
+
+        <button
+          type="button"
+          class="view-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer flex items-center gap-1.5 text-white/50 hover:text-white hover:bg-white/5 border border-transparent"
+          data-view="compact"
+          title={t("sfl.fishing.view.compact")}
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="4" height="4" rx="0.5" />
+            <rect x="10" y="3" width="4" height="4" rx="0.5" />
+            <rect x="17" y="3" width="4" height="4" rx="0.5" />
+            <rect x="3" y="10" width="4" height="4" rx="0.5" />
+            <rect x="10" y="10" width="4" height="4" rx="0.5" />
+            <rect x="17" y="10" width="4" height="4" rx="0.5" />
+            <rect x="3" y="17" width="4" height="4" rx="0.5" />
+            <rect x="10" y="17" width="4" height="4" rx="0.5" />
+            <rect x="17" y="17" width="4" height="4" rx="0.5" />
+          </svg>
+          <span class="hidden sm:inline">{t("sfl.fishing.view.compact")}</span>
+        </button>
+
+        <button
+          type="button"
+          class="view-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer flex items-center gap-1.5 text-white/50 hover:text-white hover:bg-white/5 border border-transparent"
+          data-view="table"
+          title={t("sfl.fishing.view.table")}
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+          <span class="hidden sm:inline">{t("sfl.fishing.view.table")}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 2: Subfiltros Contextuales según la Sección Activa -->
+  <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-white/10">
+    <!-- Subfiltros PECES -->
+    <div id="subfiltersFish" class="flex items-center gap-1.5">
       <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
         {t("sfl.fishing.filter.tier")}
       </span>
@@ -48,8 +184,8 @@ const sortOptions = [
         class="filter-tier-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
         data-tier="all"
       >
-        <span>{t("sfl.fishing.filter.all")}</span>
-        <span class="ml-1 text-[10px] text-white/50">({counts.all})</span>
+        <span>{t("sfl.fishing.filter.sub.allFish")}</span>
+        <span class="ml-1 text-[10px] text-white/50">({counts.fish})</span>
       </button>
 
       <button
@@ -81,49 +217,77 @@ const sortOptions = [
         <span>{t("sfl.fishing.filter.expert")}</span>
         <span class="ml-1 text-[10px] text-white/40">({counts.expert})</span>
       </button>
+    </div>
+
+    <!-- Subfiltros CRUSTÁCEOS -->
+    <div id="subfiltersTrap" class="hidden flex items-center gap-1.5">
+      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+        Trampa:
+      </span>
 
       <button
         type="button"
-        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-tier="trap"
+        class="filter-trap-sub-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+        data-trap-sub="all"
       >
-        <span class="w-2 h-2 rounded-full inline-block bg-orange-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.trap")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.trap})</span>
+        <span>{t("sfl.fishing.filter.sub.allCrustaceans")}</span>
+        <span class="ml-1 text-[10px] text-white/50">({counts.trap})</span>
       </button>
 
       <button
         type="button"
-        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-tier="marvel"
+        class="filter-trap-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-trap-sub="Crab Pot"
       >
-        <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.marvel")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.marvel})</span>
+        <span class="w-2 h-2 rounded-full inline-block bg-orange-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.sub.crabPot")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({counts.crabPot})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-trap-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-trap-sub="Mariner Pot"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-amber-500 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.sub.marinerPot")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({counts.marinerPot})</span>
       </button>
     </div>
 
-    <!-- Buscador en tiempo real -->
-    <div class="relative w-full lg:w-72 shrink-0">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <svg class="w-3.5 h-3.5 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
-      </div>
-      <input
-        type="text"
-        id="fishSearchInput"
-        placeholder={t("sfl.fishing.search.placeholder")}
-        class="w-full bg-[#18181b]/80 border border-white/10 focus:border-cyan-400/50 rounded-xl pl-9 pr-8 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none transition-colors font-mono"
-      />
+    <!-- Subfiltros MARAVILLAS -->
+    <div id="subfiltersMarvel" class="hidden flex items-center gap-1.5">
+      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+        Tipo:
+      </span>
+
       <button
-        id="clearSearchBtn"
         type="button"
-        class="hidden absolute right-2.5 top-1.5 text-white/40 hover:text-white text-xs p-0.5 cursor-pointer"
-        title="Clear search"
+        class="filter-marvel-sub-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+        data-marvel-sub="all"
       >
-        ✕
+        <span>{t("sfl.fishing.filter.sub.allMarvels")}</span>
+        <span class="ml-1 text-[10px] text-white/50">({counts.marvel})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-marvel-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-marvel-sub="permanent"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.sub.permanent")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({counts.permanent})</span>
+      </button>
+
+      <button
+        type="button"
+        class="filter-marvel-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+        data-marvel-sub="chapters"
+      >
+        <span class="w-2 h-2 rounded-full inline-block bg-purple-400 mr-1.5"></span>
+        <span>{t("sfl.fishing.filter.sub.chapters")}</span>
+        <span class="ml-1 text-[10px] text-white/40">({counts.chapters})</span>
       </button>
     </div>
   </div>
@@ -131,7 +295,7 @@ const sortOptions = [
   <!-- Línea divisoria sutil -->
   <div class="h-px bg-white/5 w-full"></div>
 
-  <!-- Fila 2: Estaciones & Ordenación -->
+  <!-- Fila 3: Estaciones & Ordenación -->
   <div class="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
     <!-- Botones de Estación -->
     <div class="flex items-center gap-1.5 overflow-x-auto pb-1 xl:pb-0 scrollbar-none">
