@@ -37,6 +37,7 @@ const counts = {
   marvel: allMarvels.length,
   permanent: marvelsData.permanent.length,
   chapters: marvelsData.chapters.length,
+  currentChapter: allMarvels.filter((m: any) => m.chapter === "Cave Dwellers").length,
 }
 ---
 
@@ -127,6 +128,7 @@ const counts = {
     const tierButtons = document.querySelectorAll(".filter-tier-btn")
     const trapSubButtons = document.querySelectorAll(".filter-trap-sub-btn")
     const marvelSubButtons = document.querySelectorAll(".filter-marvel-sub-btn")
+    const chapterSelectButtons = document.querySelectorAll(".filter-chapter-select-btn")
     const seasonButtons = document.querySelectorAll(".filter-season-btn")
     const sortButtons = document.querySelectorAll(".sort-fish-btn")
     const viewButtons = document.querySelectorAll(".view-mode-btn")
@@ -135,6 +137,9 @@ const counts = {
     const subfiltersFish = document.getElementById("subfiltersFish")
     const subfiltersTrap = document.getElementById("subfiltersTrap")
     const subfiltersMarvel = document.getElementById("subfiltersMarvel")
+    const bottomFilterRow = document.getElementById("bottomFilterRow")
+    const seasonFilterBlock = document.getElementById("seasonFilterBlock")
+    const chapterFilterBlock = document.getElementById("chapterFilterBlock")
     const fullGrid = document.getElementById("fishGrid")
     const compactGrid = document.getElementById("fishGridCompact")
     const tableContainer = document.getElementById("fishTableContainer")
@@ -147,6 +152,7 @@ const counts = {
     let activeTier = "all"
     let activeTrapSub = "all"
     let activeMarvelSub = "all"
+    let activeChapterSelect = "all"
     let activeSeason = "all"
     let activeSort = "default"
     let searchQuery = ""
@@ -250,6 +256,7 @@ const counts = {
       const cardTier = el.dataset.tier || ""
       const cardTrap = el.dataset.trap || ""
       const cardChapter = el.dataset.chapter || ""
+      const cardChapterName = el.dataset.chapterName || ""
       const cardSeasons = (el.dataset.seasons || "").split(" ")
       const cardName = el.dataset.name || ""
       const cardBait = el.dataset.bait || ""
@@ -284,18 +291,29 @@ const counts = {
       }
 
       if (activeSection === "marvel") {
-        if (activeMarvelSub !== "all" && cardChapter !== activeMarvelSub) {
+        if (activeMarvelSub === "permanent" && cardChapter !== "permanent") {
+          return false
+        }
+        if (activeMarvelSub === "chapters" && cardChapter !== "chapters") {
+          return false
+        }
+        if (activeMarvelSub === "current" && cardChapterName !== "Cave Dwellers") {
+          return false
+        }
+        if (activeChapterSelect !== "all" && cardChapterName !== activeChapterSelect) {
           return false
         }
       }
 
-      // 3. Filtro por Estación
-      const matchesSeason =
-        activeSeason === "all" ||
-        cardSeasons.includes(activeSeason) ||
-        cardSeasons.length >= 4
+      // 3. Filtro por Estación (solo para Peces o vista global "all")
+      if (activeSection === "fish" || activeSection === "all") {
+        const matchesSeason =
+          activeSeason === "all" ||
+          cardSeasons.includes(activeSeason) ||
+          cardSeasons.length >= 4
 
-      if (!matchesSeason) return false
+        if (!matchesSeason) return false
+      }
 
       // 4. Filtro por Búsqueda
       const matchesSearch =
@@ -347,6 +365,7 @@ const counts = {
 
         activeSection = btn.dataset.section || "fish"
 
+        // Subfiltros de Fila 2
         if (subfiltersFish) {
           if (activeSection === "fish" || activeSection === "all") subfiltersFish.classList.remove("hidden")
           else subfiltersFish.classList.add("hidden")
@@ -358,6 +377,60 @@ const counts = {
         if (subfiltersMarvel) {
           if (activeSection === "marvel") subfiltersMarvel.classList.remove("hidden")
           else subfiltersMarvel.classList.add("hidden")
+        }
+
+        // Fila 3: Ocultar o mostrar Estación / Capítulos
+        if (activeSection === "fish" || activeSection === "all") {
+          if (bottomFilterRow) bottomFilterRow.classList.remove("hidden")
+          if (seasonFilterBlock) seasonFilterBlock.classList.remove("hidden")
+          if (chapterFilterBlock) chapterFilterBlock.classList.add("hidden")
+        } else if (activeSection === "trap") {
+          // Crustáceos: ocultar fila 3 (sin estación)
+          if (bottomFilterRow) bottomFilterRow.classList.add("hidden")
+          if (seasonFilterBlock) seasonFilterBlock.classList.add("hidden")
+          if (chapterFilterBlock) chapterFilterBlock.classList.add("hidden")
+        } else if (activeSection === "marvel") {
+          // Maravillas: mostrar selector de capítulos en fila 3, ocultar estación
+          if (bottomFilterRow) bottomFilterRow.classList.remove("hidden")
+          if (seasonFilterBlock) seasonFilterBlock.classList.add("hidden")
+          if (chapterFilterBlock) chapterFilterBlock.classList.remove("hidden")
+
+          // Reset subfiltros marvel y selector de capítulos a all
+          activeMarvelSub = "all"
+          activeChapterSelect = "all"
+          marvelSubButtons.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-white/10",
+              "text-white",
+              "border-white/20",
+              "bg-cyan-500/20",
+              "text-cyan-300",
+              "border-cyan-500/30"
+            )
+            if (b.dataset.marvelSub === "current") {
+              b.classList.add("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+            } else {
+              b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
+          chapterSelectButtons.forEach((cb) => {
+            if (cb.dataset.chapterName === "all") {
+              cb.classList.add("active", "bg-white/10", "text-white", "border-white/20")
+              cb.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+            } else {
+              cb.classList.remove(
+                "active",
+                "bg-white/10",
+                "text-white",
+                "border-white/20",
+                "bg-cyan-500/20",
+                "text-cyan-300",
+                "border-cyan-500/30"
+              )
+              cb.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
         }
 
         updateFilters()
@@ -394,14 +467,177 @@ const counts = {
 
     marvelSubButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        marvelSubButtons.forEach((b) => {
-          b.classList.remove("bg-white/10", "text-white", "border-white/20", "active")
+        const sub = btn.dataset.marvelSub || "all"
+        const isAlreadyActive = btn.classList.contains("active")
+
+        if (isAlreadyActive) {
+          // Toggle OFF: deseleccionar y volver a mostrar todas las maravillas
+          btn.classList.remove(
+            "active",
+            "bg-white/10",
+            "text-white",
+            "border-white/20",
+            "bg-cyan-500/20",
+            "text-cyan-300",
+            "border-cyan-500/30"
+          )
+          if (sub === "current") {
+            btn.classList.add("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+          } else {
+            btn.classList.add("bg-transparent", "text-white/60", "border-white/5")
+          }
+
+          activeMarvelSub = "all"
+          activeChapterSelect = "all"
+
+          // Restaurar fila 3 a "Todos los Capítulos"
+          chapterSelectButtons.forEach((cb) => {
+            if (cb.dataset.chapterName === "all") {
+              cb.classList.add("active", "bg-white/10", "text-white", "border-white/20")
+              cb.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+            } else {
+              cb.classList.remove(
+                "active",
+                "bg-white/10",
+                "text-white",
+                "border-white/20",
+                "bg-cyan-500/20",
+                "text-cyan-300",
+                "border-cyan-500/30"
+              )
+              cb.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
+        } else {
+          // Activar este botón y desactivar el otro
+          marvelSubButtons.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-white/10",
+              "text-white",
+              "border-white/20",
+              "bg-cyan-500/20",
+              "text-cyan-300",
+              "border-cyan-500/30"
+            )
+            if (b.dataset.marvelSub === "current") {
+              b.classList.add("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+            } else {
+              b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
+
+          if (sub === "current") {
+            btn.classList.add("active", "bg-cyan-500/20", "text-cyan-300", "border-cyan-500/30")
+            btn.classList.remove("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+            activeMarvelSub = "current"
+            activeChapterSelect = "Cave Dwellers"
+
+            // Sincronizar fila 3 con Cap. 16: Cave Dwellers
+            chapterSelectButtons.forEach((cb) => {
+              if (cb.dataset.chapterName === "Cave Dwellers") {
+                cb.classList.add("active", "bg-cyan-500/20", "text-cyan-300", "border-cyan-500/30")
+                cb.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+              } else {
+                cb.classList.remove(
+                  "active",
+                  "bg-white/10",
+                  "text-white",
+                  "border-white/20",
+                  "bg-cyan-500/20",
+                  "text-cyan-300",
+                  "border-cyan-500/30"
+                )
+                cb.classList.add("bg-transparent", "text-white/60", "border-white/5")
+              }
+            })
+          } else if (sub === "permanent") {
+            btn.classList.add("active", "bg-white/10", "text-white", "border-white/20")
+            btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
+            activeMarvelSub = "permanent"
+            activeChapterSelect = "all"
+
+            // En fila 3 deseleccionar capítulos
+            chapterSelectButtons.forEach((cb) => {
+              cb.classList.remove(
+                "active",
+                "bg-white/10",
+                "text-white",
+                "border-white/20",
+                "bg-cyan-500/20",
+                "text-cyan-300",
+                "border-cyan-500/30"
+              )
+              cb.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            })
+          }
+        }
+
+        updateFilters()
+      })
+    })
+
+    chapterSelectButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        chapterSelectButtons.forEach((b) => {
+          b.classList.remove("active", "bg-white/10", "text-white", "border-white/20", "bg-cyan-500/20", "text-cyan-300", "border-cyan-500/30")
           b.classList.add("bg-transparent", "text-white/60", "border-white/5")
         })
-        btn.classList.add("bg-white/10", "text-white", "border-white/20", "active")
+        btn.classList.add("active", "bg-white/10", "text-white", "border-white/20")
         btn.classList.remove("bg-transparent", "text-white/60", "border-white/5")
 
-        activeMarvelSub = btn.dataset.marvelSub || "all"
+        const chName = btn.dataset.chapterName || "all"
+        activeChapterSelect = chName
+
+        if (chName === "all") {
+          activeMarvelSub = "all"
+          marvelSubButtons.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-white/10",
+              "text-white",
+              "border-white/20",
+              "bg-cyan-500/20",
+              "text-cyan-300",
+              "border-cyan-500/30"
+            )
+            if (b.dataset.marvelSub === "current") {
+              b.classList.add("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+            } else {
+              b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
+        } else if (chName === "Cave Dwellers") {
+          activeMarvelSub = "current"
+          marvelSubButtons.forEach((b) => {
+            if (b.dataset.marvelSub === "current") {
+              b.classList.add("active", "bg-cyan-500/20", "text-cyan-300", "border-cyan-500/30")
+              b.classList.remove("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+            } else {
+              b.classList.remove("active", "bg-white/10", "text-white", "border-white/20")
+              b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
+        } else {
+          activeMarvelSub = "chapters"
+          marvelSubButtons.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "bg-white/10",
+              "text-white",
+              "border-white/20",
+              "bg-cyan-500/20",
+              "text-cyan-300",
+              "border-cyan-500/30"
+            )
+            if (b.dataset.marvelSub === "current") {
+              b.classList.add("bg-transparent", "text-cyan-300/80", "border-cyan-500/20")
+            } else {
+              b.classList.add("bg-transparent", "text-white/60", "border-white/5")
+            }
+          })
+        }
+
         updateFilters()
       })
     })
@@ -587,10 +823,12 @@ const counts = {
             if (oddsBadgeEl) {
               if (mapMultiplier > 1) {
                 oddsBadgeEl.title = `${effectiveOdds}% prob. fragmento de mapa [${mapTags.join(" + ")}]`
-                oddsBadgeEl.classList.add("bg-cyan-500/25", "border-cyan-400", "shadow-[0_0_8px_rgba(34,211,238,0.25)]")
+                oddsBadgeEl.classList.add("bg-amber-500/10", "border-amber-500/25", "text-amber-200/90")
+                oddsBadgeEl.classList.remove("bg-white/[0.03]", "border-white/10", "text-white/70", "bg-cyan-500/25", "border-cyan-400", "shadow-[0_0_8px_rgba(34,211,238,0.25)]")
               } else {
                 oddsBadgeEl.title = `${baseOdds.toFixed(1)}% prob. fragmento de mapa`
-                oddsBadgeEl.classList.remove("bg-cyan-500/25", "border-cyan-400", "shadow-[0_0_8px_rgba(34,211,238,0.25)]")
+                oddsBadgeEl.classList.remove("bg-amber-500/10", "border-amber-500/25", "text-amber-200/90", "bg-cyan-500/25", "border-cyan-400", "shadow-[0_0_8px_rgba(34,211,238,0.25)]")
+                oddsBadgeEl.classList.add("bg-white/[0.03]", "border-white/10", "text-white/70")
               }
             }
           })
@@ -627,11 +865,11 @@ const counts = {
             const rodCostVal = hasAncientRod ? "0" : rodCost.toFixed(4)
 
             baseLabel = `
-              <span class="text-amber-300 font-bold">~${roundedCasts} ${textCasts}</span>
-              <span class="text-white/30">·</span>
+              <span class="text-white/90 font-medium">~${roundedCasts} ${textCasts}</span>
+              <span class="text-white/20">·</span>
               <span class="inline-flex items-center gap-1" title="${hasAncientRod ? 'Ancient Rod (0 FLOWER)' : 'Caña (' + rodCost.toFixed(4) + ' FLOWER)'}">
                 <img src="${rodImg}" alt="Rod" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                <span class="${hasAncientRod ? 'text-emerald-400 font-bold' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
+                <span class="${hasAncientRod ? 'text-emerald-400 font-medium' : 'text-white/60'}">(${flowerIconHtml}${rodCostVal})</span>
               </span>
             `
 
@@ -639,10 +877,10 @@ const counts = {
               const baitImgEl = activeTrigger.querySelector("img")
               const baitImg = baitImgEl ? baitImgEl.getAttribute("src") : `/img/sunflowerland/fish/a/${baitName}.png`
               baseLabel += `
-                <span class="text-white/30">+</span>
+                <span class="text-white/20">+</span>
                 <span class="inline-flex items-center gap-1" title="${baitName} (${baitPrice.toFixed(4)} FLOWER)">
                   <img src="${baitImg}" alt="${baitName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                  <span class="text-cyan-300 font-bold">(${flowerIconHtml}${baitPrice.toFixed(4)})</span>
+                  <span class="text-white/80 font-mono">(${flowerIconHtml}${baitPrice.toFixed(4)})</span>
                 </span>
               `
             }
@@ -652,10 +890,10 @@ const counts = {
             const fishImg = fishImgEl ? fishImgEl.getAttribute("src") : `/img/sunflowerland/fish/${fishName}.png`
 
             baseLabel += `
-              <span class="text-white/30 text-[9px]">➔</span>
+              <span class="text-white/20 text-[9px]">➔</span>
               <span class="inline-flex items-center gap-1" title="${fishName} (${effectiveOdds}% prob. mapa)">
                 <img src="${fishImg}" alt="${fishName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                <span class="text-purple-300 font-bold">(${effectiveOdds}%)</span>
+                <span class="text-amber-200/90 font-medium font-mono">(${effectiveOdds}%)</span>
               </span>
             `
           } else {
@@ -680,12 +918,12 @@ const counts = {
               baseLabel = `
                 <span class="inline-flex items-center gap-1" title="${hasAncientRod ? 'Ancient Rod (0 FLOWER)' : 'Caña (' + rodCost.toFixed(4) + ' FLOWER)'}">
                   <img src="${rodImg}" alt="Rod" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                  <span class="${hasAncientRod ? 'text-emerald-400 font-bold' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
+                  <span class="${hasAncientRod ? 'text-emerald-400 font-medium' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
                 </span>
                 <span class="text-white/30">+</span>
                 <span class="inline-flex items-center gap-1" title="${baitName} (${baitCostVal} FLOWER)">
                   <img src="${baitImg}" alt="${baitName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                  <span class="${isFree ? 'text-emerald-400 font-bold' : 'text-cyan-300 font-bold'}">(${flowerIconHtml}${baitCostVal})</span>
+                  <span class="${isFree ? 'text-emerald-400 font-medium' : 'text-white/80 font-medium'}">(${flowerIconHtml}${baitCostVal})</span>
                 </span>
               `
             }
@@ -710,12 +948,12 @@ const counts = {
             baseLabel = `
               <span class="inline-flex items-center gap-1" title="${hasAncientRod ? 'Ancient Rod (0 FLOWER)' : 'Caña (' + rodCost.toFixed(4) + ' FLOWER)'}">
                 <img src="${rodImg}" alt="Rod" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                <span class="${hasAncientRod ? 'text-emerald-400 font-bold' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
+                <span class="${hasAncientRod ? 'text-emerald-400 font-medium' : 'text-white/80'}">(${flowerIconHtml}${rodCostVal})</span>
               </span>
               <span class="text-white/30">+</span>
               <span class="inline-flex items-center gap-1" title="${baitName} (${baitCostVal} FLOWER)">
                 <img src="${baitImg}" alt="${baitName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-                <span class="${isFree ? 'text-emerald-400 font-bold' : isGuaranteed ? 'text-teal-300 font-bold' : 'text-cyan-300 font-bold'}">(${flowerIconHtml}${baitCostVal})</span>
+                <span class="${isFree ? 'text-emerald-400 font-medium' : 'text-white/80 font-medium'}">(${flowerIconHtml}${baitCostVal})</span>
               </span>
             `
           }
@@ -737,7 +975,7 @@ const counts = {
         baseLabel = `
           <span class="inline-flex items-center gap-1" title="${trapType} (${currentTrapCost.toFixed(4)} FLOWER)">
             <img src="${trapImg}" alt="${trapType}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-            <span class="text-orange-400 font-bold">(${flowerIconHtml}${currentTrapCost.toFixed(4)})</span>
+            <span class="text-white/80 font-medium">(${flowerIconHtml}${currentTrapCost.toFixed(4)})</span>
           </span>
         `
       }
@@ -764,7 +1002,7 @@ const counts = {
           <span class="inline-flex items-center gap-1" title="${amount}x ${chumName} (${chumCost.toFixed(4)} FLOWER)">
             ${qtyPrefix}
             <img src="${chumImg}" alt="${chumName}" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />
-            <span class="text-amber-400 font-bold">(${flowerIconHtml}${chumCost.toFixed(4)})</span>
+            <span class="text-white/80 font-medium">(${flowerIconHtml}${chumCost.toFixed(4)})</span>
           </span>
         `
       }
@@ -1107,30 +1345,31 @@ const counts = {
               "ring-1",
               "ring-emerald-400/50",
               "ring-cyan-400/50",
+              "bg-white/[0.06]",
+              "border-white/25",
+              "border-emerald-400/40",
+              "text-emerald-200",
+              "text-white",
               "shadow-sm"
             )
-            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+            b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
           })
 
-          badge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+          badge.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70", "bg-white/[0.03]")
           if (isFree) {
             badge.classList.add(
               "active",
-              "bg-emerald-500/20",
-              "border-emerald-400",
-              "text-emerald-300",
-              "ring-1",
-              "ring-emerald-400/50",
+              "bg-white/[0.06]",
+              "border-emerald-400/40",
+              "text-emerald-200",
               "shadow-sm"
             )
           } else {
             badge.classList.add(
               "active",
-              "bg-cyan-500/20",
-              "border-cyan-400",
-              "text-cyan-300",
-              "ring-1",
-              "ring-cyan-400/50",
+              "bg-white/[0.06]",
+              "border-white/25",
+              "text-white",
               "shadow-sm"
             )
           }
@@ -1141,14 +1380,15 @@ const counts = {
             triggerRows.forEach((r) => {
               r.classList.remove(
                 "active",
-                "bg-white/[0.08]",
+                "bg-white/[0.05]",
                 "border-white/20",
                 "text-white",
                 "shadow-sm",
+                "bg-white/[0.08]",
                 "bg-cyan-500/20",
                 "border-cyan-400"
               )
-              r.classList.add("bg-white/[0.02]", "border-white/5", "text-white/70")
+              r.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
             })
           }
 
@@ -1183,24 +1423,25 @@ const counts = {
           triggerRows.forEach((r) => {
             r.classList.remove(
               "active",
-              "bg-white/[0.08]",
+              "bg-white/[0.05]",
               "border-white/20",
               "text-white",
               "shadow-sm",
+              "bg-white/[0.08]",
               "bg-cyan-500/20",
               "border-cyan-400"
             )
-            r.classList.add("bg-white/[0.02]", "border-white/5", "text-white/70")
+            r.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
           })
 
           row.classList.add(
             "active",
-            "bg-white/[0.08]",
+            "bg-white/[0.05]",
             "border-white/20",
             "text-white",
             "shadow-sm"
           )
-          row.classList.remove("bg-white/[0.02]", "border-white/5", "text-white/70")
+          row.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70")
 
           // Deseleccionar cualquier cebo de captura directa para evitar interferencias
           const baitBadges = card.querySelectorAll(".bait-badge")
@@ -1251,9 +1492,12 @@ const counts = {
               "text-cyan-300",
               "ring-1",
               "ring-cyan-400/50",
+              "bg-white/[0.06]",
+              "border-white/25",
+              "text-white",
               "shadow-sm"
             )
-            b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+            b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
             const check = b.querySelector(".chum-check")
             if (check) check.classList.add("hidden")
           })
@@ -1261,14 +1505,12 @@ const counts = {
           if (!isAlreadyActive) {
             badge.classList.add(
               "active",
-              "bg-cyan-500/20",
-              "border-cyan-400",
-              "text-cyan-300",
-              "ring-1",
-              "ring-cyan-400/50",
+              "bg-white/[0.06]",
+              "border-white/25",
+              "text-white",
               "shadow-sm"
             )
-            badge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+            badge.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70", "bg-white/[0.03]")
             const check = badge.querySelector(".chum-check")
             if (check) check.classList.remove("hidden")
           }
@@ -1351,6 +1593,9 @@ const counts = {
             "text-cyan-300",
             "ring-1",
             "ring-cyan-400/50",
+            "bg-white/[0.06]",
+            "border-white/25",
+            "text-white",
             "shadow-sm"
           )
           cb.classList.add(
@@ -1377,7 +1622,7 @@ const counts = {
             "border-white/[0.03]"
           )
           if (!cb.classList.contains("active")) {
-            cb.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+            cb.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
           }
         })
         if (chumSection) {
@@ -1403,31 +1648,32 @@ const counts = {
           "ring-1",
           "ring-emerald-400/50",
           "ring-cyan-400/50",
+          "bg-white/[0.06]",
+          "border-white/25",
+          "border-emerald-400/40",
+          "text-emerald-200",
+          "text-white",
           "shadow-sm"
         )
-        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+        b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
       })
       if (targetBadge) {
         const isFree = targetBadge.dataset.isFree === "true"
-        targetBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        targetBadge.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70", "bg-white/[0.03]")
         if (isFree) {
           targetBadge.classList.add(
             "active",
-            "bg-emerald-500/20",
-            "border-emerald-400",
-            "text-emerald-300",
-            "ring-1",
-            "ring-emerald-400/50",
+            "bg-white/[0.06]",
+            "border-emerald-400/40",
+            "text-emerald-200",
             "shadow-sm"
           )
         } else {
           targetBadge.classList.add(
             "active",
-            "bg-cyan-500/20",
-            "border-cyan-400",
-            "text-cyan-300",
-            "ring-1",
-            "ring-cyan-400/50",
+            "bg-white/[0.06]",
+            "border-white/25",
+            "text-white",
             "shadow-sm"
           )
         }
@@ -1445,23 +1691,24 @@ const counts = {
           "text-cyan-300",
           "ring-1",
           "ring-cyan-400/50",
+          "bg-white/[0.06]",
+          "border-white/25",
+          "text-white",
           "shadow-sm"
         )
-        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+        b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
         const check = b.querySelector(".chum-check")
         if (check) check.classList.add("hidden")
       })
       if (targetBadge) {
         targetBadge.classList.add(
           "active",
-          "bg-cyan-500/20",
-          "border-cyan-400",
-          "text-cyan-300",
-          "ring-1",
-          "ring-cyan-400/50",
+          "bg-white/[0.06]",
+          "border-white/25",
+          "text-white",
           "shadow-sm"
         )
-        targetBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        targetBadge.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70", "bg-white/[0.03]")
         const check = targetBadge.querySelector(".chum-check")
         if (check) check.classList.remove("hidden")
       }
@@ -1631,32 +1878,33 @@ const counts = {
           "ring-1",
           "ring-emerald-400/50",
           "ring-cyan-400/50",
+          "bg-white/[0.06]",
+          "border-white/25",
+          "border-emerald-400/40",
+          "text-emerald-200",
+          "text-white",
           "shadow-sm"
         )
-        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+        b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
       })
 
       if (cheapestBadge) {
         const isFree = cheapestBadge.dataset.isFree === "true"
-        cheapestBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        cheapestBadge.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70", "bg-white/[0.03]")
         if (isFree) {
           cheapestBadge.classList.add(
             "active",
-            "bg-emerald-500/20",
-            "border-emerald-400",
-            "text-emerald-300",
-            "ring-1",
-            "ring-emerald-400/50",
+            "bg-white/[0.06]",
+            "border-emerald-400/40",
+            "text-emerald-200",
             "shadow-sm"
           )
         } else {
           cheapestBadge.classList.add(
             "active",
-            "bg-cyan-500/20",
-            "border-cyan-400",
-            "text-cyan-300",
-            "ring-1",
-            "ring-cyan-400/50",
+            "bg-white/[0.06]",
+            "border-white/25",
+            "text-white",
             "shadow-sm"
           )
         }
@@ -1707,9 +1955,12 @@ const counts = {
           "text-cyan-300",
           "ring-1",
           "ring-cyan-400/50",
+          "bg-white/[0.06]",
+          "border-white/25",
+          "text-white",
           "shadow-sm"
         )
-        b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+        b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
         const check = b.querySelector(".chum-check")
         if (check) check.classList.add("hidden")
       })
@@ -1717,14 +1968,12 @@ const counts = {
       if (cheapestBadge) {
         cheapestBadge.classList.add(
           "active",
-          "bg-cyan-500/20",
-          "border-cyan-400",
-          "text-cyan-300",
-          "ring-1",
-          "ring-cyan-400/50",
+          "bg-white/[0.06]",
+          "border-white/25",
+          "text-white",
           "shadow-sm"
         )
-        cheapestBadge.classList.remove("bg-white/[0.03]", "border-white/5", "text-white/70")
+        cheapestBadge.classList.remove("bg-[#0e0e11]", "border-white/5", "text-white/70", "bg-white/[0.03]")
         const check = cheapestBadge.querySelector(".chum-check")
         if (check) check.classList.remove("hidden")
       }
@@ -1756,9 +2005,12 @@ const counts = {
                 "text-cyan-300",
                 "ring-1",
                 "ring-cyan-400/50",
+                "bg-white/[0.06]",
+                "border-white/25",
+                "text-white",
                 "shadow-sm"
               )
-              b.classList.add("bg-white/[0.03]", "border-white/5", "text-white/70")
+              b.classList.add("bg-[#0e0e11]", "border-white/5", "text-white/70")
               const check = b.querySelector(".chum-check")
               if (check) check.classList.add("hidden")
             })

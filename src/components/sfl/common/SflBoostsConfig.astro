@@ -108,6 +108,9 @@ const formatDescription = (skill: any) => {
 }
 
 const getCompactText = (data: any, formattedDesc: string) => {
+  if (data.name === "Astrolabe") {
+    return "+5% XP [Aged fish] Astrolabe"
+  }
   let value = "?"
   if (!formattedDesc || typeof formattedDesc !== "string") return value
   const match = formattedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i)

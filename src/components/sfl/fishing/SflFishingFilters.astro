@@ -14,6 +14,7 @@ interface Props {
     marvel: number
     permanent: number
     chapters: number
+    currentChapter: number
   }
 }
 
@@ -31,10 +32,25 @@ const seasons = [
 
 const sortOptions = [
   { key: "default", label: t("sfl.fishing.sort.default"), icon: null, prefix: null },
-  { key: "cheapest", label: t("sfl.fishing.sort.cheapest"), icon: "/img/sunflowerland/123/flower.png", prefix: null },
+  { key: "cheapest", label: t("sfl.fishing.sort.cheapest"), icon: "/img/sunflowerland/123/flower.jpg", prefix: null },
   { key: "expensive", label: t("sfl.fishing.sort.expensive"), icon: null, prefix: "↑" },
   { key: "xp-desc", label: t("sfl.fishing.sort.xpDesc"), icon: "/img/sunflowerland/123/energy.png", prefix: null },
   { key: "xp-asc", label: t("sfl.fishing.sort.xpAsc"), icon: null, prefix: "↓" },
+]
+
+const marvelChapters = [
+  { name: "Cave Dwellers", label: "Cap. 16: Cave Dwellers", isCurrent: true },
+  { name: "Ascension Age", label: "Cap. 15: Ascension Age" },
+  { name: "Salt Awakening", label: "Cap. 14: Salt Awakening" },
+  { name: "Crabs and Traps", label: "Cap. 13: Crabs & Traps" },
+  { name: "Paw Prints", label: "Cap. 12: Paw Prints" },
+  { name: "Clash of Factions", label: "Cap. 11: Clash of Factions" },
+  { name: "Spring Blossom", label: "Cap. 10: Spring Blossom" },
+  { name: "Pharaoh's Treasure", label: "Cap. 9: Pharaoh's Treasure" },
+  { name: "Catch the Kraken", label: "Cap. 8: Catch the Kraken" },
+  { name: "Witches' Eve", label: "Cap. 7: Witches' Eve" },
+  { name: "Dawn Breaker", label: "Cap. 6: Dawn Breaker" },
+  { name: "Solar Flare", label: "Cap. 5: Solar Flare" },
 ]
 ---
 
@@ -171,134 +187,159 @@ const sortOptions = [
     </div>
   </div>
 
-  <!-- Fila 2: Subfiltros Contextuales según la Sección Activa -->
-  <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-white/10">
-    <!-- Subfiltros PECES -->
-    <div id="subfiltersFish" class="flex items-center gap-1.5">
-      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
-        {t("sfl.fishing.filter.tier")}
-      </span>
+  <!-- Línea divisoria 1 -->
+  <div class="h-px bg-white/5 w-full"></div>
 
-      <button
-        type="button"
-        class="filter-tier-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
-        data-tier="all"
-      >
-        <span>{t("sfl.fishing.filter.sub.allFish")}</span>
-        <span class="ml-1 text-[10px] text-white/50">({counts.fish})</span>
-      </button>
+  <!-- Fila 2: Subfiltros Contextuales (Izquierda) + Ordenación (Derecha - mismo nivel) -->
+  <div class="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
+    <!-- Subfiltros Contextuales según la Sección Activa -->
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 xl:pb-0 scrollbar-thin scrollbar-thumb-white/10">
+      <!-- Subfiltros PECES -->
+      <div id="subfiltersFish" class="flex items-center gap-1.5 shrink-0">
+        <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+          {t("sfl.fishing.filter.tier")}
+        </span>
 
-      <button
-        type="button"
-        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-tier="basic"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-emerald-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.basic")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.basic})</span>
-      </button>
+        <button
+          type="button"
+          class="filter-tier-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+          data-tier="all"
+        >
+          <span>{t("sfl.fishing.filter.sub.allFish")}</span>
+          <span class="ml-1 text-[10px] text-white/50">({counts.fish})</span>
+        </button>
 
-      <button
-        type="button"
-        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-tier="advanced"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-sky-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.advanced")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.advanced})</span>
-      </button>
+        <button
+          type="button"
+          class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+          data-tier="basic"
+        >
+          <span class="w-2 h-2 rounded-full inline-block bg-emerald-400 mr-1.5"></span>
+          <span>{t("sfl.fishing.filter.basic")}</span>
+          <span class="ml-1 text-[10px] text-white/40">({counts.basic})</span>
+        </button>
 
-      <button
-        type="button"
-        class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-tier="expert"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-purple-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.expert")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.expert})</span>
-      </button>
+        <button
+          type="button"
+          class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+          data-tier="advanced"
+        >
+          <span class="w-2 h-2 rounded-full inline-block bg-sky-400 mr-1.5"></span>
+          <span>{t("sfl.fishing.filter.advanced")}</span>
+          <span class="ml-1 text-[10px] text-white/40">({counts.advanced})</span>
+        </button>
+
+        <button
+          type="button"
+          class="filter-tier-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+          data-tier="expert"
+        >
+          <span class="w-2 h-2 rounded-full inline-block bg-purple-400 mr-1.5"></span>
+          <span>{t("sfl.fishing.filter.expert")}</span>
+          <span class="ml-1 text-[10px] text-white/40">({counts.expert})</span>
+        </button>
+      </div>
+
+      <!-- Subfiltros CRUSTÁCEOS -->
+      <div id="subfiltersTrap" class="hidden flex items-center gap-1.5 shrink-0">
+        <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+          {t("sfl.fishing.filter.trapType")}
+        </span>
+
+        <button
+          type="button"
+          class="filter-trap-sub-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+          data-trap-sub="all"
+        >
+          <span>{t("sfl.fishing.filter.sub.allCrustaceans")}</span>
+          <span class="ml-1 text-[10px] text-white/50">({counts.trap})</span>
+        </button>
+
+        <button
+          type="button"
+          class="filter-trap-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+          data-trap-sub="Crab Pot"
+        >
+          <span class="w-2 h-2 rounded-full inline-block bg-orange-400 mr-1.5"></span>
+          <span>{t("sfl.fishing.filter.sub.crabPot")}</span>
+          <span class="ml-1 text-[10px] text-white/40">({counts.crabPot})</span>
+        </button>
+
+        <button
+          type="button"
+          class="filter-trap-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+          data-trap-sub="Mariner Pot"
+        >
+          <span class="w-2 h-2 rounded-full inline-block bg-amber-500 mr-1.5"></span>
+          <span>{t("sfl.fishing.filter.sub.marinerPot")}</span>
+          <span class="ml-1 text-[10px] text-white/40">({counts.marinerPot})</span>
+        </button>
+      </div>
+
+      <!-- Subfiltros MARAVILLAS -->
+      <div id="subfiltersMarvel" class="hidden flex items-center gap-1.5 shrink-0">
+        <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
+          {t("sfl.fishing.filter.marvelType")}
+        </span>
+
+        <!-- Permanentes -->
+        <button
+          type="button"
+          class="filter-marvel-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
+          data-marvel-sub="permanent"
+        >
+          <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
+          <span>{t("sfl.fishing.filter.sub.permanent")}</span>
+          <span class="ml-1 text-[10px] text-white/40">({counts.permanent})</span>
+        </button>
+
+        <!-- Capítulo Actual (Cap. 16) -->
+        <button
+          type="button"
+          class="filter-marvel-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer shrink-0 bg-transparent text-cyan-300/80 border-cyan-500/20 hover:bg-cyan-500/10 hover:text-cyan-200"
+          data-marvel-sub="current"
+          title="Ver criaturas del Capítulo 16 actual (Cave Dwellers)"
+        >
+          <span class="text-cyan-400">⚡</span>
+          <span>{t("sfl.fishing.filter.sub.currentChapter")}</span>
+          <span class="ml-1 text-[10px] text-cyan-400/60">({counts.currentChapter})</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Subfiltros CRUSTÁCEOS -->
-    <div id="subfiltersTrap" class="hidden flex items-center gap-1.5">
+    <!-- Ordenación (Subido al mismo nivel que dificultad) -->
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 xl:pb-0 scrollbar-none shrink-0">
       <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
-        Trampa:
+        {t("sfl.fishing.sort.label")}
       </span>
-
-      <button
-        type="button"
-        class="filter-trap-sub-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
-        data-trap-sub="all"
-      >
-        <span>{t("sfl.fishing.filter.sub.allCrustaceans")}</span>
-        <span class="ml-1 text-[10px] text-white/50">({counts.trap})</span>
-      </button>
-
-      <button
-        type="button"
-        class="filter-trap-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-trap-sub="Crab Pot"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-orange-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.sub.crabPot")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.crabPot})</span>
-      </button>
-
-      <button
-        type="button"
-        class="filter-trap-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-trap-sub="Mariner Pot"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-amber-500 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.sub.marinerPot")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.marinerPot})</span>
-      </button>
-    </div>
-
-    <!-- Subfiltros MARAVILLAS -->
-    <div id="subfiltersMarvel" class="hidden flex items-center gap-1.5">
-      <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
-        Tipo:
-      </span>
-
-      <button
-        type="button"
-        class="filter-marvel-sub-btn active px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
-        data-marvel-sub="all"
-      >
-        <span>{t("sfl.fishing.filter.sub.allMarvels")}</span>
-        <span class="ml-1 text-[10px] text-white/50">({counts.marvel})</span>
-      </button>
-
-      <button
-        type="button"
-        class="filter-marvel-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-marvel-sub="permanent"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-amber-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.sub.permanent")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.permanent})</span>
-      </button>
-
-      <button
-        type="button"
-        class="filter-marvel-sub-btn px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white"
-        data-marvel-sub="chapters"
-      >
-        <span class="w-2 h-2 rounded-full inline-block bg-purple-400 mr-1.5"></span>
-        <span>{t("sfl.fishing.filter.sub.chapters")}</span>
-        <span class="ml-1 text-[10px] text-white/40">({counts.chapters})</span>
-      </button>
+      {
+        sortOptions.map((opt, idx) => (
+          <button
+            type="button"
+            class:list={[
+              "sort-fish-btn px-2.5 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer shrink-0 flex items-center gap-1.5 border",
+              idx === 0
+                ? "active bg-white/10 text-white border-white/20"
+                : "bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white",
+            ]}
+            data-sort={opt.key}
+          >
+            {opt.icon && <img src={opt.icon} alt={opt.label} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />}
+            {opt.prefix && <span class="text-white/50 text-xs leading-none font-bold">{opt.prefix}</span>}
+            <span>{opt.label}</span>
+          </button>
+        ))
+      }
     </div>
   </div>
 
-  <!-- Línea divisoria sutil -->
-  <div class="h-px bg-white/5 w-full"></div>
+  <!-- Fila 3 Contextual: Estaciones (para Peces) O Selector de Capítulos (para Maravillas) -->
+  <div id="bottomFilterRow" class="flex flex-col gap-3">
+    <!-- Línea divisoria 2 -->
+    <div id="bottomDivider" class="h-px bg-white/5 w-full"></div>
 
-  <!-- Fila 3: Estaciones & Ordenación -->
-  <div class="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
-    <!-- Botones de Estación -->
-    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 xl:pb-0 scrollbar-none">
+    <!-- Bloque ESTACIÓN (Solo visible para Peces y Todos) -->
+    <div id="seasonFilterBlock" class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
       <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
         {t("sfl.fishing.filter.season")}
       </span>
@@ -321,26 +362,34 @@ const sortOptions = [
       }
     </div>
 
-    <!-- Botones de Ordenación -->
-    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 xl:pb-0 scrollbar-none">
+    <!-- Bloque CAPÍTULOS (Solo visible para Maravillas Marinas) -->
+    <div id="chapterFilterBlock" class="hidden flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-white/10">
       <span class="text-xs font-mono uppercase tracking-wider text-white/40 shrink-0 mr-1 hidden sm:inline">
-        {t("sfl.fishing.sort.label")}
+        {t("sfl.fishing.filter.chapter")}
       </span>
+
+      <!-- Todos los Capítulos -->
+      <button
+        type="button"
+        class="filter-chapter-select-btn active px-2.5 py-1.5 rounded-xl text-xs font-mono font-medium border transition-all cursor-pointer shrink-0 bg-white/10 text-white border-white/20"
+        data-chapter-name="all"
+      >
+        <span>{t("sfl.fishing.filter.allChapters")}</span>
+      </button>
+
       {
-        sortOptions.map((opt, idx) => (
+        marvelChapters.map((ch) => (
           <button
             type="button"
             class:list={[
-              "sort-fish-btn px-2.5 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer shrink-0 flex items-center gap-1.5 border",
-              idx === 0
-                ? "active bg-white/10 text-white border-white/20"
+              "filter-chapter-select-btn px-2.5 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer shrink-0 border",
+              ch.isCurrent
+                ? "bg-cyan-500/10 text-cyan-300 border-cyan-500/20 hover:bg-cyan-500/20 font-bold"
                 : "bg-transparent text-white/60 border-white/5 hover:bg-white/5 hover:text-white",
             ]}
-            data-sort={opt.key}
+            data-chapter-name={ch.name}
           >
-            {opt.icon && <img src={opt.icon} alt={opt.label} class="w-3.5 h-3.5 object-contain [image-rendering:pixelated]" />}
-            {opt.prefix && <span class="text-white/50 text-xs leading-none font-bold">{opt.prefix}</span>}
-            <span>{opt.label}</span>
+            <span>{ch.label}</span>
           </button>
         ))
       }

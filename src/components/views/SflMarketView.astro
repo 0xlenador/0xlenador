@@ -742,10 +742,10 @@ const t = useTranslations(lang)
         </div>
 
         <!-- Modal Body (Scrollable) -->
-        <div class="p-4 sm:p-5 overflow-y-auto space-y-4 custom-scrollbar flex-1">
+        <div class="p-3.5 sm:p-4 overflow-y-auto space-y-3.5 custom-scrollbar flex-1">
           <!-- Gráfica de Trading Avanzada -->
-          <div class="bg-black/40 border border-white/10 rounded-xl p-3.5 sm:p-4">
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="bg-black/40 border border-white/10 rounded-xl p-3 sm:p-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
               <div class="flex items-center gap-2">
                 <h4 class="text-xs sm:text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
                   <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -758,22 +758,87 @@ const t = useTranslations(lang)
                   <!-- Dynamically populated on hover -->
                 </div>
               </div>
-              <div class="flex items-center gap-1 bg-black/60 border border-white/10 rounded-lg p-0.5">
-                <button type="button" onclick="window.setModalGraphPeriod('7d')" id="modalBtn7d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded bg-white/10 text-white transition-all cursor-pointer">7D</button>
-                <button type="button" onclick="window.setModalGraphPeriod('30d')" id="modalBtn30d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer">30D</button>
-                <button type="button" onclick="window.setModalGraphPeriod('180d')" id="modalBtn180d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer">180D</button>
+              <div class="flex items-center gap-2">
+                <!-- Botón Comparar / Chips Activos / Dropdown Selector -->
+                <div class="relative flex items-center gap-1.5" id="modalCompareContainer">
+                  <!-- Botón cuando no hay comparación activa -->
+                  <button
+                    type="button"
+                    id="modalCompareBtn"
+                    onclick="window.toggleCompareDropdown()"
+                    class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 transition-all cursor-pointer shrink-0"
+                    title={t("sfl.modal.compare")}
+                  >
+                    <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                    <span>{t("sfl.modal.compare")}</span>
+                  </button>
+
+                  <!-- Chips cuando hay comparaciones activas -->
+                  <div id="modalCompareChipsList" class="hidden items-center gap-1.5 flex-wrap">
+                    <!-- Contenido dinámico de chips en JS -->
+                  </div>
+
+                  <!-- Dropdown selector flotante con buscador -->
+                  <div
+                    id="modalCompareDropdown"
+                    class="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-[#161a1f] border border-white/15 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.85)] z-50 p-2.5 hidden flex-col gap-2 backdrop-blur-md"
+                  >
+                    <div class="flex items-center justify-between pb-1.5 border-b border-white/10 text-[11px] font-mono text-white/70">
+                      <span class="font-bold flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                        </svg>
+                        <span id="modalCompareDropdownTitle">{t("sfl.modal.selectItemToCompare")}</span>
+                      </span>
+                      <button type="button" onclick="window.toggleCompareDropdown(false)" class="text-white/40 hover:text-white cursor-pointer px-1">✕</button>
+                    </div>
+                    <div class="relative">
+                      <input
+                        type="text"
+                        id="modalCompareSearchInput"
+                        placeholder={t("sfl.modal.searchItemToCompare")}
+                        class="w-full bg-black/60 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-cyan-400 font-mono"
+                        oninput="window.filterCompareList(this.value)"
+                      />
+                    </div>
+                    <div id="modalCompareItemsList" class="max-h-60 overflow-y-auto space-y-1 custom-scrollbar text-xs">
+                      <!-- Contenido cargado dinámicamente -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Botones de periodo -->
+                <div class="flex items-center gap-1 bg-black/60 border border-white/10 rounded-lg p-0.5 shrink-0">
+                  <button type="button" onclick="window.setModalGraphPeriod('7d')" id="modalBtn7d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded bg-white/10 text-white transition-all cursor-pointer">7D</button>
+                  <button type="button" onclick="window.setModalGraphPeriod('30d')" id="modalBtn30d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer">30D</button>
+                  <button type="button" onclick="window.setModalGraphPeriod('180d')" id="modalBtn180d" class="modal-period-btn px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer">180D</button>
+                </div>
               </div>
             </div>
 
-            <!-- Área del SVG de Gráfica Grande con Tooltip Interactivo -->
-            <div class="relative w-full h-56 sm:h-64 bg-[#0c1015]/90 rounded-lg border border-white/5 overflow-hidden flex items-center justify-center p-0 group/chart" id="modalChartWrapper">
-              <svg id="modalChartSvg" class="w-full h-full overflow-visible" viewBox="0 0 700 240" preserveAspectRatio="none">
+            <!-- Área del SVG de Gráfica Grande estilo Trading Terminal Pro -->
+            <div class="relative w-full h-56 sm:h-64 bg-[#0c1015] rounded-xl border border-white/10 overflow-hidden flex flex-col p-0 group/chart select-none" id="modalChartWrapper">
+              <!-- Overlay HUD de Leyenda Técnica Flotante (TradingView Style) -->
+              <div id="modalChartHud" class="absolute top-2 left-3 z-20 pointer-events-none flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[10px] font-mono leading-none">
+              </div>
+
+              <!-- SVG del gráfico con escala técnica panorámica -->
+              <svg id="modalChartSvg" class="w-full h-full overflow-visible" viewBox="0 0 800 240" preserveAspectRatio="none">
                 <!-- Dynamic SVG Chart Content -->
               </svg>
-              <!-- Crosshair vertical -->
-              <div id="modalChartCrosshair" class="absolute top-0 bottom-0 pointer-events-none hidden border-l border-dashed border-white/40 z-10"></div>
-              <!-- Floating Tooltip -->
-              <div id="modalChartTooltip" class="absolute pointer-events-none hidden bg-[#0c1015] border border-white/20 text-white px-2.5 py-1.5 rounded-lg shadow-2xl text-xs font-mono z-20 whitespace-nowrap"></div>
+
+              <!-- Crosshair vertical y horizontal estilo TradingView -->
+              <div id="modalChartCrosshairX" class="absolute top-0 bottom-0 pointer-events-none hidden border-l border-dashed border-white/25 z-10"></div>
+              <div id="modalChartCrosshairY" class="absolute left-0 right-0 pointer-events-none hidden border-t border-dashed border-white/25 z-10"></div>
+
+              <!-- Badges de ejes del cursor (TradingView axis tags) -->
+              <div id="modalCrosshairBadgeY" class="absolute right-0 pointer-events-none hidden bg-[#1a1f26] border border-white/20 text-white font-mono text-[9.5px] px-1.5 py-0.5 rounded-l shadow z-20 -translate-y-1/2"></div>
+              <div id="modalCrosshairBadgeX" class="absolute bottom-1 pointer-events-none hidden bg-[#1a1f26] border border-white/20 text-cyan-400 font-mono text-[9.5px] px-1.5 py-0.5 rounded shadow z-20 -translate-x-1/2"></div>
+
+              <!-- Floating Tooltip Pro Glassmorphism -->
+              <div id="modalChartTooltip" class="absolute pointer-events-none hidden bg-[#0c1015]/95 border border-white/15 text-white p-2.5 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.85)] text-xs font-mono z-30 whitespace-nowrap backdrop-blur-md"></div>
             </div>
           </div>
         </div>
@@ -1056,6 +1121,14 @@ const t = useTranslations(lang)
     tModalLive: t("sfl.modal.live"),
     tModalLoading: t("sfl.modal.loading"),
     tModalViewChart: t("sfl.modal.viewChart"),
+    tModalCompare: t("sfl.modal.compare"),
+    tModalSearchItemToCompare: t("sfl.modal.searchItemToCompare"),
+    tModalSelectItemToCompare: t("sfl.modal.selectItemToCompare"),
+    tModalClearComparison: t("sfl.modal.clearComparison"),
+    tModalNoItemsFound: t("sfl.modal.noItemsFound"),
+    tModalRelativePerformance: t("sfl.modal.relativePerformance"),
+    tModalAddCompare: t("sfl.modal.addCompare"),
+    tModalMaxCompare: t("sfl.modal.maxCompare"),
   }}
 >
   const searchInput = document.getElementById("searchInput")
@@ -3549,10 +3622,197 @@ const t = useTranslations(lang)
   let activeModalItem = null;
   let activeModalPeriod = "7d";
   let activeModalChartData = null;
+  let compareModalItems = []; // Hasta 4 ítems adicionales (5 en total)
+
+  const COMPARE_PALETTE = [
+    { stroke: "#10b981", name: "Emerald", text: "text-emerald-400" },
+    { stroke: "#c084fc", name: "Violet",  text: "text-purple-300" },
+    { stroke: "#38bdf8", name: "Sky",     text: "text-sky-300" },
+    { stroke: "#f59e0b", name: "Amber",   text: "text-amber-300" },
+    { stroke: "#f43f5e", name: "Rose",    text: "text-rose-300" },
+  ];
+
+  window.toggleCompareDropdown = (forceState) => {
+    const dropdown = document.getElementById("modalCompareDropdown");
+    if (!dropdown) return;
+    const isHidden = dropdown.classList.contains("hidden");
+    const show = typeof forceState === "boolean" ? forceState : isHidden;
+    if (show) {
+      dropdown.classList.remove("hidden");
+      dropdown.classList.add("flex");
+      const searchInput = document.getElementById("modalCompareSearchInput");
+      if (searchInput) {
+        searchInput.value = "";
+        setTimeout(() => searchInput.focus(), 60);
+      }
+      window.filterCompareList("");
+    } else {
+      dropdown.classList.add("hidden");
+      dropdown.classList.remove("flex");
+    }
+  };
+
+  window.filterCompareList = (query) => {
+    const listEl = document.getElementById("modalCompareItemsList");
+    if (!listEl) return;
+    const q = (query || "").trim().toLowerCase();
+
+    const currentItemKey = activeModalItem ? (activeModalItem.key || activeModalItem.name) : "";
+    const selectedKeys = new Set(compareModalItems.map(i => i.key || i.name));
+    selectedKeys.add(currentItemKey);
+
+    if (compareModalItems.length >= 4) {
+      listEl.innerHTML = `<div class="p-3 text-center text-cyan-400/80 font-mono text-xs">${tModalMaxCompare}</div>`;
+      return;
+    }
+
+    const availableItems = (marketData || []).filter(item => {
+      const k = item.key || item.name;
+      if (selectedKeys.has(k)) return false;
+      return true;
+    });
+
+    const filtered = q
+      ? availableItems.filter(item => item.name.toLowerCase().includes(q) || (item.category && item.category.toLowerCase().includes(q)))
+      : availableItems;
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = `<div class="p-3 text-center text-white/40 text-xs">${tModalNoItemsFound}</div>`;
+      return;
+    }
+
+    filtered.sort((a, b) => (b.volume7d || 0) - (a.volume7d || 0));
+
+    listEl.innerHTML = filtered.slice(0, 40).map(item => {
+      const isBuds = item.category === "buds";
+      const imgSrc = getItemImageSrc(item);
+      const priceStr = formatModalPrice(item.currentPrice);
+      const safeKey = (item.key || item.name).replace(/'/g, "\\'");
+      return `
+        <div
+          onclick="window.selectCompareItem('${safeKey}')"
+          class="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 cursor-pointer transition-colors group"
+        >
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-7 h-7 rounded bg-black/60 border border-white/10 flex items-center justify-center p-0.5 overflow-hidden shrink-0">
+              <img src="${imgSrc}" class="w-full h-full object-contain pixelated ${isBuds ? 'scale-150' : ''}" />
+            </div>
+            <div class="min-w-0">
+              <div class="font-bold text-white text-xs truncate group-hover:text-cyan-400 transition-colors">${item.name}</div>
+              <div class="text-[9.5px] text-white/40 uppercase font-mono">${item.category}</div>
+            </div>
+          </div>
+          <div class="text-right font-mono text-xs shrink-0 pl-2">
+            <span class="text-white font-bold">${priceStr}</span>
+            <span class="text-[9px] text-white/40 block">FLOWER</span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  };
+
+  window.selectCompareItem = (itemKey) => {
+    if (compareModalItems.length >= 4) return;
+    const item = (marketData || []).find(i => (i.key || i.name) === itemKey);
+    if (!item) return;
+    const k = item.key || item.name;
+    if (compareModalItems.some(i => (i.key || i.name) === k)) return;
+    compareModalItems.push(item);
+    window.toggleCompareDropdown(false);
+    updateCompareUI();
+    window.setModalGraphPeriod(activeModalPeriod);
+  };
+
+  window.removeCompareItem = (itemKey) => {
+    compareModalItems = compareModalItems.filter(i => (i.key || i.name) !== itemKey);
+    updateCompareUI();
+    window.setModalGraphPeriod(activeModalPeriod);
+  };
+
+  window.clearModalComparison = () => {
+    compareModalItems = [];
+    updateCompareUI();
+    window.setModalGraphPeriod(activeModalPeriod);
+  };
+
+  function updateCompareUI() {
+    const compareBtn = document.getElementById("modalCompareBtn");
+    const chipsList = document.getElementById("modalCompareChipsList");
+    const dropdownTitle = document.getElementById("modalCompareDropdownTitle");
+
+    if (compareModalItems.length > 0) {
+      if (compareBtn) compareBtn.classList.add("hidden");
+      if (chipsList) {
+        chipsList.classList.remove("hidden");
+        chipsList.classList.add("flex");
+
+        const chipsHtml = compareModalItems.map((item, idx) => {
+          const pal = COMPARE_PALETTE[idx + 1] || COMPARE_PALETTE[1];
+          const imgSrc = getItemImageSrc(item);
+          const safeKey = (item.key || item.name).replace(/'/g, "\\'");
+          return `
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg border text-xs font-mono" style="border-color: ${pal.stroke}40; background-color: ${pal.stroke}15; color: ${pal.stroke};">
+              <span class="text-[9px] text-white/40 font-bold uppercase">vs</span>
+              <img src="${imgSrc}" class="w-4 h-4 object-contain rounded pixelated bg-black/40" />
+              <span class="font-bold truncate max-w-[70px] sm:max-w-[100px] text-white">${item.name}</span>
+              <button type="button" onclick="window.removeCompareItem('${safeKey}')" class="ml-0.5 hover:text-white cursor-pointer px-0.5 opacity-70 hover:opacity-100" title="${tModalClearComparison}">✕</button>
+            </div>
+          `;
+        }).join("");
+
+        const canAddMore = compareModalItems.length < 4;
+        const addBtnHtml = canAddMore ? `
+          <button
+            type="button"
+            onclick="window.toggleCompareDropdown()"
+            class="flex items-center gap-1 px-2 py-0.5 text-xs font-mono font-bold rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 transition-all cursor-pointer"
+            title="${tModalAddCompare}"
+          >
+            <span class="text-cyan-400 font-bold">+</span>
+            <span class="text-[11px] text-white/60">vs</span>
+          </button>
+        ` : '';
+
+        const clearBtnHtml = `
+          <button
+            type="button"
+            onclick="window.clearModalComparison()"
+            class="text-white/40 hover:text-white text-xs font-mono px-1 py-0.5 cursor-pointer ml-0.5"
+            title="${tModalClearComparison}"
+          >✕</button>
+        `;
+
+        chipsList.innerHTML = chipsHtml + addBtnHtml + clearBtnHtml;
+      }
+    } else {
+      if (compareBtn) compareBtn.classList.remove("hidden");
+      if (chipsList) {
+        chipsList.classList.add("hidden");
+        chipsList.classList.remove("flex");
+        chipsList.innerHTML = "";
+      }
+    }
+
+    if (dropdownTitle) {
+      dropdownTitle.textContent = compareModalItems.length >= 4
+        ? tModalMaxCompare
+        : `${tModalSelectItemToCompare} (${compareModalItems.length + 1}/5)`;
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    const compContainer = document.getElementById("modalCompareContainer");
+    if (compContainer && !compContainer.contains(e.target)) {
+      window.toggleCompareDropdown(false);
+    }
+  });
 
   window.openTradingModal = (item) => {
     if (!item) return;
     activeModalItem = item;
+    compareModalItems = [];
+    updateCompareUI();
+    window.toggleCompareDropdown(false);
     activeModalPeriod = "7d";
 
     const modal = document.getElementById("tradingModal");
@@ -3716,13 +3976,13 @@ const t = useTranslations(lang)
     if (tradesCountEl) tradesCountEl.textContent = item.trades7d !== undefined ? formatNumber(item.trades7d, 0) : (item.trades || 0);
     if (supplyEl) supplyEl.textContent = item.category === "buds" ? `${tModalSupply}: 1 NFT` : `${tModalSupply}: ${item.supply !== undefined ? formatNumber(item.supply, 0) : "∞"}`;
 
-    // 3. Render Chart
-    window.setModalGraphPeriod("7d");
-
-    // 4. Mostrar Modal
+    // 3. Mostrar Modal
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     document.body.style.overflow = "hidden";
+
+    // 4. Render Chart
+    window.setModalGraphPeriod("7d");
   };
 
   window.closeTradingModal = () => {
@@ -3732,6 +3992,9 @@ const t = useTranslations(lang)
     modal.classList.remove("flex");
     document.body.style.overflow = "";
     activeModalItem = null;
+    compareModalItems = [];
+    updateCompareUI();
+    window.toggleCompareDropdown(false);
   };
 
   window.setModalGraphPeriod = (period) => {
@@ -3759,12 +4022,20 @@ const t = useTranslations(lang)
     const svg = document.getElementById("modalChartSvg");
     const wrapper = document.getElementById("modalChartWrapper");
     const tooltip = document.getElementById("modalChartTooltip");
-    const crosshair = document.getElementById("modalChartCrosshair");
+    const crosshairX = document.getElementById("modalChartCrosshairX");
+    const crosshairY = document.getElementById("modalChartCrosshairY");
+    const badgeX = document.getElementById("modalCrosshairBadgeX");
+    const badgeY = document.getElementById("modalCrosshairBadgeY");
     if (!svg || !wrapper) return;
+
+    if (compareModalItems.length > 0) {
+      renderCompareChart(period);
+      return;
+    }
 
     const expectedLength = period === "180d" ? 181 : (period === "30d" ? 31 : (Array.isArray(rawPoints) && rawPoints.length > 8 ? rawPoints.length : 8));
 
-    // Filtrar solo datos válidos reales (sin rellenar con líneas planas artificiales hacia atrás)
+    // Filtrar solo datos válidos reales
     let validData = Array.isArray(rawPoints)
       ? rawPoints.filter((p) => p !== null && p !== undefined && typeof p === "number")
       : [];
@@ -3775,11 +4046,14 @@ const t = useTranslations(lang)
 
     if (validData.length < 2 && currentPrice <= 0) {
       svg.innerHTML = `
-        <text x="350" y="125" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">NO SALES DATA</text>
+        <text x="400" y="120" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">NO SALES DATA</text>
       `;
       wrapper.onmousemove = null;
       wrapper.onmouseleave = null;
-      if (crosshair) crosshair.classList.add("hidden");
+      if (crosshairX) crosshairX.classList.add("hidden");
+      if (crosshairY) crosshairY.classList.add("hidden");
+      if (badgeX) badgeX.classList.add("hidden");
+      if (badgeY) badgeY.classList.add("hidden");
       if (tooltip) tooltip.classList.add("hidden");
       return;
     }
@@ -3790,18 +4064,18 @@ const t = useTranslations(lang)
 
     activeModalChartData = validData;
 
-    const width = 700;
+    const width = 800;
     const height = 240;
     const padTop = 24;
     const padBottom = 24;
-    const padLeft = 16;
-    const padRight = 30;
+    const padLeft = 20;
+    const padRight = 62;
 
     const min = Math.min(...validData);
     const max = Math.max(...validData);
     const range = (max - min) || (max * 0.1) || 1;
 
-    // getX calcula la posición temporal real dejando vacío el pasado de ítems nuevos (igual que en la tabla)
+    // getX calcula la posición temporal real dejando vacío el pasado de ítems nuevos
     const getX = (i) => {
       const daysAgo = validData.length - 1 - i;
       const xProgress = 1 - (daysAgo / Math.max(1, expectedLength - 1));
@@ -3809,13 +4083,29 @@ const t = useTranslations(lang)
     };
     const getY = (v) => padTop + (1 - (v - min) / range) * (height - padTop - padBottom);
 
-    const isPositive = validData[validData.length - 1] >= validData[0];
+    const lastPrice = validData[validData.length - 1] || 0;
+    const isPositive = lastPrice >= validData[0];
     const strokeColor = isPositive ? "#10b981" : "#ef4444";
     const fillGradientId = `modalGrad_${isPositive ? "green" : "red"}`;
 
     const pointsArray = validData.map((v, i) => [getX(i), getY(v)]);
     const startX = pointsArray[0][0];
     const endX = pointsArray[pointsArray.length - 1][0];
+
+    // Actualizar HUD técnico individual
+    const hudEl = document.getElementById("modalChartHud");
+    if (hudEl && activeModalItem) {
+      const pctChange = validData.length > 0 ? ((lastPrice - validData[0]) / (validData[0] || 1)) * 100 : 0;
+      const pctStr = `${pctChange >= 0 ? '+' : ''}${pctChange.toFixed(1)}%`;
+      hudEl.innerHTML = `
+        <div class="flex items-center gap-1.5 font-bold">
+          <span class="w-2 h-2 rounded-full shrink-0 ${isPositive ? 'bg-emerald-400' : 'bg-red-400'}"></span>
+          <span class="text-white">${activeModalItem.name}</span>
+          <span class="${isPositive ? 'text-emerald-400' : 'text-red-400'}">${formatModalPrice(lastPrice)} FLOWER</span>
+          <span class="${isPositive ? 'text-emerald-400' : 'text-red-400'} text-[9.5px]">(${pctStr})</span>
+        </div>
+      `;
+    }
 
     // Suavizado de curva tipo Catmull-Rom to Cubic Bézier
     const getCurvePath = (pts) => {
@@ -3842,7 +4132,6 @@ const t = useTranslations(lang)
     const midPrice = min + range / 2;
     const sflUsd = window.sflUsdPrice || 0.085;
 
-    // Formateador de escala Y con soporte para 4 decimales cuando precio < 0.09
     const formatAxisPrice = (v) => {
       if (typeof v !== "number" || isNaN(v)) return "0";
       if (v < 0.09 || range < 0.09) return formatNumber(v, 4);
@@ -3850,7 +4139,6 @@ const t = useTranslations(lang)
       return formatNumber(v, 1);
     };
 
-    // Interpolador continuo suave Catmull-Rom para el hover
     const getCatmullRomVal = (pts, i, t) => {
       if (pts.length === 0) return 0;
       if (pts.length === 1) return pts[0];
@@ -3870,43 +4158,49 @@ const t = useTranslations(lang)
     svg.innerHTML = `
       <defs>
         <linearGradient id="${fillGradientId}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.3" />
-          <stop offset="85%" stop-color="${strokeColor}" stop-opacity="0.02" />
+          <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.10" />
+          <stop offset="85%" stop-color="${strokeColor}" stop-opacity="0.01" />
           <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0" />
         </linearGradient>
       </defs>
 
-      <!-- Guías horizontales y precios de escala -->
-      <line x1="${padLeft}" y1="${getY(max)}" x2="${width - padRight}" y2="${getY(max)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
-      <text x="${width - padRight}" y="${getY(max) - 6}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatAxisPrice(max)}</text>
+      <!-- Rejilla Técnica TradingView -->
+      <line x1="${padLeft}" y1="${getY(max).toFixed(2)}" x2="${width - padRight}" y2="${getY(max).toFixed(2)}" stroke="rgba(255,255,255,0.035)" stroke-dasharray="2,2" />
+      <text x="${width - padRight + 6}" y="${(getY(max) + 3.5).toFixed(2)}" fill="rgba(255,255,255,0.25)" font-size="9" font-family="monospace">${formatAxisPrice(max)}</text>
 
-      <line x1="${padLeft}" y1="${getY(midPrice)}" x2="${width - padRight}" y2="${getY(midPrice)}" stroke="rgba(255,255,255,0.04)" stroke-dasharray="3,3" />
-      <text x="${width - padRight}" y="${getY(midPrice) - 6}" fill="rgba(255,255,255,0.25)" font-size="10" font-family="monospace" text-anchor="end">${formatAxisPrice(midPrice)}</text>
+      <line x1="${padLeft}" y1="${getY(midPrice).toFixed(2)}" x2="${width - padRight}" y2="${getY(midPrice).toFixed(2)}" stroke="rgba(255,255,255,0.035)" stroke-dasharray="2,2" />
+      <text x="${width - padRight + 6}" y="${(getY(midPrice) + 3.5).toFixed(2)}" fill="rgba(255,255,255,0.25)" font-size="9" font-family="monospace">${formatAxisPrice(midPrice)}</text>
 
-      <line x1="${padLeft}" y1="${getY(min)}" x2="${width - padRight}" y2="${getY(min)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
-      <text x="${width - padRight}" y="${getY(min) + 14}" fill="rgba(255,255,255,0.4)" font-size="10" font-family="monospace" text-anchor="end">${formatAxisPrice(min)}</text>
+      <line x1="${padLeft}" y1="${getY(min).toFixed(2)}" x2="${width - padRight}" y2="${getY(min).toFixed(2)}" stroke="rgba(255,255,255,0.035)" stroke-dasharray="2,2" />
+      <text x="${width - padRight + 6}" y="${(getY(min) + 3.5).toFixed(2)}" fill="rgba(255,255,255,0.25)" font-size="9" font-family="monospace">${formatAxisPrice(min)}</text>
 
-      <!-- Área y Trazo Suavizado (Solo en rango de existencia real) -->
+      <!-- Área y Trazo Suavizado Ultrafino -->
       <path d="${dArea}" fill="url(#${fillGradientId})" />
-      <path d="${dLine}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="${dLine}" fill="none" stroke="${strokeColor}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
 
       <!-- Punto final actual -->
-      <circle cx="${endX.toFixed(2)}" cy="${getY(validData[validData.length - 1]).toFixed(2)}" r="4.5" fill="${strokeColor}" stroke="#141414" stroke-width="2" />
+      <circle cx="${endX.toFixed(2)}" cy="${getY(lastPrice).toFixed(2)}" r="3.5" fill="${strokeColor}" stroke="#0c1015" stroke-width="1.5" />
+
+      <!-- Píldora de precio actual anclada al eje derecho (TradingView Style) -->
+      <rect x="${width - padRight + 4}" y="${(getY(lastPrice) - 8).toFixed(2)}" width="52" height="16" rx="2" fill="${strokeColor}" />
+      <text x="${width - padRight + 30}" y="${(getY(lastPrice) + 3.5).toFixed(2)}" fill="#000000" font-size="9.5" font-family="monospace" text-anchor="middle" font-weight="900">${formatAxisPrice(lastPrice)}</text>
 
       <!-- Punto interactivo activo en hover continuo -->
-      <circle id="modalHoverDot" cx="0" cy="0" r="5" fill="#ffffff" stroke="${strokeColor}" stroke-width="2.5" class="hidden pointer-events-none" />
+      <circle id="modalHoverDot" cx="0" cy="0" r="3.5" fill="#ffffff" stroke="${strokeColor}" stroke-width="1.5" class="hidden pointer-events-none" />
     `;
 
-    // Interacción MouseMove con Crosshair y Tooltip continuos y suavizados
     wrapper.onmousemove = (e) => {
       const rect = wrapper.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
       const svgX = (mouseX / rect.width) * width;
       const clampedSvgX = Math.max(padLeft, Math.min(width - padRight, svgX));
 
-      // Si el cursor está en el pasado donde el ítem aún no existía, ocultar elementos (igual que la tabla)
       if (clampedSvgX < startX - 3) {
-        if (crosshair) crosshair.classList.add("hidden");
+        if (crosshairX) crosshairX.classList.add("hidden");
+        if (crosshairY) crosshairY.classList.add("hidden");
+        if (badgeX) badgeX.classList.add("hidden");
+        if (badgeY) badgeY.classList.add("hidden");
         if (tooltip) tooltip.classList.add("hidden");
         const hoverDot = document.getElementById("modalHoverDot");
         if (hoverDot) hoverDot.classList.add("hidden");
@@ -3922,17 +4216,28 @@ const t = useTranslations(lang)
       const i0 = Math.min(totalSegments - 1, Math.floor(exactIndex));
       const t = exactIndex - i0;
 
-      // Valor continuo suavizado exactamente sobre la trayectoria
       const val = getCatmullRomVal(validData, i0, t);
       const ptSvgX = activeSvgX;
       const ptSvgY = Math.max(padTop - 8, Math.min(height - padBottom + 8, getY(val)));
 
       const pxX = (ptSvgX / width) * rect.width;
       const pxY = (ptSvgY / height) * rect.height;
+      const pxYCursor = Math.max(0, Math.min(rect.height, mouseY));
+      const svgYCursor = (pxYCursor / rect.height) * height;
+      const cursorPrice = min + (1 - (svgYCursor - padTop) / (height - padTop - padBottom)) * range;
 
-      if (crosshair) {
-        crosshair.style.left = `${pxX}px`;
-        crosshair.classList.remove("hidden");
+      if (crosshairX) {
+        crosshairX.style.left = `${pxX}px`;
+        crosshairX.classList.remove("hidden");
+      }
+      if (crosshairY) {
+        crosshairY.style.top = `${pxYCursor}px`;
+        crosshairY.classList.remove("hidden");
+      }
+      if (badgeY) {
+        badgeY.style.top = `${pxYCursor}px`;
+        badgeY.textContent = formatAxisPrice(cursorPrice);
+        badgeY.classList.remove("hidden");
       }
 
       const hoverDot = document.getElementById("modalHoverDot");
@@ -3955,6 +4260,12 @@ const t = useTranslations(lang)
         };
         const dateLabel = datePoint.toLocaleDateString(clientLang === 'es' ? 'es-ES' : 'en-US', dateOptions);
 
+        if (badgeX) {
+          badgeX.style.left = `${pxX}px`;
+          badgeX.textContent = dateLabel;
+          badgeX.classList.remove("hidden");
+        }
+
         const displayFlower = formatModalPrice(val);
         const displayUsd = formatModalUsd(usdVal);
 
@@ -3969,7 +4280,6 @@ const t = useTranslations(lang)
           </div>
         `;
         
-        // Posicionar tooltip asegurando que nunca desborde
         let leftPos = pxX + 15;
         if (leftPos + 150 > rect.width) {
           leftPos = pxX - 160;
@@ -3981,10 +4291,420 @@ const t = useTranslations(lang)
     };
 
     wrapper.onmouseleave = () => {
-      if (crosshair) crosshair.classList.add("hidden");
+      if (crosshairX) crosshairX.classList.add("hidden");
+      if (crosshairY) crosshairY.classList.add("hidden");
+      if (badgeX) badgeX.classList.add("hidden");
+      if (badgeY) badgeY.classList.add("hidden");
       if (tooltip) tooltip.classList.add("hidden");
       const hoverDot = document.getElementById("modalHoverDot");
       if (hoverDot) hoverDot.classList.add("hidden");
+    };
+  }
+
+  function renderCompareChart(period) {
+    const svg = document.getElementById("modalChartSvg");
+    const wrapper = document.getElementById("modalChartWrapper");
+    const tooltip = document.getElementById("modalChartTooltip");
+    const crosshairX = document.getElementById("modalChartCrosshairX");
+    const crosshairY = document.getElementById("modalChartCrosshairY");
+    const badgeX = document.getElementById("modalCrosshairBadgeX");
+    const badgeY = document.getElementById("modalCrosshairBadgeY");
+    if (!svg || !wrapper || !activeModalItem || compareModalItems.length === 0) return;
+
+    const allItems = [activeModalItem, ...compareModalItems];
+    const sparkKey = `sparkline${period}`;
+    const expectedLength = period === "180d" ? 181 : (period === "30d" ? 31 : 8);
+
+    const itemsData = allItems.map((item, idx) => {
+      const rawPoints = (item.history && item.history[sparkKey]) || [];
+      let validData = Array.isArray(rawPoints)
+        ? rawPoints.filter((p) => p !== null && p !== undefined && typeof p === "number")
+        : [];
+      if (validData.length === 0 && item.currentPrice > 0) validData = [item.currentPrice, item.currentPrice];
+      if (item.currentPrice > 0 && validData.length > 0) validData[validData.length - 1] = item.currentPrice;
+
+      const startVal = validData[0] || (item.currentPrice || 1);
+      const pctData = validData.map(v => ((v - startVal) / startVal) * 100);
+      const pal = COMPARE_PALETTE[idx] || COMPARE_PALETTE[idx % COMPARE_PALETTE.length];
+
+      return {
+        item,
+        validData,
+        pctData,
+        color: pal.stroke,
+        startVal
+      };
+    });
+
+    if (itemsData.every(d => d.validData.length < 2)) {
+      svg.innerHTML = `<text x="400" y="120" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">NO SALES DATA</text>`;
+      wrapper.onmousemove = null;
+      wrapper.onmouseleave = null;
+      if (crosshairX) crosshairX.classList.add("hidden");
+      if (crosshairY) crosshairY.classList.add("hidden");
+      if (badgeX) badgeX.classList.add("hidden");
+      if (badgeY) badgeY.classList.add("hidden");
+      if (tooltip) tooltip.classList.add("hidden");
+      return;
+    }
+
+    const allPcts = itemsData.flatMap(d => d.pctData).concat([0]);
+    const minPct = Math.min(...allPcts);
+    const maxPct = Math.max(...allPcts);
+    const spanPct = (maxPct - minPct) || 10;
+    const padMargin = spanPct * 0.16;
+    const yMin = minPct - padMargin;
+    const yMax = maxPct + padMargin;
+    const rangeY = yMax - yMin;
+
+    const width = 800;
+    const height = 240;
+    const padTop = 26;
+    const padBottom = 26;
+    const padLeft = 20;
+    const padRight = 62;
+
+    const getY = (pct) => padTop + (1 - (pct - yMin) / rangeY) * (height - padTop - padBottom);
+    const getX = (validDataLen, i) => {
+      const daysAgo = validDataLen - 1 - i;
+      const xProgress = 1 - (daysAgo / Math.max(1, expectedLength - 1));
+      return padLeft + xProgress * (width - padLeft - padRight);
+    };
+
+    const getCatmullRomVal = (pts, i, t) => {
+      if (pts.length === 0) return 0;
+      if (pts.length === 1) return pts[0];
+      if (pts.length === 2) return pts[0] + t * (pts[1] - pts[0]);
+      const p0 = pts[Math.max(0, i - 1)];
+      const p1 = pts[i];
+      const p2 = pts[Math.min(pts.length - 1, i + 1)];
+      const p3 = pts[Math.min(pts.length - 1, i + 2)];
+      return 0.5 * (
+        (2 * p1) +
+        (-p0 + p2) * t +
+        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t +
+        (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t
+      );
+    };
+
+    const getCurvePath = (pts) => {
+      if (pts.length <= 1) return "";
+      if (pts.length === 2) return ` L ${pts[1][0].toFixed(2)} ${pts[1][1].toFixed(2)}`;
+      let d = "";
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i === 0 ? 0 : i - 1];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[i + 2 >= pts.length ? i + 1 : i + 2];
+        const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+        const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+        const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+        const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+        d += ` C ${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${p2[0].toFixed(2)},${p2[1].toFixed(2)}`;
+      }
+      return d;
+    };
+
+    itemsData.forEach((d) => {
+      d.pts = d.validData.map((v, i) => [getX(d.validData.length, i), getY(d.pctData[i])]);
+      d.yCoords = d.pts.map(p => p[1]);
+      d.startX = d.pts[0][0];
+      d.startY = d.pts[0][1];
+      d.endX = d.pts[d.pts.length - 1][0];
+      d.endY = d.pts[d.pts.length - 1][1];
+      d.dLine = `M ${d.startX.toFixed(2)} ${d.startY.toFixed(2)}${getCurvePath(d.pts)}`;
+      d.dArea = `${d.dLine} L ${d.endX.toFixed(2)} ${height - padBottom} L ${d.startX.toFixed(2)} ${height - padBottom} Z`;
+      d.finalPct = d.pctData[d.pctData.length - 1] || 0;
+      d.imgSrc = getItemImageSrc(d.item);
+    });
+
+    // Escalonar avatares si se solapan en el inicio
+    itemsData.forEach((d) => {
+      const closeItems = itemsData.filter(other => Math.abs(other.startX - d.startX) < 18 && Math.abs(other.startY - d.startY) < 18);
+      if (closeItems.length > 1) {
+        const rank = closeItems.indexOf(d);
+        const count = closeItems.length;
+        d.avatarX = d.startX;
+        d.avatarY = d.startY + (rank - (count - 1) / 2) * 16;
+        d.avatarY = Math.max(padTop - 4, Math.min(height - padBottom + 4, d.avatarY));
+        d.hasOffset = Math.abs(d.avatarY - d.startY) > 2;
+      } else {
+        d.avatarX = d.startX;
+        d.avatarY = d.startY;
+        d.hasOffset = false;
+      }
+    });
+
+    const yZero = getY(0);
+
+    // Actualizar HUD Flotante superior izquierdo
+    const hudEl = document.getElementById("modalChartHud");
+    if (hudEl) {
+      const hudItemsHtml = itemsData.map(d => {
+        const pctStr = `${d.finalPct >= 0 ? '+' : ''}${d.finalPct.toFixed(1)}%`;
+        const pctColor = d.finalPct >= 0 ? d.color : '#f87171';
+        return `
+          <div class="flex items-center gap-1.5 font-bold">
+            <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${d.color}"></span>
+            <span class="text-white truncate max-w-[70px] sm:max-w-[100px]">${d.item.name}</span>
+            <span style="color: ${d.color}" class="text-[10px]">${formatModalPrice(d.item.currentPrice)}</span>
+            <span style="color: ${pctColor}" class="text-[9px]">(${pctStr})</span>
+          </div>
+        `;
+      }).join("");
+
+      let extraHud = "";
+      if (itemsData.length === 2) {
+        const ratioVal = itemsData[0].item.currentPrice / (itemsData[1].item.currentPrice || 0.0001);
+        const ratioStr = ratioVal >= 100 ? formatNumber(ratioVal, 0) : formatNumber(ratioVal, 2);
+        extraHud = `<span class="text-white/30 text-[9px] ml-1">1 ${itemsData[0].item.name.slice(0, 6)} = ${ratioStr} ${itemsData[1].item.name.slice(0, 6)}</span>`;
+      }
+      hudEl.innerHTML = hudItemsHtml + extraHud;
+    }
+
+    // Niveles de escala para el grid técnico TradingView
+    const gridLevels = [
+      maxPct,
+      maxPct * 0.5,
+      minPct * 0.5,
+      minPct
+    ].filter(lvl => Math.abs(lvl) > 1.5);
+
+    const gridLinesHtml = gridLevels.map(lvl => `
+      <line x1="${padLeft}" y1="${getY(lvl).toFixed(2)}" x2="${width - padRight}" y2="${getY(lvl).toFixed(2)}" stroke="rgba(255,255,255,0.035)" stroke-dasharray="2,2" />
+      <text x="${width - padRight + 6}" y="${(getY(lvl) + 3.5).toFixed(2)}" fill="rgba(255,255,255,0.25)" font-size="9" font-family="monospace">${lvl >= 0 ? '+' : ''}${lvl.toFixed(1)}%</text>
+    `).join("");
+
+    // Píldoras de rendimiento en el eje derecho con resolución de colisiones
+    const pillBadges = itemsData.map((d, k) => ({
+      k,
+      color: d.color,
+      pct: d.finalPct,
+      rawY: d.endY,
+      y: d.endY
+    }));
+
+    pillBadges.sort((a, b) => a.rawY - b.rawY);
+    for (let i = 1; i < pillBadges.length; i++) {
+      if (pillBadges[i].y - pillBadges[i - 1].y < 14) {
+        pillBadges[i].y = pillBadges[i - 1].y + 14;
+      }
+    }
+    for (let i = pillBadges.length - 1; i >= 0; i--) {
+      if (pillBadges[i].y > height - padBottom + 8) {
+        pillBadges[i].y = height - padBottom + 8;
+        if (i > 0 && pillBadges[i].y - pillBadges[i - 1].y < 14) {
+          pillBadges[i - 1].y = pillBadges[i].y - 14;
+        }
+      }
+    }
+
+    const pillsHtml = pillBadges.map(p => `
+      <rect x="${width - padRight + 4}" y="${(p.y - 7).toFixed(2)}" width="52" height="14" rx="2" fill="${p.color}" />
+      <text x="${width - padRight + 30}" y="${(p.y + 3.5).toFixed(2)}" fill="#000000" font-size="9" font-family="monospace" text-anchor="middle" font-weight="900">${p.pct >= 0 ? '+' : ''}${p.pct.toFixed(1)}%</text>
+    `).join("");
+
+    const defsHtml = itemsData.map((d, k) => `
+      <clipPath id="clipAvatarComp${k}">
+        <circle cx="${d.avatarX.toFixed(2)}" cy="${d.avatarY.toFixed(2)}" r="8" />
+      </clipPath>
+      <linearGradient id="compGrad${k}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${d.color}" stop-opacity="0.08" />
+        <stop offset="100%" stop-color="${d.color}" stop-opacity="0.0" />
+      </linearGradient>
+    `).join("");
+
+    const areasHtml = itemsData.map((d, k) => `
+      <path d="${d.dArea}" fill="url(#compGrad${k})" />
+    `).join("");
+
+    const linesHtml = itemsData.map(d => `
+      <path d="${d.dLine}" fill="none" stroke="${d.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    `).join("");
+
+    const endCirclesHtml = itemsData.map(d => `
+      <circle cx="${d.endX.toFixed(2)}" cy="${d.endY.toFixed(2)}" r="3.5" fill="${d.color}" stroke="#0c1015" stroke-width="1.5" />
+    `).join("");
+
+    const connectorsHtml = itemsData.filter(d => d.hasOffset).map(d => `
+      <line x1="${d.startX.toFixed(2)}" y1="${d.startY.toFixed(2)}" x2="${d.avatarX.toFixed(2)}" y2="${d.avatarY.toFixed(2)}" stroke="${d.color}" stroke-width="1" stroke-dasharray="2,2" opacity="0.6" />
+    `).join("");
+
+    const avatarsHtml = itemsData.map((d, k) => `
+      <g class="cursor-pointer">
+        <circle cx="${d.avatarX.toFixed(2)}" cy="${d.avatarY.toFixed(2)}" r="9" fill="#0c1015" />
+        <image href="${d.imgSrc}" x="${(d.avatarX - 7.5).toFixed(2)}" y="${(d.avatarY - 7.5).toFixed(2)}" width="15" height="15" clip-path="url(#clipAvatarComp${k})" preserveAspectRatio="xMidYMid slice" style="image-rendering: pixelated;" />
+        <circle cx="${d.avatarX.toFixed(2)}" cy="${d.avatarY.toFixed(2)}" r="8.5" fill="none" stroke="${d.color}" stroke-width="1.5" />
+      </g>
+    `).join("");
+
+    const hoverDotsHtml = itemsData.map((d, k) => `
+      <circle id="modalHoverDot${k}" cx="0" cy="0" r="3.5" fill="#ffffff" stroke="${d.color}" stroke-width="1.5" class="hidden pointer-events-none" />
+    `).join("");
+
+    svg.innerHTML = `
+      <defs>
+        ${defsHtml}
+      </defs>
+
+      <!-- Rejilla Técnica de Fondo (Grid) -->
+      ${gridLinesHtml}
+
+      <!-- Línea Base 0.0% -->
+      <line x1="${padLeft}" y1="${yZero.toFixed(2)}" x2="${width - padRight}" y2="${yZero.toFixed(2)}" stroke="rgba(255,255,255,0.14)" stroke-dasharray="3,3" />
+      <rect x="${width - padRight + 4}" y="${(yZero - 7).toFixed(2)}" width="48" height="14" rx="2" fill="#141920" stroke="rgba(255,255,255,0.15)" />
+      <text x="${width - padRight + 28}" y="${(yZero + 3.5).toFixed(2)}" fill="rgba(255,255,255,0.6)" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">0.0%</text>
+
+      <!-- Áreas suaves de fondo -->
+      ${areasHtml}
+
+      <!-- Líneas de tendencia ultrafinas -->
+      ${linesHtml}
+
+      <!-- Puntos finales -->
+      ${endCirclesHtml}
+
+      <!-- Píldoras de rendimiento final ancladas en el eje derecho -->
+      ${pillsHtml}
+
+      <!-- Conectores si hay solapamiento al inicio -->
+      ${connectorsHtml}
+
+      <!-- Avatares en su punto de partida -->
+      ${avatarsHtml}
+
+      <!-- Puntos interactivos hover continuos y ultra precisos -->
+      ${hoverDotsHtml}
+    `;
+
+    // Interacción continua en hover con cálculo Catmull-Rom exacto
+    wrapper.onmousemove = (e) => {
+      const rect = wrapper.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      const svgX = (mouseX / rect.width) * width;
+      const clampedSvgX = Math.max(padLeft, Math.min(width - padRight, svgX));
+
+      // 1. Fecha histórica exacta sincronizada con la línea de tiempo global
+      const progressGlobal = Math.max(0, Math.min(1, (clampedSvgX - padLeft) / (width - padLeft - padRight || 1)));
+      const daysAgo = (1 - progressGlobal) * (expectedLength - 1);
+      const now = new Date();
+      const datePoint = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
+      const dateOptions = {
+        day: "numeric",
+        month: "short",
+        ...(datePoint.getFullYear() !== now.getFullYear() ? { year: "numeric" } : {})
+      };
+      const dateLabel = datePoint.toLocaleDateString(clientLang === 'es' ? 'es-ES' : 'en-US', dateOptions);
+
+      // Posiciones de píxeles
+      const pxX = (clampedSvgX / width) * rect.width;
+      const pxYCursor = Math.max(0, Math.min(rect.height, mouseY));
+      const svgYCursor = (pxYCursor / rect.height) * height;
+      const cursorPct = yMin + (1 - (svgYCursor - padTop) / (height - padTop - padBottom)) * rangeY;
+
+      // Crosshairs duales (X e Y) estilo TradingView
+      if (crosshairX) {
+        crosshairX.style.left = `${pxX}px`;
+        crosshairX.classList.remove("hidden");
+      }
+      if (crosshairY) {
+        crosshairY.style.top = `${pxYCursor}px`;
+        crosshairY.classList.remove("hidden");
+      }
+      if (badgeY) {
+        badgeY.style.top = `${pxYCursor}px`;
+        badgeY.textContent = `${cursorPct >= 0 ? '+' : ''}${cursorPct.toFixed(1)}%`;
+        badgeY.classList.remove("hidden");
+      }
+      if (badgeX) {
+        badgeX.style.left = `${pxX}px`;
+        badgeX.textContent = dateLabel;
+        badgeX.classList.remove("hidden");
+      }
+
+      // Interpolación para cada ítem y posicionamiento de puntos hover
+      const rowsTooltip = [];
+      let minPixelY = rect.height;
+
+      itemsData.forEach((d, k) => {
+        const dot = document.getElementById(`modalHoverDot${k}`);
+        if (clampedSvgX < d.startX - 3) {
+          if (dot) dot.classList.add("hidden");
+          return;
+        }
+
+        const activeWidth = (d.endX - d.startX) || 1;
+        const progress = Math.max(0, Math.min(1, (clampedSvgX - d.startX) / activeWidth));
+        const totalSegments = Math.max(1, d.validData.length - 1);
+        const exactIndex = progress * totalSegments;
+        const i0 = Math.min(totalSegments - 1, Math.floor(exactIndex));
+        const t = exactIndex - i0;
+
+        const ptSvgY = Math.max(padTop - 8, Math.min(height - padBottom + 8, getCatmullRomVal(d.yCoords, i0, t)));
+        const val = getCatmullRomVal(d.validData, i0, t);
+        const pct = getCatmullRomVal(d.pctData, i0, t);
+        const pxY = (ptSvgY / height) * rect.height;
+        if (pxY < minPixelY) minPixelY = pxY;
+
+        if (dot) {
+          dot.setAttribute("cx", clampedSvgX.toFixed(2));
+          dot.setAttribute("cy", ptSvgY.toFixed(2));
+          dot.classList.remove("hidden");
+        }
+
+        rowsTooltip.push(`
+          <div class="flex items-center justify-between gap-3 py-0.5">
+            <div class="flex items-center gap-1.5 font-bold">
+              <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${d.color}"></span>
+              <span class="text-white truncate max-w-[85px] sm:max-w-[110px]">${d.item.name}</span>
+            </div>
+            <div class="font-mono text-[10.5px] text-right">
+              <span class="text-white font-bold">${formatModalPrice(val)}</span>
+              <span style="color: ${pct >= 0 ? d.color : '#f87171'}" class="ml-1 text-[9.5px]">${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%</span>
+            </div>
+          </div>
+        `);
+      });
+
+      if (tooltip) {
+        let ratioHeader = "";
+        if (itemsData.length === 2 && itemsData[0].validData.length > 0 && itemsData[1].validData.length > 0) {
+          const valA = getCatmullRomVal(itemsData[0].validData, 0, 0); // fallback
+          const valB = getCatmullRomVal(itemsData[1].validData, 0, 0);
+          const ratioNow = valA / (valB || 0.0001);
+          const ratioStr = ratioNow >= 100 ? formatNumber(ratioNow, 0) : formatNumber(ratioNow, 2);
+          ratioHeader = `<span class="text-white/40 font-normal">1 ${itemsData[0].item.name.slice(0, 6)} = ${ratioStr} ${itemsData[1].item.name.slice(0, 6)}</span>`;
+        }
+
+        tooltip.innerHTML = `
+          <div class="text-[10px] text-cyan-400 font-bold mb-1 pb-1 border-b border-white/10 flex justify-between gap-3">
+            <span>${dateLabel}</span>
+            ${ratioHeader}
+          </div>
+          ${rowsTooltip.join("")}
+        `;
+
+        let leftPos = pxX + 15;
+        if (leftPos + 220 > rect.width) {
+          leftPos = pxX - 230;
+        }
+        tooltip.style.left = `${Math.max(10, Math.min(rect.width - 230, leftPos))}px`;
+        tooltip.style.top = `${Math.max(10, Math.min(rect.height - 110, minPixelY - 20))}px`;
+        tooltip.classList.remove("hidden");
+      }
+    };
+
+    wrapper.onmouseleave = () => {
+      if (crosshairX) crosshairX.classList.add("hidden");
+      if (crosshairY) crosshairY.classList.add("hidden");
+      if (badgeX) badgeX.classList.add("hidden");
+      if (badgeY) badgeY.classList.add("hidden");
+      if (tooltip) tooltip.classList.add("hidden");
+      itemsData.forEach((_, k) => {
+        const dot = document.getElementById(`modalHoverDot${k}`);
+        if (dot) dot.classList.add("hidden");
+      });
     };
   }
 

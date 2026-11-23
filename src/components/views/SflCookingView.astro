@@ -44,11 +44,14 @@ const cookingBuffsCatalog = cookingBuffs.map((b) => {
     effects: b.effects || [],
   }
 })
-const sflBuffs = Object.fromEntries(
-  cookingBuffs
+const sflBuffs = Object.fromEntries([
+  ...cookingBuffs
     .filter((b) => b.type === "collectible" || b.type === "wearable")
-    .map((b) => [String(b.id), b.raw])
-)
+    .map((b) => [String(b.id), b.raw]),
+  ...cookingBuffs
+    .filter((b) => b.type === "collectible" || b.type === "wearable")
+    .map((b) => [b.name, b.raw]),
+])
 const sflShrines = Object.fromEntries(
   cookingBuffs.filter((b) => b.type === "shrine").map((b) => [b.name, b.raw])
 )
@@ -87,6 +90,9 @@ const faqItems = [
 
 
 const getCompactText = (data, formattedDesc, typeName) => {
+  if (data.name === "Astrolabe") {
+    return "+5% XP [Aged fish] Astrolabe";
+  }
   let value = "?";
   if (!formattedDesc || typeof formattedDesc !== "string") {
     return value;
@@ -243,12 +249,20 @@ const formatAstroDescription = (skill) => {
               >
                 <!-- Buscador rápido dentro del desplegable -->
                 <div class="p-2.5 border-b border-white/10 bg-black/40">
-                  <input
-                    type="text"
-                    id="dishDropdownSearch"
-                    placeholder={t("sfl.cooking.dash.searchDishPlaceholder")}
-                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-emerald-500/50 font-mono"
-                  />
+                  <div class="relative w-full">
+                    <input
+                      type="text"
+                      id="dishDropdownSearch"
+                      placeholder={t("sfl.cooking.dash.searchDishPlaceholder")}
+                      class="w-full bg-white/5 border border-white/10 rounded-xl pl-3 pr-8 py-1.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    />
+                    <button
+                      type="button"
+                      id="clearDishDropdownSearch"
+                      class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-white/40 hover:text-white transition-colors cursor-pointer text-xs font-mono select-none"
+                      title={t("sfl.cooking.search.clear")}
+                    >✕</button>
+                  </div>
                 </div>
 
                 <!-- Lista de platos ordenados por eficiencia -->
@@ -678,8 +692,14 @@ const formatAstroDescription = (skill) => {
                 type="text"
                 id="searchInput"
                 placeholder={t("sfl.cooking.search.placeholder")}
-                class="w-full bg-black/40 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all font-mono"
+                class="w-full bg-black/40 border border-white/10 rounded-xl pl-8 pr-8 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all font-mono"
               />
+              <button
+                type="button"
+                id="clearSearchInput"
+                class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-white/40 hover:text-white transition-colors cursor-pointer text-xs font-mono select-none"
+                title={t("sfl.cooking.search.clear")}
+              >✕</button>
             </div>
           </div>
         </div>
@@ -1500,7 +1520,7 @@ const formatAstroDescription = (skill) => {
     if (target === "Honey Foods") {
       return item.ingredients.some(ing => ing.name === "Honey");
     }
-    if (target === "Aged Fish") {
+    if (target === "Aged Fish" || (typeof target === "string" && target.toLowerCase() === "aged fish")) {
       return item.building === "Aging Shed" || item.name.startsWith("Aged ");
     }
     return false;
@@ -1610,8 +1630,13 @@ const formatAstroDescription = (skill) => {
     }
 
     // 16. Aging Prime buffs
-    if (buff.effects && buff.effects.some(e => e.category === "aging_prime")) {
+    if (buff.effects && buff.effects.some(e => e.category === "aging_prime" || e.effect_type === "prime")) {
       return isAgingBuilding && Boolean(item.agedXp);
+    }
+
+    // 16b. Astrolabe (Aged Fish)
+    if (name === "Astrolabe") {
+      return isTargetMatch(item, "Aged Fish");
     }
 
     // 17. Genérico por MathEffects de Collectibles / Wearables
@@ -1697,8 +1722,8 @@ const formatAstroDescription = (skill) => {
     if (name === "Hungry Hare") return "+2x XP";
     if (name === "Swiss Whiskers") return "+20 XP";
     if (name === "Observatory") return "+5% XP";
-    if (name === "Astrolabe") return "+10% XP";
-    if (name === "Winged Vase") return "+50% XP";
+    if (name === "Astrolabe") return "+5% XP";
+    if (name === "Winged Vase") return "+14% Prime";
     if (name === "Golden Spatula") return "+10% XP";
     if (name === "Luna's Hat") return "-50% tiempo";
     if (name === "Pan") return "+25% XP";
@@ -1755,32 +1780,45 @@ const formatAstroDescription = (skill) => {
     `;
   };
 
+  const getPrimeChance = () => {
+    let primeChance = 0.10;
+    activeBuffs.forEach(id => {
+      const buff = sflBuffs[id];
+      if (buff) {
+        [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6].forEach(math => {
+          if (math && (math.category === "aging_prime" || math.effect_type === "prime") && math.calc) {
+            primeChance += (math.calc / 100);
+          }
+        });
+      }
+    });
+    return Math.min(1, Math.max(0, primeChance));
+  };
+
   const getCalculatedXp = (item) => {
     let baseExp = item.xp;
     if (item.building === "Aging Shed" && item.agedXp && item.primeAgedXp) {
-      let primeChance = 0.10;
-      activeBuffs.forEach(id => {
-        const buff = sflBuffs[id];
-        if (buff) {
-          [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6].forEach(math => {
-            if (math && math.category === "aging_prime" && math.calc) {
-              primeChance += (math.calc / 100);
-            }
-          });
-        }
-      });
-      primeChance = Math.min(1, Math.max(0, primeChance));
+      const primeChance = getPrimeChance();
       baseExp = Math.round(item.agedXp * (1 - primeChance) + item.primeAgedXp * primeChance);
     }
 
     let boostedExp = baseExp;
     let additions = 0;
     
+    const processedBuffs = new Set();
     activeBuffs.forEach(id => {
       const buff = sflBuffs[id];
       if (buff) {
+        const buffKey = buff.name || id;
+        if (processedBuffs.has(buffKey)) return;
+        processedBuffs.add(buffKey);
+
         [buff.mathematics_1, buff.mathematics_2, buff.mathematics_3, buff.mathematics_4, buff.mathematics_5, buff.mathematics_6].forEach(math => {
-          if (math && math.category === "bumpkin_xp" && isTargetMatch(item, math.target_food || math.target || "all")) {
+          if (
+            math &&
+            (math.category === "bumpkin_xp" || (math.category === "cooking" && math.effect_type === "xp")) &&
+            isTargetMatch(item, math.target_food || math.target || "all")
+          ) {
             if (math.mathematics_operation === "multiply") {
               boostedExp *= math.calc;
             } else if (math.mathematics_operation === "add") {
@@ -1799,7 +1837,7 @@ const formatAstroDescription = (skill) => {
       );
     };
 
-    // Others XP Buffs (VIP Pass, Blossom Beard, Luminous Anglerfish, Faction Pet)
+    // Others XP Buffs (VIP Pass, Blossom Beard, Luminous Anglerfish, Astrolabe, Faction Pet)
     if (isBuffOrSkillActive("VIP Pass", 9001)) {
       boostedExp *= 1.1;
     }
@@ -1808,6 +1846,10 @@ const formatAstroDescription = (skill) => {
     }
     if (isBuffOrSkillActive("Luminous Anglerfish", 9004) && isTargetMatch(item, "Fish")) {
       boostedExp *= 1.5;
+    }
+    if (isBuffOrSkillActive("Astrolabe", 3046) && isTargetMatch(item, "Aged Fish") && !processedBuffs.has("Astrolabe")) {
+      boostedExp *= 1.05;
+      processedBuffs.add("Astrolabe");
     }
     if (activeSkills && activeSkills["Faction Pet"]) {
       const petBonus = activeSkills["Faction Pet"] === 1 ? 0.1 : activeSkills["Faction Pet"] === 2 ? 0.2 : activeSkills["Faction Pet"] === 3 ? 0.3 : 0.5;
@@ -1856,7 +1898,7 @@ const formatAstroDescription = (skill) => {
       });
     }
     
-    return boostedExp + additions;
+    return Math.round(boostedExp + additions);
   };
 
   const getCalculatedTime = (item) => {
@@ -2007,6 +2049,9 @@ const formatAstroDescription = (skill) => {
     }
     if (searchInput) {
       searchInput.value = recipeName;
+      if (typeof window.updateTableSearchClearBtn === "function") {
+        window.updateTableSearchClearBtn();
+      }
     }
     renderTable(recipeName);
     setTimeout(() => {
@@ -2294,6 +2339,12 @@ const formatAstroDescription = (skill) => {
       const rawFishName = isAging ? item.name.replace(/^Aged\s+/i, "") : null;
       const rawFishImg = isAging ? (item.image || `/img/sunflowerland/fish/${rawFishName}.png`) : null;
 
+      const currentPrimeChance = isAging ? getPrimeChance() : 0.10;
+      const primePercent = Math.round(currentPrimeChance * 100);
+      const normalPercent = 100 - primePercent;
+      const badgeText = `🎲 ${normalPercent}/${primePercent}`;
+      const badgeTitle = isAging && item.agedXp ? `Aged (${normalPercent}%): +${item.agedXp} XP · Prime (${primePercent}%): +${item.primeAgedXp} XP` : "";
+
       // Comparativa Crudo vs Envejecido (solo para peces)
       let counterpartHtmlDesktop = "";
       let counterpartHtmlMobile = "";
@@ -2568,15 +2619,22 @@ const formatAstroDescription = (skill) => {
                   }
 
                 </div>
-                <div class="flex items-center justify-between lg:justify-start w-full">
-                  ${
-                    isRawFish
-                      ? `<span class="text-[11px] text-emerald-400 font-mono mt-0.5 flex items-center gap-1">⚡ ${tInstant || "Instant"}</span>`
-                      : `<span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>`
-                  }
+                <div class="flex items-center justify-between lg:justify-start w-full gap-2">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    ${
+                      isRawFish
+                        ? `<span class="text-[11px] text-emerald-400 font-mono mt-0.5 flex items-center gap-1">⚡ ${tInstant || "Instant"}</span>`
+                        : `<span class="text-[11px] text-terminal-muted mt-0.5 ${timeSeconds < parseTime(item.time) ? 'text-blue-400' : ''}">🕒 ${displayTime}</span>`
+                    }
+                    ${
+                      isAging && item.primeAgedXp
+                        ? `<span class="text-[9px] font-mono px-1 py-0.5 rounded bg-yellow-400/10 text-yellow-300 border border-yellow-400/20 select-none" title="${badgeTitle}">${badgeText}</span>`
+                        : ""
+                    }
+                  </div>
                   ${
                     item.instant
-                      ? `<span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 ml-2"><img src="/img/sunflowerland/123/Gem.png" class="w-3 h-3 object-contain" alt="Gem" width="12" height="12" loading="lazy" decoding="async" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>`
+                      ? `<span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 ml-auto lg:ml-2"><img src="/img/sunflowerland/123/Gem.png" class="w-3 h-3 object-contain" alt="Gem" width="12" height="12" loading="lazy" decoding="async" onerror="this.onerror=null; this.outerHTML='💎';" /> ${item.instant}</span>`
                       : ""
                   }
                 </div>
@@ -2589,9 +2647,8 @@ const formatAstroDescription = (skill) => {
               <div class="absolute -right-2 -bottom-2 text-white/5 text-4xl font-black pointer-events-none">XP</div>
               <span class="text-[9px] text-white/40 uppercase tracking-wider font-bold mb-0.5 relative z-10">${tTotalXp}</span>
               <div class="flex items-center gap-1 relative z-10 flex-wrap">
-                <span class="text-white text-[15px] font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="Aged (90%): +${item.agedXp} XP · Prime (10%): +${item.primeAgedXp} XP"` : ''}>${formatNumber(finalXp, 0)}</span>
+                <span class="text-white text-[15px] font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="${badgeTitle}"` : ''}>${formatNumber(finalXp, 0)}</span>
                 ${finalXp > item.xp ? `<img src="/img/sunflowerland/123/energy.png" alt="⚡" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] inline-block shrink-0" title="Base: ${formatNumber(item.xp, 0)}" />` : ""}
-                ${isAging && item.primeAgedXp ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-yellow-400/10 text-yellow-300 border border-yellow-400/20" title="Aged: +${item.agedXp} XP (90%) · Prime: +${item.primeAgedXp} XP (10%)">🎲 90/10</span>` : ''}
               </div>
               ${itemBuffsHtmlMobile}
             </div>
@@ -2620,9 +2677,8 @@ const formatAstroDescription = (skill) => {
 
           <div class="hidden lg:flex mt-2 lg:mt-0 lg:px-4 flex-col items-end justify-center">
             <div class="flex items-center gap-1.5 flex-wrap justify-end">
-              <span class="text-white text-sm font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="Aged (90%): +${item.agedXp} XP · Prime (10%): +${item.primeAgedXp} XP"` : ''}>${formatNumber(finalXp, 0)}</span>
+              <span class="text-white text-sm font-bold ${finalXp > item.xp ? 'text-emerald-400' : ''}" ${isAging && item.agedXp ? `title="${badgeTitle}"` : ''}>${formatNumber(finalXp, 0)}</span>
               ${finalXp > item.xp ? `<img src="/img/sunflowerland/123/energy.png" alt="⚡" class="w-3.5 h-3.5 object-contain [image-rendering:pixelated] inline-block shrink-0" title="Base: ${formatNumber(item.xp, 0)}" />` : ""}
-              ${isAging && item.primeAgedXp ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-yellow-400/10 text-yellow-300 border border-yellow-400/20" title="Aged: +${item.agedXp} XP (90%) · Prime: +${item.primeAgedXp} XP (10%)">🎲 90/10</span>` : ''}
             </div>
             ${itemBuffsHtmlDesktop}
           </div>
@@ -3306,6 +3362,8 @@ const formatAstroDescription = (skill) => {
         searchInput.value = "";
         setTimeout(() => searchInput.focus(), 50);
       }
+      const clearDishDropdownSearch = document.getElementById("clearDishDropdownSearch");
+      if (clearDishDropdownSearch) clearDishDropdownSearch.classList.add("hidden");
     } else {
       closeDishDropdown();
     }
@@ -3451,12 +3509,27 @@ const formatAstroDescription = (skill) => {
   }
 
   const dishDropdownSearch = document.getElementById("dishDropdownSearch");
+  const clearDishDropdownSearch = document.getElementById("clearDishDropdownSearch");
   if (dishDropdownSearch) {
     dishDropdownSearch.addEventListener("input", (e) => {
       renderDishDropdownList(e.target.value);
+      if (clearDishDropdownSearch) {
+        clearDishDropdownSearch.classList.toggle("hidden", e.target.value.trim().length === 0);
+      }
     });
     dishDropdownSearch.addEventListener("click", (e) => {
       e.stopPropagation();
+    });
+  }
+  if (clearDishDropdownSearch) {
+    clearDishDropdownSearch.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (dishDropdownSearch) {
+        dishDropdownSearch.value = "";
+        clearDishDropdownSearch.classList.add("hidden");
+        renderDishDropdownList("");
+        dishDropdownSearch.focus();
+      }
     });
   }
 
@@ -3552,10 +3625,32 @@ const formatAstroDescription = (skill) => {
     })
   })
 
+  const clearSearchInput = document.getElementById("clearSearchInput");
+  window.updateTableSearchClearBtn = () => {
+    if (clearSearchInput && searchInput) {
+      clearSearchInput.classList.toggle("hidden", searchInput.value.trim().length === 0);
+    }
+  };
+  window.updateTableSearchClearBtn();
+
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
-      renderTable(e.target.value)
-    })
+      renderTable(e.target.value);
+      if (typeof window.updateTableSearchClearBtn === "function") {
+        window.updateTableSearchClearBtn();
+      }
+    });
+  }
+
+  if (clearSearchInput) {
+    clearSearchInput.addEventListener("click", () => {
+      if (searchInput) {
+        searchInput.value = "";
+        clearSearchInput.classList.add("hidden");
+        renderTable("");
+        searchInput.focus();
+      }
+    });
   }
 
 

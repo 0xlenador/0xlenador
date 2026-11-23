@@ -465,7 +465,7 @@ export function isEffectTargetMatch(
     return ingredients.some((ing) => ing.name === "Honey")
   }
 
-  if (target === "Aged Fish") {
+  if (target === "Aged Fish" || target?.toLowerCase() === "aged fish") {
     return building === "Aging Shed" || itemName.startsWith("Aged ")
   }
 
@@ -504,7 +504,12 @@ export function calculateCompoundedMultiplier(
     const rank = typeof selection === "number" ? selection : 1
 
     for (const effect of buff.effects) {
-      if (effect.category !== category) continue
+      if (
+        effect.category !== category &&
+        !(category === "bumpkin_xp" && effect.category === "cooking" && effect.effect_type === "xp")
+      ) {
+        continue
+      }
       if (!isEffectTargetMatch(effect.target, targetContext)) continue
 
       const val = resolveEffectValue(effect, rank)

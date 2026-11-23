@@ -301,7 +301,7 @@ export function calculateCookingXp(
     let primeChance = 0.1 // Base 10%
     for (const buff of activeBuffDefinitions) {
       for (const eff of buff.effects) {
-        if (eff.category === "aging_prime" && eff.calc) {
+        if ((eff.category === "aging_prime" || eff.effect_type === "prime") && eff.calc) {
           primeChance += eff.calc / 100
         }
       }
@@ -337,8 +337,16 @@ export function calculateCookingXp(
       boostedExp *= 1.5
       continue
     }
+    if (
+      buff.name === "Astrolabe" &&
+      !activeSkills["Astrolabe"] &&
+      isEffectTargetMatch("Aged Fish", targetContext)
+    ) {
+      boostedExp *= 1.05
+      continue
+    }
     for (const eff of buff.effects) {
-      if (eff.category !== "bumpkin_xp") continue
+      if (eff.category !== "bumpkin_xp" && !(eff.category === "cooking" && eff.effect_type === "xp")) continue
       if (!isEffectTargetMatch(eff.target, targetContext)) continue
 
       if (eff.mathematics_operation === "multiply" && eff.calc) {
@@ -363,6 +371,11 @@ export function calculateCookingXp(
       isEffectTargetMatch("Fish", targetContext)
     ) {
       boostedExp *= 1.5
+    } else if (
+      skillName === "Astrolabe" &&
+      isEffectTargetMatch("Aged Fish", targetContext)
+    ) {
+      boostedExp *= 1.05
     } else if (skillName === "Faction Pet") {
       const petBonus = rank === 1 ? 0.1 : rank === 2 ? 0.2 : rank === 3 ? 0.3 : 0.5
       boostedExp *= 1 + petBonus

@@ -80,6 +80,7 @@ const tierVisuals: Record<string, { label: string; badgeClass: string }> = {
               data-chum={filterChum}
               data-guaranteed={filterGuaranteed}
               data-chapter={item.chapter ? "chapters" : "permanent"}
+              data-chapter-name={item.chapter || ""}
               data-default-order={idx}
               data-xp={item.xp || 0}
               data-cost="999999"

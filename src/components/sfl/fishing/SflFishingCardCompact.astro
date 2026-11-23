@@ -75,6 +75,7 @@ const defaultBaitName = allBaits[0] || (kind === "trap" ? item.trap : "Earthworm
   data-chum={filterChum}
   data-guaranteed={filterGuaranteed}
   data-chapter={item.chapter ? "chapters" : "permanent"}
+  data-chapter-name={item.chapter || ""}
   data-default-order={index}
   data-xp={item.xp || 0}
   data-cost="999999"
