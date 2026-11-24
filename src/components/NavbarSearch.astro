@@ -47,8 +47,8 @@ const uiStrings = {
   itemsLabel: lang === "es" ? "items" : "items",
   noResultsTip:
     lang === "es"
-      ? "Prueba con términos como 'btc', 'perpetuos', 'juegos', 'riskfolio' o 'faucets'."
-      : "Try terms like 'btc', 'perps', 'games', 'riskfolio' or 'faucets'.",
+      ? "Prueba con términos como 'animales', 'btc', 'perpetuos', 'riskfolio' o 'faucets'."
+      : "Try terms like 'animals', 'btc', 'perps', 'riskfolio' or 'faucets'.",
 }
 ---
 
@@ -59,6 +59,7 @@ const uiStrings = {
     type="button"
     class="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-terminal-surface/70 hover:bg-terminal-surface border border-terminal-border/80 hover:border-emerald-500/40 text-terminal-muted hover:text-white transition-all text-xs group cursor-pointer shadow-inner"
     aria-label={t("nav.search.placeholder")}
+    data-open-search="true"
   >
     <span class="flex items-center gap-2 truncate">
       <svg
@@ -88,16 +89,18 @@ const uiStrings = {
 <!-- Modal / Command Palette Dialog -->
 <div
   id="search-palette-modal"
-  class="fixed inset-0 z-[100] bg-black/75 backdrop-blur-md flex items-start justify-center pt-16 md:pt-24 px-4 hidden transition-opacity duration-200"
+  class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md hidden items-start justify-center pt-4 sm:pt-16 md:pt-24 px-2 sm:px-4 transition-opacity duration-200"
+  style="display: none;"
   role="dialog"
   aria-modal="true"
+  data-lang={lang}
 >
   <div
     id="search-palette-box"
-    class="w-full max-w-2xl bg-[#0e0e0e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] ring-1 ring-emerald-500/20 transform transition-all duration-200 scale-95 opacity-0"
+    class="w-full max-w-2xl bg-[#0e0e0e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh] md:max-h-[80vh] ring-1 ring-emerald-500/20 transform transition-all duration-200 scale-95 opacity-0"
   >
     <!-- Header del Buscador -->
-    <div class="p-4 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
+    <div class="p-3.5 sm:p-4 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
       <svg
         class="w-5 h-5 text-emerald-400 shrink-0"
         fill="none"
@@ -121,9 +124,10 @@ const uiStrings = {
       <button
         id="search-palette-close"
         type="button"
-        class="text-xs font-mono text-terminal-muted hover:text-white px-2 py-1 rounded bg-white/5 border border-white/10 hover:border-white/20 transition-colors cursor-pointer"
+        class="text-xs font-mono text-terminal-muted hover:text-white px-2.5 py-1 rounded bg-white/5 border border-white/10 hover:border-white/20 transition-colors cursor-pointer shrink-0"
       >
-        ESC
+        <span class="hidden sm:inline">ESC</span>
+        <span class="sm:hidden">✕</span>
       </button>
     </div>
 
@@ -146,6 +150,14 @@ const uiStrings = {
       <button
         type="button"
         class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+        data-query="sfl"
+      >
+        <Icon name="lucide:sprout" class="w-3.5 h-3.5 text-emerald-400" />
+        <span>Sunflower Land</span>
+      </button>
+      <button
+        type="button"
+        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
         data-query="activo"
       >
         <Icon name="lucide:trending-up" class="w-3.5 h-3.5 text-emerald-400" />
@@ -162,35 +174,33 @@ const uiStrings = {
       <button
         type="button"
         class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
-        data-query="educacion"
-      >
-        <Icon name="lucide:book-open" class="w-3.5 h-3.5 text-emerald-400" />
-        <span>{lang === "es" ? "Educación" : "Articles"}</span>
-      </button>
-      <button
-        type="button"
-        class="quick-chip px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-terminal-secondary border border-white/5 hover:border-emerald-500/30 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
-        data-query="juegos"
+        data-query="yakkamon"
       >
         <Icon name="lucide:gamepad-2" class="w-3.5 h-3.5 text-emerald-400" />
-        <span>{lang === "es" ? "Juegos" : "Games"}</span>
+        <span>Yakkamon</span>
       </button>
     </div>
 
     <!-- Lista de Resultados Agrupados -->
     <div
       id="search-palette-results"
-      class="overflow-y-auto p-3 space-y-4 max-h-[50vh] divide-y divide-white/5 custom-scrollbar"
+      class="overflow-y-auto p-3 space-y-4 max-h-[58vh] md:max-h-[50vh] divide-y divide-white/5 custom-scrollbar"
     >
-      <!-- Se puebla dinámicamente con JS -->
+      <!-- Se puebla dinámicamente con Pagefind / JS -->
     </div>
 
     <!-- Footer informativo con atajos -->
     <div
       class="px-4 py-2.5 bg-white/[0.02] border-t border-white/5 flex items-center justify-between text-[11px] text-terminal-muted font-mono"
     >
-      <span>{uiStrings.kbdHint}</span>
-      <span class="text-emerald-400 font-semibold">0xLeñador Search</span>
+      <span class="hidden sm:inline">{uiStrings.kbdHint}</span>
+      <span class="sm:hidden text-[10px] text-terminal-muted"
+        >{lang === "es" ? "Toca un resultado para abrir" : "Tap result to open"}</span
+      >
+      <span class="text-emerald-400 font-semibold flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        0xLeñador Search
+      </span>
     </div>
   </div>
 </div>
@@ -228,384 +238,375 @@ const uiStrings = {
 <script id="search-ui-json" type="application/json" set:html={JSON.stringify(uiStrings)} />
 
 <script>
-  function initNavbarSearch() {
-    const modal = document.getElementById("search-palette-modal")
-    const box = document.getElementById("search-palette-box")
-    const input = document.getElementById("search-palette-input") as HTMLInputElement
-    const resultsContainer = document.getElementById("search-palette-results")
-    const closeBtn = document.getElementById("search-palette-close")
-    const triggerDesktop = document.getElementById("nav-search-trigger")
-    const triggerMobile = document.getElementById("nav-mobile-search-trigger")
-    const quickChips = document.querySelectorAll(".quick-chip")
-    const dataElement = document.getElementById("search-data-json")
-    const uiElement = document.getElementById("search-ui-json")
+  // Variables de estado compartidas del buscador
+  let catalog: any[] = []
+  let ui: any = {}
+  let activeItemIndex = -1
+  let visibleItems: HTMLElement[] = []
+  const iconTemplates: Record<string, string> = {}
+  const RECENT_SEARCHES_KEY = "0x_recent_searches_v2"
 
-    if (!modal || !box || !input || !resultsContainer || !dataElement || !uiElement) return
+  // ─── INSTANCIA DINÁMICA DE PAGEFIND ─────────────────────────
+  let pagefindInstance: any = null
+  let pagefindLoading: Promise<any> | null = null
 
-    // Evitar multi-listener si ya está inicializado
-    if (modal.getAttribute("data-initialized") === "true") return
-    modal.setAttribute("data-initialized", "true")
-
-    const RECENT_SEARCHES_KEY = "0x_recent_searches_v2"
-
-    let catalog: any[] = []
-    let ui: any = {}
-    try {
-      catalog = JSON.parse(dataElement.textContent || "[]")
-      ui = JSON.parse(uiElement.textContent || "{}")
-    } catch (e) {
-      catalog = []
-      ui = {}
-    }
-
-    // Migración transparente de esquema: preserva el historial del usuario adaptándolo al catálogo dinámico
-    try {
-      const oldV1 = localStorage.getItem("0x_recent_searches_v1")
-      if (oldV1 && !localStorage.getItem(RECENT_SEARCHES_KEY)) {
-        const parsed = JSON.parse(oldV1)
-        if (Array.isArray(parsed)) {
-          const migrated = parsed
-            .map((item: any) => {
-              const rawId = item?.id || item
-              // Mapeo retrocompatible de IDs manuales anteriores
-              if (rawId === "blog-fomo") return "blog-que-es-fomo"
-              return rawId
-            })
-            .filter((id: string) => catalog.some((c: any) => c.id === id))
-            .slice(0, 5)
-            .map((id: string) => ({ id }))
-
-          if (migrated.length > 0) {
-            localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(migrated))
+  async function getPagefind() {
+    if (pagefindInstance) return pagefindInstance
+    if (!pagefindLoading) {
+      pagefindLoading = (async () => {
+        try {
+          // Invocación dinámica en runtime para evitar que el analizador estático de Vite intente resolver la ruta en dev
+          const dynamicImport = new Function("url", "return import(url)")
+          const pf = await dynamicImport("/pagefind/pagefind.js")
+          if (pf && typeof pf.init === "function") {
+            await pf.init()
           }
+          pagefindInstance = pf
+          return pf
+        } catch (e) {
+          // Pagefind no disponible aún (ej. antes de generar el índice), usa fallback local
+          return null
+        }
+      })()
+    }
+    return pagefindLoading
+  }
+
+  function ensureDataLoaded() {
+    if (catalog.length === 0) {
+      const dataElement = document.getElementById("search-data-json")
+      if (dataElement) {
+        try {
+          catalog = JSON.parse(dataElement.textContent || "[]")
+        } catch {
+          catalog = []
         }
       }
-      localStorage.removeItem("0x_recent_searches_v1")
-    } catch {}
-
-    let activeItemIndex = -1
-    let visibleItems: HTMLElement[] = []
-
-    // Carga de plantillas de iconos astro-icon renderizados en compilación
-    const iconTemplates: Record<string, string> = {}
-    document.querySelectorAll("#search-icon-templates [data-icon-id]").forEach((el) => {
-      const id = el.getAttribute("data-icon-id")
-      if (id) {
-        iconTemplates[id] = el.innerHTML.trim()
+    }
+    if (Object.keys(ui).length === 0) {
+      const uiElement = document.getElementById("search-ui-json")
+      if (uiElement) {
+        try {
+          ui = JSON.parse(uiElement.textContent || "{}")
+        } catch {
+          ui = {}
+        }
       }
-    })
+    }
+    if (Object.keys(iconTemplates).length === 0) {
+      document.querySelectorAll("#search-icon-templates [data-icon-id]").forEach((el) => {
+        const id = el.getAttribute("data-icon-id")
+        if (id) {
+          iconTemplates[id] = el.innerHTML.trim()
+        }
+      })
+    }
+  }
 
-    function getIconMarkup(item: any): string {
-      if (item.icon) {
-        return `<img src="${item.icon}" alt="${item.name}" class="w-6 h-6 rounded-md object-cover bg-white/5 shrink-0" onerror="this.style.display='none'" />`
-      }
-      const iconKey =
-        item.iconName ||
-        (item.category === "blog"
-          ? "lucide:book-open"
-          : item.category === "directorio"
-            ? "lucide:folder"
-            : item.category === "herramientas"
-              ? "lucide:calculator"
-              : item.category === "guias"
-                ? "lucide:compass"
+  function getIconMarkup(item: any): string {
+    if (item.icon) {
+      return `<img src="${item.icon}" alt="${(item.name || "").replace(/"/g, "&quot;")}" class="w-6 h-6 rounded-md object-cover bg-white/5 shrink-0" onerror="this.style.display='none'" />`
+    }
+    const iconKey =
+      item.iconName ||
+      (item.category === "blog"
+        ? "lucide:book-open"
+        : item.category === "directorio"
+          ? "lucide:folder"
+          : item.category === "herramientas"
+            ? "lucide:calculator"
+            : item.category === "guias"
+              ? "lucide:compass"
+              : item.category === "activos"
+                ? "lucide:trending-up"
                 : "lucide:link")
 
-      const innerSvg = iconTemplates[iconKey] || iconTemplates["lucide:link"] || ""
-      return `<div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors shrink-0">${innerSvg}</div>`
-    }
+    const innerSvg = iconTemplates[iconKey] || iconTemplates["lucide:link"] || ""
+    return `<div class="w-6 h-6 flex items-center justify-center rounded-md bg-white/5 text-emerald-400 group-hover:text-emerald-300 transition-colors shrink-0">${innerSvg}</div>`
+  }
 
-    function normalizeText(text: string) {
-      return (text || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim()
-    }
+  function normalizeText(text: string) {
+    return (text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim()
+  }
 
-    // --- Persistencia de Búsquedas Recientes (localStorage) ---
-    // Siempre sincronizada con el catálogo real para evitar datos cacheados obsoletos
-    function getRecentSearches(): any[] {
-      try {
-        const stored = localStorage.getItem(RECENT_SEARCHES_KEY)
-        if (!stored) return []
-        const parsed = JSON.parse(stored)
-        if (!Array.isArray(parsed)) return []
-        return parsed.map((r: any) => catalog.find((c) => c.id === (r.id || r))).filter(Boolean)
-      } catch {
-        return []
-      }
+  // --- Persistencia de Búsquedas Recientes (localStorage) ---
+  function getRecentSearches(): any[] {
+    try {
+      const stored = localStorage.getItem(RECENT_SEARCHES_KEY)
+      if (!stored) return []
+      const parsed = JSON.parse(stored)
+      if (!Array.isArray(parsed)) return []
+      return parsed
+        .map((r: any) => {
+          const foundInCatalog = catalog.find((c) => c.id === (r.id || r))
+          if (foundInCatalog) return foundInCatalog
+          if (r.url && r.name) return r
+          return null
+        })
+        .filter(Boolean)
+    } catch {
+      return []
     }
+  }
 
-    function saveRecentSearch(item: any) {
-      try {
-        let recents = getRecentSearches().filter((r: any) => r.id !== item.id)
-        recents.unshift(item)
-        recents = recents.slice(0, 5)
-        const idsToStore = recents.map((r: any) => ({ id: r.id }))
-        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(idsToStore))
-      } catch {}
-    }
-
-    function clearRecentSearches() {
-      try {
-        localStorage.removeItem(RECENT_SEARCHES_KEY)
-        localStorage.removeItem("0x_recent_searches_v1")
-      } catch {}
-      renderResults("")
-    }
-
-    function openModal() {
-      modal.classList.remove("hidden")
-      document.body.style.overflow = "hidden"
-      requestAnimationFrame(() => {
-        box.classList.remove("scale-95", "opacity-0")
-        box.classList.add("scale-100", "opacity-100")
-        input.focus()
+  function saveRecentSearch(item: any) {
+    try {
+      let recents = getRecentSearches().filter((r: any) => r.url !== item.url)
+      recents.unshift({
+        id: item.id || item.url,
+        name: item.name,
+        url: item.url,
+        description: item.description || "",
+        category: item.category || "general",
+        categoryLabel: item.categoryLabel || "",
+        icon: item.icon,
+        iconName: item.iconName,
       })
-      renderResults(input.value)
-    }
+      recents = recents.slice(0, 5)
+      localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recents))
+    } catch {}
+  }
 
-    function closeModal() {
-      box.classList.remove("scale-100", "opacity-100")
-      box.classList.add("scale-95", "opacity-0")
-      setTimeout(() => {
-        modal.classList.add("hidden")
-        document.body.style.overflow = ""
-        input.value = ""
-        activeItemIndex = -1
-      }, 150)
-    }
+  function clearRecentSearches() {
+    try {
+      localStorage.removeItem(RECENT_SEARCHES_KEY)
+    } catch {}
+    const input = document.getElementById("search-palette-input") as HTMLInputElement | null
+    renderResults(input ? input.value : "")
+  }
 
-    // Clasificación y puntuación inteligente
-    function performSearch(query: string) {
-      const q = normalizeText(query)
-      if (!q) {
-        // Estado vacío: devolvemos solo la selección balanceada y destacada (featured)
-        return catalog.filter((item) => item.featured)
-      }
+  // ─── BÚSQUEDA AUTOMÁTICA CON PAGEFIND ───────────────────────
+  async function searchWithPagefind(query: string) {
+    const pf = await getPagefind()
+    if (!pf) return null
 
-      // Sistema de puntuación (Scoring)
-      const scored = catalog
-        .map((item) => {
-          let score = 0
-          const nameNorm = normalizeText(item.name)
-          const descNorm = normalizeText(item.description)
-          const ecoNorm = normalizeText(item.ecosystem)
-          const ecoLabelNorm = normalizeText(item.ecosystemLabel)
-          const catNorm = normalizeText(item.category)
-          const catLabelNorm = normalizeText(item.categoryLabel)
-          const tagsNorm = (item.tags || []).map(normalizeText)
+    try {
+      const modal = document.getElementById("search-palette-modal")
+      const currentLang = modal?.getAttribute("data-lang") || "es"
+      const isEn = currentLang === "en"
+      const searchRes = await pf.search(query)
+      if (!searchRes || !searchRes.results) return []
 
-          // Match exacto en nombre
-          if (nameNorm === q) score += 120
-          else if (nameNorm.startsWith(q)) score += 70
-          else if (nameNorm.includes(q)) score += 45
+      const topRaw = await Promise.all(searchRes.results.slice(0, 16).map((r: any) => r.data()))
 
-          // Match en tags
-          if (tagsNorm.includes(q)) score += 55
-          else if (tagsNorm.some((t: string) => t.includes(q) || q.includes(t))) score += 35
+      // Filtrar páginas según el idioma de la URL
+      const filtered = topRaw.filter((item: any) => {
+        if (isEn) {
+          return item.url.startsWith("/en/")
+        } else {
+          return !item.url.startsWith("/en/")
+        }
+      })
 
-          // Match en ecosistema
-          if (ecoNorm.includes(q) || ecoLabelNorm.includes(q)) score += 40
+      return filtered.map((item: any) => {
+        const rawTitle = item.meta?.title || item.url
+        const cleanTitle = rawTitle.split(/\s+[|—–-]\s+0x/i)[0].trim()
 
-          // Match en categoría
-          if (catNorm.includes(q) || catLabelNorm.includes(q)) score += 25
+        let category = "general"
+        let categoryLabel = isEn ? "Page" : "Página"
+        let iconName = "lucide:link"
+        let icon = item.meta?.image || undefined
 
-          // Match en descripción
-          if (descNorm.includes(q)) score += 15
-
-          return { ...item, score }
-        })
-        .filter((item) => item.score > 0)
-        .sort((a, b) => b.score - a.score)
-
-      return scored
-    }
-
-    // Agrupación balanceada y anti-saturación
-    function groupResults(items: any[], query: string) {
-      const q = normalizeText(query)
-      const groups: {
-        id: string
-        iconName: string
-        title: string
-        items: any[]
-        canClear?: boolean
-      }[] = []
-
-      // Si el input está vacío, incluir Búsquedas Recientes arriba (si existen)
-      if (!q) {
-        const recents = getRecentSearches()
-        if (recents.length > 0) {
-          groups.push({
-            id: "recents",
-            iconName: "lucide:clock",
-            title: ui.recentSearches || "Búsquedas recientes",
-            items: recents,
-            canClear: true,
-          })
+        const u = item.url.toLowerCase()
+        if (u.includes("/blog/")) {
+          category = "blog"
+          categoryLabel = isEn ? "Education" : "Artículos"
+          iconName = "lucide:book-open"
+        } else if (u.includes("/operaciones/") || u.includes("/operations/")) {
+          category = "guias"
+          categoryLabel = isEn ? "Guides" : "Guías"
+          iconName = "lucide:compass"
+        } else if (u.includes("/activos/") || u.includes("/watchlist/")) {
+          category = "activos"
+          categoryLabel = isEn ? "Assets" : "Activos"
+          iconName = "lucide:trending-up"
+        } else if (u.includes("/sfl-") || u.includes("/sunflowerland") || u.includes("/fishing")) {
+          category = "sfl"
+          categoryLabel = "Sunflower Land"
+          icon = "/img/cripto/sunflowerland.webp"
+        } else if (u.includes("/yakkamon")) {
+          category = "games"
+          categoryLabel = "Yakkamon"
+          icon = "/img/cripto/yakkamon.webp"
+        } else if (u.includes("/faucets")) {
+          category = "directorio"
+          categoryLabel = "Faucets"
+          iconName = "lucide:droplet"
+        } else if (
+          u.includes("/intrinseco") ||
+          u.includes("/intrinsic") ||
+          u.includes("/riskfolio") ||
+          u.includes("/herramientas") ||
+          u.includes("/tools")
+        ) {
+          category = "herramientas"
+          categoryLabel = isEn ? "Tools" : "Herramientas"
+          iconName = "lucide:calculator"
+        } else if (
+          u.includes("/directorio") ||
+          u.includes("/directory") ||
+          u.includes("/lista-web3") ||
+          u.includes("/infravalorados")
+        ) {
+          category = "directorio"
+          categoryLabel = isEn ? "Directory" : "Directorio"
+          iconName = "lucide:folder"
         }
 
-        // Showcase equilibrado con HERRAMIENTAS PRIMERO:
-        const showcaseMap: Record<
-          string,
-          { id: string; iconName: string; title: string; items: any[] }
-        > = {
-          herramientas: {
-            id: "herramientas",
-            iconName: "lucide:zap",
-            title: ui.groupTools || "Herramientas",
-            items: [],
-          },
-          activos: {
-            id: "activos",
-            iconName: "lucide:trending-up",
-            title: ui.groupAssets || "Activos y Tesis",
-            items: [],
-          },
-          guias: {
-            id: "guias",
-            iconName: "lucide:compass",
-            title: ui.groupOps || "Guías y Operaciones",
-            items: [],
-          },
-          blog: {
-            id: "blog",
-            iconName: "lucide:book-open",
-            title: ui.groupBlog || "Artículos y Educación",
-            items: [],
-          },
-          directorio: {
-            id: "directorio",
-            iconName: "lucide:folder",
-            title: ui.groupDirectory || "Directorio y Recursos",
-            items: [],
-          },
+        return {
+          id: item.url,
+          name: cleanTitle,
+          description: item.excerpt || item.meta?.description || "",
+          url: item.url,
+          category,
+          categoryLabel,
+          icon,
+          iconName,
         }
+      })
+    } catch (e) {
+      return null
+    }
+  }
 
-        items.forEach((item) => {
-          if (showcaseMap[item.category]) {
-            showcaseMap[item.category].items.push(item)
+  // ─── FALLBACK: Búsqueda local por tokens (instantánea) ───
+  function performFallbackSearch(query: string) {
+    const q = normalizeText(query)
+    if (!q) {
+      return catalog.filter((item) => item.featured)
+    }
+
+    const tokens = q.split(/\s+/).filter(Boolean)
+
+    const scored = catalog
+      .map((item) => {
+        let score = 0
+        const nameNorm = normalizeText(item.name)
+        const descNorm = normalizeText(item.description)
+        const ecoNorm = normalizeText(item.ecosystem)
+        const ecoLabelNorm = normalizeText(item.ecosystemLabel)
+        const catNorm = normalizeText(item.category)
+        const catLabelNorm = normalizeText(item.categoryLabel)
+        const tagsNorm = (item.tags || []).map(normalizeText)
+
+        if (nameNorm === q) score += 120
+        else if (nameNorm.startsWith(q)) score += 70
+        else if (nameNorm.includes(q)) score += 45
+
+        let matchedTokens = 0
+        tokens.forEach((token) => {
+          if (nameNorm.includes(token)) {
+            score += 25
+            matchedTokens++
+          } else if (tagsNorm.some((t: string) => t.includes(token))) {
+            score += 20
+            matchedTokens++
+          } else if (ecoNorm.includes(token) || ecoLabelNorm.includes(token)) {
+            score += 15
+            matchedTokens++
+          } else if (catNorm.includes(token) || catLabelNorm.includes(token)) {
+            score += 10
+            matchedTokens++
+          } else if (descNorm.includes(token)) {
+            score += 8
+            matchedTokens++
           }
         })
 
-        Object.values(showcaseMap).forEach((g) => {
-          if (g.items.length > 0) {
-            groups.push(g)
-          }
+        if (tokens.length > 1 && matchedTokens === tokens.length) {
+          score += 40
+        }
+
+        return { ...item, score }
+      })
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+
+    return scored
+  }
+
+  // Agrupación balanceada y anti-saturación
+  function groupResults(items: any[], query: string) {
+    const q = normalizeText(query)
+    const groups: {
+      id: string
+      iconName: string
+      title: string
+      items: any[]
+      canClear?: boolean
+    }[] = []
+
+    if (!q) {
+      const recents = getRecentSearches()
+      if (recents.length > 0) {
+        groups.push({
+          id: "recents",
+          iconName: "lucide:clock",
+          title: ui.recentSearches || "Búsquedas recientes",
+          items: recents,
+          canClear: true,
         })
-
-        return groups
       }
 
-      // Caso 1: Búsqueda explícita de "JUEGOS" / "GAMING"
-      const isGamingSearch = ["juego", "juegos", "game", "games", "gaming"].some((k) =>
-        q.includes(k),
-      )
-      if (isGamingSearch) {
-        const gamingItems = items.filter((item) =>
-          (item.tags || []).some((t: string) =>
-            ["juego", "juegos", "game", "gaming"].includes(normalizeText(t)),
-          ),
-        )
-        const otherItems = items.filter((item) => !gamingItems.includes(item))
-
-        if (gamingItems.length > 0) {
-          groups.push({
-            id: "games",
-            iconName: "lucide:gamepad-2",
-            title: ui.groupGames || "Juegos & Gaming Web3",
-            items: gamingItems,
-          })
-        }
-        if (otherItems.length > 0) {
-          groups.push({
-            id: "general",
-            iconName: "lucide:search",
-            title: ui.groupGeneral || "Resultados Relacionados",
-            items: otherItems,
-          })
-        }
-        return groups
+      const showcaseMap: Record<
+        string,
+        { id: string; iconName: string; title: string; items: any[] }
+      > = {
+        herramientas: {
+          id: "herramientas",
+          iconName: "lucide:zap",
+          title: ui.groupTools || "Herramientas",
+          items: [],
+        },
+        sfl: {
+          id: "sfl",
+          iconName: "lucide:sprout",
+          title: ui.groupSfl || "Sunflower Land",
+          items: [],
+        },
+        activos: {
+          id: "activos",
+          iconName: "lucide:trending-up",
+          title: ui.groupAssets || "Activos y Tesis",
+          items: [],
+        },
+        guias: {
+          id: "guias",
+          iconName: "lucide:compass",
+          title: ui.groupOps || "Guías y Operaciones",
+          items: [],
+        },
+        blog: {
+          id: "blog",
+          iconName: "lucide:book-open",
+          title: ui.groupBlog || "Artículos y Educación",
+          items: [],
+        },
+        directorio: {
+          id: "directorio",
+          iconName: "lucide:folder",
+          title: ui.groupDirectory || "Directorio y Recursos",
+          items: [],
+        },
       }
-
-      // Caso 2: Búsqueda explícita de un ecosistema específico (ej: Sunflower Land)
-      const isSflSearch = ["sunflower", "sfl"].some((k) => q.includes(k))
-      if (isSflSearch) {
-        const sflItems = items.filter((i) => i.ecosystem === "sunflowerland")
-        const otherItems = items.filter((i) => i.ecosystem !== "sunflowerland")
-
-        if (sflItems.length > 0) {
-          groups.push({
-            id: "sfl",
-            iconName: "lucide:sprout",
-            title: ui.groupSfl || "Ecosistema Sunflower Land",
-            items: sflItems,
-          })
-        }
-        if (otherItems.length > 0) {
-          groups.push({
-            id: "general",
-            iconName: "lucide:search",
-            title: ui.groupGeneral || "Otros Resultados",
-            items: otherItems,
-          })
-        }
-        return groups
-      }
-
-      // Caso 3: Búsqueda general equilibrada con HERRAMIENTAS PRIMERO (anti-saturación de un mismo proyecto)
-      const catMap: Record<string, { id: string; iconName: string; title: string; items: any[] }> =
-        {
-          herramientas: {
-            id: "herramientas",
-            iconName: "lucide:zap",
-            title: ui.groupTools || "Herramientas",
-            items: [],
-          },
-          activos: {
-            id: "activos",
-            iconName: "lucide:trending-up",
-            title: ui.groupAssets || "Activos y Tesis",
-            items: [],
-          },
-          guias: {
-            id: "guias",
-            iconName: "lucide:compass",
-            title: ui.groupOps || "Guías y Operaciones",
-            items: [],
-          },
-          blog: {
-            id: "blog",
-            iconName: "lucide:book-open",
-            title: ui.groupBlog || "Artículos y Educación",
-            items: [],
-          },
-          directorio: {
-            id: "directorio",
-            iconName: "lucide:folder",
-            title: ui.groupDirectory || "Directorio y Recursos",
-            items: [],
-          },
-        }
-
-      // Agrupamos limitando la saturación de un mismo ecosistema a un máximo equilibrado
-      const ecoCountPerCategory: Record<string, number> = {}
 
       items.forEach((item) => {
-        const catKey = item.category || "directorio"
-        const target = catMap[catKey] || catMap.directorio
-        const countKey = `${catKey}_${item.ecosystem}`
-        ecoCountPerCategory[countKey] = (ecoCountPerCategory[countKey] || 0) + 1
-
-        // Si la búsqueda no fue específicamente por ese ecosistema, limitamos a max 3 por categoría
-        if (ecoCountPerCategory[countKey] <= 3) {
-          target.items.push(item)
+        const cat =
+          item.ecosystem === "sunflowerland" || item.category === "sfl"
+            ? "sfl"
+            : item.category || "directorio"
+        if (showcaseMap[cat]) {
+          showcaseMap[cat].items.push(item)
+        } else if (showcaseMap.directorio) {
+          showcaseMap.directorio.items.push(item)
         }
       })
 
-      Object.values(catMap).forEach((g) => {
+      Object.values(showcaseMap).forEach((g) => {
         if (g.items.length > 0) {
           groups.push(g)
         }
@@ -614,148 +615,267 @@ const uiStrings = {
       return groups
     }
 
-    function renderResults(query: string) {
-      const items = performSearch(query)
-      activeItemIndex = -1
-      visibleItems = []
+    const catMap: Record<string, { id: string; iconName: string; title: string; items: any[] }> = {
+      herramientas: {
+        id: "herramientas",
+        iconName: "lucide:zap",
+        title: ui.groupTools || "Herramientas",
+        items: [],
+      },
+      sfl: {
+        id: "sfl",
+        iconName: "lucide:sprout",
+        title: ui.groupSfl || "Sunflower Land",
+        items: [],
+      },
+      games: {
+        id: "games",
+        iconName: "lucide:gamepad-2",
+        title: ui.groupGames || "Juegos Web3",
+        items: [],
+      },
+      activos: {
+        id: "activos",
+        iconName: "lucide:trending-up",
+        title: ui.groupAssets || "Activos",
+        items: [],
+      },
+      guias: {
+        id: "guias",
+        iconName: "lucide:compass",
+        title: ui.groupOps || "Guías y Operaciones",
+        items: [],
+      },
+      blog: {
+        id: "blog",
+        iconName: "lucide:book-open",
+        title: ui.groupBlog || "Artículos",
+        items: [],
+      },
+      directorio: {
+        id: "directorio",
+        iconName: "lucide:folder",
+        title: ui.groupDirectory || "Directorio",
+        items: [],
+      },
+      general: {
+        id: "general",
+        iconName: "lucide:search",
+        title: ui.groupGeneral || "Resultados",
+        items: [],
+      },
+    }
 
-      if (items.length === 0) {
-        resultsContainer.innerHTML = `
-          <div class="py-12 px-4 text-center">
-            <svg class="w-10 h-10 mx-auto text-terminal-muted/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p class="text-sm text-terminal-secondary">${ui.noResults || "No se encontraron resultados para"} "<span class="text-white font-medium">${query}</span>"</p>
-            <p class="text-xs text-terminal-muted mt-1.5">${ui.noResultsTip || "Prueba con palabras como 'btc', 'perpetuos', 'juegos', 'riskfolio' o 'faucets'."}</p>
-          </div>
-        `
-        return
+    items.forEach((item) => {
+      const catKey = item.category || "general"
+      const target = catMap[catKey] || catMap.general
+      target.items.push(item)
+    })
+
+    Object.values(catMap).forEach((g) => {
+      if (g.items.length > 0) {
+        groups.push(g)
       }
+    })
 
-      const groups = groupResults(items, query)
+    return groups
+  }
 
-      let html = ""
-      let globalIndex = 0
+  async function renderResults(query: string) {
+    const resultsContainer = document.getElementById("search-palette-results")
+    if (!resultsContainer) return
 
-      groups.forEach((group) => {
-        const clearButtonHtml = group.canClear
-          ? `<button id="clear-recents-btn" type="button" class="text-[10px] font-mono text-terminal-muted hover:text-red-400 transition-colors cursor-pointer px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/10">${ui.clearHistory || "Limpiar"}</button>`
-          : `<span class="text-[10px] font-mono text-terminal-muted">${group.items.length} ${ui.itemsLabel || "items"}</span>`
+    ensureDataLoaded()
+    activeItemIndex = -1
+    visibleItems = []
 
-        html += `
-          <div class="pt-3 first:pt-0">
-            <div class="px-2 py-1.5 mb-1.5 flex items-center justify-between">
-              <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5">
-                <span class="w-3.5 h-3.5 inline-flex items-center justify-center shrink-0 text-emerald-400">
-                  ${iconTemplates[group.iconName] || ""}
-                </span>
-                <span>${group.title}</span>
+    let items: any[] | null = null
+
+    if (!query.trim()) {
+      items = catalog.filter((item) => item.featured)
+    } else {
+      try {
+        items = await searchWithPagefind(query)
+      } catch {
+        items = null
+      }
+      if (items === null || items.length === 0) {
+        items = performFallbackSearch(query)
+      }
+    }
+
+    if (!items || items.length === 0) {
+      resultsContainer.innerHTML = `
+        <div class="py-12 px-4 text-center">
+          <svg class="w-10 h-10 mx-auto text-terminal-muted/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-sm text-terminal-secondary">${ui.noResults || "No se encontraron resultados para"} "<span class="text-white font-medium">${query}</span>"</p>
+          <p class="text-xs text-terminal-muted mt-1.5">${ui.noResultsTip || "Prueba con palabras como 'animales', 'btc', 'perpetuos', 'riskfolio' o 'faucets'."}</p>
+        </div>
+      `
+      return
+    }
+
+    const groups = groupResults(items, query)
+
+    let html = ""
+    let globalIndex = 0
+
+    groups.forEach((group) => {
+      const clearButtonHtml = group.canClear
+        ? `<button id="clear-recents-btn" type="button" class="text-[10px] font-mono text-terminal-muted hover:text-red-400 transition-colors cursor-pointer px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/10">${ui.clearHistory || "Limpiar"}</button>`
+        : `<span class="text-[10px] font-mono text-terminal-muted">${group.items.length} ${ui.itemsLabel || "items"}</span>`
+
+      html += `
+        <div class="pt-3 first:pt-0">
+          <div class="px-2 py-1.5 mb-1.5 flex items-center justify-between">
+            <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 inline-flex items-center justify-center shrink-0 text-emerald-400">
+                ${iconTemplates[group.iconName] || iconTemplates["lucide:search"] || ""}
               </span>
-              ${clearButtonHtml}
-            </div>
-            <div class="space-y-1">
-        `
+              <span>${group.title}</span>
+            </span>
+            ${clearButtonHtml}
+          </div>
+          <div class="space-y-1">
+      `
 
-        group.items.forEach((item) => {
-          const itemIdx = globalIndex++
-          const iconMarkup = getIconMarkup(item)
-
-          html += `
-            <a
-              href="${item.url}"
-              data-index="${itemIdx}"
-              data-item-id="${item.id}"
-              class="search-result-item flex items-center justify-between p-2.5 rounded-xl text-terminal-secondary hover:text-white hover:bg-white/[0.05] border border-transparent hover:border-emerald-500/30 transition-all group cursor-pointer"
-            >
-              <div class="flex items-center gap-3 min-w-0 pr-3">
-                ${iconMarkup}
-                <div class="min-w-0">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-white group-hover:text-emerald-300 transition-colors truncate">${item.name}</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-terminal-muted border border-white/5 font-mono">${item.categoryLabel}</span>
-                  </div>
-                  <p class="text-xs text-terminal-muted truncate mt-0.5 group-hover:text-terminal-secondary transition-colors">${item.description}</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="text-[10px] font-mono text-terminal-muted/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                  ${ui.visit || "Visitar ↵"}
-                </span>
-              </div>
-            </a>
-          `
-        })
+      group.items.forEach((item) => {
+        const itemIdx = globalIndex++
+        const iconMarkup = getIconMarkup(item)
+        const safeName = (item.name || "").replace(/"/g, "&quot;")
+        const safeUrl = (item.url || "").replace(/"/g, "&quot;")
 
         html += `
+          <a
+            href="${safeUrl}"
+            data-index="${itemIdx}"
+            data-item-url="${safeUrl}"
+            data-item-name="${safeName}"
+            class="search-result-item flex items-center justify-between p-2.5 rounded-xl text-terminal-secondary hover:text-white hover:bg-white/[0.05] border border-transparent hover:border-emerald-500/30 transition-all group cursor-pointer"
+          >
+            <div class="flex items-center gap-3 min-w-0 pr-3">
+              ${iconMarkup}
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium text-white group-hover:text-emerald-300 transition-colors truncate">${safeName}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-terminal-muted border border-white/5 font-mono shrink-0">${item.categoryLabel || "Página"}</span>
+                </div>
+                <p class="text-xs text-terminal-muted truncate mt-0.5 group-hover:text-terminal-secondary transition-colors">${item.description || ""}</p>
+              </div>
             </div>
-          </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-terminal-muted/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                ${ui.visit || "Visitar ↵"}
+              </span>
+            </div>
+          </a>
         `
       })
 
-      resultsContainer.innerHTML = html
+      html += `
+          </div>
+        </div>
+      `
+    })
 
-      // Listener para botón "Limpiar historial"
-      const clearRecentsBtn = document.getElementById("clear-recents-btn")
-      clearRecentsBtn?.addEventListener("click", (e) => {
-        e.stopPropagation()
-        clearRecentSearches()
-      })
+    resultsContainer.innerHTML = html
 
-      // Guardar en recientes al hacer clic
-      resultsContainer.querySelectorAll(".search-result-item").forEach((el) => {
-        el.addEventListener("click", () => {
-          const itemId = el.getAttribute("data-item-id")
-          const clickedItem = catalog.find((c) => c.id === itemId)
-          if (clickedItem) {
-            saveRecentSearch(clickedItem)
-          }
-        })
-      })
+    // Colección de nodos para navegación con flechas
+    visibleItems = Array.from(resultsContainer.querySelectorAll(".search-result-item"))
 
-      // Colección de nodos para navegación con flechas
-      visibleItems = Array.from(resultsContainer.querySelectorAll(".search-result-item"))
-
-      // Por defecto seleccionar el primer elemento
-      if (visibleItems.length > 0) {
-        updateActiveIndex(0)
-      }
+    // Por defecto seleccionar el primer elemento
+    if (visibleItems.length > 0) {
+      updateActiveIndex(0)
     }
+  }
 
-    function updateActiveIndex(newIndex: number) {
-      if (visibleItems.length === 0) return
+  function updateActiveIndex(newIndex: number) {
+    if (visibleItems.length === 0) return
 
-      visibleItems.forEach((el) => {
-        el.classList.remove(
-          "bg-white/[0.08]",
-          "border-emerald-500/40",
-          "ring-1",
-          "ring-emerald-500/30",
-        )
-      })
+    visibleItems.forEach((el) => {
+      el.classList.remove(
+        "bg-white/[0.08]",
+        "border-emerald-500/40",
+        "ring-1",
+        "ring-emerald-500/30",
+      )
+    })
 
-      if (newIndex >= 0 && newIndex < visibleItems.length) {
-        activeItemIndex = newIndex
-        const activeEl = visibleItems[activeItemIndex]
-        activeEl.classList.add(
-          "bg-white/[0.08]",
-          "border-emerald-500/40",
-          "ring-1",
-          "ring-emerald-500/30",
-        )
-        activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" })
-      }
+    if (newIndex >= 0 && newIndex < visibleItems.length) {
+      activeItemIndex = newIndex
+      const activeEl = visibleItems[activeItemIndex]
+      activeEl.classList.add(
+        "bg-white/[0.08]",
+        "border-emerald-500/40",
+        "ring-1",
+        "ring-emerald-500/30",
+      )
+      activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" })
     }
+  }
 
-    // Input debounce para filtrado instantáneo
+  // ─── CONTROL DEL MODAL (Abierto / Cerrado) ───────────────────
+  function openModal() {
+    ensureDataLoaded()
+    const modal = document.getElementById("search-palette-modal")
+    const box = document.getElementById("search-palette-box")
+    const input = document.getElementById("search-palette-input") as HTMLInputElement | null
+    if (!modal || !box) return
+
+    modal.style.display = "flex"
+    modal.classList.remove("hidden")
+    document.body.style.overflow = "hidden"
+
+    requestAnimationFrame(() => {
+      box.classList.remove("scale-95", "opacity-0")
+      box.classList.add("scale-100", "opacity-100")
+      if (input) {
+        input.focus()
+      }
+    })
+
+    getPagefind()
+    try {
+      renderResults(input ? input.value : "")
+    } catch (e) {
+      console.warn("[Search] Error al renderizar:", e)
+    }
+  }
+
+  function closeModal() {
+    const modal = document.getElementById("search-palette-modal")
+    const box = document.getElementById("search-palette-box")
+    const input = document.getElementById("search-palette-input") as HTMLInputElement | null
+    if (!modal || !box) return
+
+    box.classList.remove("scale-100", "opacity-100")
+    box.classList.add("scale-95", "opacity-0")
+
+    setTimeout(() => {
+      modal.classList.add("hidden")
+      modal.style.display = "none"
+      document.body.style.overflow = ""
+      if (input) input.value = ""
+      activeItemIndex = -1
+    }, 150)
+  }
+
+  // Configurar listeners del input de búsqueda (se llama idempotentemente)
+  function attachInputListeners() {
+    const input = document.getElementById("search-palette-input") as HTMLInputElement | null
+    if (!input || input.getAttribute("data-search-ready") === "true") return
+    input.setAttribute("data-search-ready", "true")
+
     let timeout: ReturnType<typeof setTimeout>
     input.addEventListener("input", () => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         renderResults(input.value)
-      }, 50)
+      }, 60)
     })
 
-    // Navegación con teclado
     input.addEventListener("keydown", (e) => {
       if (e.key === "ArrowDown") {
         e.preventDefault()
@@ -769,10 +889,10 @@ const uiStrings = {
         e.preventDefault()
         if (activeItemIndex >= 0 && visibleItems[activeItemIndex]) {
           const activeEl = visibleItems[activeItemIndex]
-          const itemId = activeEl.getAttribute("data-item-id")
-          const selectedItem = catalog.find((c) => c.id === itemId)
-          if (selectedItem) {
-            saveRecentSearch(selectedItem)
+          const itemUrl = activeEl.getAttribute("data-item-url")
+          const itemName = activeEl.getAttribute("data-item-name")
+          if (itemUrl && itemName) {
+            saveRecentSearch({ url: itemUrl, name: itemName })
           }
           const link = activeEl as HTMLAnchorElement
           window.location.href = link.href
@@ -781,20 +901,79 @@ const uiStrings = {
         closeModal()
       }
     })
+  }
 
-    // Click en los chips de sugerencia rápida
-    quickChips.forEach((chip) => {
-      chip.addEventListener("click", (e) => {
-        const target = e.currentTarget as HTMLElement
-        const query = target.dataset.query || ""
-        input.value = query
-        renderResults(query)
-        input.focus()
-      })
+  // ─── DELEGACIÓN GLOBAL DE EVENTOS (NUNCA SE PIERDE) ──────────
+  function setupGlobalListeners() {
+    if ((window as any).__0xSearchGlobalListenersAttached) return
+    ;(window as any).__0xSearchGlobalListenersAttached = true
+    ;(window as any).open0xSearch = openModal
+    ;(window as any).close0xSearch = closeModal
+
+    // Clic global con delegación
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement | null
+      if (!target) return
+
+      // 1. Clic en trigger para abrir (desktop, móvil o cualquier elemento con data-open-search)
+      if (target.closest("#nav-search-trigger, #nav-mobile-search-trigger, [data-open-search]")) {
+        e.preventDefault()
+        e.stopPropagation()
+        openModal()
+        return
+      }
+
+      // 2. Clic en botón cerrar ESC / ✕
+      if (target.closest("#search-palette-close")) {
+        e.preventDefault()
+        closeModal()
+        return
+      }
+
+      // 3. Clic directo en el backdrop oscuro exterior
+      const modal = document.getElementById("search-palette-modal")
+      if (modal && target === modal) {
+        closeModal()
+        return
+      }
+
+      // 4. Botón "Limpiar historial"
+      if (target.closest("#clear-recents-btn")) {
+        e.stopPropagation()
+        clearRecentSearches()
+        return
+      }
+
+      // 5. Clic en chip de sugerencia rápida
+      const chip = target.closest<HTMLElement>(".quick-chip")
+      if (chip) {
+        const query = chip.dataset.query || ""
+        const input = document.getElementById("search-palette-input") as HTMLInputElement | null
+        if (input) {
+          input.value = query
+          renderResults(query)
+          input.focus()
+        }
+        return
+      }
+
+      // 6. Guardar en recientes al hacer clic en un resultado
+      const resultItem = target.closest<HTMLElement>(".search-result-item")
+      if (resultItem) {
+        const itemUrl = resultItem.getAttribute("data-item-url")
+        const itemName = resultItem.getAttribute("data-item-name")
+        if (itemUrl && itemName) {
+          saveRecentSearch({ url: itemUrl, name: itemName })
+        }
+      }
     })
 
-    // Atajos globales (/ y Cmd+K / Ctrl+K)
+    // Atajos globales de teclado (/ y Cmd+K / Ctrl+K y Escape)
     document.addEventListener("keydown", (e) => {
+      const modal = document.getElementById("search-palette-modal")
+      const isModalOpen =
+        modal && modal.style.display !== "none" && !modal.classList.contains("hidden")
+
       const activeEl = document.activeElement as HTMLElement
       const isInputActive =
         activeEl &&
@@ -802,36 +981,45 @@ const uiStrings = {
           activeEl.tagName === "TEXTAREA" ||
           activeEl.isContentEditable)
 
-      if (e.key === "/" && !isInputActive) {
+      // "/" abre el modal si no estamos escribiendo en un input
+      if (e.key === "/" && !isInputActive && !isModalOpen) {
         e.preventDefault()
         openModal()
-      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault()
-        if (modal.classList.contains("hidden")) {
-          openModal()
-        } else {
-          closeModal()
-        }
-      } else if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-        closeModal()
+        return
       }
-    })
 
-    triggerDesktop?.addEventListener("click", openModal)
-    triggerMobile?.addEventListener("click", openModal)
-    closeBtn?.addEventListener("click", closeModal)
+      // Cmd+K / Ctrl+K hace toggle
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault()
+        if (isModalOpen) {
+          closeModal()
+        } else {
+          openModal()
+        }
+        return
+      }
 
-    // Cerrar al hacer clic en el backdrop
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
+      // ESC cierra si el modal está abierto
+      if (e.key === "Escape" && isModalOpen) {
         closeModal()
+        return
       }
     })
   }
 
-  // Inicialización compatible con Astro View Transitions
-  initNavbarSearch()
-  document.addEventListener("astro:page-load", initNavbarSearch)
+  // Inicialización segura para cualquier ciclo de vida (SPA, ViewTransitions o SSR)
+  function init() {
+    setupGlobalListeners()
+    attachInputListeners()
+    ensureDataLoaded()
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init)
+  } else {
+    init()
+  }
+  document.addEventListener("astro:page-load", init)
 </script>
 
 <style>
@@ -868,5 +1056,13 @@ const uiStrings = {
     display: none;
     width: 0;
     height: 0;
+  }
+
+  /* Resaltado de texto coincidente generado por Pagefind */
+  :global(#search-palette-results mark) {
+    background-color: rgba(16, 185, 129, 0.25);
+    color: #34d399;
+    border-radius: 2px;
+    padding: 0 2px;
   }
 </style>

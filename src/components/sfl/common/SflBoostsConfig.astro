@@ -56,6 +56,8 @@ if (domain === "cooking") {
     ...(allSkillsData.Cooking || {}),
     ...(allSkillsData.Fishing?.["Fishy Feast"] ? { "Fishy Feast": allSkillsData.Fishing["Fishy Feast"] } : {}),
     ...(allSkillsData.Aging?.["Speedy Aging"] ? { "Speedy Aging": allSkillsData.Aging["Speedy Aging"] } : {}),
+    ...(allSkillsData.Aging?.["Fish Smoking"] ? { "Fish Smoking": allSkillsData.Aging["Fish Smoking"] } : {}),
+    ...(allSkillsData.Aging?.["Ager"] ? { "Ager": allSkillsData.Aging["Ager"] } : {}),
   }
 } else if (domain === "cave") {
   rawBuffs = getCaveBuffs()

@@ -65,6 +65,12 @@ if (sflSkillsEntry.data.Fishing && sflSkillsEntry.data.Fishing["Fishy Feast"]) {
 if (sflSkillsEntry.data.Aging && sflSkillsEntry.data.Aging["Speedy Aging"]) {
   sflSkills["Speedy Aging"] = sflSkillsEntry.data.Aging["Speedy Aging"]
 }
+if (sflSkillsEntry.data.Aging && sflSkillsEntry.data.Aging["Fish Smoking"]) {
+  sflSkills["Fish Smoking"] = sflSkillsEntry.data.Aging["Fish Smoking"]
+}
+if (sflSkillsEntry.data.Aging && sflSkillsEntry.data.Aging["Ager"]) {
+  sflSkills["Ager"] = sflSkillsEntry.data.Aging["Ager"]
+}
 const sflOthers = sflBuffsRaw.others || {}
 
 import levelExperience from "../../content/data/sfl/level_experience.json"
@@ -1609,6 +1615,11 @@ const formatAstroDescription = (skill) => {
       return isAgingBuilding && hasTime;
     }
 
+    // 11b. Ager y Fish Smoking (Aging Shed)
+    if (name === "Ager" || name === "Fish Smoking") {
+      return isAgingBuilding;
+    }
+
     // 12. Double Nom (Cocina tradicional, no Aging Shed ni Fish crudo)
     if (name === "Double Nom") {
       return !isAgingBuilding && !isFishBuilding;
@@ -1706,6 +1717,8 @@ const formatAstroDescription = (skill) => {
     if (name === "Nom Nom") return "+10% XP";
     if (name === "Juicy Boost") return "+10% XP";
     if (name === "Double Nom") return "+100% XP (x2)";
+    if (name === "Ager") return "+100% XP (x2)";
+    if (name === "Fish Smoking") return "+100% Prime";
     if (name === "Fiery Jackpot") return "+20% chance x2";
     if (name === "Fishy Feast") return "+20% XP";
     if (name === "Buzzworthy Treats") return "+10% XP";
@@ -1781,7 +1794,14 @@ const formatAstroDescription = (skill) => {
   };
 
   const getPrimeChance = () => {
-    let primeChance = 0.10;
+    let basePrimeChance = 0.10;
+    if (activeSkills && activeSkills["Fish Smoking"]) {
+      const rank = activeSkills["Fish Smoking"];
+      const skill = sflSkills["Fish Smoking"];
+      const mult = skill?.mathematics_1?.calc_by_rank?.[`rank_${rank}`] || (rank === 1 ? 2 : rank === 2 ? 3 : 4);
+      basePrimeChance *= mult;
+    }
+    let primeChance = basePrimeChance;
     activeBuffs.forEach(id => {
       const buff = sflBuffs[id];
       if (buff) {
@@ -1878,6 +1898,11 @@ const formatAstroDescription = (skill) => {
         // Double Nom (+1 food = 2x XP essentially) - Solo para cocina, NO para Aging Shed ni Fish crudo
         if (skillName === "Double Nom" && item.building !== "Aging Shed" && item.building !== "Fish") {
           boostedExp *= (1 + math1);
+        }
+        // Ager (+1 aged fish = 2x XP essentially) - Solo para Aging Shed
+        if (skillName === "Ager" && item.building === "Aging Shed") {
+          const agerMult = skill.mathematics_1?.calc_by_rank?.[`rank_${rank}`] || 2;
+          boostedExp *= agerMult;
         }
         // Fiery Jackpot (+20% chance of +1 food in Fire Pit)
         if (skillName === "Fiery Jackpot" && item.building === "Fire Pit") {
@@ -2218,7 +2243,7 @@ const formatAstroDescription = (skill) => {
       }
     }
     
-    // Skills Logic for Cost (Debuffs) - Solo para cocina, NO para Aging Shed ni Fish crudo
+    // Skills Logic for Cost (Debuffs) - Cocina (Double Nom, Instant Gratification) y Aging Shed (Ager)
     let costMultiplier = 1;
     if (isTopLevel && !isAgingShed && !isFish) {
       activeSkills && Object.entries(activeSkills).forEach(([skillName, rank]) => {
@@ -2235,6 +2260,13 @@ const formatAstroDescription = (skill) => {
           costMultiplier *= 2; 
         }
       });
+    } else if (isTopLevel && isAgingShed) {
+      if (activeSkills && activeSkills["Ager"]) {
+        const rank = activeSkills["Ager"];
+        const skill = sflSkills["Ager"];
+        const agerMult = skill?.mathematics_1?.calc_by_rank?.[`rank_${rank}`] || 2;
+        costMultiplier *= agerMult;
+      }
     }
     
     return { total: total * costMultiplier, missing, baseTotal: total }
@@ -2247,6 +2279,13 @@ const formatAstroDescription = (skill) => {
       const rank = activeSkills["Double Nom"];
       const math1 = sflSkills["Double Nom"]?.mathematics_1?.calc_by_rank[`rank_${rank}`] || 0;
       doubleNomMultiplier = 1 + math1;
+    }
+
+    let agerMultiplier = 1;
+    if (activeSkills && activeSkills["Ager"]) {
+      const rank = activeSkills["Ager"];
+      const math1 = sflSkills["Ager"]?.mathematics_1?.calc_by_rank[`rank_${rank}`] || 2;
+      agerMultiplier = math1;
     }
 
     const term = searchTerm.toLowerCase();
@@ -2333,8 +2372,8 @@ const formatAstroDescription = (skill) => {
       const isAging = item.building === "Aging Shed" || item.name.startsWith("Aged ");
       const isRawFish = item.building === "Fish";
       const isCookingDish = !isAging && !isRawFish;
-      const effectiveDoubleNom = isCookingDish ? doubleNomMultiplier : 1;
-      const displayName = effectiveDoubleNom > 1 ? `${item.name} x${effectiveDoubleNom}` : item.name;
+      const effectiveBatchMultiplier = isAging ? agerMultiplier : (isCookingDish ? doubleNomMultiplier : 1);
+      const displayName = effectiveBatchMultiplier > 1 ? `${item.name} x${effectiveBatchMultiplier}` : item.name;
       const dishImg = item.image || `/img/sunflowerland/food/${item.name}.png`;
       const rawFishName = isAging ? item.name.replace(/^Aged\s+/i, "") : null;
       const rawFishImg = isAging ? (item.image || `/img/sunflowerland/fish/${rawFishName}.png`) : null;
@@ -2454,7 +2493,7 @@ const formatAstroDescription = (skill) => {
 
       const ingredientsHtml = effectiveIngredients
         .map((ing) => {
-          const totalAmount = ing.amount * effectiveDoubleNom;
+          const totalAmount = ing.amount * effectiveBatchMultiplier;
           const priceInfo = getIngredientPriceInfo(ing.name, totalAmount);
           const imgSrc = getIngredientImg(ing);
           const safeName = ing.name.replace(/'/g, "\\'");
@@ -3709,17 +3748,20 @@ const formatAstroDescription = (skill) => {
       console.warn("Failed to load sfl_user_game_state_v1 in loadState", e);
     }
 
+    const hasGlobal = Boolean(localStorage.getItem("sfl_user_game_state_v1"));
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
       try {
         const state = JSON.parse(cached);
-        if (state.activeBuffs && activeBuffs.size === 0) {
-          state.activeBuffs.forEach(buffId => {
-            activeBuffs.add(String(buffId));
-          });
-        }
-        if (state.activeSkills && Object.keys(activeSkills).length === 0) {
-          activeSkills = { ...state.activeSkills };
+        if (!hasGlobal) {
+          if (state.activeBuffs && activeBuffs.size === 0) {
+            state.activeBuffs.forEach(buffId => {
+              activeBuffs.add(String(buffId));
+            });
+          }
+          if (state.activeSkills && Object.keys(activeSkills).length === 0) {
+            activeSkills = { ...state.activeSkills };
+          }
         }
 
         // Marcar checkboxes y clases activas para los buffs cargados
@@ -3829,11 +3871,25 @@ const formatAstroDescription = (skill) => {
       else resetCoinsBtn.classList.add("hidden");
     }
 
-    // 2. Rod
-    const stoneP = window.sflStonePrice || 0;
-    const woodP = window.sflWoodPrice || 0;
-    const rodCoinsInFlower = 20 / effectiveCoins;
-    const autoRodCost = (1 * stoneP) + (3 * woodP) + rodCoinsInFlower;
+    // 2. Rod (Resuelto desde el motor central SflPrices, respetando buffs como Ancient Rod y Reel Deal)
+    let autoRodCost = 0;
+    if (window.SflPrices && typeof window.SflPrices.resolveCost === "function") {
+      try {
+        const rodRes = window.SflPrices.resolveCost("Rod", {
+          coinsPerFlower: effectiveCoins,
+          flowerPriceUsd: window.sflFlowerPrice || 0.0854,
+          resolveBasePrice: (n) => priceDict[n] || (window.SflMarket ? window.SflMarket.getItemPrice(n) : 0),
+        });
+        if (rodRes) {
+          autoRodCost = rodRes.craftCostFlower;
+        }
+      } catch (e) {}
+    } else {
+      const stoneP = window.sflStonePrice || 0;
+      const woodP = window.sflWoodPrice || 0;
+      const rodCoinsInFlower = effectiveCoins > 0 ? 20 / effectiveCoins : 0;
+      autoRodCost = (1 * stoneP) + (3 * woodP) + rodCoinsInFlower;
+    }
     window.sflAutoRodCost = autoRodCost;
 
     const isCustomRod = window.sflCustomRodCost !== null && window.sflCustomRodCost !== undefined && window.sflCustomRodCost >= 0;
@@ -3887,7 +3943,11 @@ const formatAstroDescription = (skill) => {
     const getAutoFishMarketCost = (name, fallbackFactor) => {
       if (window.SflPrices && typeof window.SflPrices.resolveCost === "function") {
         try {
-          const res = window.SflPrices.resolveCost(name);
+          const res = window.SflPrices.resolveCost(name, {
+            coinsPerFlower: effectiveCoins,
+            flowerPriceUsd: window.sflFlowerPrice || 0.0854,
+            resolveBasePrice: (n) => priceDict[n] || (window.SflMarket ? window.SflMarket.getItemPrice(n) : 0),
+          });
           if (res) {
             if (res.isCraftable && res.craftCostFlower > 0) return res.craftCostFlower;
             if (res.marketPriceFlower > 0) return res.marketPriceFlower;
@@ -3896,7 +3956,7 @@ const formatAstroDescription = (skill) => {
       }
       if (window.SflPrices && typeof window.SflPrices.getUnitCost === "function") {
         try {
-          const u = window.SflPrices.getUnitCost(name);
+          const u = window.SflPrices.getUnitCost(name, window.sflFlowerPrice || 0.0854);
           if (u && u.flower > 0) return u.flower;
         } catch (e) {}
       }
@@ -4037,7 +4097,10 @@ const formatAstroDescription = (skill) => {
       });
     }
 
-    // Siempre re-renderizar tabla y calculadora ante cambios de estado global (para reflejar yields y costos dinámicos de pesca/aging)
+    // Siempre re-renderizar precios clave, tabla y calculadora ante cambios de estado global (para reflejar yields y costos dinámicos de pesca/aging)
+    if (typeof window.updateKeyPrices === "function") {
+      window.updateKeyPrices();
+    }
     const searchInput = document.getElementById("searchInput");
     renderTable(searchInput ? searchInput.value : "");
     updateSkillCalculator();

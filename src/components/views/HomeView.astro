@@ -134,17 +134,10 @@ const faqItems = [
 ]
 ---
 
-<main class="max-w-6xl mx-auto px-6 pt-6 md:pt-10 pb-0">
+<main class="max-w-6xl mx-auto px-6 pt-4 md:pt-8 pb-0">
   <!-- ─── HERO ─── -->
   <HeroSection
-    phrases={[
-      t("home.hero.phrase1"),
-      t("home.hero.phrase2"),
-      t("home.hero.phrase3"),
-      t("home.hero.phrase4"),
-      t("home.hero.phrase5"),
-    ]}
-    ctaPrimario={{ texto: t("home.hero.cta.primary"), href: getLocalizedPath("/directorio", lang) }}
+    ctaPrimario={{ texto: t("home.hero.cta.primary"), href: getLocalizedPath("/herramientas", lang) }}
     ctaSecundario={{ texto: t("home.hero.cta.secondary"), href: getLocalizedPath("/operaciones", lang) }}
   />
 </main>

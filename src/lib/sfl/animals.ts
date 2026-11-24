@@ -38,6 +38,7 @@ export interface LevelBounties {
   tickets?: BountyCategoryDetail
   coins?: BountyCategoryDetail
   gems?: BountyCategoryDetail
+  bristles?: BountyCategoryDetail
 }
 
 export interface BuildingLevel {

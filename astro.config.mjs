@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite"
 import sitemap from "@astrojs/sitemap"
 import mdx from "@astrojs/mdx"
 import icon from "astro-icon"
+import pagefind from "astro-pagefind"
 import rehypeExternalLinks from "rehype-external-links"
 import { getAlternateUrl } from "./src/i18n/utils.ts"
 import { buildBlogSlugMap, buildGuiasSlugMap } from "./src/lib/sitemapHelpers.mjs"
@@ -123,6 +124,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     icon(),
+    pagefind(),
     sitemap({
       // Filtrar páginas que no deben estar en el sitemap:
       // - Páginas 404

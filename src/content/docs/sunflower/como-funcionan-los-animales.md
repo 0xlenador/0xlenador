@@ -26,9 +26,9 @@ Documentación técnica y operativa sobre la cría de animales, gestión de edif
 * **Animales permitidos:** Cerdos (`Pig`).
 * **¿Qué se hace dentro?:** Alimentar con mezclas de lodo/slops, relajar con música (`Music Box`), curar enfermedades, cosechar cerdas/pelos (*Bristles*), buscar trufas y canjear cerdos en los pedidos semanales.
 * **Mejoras y capacidades:**
-  * **Nivel 1:** Capacidad de 5 cerdos · Desbloquea hasta 5 bounties/semana (3 tickets, 2 coins).
-  * **Nivel 2:** Capacidad de 10 cerdos · Desbloquea hasta 10 bounties/semana (5 tickets, 5 coins).
-  * **Nivel 3:** Capacidad de 15 cerdos · Desbloquea hasta 15 bounties/semana (6 tickets, 7 coins, 2 gemas).
+  * **Nivel 1:** Capacidad de 3 cerdos · Desbloquea hasta 3 bounties/semana (2 coins, 1 cerdas).
+  * **Nivel 2:** Capacidad de 6 cerdos · Desbloquea hasta 7 bounties/semana (5 coins, 1 gemas, 1 cerdas).
+  * **Nivel 3:** Capacidad de 9 cerdos · Desbloquea hasta 11 bounties/semana (7 coins, 3 gemas, 1 cerdas).
 
 ---
 

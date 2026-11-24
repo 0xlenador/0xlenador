@@ -1244,7 +1244,8 @@ class DagCostSolver {
     }
 
     // 6. Cebo Canónico del Fish Market (Promedio general de las 4 estaciones Σ / 4)
-    if (recipe.category === "fish_market" && !recipe.id.includes("_")) {
+    const isSeasonalFishMarketVariant = /_(spring|summer|autumn|winter)$/.test(recipe.id)
+    if (recipe.category === "fish_market" && !isSeasonalFishMarketVariant) {
       const seasons = ["spring", "summer", "autumn", "winter"] as const
       const seasonalResolutions: CostResolution[] = []
       let sumSeasonalFlower = 0
@@ -1281,13 +1282,13 @@ class DagCostSolver {
       const res: CostResolution = {
         name: recipe.name,
         id: recipe.id,
-        kind: "craftable",
+        kind: "recipe",
         category: "fish_market",
         building: recipe.building,
         yield: 1,
         isCraftable: true,
-        craftCostFlower: avgCraftCostFlower,
-        craftCostUsd: avgCraftCostUsd,
+        craftCostFlower: Number(avgCraftCostFlower.toFixed(6)),
+        craftCostUsd: Number(avgCraftCostUsd.toFixed(4)),
         hasMarketPrice,
         marketPriceFlower,
         marketPriceUsd,
@@ -1296,9 +1297,11 @@ class DagCostSolver {
         ingredients: seasonalResolutions[0]?.ingredients || [],
         baseMaterials: Array.from(baseMaterialsMap.entries()).map(([k, v]) => ({
           name: k,
-          amount: v.amount,
-          totalFlower: v.totalFlower,
+          amount: Number(v.amount.toFixed(4)),
+          totalFlower: Number(v.totalFlower.toFixed(6)),
         })),
+        timeSeconds: recipe.timeSeconds,
+        image: recipe.image,
       }
       this.memo.set(memoKey, res)
       return res
@@ -1365,7 +1368,23 @@ class DagCostSolver {
 
     const totalBatchFlower = coinsFlower + totalBatchMaterialsFlower
     const unitCraftFlower = totalBatchFlower / recipeYield
-    const unitCraftUsd = unitCraftFlower * this.flowerPrice
+    let finalUnitCraftFlower = unitCraftFlower
+
+    // Si la receta es la Caña de Pescar (Rod), aplicar buffs de pesca (Ancient Rod, Reel Deal)
+    if (recipe.id === "rod" || recipe.name.toLowerCase() === "rod") {
+      const stoneUnitPrice =
+        ingredientsBreakdown.find((ib) => ib.name.toLowerCase() === "stone")?.unitPriceFlower || 0
+      const woodUnitPrice =
+        ingredientsBreakdown.find((ib) => ib.name.toLowerCase() === "wood")?.unitPriceFlower || 0
+      finalUnitCraftFlower = calculateEffectiveRodCost(
+        unitCraftFlower,
+        stoneUnitPrice,
+        woodUnitPrice,
+        this.userState
+      )
+    }
+
+    const unitCraftUsd = finalUnitCraftFlower * this.flowerPrice
 
     // Consolidación de materias primas base por unidad final
     const baseMaterials: BaseMaterialSummary[] = []
@@ -1379,8 +1398,8 @@ class DagCostSolver {
 
     // Análisis de arbitraje si existe en P2P
     let arbitrage: CostResolution["arbitrage"] = undefined
-    if (effectiveHasMarketPrice && unitCraftFlower > 0) {
-      const spreadFlower = effectiveMarketPriceFlower - unitCraftFlower
+    if (effectiveHasMarketPrice && finalUnitCraftFlower > 0) {
+      const spreadFlower = effectiveMarketPriceFlower - finalUnitCraftFlower
       const cheaperToCraft = spreadFlower > 0
       const savingsPercent =
         effectiveMarketPriceFlower > 0 ? (spreadFlower / effectiveMarketPriceFlower) * 100 : 0
@@ -1399,7 +1418,7 @@ class DagCostSolver {
       building: recipe.building,
       yield: recipeYield,
       isCraftable: true,
-      craftCostFlower: Number(unitCraftFlower.toFixed(6)),
+      craftCostFlower: Number(finalUnitCraftFlower.toFixed(6)),
       craftCostUsd: Number(unitCraftUsd.toFixed(4)),
       hasMarketPrice: effectiveHasMarketPrice,
       marketPriceFlower: Number(effectiveMarketPriceFlower.toFixed(6)),

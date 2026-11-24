@@ -1,12 +1,13 @@
 ---
 import { Image } from "astro:assets"
 import logoImg from "../../assets/img/logo.webp"
+import { getLangFromUrl, useTranslations, getLocalizedPath } from "../../i18n/utils"
 
 /**
- * HeroSection.astro — Header principal de la landing page.
- * Efecto typewriter/terminal: el H1 muestra "> " fijo al inicio,
- * seguido de texto que se escribe carácter por carácter, simulando
- * una consola ejecutando una tesis de inversión.
+ * HeroSection.astro
+ * Cabecera limpia y directa:
+ * - Columna Izquierda: Identidad sin humo, acciones directas a herramientas y bitácora.
+ * - Columna Derecha: Tarjeta minimalista premium estilo Apple con accesos a SFL, Yakkamon y Activos.
  */
 
 interface CtaButton {
@@ -15,157 +16,285 @@ interface CtaButton {
 }
 
 interface Props {
-  phrases: string[]
-  ctaPrimario: CtaButton
-  ctaSecundario: CtaButton
+  ctaPrimario?: CtaButton
+  ctaSecundario?: CtaButton
 }
 
-const { phrases, ctaPrimario, ctaSecundario } = Astro.props
+const { ctaPrimario, ctaSecundario } = Astro.props
 
-// Calculamos la frase más larga para establecer el ancho fijo del contenedor
-// y evitar que el texto salte o se re-centre con cada letra.
-const longestPhrase = phrases.reduce((a, b) => (a.length > b.length ? a : b), "")
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const primaryCta = ctaPrimario ?? {
+  texto: t("home.hero.cta.primary"),
+  href: getLocalizedPath("/herramientas", lang),
+}
+
+const secondaryCta = ctaSecundario ?? {
+  texto: t("home.hero.cta.secondary"),
+  href: getLocalizedPath("/operaciones", lang),
+}
+
+const quickTools = [
+  { nombre: t("home.hero.quick.riskfolio"), href: getLocalizedPath("/riskfolio", lang) },
+  { nombre: t("home.hero.quick.intrinseco"), href: getLocalizedPath("/intrinseco", lang) },
+  { nombre: t("home.hero.quick.directorio"), href: getLocalizedPath("/directorio", lang) },
+]
 ---
 
-<header
-  class="relative max-w-4xl mx-auto mb-0 text-center pt-2 pb-6 md:pb-8 flex flex-col justify-center min-h-[calc(100vh-80px)]"
->
-  <div
-    id="hero-logo"
-    class="flex items-center justify-center gap-4 mb-6 animate-fade-in-up opacity-0 transition-opacity duration-1000"
-  >
-    <Image
-      src={logoImg}
-      alt="Logo 0x Leñador"
-      width={64}
-      height={64}
-      loading="eager"
-      class="w-8 h-8 md:w-12 md:h-12 object-contain"
-    />
-    <p class="text-2xl md:text-4xl font-bold tracking-tighter text-terminal-text leading-none m-0">
-      0x<span class="ml-1.5 md:ml-2 text-emerald-500">Leñador</span>
-    </p>
-  </div>
-
-  <div class="h-24 md:h-32 flex items-center justify-center mb-6 px-4">
-    <div class="relative text-left">
-      <!-- Contenedor invisible que mantiene el ancho máximo -->
-      <h1
-        class="text-[6vw] sm:text-3xl md:text-5xl lg:text-7xl font-light text-transparent tracking-tight leading-tight select-none pointer-events-none invisible whitespace-nowrap"
-        aria-hidden="true"
-      >
-        <span class="font-mono mr-2 md:mr-3">&gt;</span>{longestPhrase}<span
-          class="font-mono inline-block ml-0.5">|</span
+<header class="relative max-w-6xl mx-auto pt-3 pb-8 md:pt-6 md:pb-12">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+    <!-- ─── COLUMNA IZQUIERDA: IDENTIDAD & HERRAMIENTAS ─── -->
+    <div class="lg:col-span-7 flex flex-col justify-center space-y-5 md:space-y-6">
+      <!-- Badge de estado sobrio -->
+      <div class="flex items-center">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-terminal-secondary"
         >
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="text-[11px] font-medium tracking-wide text-zinc-300">
+            {t("home.hero.badge")}
+          </span>
+        </div>
+      </div>
+
+      <!-- Marca / Logo -->
+      <div class="flex items-center gap-3">
+        <Image
+          src={logoImg}
+          alt="0x Leñador"
+          width={48}
+          height={48}
+          loading="eager"
+          class="w-10 h-10 md:w-11 md:h-11 object-contain shrink-0"
+        />
+        <span class="text-2xl md:text-3xl font-bold tracking-tight text-white font-mono">
+          0x<span class="text-emerald-500">Leñador</span>
+        </span>
+      </div>
+
+      <!-- Título principal -->
+      <h1
+        class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.12]"
+      >
+        {t("home.hero.title.prefix")}{" "}
+        <span class="text-emerald-400 font-extrabold">
+          {t("home.hero.title.highlight")}
+        </span>
       </h1>
 
-      <!-- Animación real superpuesta -->
-      <h1
-        id="hero-typewriter"
-        class="absolute top-0 left-0 w-full h-full text-[6vw] sm:text-3xl md:text-5xl lg:text-7xl font-light text-terminal-text tracking-tight leading-tight whitespace-nowrap"
-        aria-label={phrases.join(". ")}
-      >
-        <span class="font-mono text-emerald-500 mr-2 md:mr-3" aria-hidden="true">&gt;</span><span
-          id="typewriter-text"></span><span
-          id="typewriter-cursor"
-          class="terminal-cursor font-mono inline-block ml-0.5"
-          aria-hidden="true">|</span
-        >
-      </h1>
-    </div>
-  </div>
+      <!-- Subtítulo directo -->
+      <p class="text-terminal-secondary text-sm md:text-base leading-relaxed max-w-lg">
+        {t("home.hero.subtitle")}
+      </p>
 
-  <div
-    id="hero-ctas"
-    class="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-2 px-4 max-w-xs sm:max-w-none mx-auto w-full sm:w-auto opacity-0 transition-opacity duration-1000"
-  >
-    <div
-      class="relative group w-full sm:w-auto p-[1px] rounded-xl bg-gradient-to-r from-transparent via-cyan-500/80 to-transparent shadow-[0_0_25px_rgba(6,182,212,0.2)] hover:shadow-[0_0_35px_rgba(6,182,212,0.4)] transition-all"
-    >
-      <a
-        href={ctaPrimario.href}
-        class="w-full h-full px-5 py-2.5 md:px-6 md:py-3 bg-[#0A0D10] group-hover:bg-[#0f171e] text-cyan-400 font-black uppercase tracking-widest text-xs rounded-xl transition-all italic flex items-center justify-center gap-2"
-      >
-        <svg
-          class="w-4 h-4 shrink-0"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          viewBox="0 0 24 24"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-          ></path>
-        </svg>
-        <span>{ctaPrimario.texto}</span>
-      </a>
+      <!-- Botones de Acción -->
+      <div class="flex flex-wrap items-center gap-3 pt-1">
+        <a
+          href={primaryCta.href}
+          class="px-5 py-2.5 md:px-6 md:py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase tracking-wider text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.35)] flex items-center gap-2 no-underline"
+        >
+          <svg
+            class="w-4 h-4 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            ></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+          <span>{primaryCta.texto}</span>
+        </a>
+
+        <a
+          href={secondaryCta.href}
+          class="px-5 py-2.5 md:px-6 md:py-3 border border-terminal-border text-terminal-text hover:text-white font-bold uppercase tracking-wider text-xs rounded-xl hover:bg-terminal-surface hover:border-terminal-secondary/50 transition-all inline-flex items-center gap-2 no-underline"
+        >
+          <svg
+            class="w-4 h-4 text-terminal-muted"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+            ></path>
+          </svg>
+          <span>{secondaryCta.texto}</span>
+        </a>
+      </div>
+
+      <!-- Accesos Directos -->
+      <div class="pt-1 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs">
+        <span
+          class="text-[10px] font-mono font-bold uppercase tracking-widest text-terminal-subtle shrink-0"
+        >
+          {t("home.hero.quick.label")}
+        </span>
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 hide-scroll">
+          {
+            quickTools.map((tool) => (
+              <a
+                href={tool.href}
+                class="px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] hover:border-emerald-500/50 hover:bg-white/[0.06] text-terminal-muted hover:text-white transition-all text-[11px] font-mono tracking-tight whitespace-nowrap flex items-center gap-1.5 no-underline"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/80" />
+                <span>{tool.nombre}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
     </div>
-    <a
-      href={ctaSecundario.href}
-      class="w-full sm:w-auto px-5 py-2.5 md:px-6 md:py-3 border border-terminal-border text-terminal-text font-black uppercase tracking-widest text-xs rounded-xl hover:bg-terminal-surface transition-all inline-flex items-center justify-center text-center"
-    >
-      {ctaSecundario.texto}
-    </a>
+
+    <!-- ─── COLUMNA DERECHA: TARJETA APPLE PREMIUM ─── -->
+    <div class="lg:col-span-5 flex flex-col">
+      <div
+        class="relative rounded-3xl bg-[#161618]/90 border border-white/[0.08] p-5 sm:p-6 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between overflow-hidden group"
+      >
+        <!-- Glow ambiental sutil -->
+        <div
+          class="absolute -top-24 -right-24 w-52 h-52 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/15 transition-all"
+        >
+        </div>
+
+        <!-- Encabezado de la tarjeta -->
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.06]">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span
+              class="text-[11px] font-mono font-bold uppercase tracking-widest text-zinc-400"
+            >
+              {t("home.hero.apple.header")}
+            </span>
+          </div>
+          <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+            3 Módulos
+          </span>
+        </div>
+
+        <!-- Lista de 3 accesos principales -->
+        <div class="space-y-3">
+          <!-- 1. Sunflower Land -->
+          <a
+            href={getLocalizedPath("/sfl-mercado", lang)}
+            class="group/item flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.05] hover:border-white/[0.14] transition-all duration-200 no-underline"
+          >
+            <div class="flex items-center gap-3.5 min-w-0">
+              <img
+                src="/img/cripto/sunflowerland.webp"
+                alt="Sunflower Land"
+                class="w-11 h-11 rounded-xl object-contain bg-black/40 p-1 border border-white/[0.08] group-hover/item:scale-105 transition-transform duration-200 shrink-0"
+              />
+              <div class="min-w-0">
+                <h3
+                  class="text-sm font-semibold text-white tracking-tight group-hover/item:text-amber-300 transition-colors truncate"
+                >
+                  {t("home.hero.apple.sfl.title")}
+                </h3>
+                <p class="text-xs text-zinc-400 tracking-normal mt-0.5 truncate">
+                  {t("home.hero.apple.sfl.desc")}
+                </p>
+              </div>
+            </div>
+            <svg
+              class="w-4 h-4 text-zinc-500 group-hover/item:text-white group-hover/item:translate-x-0.5 transition-all shrink-0 ml-3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+
+          <!-- 2. Yakkamon -->
+          <a
+            href={getLocalizedPath("/yakkamon", lang)}
+            class="group/item flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.05] hover:border-white/[0.14] transition-all duration-200 no-underline"
+          >
+            <div class="flex items-center gap-3.5 min-w-0">
+              <img
+                src="/img/cripto/yakkamon.webp"
+                alt="Yakkamon"
+                class="w-11 h-11 rounded-xl object-contain bg-black/40 p-1 border border-white/[0.08] group-hover/item:scale-105 transition-transform duration-200 shrink-0"
+              />
+              <div class="min-w-0">
+                <h3
+                  class="text-sm font-semibold text-white tracking-tight group-hover/item:text-purple-300 transition-colors truncate"
+                >
+                  {t("home.hero.apple.yakkamon.title")}
+                </h3>
+                <p class="text-xs text-zinc-400 tracking-normal mt-0.5 truncate">
+                  {t("home.hero.apple.yakkamon.desc")}
+                </p>
+              </div>
+            </div>
+            <svg
+              class="w-4 h-4 text-zinc-500 group-hover/item:text-white group-hover/item:translate-x-0.5 transition-all shrink-0 ml-3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+
+          <!-- 3. Activos -->
+          <a
+            href={getLocalizedPath("/activos", lang)}
+            class="group/item flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.05] hover:border-white/[0.14] transition-all duration-200 no-underline"
+          >
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div
+                class="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-105 transition-transform duration-200 shrink-0"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <h3
+                  class="text-sm font-semibold text-white tracking-tight group-hover/item:text-emerald-400 transition-colors truncate"
+                >
+                  {t("home.hero.apple.activos.title")}
+                </h3>
+                <p class="text-xs text-zinc-400 tracking-normal mt-0.5 truncate">
+                  {t("home.hero.apple.activos.desc")}
+                </p>
+              </div>
+            </div>
+            <svg
+              class="w-4 h-4 text-zinc-500 group-hover/item:text-white group-hover/item:translate-x-0.5 transition-all shrink-0 ml-3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
-
-<script define:vars={{ phrases }}>
-  // ==========================================
-  // MOTOR TYPEWRITER — Terminal Premium
-  // Escribe carácter por carácter, pausa, borra y rota frases.
-  // ==========================================
-  const textEl = document.getElementById("typewriter-text")
-
-  if (textEl && phrases && phrases.length > 0) {
-    let phraseIndex = 0
-    let isFirstCycle = true
-    const TYPING_SPEED = 55 // ms por carácter al escribir
-    const ERASING_SPEED = 30 // ms por carácter al borrar
-    const PAUSE_AFTER_TYPE = 5000 // ms de pausa tras completar frase
-    const PAUSE_AFTER_ERASE = 400 // ms de pausa tras borrar antes de la siguiente
-
-    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
-
-    function typePhrase(text, charIndex, callback) {
-      if (charIndex <= text.length) {
-        textEl.textContent = text.substring(0, charIndex)
-        setTimeout(() => typePhrase(text, charIndex + 1, callback), TYPING_SPEED)
-      } else {
-        if (isFirstCycle) {
-          isFirstCycle = false
-          const logoEl = document.getElementById("hero-logo")
-          const ctasEl = document.getElementById("hero-ctas")
-          if (logoEl) logoEl.classList.remove("opacity-0")
-          if (ctasEl) ctasEl.classList.remove("opacity-0")
-        }
-        callback()
-      }
-    }
-
-    function erasePhrase(text, charIndex, callback) {
-      if (charIndex >= 0) {
-        textEl.textContent = text.substring(0, charIndex)
-        setTimeout(() => erasePhrase(text, charIndex - 1, callback), ERASING_SPEED)
-      } else {
-        callback()
-      }
-    }
-
-    function runCycle() {
-      const currentPhrase = capitalize(phrases[phraseIndex])
-
-      typePhrase(currentPhrase, 0, () => {
-        setTimeout(() => {
-          erasePhrase(currentPhrase, currentPhrase.length, () => {
-            phraseIndex = (phraseIndex + 1) % phrases.length
-            setTimeout(runCycle, PAUSE_AFTER_ERASE)
-          })
-        }, PAUSE_AFTER_TYPE)
-      })
-    }
-
-    // Arrancar el ciclo
-    runCycle()
-  }
-</script>
