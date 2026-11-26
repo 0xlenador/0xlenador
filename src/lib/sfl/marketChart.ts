@@ -70,6 +70,12 @@ export interface ModalChartLabels {
   loading: string
   noListings: string
   seller: string
+  stemLabel: string
+  collectible: string
+  floorDetected: string
+  farmerFallback: string
+  currentMarketFloor: string
+  noSalesDataChart: string
 }
 
 export interface ModalChartContext {
@@ -211,6 +217,19 @@ function getModalChartDims(
   lastRenderedSvgH = height
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`)
   return { width, height }
+}
+
+const HTML_ESCAPE_MAP: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+}
+
+/** Escapa caracteres HTML especiales antes de interpolar datos externos en `innerHTML`. */
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (ch) => HTML_ESCAPE_MAP[ch] ?? ch)
 }
 
 function formatChartDateLabel(daysAgo: number, clientLang: string): string {
@@ -441,7 +460,7 @@ function renderCompareChart(period: GraphPeriod): void {
   const { width, height } = getModalChartDims(svg, svgArea)
 
   if (itemsData.every((d) => d.validData.length < 2)) {
-    svg.innerHTML = `<text x="${(width / 2).toFixed(0)}" y="${(height / 2).toFixed(0)}" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">NO SALES DATA</text>`
+    svg.innerHTML = `<text x="${(width / 2).toFixed(0)}" y="${(height / 2).toFixed(0)}" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">${ctx.labels.noSalesDataChart}</text>`
     clearChartPointerHandlers(svgArea)
     hideModalChartOverlays(crosshairX, crosshairY, badgeX, badgeY, tooltip)
     return
@@ -846,7 +865,7 @@ function renderModalChart(
 
   if (validData.length < 2 && currentPrice <= 0) {
     svg.innerHTML = `
-        <text x="${(width / 2).toFixed(0)}" y="${(height / 2).toFixed(0)}" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">NO SALES DATA</text>
+        <text x="${(width / 2).toFixed(0)}" y="${(height / 2).toFixed(0)}" fill="rgba(255,255,255,0.25)" font-size="12" font-family="monospace" text-anchor="middle" letter-spacing="2">${ctx.labels.noSalesDataChart}</text>
       `
     clearChartPointerHandlers(svgArea)
     hideModalChartOverlays(crosshairX, crosshairY, badgeX, badgeY, tooltip)
@@ -1288,7 +1307,7 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
         }
         if (stemB) {
           const cleanStem = stemB.replace(/^Stem:\s*/i, "")
-          const stemLabel = currentCtx.clientLang === "es" ? "Tallo" : "Stem"
+          const stemLabel = currentCtx.labels.stemLabel
           badgesHtml.push(
             `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10.5px] font-bold shadow-[0_0_10px_rgba(16,185,129,0.1)] shrink-0"><span class="text-[11px] leading-none">🌱</span><span>${stemLabel}: ${cleanStem}</span></span>`,
           )
@@ -1305,13 +1324,7 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
           boostsContainer.classList.remove("hidden")
         }
       } else if (item.category === "powerups" && item.boost) {
-        const itemTypeLabel = item.isWearable
-          ? currentCtx.clientLang === "es"
-            ? "Wearable"
-            : "Wearable"
-          : currentCtx.clientLang === "es"
-            ? "Coleccionable"
-            : "Collectible"
+        const itemTypeLabel = item.isWearable ? "Wearable" : currentCtx.labels.collectible
         subTitleEl.textContent = `Sunflower Land • ${itemTypeLabel}`
 
         const parts = currentCtx.parseBoosts(item.boost)
@@ -1496,14 +1509,14 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
           container.innerHTML = `
             <div class="py-6 px-4 rounded-xl bg-white/[0.01] border border-dashed border-white/10 text-center">
               <span class="text-xs font-mono text-terminal-muted">${currentCtx.labels.noListings}</span>
-              ${data.floor ? `<div class="mt-2 text-xs font-mono text-white/50">Floor detectado: <strong class="text-emerald-400">${data.floor} FLOWER</strong></div>` : ""}
+              ${data.floor ? `<div class="mt-2 text-xs font-mono text-white/50"> ${currentCtx.labels.floorDetected} <strong class="text-emerald-400">${data.floor} FLOWER</strong></div>` : ""}
             </div>
           `
         } else {
           const sflUsd = currentCtx.getSflUsdPrice() || 0.085
           container.innerHTML = listings
             .map((l) => {
-              const username = l.listedBy?.username || "Granjero"
+              const username = escapeHtml(l.listedBy?.username || currentCtx.labels.farmerFallback)
               const bumpkinUri = l.listedBy?.bumpkinUri
               const avatar = bumpkinUri
                 ? `https://animations.sunflower-land.com/bumpkin_image/${bumpkinUri}/100`
@@ -1549,7 +1562,7 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
       container.innerHTML = `
         <div class="py-4 px-4 rounded-xl bg-white/[0.01] border border-white/5 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-xs text-white/70 font-sans">Floor de mercado actual</span>
+            <span class="text-xs text-white/70 font-sans">${currentCtx.labels.currentMarketFloor}</span>
           </div>
           <div class="flex items-center gap-1.5 font-mono">
             <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />

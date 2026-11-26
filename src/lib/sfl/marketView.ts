@@ -41,6 +41,13 @@ export interface SflMarketTableLabels {
   colMarketcap: string
   hideFlower: string
   modalViewChart: string
+  graphPrefix: string
+  unitsShort: string
+  noSalesData: string
+  uncapped: string
+  unlimitedResourceTooltip: string
+  loadingBuds: string
+  unknownApiError: string
 }
 
 export interface SflMarketConfig {
@@ -465,13 +472,13 @@ const getSupplyColumnHTML = (
   `
 }
 
-const getVolColumnHTML = (title: string, item: DashboardMarketItem, clientLang: string): string => {
+const getVolColumnHTML = (title: string, item: DashboardMarketItem, unitsShort: string): string => {
   const usdValue = item.volume7dUsd !== undefined ? formatNumber(item.volume7dUsd, 0) : ""
   const flowerValue = item.volume7d !== undefined ? formatNumber(item.volume7d, 0) : "-"
   const unitsValue = item.trades7d !== undefined ? formatNumber(item.trades7d, 0) : "-"
   const containerClass =
     "text-[13px] font-medium font-sans text-white/90 inline-flex items-center whitespace-nowrap shrink-0 leading-none"
-  const tUnits = clientLang === "es" ? "UND" : "UN"
+  const tUnits = unitsShort
 
   const badgeHTML = `
       <div class="flex flex-col items-end">
@@ -630,7 +637,6 @@ const createFlowerRow = (
 function renderPage(page: number): void {
   if (!tableBody || !activeConfig) return
   const labels = activeConfig.tableLabels
-  const clientLang = activeConfig.clientLang
 
   if (page === 1) tableBody.innerHTML = ""
 
@@ -769,7 +775,7 @@ function renderPage(page: number): void {
             ? `
           <div class="mt-2 pt-3 border-t border-white/5 lg:border-none lg:pt-0 lg:mt-0 lg:col-span-4 lg:h-full flex items-center justify-center lg:py-2 w-full">
             <div class="w-full h-full min-h-[80px] lg:min-h-0 rounded-lg border border-dashed border-white/10 bg-white/[0.01] flex items-center justify-center">
-              <span class="text-[10px] font-mono text-terminal-muted/40 uppercase tracking-widest">No Sales Data</span>
+              <span class="text-[10px] font-mono text-terminal-muted/40 uppercase tracking-widest">${labels.noSalesData}</span>
             </div>
           </div>
         `
@@ -780,7 +786,7 @@ function renderPage(page: number): void {
               isResources
                 ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-3">
                   <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Market Cap</div>
-                  <span class="text-[11px] font-medium font-sans text-white/30 italic">${clientLang === "es" ? "No cumple" : "Uncapped"}</span>
+                  <span class="text-[11px] font-medium font-sans text-white/30 italic">${labels.uncapped}</span>
                 </div>`
                 : isBuds
                   ? getMarketcapColumnHTML("Floor Price", item.currentPrice)
@@ -789,10 +795,10 @@ function renderPage(page: number): void {
                       (item.supply || 0) * item.currentPrice,
                     )
             }
-            ${getVolColumnHTML("Vol. 7D", item, clientLang)}
+            ${getVolColumnHTML("Vol. 7D", item, labels.unitsShort)}
             ${
               isResources
-                ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-3" title="${clientLang === "es" ? "Recurso ilimitado, se genera y consume dentro del juego" : "Unlimited resource, generated and consumed in-game"}">
+                ? `<div class="flex flex-col justify-center items-center lg:flex-row lg:justify-end lg:items-center bg-terminal-bg/50 lg:bg-transparent p-4 rounded-xl lg:p-0 lg:rounded-none border border-white/[0.02] lg:border-none w-full lg:pr-3" title="${labels.unlimitedResourceTooltip}">
                   <div class="lg:hidden text-[9px] font-mono text-terminal-muted mb-1">Circ. Supply</div>
                   <span class="text-[15px] font-medium text-white/30">∞</span>
                 </div>`
@@ -1050,8 +1056,7 @@ function bindGlobalMarketActions(): void {
     const sortIcon = document.getElementById("graph-sort-icon")
 
     if (titleEl && sortBtn && sortIcon) {
-      const isEn = window.location.pathname.includes("/en/")
-      const prefix = isEn ? "Price Graph" : "Gráfica"
+      const prefix = activeConfig?.tableLabels.graphPrefix || "Gráfica"
       titleEl.innerText = `${prefix} (${period.toUpperCase()})`
       sortBtn.setAttribute("onclick", `window.handleSort('${period}')`)
       sortIcon.setAttribute("data-col", period)
@@ -1063,7 +1068,8 @@ function bindGlobalMarketActions(): void {
     window.__budsLoading = true
 
     const currentTableBody = document.getElementById("tableBody")
-    const clientLang = activeConfig?.clientLang || "es"
+    const loadingText =
+      activeConfig?.tableLabels.loadingBuds || "Cargando catálogo Buds NFT (678 items)..."
     if (currentCategory === "buds" && currentTableBody) {
       currentTableBody.innerHTML = `
         <div class="py-20 text-center flex flex-col items-center justify-center gap-3">
@@ -1071,7 +1077,7 @@ function bindGlobalMarketActions(): void {
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
           </svg>
-          <span class="text-xs font-mono text-cyan-400 tracking-wider uppercase font-bold">${clientLang === "es" ? "Cargando catálogo Buds NFT (678 items)..." : "Loading Buds NFT catalog (678 items)..."}</span>
+          <span class="text-xs font-mono text-cyan-400 tracking-wider uppercase font-bold">${loadingText}</span>
         </div>
       `
     }
@@ -1481,7 +1487,10 @@ async function fetchData(silent = false, forceRefresh = false): Promise<void> {
     }
   } catch (err) {
     console.error(err)
-    const msg = err instanceof Error ? err.message : "Error desconocido al consultar la API."
+    const msg =
+      err instanceof Error
+        ? err.message
+        : activeConfig?.tableLabels.unknownApiError || "Error desconocido al consultar la API."
     errorMsg.innerText = msg
 
     if (!silent) {

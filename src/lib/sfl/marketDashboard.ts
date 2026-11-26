@@ -87,6 +87,10 @@ export interface DashboardLabels {
   nearAtl: string
   tooltipAth: string
   tooltipAtl: string
+  infoAria: string
+  calcResetTitle: string
+  topMoversGainers: string
+  topMoversLosers: string
 }
 
 export interface MarketDashboardContext {
@@ -259,7 +263,7 @@ function renderBox1MarketCap(
                 <h3 class="text-xs font-sans font-bold text-white/90 tracking-wide">
                    ${labels.dashMcapTitle}
                 </h3>
-                <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
+                <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="${labels.infoAria}">
                    <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="12" cy="12" r="10"></circle>
                       <path d="M12 16v-4"></path>
@@ -437,7 +441,7 @@ function renderBox5CategoryDistribution(
        <div class="flex justify-between items-start mb-2 relative z-30 focus-within:z-[70] hover:z-[70]">
           <div class="flex items-center">
              <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide">${labels.dashCatTitle}</h3>
-             <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
+             <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="${labels.infoAria}">
                 <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                    <circle cx="12" cy="12" r="10"></circle>
                    <path d="M12 16v-4"></path>
@@ -580,7 +584,7 @@ function renderBox2SeasonAndConverter(labels: DashboardLabels): void {
        <div class="w-[38%] flex flex-col h-full border-r border-white/5 pr-2">
           <div class="relative w-full mb-1.5 shrink-0 h-[22px]">
              <input type="number" id="calcInput" value="${currentAmount}" step="any" class="block w-full h-[22px] bg-[#0c1015] border border-white/10 rounded pl-1.5 pr-6 text-[11px] font-mono text-white outline-none focus:border-white/30 transition-colors shadow-inner" />
-             <button id="calcClearBtn" class="hidden absolute right-1 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/80 focus:outline-none transition-colors w-4 h-4 flex items-center justify-center rounded hover:bg-white/5" onclick="document.getElementById('calcInput').value='1'; window.updateCalc();" title="Resetear a 1">
+             <button id="calcClearBtn" class="hidden absolute right-1 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/80 focus:outline-none transition-colors w-4 h-4 flex items-center justify-center rounded hover:bg-white/5" onclick="document.getElementById('calcInput').value='1'; window.updateCalc();" title="${labels.calcResetTitle}">
                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
              </button>
           </div>
@@ -867,7 +871,7 @@ function renderBox3TopMovers(
     if (window.currentSlide3 === 0) {
       s1.classList.remove("hidden")
       s2.classList.add("hidden")
-      title.textContent = "Top Gainers"
+      title.textContent = labels.topMoversGainers
       titleIcon.classList.remove("text-red-500")
       titleIcon.classList.add("text-emerald-500")
       titleIcon.innerHTML =
@@ -879,7 +883,7 @@ function renderBox3TopMovers(
     } else {
       s1.classList.add("hidden")
       s2.classList.remove("hidden")
-      title.textContent = "Top Losers"
+      title.textContent = labels.topMoversLosers
       titleIcon.classList.remove("text-emerald-500")
       titleIcon.classList.add("text-red-500")
       titleIcon.innerHTML =
@@ -923,7 +927,7 @@ function renderBox3TopMovers(
           <div class="flex items-center gap-1.5">
              <svg id="box3TitleIcon" class="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
              <h3 id="box3Title" class="text-[11px] font-sans font-bold text-white/80 tracking-wide">
-                Top Gainers
+                ${labels.topMoversGainers}
              </h3>
           </div>
           <div class="flex items-center gap-1.5 cursor-pointer group/btn" onclick="window.nextBox3Slide(event)">
@@ -1121,7 +1125,7 @@ function renderBox6FearAndGreed(
              <h3 class="text-[11px] font-sans font-bold text-white/80 tracking-wide transition-colors">
                 ${labels.dashFgTitle}
              </h3>
-             <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="Información">
+             <button class="relative group cursor-pointer text-terminal-muted hover:text-white transition-colors focus:outline-none ml-1.5 pt-[1px]" aria-label="${labels.infoAria}">
                 <svg class="w-[11px] h-[11px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                    <circle cx="12" cy="12" r="10"></circle>
                    <path d="M12 16v-4"></path>
