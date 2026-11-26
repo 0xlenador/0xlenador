@@ -1,0 +1,410 @@
+---
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+---
+
+<!-- MODAL CENTRAL PRO DE TRADING -->
+<div
+  id="tradingModal"
+  class="fixed inset-0 z-[100] hidden items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md transition-all duration-300"
+  onclick="if(event.target === this) window.closeTradingModal()"
+>
+  <div
+    class="relative w-full max-w-4xl bg-[#141414] border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh] text-white animate-in fade-in zoom-in-95 duration-200"
+    onclick="event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="p-3.5 sm:p-4 border-b border-white/10 bg-black/40 flex flex-col gap-2.5 shrink-0">
+      <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-3 w-full">
+        <div class="flex items-center gap-3 min-w-0">
+          <div
+            id="modalItemImgContainer"
+            class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center p-1.5 overflow-hidden shrink-0 shadow-inner"
+          >
+            <img
+              id="modalItemImg"
+              src="/img/sunflowerland/123/bud.png"
+              alt=""
+              class="w-full h-full object-contain drop-shadow transition-transform duration-300 pixelated"
+              onerror="this.onerror=null; this.src='/img/sunflowerland/123/bud.png'"
+            />
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3
+                id="modalItemName"
+                class="text-base sm:text-lg font-bold text-white tracking-tight truncate"
+              >
+                --
+              </h3>
+              <span
+                id="modalItemCategoryBadge"
+                class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase shrink-0"
+              >
+                Buds
+              </span>
+            </div>
+            <div class="flex items-center gap-2 mt-0.5 text-xs text-terminal-secondary">
+              <span id="modalItemSubtitle">Sunflower Land NFT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPIs Compactos en Encabezado -->
+        <div
+          class="flex items-center justify-between sm:justify-center gap-2 sm:gap-3 lg:gap-4 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/5 order-3 md:order-2 w-full md:w-auto shrink-0"
+        >
+          <!-- Floor / Precio Actual -->
+          <div class="flex flex-col items-start sm:items-center min-w-0">
+            <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+              {t("sfl.modal.floorPrice")}
+            </span>
+            <div class="flex items-center gap-1 mt-0.5">
+              <img
+                src="/img/sunflowerland/flower.jpg"
+                class="w-3.5 h-3.5 rounded-full object-cover shrink-0"
+                alt="FLOWER"
+              />
+              <span
+                id="modalFloorPrice"
+                class="text-xs sm:text-sm font-bold text-white font-mono leading-none"
+              >
+                --
+              </span>
+            </div>
+            <span id="modalFloorUsd" class="text-[9px] font-mono text-white/40 leading-none mt-0.5">
+              ~$0.00
+            </span>
+          </div>
+
+          <div class="w-px h-6 bg-white/10 shrink-0"></div>
+
+          <!-- Cambio 24H -->
+          <div class="flex flex-col items-start sm:items-center min-w-0">
+            <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+              {t("sfl.modal.change24h")}
+            </span>
+            <div class="flex items-center gap-1 mt-0.5">
+              <span
+                id="modalChange24h"
+                class="text-xs sm:text-sm font-bold font-mono leading-none text-white/50"
+              >
+                --
+              </span>
+            </div>
+            <span
+              id="modalPastPrice"
+              class="text-[9px] font-mono text-white/40 leading-none mt-0.5"
+            >
+              Prev: --
+            </span>
+          </div>
+
+          <div class="w-px h-6 bg-white/10 shrink-0"></div>
+
+          <!-- Volumen 7D -->
+          <div class="flex flex-col items-start sm:items-center min-w-0">
+            <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+              {t("sfl.modal.volume7d")}
+            </span>
+            <div class="flex items-center gap-1 mt-0.5">
+              <img
+                src="/img/sunflowerland/flower.jpg"
+                class="w-3.5 h-3.5 rounded-full object-cover shrink-0"
+                alt="FLOWER"
+              />
+              <span
+                id="modalVolume7d"
+                class="text-xs sm:text-sm font-bold text-white font-mono leading-none"
+              >
+                --
+              </span>
+            </div>
+            <span
+              id="modalVolume7dUsd"
+              class="text-[9px] font-mono text-white/40 leading-none mt-0.5"
+            >
+              ~$0.00
+            </span>
+          </div>
+
+          <div class="w-px h-6 bg-white/10 shrink-0"></div>
+
+          <!-- Trades (7D) / Supply -->
+          <div class="flex flex-col items-start sm:items-center min-w-0">
+            <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+              {t("sfl.activity")} (7D)
+            </span>
+            <div class="flex items-center gap-1 mt-0.5">
+              <span
+                id="modalTradesCount"
+                class="text-xs sm:text-sm font-bold text-cyan-400 font-mono leading-none"
+              >
+                --
+              </span>
+              <span class="text-[8.5px] text-white/40 font-mono">trades</span>
+            </div>
+            <span id="modalSupply" class="text-[9px] font-mono text-white/40 leading-none mt-0.5">
+              {t("sfl.modal.supply")}: 1 NFT
+            </span>
+          </div>
+        </div>
+
+        <!-- Close Button -->
+        <button
+          type="button"
+          onclick="window.closeTradingModal()"
+          class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-terminal-muted hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 order-2 md:order-3 ml-auto md:ml-0"
+          title="Cerrar (Esc)"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Potenciadores / Buffs en la siguiente línea de abajo -->
+      <div
+        id="modalItemBoostsContainer"
+        class="w-full flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/5 hidden"
+      >
+      </div>
+    </div>
+
+    <!-- Modal Body (Scrollable) -->
+    <div class="p-3.5 sm:p-4 overflow-y-auto space-y-3.5 custom-scrollbar flex-1">
+      <!-- Gráfica de Trading Avanzada -->
+      <div class="bg-black/40 border border-white/10 rounded-xl p-3 sm:p-3.5">
+        <div class="relative mb-2.5" id="modalChartControlsWrapper">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <h4
+                class="text-xs sm:text-sm font-bold text-white tracking-tight flex items-center gap-1.5"
+              >
+                <svg
+                  class="w-4 h-4 text-emerald-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                  ></path>
+                </svg>
+                <span>{t("sfl.modal.priceChart")}</span>
+                <span
+                  id="modalPeriodBadge"
+                  class="text-[10px] font-mono font-bold text-emerald-400 px-1.5 py-0.2 rounded bg-emerald-500/10 border border-emerald-500/20"
+                >
+                  7D
+                </span>
+              </h4>
+              <div id="modalHoverInfo" class="text-[11px] font-mono text-terminal-secondary hidden">
+                <!-- Dynamically populated on hover -->
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 sm:gap-2 ml-auto sm:ml-0">
+              <!-- Botón Comparar / Controles rápidos cuando hay comparación activa -->
+              <div class="flex items-center gap-1" id="modalCompareContainer">
+                <!-- Botón cuando no hay comparación activa -->
+                <button
+                  type="button"
+                  id="modalCompareBtn"
+                  onclick="window.toggleCompareDropdown()"
+                  class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 transition-all cursor-pointer shrink-0"
+                  title={t("sfl.modal.compare")}
+                >
+                  <svg
+                    class="w-3.5 h-3.5 text-cyan-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                  </svg>
+                  <span>{t("sfl.modal.compare")}</span>
+                </button>
+
+                <!-- Botones rápidos cuando hay comparaciones activas -->
+                <div id="modalCompareActions" class="hidden items-center gap-1">
+                  <button
+                    type="button"
+                    id="modalCompareAddBtn"
+                    onclick="window.toggleCompareDropdown()"
+                    class="flex items-center gap-1 px-2 py-1 text-xs font-mono font-bold rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 transition-all cursor-pointer shrink-0"
+                    title={t("sfl.modal.addCompare")}
+                  >
+                    <span class="text-cyan-400 font-bold">+</span>
+                    <span class="text-[11px] text-white/70">vs</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="modalCompareClearBtn"
+                    onclick="window.clearModalComparison()"
+                    class="px-1.5 py-1 text-xs font-mono text-white/40 hover:text-white rounded-lg bg-white/[0.03] hover:bg-white/10 border border-white/10 transition-colors cursor-pointer shrink-0"
+                    title={t("sfl.modal.clearComparison")}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <!-- Botones de periodo -->
+              <div
+                class="flex items-center gap-1 bg-black/60 border border-white/10 rounded-lg p-0.5 shrink-0"
+              >
+                <button
+                  type="button"
+                  onclick="window.setModalGraphPeriod('7d')"
+                  id="modalBtn7d"
+                  class="modal-period-btn px-2 sm:px-2.5 py-1 text-xs font-mono font-bold rounded bg-white/10 text-white transition-all cursor-pointer"
+                >
+                  7D
+                </button>
+                <button
+                  type="button"
+                  onclick="window.setModalGraphPeriod('30d')"
+                  id="modalBtn30d"
+                  class="modal-period-btn px-2 sm:px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer"
+                >
+                  30D
+                </button>
+                <button
+                  type="button"
+                  onclick="window.setModalGraphPeriod('180d')"
+                  id="modalBtn180d"
+                  class="modal-period-btn px-2 sm:px-2.5 py-1 text-xs font-mono font-bold rounded text-white/40 hover:text-white transition-all cursor-pointer"
+                >
+                  180D
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chips activos debajo del header para evitar desalineación en móvil -->
+          <div id="modalCompareChipsList" class="hidden flex-wrap items-center gap-1.5 mt-2">
+            <!-- Contenido dinámico de chips en JS -->
+          </div>
+
+          <!-- Dropdown selector flotante con buscador (en móvil ancho 100% interno sin desborde) -->
+          <div
+            id="modalCompareDropdown"
+            class="absolute left-0 right-0 sm:left-auto sm:right-0 top-full mt-2 w-full sm:w-80 bg-[#161a1f] border border-white/15 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.92)] z-50 p-2.5 hidden flex-col gap-2 backdrop-blur-md"
+          >
+            <div
+              class="flex items-center justify-between pb-1.5 border-b border-white/10 text-[11px] font-mono text-white/70"
+            >
+              <span class="font-bold flex items-center gap-1.5 min-w-0 truncate">
+                <svg
+                  class="w-3.5 h-3.5 text-cyan-400 shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                </svg>
+                <span id="modalCompareDropdownTitle" class="truncate"
+                  >{t("sfl.modal.selectItemToCompare")}</span
+                >
+              </span>
+              <button
+                type="button"
+                onclick="window.toggleCompareDropdown(false)"
+                class="text-white/40 hover:text-white cursor-pointer px-1 shrink-0"
+              >
+                ✕
+              </button>
+            </div>
+            <div class="relative">
+              <input
+                type="text"
+                id="modalCompareSearchInput"
+                placeholder={t("sfl.modal.searchItemToCompare")}
+                class="w-full bg-black/60 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-cyan-400 font-mono"
+                oninput="window.filterCompareList(this.value)"
+              />
+            </div>
+            <div
+              id="modalCompareItemsList"
+              class="max-h-40 sm:max-h-56 overflow-y-auto space-y-1 custom-scrollbar text-xs"
+            >
+              <!-- Contenido cargado dinámicamente -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Área del SVG de Gráfica Grande estilo Trading Terminal Pro -->
+        <div
+          class="relative w-full h-60 sm:h-64 bg-[#0c1015] rounded-xl border border-white/10 overflow-hidden flex flex-col p-0 group/chart select-none"
+          id="modalChartWrapper"
+        >
+          <!-- HUD de Leyenda Técnica integrado arriba (evita solapamiento con las curvas) -->
+          <div
+            id="modalChartHud"
+            class="shrink-0 px-3 pt-2 pb-1.5 border-b border-white/[0.04] bg-[#0c1015] flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-mono leading-tight z-20"
+          >
+          </div>
+
+          <!-- Área SVG 1:1 en píxeles reales -->
+          <div id="modalChartSvgArea" class="relative flex-1 min-h-0 w-full touch-pan-y">
+            <svg
+              id="modalChartSvg"
+              class="w-full h-full block overflow-visible"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <!-- Dynamic SVG Chart Content -->
+            </svg>
+
+            <!-- Crosshair vertical y horizontal estilo TradingView -->
+            <div
+              id="modalChartCrosshairX"
+              class="absolute top-0 bottom-0 pointer-events-none hidden border-l border-dashed border-white/25 z-10"
+            >
+            </div>
+            <div
+              id="modalChartCrosshairY"
+              class="absolute left-0 right-0 pointer-events-none hidden border-t border-dashed border-white/25 z-10"
+            >
+            </div>
+
+            <!-- Badges de ejes del cursor (TradingView axis tags) -->
+            <div
+              id="modalCrosshairBadgeY"
+              class="absolute right-0 pointer-events-none hidden bg-[#1a1f26] border border-white/20 text-white font-mono text-[9.5px] px-1.5 py-0.5 rounded-l shadow z-20 -translate-y-1/2"
+            >
+            </div>
+            <div
+              id="modalCrosshairBadgeX"
+              class="absolute bottom-1 pointer-events-none hidden bg-[#1a1f26] border border-white/20 text-cyan-400 font-mono text-[9.5px] px-1.5 py-0.5 rounded shadow z-20 -translate-x-1/2"
+            >
+            </div>
+
+            <!-- Floating Tooltip Pro Glassmorphism -->
+            <div
+              id="modalChartTooltip"
+              class="absolute pointer-events-none hidden bg-[#0c1015]/95 border border-white/15 text-white p-2.5 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.85)] text-xs font-mono z-30 whitespace-nowrap backdrop-blur-md"
+            >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
