@@ -10,7 +10,7 @@ import {
   DEFAULT_OIL_MULTIPLIER,
   getGemFiatPrice,
 } from "./constants"
-import type { ChangeResult, MarketItemRecord } from "./marketChart"
+import { escapeHtml, type ChangeResult, type MarketItemRecord } from "./marketChart"
 
 export interface DashboardMarketItem extends MarketItemRecord {
   volume24h?: number
@@ -164,6 +164,17 @@ declare global {
 }
 
 let activeDashboardCtx: MarketDashboardContext | null = null
+let dash5Aborter: AbortController | null = null
+
+function closeDash5Bars(box5: HTMLElement | null): void {
+  if (!box5) return
+  box5.classList.remove("z-[80]")
+  box5.querySelector("[data-dash5-bars]")?.classList.remove("z-[80]")
+  box5.querySelectorAll<HTMLButtonElement>(".dash5-bar.is-active").forEach((bar) => {
+    bar.classList.remove("is-active")
+    bar.setAttribute("aria-expanded", "false")
+  })
+}
 
 const formatLarge = (num: number): string => {
   if (num >= 1e12) return (num / 1e12).toFixed(2) + "T"
@@ -172,8 +183,6 @@ const formatLarge = (num: number): string => {
   if (num >= 1e3) return (num / 1e3).toFixed(2) + "K"
   return num.toFixed(2)
 }
-
-const escapeAttr = (value: string): string => value.replace(/"/g, "&quot;")
 
 function renderBox1MarketCap(
   marketData: DashboardMarketItem[],
@@ -398,14 +407,16 @@ function renderBox5CategoryDistribution(
     const typeStr = isVol ? labels.dashCatVol : labels.dashCatSales
 
     return `
-      <div class="w-[35%] sm:w-[40%] rounded-t-sm relative group/bar flex flex-col justify-end transition-all hover:brightness-125 ${color}" style="height: ${height}%; min-height: 4px;">
-        <div class="hidden group-hover/bar:flex absolute bottom-full mb-1 ${alignClass} bg-[#0c1015] border border-white/10 px-3 py-2 rounded shadow-2xl text-white z-50 whitespace-nowrap flex-col items-center gap-1">
-           <span class="text-white/90 font-bold tracking-tight text-xs leading-none">${d.name}</span>
-           <div class="flex items-center gap-1.5">
-              <span class="text-white/50 text-[10px] font-sans uppercase">${typeStr}</span> <span class="font-bold tracking-tight text-xs">${valStr}</span>
-           </div>
-        </div>
-      </div>
+      <button type="button" class="dash5-bar relative w-[35%] sm:w-[40%] h-full block bg-transparent border-0 p-0 group/bar cursor-pointer focus:outline-none touch-manipulation" aria-label="${escapeHtml(`${d.name} ${typeStr} ${valStr}`)}" aria-expanded="false">
+        <span class="absolute inset-x-0 bottom-0 w-full rounded-t-sm transition-all [@media(hover:hover)]:group-hover/bar:brightness-125 group-[.is-active]/bar:brightness-125 ${color}" style="height: ${height}%; min-height: 4px;">
+          <span class="hidden [@media(hover:hover)]:group-hover/bar:flex group-[.is-active]/bar:flex pointer-events-none absolute bottom-full mb-1 ${alignClass} bg-[#0c1015] border border-white/10 px-3 py-2 rounded shadow-2xl text-white z-[90] whitespace-nowrap flex-col items-center gap-1">
+             <span class="text-white/90 font-bold tracking-tight text-xs leading-none">${d.name}</span>
+             <span class="flex items-center gap-1.5">
+                <span class="text-white/50 text-[10px] font-sans uppercase">${typeStr}</span> <span class="font-bold tracking-tight text-xs">${valStr}</span>
+             </span>
+          </span>
+        </span>
+      </button>
     `
   }
 
@@ -461,7 +472,7 @@ function renderBox5CategoryDistribution(
              <span class="text-[10px] font-bold text-blue-500">7D</span>
           </div>
        </div>
-       <div class="flex-1 flex items-end justify-between w-full relative z-20 hover:z-[80]">
+       <div data-dash5-bars class="flex-1 flex items-end justify-between w-full relative z-20 hover:z-[80]">
           ${renderGroup("resources", false, false, 0)}
           ${renderGroup("powerups", false, false, 1)}
           ${renderGroup("cosmetics", false, false, 2)}
@@ -470,7 +481,48 @@ function renderBox5CategoryDistribution(
        </div>
     </div>
   `
-  box5.classList.remove("items-center", "justify-center")
+  box5.classList.remove("items-center", "justify-center", "z-[80]")
+
+  if (dash5Aborter) dash5Aborter.abort()
+  dash5Aborter = new AbortController()
+  const { signal } = dash5Aborter
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      const currentBox5 = document.getElementById("dashBox5")
+      if (!currentBox5) {
+        dash5Aborter?.abort()
+        return
+      }
+      const target = e.target as HTMLElement | null
+      const clickedBar = target?.closest<HTMLButtonElement>(".dash5-bar")
+      if (!clickedBar || !currentBox5.contains(clickedBar)) {
+        closeDash5Bars(currentBox5)
+        return
+      }
+
+      const wasActive = clickedBar.classList.contains("is-active")
+      closeDash5Bars(currentBox5)
+      if (!wasActive) {
+        clickedBar.classList.add("is-active")
+        clickedBar.setAttribute("aria-expanded", "true")
+        currentBox5.querySelector("[data-dash5-bars]")?.classList.add("z-[80]")
+        currentBox5.classList.add("z-[80]")
+      }
+    },
+    { signal },
+  )
+
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key === "Escape") {
+        closeDash5Bars(document.getElementById("dashBox5"))
+      }
+    },
+    { signal },
+  )
 }
 
 function renderBox2SeasonAndConverter(labels: DashboardLabels): void {
@@ -827,7 +879,7 @@ function renderBox3TopMovers(
         const changeSign = isPos ? "+" : ""
 
         const itemImgSrc = getItemImageSrc(topItem)
-        const safeItemNameForHtml = escapeAttr(topItem.name)
+        const safeItemNameForHtml = escapeHtml(topItem.name)
 
         return `
           <div class="flex items-center gap-[3px] cursor-pointer group hover:bg-white/[0.05] rounded px-[3px] py-[2px] transition-colors" data-item="${safeItemNameForHtml}" onclick="window.scrollToItem(this.dataset.item, event)" title="${safeItemNameForHtml}">
@@ -999,7 +1051,8 @@ function renderBox4Whales(
                   trade.buyer.bumpkinUri +
                   "/100"
                 : "/img/sunflowerland/123/bear.png"
-              const safeItemNameForHtml = escapeAttr(itemName)
+              const safeItemNameForHtml = escapeHtml(itemName)
+              const safeUsernameForHtml = escapeHtml(trade.buyer?.username || "Unknown")
 
               return (
                 '<div onclick="window.scrollToItem(this.dataset.item, event)" data-item="' +
@@ -1015,7 +1068,7 @@ function renderBox4Whales(
                 '" class="max-w-[80%] max-h-[80%] object-contain pixelated" onerror="this.src=\'/img/sunflowerland/123/bear.png\'" />' +
                 "</div>" +
                 '<span class="text-xs font-bold text-white/90 truncate max-w-[120px] sm:max-w-[150px] tracking-tight">' +
-                itemName +
+                safeItemNameForHtml +
                 "</span>" +
                 "</div>" +
                 "<!-- Fila Usuario -->" +
@@ -1028,7 +1081,7 @@ function renderBox4Whales(
                 '<div class="absolute inset-0 bg-black/20 group-hover/user:bg-transparent transition-colors"></div>' +
                 "</div>" +
                 '<span class="text-[10px] text-white/50 group-hover/user:text-white/90 group-hover/user:font-semibold truncate max-w-[120px] sm:max-w-[150px] transition-all">' +
-                (trade.buyer?.username || "Unknown") +
+                safeUsernameForHtml +
                 "</span>" +
                 "</div>" +
                 "</div>" +
@@ -1289,7 +1342,7 @@ function renderLegacyCarousels(
     if (!item) return ""
     const imgSrc = getItemImageSrc(item)
     const imgSize = item.category !== "resources" ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"
-    const safeItemName = escapeAttr(item.name)
+    const safeItemName = escapeHtml(item.name)
     return `
       <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" data-item="${safeItemName}" onclick="window.scrollToItem(this.dataset.item, event)" title="${safeItemName}">
         <div class="w-8 h-8 lg:w-9 lg:h-9 rounded bg-terminal-dark border border-terminal-muted/20 flex items-center justify-center p-1 shrink-0">
@@ -1433,7 +1486,7 @@ function renderLegacyCarousels(
       return items
         .map((item) => {
           const imgSrc = getItemImageSrc(item)
-          const safeItemName = escapeAttr(item.name)
+          const safeItemName = escapeHtml(item.name)
           return `
         <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-terminal-dark border ${slide.borderClass} flex items-center justify-center p-1 relative group cursor-pointer hover:scale-110 transition-transform ${slide.shadowClass} shrink-0" data-item="${safeItemName}" onclick="window.scrollToItem(this.dataset.item, event)">
           <img src="${imgSrc}" class="${isNotRes ? "w-[85%] h-[85%]" : "w-[60%] h-[60%]"} object-contain drop-shadow-sm pixelated" onerror="this.style.display='none'" />
@@ -1581,6 +1634,8 @@ export function updateDash61Changes(dataMap: CoinGeckoDataMap): void {
 
 export function initSflMarketDashboard(ctx: MarketDashboardContext): void {
   activeDashboardCtx = ctx
+  dash5Aborter?.abort()
+  dash5Aborter = null
   window.updateDash61Changes = updateDash61Changes
 }
 

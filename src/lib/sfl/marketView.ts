@@ -13,6 +13,7 @@ import { createSparklineSVG, formatNumber, initSparklineHover } from "../../util
 import { calculateOilDrillCost, DEFAULT_OIL_MULTIPLIER } from "./constants"
 import * as SflMarket from "./market"
 import {
+  escapeHtml,
   initSflTradingModal,
   type BudTraits,
   type ChangeResult,
@@ -294,8 +295,10 @@ const getTableBoostHTML = (item: DashboardMarketItem): string => {
   }
   if (parts.length === 0) return ""
   const textColor = item.category === "buds" ? "text-cyan-400/90 font-mono" : "text-emerald-400/80"
-  const linesHtml = parts.map((p) => `<span class="block truncate">${p}</span>`).join("")
-  return `<div class="text-[9px] ${textColor} leading-[1.1] mt-[1px]" title="${item.boost}">${linesHtml}</div>`
+  const linesHtml = parts
+    .map((p) => `<span class="block truncate">${escapeHtml(p)}</span>`)
+    .join("")
+  return `<div class="text-[9px] ${textColor} leading-[1.1] mt-[1px]" title="${escapeHtml(item.boost)}">${linesHtml}</div>`
 }
 
 const formatModalPrice = (p: number): string => {

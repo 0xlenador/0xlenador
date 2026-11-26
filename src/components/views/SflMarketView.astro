@@ -93,14 +93,8 @@ const marketConfig = {
     clearComparison: t("sfl.modal.clearComparison"),
     selectItemToCompare: t("sfl.modal.selectItemToCompare"),
     supply: t("sfl.modal.supply"),
-    loading: t("sfl.modal.loading"),
-    noListings: t("sfl.modal.noListings"),
-    seller: t("sfl.modal.seller"),
     stemLabel: t("sfl.modal.stemLabel"),
     collectible: t("sfl.modal.collectible"),
-    floorDetected: t("sfl.modal.floorDetected"),
-    farmerFallback: t("sfl.modal.farmerFallback"),
-    currentMarketFloor: t("sfl.modal.currentMarketFloor"),
     noSalesDataChart: t("sfl.modal.noSalesDataChart"),
   },
 }
@@ -115,354 +109,562 @@ const faqItems = [
 ---
 
 <SflToolLayout activeTab="mercado">
+  <div
+    class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-3 mb-2 relative z-10 text-center sm:text-left"
+  >
+    <div class="w-full lg:w-auto">
+      <h1 class="text-xl md:text-2xl font-black text-white tracking-tighter mb-1">
+        {t("sfl.heading")}
+        <span class="text-emerald-500"> {t("sfl.heading.accent")}</span>
+      </h1>
+      <p class="text-terminal-secondary text-sm leading-snug max-w-2xl mx-auto sm:mx-0">
+        {t("sfl.intro")}
+      </p>
+    </div>
     <div
-      class="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-3 mb-2 relative z-10 text-center sm:text-left"
+      class="hidden lg:flex w-full lg:w-auto justify-center lg:justify-end shrink-0 lg:pt-1 gap-4"
     >
-      <div class="w-full lg:w-auto">
-        <h1 class="text-xl md:text-2xl font-black text-white tracking-tighter mb-1">
-          {t("sfl.heading")}
-          <span class="text-emerald-500"> {t("sfl.heading.accent")}</span>
-        </h1>
-        <p class="text-terminal-secondary text-sm leading-snug max-w-2xl mx-auto sm:mx-0">
-          {t("sfl.intro")}
-        </p>
-      </div>
-      <div class="hidden lg:flex w-full lg:w-auto justify-center lg:justify-end shrink-0 lg:pt-1 gap-4">
-        <!-- Tarjeta Yakkamon -->
-        <div
-          class="relative bg-white/[0.02] border border-amber-500/20 pr-4 rounded-2xl flex items-stretch shadow-[0_0_15px_rgba(245,158,11,0.05)] hover:border-amber-500/40 transition-colors group"
+      <!-- Tarjeta Yakkamon -->
+      <div
+        class="relative bg-white/[0.02] border border-amber-500/20 pr-4 rounded-2xl flex items-stretch shadow-[0_0_15px_rgba(245,158,11,0.05)] hover:border-amber-500/40 transition-colors group"
+      >
+        <!-- Badge Nuevo Juego sin fondo negro extra -->
+        <span
+          class="absolute -top-[7px] left-1/2 -translate-x-1/2 bg-[#0c1015] text-amber-500/90 border border-amber-500/20 px-1.5 py-[1px] rounded-[3px] text-[7px] font-mono font-bold uppercase tracking-widest whitespace-nowrap"
+          >{t("sfl.newGame")}</span
         >
-          <!-- Badge Nuevo Juego sin fondo negro extra -->
-          <span class="absolute -top-[7px] left-1/2 -translate-x-1/2 bg-[#0c1015] text-amber-500/90 border border-amber-500/20 px-1.5 py-[1px] rounded-[3px] text-[7px] font-mono font-bold uppercase tracking-widest whitespace-nowrap">{t("sfl.newGame")}</span>
 
-          <!-- Imagen alto completo al borde sin espacio -->
-          <a href="https://yakkamon.com/?code=VNTB4Y" target="_blank" rel="noopener noreferrer" class="w-12 shrink-0 overflow-hidden cursor-pointer flex items-center justify-center rounded-l-[15px] bg-amber-500/5">
-            <img
-              src="/img/cripto/yakkamon.webp"
-              alt="Yakkamon"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform"
-            />
+        <!-- Imagen alto completo al borde sin espacio -->
+        <a
+          href="https://yakkamon.com/?code=VNTB4Y"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-12 shrink-0 overflow-hidden cursor-pointer flex items-center justify-center rounded-l-[15px] bg-amber-500/5"
+        >
+          <img
+            src="/img/cripto/yakkamon.webp"
+            alt="Yakkamon"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+          />
+        </a>
+
+        <div class="flex flex-col text-left justify-center py-2 pl-3">
+          <a
+            href="https://yakkamon.com/?code=VNTB4Y"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-1 text-[15px] text-white font-black tracking-wider leading-none hover:text-amber-400 transition-colors mb-1"
+          >
+            Yakkamon
+            <svg
+              class="w-3 h-3 text-amber-500/70"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              ></path>
+            </svg>
           </a>
-          
-          <div class="flex flex-col text-left justify-center py-2 pl-3">
-            <a href="https://yakkamon.com/?code=VNTB4Y" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-[15px] text-white font-black tracking-wider leading-none hover:text-amber-400 transition-colors mb-1">
-              Yakkamon
-              <svg class="w-3 h-3 text-amber-500/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-            <div class="flex items-center gap-1 group/code cursor-pointer" onclick="navigator.clipboard.writeText('YAKKA-VNTB4Y'); const i=this.querySelector('.copy-icon'); const c=this.querySelector('.check-icon'); i.classList.add('hidden'); c.classList.remove('hidden'); setTimeout(()=>{i.classList.remove('hidden'); c.classList.add('hidden');}, 2000)" title={t("sfl.market.copyCode")}>
-              <span class="text-[7px] font-mono text-terminal-secondary group-hover/code:text-amber-400 transition-colors uppercase tracking-widest">Code: <span class="text-[9px] font-bold text-white group-hover/code:text-amber-400">YAKKA-VNTB4Y</span></span>
-              
-              <!-- Ícono de copiar normal -->
-              <svg class="w-2.5 h-2.5 text-terminal-muted/60 group-hover/code:text-amber-400/80 transition-colors copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-              </svg>
+          <div
+            class="flex items-center gap-1 group/code cursor-pointer"
+            onclick="navigator.clipboard.writeText('YAKKA-VNTB4Y'); const i=this.querySelector('.copy-icon'); const c=this.querySelector('.check-icon'); i.classList.add('hidden'); c.classList.remove('hidden'); setTimeout(()=>{i.classList.remove('hidden'); c.classList.add('hidden');}, 2000)"
+            title={t("sfl.market.copyCode")}
+          >
+            <span
+              class="text-[7px] font-mono text-terminal-secondary group-hover/code:text-amber-400 transition-colors uppercase tracking-widest"
+              >Code: <span class="text-[9px] font-bold text-white group-hover/code:text-amber-400"
+                >YAKKA-VNTB4Y</span
+              ></span
+            >
 
-              <!-- Ícono de check verde (oculto por defecto) -->
-              <svg class="w-2.5 h-2.5 text-emerald-500 hidden check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
+            <!-- Ícono de copiar normal -->
+            <svg
+              class="w-2.5 h-2.5 text-terminal-muted/60 group-hover/code:text-amber-400/80 transition-colors copy-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+
+            <!-- Ícono de check verde (oculto por defecto) -->
+            <svg
+              class="w-2.5 h-2.5 text-emerald-500 hidden check-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"></path>
+            </svg>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-
+  <div id="loadingState" class="relative z-10 mb-2 min-h-[100vh]">
+    <div
+      class="grid grid-cols-[max-content_max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar"
+    >
+      <!-- Fila 1 -->
+      <div
+        class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"
+      >
+      </div>
+      <div
+        class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"
+      >
+      </div>
+      <div
+        class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"
+      >
+      </div>
+      <div
+        class="flex h-[268px] min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2"
+      >
+      </div>
+      <!-- Fila 2 -->
+      <div
+        class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"
+      >
+      </div>
+      <div
+        class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"
+      >
+      </div>
+      <div
+        class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"
+      >
       </div>
     </div>
 
+    <!-- Skeleton de Título y Botón Refresh -->
+    <div class="flex flex-wrap items-center justify-between mb-2 gap-2 mt-2">
+      <div class="h-7 w-48 bg-white/[0.03] rounded-lg animate-pulse border border-white/5"></div>
+      <div
+        class="h-8 w-full sm:w-24 bg-white/[0.03] rounded-xl animate-pulse border border-white/5"
+      >
+      </div>
+    </div>
+
+    <!-- Skeleton de Filtros y Buscador -->
     <div
-      id="loadingState"
-      class="relative z-10 mb-2 min-h-[100vh]"
+      class="bg-black/20 border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 shadow-2xl animate-pulse"
     >
-      <div class="grid grid-cols-[max-content_max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar">
-        <!-- Fila 1 -->
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-        <div class="flex h-[268px] min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5 row-span-2"></div>
-        <!-- Fila 2 -->
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-        <div class="min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 h-[130px] bg-white/[0.03] rounded-[16px] animate-pulse border border-white/5"></div>
-      </div>
+      <div class="h-10 w-full lg:w-1/3 bg-white/[0.03] rounded-lg border border-white/5"></div>
+      <div class="h-10 w-full lg:w-1/2 bg-white/[0.03] rounded-lg border border-white/5"></div>
+    </div>
 
-      <!-- Skeleton de Título y Botón Refresh -->
-      <div class="flex flex-wrap items-center justify-between mb-2 gap-2 mt-2">
-        <div class="h-7 w-48 bg-white/[0.03] rounded-lg animate-pulse border border-white/5"></div>
-        <div class="h-8 w-full sm:w-24 bg-white/[0.03] rounded-xl animate-pulse border border-white/5"></div>
-      </div>
+    <!-- Skeleton de Cabecera (solo desktop) -->
+    <div
+      class="hidden lg:grid grid-cols-[22%_10%_8%_11%_12%_10%_27%] border-b border-white/[0.05] py-4"
+    >
+      <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-4"></div>
+      <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+      <div class="h-4 w-12 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+      <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+      <div class="h-4 w-14 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+      <div class="h-4 w-14 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
+      <div class="h-4 w-28 bg-white/[0.03] rounded border border-white/5 ml-auto mr-4"></div>
+    </div>
 
-      <!-- Skeleton de Filtros y Buscador -->
-      <div class="bg-black/20 border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 shadow-2xl animate-pulse">
-        <div class="h-10 w-full lg:w-1/3 bg-white/[0.03] rounded-lg border border-white/5"></div>
-        <div class="h-10 w-full lg:w-1/2 bg-white/[0.03] rounded-lg border border-white/5"></div>
-      </div>
-
-      <!-- Skeleton de Cabecera (solo desktop) -->
-      <div class="hidden lg:grid grid-cols-[22%_10%_8%_11%_12%_10%_27%] border-b border-white/[0.05] py-4">
-        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-4"></div>
-        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
-        <div class="h-4 w-12 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
-        <div class="h-4 w-16 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
-        <div class="h-4 w-14 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
-        <div class="h-4 w-14 bg-white/[0.03] rounded border border-white/5 ml-auto"></div>
-        <div class="h-4 w-28 bg-white/[0.03] rounded border border-white/5 ml-auto mr-4"></div>
-      </div>
-
-      <!-- Skeleton de Filas de Tabla -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:block gap-4 lg:gap-0 lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0">
-        {[1, 2, 3, 4, 5, 6].map(() => (
+    <!-- Skeleton de Filas de Tabla -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:block gap-4 lg:gap-0 lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0"
+    >
+      {
+        [1, 2, 3, 4, 5, 6].map(() => (
           <div class="bg-black/20 lg:bg-transparent rounded-xl lg:rounded-none p-4 lg:p-0 border border-white/5 lg:border-none">
-            <!-- Diseño móvil/tablet: skeleton de carta -->
+            {/* Diseño móvil/tablet: skeleton de carta */}
             <div class="lg:hidden flex flex-col gap-4 animate-pulse">
               <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/5"></div>
+                  <div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/5" />
                   <div class="flex flex-col gap-2">
-                    <div class="w-24 h-4 rounded bg-white/[0.03] border border-white/5"></div>
-                    <div class="w-16 h-3 rounded bg-white/[0.03] border border-white/5"></div>
+                    <div class="w-24 h-4 rounded bg-white/[0.03] border border-white/5" />
+                    <div class="w-16 h-3 rounded bg-white/[0.03] border border-white/5" />
                   </div>
                 </div>
-                <div class="w-20 h-8 rounded-lg bg-white/[0.03] border border-white/5"></div>
+                <div class="w-20 h-8 rounded-lg bg-white/[0.03] border border-white/5" />
               </div>
-              <div class="w-full h-10 rounded-lg bg-white/[0.03] border border-white/5"></div>
+              <div class="w-full h-10 rounded-lg bg-white/[0.03] border border-white/5" />
             </div>
-            
-            <!-- Diseño desktop: skeleton de fila -->
+
+            {/* Diseño desktop: skeleton de fila */}
             <div class="hidden lg:grid grid-cols-[22%_10%_8%_11%_12%_10%_27%] items-center py-4 animate-pulse">
               <div class="flex items-center gap-3 px-4">
-                <div class="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/5"></div>
+                <div class="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/5" />
                 <div class="flex flex-col gap-2">
-                  <div class="w-24 h-4 rounded bg-white/[0.03] border border-white/5"></div>
-                  <div class="w-16 h-3 rounded bg-white/[0.03] border border-white/5"></div>
+                  <div class="w-24 h-4 rounded bg-white/[0.03] border border-white/5" />
+                  <div class="w-16 h-3 rounded bg-white/[0.03] border border-white/5" />
                 </div>
               </div>
-              <div class="flex justify-end px-4"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
-              <div class="flex justify-end px-3"><div class="w-12 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
-              <div class="flex justify-end px-3"><div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
-              <div class="flex justify-end px-3"><div class="w-14 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
-              <div class="flex justify-end px-3"><div class="w-14 h-4 rounded bg-white/[0.03] border border-white/5"></div></div>
-              <div class="flex justify-end px-4"><div class="w-44 h-10 rounded-lg bg-white/[0.03] border border-white/5"></div></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div
-      id="errorState"
-      class="hidden py-12 px-6 bg-red-500/10 border border-red-500/20 rounded-xl relative z-10"
-    >
-      <p id="errorMsg" class="text-red-400 text-sm text-center">{t("sfl.error")}</p>
-    </div>
-
-    <div id="dataContainer" class="hidden relative z-10">
-      <!-- Dashboard Resumen -->
-      <!-- Nuevo Dashboard (Estructura de 7 Cajas) -->
-      <div class="relative mb-2">
-        <div class="grid grid-cols-[max-content_max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar">
-          <!-- Fila 1 -->
-          <div id="dashBox1" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-4xl font-bold text-white/20">1</span>
-          </div>
-          <div id="dashBox2" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-sm font-bold text-white/20 uppercase tracking-widest">{t("sfl.dashboard.pending")}</span>
-          </div>
-          <div id="dashBox3" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-sm font-bold text-white/20 uppercase tracking-widest">{t("sfl.dashboard.pending")}</span>
-          </div>
-          <div id="dashBox4" class="relative flex bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2 min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0">
-            <span class="text-6xl font-bold text-white/20">4</span>
-          </div>
-          <!-- Fila 2 -->
-          <div id="dashBox5" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-4xl font-bold text-white/20">5</span>
-          </div>
-          <div class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 flex flex-row gap-2 h-full">
-            <div id="dashBox6" class="flex-1 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center relative min-h-[130px]">
-              <span class="text-4xl font-bold text-white/20">6</span>
-            </div>
-            <div id="dashBox6_1" class="flex-1 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center relative min-h-[130px]">
-              <span class="text-3xl font-bold text-white/20">6.1</span>
-            </div>
-          </div>
-          <div id="dashBox7" class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]">
-            <span class="text-4xl font-bold text-white/20">7</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ancla Oculta para el Motor Central -->
-      <span class="price-value hidden" data-coin-id="flower-2" data-needs-volume-7d="true"></span>
-      <span class="price-value hidden" data-coin-id="bitcoin"></span>
-      <div
-        class="flex flex-wrap items-center justify-between mb-2 gap-2"
-      >
-        <div class="flex items-center flex-wrap gap-2">
-          <h2 class="text-[20px] font-semibold text-white">
-            {t("sfl.activity")}
-            <span
-              class="text-[10px] text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline"
-              >P2P History</span>
-          </h2>
-        </div>
-        
-        <label class="flex items-center cursor-pointer gap-2 mr-1 sm:mr-3 group ml-auto" title={t("sfl.market.showFlower")}>
-          <span class="text-[10px] sm:text-xs font-bold text-terminal-muted group-hover:text-white transition-colors">$FLOWER</span>
-          <div class="relative flex items-center">
-            <input type="checkbox" id="flowerRowToggle" class="sr-only peer" checked>
-            <div class="w-8 h-4 bg-black/50 border border-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-terminal-muted peer-checked:after:bg-emerald-400 after:border-transparent after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500/20"></div>
-          </div>
-        </label>
-        
-        <button
-          id="fetchBtn"
-          class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto shrink-0 justify-center"
-        >
-          <svg
-            id="fetchBtnRefreshIcon"
-            class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            ></path></svg
-          >
-          <svg 
-            id="fetchBtnCheckIcon"
-            class="w-3.5 h-3.5 shrink-0 hidden" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-            ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span id="fetchBtnText" data-original-text={t("sfl.refresh")} data-updated-text={t("sfl.updated")}>{t("sfl.refresh")}</span>
-        </button>
-      </div>
-
-      <!-- Filtros y Buscador -->
-      <div
-        class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 relative z-30 shadow-2xl"
-      >
-        <!-- Buscador Pro -->
-        <div class="w-full lg:w-1/3 relative z-40 group">
-          <div
-            class="relative flex items-center w-full bg-black/40 border border-white/10 rounded-lg overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/30 transition-all duration-300"
-          >
-            <div class="pl-3 pr-2 flex items-center justify-center">
-              <svg
-                id="searchIcon"
-                class="w-4 h-4 text-white/40 group-focus-within:text-emerald-400 transition-colors duration-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </div>
-            <input
-              type="text"
-              id="searchInput"
-              placeholder={t("sfl.search.placeholder")}
-              autocomplete="off"
-              spellcheck="false"
-              style="outline: none !important; box-shadow: none !important; border: none !important; background-color: transparent !important;"
-              class="w-full px-2 py-3 text-white placeholder-white/30 text-sm"
-            />
-            <button
-              id="clearSearchBtn"
-              class="hidden absolute right-3 focus:outline-none hover:bg-white/10 p-1 rounded-full transition-colors"
-            >
-              <svg
-                class="w-4 h-4 text-white/50 hover:text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5">
-          <!-- Segmented Control para Categorías (Scroll horizontal en móvil con sangría) -->
-          <div class="relative w-full lg:w-auto scroll-hint-wrapper">
-            <div
-              class="w-[calc(100%)] lg:w-auto lg:ml-0 lg:px-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0 scroll-area"
-            >
-              <div
-                class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 w-max md:w-full lg:w-max md:gap-1 lg:gap-0"
-              >
-                <button
-                  class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
-                  data-category="resources"
-                  onclick="window.handleCategory('resources')"
-                >
-                  <img
-                    src="/img/sunflowerland/Eggplant.png"
-                    alt="Resources"
-                    class="w-4 h-4 object-contain pixelated"
-                  />
-                  Resources
-                </button>
-                <button
-                  class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
-                  data-category="powerups"
-                  onclick="window.handleCategory('powerups')"
-                >
-                  <img
-                    src="/img/sunflowerland/123/energy.png"
-                    alt="Power Ups"
-                    class="w-4 h-4 object-contain pixelated"
-                  />
-                  Power Ups
-                </button>
-                <button
-                  class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
-                  data-category="cosmetics"
-                  onclick="window.handleCategory('cosmetics')"
-                >
-                  <img
-                    src="/img/sunflowerland/123/bear.png"
-                    alt="Cosmetics"
-                    class="w-4 h-4 object-contain pixelated"
-                  />
-                  Cosmetics
-                </button>
-                <button
-                  class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
-                  data-category="buds"
-                  onclick="window.handleCategory('buds')"
-                >
-                  <img
-                    src="/img/sunflowerland/123/bud.png"
-                    alt="Buds"
-                    class="w-4 h-4 object-contain pixelated"
-                  />
-                  Buds
-                </button>
-                <button
-                  class="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0 flex items-center justify-center md:flex-1 lg:flex-none"
-                  disabled
-                  title={t("sfl.market.comingSoon")}>Pets</button
-                >
+              <div class="flex justify-end px-4">
+                <div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5" />
+              </div>
+              <div class="flex justify-end px-3">
+                <div class="w-12 h-4 rounded bg-white/[0.03] border border-white/5" />
+              </div>
+              <div class="flex justify-end px-3">
+                <div class="w-16 h-4 rounded bg-white/[0.03] border border-white/5" />
+              </div>
+              <div class="flex justify-end px-3">
+                <div class="w-14 h-4 rounded bg-white/[0.03] border border-white/5" />
+              </div>
+              <div class="flex justify-end px-3">
+                <div class="w-14 h-4 rounded bg-white/[0.03] border border-white/5" />
+              </div>
+              <div class="flex justify-end px-4">
+                <div class="w-44 h-10 rounded-lg bg-white/[0.03] border border-white/5" />
               </div>
             </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div
+    id="errorState"
+    class="hidden py-12 px-6 bg-red-500/10 border border-red-500/20 rounded-xl relative z-10"
+  >
+    <p id="errorMsg" class="text-red-400 text-sm text-center">{t("sfl.error")}</p>
+  </div>
+
+  <div id="dataContainer" class="hidden relative z-10">
+    <!-- Dashboard Resumen -->
+    <!-- Nuevo Dashboard (Estructura de 7 Cajas) -->
+    <div class="relative mb-2">
+      <div
+        class="grid grid-cols-[max-content_max-content_max-content_max-content] overflow-x-auto snap-x snap-mandatory gap-2 mt-7 mb-7 pb-6 lg:grid-cols-4 lg:gap-2 lg:pb-0 lg:overflow-visible no-scrollbar"
+      >
+        <!-- Fila 1 -->
+        <div
+          id="dashBox1"
+          class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]"
+        >
+          <span class="text-4xl font-bold text-white/20">1</span>
+        </div>
+        <div
+          id="dashBox2"
+          class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]"
+        >
+          <span class="text-sm font-bold text-white/20 uppercase tracking-widest"
+            >{t("sfl.dashboard.pending")}</span
+          >
+        </div>
+        <div
+          id="dashBox3"
+          class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]"
+        >
+          <span class="text-sm font-bold text-white/20 uppercase tracking-widest"
+            >{t("sfl.dashboard.pending")}</span
+          >
+        </div>
+        <div
+          id="dashBox4"
+          class="relative flex bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex-col items-center justify-center min-h-[268px] row-span-2 min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0"
+        >
+          <span class="text-6xl font-bold text-white/20">4</span>
+        </div>
+        <!-- Fila 2 -->
+        <div
+          id="dashBox5"
+          class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]"
+        >
+          <span class="text-4xl font-bold text-white/20">5</span>
+        </div>
+        <div
+          class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 flex flex-row gap-2 h-full"
+        >
+          <div
+            id="dashBox6"
+            class="flex-1 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center relative min-h-[130px]"
+          >
+            <span class="text-4xl font-bold text-white/20">6</span>
+          </div>
+          <div
+            id="dashBox6_1"
+            class="flex-1 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center relative min-h-[130px]"
+          >
+            <span class="text-3xl font-bold text-white/20">6.1</span>
+          </div>
+        </div>
+        <div
+          id="dashBox7"
+          class="relative min-w-[85vw] sm:min-w-[320px] lg:min-w-0 snap-center shrink-0 bg-white/[0.03] border border-white/5 rounded-[16px] shadow-inner flex flex-col items-center justify-center min-h-[130px]"
+        >
+          <span class="text-4xl font-bold text-white/20">7</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ancla Oculta para el Motor Central -->
+    <span class="price-value hidden" data-coin-id="flower-2" data-needs-volume-7d="true"></span>
+    <span class="price-value hidden" data-coin-id="bitcoin"></span>
+    <div class="flex flex-wrap items-center justify-between mb-2 gap-2">
+      <div class="flex items-center flex-wrap gap-2">
+        <h2 class="text-[20px] font-semibold text-white">
+          {t("sfl.activity")}
+          <span
+            class="text-[10px] text-terminal-muted font-normal ml-2 tracking-wide hidden sm:inline"
+            >P2P History</span
+          >
+        </h2>
+      </div>
+
+      <label
+        class="flex items-center cursor-pointer gap-2 mr-1 sm:mr-3 group ml-auto"
+        title={t("sfl.market.showFlower")}
+      >
+        <span
+          class="text-[10px] sm:text-xs font-bold text-terminal-muted group-hover:text-white transition-colors"
+          >$FLOWER</span
+        >
+        <div class="relative flex items-center">
+          <input type="checkbox" id="flowerRowToggle" class="sr-only peer" checked />
+          <div
+            class="w-8 h-4 bg-black/50 border border-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-terminal-muted peer-checked:after:bg-emerald-400 after:border-transparent after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500/20"
+          >
+          </div>
+        </div>
+      </label>
+
+      <button
+        id="fetchBtn"
+        class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs rounded-xl transition-colors whitespace-nowrap flex items-center gap-2 group w-full sm:w-auto shrink-0 justify-center"
+      >
+        <svg
+          id="fetchBtnRefreshIcon"
+          class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          ></path></svg
+        >
+        <svg
+          id="fetchBtnCheckIcon"
+          class="w-3.5 h-3.5 shrink-0 hidden"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"
+          ></path></svg
+        >
+        <span
+          id="fetchBtnText"
+          data-original-text={t("sfl.refresh")}
+          data-updated-text={t("sfl.updated")}>{t("sfl.refresh")}</span
+        >
+      </button>
+    </div>
+
+    <!-- Filtros y Buscador -->
+    <div
+      class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl p-2 lg:p-3 mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 relative z-30 shadow-2xl"
+    >
+      <!-- Buscador Pro -->
+      <div class="w-full lg:w-1/3 relative z-40 group">
+        <div
+          class="relative flex items-center w-full bg-black/40 border border-white/10 rounded-lg overflow-hidden focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/30 transition-all duration-300"
+        >
+          <div class="pl-3 pr-2 flex items-center justify-center">
+            <svg
+              id="searchIcon"
+              class="w-4 h-4 text-white/40 group-focus-within:text-emerald-400 transition-colors duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder={t("sfl.search.placeholder")}
+            autocomplete="off"
+            spellcheck="false"
+            style="outline: none !important; box-shadow: none !important; border: none !important; background-color: transparent !important;"
+            class="w-full px-2 py-3 text-white placeholder-white/30 text-sm"
+          />
+          <button
+            id="clearSearchBtn"
+            class="hidden absolute right-3 focus:outline-none hover:bg-white/10 p-1 rounded-full transition-colors"
+          >
+            <svg
+              class="w-4 h-4 text-white/50 hover:text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5">
+        <!-- Segmented Control para Categorías (Scroll horizontal en móvil con sangría) -->
+        <div class="relative w-full lg:w-auto scroll-hint-wrapper">
+          <div
+            class="w-[calc(100%)] lg:w-auto lg:ml-0 lg:px-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0 scroll-area"
+          >
             <div
-              class="scroll-hint absolute right-0 top-0 bottom-1 w-12 bg-gradient-to-l from-[#111] to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 lg:hidden pr-1 opacity-0"
+              class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 w-max md:w-full lg:w-max md:gap-1 lg:gap-0"
+            >
+              <button
+                class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-emerald-400 bg-white/5 shadow-[0_0_15px_rgba(16,185,129,0.1)] whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
+                data-category="resources"
+                onclick="window.handleCategory('resources')"
+              >
+                <img
+                  src="/img/sunflowerland/Eggplant.png"
+                  alt="Resources"
+                  class="w-4 h-4 object-contain pixelated"
+                />
+                Resources
+              </button>
+              <button
+                class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
+                data-category="powerups"
+                onclick="window.handleCategory('powerups')"
+              >
+                <img
+                  src="/img/sunflowerland/123/energy.png"
+                  alt="Power Ups"
+                  class="w-4 h-4 object-contain pixelated"
+                />
+                Power Ups
+              </button>
+              <button
+                class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
+                data-category="cosmetics"
+                onclick="window.handleCategory('cosmetics')"
+              >
+                <img
+                  src="/img/sunflowerland/123/bear.png"
+                  alt="Cosmetics"
+                  class="w-4 h-4 object-contain pixelated"
+                />
+                Cosmetics
+              </button>
+              <button
+                class="category-btn relative px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 whitespace-nowrap shrink-0 transition-all duration-300 flex items-center justify-center gap-2 md:flex-1 lg:flex-none"
+                data-category="buds"
+                onclick="window.handleCategory('buds')"
+              >
+                <img
+                  src="/img/sunflowerland/123/bud.png"
+                  alt="Buds"
+                  class="w-4 h-4 object-contain pixelated"
+                />
+                Buds
+              </button>
+              <button
+                class="px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white/20 cursor-not-allowed whitespace-nowrap shrink-0 flex items-center justify-center md:flex-1 lg:flex-none"
+                disabled
+                title={t("sfl.market.comingSoon")}>Pets</button
+              >
+            </div>
+          </div>
+          <div
+            class="scroll-hint absolute right-0 top-0 bottom-1 w-12 bg-gradient-to-l from-[#111] to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 lg:hidden pr-1 opacity-0"
+          >
+            <svg
+              class="w-4 h-4 text-emerald-500/70 animate-pulse"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"></path></svg
+            >
+          </div>
+        </div>
+
+        <!-- Contenedor Tablet para Subfiltros y Ordenamiento (Fila Única en md) -->
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between lg:justify-start gap-3 md:gap-4 w-full lg:w-auto md:border-t md:border-white/5 md:pt-3 lg:border-none lg:pt-0"
+        >
+          <div class="hidden lg:block w-px h-10 bg-white/10"></div>
+          <!-- Separador vertical Desktop -->
+
+          <!-- Subfiltros Integrados -->
+          <div class="relative w-full md:w-auto lg:w-max scroll-hint-wrapper">
+            <div
+              id="subfilters-container"
+              class="flex items-center gap-5 opacity-30 grayscale pointer-events-none transition-all duration-300 w-full lg:w-max overflow-x-auto no-scrollbar pl-1 lg:pl-0 pb-2 lg:pb-0 scroll-area"
+            >
+              <label class="flex items-center gap-2 cursor-pointer group/label shrink-0">
+                <input
+                  type="checkbox"
+                  value="collectibles"
+                  checked
+                  onchange="window.toggleSubCategory('collectibles')"
+                  class="sub-checkbox-common w-4 h-4 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer"
+                />
+                <img
+                  src="/img/sunflowerland/powerups/freya_fox.png"
+                  alt="Collectibles"
+                  class="w-4 h-4 object-contain pixelated"
+                />
+                <span
+                  class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest"
+                  >Collectibles</span
+                >
+              </label>
+              <div class="w-px h-4 bg-white/10 shrink-0"></div>
+              <label class="flex items-center gap-2 cursor-pointer group/label shrink-0">
+                <input
+                  type="checkbox"
+                  value="wearables"
+                  checked
+                  onchange="window.toggleSubCategory('wearables')"
+                  class="sub-checkbox-common w-4 h-4 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer"
+                />
+                <img
+                  src="/img/sunflowerland/123/hat-wearables.webp"
+                  alt="Wearables"
+                  class="w-4 h-4 object-contain pixelated"
+                />
+                <span
+                  class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest"
+                  >Wearables</span
+                >
+              </label>
+            </div>
+            <div
+              class="scroll-hint absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-[#111] to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 lg:hidden pr-1 opacity-0"
             >
               <svg
                 class="w-4 h-4 text-emerald-500/70 animate-pulse"
@@ -478,266 +680,227 @@ const faqItems = [
             </div>
           </div>
 
-          <!-- Contenedor Tablet para Subfiltros y Ordenamiento (Fila Única en md) -->
+          <!-- Ordenamiento Móvil Estilo App -->
           <div
-            class="flex flex-col md:flex-row md:items-center md:justify-between lg:justify-start gap-3 md:gap-4 w-full lg:w-auto md:border-t md:border-white/5 md:pt-3 lg:border-none lg:pt-0"
+            class="relative w-[calc(100%)] md:w-auto md:max-w-[55%] md:flex-grow lg:hidden border-t border-white/5 pt-3 md:border-none md:pt-0 scroll-hint-wrapper overflow-hidden"
           >
-            <div class="hidden lg:block w-px h-10 bg-white/10"></div>
-            <!-- Separador vertical Desktop -->
-
-            <!-- Subfiltros Integrados -->
-            <div class="relative w-full md:w-auto lg:w-max scroll-hint-wrapper">
-              <div
-                id="subfilters-container"
-                class="flex items-center gap-5 opacity-30 grayscale pointer-events-none transition-all duration-300 w-full lg:w-max overflow-x-auto no-scrollbar pl-1 lg:pl-0 pb-2 lg:pb-0 scroll-area"
-              >
-                <label class="flex items-center gap-2 cursor-pointer group/label shrink-0">
-                  <input
-                    type="checkbox"
-                    value="collectibles"
-                    checked
-                    onchange="window.toggleSubCategory('collectibles')"
-                    class="sub-checkbox-common w-4 h-4 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer"
-                  />
-                  <img
-                    src="/img/sunflowerland/powerups/freya_fox.png"
-                    alt="Collectibles"
-                    class="w-4 h-4 object-contain pixelated"
-                  />
-                  <span
-                    class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest"
-                    >Collectibles</span
-                  >
-                </label>
-                <div class="w-px h-4 bg-white/10 shrink-0"></div>
-                <label class="flex items-center gap-2 cursor-pointer group/label shrink-0">
-                  <input
-                    type="checkbox"
-                    value="wearables"
-                    checked
-                    onchange="window.toggleSubCategory('wearables')"
-                    class="sub-checkbox-common w-4 h-4 accent-emerald-500 bg-black/50 border-white/20 rounded cursor-pointer"
-                  />
-                  <img
-                    src="/img/sunflowerland/123/hat-wearables.webp"
-                    alt="Wearables"
-                    class="w-4 h-4 object-contain pixelated"
-                  />
-                  <span
-                    class="text-xs font-semibold text-white/70 group-hover/label:text-white transition-colors uppercase tracking-widest"
-                    >Wearables</span
-                  >
-                </label>
-              </div>
-              <div
-                class="scroll-hint absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-[#111] to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 lg:hidden pr-1 opacity-0"
-              >
-                <svg
-                  class="w-4 h-4 text-emerald-500/70 animate-pulse"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"></path></svg
+            <div class="w-full overflow-x-auto no-scrollbar scroll-area md:flex md:justify-end">
+              <div class="flex items-center gap-1 w-max pr-6 md:pr-0">
+                <span
+                  class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0"
+                  >{t("sfl.market.sortby")}</span
+                >
+                <button
+                  class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
+                  onclick="window.handleSort('name')"
+                  >{t("sfl.market.sort.name")}
+                  <span class="sort-icon hidden" data-col="name">↓</span></button
+                >
+                <button
+                  class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
+                  onclick="window.handleSort('price')"
+                  >{t("sfl.market.sort.price")}
+                  <span class="sort-icon hidden" data-col="price">↓</span></button
+                >
+                <button
+                  class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
+                  onclick="window.handleSort('1d')"
+                  >{t("sfl.market.sort.24h")}
+                  <span class="sort-icon hidden" data-col="1d">↓</span></button
+                >
+                <button
+                  class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
+                  onclick="window.handleSort('7d')"
+                  >{t("sfl.market.sort.7d")}
+                  <span class="sort-icon hidden" data-col="7d">↓</span></button
+                >
+                <button
+                  class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
+                  onclick="window.handleSort('30d')"
+                  >{t("sfl.market.sort.30d")}
+                  <span class="sort-icon hidden" data-col="30d">↓</span></button
+                >
+                <button
+                  class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
+                  onclick="window.handleSort('180d')"
+                  >{t("sfl.market.sort.180d")}
+                  <span class="sort-icon hidden" data-col="180d">↓</span></button
                 >
               </div>
             </div>
-
-            <!-- Ordenamiento Móvil Estilo App -->
             <div
-              class="relative w-[calc(100%)] md:w-auto md:max-w-[55%] md:flex-grow lg:hidden border-t border-white/5 pt-3 md:border-none md:pt-0 scroll-hint-wrapper overflow-hidden"
+              class="scroll-hint absolute right-0 top-3 md:top-0 bottom-0 w-12 bg-gradient-to-l from-[#111] to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 md:hidden pr-1 opacity-0"
             >
-              <div class="w-full overflow-x-auto no-scrollbar scroll-area md:flex md:justify-end">
-                <div class="flex items-center gap-1 w-max pr-6 md:pr-0">
-                  <span
-                    class="text-[10px] font-mono text-white/30 uppercase tracking-widest mr-1 shrink-0"
-                    >{t("sfl.market.sortby")}</span
-                  >
-                  <button
-                    class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
-                    onclick="window.handleSort('name')"
-                    >{t("sfl.market.sort.name")}
-                    <span class="sort-icon hidden" data-col="name">↓</span></button
-                  >
-                  <button
-                    class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
-                    onclick="window.handleSort('price')"
-                    >{t("sfl.market.sort.price")}
-                    <span class="sort-icon hidden" data-col="price">↓</span></button
-                  >
-                  <button
-                    class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
-                    onclick="window.handleSort('1d')"
-                    >{t("sfl.market.sort.24h")}
-                    <span class="sort-icon hidden" data-col="1d">↓</span></button
-                  >
-                  <button
-                    class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
-                    onclick="window.handleSort('7d')"
-                    >{t("sfl.market.sort.7d")}
-                    <span class="sort-icon hidden" data-col="7d">↓</span></button
-                  >
-                  <button
-                    class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
-                    onclick="window.handleSort('30d')"
-                    >{t("sfl.market.sort.30d")}
-                    <span class="sort-icon hidden" data-col="30d">↓</span></button
-                  >
-                  <button
-                    class="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-[10px] font-semibold text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap flex items-center gap-1.5"
-                    onclick="window.handleSort('180d')"
-                    >{t("sfl.market.sort.180d")}
-                    <span class="sort-icon hidden" data-col="180d">↓</span></button
-                  >
-                </div>
-              </div>
-              <div
-                class="scroll-hint absolute right-0 top-3 md:top-0 bottom-0 w-12 bg-gradient-to-l from-[#111] to-transparent pointer-events-none flex justify-end items-center transition-opacity duration-300 md:hidden pr-1 opacity-0"
+              <svg
+                class="w-4 h-4 text-emerald-500/70 animate-pulse"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"></path></svg
               >
-                <svg
-                  class="w-4 h-4 text-emerald-500/70 animate-pulse"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"></path></svg
-                >
-              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="w-full">
-        <!-- Sentinel for Sticky Header -->
-        <div id="headerSentinel" class="w-full h-[1px]"></div>
-        <!-- Desktop Header -->
-        <div
-          id="desktopHeader"
-          class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[22%_10%_8%_11%_12%_10%_27%] border-b border-white/[0.05] items-center transition-all duration-300"
-        >
-          <div
-            class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('name')"
-          >
-            <div class="flex items-center gap-2">
-              {t("sfl.market.col.name")}
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="name">↕</span>
-            </div>
-          </div>
-          <div
-            class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('price')"
-            title={t("sfl.market.col.priceTooltip")}
-          >
-            <div class="flex items-center justify-end gap-2">
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="price">↕</span
-              >
-              {t("sfl.market.col.price")}
-            </div>
-          </div>
-          <div
-            class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('1d')"
-            title={t("sfl.market.col.24hTooltip")}
-          >
-            <div class="flex items-center justify-end gap-1.5">
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="1d">↕</span>
-              {t("sfl.market.col.chg24h")}
-            </div>
-          </div>
-          <div
-            id="marketcapHeader"
-            class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('marketcap')"
-            title={t("sfl.market.col.marketcapTooltip")}
-          >
-            <div class="flex items-center justify-end gap-1.5">
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="marketcap">↕</span>
-              Market Cap
-            </div>
-          </div>
-          <div
-            id="trades7dHeader"
-            class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none whitespace-nowrap flex justify-end"
-            onclick="window.handleSort('trades7d')"
-            title={t("sfl.market.col.vol7dTooltip")}
-          >
-            <div class="flex items-center justify-end gap-1">
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="trades7d">↕</span>
-              Vol. (7D)
-              <button 
-                onclick="event.stopPropagation(); document.body.classList.toggle('show-vol-units');" 
-                class="ml-0.5 text-white/30 hover:text-white transition-colors bg-transparent border-none p-0.5 rounded-full hover:bg-white/5"
-                title={t("sfl.market.toggleUnits")}
-              >
-                <svg class="w-[10px] h-[10px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div
-            id="supplyHeader"
-            class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
-            onclick="window.handleSort('supply')"
-            title={t("sfl.market.col.supplyTooltip")}
-          >
-            <div class="flex items-center justify-end gap-1.5">
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                data-col="supply">↕</span>
-              Circ. Supply
-            </div>
-          </div>
-          <div
-            class="py-4 px-4 flex flex-row items-center justify-end gap-3 group select-none"
-            title={t("sfl.market.col.graphTooltip")}
-          >
-            <!-- Título y Filtro -->
-            <div class="text-[13px] font-sans text-white/50 font-medium capitalize flex items-center justify-end gap-1.5 cursor-pointer hover:text-white transition-colors" id="graph-sort-btn" onclick="window.handleSort('7d')">
-              <span
-                class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
-                id="graph-sort-icon"
-                data-col="7d">↕</span>
-              <span id="graph-col-title">{t("sfl.market.col.graph")} (7D)</span>
-            </div>
-            <!-- Botones -->
-            <div class="bg-black/40 border border-white/5 rounded p-0.5 flex gap-0.5 cursor-default">
-              <button onclick="window.toggleGraph('7d')" id="btn-graph-7d" class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded bg-white/10 text-white font-bold transition-all">7D</button>
-              <button onclick="window.toggleGraph('30d')" id="btn-graph-30d" class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded text-terminal-muted hover:text-white font-bold transition-all">30D</button>
-              <button onclick="window.toggleGraph('180d')" id="btn-graph-180d" class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded text-terminal-muted hover:text-white font-bold transition-all">180D</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Contenedor Dinámico -->
-        <div
-          id="tableBody"
-          class="grid grid-cols-1 md:grid-cols-2 lg:block gap-4 lg:gap-0 lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0"
-        >
-          <!-- Filas/Cards dinámicas JS -->
         </div>
       </div>
     </div>
 
-    <SflTradingModal />
+    <div class="w-full">
+      <!-- Sentinel for Sticky Header -->
+      <div id="headerSentinel" class="w-full h-[1px]"></div>
+      <!-- Desktop Header -->
+      <div
+        id="desktopHeader"
+        class="sticky top-0 z-20 relative hidden lg:grid grid-cols-[22%_10%_8%_11%_12%_10%_27%] border-b border-white/[0.05] items-center transition-all duration-300"
+      >
+        <div
+          class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize cursor-pointer hover:text-white transition-colors group select-none"
+          onclick="window.handleSort('name')"
+        >
+          <div class="flex items-center gap-2">
+            {t("sfl.market.col.name")}
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              data-col="name">↕</span
+            >
+          </div>
+        </div>
+        <div
+          class="py-4 px-4 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+          onclick="window.handleSort('price')"
+          title={t("sfl.market.col.priceTooltip")}
+        >
+          <div class="flex items-center justify-end gap-2">
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              data-col="price">↕</span
+            >
+            {t("sfl.market.col.price")}
+          </div>
+        </div>
+        <div
+          class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+          onclick="window.handleSort('1d')"
+          title={t("sfl.market.col.24hTooltip")}
+        >
+          <div class="flex items-center justify-end gap-1.5">
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              data-col="1d">↕</span
+            >
+            {t("sfl.market.col.chg24h")}
+          </div>
+        </div>
+        <div
+          id="marketcapHeader"
+          class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+          onclick="window.handleSort('marketcap')"
+          title={t("sfl.market.col.marketcapTooltip")}
+        >
+          <div class="flex items-center justify-end gap-1.5">
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              data-col="marketcap">↕</span
+            >
+            Market Cap
+          </div>
+        </div>
+        <div
+          id="trades7dHeader"
+          class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none whitespace-nowrap flex justify-end"
+          onclick="window.handleSort('trades7d')"
+          title={t("sfl.market.col.vol7dTooltip")}
+        >
+          <div class="flex items-center justify-end gap-1">
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              data-col="trades7d">↕</span
+            >
+            Vol. (7D)
+            <button
+              onclick="event.stopPropagation(); document.body.classList.toggle('show-vol-units');"
+              class="ml-0.5 text-white/30 hover:text-white transition-colors bg-transparent border-none p-0.5 rounded-full hover:bg-white/5"
+              title={t("sfl.market.toggleUnits")}
+            >
+              <svg class="w-[10px] h-[10px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          id="supplyHeader"
+          class="py-4 px-3 text-[13px] font-sans text-white/50 font-medium capitalize text-right cursor-pointer hover:text-white transition-colors group select-none"
+          onclick="window.handleSort('supply')"
+          title={t("sfl.market.col.supplyTooltip")}
+        >
+          <div class="flex items-center justify-end gap-1.5">
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              data-col="supply">↕</span
+            >
+            Circ. Supply
+          </div>
+        </div>
+        <div
+          class="py-4 px-4 flex flex-row items-center justify-end gap-3 group select-none"
+          title={t("sfl.market.col.graphTooltip")}
+        >
+          <!-- Título y Filtro -->
+          <div
+            class="text-[13px] font-sans text-white/50 font-medium capitalize flex items-center justify-end gap-1.5 cursor-pointer hover:text-white transition-colors"
+            id="graph-sort-btn"
+            onclick="window.handleSort('7d')"
+          >
+            <span
+              class="sort-icon opacity-0 group-hover:opacity-50 transition-opacity"
+              id="graph-sort-icon"
+              data-col="7d">↕</span
+            >
+            <span id="graph-col-title">{t("sfl.market.col.graph")} (7D)</span>
+          </div>
+          <!-- Botones -->
+          <div class="bg-black/40 border border-white/5 rounded p-0.5 flex gap-0.5 cursor-default">
+            <button
+              onclick="window.toggleGraph('7d')"
+              id="btn-graph-7d"
+              class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded bg-white/10 text-white font-bold transition-all"
+              >7D</button
+            >
+            <button
+              onclick="window.toggleGraph('30d')"
+              id="btn-graph-30d"
+              class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded text-terminal-muted hover:text-white font-bold transition-all"
+              >30D</button
+            >
+            <button
+              onclick="window.toggleGraph('180d')"
+              id="btn-graph-180d"
+              class="graph-toggle-btn px-2 py-1 text-[10px] font-mono rounded text-terminal-muted hover:text-white font-bold transition-all"
+              >180D</button
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenedor Dinámico -->
+      <div
+        id="tableBody"
+        class="grid grid-cols-1 md:grid-cols-2 lg:block gap-4 lg:gap-0 lg:divide-y lg:divide-white/[0.02] mt-4 lg:mt-0"
+      >
+        <!-- Filas/Cards dinámicas JS -->
+      </div>
+    </div>
+  </div>
+
+  <SflTradingModal />
   <!-- FAQ Section SEO Optimized -->
   <section slot="footer" class="mt-16 mb-8 max-w-4xl mx-auto px-2 sm:px-0">
     <div class="text-center mb-10">
@@ -777,10 +940,16 @@ const faqItems = [
 </SflToolLayout>
 
 <style is:global>
-  body:not(.show-vol-units) .vol-units { display: none !important; }
-  body.show-vol-units .vol-flower { display: none !important; }
-  body.show-vol-units #volToggleBtn { background-color: rgba(255, 255, 255, 0.1); }
-  
+  body:not(.show-vol-units) .vol-units {
+    display: none !important;
+  }
+  body.show-vol-units .vol-flower {
+    display: none !important;
+  }
+  body.show-vol-units #volToggleBtn {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
   @keyframes fillCircle {
     0% {
       stroke-dashoffset: 62.83;
@@ -789,14 +958,7 @@ const faqItems = [
       stroke-dashoffset: 0;
     }
   }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
+
   #desktopHeader::before {
     content: "";
     position: absolute;
@@ -820,10 +982,9 @@ const faqItems = [
   type="application/json"
   id="sflMarketConfig"
   set:html={JSON.stringify(marketConfig).replace(/</g, "\\u003c")}
-></script>
+/>
 
 <script>
   import { initSflMarketView } from "../../lib/sfl/marketView"
   initSflMarketView()
 </script>
-

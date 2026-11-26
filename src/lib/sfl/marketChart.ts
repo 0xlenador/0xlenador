@@ -67,14 +67,8 @@ export interface ModalChartLabels {
   clearComparison: string
   selectItemToCompare: string
   supply: string
-  loading: string
-  noListings: string
-  seller: string
   stemLabel: string
   collectible: string
-  floorDetected: string
-  farmerFallback: string
-  currentMarketFloor: string
   noSalesDataChart: string
 }
 
@@ -118,22 +112,6 @@ interface PreparedCompareItem {
   hasOffset: boolean
 }
 
-interface TradeableListing {
-  sfl?: number
-  listedAt?: string | number
-  listedBy?: {
-    username?: string
-    bumpkinUri?: string
-  }
-}
-
-interface TradeableApiResponse {
-  data?: {
-    floor?: number
-    listings?: TradeableListing[]
-  }
-}
-
 declare global {
   interface Window {
     toggleCompareDropdown?: (forceState?: boolean) => void
@@ -144,7 +122,6 @@ declare global {
     openTradingModal?: (item: MarketItemRecord) => void
     closeTradingModal?: () => void
     setModalGraphPeriod?: (period: GraphPeriod) => void
-    fetchModalListings?: (item: MarketItemRecord) => Promise<void>
     __initSflTradingModal?: (ctx: ModalChartContext) => void
     __sflMarketModalCtx?: ModalChartContext
   }
@@ -228,7 +205,7 @@ const HTML_ESCAPE_MAP: Record<string, string> = {
 }
 
 /** Escapa caracteres HTML especiales antes de interpolar datos externos en `innerHTML`. */
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (ch) => HTML_ESCAPE_MAP[ch] ?? ch)
 }
 
@@ -1228,7 +1205,6 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
     const imgEl = document.getElementById("modalItemImg") as HTMLImageElement | null
     const nameEl = document.getElementById("modalItemName")
     const badgeEl = document.getElementById("modalItemCategoryBadge")
-    const linkEl = document.getElementById("modalExternalLink") as HTMLAnchorElement | null
     const subTitleEl = document.getElementById("modalItemSubtitle")
 
     if (imgEl) {
@@ -1347,19 +1323,6 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
         subTitleEl.textContent = "Sunflower Land P2P"
       }
     }
-    if (linkEl) {
-      const linkTextEl = document.getElementById("modalExternalLinkText")
-      if (item.category === "buds") {
-        const bId = item.budId || item.name.replace(/\D/g, "")
-        linkEl.href = `https://opensea.io/assets/matic/0x78a0cea8f323ff80985c5f9d1f9de18bb9e35996/${bId}`
-        linkEl.classList.remove("hidden")
-        if (linkTextEl) linkTextEl.textContent = "OpenSea"
-      } else {
-        linkEl.href = "https://sunflower-land.com/play/#/marketplace"
-        linkEl.classList.remove("hidden")
-        if (linkTextEl) linkTextEl.textContent = "SFL Market"
-      }
-    }
 
     // 2. KPIs
     const floorPriceEl = document.getElementById("modalFloorPrice")
@@ -1469,108 +1432,6 @@ export function initSflTradingModal(ctx: ModalChartContext): void {
       const sparkKey = `sparkline${period}` as "sparkline7d" | "sparkline30d" | "sparkline180d"
       const rawPoints = activeModalItem.history[sparkKey] || []
       renderModalChart(rawPoints, period, activeModalItem.currentPrice)
-    }
-  }
-
-  window.fetchModalListings = async (item: MarketItemRecord) => {
-    const currentCtx = activeCtx
-    if (!currentCtx) return
-    const container = document.getElementById("modalListingsContainer")
-    const countBadge = document.getElementById("modalListingsCountBadge")
-    if (!container) return
-
-    container.innerHTML = `
-      <div class="py-6 flex flex-col items-center justify-center text-center">
-        <svg class="w-6 h-6 text-emerald-400 animate-spin mb-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-        <span class="text-xs font-mono text-terminal-muted">${currentCtx.labels.loading}</span>
-      </div>
-    `
-
-    try {
-      const collection =
-        item.category === "buds"
-          ? "buds"
-          : item.category === "wearables"
-            ? "wearables"
-            : "collectibles"
-      const id = item.budId || (item.key ? item.key.split("-")[1] : "0")
-      const url = `https://api.sunflower-land.com/community/data?type=tradeable&collection=${collection}&id=${id}`
-
-      const res = await fetch(url)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json = (await res.json()) as TradeableApiResponse
-
-      if (json && json.data) {
-        const data = json.data
-        const listings = Array.isArray(data.listings) ? data.listings : []
-        if (countBadge) countBadge.textContent = String(listings.length)
-
-        if (listings.length === 0) {
-          container.innerHTML = `
-            <div class="py-6 px-4 rounded-xl bg-white/[0.01] border border-dashed border-white/10 text-center">
-              <span class="text-xs font-mono text-terminal-muted">${currentCtx.labels.noListings}</span>
-              ${data.floor ? `<div class="mt-2 text-xs font-mono text-white/50"> ${currentCtx.labels.floorDetected} <strong class="text-emerald-400">${data.floor} FLOWER</strong></div>` : ""}
-            </div>
-          `
-        } else {
-          const sflUsd = currentCtx.getSflUsdPrice() || 0.085
-          container.innerHTML = listings
-            .map((l) => {
-              const username = escapeHtml(l.listedBy?.username || currentCtx.labels.farmerFallback)
-              const bumpkinUri = l.listedBy?.bumpkinUri
-              const avatar = bumpkinUri
-                ? `https://animations.sunflower-land.com/bumpkin_image/${bumpkinUri}/100`
-                : "/img/sunflowerland/123/bear.png"
-              const dateStr = l.listedAt
-                ? new Date(l.listedAt).toLocaleDateString(
-                    currentCtx.clientLang === "es" ? "es-ES" : "en-US",
-                    { day: "2-digit", month: "short" },
-                  )
-                : "--"
-              const price = l.sfl || 0
-              const priceUsd = price * sflUsd
-
-              return `
-              <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 transition-colors">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-8 h-8 rounded-full bg-black/50 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
-                    <img src="${avatar}" alt="${username}" class="w-full h-full object-cover object-top" onerror="this.src='/img/sunflowerland/123/bear.png'" />
-                  </div>
-                  <div>
-                    <span class="text-xs font-bold text-white block leading-tight">${username}</span>
-                    <span class="text-[9px] font-mono text-white/40">${currentCtx.labels.seller} • ${dateStr}</span>
-                  </div>
-                </div>
-                <div class="flex flex-col items-end">
-                  <div class="flex items-center gap-1.5">
-                    <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
-                    <span class="text-xs sm:text-sm font-bold text-emerald-400 font-mono">${currentCtx.formatModalPrice(price)} FLOWER</span>
-                  </div>
-                  <span class="text-[9.5px] font-mono text-white/40 mt-0.5">${currentCtx.formatModalUsd(priceUsd)}</span>
-                </div>
-              </div>
-            `
-            })
-            .join("")
-        }
-      } else {
-        throw new Error("No data in response")
-      }
-    } catch {
-      if (countBadge) countBadge.textContent = "0"
-      const sflUsd = currentCtx.getSflUsdPrice() || 0.085
-      container.innerHTML = `
-        <div class="py-4 px-4 rounded-xl bg-white/[0.01] border border-white/5 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-white/70 font-sans">${currentCtx.labels.currentMarketFloor}</span>
-          </div>
-          <div class="flex items-center gap-1.5 font-mono">
-            <img src="/img/sunflowerland/flower.jpg" class="w-3.5 h-3.5 rounded-full object-cover" />
-            <span class="text-xs font-bold text-emerald-400">${item.currentPrice > 0 ? currentCtx.formatNumber(item.currentPrice, 2) : "--"} FLOWER</span>
-            <span class="text-[10px] text-white/40">(~$${currentCtx.formatNumber((item.currentPrice || 0) * sflUsd, 2)})</span>
-          </div>
-        </div>
-      `
     }
   }
 
