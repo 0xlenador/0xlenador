@@ -4,6 +4,12 @@
 // carruseles y métricas CoinGecko (6.1) para SflMarketView.astro.
 // ============================================================================
 
+import {
+  BASE_GEM_FIAT_PRICE,
+  CRYPTO_PAYMENT_DISCOUNT,
+  DEFAULT_OIL_MULTIPLIER,
+  getGemFiatPrice,
+} from "./constants"
 import type { ChangeResult, MarketItemRecord } from "./marketChart"
 
 export interface DashboardMarketItem extends MarketItemRecord {
@@ -598,7 +604,7 @@ function renderBox2SeasonAndConverter(labels: DashboardLabels): void {
                        ? `
                      <div class="ml-auto flex items-center gap-[2px]" onclick="event.stopPropagation()">
                        <span class="text-[8px] text-white/30 font-bold mt-[1px]">x</span>
-                       <input type="number" id="oilMultiplierInput" value="${window.sflOilMultiplier || 16.67}" step="any" class="w-10 bg-[#0c1015] border border-white/10 rounded px-1 py-[1px] text-[8.5px] font-mono text-white/70 outline-none focus:border-white/30 transition-colors text-center" oninput="window.updateOilMultiplier(this.value)" />
+                       <input type="number" id="oilMultiplierInput" value="${window.sflOilMultiplier || DEFAULT_OIL_MULTIPLIER}" step="any" class="w-10 bg-[#0c1015] border border-white/10 rounded px-1 py-[1px] text-[8.5px] font-mono text-white/70 outline-none focus:border-white/30 transition-colors text-center" oninput="window.updateOilMultiplier(this.value)" />
                      </div>
                    `
                        : ""
@@ -678,16 +684,6 @@ function renderBox2SeasonAndConverter(labels: DashboardLabels): void {
     // Usamos el precio interno del juego para la calculadora porque las Gemas y monedas se basan en este oráculo interno
     const sflPrice = window.sflInternalPrice || window.sflUsdPrice || 0.073
 
-    const getGemFiatPrice = (gems: number): number => {
-      if (gems < 650) return 1.29 / 100
-      if (gems < 1350) return 6.49 / 650
-      if (gems < 2800) return 12.99 / 1350
-      if (gems < 8000) return 25.99 / 2800
-      if (gems < 15500) return 0.0087825 // Hidden tier!
-      if (gems < 200000) return 129.99 / 15500
-      return 1299.99 / 200000
-    }
-
     const rates: Record<CalcCurrency, number> = {
       FLOWER: 1,
       COIN: 1 / (window.sflBestCoinsPerFlower || 1330),
@@ -698,21 +694,21 @@ function renderBox2SeasonAndConverter(labels: DashboardLabels): void {
 
     const baseAmountTmp = selectedCurr !== "Gema" ? amount * rates[selectedCurr] : 0
 
-    let fiatPricePerGem = 0.0129
+    let fiatPricePerGem = BASE_GEM_FIAT_PRICE
     if (window.sflGemBonusManual && window.sflGemBonus !== undefined) {
-      fiatPricePerGem = 0.0129 / (1 + window.sflGemBonus)
+      fiatPricePerGem = BASE_GEM_FIAT_PRICE / (1 + window.sflGemBonus)
     } else if (selectedCurr === "Gema") {
       fiatPricePerGem = getGemFiatPrice(amount)
     } else {
       const usdValue = baseAmountTmp * sflPrice
-      let targetGems = usdValue / (0.0129 * 0.8)
+      let targetGems = usdValue / (BASE_GEM_FIAT_PRICE * CRYPTO_PAYMENT_DISCOUNT)
       for (let i = 0; i < 3; i++) {
         fiatPricePerGem = getGemFiatPrice(targetGems)
-        targetGems = usdValue / (fiatPricePerGem * 0.8)
+        targetGems = usdValue / (fiatPricePerGem * CRYPTO_PAYMENT_DISCOUNT)
       }
     }
 
-    const gemBonus = 0.0129 / fiatPricePerGem - 1
+    const gemBonus = BASE_GEM_FIAT_PRICE / fiatPricePerGem - 1
     window.sflGemBonus = gemBonus
 
     const gemBonusInput = document.getElementById("gemBonusInput") as HTMLInputElement | null
@@ -721,7 +717,7 @@ function renderBox2SeasonAndConverter(labels: DashboardLabels): void {
     }
 
     // El costo mostrado en USD es el precio fiat con el descuento de cripto del 20%
-    const gemCostUsd = fiatPricePerGem * 0.8
+    const gemCostUsd = fiatPricePerGem * CRYPTO_PAYMENT_DISCOUNT
     const gemCostFlower = gemCostUsd / sflPrice
 
     rates.Gema = gemCostFlower
