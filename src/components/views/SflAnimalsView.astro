@@ -16,12 +16,15 @@ import animalsDataRaw from "../../content/data/sfl/animals/animals.json"
 import buildingsDataRaw from "../../content/data/sfl/animals/buildings.json"
 import consumablesDataRaw from "../../content/data/sfl/animals/consumables.json"
 import sflResourcesJson from "../../content/data/sfl/resources.json"
-import { calculateGemCostUsd, getRefinedSaltPrice, getHoneyTreatPrice } from "../../lib/sfl/constants"
+import bettyPricesJson from "../../content/data/sfl/betty_prices.json"
+import { calculateGemCostUsd, getRefinedSaltPrice, getHoneyTreatPrice, OFFICIAL_COINS_PER_FLOWER } from "../../lib/sfl/constants"
+import { resolveCost } from "../../lib/sfl/prices"
 import SflBoostsConfig from "../sfl/common/SflBoostsConfig.astro"
 
 // Lectura de precios P2P en FLOWER y USD desde sfl_data.json
 const marketPrices: Record<string, number> = {}
 let flowerUsd = 0.1388
+let bettyRatio = OFFICIAL_COINS_PER_FLOWER
 
 try {
   const sflDataPath = path.resolve(process.cwd(), "public/api/sfl_data.json")
@@ -41,6 +44,17 @@ try {
   console.error("Error leyendo sfl_data.json en build:", e)
 }
 
+// Tasa Betty óptima en Coins / FLOWER (equivalente a market.ts)
+let maxCoinsPerFlower = 0
+Object.entries(bettyPricesJson as Record<string, { sellPrice: number }>).forEach(([cropName, info]) => {
+  const p2pPrice = marketPrices[cropName]
+  if (p2pPrice && p2pPrice > 0 && info?.sellPrice > 0) {
+    const ratio = info.sellPrice / p2pPrice
+    if (ratio > maxCoinsPerFlower) maxCoinsPerFlower = ratio
+  }
+})
+if (maxCoinsPerFlower > 0) bettyRatio = maxCoinsPerFlower
+
 // Costo de 1 Gema en FLOWER (para Omnifeed)
 const gemCostUsd = calculateGemCostUsd(1).unitUsd
 const gemFlowerPrice = flowerUsd > 0 ? gemCostUsd / flowerUsd : 0
@@ -50,6 +64,28 @@ const resolveP2P = (name: string) => marketPrices[name] || 0
 const refinedSaltPriceFlower = getRefinedSaltPrice(resolveP2P)
 const honeyTreatCostFlower = getHoneyTreatPrice(resolveP2P)
 const honeyTreatCostUsd = honeyTreatCostFlower * flowerUsd
+
+// Caché de costos de captura/cueva (peces, crustáceos y Magic Mushroom) en build
+const buildCraftCostCache = new Map<string, number>()
+
+function resolveSlopIngredientUnitCost(name: string): { cost: number; priceSource: "p2p" | "craft" } {
+  const p2p = marketPrices[name] ?? 0
+  if (p2p > 0) return { cost: p2p, priceSource: "p2p" }
+
+  if (buildCraftCostCache.has(name)) {
+    return { cost: buildCraftCostCache.get(name)!, priceSource: "craft" }
+  }
+
+  const res = resolveCost(name, {
+    flowerPriceUsd: flowerUsd,
+    coinsPerFlower: bettyRatio,
+    resolveBasePrice: resolveP2P,
+    userState: null,
+  })
+  const craftCost = res.craftCostFlower > 0 ? res.craftCostFlower : res.marketPriceFlower
+  buildCraftCostCache.set(name, craftCost)
+  return { cost: craftCost, priceSource: "craft" }
+}
 
 const sflPowerUpsEntry = await getEntry("sfl", "powerups")
 const sflSkillsEntry = await getEntry("sfl", "skills")
@@ -240,76 +276,32 @@ const REQUIRED_FOOD_QTY: Record<string, number> = {
   pig: 1,
 }
 
-// Drops oficiales exactos según ANIMAL_RESOURCE_DROP de Sunflower Land
-const OFFICIAL_RESOURCE_DROPS: Record<string, Record<number, Array<{ name: string; amount: number; image: string }>>> = {
-  chicken: {
-    1: [{ name: "Egg", amount: 1, image: "/img/sunflowerland/Egg.png" }],
-    2: [{ name: "Egg", amount: 1, image: "/img/sunflowerland/Egg.png" }],
-    3: [{ name: "Egg", amount: 1, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
-    4: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
-    5: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
-    6: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
-    7: [{ name: "Egg", amount: 2, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
-    8: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 1, image: "/img/sunflowerland/Feather.png" }],
-    9: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
-    10: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
-    11: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
-    12: [{ name: "Egg", amount: 3, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
-    13: [{ name: "Egg", amount: 4, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
-    14: [{ name: "Egg", amount: 4, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 2, image: "/img/sunflowerland/Feather.png" }],
-    15: [{ name: "Egg", amount: 5, image: "/img/sunflowerland/Egg.png" }, { name: "Feather", amount: 3, image: "/img/sunflowerland/Feather.png" }],
-  },
-  cow: {
-    1: [{ name: "Milk", amount: 1, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
-    2: [{ name: "Milk", amount: 1, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
-    3: [{ name: "Milk", amount: 1, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
-    4: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
-    5: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 1, image: "/img/sunflowerland/Leather.png" }],
-    6: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
-    7: [{ name: "Milk", amount: 2, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
-    8: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
-    9: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 2, image: "/img/sunflowerland/Leather.png" }],
-    10: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
-    11: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
-    12: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
-    13: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
-    14: [{ name: "Milk", amount: 3, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 3, image: "/img/sunflowerland/Leather.png" }],
-    15: [{ name: "Milk", amount: 4, image: "/img/sunflowerland/Milk.png" }, { name: "Leather", amount: 4, image: "/img/sunflowerland/Leather.png" }],
-  },
-  sheep: {
-    1: [{ name: "Wool", amount: 1, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
-    2: [{ name: "Wool", amount: 1, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
-    3: [{ name: "Wool", amount: 1, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
-    4: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
-    5: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 1, image: "/img/sunflowerland/Merino Wool.png" }],
-    6: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
-    7: [{ name: "Wool", amount: 2, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
-    8: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
-    9: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 2, image: "/img/sunflowerland/Merino Wool.png" }],
-    10: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
-    11: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
-    12: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
-    13: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
-    14: [{ name: "Wool", amount: 3, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 3, image: "/img/sunflowerland/Merino Wool.png" }],
-    15: [{ name: "Wool", amount: 4, image: "/img/sunflowerland/Wool.png" }, { name: "Merino Wool", amount: 4, image: "/img/sunflowerland/Merino Wool.png" }],
-  },
-  pig: {
-    1: [{ name: "Truffle", amount: 1, image: "/img/sunflowerland/truffle.webp" }],
-    2: [{ name: "Truffle", amount: 1, image: "/img/sunflowerland/truffle.webp" }],
-    3: [{ name: "Truffle", amount: 1, image: "/img/sunflowerland/truffle.webp" }],
-    4: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
-    5: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
-    6: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
-    7: [{ name: "Truffle", amount: 2, image: "/img/sunflowerland/truffle.webp" }],
-    8: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    9: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    10: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    11: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    12: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    13: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    14: [{ name: "Truffle", amount: 3, image: "/img/sunflowerland/truffle.webp" }],
-    15: [{ name: "Truffle", amount: 4, image: "/img/sunflowerland/truffle.webp" }],
-  },
+// Helper único de drops por nivel desde animals.json (SSOT unificada)
+function getDropsForAnimalLevel(animalId: string, level: number): Array<{ name: string; amount: number; image: string }> {
+  const animalDef = (animalsDataRaw as Record<string, any>)[animalId]
+  if (!animalDef?.drops) return []
+
+  const resolveDropAmount = (drop: any): number => {
+    if (!drop || level < (drop.unlockLevel || 1)) return 0
+    if (Array.isArray(drop.yieldTiers)) {
+      const tier = drop.yieldTiers.find((t: any) => level >= t.minLevel && level <= t.maxLevel)
+      return tier ? tier.amount : 0
+    }
+    return drop.amount || 0
+  }
+
+  const result: Array<{ name: string; amount: number; image: string }> = []
+  const primary = animalDef.drops.primary
+  const primaryAmt = resolveDropAmount(primary)
+  if (primaryAmt > 0) {
+    result.push({ name: primary.name, amount: primaryAmt, image: primary.image })
+  }
+  const secondary = animalDef.drops.secondary
+  const secondaryAmt = resolveDropAmount(secondary)
+  if (secondaryAmt > 0) {
+    result.push({ name: secondary.name, amount: secondaryAmt, image: secondary.image })
+  }
+  return result
 }
 
 interface FoodCandidate {
@@ -321,6 +313,8 @@ interface FoodCandidate {
   ingredientImage?: string
   ingredientName?: string
   ingredientAmount?: number
+  priceSource: "p2p" | "craft" | "gem"
+  ingredientsList: Array<{ name: string; amount: number }>
   xp: number
   unitCostFlower: number
   requiredPerFeed: number
@@ -356,9 +350,9 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
     const options = consumable?.options || []
 
     for (const opt of options) {
-      const price = marketPrices[opt.name] ?? 0
-      if (price > 0) {
-        const totalCost = price * opt.amount
+      const { cost: unitPrice, priceSource } = resolveSlopIngredientUnitCost(opt.name)
+      if (unitPrice > 0) {
+        const totalCost = unitPrice * opt.amount
         candidates.push({
           id: `${slopId}_${opt.name}`,
           name: consumable?.name || "Slop",
@@ -368,6 +362,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
           ingredientImage: opt.image,
           ingredientName: opt.name,
           ingredientAmount: opt.amount,
+          priceSource,
+          ingredientsList: [{ name: opt.name, amount: opt.amount }],
           xp: slopXp,
           unitCostFlower: totalCost,
           requiredPerFeed: 1,
@@ -389,6 +385,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         ingredientImage: "/img/sunflowerland/Potato.png",
         ingredientName: "Potato",
         ingredientAmount: 150,
+        priceSource: "p2p",
+        ingredientsList: [{ name: "Potato", amount: 150 }],
         xp: slopXp,
         unitCostFlower: 0.0346,
         requiredPerFeed: 1,
@@ -407,7 +405,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         id: "kernel_blend",
         name: "Kernel Blend",
         image: "/img/sunflowerland/animals/kernel_blend.webp",
-        ingredient: "1x Corn",
+        ingredient: `${reqQty}x Corn`,
+        ingredientsList: [{ name: "Corn", amount: 1 }],
         price: marketPrices["Corn"] || 0.02,
         xp: currentLevel <= 2 ? 60 : 10,
         isFav: currentLevel <= 2,
@@ -416,7 +415,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         id: "hay",
         name: "Hay",
         image: "/img/sunflowerland/animals/hay.webp",
-        ingredient: "1x Wheat",
+        ingredient: `${reqQty}x Wheat`,
+        ingredientsList: [{ name: "Wheat", amount: 1 }],
         price: marketPrices["Wheat"] || 0.01598,
         xp: currentLevel >= 3 && currentLevel <= 5 ? 60 : (currentLevel <= 2 ? 10 : 20),
         isFav: currentLevel >= 3 && currentLevel <= 5,
@@ -425,7 +425,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         id: "nutribarley",
         name: "NutriBarley",
         image: "/img/sunflowerland/animals/nutri_barley.webp",
-        ingredient: "1x Barley",
+        ingredient: `${reqQty}x Barley`,
+        ingredientsList: [{ name: "Barley", amount: 1 }],
         price: marketPrices["Barley"] || 0.02285,
         xp: currentLevel >= 6 && currentLevel <= 9 ? 60 : (currentLevel <= 5 ? 20 : 30),
         isFav: currentLevel >= 6 && currentLevel <= 9,
@@ -434,7 +435,12 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         id: "mixed_grain",
         name: "Mixed Grain",
         image: "/img/sunflowerland/animals/mixed_grain.webp",
-        ingredient: "1x Corn, 1x Wheat, 1x Barley",
+        ingredient: `${reqQty}x Corn, ${reqQty}x Wheat, ${reqQty}x Barley`,
+        ingredientsList: [
+          { name: "Corn", amount: 1 },
+          { name: "Wheat", amount: 1 },
+          { name: "Barley", amount: 1 },
+        ],
         price: (marketPrices["Corn"] || 0.02) + (marketPrices["Wheat"] || 0.01598) + (marketPrices["Barley"] || 0.02285),
         xp: currentLevel >= 10 ? 80 : 30,
         isFav: currentLevel >= 10,
@@ -449,6 +455,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         displayName: g.name,
         image: g.image,
         ingredient: g.ingredient,
+        priceSource: "p2p",
+        ingredientsList: g.ingredientsList,
         xp: g.xp,
         unitCostFlower: g.price,
         requiredPerFeed: reqQty,
@@ -469,7 +477,9 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         name: omniDef?.name || "Omnifeed",
         displayName: "Omnifeed",
         image: omniDef?.image || "/img/sunflowerland/animals/omnifeed.webp",
-        ingredient: "1x Gem",
+        ingredient: `${reqQty}x Gem`,
+        priceSource: "gem",
+        ingredientsList: [{ name: "Gem", amount: 1 }],
         xp: omniXp,
         unitCostFlower: gemFlowerPrice,
         requiredPerFeed: reqQty,
@@ -498,6 +508,8 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
         displayName: b.name,
         image: b.img,
         ingredient: "Beetle P2P",
+        priceSource: "p2p",
+        ingredientsList: [{ name: b.name, amount: 1 }],
         xp: b.xp,
         unitCostFlower: price,
         requiredPerFeed: 1,
@@ -509,9 +521,10 @@ function getAllFoodOptionsForLevel(animalId: string, currentLevel: number): {
     }
   }
 
-  // Selección matemática del de menor costo por unidad de XP
-  const optimal = candidates.reduce((best, curr) => (curr.costPerXp < best.costPerXp ? curr : best))
-  optimal.isOptimal = true
+  // Ordenar de menor a mayor costo por XP y marcar la opción óptima
+  candidates.sort((a, b) => a.costPerXp - b.costPerXp)
+  const optimal = candidates[0]
+  if (optimal) optimal.isOptimal = true
 
   return { optimal, options: candidates }
 }
@@ -687,8 +700,8 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
     const residualGenerated = Math.max(0, totalAvailable - xpReq)
     currentCarryover = residualGenerated
 
-    // Recursos obtenidos oficialmente según ANIMAL_RESOURCE_DROP
-    const resources: AnimalLevelDisplay["resources"] = OFFICIAL_RESOURCE_DROPS[animalId]?.[toLvl] || []
+    // Recursos obtenidos por nivel según animals.json
+    const resources: AnimalLevelDisplay["resources"] = getDropsForAnimalLevel(animalId, toLvl)
 
     // Ingresos brutos por venta de recursos en FLOWER y USD
     let revenueFlower = 0
@@ -796,6 +809,7 @@ const animalsDisplayList: AnimalMetaDisplay[] = orderedAnimalIds.map((animalId) 
 
 const clientPayload = {
   flowerUsd,
+  bettyRatio,
   honeyTreatCostFlower,
   honeyTreatCostUsd,
   resLabel,
@@ -803,6 +817,12 @@ const clientPayload = {
   foodLabel,
   surplusLabel,
   totalProfitLabel: t("sfl.animals.card.totalProfit"),
+  dropdownFoodLabel: t("sfl.animals.dropdown.food"),
+  levelLabel: t("sfl.animals.dropdown.level"),
+  selectLabel: t("sfl.animals.dropdown.select"),
+  optimalLabel: t("sfl.animals.dropdown.optimal"),
+  honeyTreatPickLevel: t("sfl.animals.card.honeyTreatPickLevel"),
+  honeyTreatNoLvl1: t("sfl.animals.card.honeyTreatNoLvl1"),
   animals: clientAnimalsData,
 }
 
@@ -883,7 +903,7 @@ const faqItems = [
         <!-- Footer del Bloque Izquierdo -->
         <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/40 relative z-10">
           <span>0xLeñador Engine · SFL v2.0</span>
-          <span class="text-emerald-400/80">4 / 4 Especies</span>
+          <span class="text-emerald-400/80">{t("sfl.animals.dash.speciesCount")}</span>
         </div>
       </div>
 
@@ -894,7 +914,7 @@ const faqItems = [
         <div>
           <!-- Header sutil -->
           <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/60 block mb-4">
-            Constantes de Granja
+            {t("sfl.animals.dash.constantsTitle")}
           </span>
 
           <div class="grid grid-cols-2 gap-2.5">
@@ -915,64 +935,15 @@ const faqItems = [
               <span class="text-[9px] font-mono text-white/40 uppercase tracking-wider">{t("sfl.animals.dash.statCycle")}</span>
               <div class="flex items-center justify-between mt-1">
                 <span class="text-base font-mono font-bold text-emerald-400">{t("sfl.animals.dash.statCycleVal")}</span>
-                <span class="text-[10px] font-mono text-white/40">Base sin boosts</span>
+                <span class="text-[10px] font-mono text-white/40">{t("sfl.animals.dash.baseNoBoosts")}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-white/40">
-          <span>Herramientas: 3</span>
-          <span class="text-white/60">Afecto diario</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fila 2: Franja Horizontal de Indicadores Rápidos -->
-    <div class="w-full bg-[#18181b]/95 border border-white/10 rounded-2xl p-3 sm:px-4 sm:py-3.5 shadow-xl backdrop-blur-md">
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/5 items-center">
-        <!-- 1. Monedas -->
-        <div class="flex items-center gap-3 sm:justify-center">
-          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-            <img src="/img/sunflowerland/123/coins.png" class="w-full h-full object-contain" alt="Coins" />
-          </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">{t("sfl.animals.dash.quickCoins")}</span>
-            <span class="text-xs font-mono font-bold text-emerald-400">1 : 320</span>
-          </div>
-        </div>
-
-        <!-- 2. Alimento de Granos -->
-        <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0">
-          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-            <img src="/img/sunflowerland/Wheat.png" class="w-full h-full object-contain" alt="Wheat" />
-          </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">{t("sfl.animals.dash.quickGrain")}</span>
-            <span class="text-xs font-mono font-bold text-white">100 - 350 XP</span>
-          </div>
-        </div>
-
-        <!-- 3. Slops / Pocilga -->
-        <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0">
-          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-            <img src="/img/sunflowerland/123/mud.webp" class="w-full h-full object-contain" alt="Mud" />
-          </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">{t("sfl.animals.dash.quickSlop")}</span>
-            <span class="text-xs font-mono font-bold text-white">4 Variantes</span>
-          </div>
-        </div>
-
-        <!-- 4. Herramientas de afecto -->
-        <div class="flex items-center gap-3 sm:justify-center pt-2 sm:pt-0">
-          <div class="w-8 h-8 rounded-full bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-            <img src="/img/sunflowerland/tools/Petting Hand.webp" class="w-full h-full object-contain" alt="Petting" />
-          </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] font-mono text-white/60 leading-none mb-1">Cuidado Diario</span>
-            <span class="text-xs font-mono font-bold text-emerald-400">+70 XP / día</span>
-          </div>
+          <span>{t("sfl.animals.dash.toolsCount")}</span>
+          <span class="text-white/60">{t("sfl.animals.dash.dailyAffection")}</span>
         </div>
       </div>
     </div>
@@ -1110,12 +1081,12 @@ const faqItems = [
                       </span>
                       <div class="w-px h-3 bg-white/10"></div>
                       <!-- Food Qty -->
-                      <div class="flex items-center gap-1" title="Multiplicador de consumo de alimento">
+                      <div class="flex items-center gap-1" title={t("sfl.animals.card.foodBoostTooltip")}>
                         <span class="text-[10px] sm:text-[11px] font-mono text-white/70">Feed:</span>
                         <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
                           <input
                             type="number"
-                            step="1"
+                            step="any"
                             min="0"
                             value="1"
                             data-animal={animal.id}
@@ -1127,7 +1098,7 @@ const faqItems = [
                       </div>
                       <div class="w-px h-2.5 bg-white/10"></div>
                       <!-- Food XP -->
-                      <div class="flex items-center gap-1" title="Multiplicador de XP obtenida de los alimentos">
+                      <div class="flex items-center gap-1" title={t("sfl.animals.card.foodXpBoostTooltip")}>
                         <span class="text-[10px] sm:text-[11px] font-mono text-white/70">XP:</span>
                         <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
                           <input
@@ -1145,7 +1116,7 @@ const faqItems = [
                     </div>
 
                     <!-- Grupo 2: Care -->
-                    <div class="flex items-center gap-1.5 bg-[#18181b]/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0" title="Multiplicador de afecto para las herramientas diarias">
+                    <div class="flex items-center gap-1.5 bg-[#18181b]/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0" title={t("sfl.animals.card.careMultiplierTooltip")}>
                       <span class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none">
                         {t("sfl.animals.card.groupCare")}
                       </span>
@@ -1182,7 +1153,7 @@ const faqItems = [
                       </span>
                       <div class="w-px h-3 bg-white/10"></div>
                       <!-- Primary Drop -->
-                      <div class="flex items-center gap-1" title={`Cantidad fija añadida por recogida (${animal.primaryDrop.name})`}>
+                      <div class="flex items-center gap-1" title={`${t("sfl.animals.card.dropBonusTooltip")} (${animal.primaryDrop.name})`}>
                         <img src={animal.primaryDrop.image} alt={animal.primaryDrop.name} class="w-3.5 h-3.5 object-contain shrink-0" />
                         <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
                           <span class="text-[10px] font-mono text-emerald-400/70 select-none font-bold mr-0.5">+</span>
@@ -1202,7 +1173,7 @@ const faqItems = [
                       {animal.secondaryDrop && (
                         <>
                           <div class="w-px h-2.5 bg-white/10"></div>
-                          <div class="flex items-center gap-1" title={`Cantidad fija añadida por recogida (${animal.secondaryDrop.name})`}>
+                          <div class="flex items-center gap-1" title={`${t("sfl.animals.card.dropBonusTooltip")} (${animal.secondaryDrop.name})`}>
                             <img src={animal.secondaryDrop.image} alt={animal.secondaryDrop.name} class="w-3.5 h-3.5 object-contain shrink-0" />
                             <div class="flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
                               <span class="text-[10px] font-mono text-emerald-400/70 select-none font-bold mr-0.5">+</span>
@@ -1268,6 +1239,7 @@ const faqItems = [
 
                       {Array.from({ length: 15 }, (_, i) => i + 1).map((lvlNum) => {
                         const isSelected = lvlNum === 15
+                        const defaultDotTitle = t("sfl.animals.card.targetLevelTooltip").replace("{lvl}", String(lvlNum))
                         return (
                           <button
                             type="button"
@@ -1279,7 +1251,8 @@ const faqItems = [
                             ]}
                             data-animal={animal.id}
                             data-target-level={lvlNum}
-                            title={`Calcular profit hasta Nivel ${lvlNum}`}
+                            data-default-title={defaultDotTitle}
+                            title={defaultDotTitle}
                           >
                             <span class="pointer-events-none">{lvlNum}</span>
                           </button>
@@ -1424,7 +1397,7 @@ const faqItems = [
                                 class="food-selector-trigger text-xs font-mono text-white truncate font-medium hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none flex items-center"
                                 data-animal={animal.id}
                                 data-level={lvl.toLevel}
-                                title="Clic para elegir alimento"
+                                title={t("sfl.animals.table.chooseFoodTooltip")}
                               >
                                 <span class="row-food-name">
                                   {lvl.food.units === 0 ? `0x ${lvl.food.name}` : (lvl.food.units > 1 ? `${lvl.food.units}x ` : "") + lvl.food.name}
@@ -1432,7 +1405,7 @@ const faqItems = [
                                 <span
                                   class="row-honey-badge items-center gap-0.5 px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 ml-1 shrink-0"
                                   style="display: none;"
-                                  title="Honey Treat activo (-25% comida)"
+                                  title={t("sfl.animals.table.honeyActiveTooltip")}
                                 >
                                   🍯 -25%
                                 </span>
@@ -1529,7 +1502,7 @@ const faqItems = [
                               </div>
                               <div class="flex flex-col min-w-0">
                                 <span class="text-xs text-white font-medium truncate" title={lvl.affectionTools.map(t => `${t.name} (${t.percent}%)`).join(", ")}>
-                                  2x Afecto
+                                  {t("sfl.animals.table.twoTimesAffection")}
                                 </span>
                                 <span class="row-affection-xp text-[10px] font-mono text-emerald-400 font-bold leading-none mt-0.5">
                                   +{lvl.affectionXp} XP
@@ -1567,7 +1540,7 @@ const faqItems = [
                             class="food-selector-trigger text-xs text-white font-medium truncate hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none flex items-center gap-1 min-w-0"
                             data-animal={animal.id}
                             data-level={lvl.toLevel}
-                            title="Clic para elegir alimento"
+                            title={t("sfl.animals.table.chooseFoodTooltip")}
                           >
                             <span class="row-food-name truncate" title={lvl.food.ingredient ? `${lvl.food.name} (${lvl.food.ingredient})` : lvl.food.name}>
                               {lvl.food.units === 0 ? `0x ${lvl.food.name}` : (lvl.food.units > 1 ? `${lvl.food.units}x ` : "") + lvl.food.name}
@@ -1575,7 +1548,7 @@ const faqItems = [
                             <span
                               class="row-honey-badge items-center gap-0.5 px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 ml-1 shrink-0"
                               style="display: none;"
-                              title="Honey Treat activo (-25% comida)"
+                              title={t("sfl.animals.table.honeyActiveTooltip")}
                             >
                               🍯 -25%
                             </span>
@@ -1651,6 +1624,9 @@ const faqItems = [
                     </div>
                   )
                 })}
+                <div class="animal-empty-state hidden py-10 px-4 text-center text-sm font-mono text-white/40">
+                  {t("sfl.animals.table.empty")}
+                </div>
               </div>
             </div>
           </div>
@@ -1671,12 +1647,23 @@ const faqItems = [
   <div slot="footer" class="mt-12">
     <!-- Acordeón de Preguntas Frecuentes (FAQ) -->
     <FaqAccordion
-      title={t("sfl.animals.faq.title")}
-      subtitle={t("sfl.animals.faq.subtitle")}
+      titulo={t("sfl.animals.faq.title")}
+      subtitulo={t("sfl.animals.faq.subtitle")}
       items={faqItems}
     />
   </div>
 </SflToolLayout>
+
+<!-- Motor Centralizado de Mercado, Constantes y Precios -->
+<script>
+  import * as SflMarket from "../../lib/sfl/market"
+  import * as SflConstants from "../../lib/sfl/constants"
+  import * as SflPrices from "../../lib/sfl/prices"
+  ;(window as any).SflMarket = SflMarket
+  ;(window as any).SflConstants = SflConstants
+  ;(window as any).SflPrices = SflPrices
+  SflMarket.fetchMarketData()
+</script>
 
 <script is:inline>
   // ---------------------------------------------------------------------------
@@ -1686,6 +1673,38 @@ const faqItems = [
     // 1. Manejo de Pestañas de Animales (Pollos, Ovejas, Vacas, Cerdos)
     const tabBtns = document.querySelectorAll(".animal-tab-btn")
     const panels = document.querySelectorAll(".animal-panel")
+    const searchInput = document.getElementById("animalSearchInput")
+
+    // 2. Buscador rápido en la tabla (reutilizable al cambiar de pestaña)
+    const applyAnimalSearch = () => {
+      const query = (searchInput?.value || "").toLowerCase().trim()
+      const activePanel = document.querySelector(".animal-panel:not(.hidden)")
+      if (!activePanel) return
+
+      const rows = activePanel.querySelectorAll(".animal-level-row")
+      let visibleCount = 0
+      rows.forEach((row) => {
+        const lvl = row.getAttribute("data-level") || ""
+        const searchAttr = (row.getAttribute("data-search") || "").toLowerCase()
+        const text = (row.textContent || "").toLowerCase()
+
+        if (!query || lvl.includes(query) || searchAttr.includes(query) || text.includes(query)) {
+          row.style.display = ""
+          visibleCount++
+        } else {
+          row.style.display = "none"
+        }
+      })
+
+      const emptyState = activePanel.querySelector(".animal-empty-state")
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove("hidden")
+        } else {
+          emptyState.classList.add("hidden")
+        }
+      }
+    }
 
     tabBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -1706,30 +1725,13 @@ const faqItems = [
             p.classList.add("hidden")
           }
         })
+
+        applyAnimalSearch()
       })
     })
 
-    // 2. Buscador rápido en la tabla
-    const searchInput = document.getElementById("animalSearchInput")
     if (searchInput) {
-      searchInput.addEventListener("input", (e) => {
-        const query = (e.target.value || "").toLowerCase().trim()
-        const activePanel = document.querySelector(".animal-panel:not(.hidden)")
-        if (!activePanel) return
-
-        const rows = activePanel.querySelectorAll(".animal-level-row")
-        rows.forEach((row) => {
-          const lvl = row.getAttribute("data-level") || ""
-          const searchAttr = (row.getAttribute("data-search") || "").toLowerCase()
-          const text = (row.textContent || "").toLowerCase()
-
-          if (!query || lvl.includes(query) || searchAttr.includes(query) || text.includes(query)) {
-            row.style.display = ""
-          } else {
-            row.style.display = "none"
-          }
-        })
-      })
+      searchInput.addEventListener("input", applyAnimalSearch)
     }
 
     // 3. Filtros de Boosts (All, Drops, Time, Feed)
@@ -1824,8 +1826,8 @@ const faqItems = [
           // Renderizar opciones minimalistas
           dropdown.innerHTML = `
             <div class="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-white/40 border-b border-white/5 flex items-center justify-between">
-              <span>Alimento (Nivel ${lvlData.level})</span>
-              <span class="text-[9px] text-emerald-400/80">Seleccionar</span>
+              <span>${clientState.dropdownFoodLabel || "Feed"} (${clientState.levelLabel || "Level"} ${lvlData.level})</span>
+              <span class="text-[9px] text-emerald-400/80">${clientState.selectLabel || "Select"}</span>
             </div>
             <div class="flex flex-col gap-1 mt-1 max-h-64 overflow-y-auto no-scrollbar">
               ${lvlData.options
@@ -1858,7 +1860,7 @@ const faqItems = [
                           <span class="text-xs font-medium text-white truncate">${opt.name}</span>
                           ${
                             isOptimal
-                              ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ÓPTIMO</span>`
+                              ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">${clientState.optimalLabel || "OPTIMAL"}</span>`
                               : ""
                           }
                         </div>
@@ -1935,9 +1937,10 @@ const faqItems = [
             // Si la XP ya está cubierta por residual o afecto, NO se requiere alimentar (neededFeeds = 0)
             const neededFeeds = neededFromFood > 0 ? Math.ceil(neededFromFood / unitFoodXp) : 0
 
-            // Multiplicador de consumo de comida (Honey Treat reduce 25% el alimento en 3 turnos)
+            // Multiplicador de consumo de comida (Honey Treat reduce 25% el alimento en 3 niveles; no permitido en 0 > 1)
             const hasHoneyTreat = Boolean(
               animal.honeyTreatLevel &&
+              animal.honeyTreatLevel >= 2 &&
               lvl.level >= animal.honeyTreatLevel &&
               lvl.level < animal.honeyTreatLevel + 3
             )
@@ -2168,16 +2171,54 @@ const faqItems = [
             progressBar.style.width = `${pct}%`
           }
 
+          updateTargetDotsUI(animalId)
+          updateHoneyTreatBtnUI(animalId)
+
+          // Actualizar estado activo de los botones de escarabajo "Aplicar a todo"
+          const applyBtns = document.querySelectorAll(`.apply-all-food-btn[data-animal="${animalId}"]`)
+          applyBtns.forEach((btn) => {
+            const fId = btn.getAttribute("data-food-id")
+            const allMatch = animal.levels && animal.levels.length > 0 && animal.levels.every((l) => l.selectedFoodId === fId)
+            if (allMatch) {
+              btn.classList.add("border-emerald-400", "bg-emerald-500/25", "ring-1", "ring-emerald-400/50", "shadow-[0_0_8px_rgba(52,211,153,0.5)]")
+              btn.classList.remove("border-white/10", "bg-black/40")
+            } else {
+              btn.classList.remove("border-emerald-400", "bg-emerald-500/25", "ring-1", "ring-emerald-400/50", "shadow-[0_0_8px_rgba(52,211,153,0.5)]")
+              btn.classList.add("border-white/10", "bg-black/40")
+            }
+          })
+        }
+
+        const updateTargetDotsUI = (animalId) => {
+          const animal = clientState.animals?.[animalId]
+          if (!animal) return
+          const targetLevel = animal.targetLevel || 15
           const dots = document.querySelectorAll(`.target-level-dot[data-animal="${animalId}"]`)
+
           dots.forEach((dot) => {
             const dLvl = Number(dot.getAttribute("data-target-level"))
+            const defaultTitle = dot.getAttribute("data-default-title") || ""
+            const isBlockedHoneyLvl1 = Boolean(animal.isHoneyTreatToolActive && dLvl === 1)
             const isTarget = dLvl === targetLevel
             const isBeforeTarget = dLvl < targetLevel
             const isHoney = Boolean(
               animal.honeyTreatLevel &&
+              animal.honeyTreatLevel >= 2 &&
               dLvl >= animal.honeyTreatLevel &&
               dLvl < animal.honeyTreatLevel + 3
             )
+
+            if (isBlockedHoneyLvl1) {
+              dot.title = clientState.honeyTreatNoLvl1 || "Not available for 0 > 1"
+              dot.setAttribute("aria-disabled", "true")
+              dot.className = isTarget
+                ? "target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-not-allowed opacity-35 transition-all duration-150 focus:outline-none bg-emerald-400 text-black border-2 border-emerald-200"
+                : "target-level-dot relative z-10 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[9px] font-semibold select-none cursor-not-allowed opacity-35 transition-all duration-150 focus:outline-none bg-[#141416] text-white/30 border border-white/10"
+              return
+            }
+
+            if (defaultTitle) dot.title = defaultTitle
+            dot.removeAttribute("aria-disabled")
 
             if (isHoney) {
               // 🍯 Nivel cubierto por Honey Treat (Color Miel Ámbar brillante)
@@ -2199,22 +2240,6 @@ const faqItems = [
                 "target-level-dot relative z-10 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[9px] font-medium select-none cursor-pointer transition-all duration-150 focus:outline-none bg-[#141416] text-white/20 border border-white/[0.06] hover:bg-white/10 hover:text-white/60 hover:border-white/20"
             }
           })
-
-          updateHoneyTreatBtnUI(animalId)
-
-          // Actualizar estado activo de los botones de escarabajo "Aplicar a todo"
-          const applyBtns = document.querySelectorAll(`.apply-all-food-btn[data-animal="${animalId}"]`)
-          applyBtns.forEach((btn) => {
-            const fId = btn.getAttribute("data-food-id")
-            const allMatch = animal.levels && animal.levels.length > 0 && animal.levels.every((l) => l.selectedFoodId === fId)
-            if (allMatch) {
-              btn.classList.add("border-emerald-400", "bg-emerald-500/25", "ring-1", "ring-emerald-400/50", "shadow-[0_0_8px_rgba(52,211,153,0.5)]")
-              btn.classList.remove("border-white/10", "bg-black/40")
-            } else {
-              btn.classList.remove("border-emerald-400", "bg-emerald-500/25", "ring-1", "ring-emerald-400/50", "shadow-[0_0_8px_rgba(52,211,153,0.5)]")
-              btn.classList.add("border-white/10", "bg-black/40")
-            }
-          })
         }
 
         const updateHoneyTreatBtnUI = (animalId) => {
@@ -2233,7 +2258,7 @@ const faqItems = [
               badge.className = "honey-treat-badge ml-0.5 w-2 h-2 rounded-full bg-amber-400 animate-ping"
             }
             if (indicator) {
-              indicator.textContent = "Elige nivel..."
+              indicator.textContent = clientState.honeyTreatPickLevel || "Pick level..."
               indicator.classList.add("text-amber-300", "font-bold")
             }
           } else if (animal.honeyTreatLevel) {
@@ -2318,6 +2343,7 @@ const faqItems = [
 
             animal.isHoneyTreatToolActive = !animal.isHoneyTreatToolActive
             updateHoneyTreatBtnUI(animalId)
+            updateTargetDotsUI(animalId)
             return
           }
 
@@ -2330,8 +2356,11 @@ const faqItems = [
             const animal = clientState.animals?.[animalId]
             if (!animal || clickedLvl < 1 || clickedLvl > 15) return
 
-            // Si la herramienta de Honey Treat está activa, aplicamos/quitamos miel en ese nivel
+            // Si la herramienta de Honey Treat está activa, aplicamos/quitamos miel en ese nivel (prohibido en 0 > 1)
             if (animal.isHoneyTreatToolActive) {
+              if (clickedLvl <= 1) {
+                return
+              }
               if (animal.honeyTreatLevel === clickedLvl) {
                 // Al tocar el mismo nivel de inicio, se desactiva
                 animal.honeyTreatLevel = null
@@ -2390,6 +2419,131 @@ const faqItems = [
         })
         window.addEventListener("scroll", closeDropdown, { passive: true })
         window.addEventListener("resize", closeDropdown, { passive: true })
+
+        // 6. Sincronización de precios en vivo desde SflMarket (/api/sfl_data.json)
+        let lastRawMarketRef = null
+        const refreshLiveMarketPrices = () => {
+          const market = window.SflMarket
+          const constants = window.SflConstants
+          const prices = window.SflPrices
+          if (!market) return
+
+          const rawData = market.getRawData?.()
+          if (!rawData || rawData === lastRawMarketRef) return
+          lastRawMarketRef = rawData
+
+          const liveFlowerUsd = market.getFlowerPrice?.()
+          if (liveFlowerUsd > 0) {
+            clientState.flowerUsd = liveFlowerUsd
+          }
+
+          const liveBetty = market.getBettyRatio?.()
+          const effBetty = liveBetty > 0 ? liveBetty : (clientState.bettyRatio || 320)
+          clientState.bettyRatio = effBetty
+
+          const resolveP2P = (name) => market.getItemPrice?.(name) || 0
+
+          let gemFlowerPrice = 0
+          if (constants) {
+            if (typeof constants.calculateGemCostUsd === "function" && clientState.flowerUsd > 0) {
+              const gemUsd = constants.calculateGemCostUsd(1).unitUsd
+              gemFlowerPrice = gemUsd / clientState.flowerUsd
+            }
+            if (typeof constants.getHoneyTreatPrice === "function") {
+              const honeyCostFlower = constants.getHoneyTreatPrice(resolveP2P)
+              if (honeyCostFlower > 0) {
+                clientState.honeyTreatCostFlower = honeyCostFlower
+                clientState.honeyTreatCostUsd = honeyCostFlower * clientState.flowerUsd
+              }
+            }
+          }
+
+          const craftCostCache = new Map()
+          const resolveCraftUnitCost = (name) => {
+            if (!name) return 0
+            if (craftCostCache.has(name)) return craftCostCache.get(name)
+            let cost = 0
+            if (prices && typeof prices.resolveCost === "function") {
+              const res = prices.resolveCost(name, {
+                flowerPriceUsd: clientState.flowerUsd,
+                coinsPerFlower: effBetty,
+                resolveBasePrice: resolveP2P,
+                userState: null,
+              })
+              cost = res.craftCostFlower > 0 ? res.craftCostFlower : res.marketPriceFlower
+            }
+            craftCostCache.set(name, cost)
+            return cost
+          }
+
+          Object.keys(clientState.animals || {}).forEach((animalId) => {
+            const animal = clientState.animals[animalId]
+            if (!animal?.levels) return
+
+            animal.levels.forEach((lvl) => {
+              if (Array.isArray(lvl.baseResources)) {
+                lvl.baseResources.forEach((res) => {
+                  const livePrice = resolveP2P(res.name)
+                  if (livePrice > 0) res.unitPrice = livePrice
+                })
+              }
+
+              if (!Array.isArray(lvl.options) || lvl.options.length === 0) return
+
+              const prevOptimalId = lvl.optimalFoodId
+              const wasUsingOptimal = !lvl.selectedFoodId || lvl.selectedFoodId === prevOptimalId
+
+              lvl.options.forEach((opt) => {
+                if (opt.priceSource === "gem") {
+                  if (gemFlowerPrice > 0) opt.unitCostFlower = gemFlowerPrice
+                } else if (opt.priceSource === "p2p" && Array.isArray(opt.ingredientsList)) {
+                  let total = 0
+                  let hasMissing = false
+                  for (const ing of opt.ingredientsList) {
+                    const p = resolveP2P(ing.name)
+                    if (!(p > 0)) {
+                      hasMissing = true
+                      break
+                    }
+                    total += p * ing.amount
+                  }
+                  if (!hasMissing && total > 0) {
+                    opt.unitCostFlower = total
+                  }
+                } else if (opt.priceSource === "craft") {
+                  const unitCraft = resolveCraftUnitCost(opt.ingredientName)
+                  if (unitCraft > 0) {
+                    opt.unitCostFlower = unitCraft * (opt.ingredientAmount || 1)
+                  }
+                }
+
+                opt.costPerFeed = opt.unitCostFlower * (opt.requiredPerFeed || 1)
+                opt.costPerXp = opt.xp > 0 ? opt.costPerFeed / opt.xp : 0
+                opt.isOptimal = false
+              })
+
+              lvl.options.sort((a, b) => a.costPerXp - b.costPerXp)
+              const bestOpt = lvl.options.find((o) => o.costPerXp > 0) || lvl.options[0]
+              if (bestOpt) {
+                bestOpt.isOptimal = true
+                lvl.optimalFoodId = bestOpt.id
+                if (wasUsingOptimal) {
+                  lvl.selectedFoodId = bestOpt.id
+                }
+              }
+            })
+
+            recalculateAnimalProgression(animalId)
+          })
+
+          if (activeTrigger) closeDropdown()
+        }
+
+        if (window.SflMarket?.onUpdate) {
+          window.SflMarket.onUpdate(refreshLiveMarketPrices)
+        }
+        window.addEventListener("sfl:marketUpdated", refreshLiveMarketPrices)
+        refreshLiveMarketPrices()
       } catch (err) {
         console.error("Error al inicializar el selector de alimentos:", err)
       }
