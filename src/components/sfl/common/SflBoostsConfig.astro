@@ -54,10 +54,16 @@ if (domain === "cooking") {
   rawBuffs = getCookingBuffs()
   targetSkills = {
     ...(allSkillsData.Cooking || {}),
-    ...(allSkillsData.Fishing?.["Fishy Feast"] ? { "Fishy Feast": allSkillsData.Fishing["Fishy Feast"] } : {}),
-    ...(allSkillsData.Aging?.["Speedy Aging"] ? { "Speedy Aging": allSkillsData.Aging["Speedy Aging"] } : {}),
-    ...(allSkillsData.Aging?.["Fish Smoking"] ? { "Fish Smoking": allSkillsData.Aging["Fish Smoking"] } : {}),
-    ...(allSkillsData.Aging?.["Ager"] ? { "Ager": allSkillsData.Aging["Ager"] } : {}),
+    ...(allSkillsData.Fishing?.["Fishy Feast"]
+      ? { "Fishy Feast": allSkillsData.Fishing["Fishy Feast"] }
+      : {}),
+    ...(allSkillsData.Aging?.["Speedy Aging"]
+      ? { "Speedy Aging": allSkillsData.Aging["Speedy Aging"] }
+      : {}),
+    ...(allSkillsData.Aging?.["Fish Smoking"]
+      ? { "Fish Smoking": allSkillsData.Aging["Fish Smoking"] }
+      : {}),
+    ...(allSkillsData.Aging?.["Ager"] ? { Ager: allSkillsData.Aging["Ager"] } : {}),
   }
 } else if (domain === "cave") {
   rawBuffs = getCaveBuffs()
@@ -109,54 +115,133 @@ const formatDescription = (skill: any) => {
   return desc
 }
 
-const getCompactText = (data: any, formattedDesc: string) => {
+const getCompactParts = (data: any, formattedDesc: string) => {
   if (data.name === "Astrolabe") {
-    return "+5% XP [Aged fish] Astrolabe"
+    return { value: "+5%", suffix: "XP [Aged fish] Astrolabe" }
   }
   let value = "?"
-  if (!formattedDesc || typeof formattedDesc !== "string") return value
-  const match = formattedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i)
-  if (match) {
-    value = match[1].trim()
-    if (value.toLowerCase().endsWith("x")) value = "x" + value.slice(0, -1)
+  if (!formattedDesc || typeof formattedDesc !== "string") {
+    return { value: "?", suffix: data.name || "" }
+  }
+  const lower = formattedDesc.toLowerCase()
+  if (lower.includes("for free")) {
+    value = "Free"
+  } else {
+    const match = formattedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i)
+    if (match) {
+      value = match[1].trim()
+      if (value.toLowerCase().endsWith("x")) value = "x" + value.slice(0, -1)
+    }
   }
 
-  let effectType = ""
-  const descLower = formattedDesc.toLowerCase()
-  if (descLower.includes("prime")) effectType = " Prime"
-  else if (descLower.includes("xp")) effectType = " XP"
-  else if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed"))
-    effectType = " Time"
-  else if (descLower.includes("yield") || descLower.includes("drop") || descLower.includes("food"))
-    effectType = " Yield"
+  let effectLabel = ""
+  const m1Type = data.mathematics_1?.effect_type || data.effects?.[0]?.effect_type || ""
+  if (lower.includes("prime") || m1Type === "prime") effectLabel = " Prime"
+  else if (
+    m1Type === "feed" ||
+    m1Type === "free_feed" ||
+    m1Type === "feed_recipe" ||
+    lower.includes("feed")
+  )
+    effectLabel = " Feed"
+  else if (
+    m1Type === "sleep" ||
+    lower.includes("time") ||
+    lower.includes("faster") ||
+    lower.includes("speed")
+  )
+    effectLabel = " Time"
+  else if (m1Type === "feed_xp" || m1Type === "affection_xp" || lower.includes("xp"))
+    effectLabel = " XP"
+  else if (m1Type === "yield" || lower.includes("yield") || lower.includes("drop"))
+    effectLabel = " Yield"
 
   let target = "All"
-  if (data.mathematics_1) {
-    if (data.mathematics_1.target_food && data.mathematics_1.target_food !== "all")
-      target = data.mathematics_1.target_food
-    else if (data.mathematics_1.target && data.mathematics_1.target !== "all")
-      target = data.mathematics_1.target
+  const m1 = data.mathematics_1 || data.effects?.[0]
+  if (m1) {
+    if (m1.target_food && m1.target_food !== "all") target = m1.target_food
+    else if (m1.target && m1.target !== "all") target = m1.target
   }
   if (data.building) target = data.building
 
-  target = target.charAt(0).toUpperCase() + target.slice(1)
-  return `${value}${effectType} [${target}] ${data.name}`
+  target = target
+    .split(",")
+    .map((part: string) => {
+      const clean = part.trim().replace(/_/g, " ")
+      return clean ? clean.charAt(0).toUpperCase() + clean.slice(1) : ""
+    })
+    .filter(Boolean)
+    .join("/")
+
+  return { value, suffix: `${effectLabel} [${target || "All"}] ${data.name}` }
 }
 
-const getEffectType = (desc: string) => {
-  if (!desc) return "other"
-  const descLower = desc.toLowerCase()
-  const effects = []
-  if (
-    descLower.includes("xp") ||
-    descLower.includes("prime") ||
-    descLower.includes("yield") ||
-    (descLower.includes("food") && !descLower.includes("revenue"))
-  )
-    effects.push("xp")
-  if (descLower.includes("time") || descLower.includes("faster") || descLower.includes("speed"))
-    effects.push("time")
-  return effects.length > 0 ? effects.join(" ") : "other"
+const getCompactText = (data: any, formattedDesc: string) => {
+  const { value, suffix } = getCompactParts(data, formattedDesc)
+  return `${value}${suffix}`
+}
+
+const getEffectType = (desc: string, item?: any) => {
+  const effects = new Set<string>()
+  const rawItem = item?.raw || item
+  const effList = Array.isArray(item?.effects)
+    ? item.effects
+    : [rawItem?.mathematics_1, rawItem?.mathematics_2, rawItem?.mathematics_3].filter(Boolean)
+
+  for (const eff of effList) {
+    const t = String(eff?.effect_type || "").toLowerCase()
+    if (t === "yield") {
+      effects.add("yield")
+      if (domain !== "animals") effects.add("xp")
+    } else if (t === "feed" || t === "free_feed" || t === "feed_recipe") {
+      effects.add("feed")
+      if (domain !== "animals") effects.add("xp")
+    } else if (t === "xp" || t === "prime" || t === "feed_xp" || t === "affection_xp") {
+      effects.add("xp")
+    } else if (t === "time" || t === "sleep" || t === "treat_duration") {
+      effects.add("time")
+    }
+  }
+
+  if (effects.size === 0 && desc) {
+    const descLower = desc.toLowerCase()
+    if (domain === "animals") {
+      if (
+        descLower.includes("yield") ||
+        descLower.includes("produce") ||
+        descLower.includes("egg") ||
+        descLower.includes("wool") ||
+        descLower.includes("milk") ||
+        descLower.includes("feather") ||
+        descLower.includes("leather") ||
+        descLower.includes("truffle")
+      ) {
+        effects.add("yield")
+      }
+      if (descLower.includes("feed")) effects.add("feed")
+      if (descLower.includes("xp")) effects.add("xp")
+      if (descLower.includes("time") || descLower.includes("sleep") || descLower.includes("speed"))
+        effects.add("time")
+    } else {
+      if (
+        descLower.includes("xp") ||
+        descLower.includes("prime") ||
+        descLower.includes("yield") ||
+        (descLower.includes("food") && !descLower.includes("revenue"))
+      ) {
+        effects.add("xp")
+      }
+      if (
+        descLower.includes("time") ||
+        descLower.includes("faster") ||
+        descLower.includes("speed")
+      ) {
+        effects.add("time")
+      }
+    }
+  }
+
+  return effects.size > 0 ? Array.from(effects).join(" ") : "other"
 }
 ---
 
@@ -194,7 +279,9 @@ const getEffectType = (desc: string) => {
       onclick="event.preventDefault();"
     >
       <div class="flex items-center gap-3 w-max shrink-0 mx-auto xl:mx-0 xl:ml-auto">
-        <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
+        <div
+          class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner"
+        >
           <button
             type="button"
             class="filter-boost-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
@@ -202,6 +289,26 @@ const getEffectType = (desc: string) => {
           >
             {t("sfl.boosts.filterAll")}
           </button>
+          {
+            domain === "animals" && (
+              <>
+                <button
+                  type="button"
+                  class="filter-boost-btn px-3.5 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+                  data-filter="yield"
+                >
+                  {t("sfl.boosts.filterYield")}
+                </button>
+                <button
+                  type="button"
+                  class="filter-boost-btn px-3.5 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
+                  data-filter="feed"
+                >
+                  {t("sfl.boosts.filterFeed")}
+                </button>
+              </>
+            )
+          }
           <button
             type="button"
             class="filter-boost-btn px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
@@ -218,7 +325,9 @@ const getEffectType = (desc: string) => {
           </button>
         </div>
 
-        <div class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner">
+        <div
+          class="flex items-center gap-1 bg-[#06080A]/50 p-1 rounded-lg border border-white/5 shadow-inner"
+        >
           <button
             type="button"
             class="view-switch-btn active px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white transition-all whitespace-nowrap shrink-0"
@@ -242,376 +351,435 @@ const getEffectType = (desc: string) => {
     <div id={`${idPrefix}-container`} class="boosts-container relative z-10" data-filter="all">
       <div class="flex flex-col items-start w-full mt-2">
         {/* 1. Sub-grupo: PowerUps (Collectibles & Wearables) */}
-        {powerups.length > 0 && (
-          <details class="group/sub w-full mb-1 open:mb-6" open>
-            <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-emerald-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-              <svg class="w-2.5 h-2.5 mr-2 text-emerald-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-              {t("sfl.boosts.powerupsTitle")} ({powerups.length})
-            </summary>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-              {powerups.map((buff) => {
-                const isWearable = buff.type === "wearable"
-                const strId = String(buff.id)
-                const powerUpItem = isWearable ? powerUpsData.wearables?.[strId] : powerUpsData.collectibles?.[strId]
-                const imgFile = powerUpItem?.image || buff.image || `${buff.name}.webp`
-                const mainSrc = imgFile.startsWith("/")
-                  ? imgFile
-                  : isWearable
-                    ? `/img/sunflowerland/powerups/wearables/${imgFile}`
-                    : `/img/sunflowerland/powerups/${imgFile}`
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`
-                const boostText = buff.raw?.boost || buff.description || ""
-                const isDisabled = Boolean(powerUpItem?.disabled || buff.raw?.disabled)
+        {
+          powerups.length > 0 && (
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-emerald-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg
+                  class="w-2.5 h-2.5 mr-2 text-emerald-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                {t("sfl.boosts.powerupsTitle")} ({powerups.length})
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {powerups.map((buff) => {
+                  const isWearable = buff.type === "wearable"
+                  const strId = String(buff.id)
+                  const powerUpItem = isWearable
+                    ? powerUpsData.wearables?.[strId]
+                    : powerUpsData.collectibles?.[strId]
+                  const cardBuffId =
+                    isWearable && powerUpsData.collectibles?.[strId] ? buff.name : strId
+                  const imgFile = powerUpItem?.image || buff.image || `${buff.name}.webp`
+                  const mainSrc = imgFile.startsWith("/")
+                    ? imgFile
+                    : isWearable
+                      ? `/img/sunflowerland/powerups/wearables/${imgFile}`
+                      : `/img/sunflowerland/powerups/${imgFile}`
+                  const fallbackSrc = `/img/cripto/sunflowerland.webp`
+                  const boostText = buff.raw?.boost || buff.description || ""
+                  const isDisabled = Boolean(powerUpItem?.disabled || buff.raw?.disabled)
 
-                return (
-                  <div
-                    data-effect={getEffectType(boostText)}
-                    class={`buff-card group flex items-center gap-2 bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all ${
-                      isDisabled
-                        ? "opacity-30 grayscale cursor-not-allowed pointer-events-none"
-                        : "cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/10"
-                    }`}
-                    data-buff-id={strId}
-                    style={isDisabled ? "pointer-events: none;" : ""}
-                  >
-                    <input
-                      type="checkbox"
-                      class="hidden buff-checkbox pointer-events-none w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50"
-                      data-buff-id={strId}
-                    />
-                    <img
-                      src={mainSrc}
-                      class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
-                      onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
-                      alt={buff.name}
-                      title={boostText}
-                      width="24"
-                      height="24"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div class="flex flex-col normal-view min-w-0">
-                      <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors truncate">
-                        {buff.name}
-                      </span>
-                      <span class="text-[9px] text-terminal-muted leading-tight line-clamp-2" title={boostText}>
-                        {boostText}
-                      </span>
-                    </div>
-                    <div class="hidden compact-view w-full">
-                      <span
-                        class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-emerald-400 transition-colors"
+                  return (
+                    <div
+                      data-effect={getEffectType(boostText, buff)}
+                      class={`buff-card group flex items-center gap-2 bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all ${
+                        isDisabled
+                          ? "opacity-30 grayscale cursor-not-allowed pointer-events-none"
+                          : "cursor-pointer hover:border-emerald-500/30 hover:bg-emerald-500/10"
+                      }`}
+                      data-buff-id={cardBuffId}
+                      style={isDisabled ? "pointer-events: none;" : ""}
+                    >
+                      <input
+                        type="checkbox"
+                        class="hidden buff-checkbox pointer-events-none w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/50"
+                        data-buff-id={cardBuffId}
+                      />
+                      <img
+                        src={mainSrc}
+                        class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
+                        onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                        alt={buff.name}
                         title={boostText}
-                      >
-                        {getCompactText(buff.raw || buff, boostText)}
-                      </span>
+                        width="24"
+                        height="24"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div class="flex flex-col normal-view min-w-0">
+                        <span class="text-[10px] font-bold text-white group-[.active]:text-emerald-400 group-hover:text-emerald-400 transition-colors truncate">
+                          {buff.name}
+                        </span>
+                        <span
+                          class="text-[9px] text-terminal-muted leading-tight line-clamp-2"
+                          title={boostText}
+                        >
+                          {boostText}
+                        </span>
+                      </div>
+                      <div class="hidden compact-view w-full">
+                        <span
+                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-emerald-400 transition-colors"
+                          title={boostText}
+                        >
+                          {getCompactText(buff.raw || buff, boostText)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
-            </div>
-          </details>
-        )}
+                  )
+                })}
+              </div>
+            </details>
+          )
+        }
 
         {/* 2. Sub-grupo: Habilidades Bumpkin (Skills) */}
-        {Object.keys(skills).length > 0 && (
-          <details class="group/sub w-full mb-1 open:mb-6" open>
-            <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-blue-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-              <svg class="w-2.5 h-2.5 mr-2 text-blue-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-              {t("sfl.boosts.skillsTitle")} ({Object.keys(skills).length})
-            </summary>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-              {Object.entries(skills).map(([skillName, skillData]: [string, any]) => {
-                const mainSrc = skillData.image || `/img/cripto/sunflowerland.webp`
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`
-                const formattedDesc = formatDescription(skillData)
-                const safeId = skillName.replace(/\s+/g, "_")
-                const ranksCount =
-                  skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0
-                    ? Object.keys(skillData.cost_by_rank).length
-                    : skillData.mathematics_1?.calc_by_rank
-                      ? Object.keys(skillData.mathematics_1.calc_by_rank).length
-                      : 1
-                const isOverlayRay = Boolean(skillData.image && !skillData.image.startsWith("/img/sunflowerland/skills/"))
+        {
+          Object.keys(skills).length > 0 && (
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-blue-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg
+                  class="w-2.5 h-2.5 mr-2 text-blue-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                {t("sfl.boosts.skillsTitle")} ({Object.keys(skills).length})
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {Object.entries(skills).map(([skillName, skillData]: [string, any]) => {
+                  const mainSrc = skillData.image || `/img/cripto/sunflowerland.webp`
+                  const fallbackSrc = `/img/cripto/sunflowerland.webp`
+                  const formattedDesc = formatDescription(skillData)
+                  const safeId = skillName.replace(/\s+/g, "_")
+                  const ranksCount =
+                    skillData.cost_by_rank && Object.keys(skillData.cost_by_rank).length > 0
+                      ? Object.keys(skillData.cost_by_rank).length
+                      : skillData.mathematics_1?.calc_by_rank
+                        ? Object.keys(skillData.mathematics_1.calc_by_rank).length
+                        : 1
+                  const isOverlayRay = Boolean(
+                    skillData.image && !skillData.image.startsWith("/img/sunflowerland/skills/"),
+                  )
 
-                return (
-                  <div
-                    data-effect={getEffectType(formattedDesc)}
-                    class={`skill-card is-skill flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${
-                      skillData.disabled
-                        ? "opacity-30 grayscale cursor-not-allowed"
-                        : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"
-                    }`}
-                    data-skill-id={skillName}
-                    data-type="skill"
-                    data-math1={JSON.stringify(skillData.mathematics_1?.calc_by_rank || {})}
-                    data-math2={JSON.stringify(skillData.mathematics_2?.calc_by_rank || {})}
-                    style={skillData.disabled ? "pointer-events: none;" : ""}
-                  >
-                    <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                      <div class="relative shrink-0">
+                  const compactParts = getCompactParts(skillData, formattedDesc)
+
+                  return (
+                    <div
+                      data-effect={getEffectType(formattedDesc, skillData)}
+                      class={`skill-card is-skill flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group ${
+                        skillData.disabled
+                          ? "opacity-30 grayscale cursor-not-allowed"
+                          : "hover:border-blue-500/30 hover:bg-blue-500/5 cursor-pointer"
+                      }`}
+                      data-skill-id={skillName}
+                      data-type="skill"
+                      data-math1={JSON.stringify(skillData.mathematics_1?.calc_by_rank || {})}
+                      data-math2={JSON.stringify(skillData.mathematics_2?.calc_by_rank || {})}
+                      style={skillData.disabled ? "pointer-events: none;" : ""}
+                    >
+                      <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                        <div class="relative shrink-0">
+                          <img
+                            src={mainSrc}
+                            class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
+                            onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                            alt={skillName}
+                            title={formattedDesc}
+                            width="24"
+                            height="24"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          {isOverlayRay && (
+                            <img
+                              src="/img/sunflowerland/123/energy.png"
+                              alt="Skill"
+                              class="absolute -top-1 -left-1 w-3 h-3 object-contain [image-rendering:pixelated] drop-shadow-md pointer-events-none z-10"
+                              loading="lazy"
+                            />
+                          )}
+                        </div>
+                        <div class="flex flex-col normal-view min-w-0">
+                          <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
+                            {skillName}
+                          </span>
+                          <span
+                            class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2"
+                            title={formattedDesc}
+                            data-original={skillData.description}
+                          >
+                            {formattedDesc}
+                          </span>
+                        </div>
+                        <div class="hidden compact-view w-full">
+                          <span
+                            class="compact-description-text text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors"
+                            title={formattedDesc}
+                            data-compact-suffix={compactParts.suffix}
+                          >
+                            {`${compactParts.value}${compactParts.suffix}`}
+                          </span>
+                        </div>
+                      </div>
+
+                      {ranksCount > 1 && (
+                        <div class="flex items-center justify-end gap-1.5 mt-auto pt-1 border-t border-white/5 skill-ranks-container">
+                          {Array.from({ length: ranksCount }).map((_, idx) => (
+                            <label class="flex items-center gap-1 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                class={`skill-rank-checkbox rank-input-${safeId} w-3 h-3 rounded-sm text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500/50`}
+                                data-skill-id={skillName}
+                                data-rank={idx + 1}
+                                value={idx + 1}
+                              />
+                              <span class="text-[9px] text-white/60 font-mono">{idx + 1}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </details>
+          )
+        }
+
+        {/* 3. Sub-grupo: Consumibles (Consumibles, Tótems y Santuarios) */}
+        {
+          (consumables.length > 0 || shrines.length > 0) && (
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-orange-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg
+                  class="w-2.5 h-2.5 mr-2 text-orange-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                {t("sfl.boosts.consumablesTitle")} ({consumables.length + shrines.length})
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {consumables.map((item) => {
+                  const mainSrc = item.image || `/img/cripto/sunflowerland.webp`
+                  const fallbackSrc = `/img/cripto/sunflowerland.webp`
+                  const formattedDesc = formatDescription(item.raw || item)
+                  const compactParts = getCompactParts(item.raw || item, formattedDesc)
+
+                  return (
+                    <div
+                      data-effect={getEffectType(formattedDesc, item)}
+                      class="skill-card is-consumable flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-amber-600/40 hover:bg-amber-600/10 cursor-pointer"
+                      data-skill-id={item.name}
+                      data-buff-id={item.id ? String(item.id) : undefined}
+                      data-type="consumable"
+                    >
+                      <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
                         <img
                           src={mainSrc}
                           class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
                           onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
-                          alt={skillName}
+                          alt={item.name}
                           title={formattedDesc}
                           width="24"
                           height="24"
                           loading="lazy"
                           decoding="async"
                         />
-                        {isOverlayRay && (
-                          <img
-                            src="/img/sunflowerland/123/energy.png"
-                            alt="Skill"
-                            class="absolute -top-1 -left-1 w-3 h-3 object-contain [image-rendering:pixelated] drop-shadow-md pointer-events-none z-10"
-                            loading="lazy"
-                          />
-                        )}
-                      </div>
-                      <div class="flex flex-col normal-view min-w-0">
-                        <span class="text-[10px] font-bold text-white group-[.active]:text-blue-400 transition-colors truncate">
-                          {skillName}
-                        </span>
-                        <span
-                          class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2"
-                          title={formattedDesc}
-                          data-original={skillData.description}
-                        >
-                          {formattedDesc}
-                        </span>
-                      </div>
-                      <div class="hidden compact-view w-full">
-                        <span
-                          class="compact-description-text text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-blue-400 transition-colors"
-                          title={formattedDesc}
-                        >
-                          {getCompactText(skillData, formattedDesc)}
-                        </span>
+                        <div class="flex flex-col normal-view min-w-0">
+                          <span class="text-[10px] font-bold text-white group-[.active]:text-amber-400 transition-colors truncate">
+                            {item.name}
+                          </span>
+                          <span
+                            class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2"
+                            title={formattedDesc}
+                            data-original={formattedDesc}
+                          >
+                            {formattedDesc}
+                          </span>
+                        </div>
+                        <div class="hidden compact-view w-full">
+                          <span
+                            class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-amber-400 transition-colors"
+                            title={formattedDesc}
+                          >
+                            {getCompactText(item.raw || item, formattedDesc)}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                  )
+                })}
 
-                    {ranksCount > 1 && (
-                      <div class="flex items-center justify-end gap-1.5 mt-auto pt-1 border-t border-white/5 skill-ranks-container">
-                        {Array.from({ length: ranksCount }).map((_, idx) => (
-                          <label class="flex items-center gap-1 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              class={`skill-rank-checkbox rank-input-${safeId} w-3 h-3 rounded-sm text-blue-500 bg-white/5 border-white/20 focus:ring-blue-500/50`}
-                              data-skill-id={skillName}
-                              data-rank={idx + 1}
-                              value={idx + 1}
-                            />
-                            <span class="text-[9px] text-white/60 font-mono">{idx + 1}</span>
-                          </label>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </details>
-        )}
+                {shrines.map((shrine) => {
+                  const imgFile = shrine.image || `${shrine.name}.webp`
+                  const mainSrc = imgFile.startsWith("/")
+                    ? imgFile
+                    : `/img/sunflowerland/shrines/${imgFile}`
+                  const fallbackSrc = `/img/cripto/sunflowerland.webp`
+                  const boostText = shrine.raw?.boost || shrine.description || ""
 
-        {/* 3. Sub-grupo: Consumibles (Consumibles, Tótems y Santuarios) */}
-        {(consumables.length > 0 || shrines.length > 0) && (
-          <details class="group/sub w-full mb-1 open:mb-6" open>
-            <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-orange-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-              <svg class="w-2.5 h-2.5 mr-2 text-orange-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-              {t("sfl.boosts.consumablesTitle")} ({consumables.length + shrines.length})
-            </summary>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-              {consumables.map((item) => {
-                const mainSrc = item.image || `/img/cripto/sunflowerland.webp`
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`
-                const formattedDesc = formatDescription(item.raw || item)
-
-                return (
-                  <div
-                    data-effect={getEffectType(formattedDesc)}
-                    class="skill-card is-consumable flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-amber-600/40 hover:bg-amber-600/10 cursor-pointer"
-                    data-skill-id={item.name}
-                    data-buff-id={item.id ? String(item.id) : undefined}
-                    data-type="consumable"
-                  >
-                    <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
-                      <img
-                        src={mainSrc}
-                        class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
-                        onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
-                        alt={item.name}
-                        title={formattedDesc}
-                        width="24"
-                        height="24"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <div class="flex flex-col normal-view min-w-0">
-                        <span class="text-[10px] font-bold text-white group-[.active]:text-amber-400 transition-colors truncate">
-                          {item.name}
-                        </span>
-                        <span class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2" title={formattedDesc} data-original={formattedDesc}>
-                          {formattedDesc}
-                        </span>
-                      </div>
-                      <div class="hidden compact-view w-full">
-                        <span
-                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-amber-400 transition-colors"
-                          title={formattedDesc}
-                        >
-                          {getCompactText(item.raw || item, formattedDesc)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-
-              {shrines.map((shrine) => {
-                const imgFile = shrine.image || `${shrine.name}.webp`
-                const mainSrc = imgFile.startsWith("/") ? imgFile : `/img/sunflowerland/shrines/${imgFile}`
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`
-                const boostText = shrine.raw?.boost || shrine.description || ""
-
-                return (
-                  <div
-                    data-effect={getEffectType(boostText)}
-                    class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all"
-                    data-buff-id={shrine.name}
-                  >
-                    <input
-                      type="checkbox"
-                      class="hidden buff-checkbox pointer-events-none w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50"
+                  return (
+                    <div
+                      data-effect={getEffectType(boostText, shrine)}
+                      class="buff-card group flex items-center gap-2 cursor-pointer bg-white/5 border border-white/5 hover:border-orange-500/30 hover:bg-orange-500/10 rounded-lg p-1.5 transition-all"
                       data-buff-id={shrine.name}
-                    />
-                    <img
-                      src={mainSrc}
-                      class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
-                      onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
-                      alt={shrine.name}
-                      title={boostText}
-                      width="24"
-                      height="24"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div class="flex flex-col normal-view min-w-0">
-                      <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 group-hover:text-orange-400 transition-colors truncate">
-                        {shrine.name}
-                      </span>
-                      <span class="text-[9px] text-terminal-muted leading-tight line-clamp-2" title={boostText}>
-                        {boostText}
-                      </span>
-                    </div>
-                    <div class="hidden compact-view w-full">
-                      <span
-                        class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors"
-                        title={boostText}
-                      >
-                        {getCompactText(shrine.raw || shrine, boostText)}
-                      </span>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </details>
-        )}
-
-        {/* 4. Sub-grupo: Global Phases & Perks (Coleccionables no vendibles, Oil, Factions, VIP) */}
-        {others.length > 0 && (
-          <details class="group/sub w-full mb-1 open:mb-6" open>
-            <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-purple-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
-              <svg class="w-2.5 h-2.5 mr-2 text-purple-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-              {t("sfl.boosts.othersTitle")} ({others.length})
-            </summary>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
-              {others.map((item) => {
-                const mainSrc = item.image || `/img/cripto/sunflowerland.webp`
-                const fallbackSrc = `/img/cripto/sunflowerland.webp`
-                const formattedDesc = formatDescription(item.raw || item)
-                const safeId = item.name.replace(/\s+/g, "_")
-                const ranksCount = item.raw?.cost_by_rank
-                  ? Object.keys(item.raw.cost_by_rank).length
-                  : item.raw?.ranks
-                    ? Object.keys(item.raw.ranks).length
-                    : 1
-
-                return (
-                  <div
-                    data-effect={getEffectType(formattedDesc)}
-                    class="skill-card is-other flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer relative"
-                    data-skill-id={item.name}
-                    data-buff-id={item.id ? String(item.id) : undefined}
-                    data-type="other"
-                  >
-                    <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                    >
+                      <input
+                        type="checkbox"
+                        class="hidden buff-checkbox pointer-events-none w-3.5 h-3.5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50"
+                        data-buff-id={shrine.name}
+                      />
                       <img
                         src={mainSrc}
                         class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
                         onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
-                        alt={item.name}
-                        title={formattedDesc}
+                        alt={shrine.name}
+                        title={boostText}
                         width="24"
                         height="24"
                         loading="lazy"
                         decoding="async"
                       />
                       <div class="flex flex-col normal-view min-w-0">
-                        <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 transition-colors truncate">
-                          {item.name}
+                        <span class="text-[10px] font-bold text-white group-[.active]:text-orange-400 group-hover:text-orange-400 transition-colors truncate">
+                          {shrine.name}
                         </span>
-                        <span class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2" title={formattedDesc} data-original={formattedDesc}>
-                          {formattedDesc}
+                        <span
+                          class="text-[9px] text-terminal-muted leading-tight line-clamp-2"
+                          title={boostText}
+                        >
+                          {boostText}
                         </span>
                       </div>
                       <div class="hidden compact-view w-full">
                         <span
-                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-purple-400 transition-colors"
-                          title={formattedDesc}
+                          class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-orange-400 transition-colors"
+                          title={boostText}
                         >
-                          {getCompactText(item.raw || item, formattedDesc)}
+                          {getCompactText(shrine.raw || shrine, boostText)}
                         </span>
                       </div>
                     </div>
+                  )
+                })}
+              </div>
+            </details>
+          )
+        }
 
-                    {ranksCount > 1 && (
-                      <div class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10 skill-ranks-container" onclick="event.stopPropagation()">
-                        {Array.from({ length: ranksCount }).map((_, idx) => {
-                          const isFaction = item.name === "Faction Pet"
-                          const labels = ["10%", "20%", "30%", "50%"]
-                          const labelText = isFaction ? labels[idx] : `R${idx + 1}`
-                          return (
-                            <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
-                              <input
-                                type="checkbox"
-                                value={idx + 1}
-                                class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-purple-500 bg-white/5 border-white/20 focus:ring-purple-500/50 rank-input-${safeId}`}
-                                data-skill-id={item.name}
-                                data-rank={idx + 1}
-                              />
-                              <span class="text-[8px] font-mono font-bold text-white/50">{labelText}</span>
-                            </label>
-                          )
-                        })}
+        {
+          /* 4. Sub-grupo: Global Phases & Perks (Coleccionables no vendibles, Oil, Factions, VIP) */
+        }
+        {
+          others.length > 0 && (
+            <details class="group/sub w-full mb-1 open:mb-6" open>
+              <summary class="flex items-center cursor-pointer text-xs font-bold text-white/60 uppercase tracking-wider mb-2 group-open/sub:mb-3 hover:text-purple-400 transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                <svg
+                  class="w-2.5 h-2.5 mr-2 text-purple-500/80 transition-transform duration-200 group-open/sub:rotate-90 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                {t("sfl.boosts.othersTitle")} ({others.length})
+              </summary>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-2 w-full pl-1">
+                {others.map((item) => {
+                  const mainSrc = item.image || `/img/cripto/sunflowerland.webp`
+                  const fallbackSrc = `/img/cripto/sunflowerland.webp`
+                  const formattedDesc = formatDescription(item.raw || item)
+                  const safeId = item.name.replace(/\s+/g, "_")
+                  const ranksCount = item.raw?.cost_by_rank
+                    ? Object.keys(item.raw.cost_by_rank).length
+                    : item.raw?.ranks
+                      ? Object.keys(item.raw.ranks).length
+                      : 1
+
+                  const compactParts = getCompactParts(item.raw || item, formattedDesc)
+
+                  return (
+                    <div
+                      data-effect={getEffectType(formattedDesc, item)}
+                      class="skill-card is-other flex flex-col bg-white/5 border border-white/5 rounded-lg p-1.5 transition-all group hover:border-purple-500/30 hover:bg-purple-500/5 cursor-pointer relative"
+                      data-skill-id={item.name}
+                      data-buff-id={item.id ? String(item.id) : undefined}
+                      data-type="other"
+                    >
+                      <div class="flex items-start gap-2 mb-1.5 pointer-events-none">
+                        <img
+                          src={mainSrc}
+                          class="w-6 h-6 object-contain drop-shadow-sm group-hover:scale-110 transition-transform shrink-0"
+                          onerror={`this.onerror=null; this.src='${fallbackSrc}';`}
+                          alt={item.name}
+                          title={formattedDesc}
+                          width="24"
+                          height="24"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <div class="flex flex-col normal-view min-w-0">
+                          <span class="text-[10px] font-bold text-white group-[.active]:text-purple-400 transition-colors truncate">
+                            {item.name}
+                          </span>
+                          <span
+                            class="skill-description-text text-[9px] text-terminal-muted leading-tight line-clamp-2"
+                            title={formattedDesc}
+                            data-original={formattedDesc}
+                          >
+                            {formattedDesc}
+                          </span>
+                        </div>
+                        <div class="hidden compact-view w-full">
+                          <span
+                            class="text-[9px] font-mono text-white/80 whitespace-nowrap overflow-hidden text-ellipsis group-[.active]:text-purple-400 transition-colors"
+                            title={formattedDesc}
+                          >
+                            {getCompactText(item.raw || item, formattedDesc)}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </details>
-        )}
+
+                      {ranksCount > 1 && (
+                        <div
+                          class="flex items-center gap-2.5 mt-auto pt-1.5 border-t border-white/10 skill-ranks-container"
+                          onclick="event.stopPropagation()"
+                        >
+                          {Array.from({ length: ranksCount }).map((_, idx) => {
+                            const isFaction = item.name === "Faction Pet"
+                            const labels = ["10%", "20%", "30%", "50%"]
+                            const labelText = isFaction ? labels[idx] : `R${idx + 1}`
+                            return (
+                              <label class="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+                                <input
+                                  type="checkbox"
+                                  value={idx + 1}
+                                  class={`skill-rank-checkbox w-2.5 h-2.5 rounded-sm text-purple-500 bg-white/5 border-white/20 focus:ring-purple-500/50 rank-input-${safeId}`}
+                                  data-skill-id={item.name}
+                                  data-rank={idx + 1}
+                                />
+                                <span class="text-[8px] font-mono font-bold text-white/50">
+                                  {labelText}
+                                </span>
+                              </label>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </details>
+          )
+        }
       </div>
     </div>
   </div>
@@ -652,7 +820,9 @@ const getEffectType = (desc: string) => {
         container.querySelectorAll<HTMLInputElement>(".buff-checkbox").forEach((cb) => {
           const id = cb.dataset.buffId
           if (!id) return
-          const isActive = Boolean(state.buffs?.[id] || (state.skills?.[id] && state.skills[id] > 0))
+          const isActive = Boolean(
+            state.buffs?.[id] || (state.skills?.[id] && state.skills[id] > 0),
+          )
           cb.checked = isActive
           const card = cb.closest(".buff-card")
           if (card) {
@@ -671,7 +841,7 @@ const getEffectType = (desc: string) => {
                 "border-emerald-500/50",
                 "bg-emerald-500/10",
                 "border-orange-500/50",
-                "bg-orange-500/10"
+                "bg-orange-500/10",
               )
               card.classList.add("border-white/5", "bg-white/5")
             }
@@ -685,9 +855,7 @@ const getEffectType = (desc: string) => {
           const buffId = card.dataset.buffId
           const rank = state.skills?.[skillId] || 0
           const isActive =
-            rank > 0 ||
-            Boolean(state.buffs?.[skillId]) ||
-            Boolean(buffId && state.buffs?.[buffId])
+            rank > 0 || Boolean(state.buffs?.[skillId]) || Boolean(buffId && state.buffs?.[buffId])
 
           if (isActive) {
             card.classList.add("active")
@@ -737,11 +905,12 @@ const getEffectType = (desc: string) => {
 
             if (compactSpan) {
               compactSpan.title = updatedDesc
+              const suffix = compactSpan.dataset.compactSuffix
               const match = updatedDesc.match(/(?:^|\b|\s)([x+-]?\d+(?:\.\d+)?(?:%|x)?)/i)
               if (match) {
                 let val = match[1].trim()
                 if (val.toLowerCase().endsWith("x")) val = "x" + val.slice(0, -1)
-                compactSpan.textContent = val
+                compactSpan.textContent = suffix ? `${val}${suffix}` : val
               }
             }
           }
@@ -825,7 +994,8 @@ const getEffectType = (desc: string) => {
         container.querySelectorAll<HTMLElement>(".skill-card").forEach((card) => {
           card.addEventListener("click", (e) => {
             // Si el click fue en un checkbox de rango específico o contenedor de rangos, dejar que su handler lo procese
-            if ((e.target as HTMLElement).closest(".skill-rank-checkbox, .skill-ranks-container")) return
+            if ((e.target as HTMLElement).closest(".skill-rank-checkbox, .skill-ranks-container"))
+              return
             const type = card.dataset.type
             if (type === "consumable" || type === "other") {
               const skillId = card.dataset.skillId
@@ -947,6 +1117,16 @@ const getEffectType = (desc: string) => {
   .skill-card.is-other.active span.font-bold,
   .skill-card[data-type="other"].active span.font-bold {
     color: #c084fc !important;
+  }
+
+  .boosts-container[data-filter="yield"] .buff-card:not([data-effect*="yield"]),
+  .boosts-container[data-filter="yield"] .skill-card:not([data-effect*="yield"]) {
+    display: none !important;
+  }
+
+  .boosts-container[data-filter="feed"] .buff-card:not([data-effect*="feed"]),
+  .boosts-container[data-filter="feed"] .skill-card:not([data-effect*="feed"]) {
+    display: none !important;
   }
 
   .boosts-container[data-filter="xp"] .buff-card:not([data-effect*="xp"]),

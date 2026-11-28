@@ -36,6 +36,16 @@ const tools = [
     tagColor: "border-amber-500/20 text-amber-400 bg-amber-500/10",
   },
   {
+    id: "animals",
+    title: t("sfl.hub.tools.animals.title"),
+    desc: t("sfl.hub.tools.animals.desc"),
+    href: loc("/sfl-animales"),
+    icon: "/img/sunflowerland/123/Chicken.png",
+    cta: t("sfl.hub.tools.animals.cta"),
+    badge: "0→15 ROI",
+    tagColor: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+  },
+  {
     id: "betty",
     title: t("sfl.hub.tools.betty.title"),
     desc: t("sfl.hub.tools.betty.desc"),
@@ -137,21 +147,32 @@ const faqItems = [
   <!-- ═════════════════════════════════════════════════════════ -->
   <!-- 1. HERO BANNER: Definición y Acceso Rápido                -->
   <!-- ═════════════════════════════════════════════════════════ -->
-  <section class="relative rounded-3xl p-6 sm:p-8 md:p-10 mb-8 border border-white/10 bg-gradient-to-b from-white/[0.04] via-white/[0.015] to-transparent overflow-hidden shadow-2xl backdrop-blur-xl">
+  <section
+    class="relative rounded-3xl p-6 sm:p-8 md:p-10 mb-8 border border-white/10 bg-gradient-to-b from-white/[0.04] via-white/[0.015] to-transparent overflow-hidden shadow-2xl backdrop-blur-xl"
+  >
     <!-- Luz cenital decorativa sutil -->
-    <div class="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    <div
+      class="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-emerald-500/10 blur-3xl"
+    >
+    </div>
 
     <div class="relative z-10 max-w-4xl">
       <!-- Badges de contexto -->
       <div class="flex flex-wrap items-center gap-2 mb-4">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-semibold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-semibold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
+        >
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           {t("sfl.hub.badge")}
         </span>
-        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium text-white/50 border border-white/10 bg-white/[0.02]">
+        <span
+          class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium text-white/50 border border-white/10 bg-white/[0.02]"
+        >
           Polygon PoS & Base
         </span>
-        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium text-white/50 border border-white/10 bg-white/[0.02]">
+        <span
+          class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium text-white/50 border border-white/10 bg-white/[0.02]"
+        >
           Web3 Gaming
         </span>
       </div>
@@ -209,7 +230,9 @@ const faqItems = [
   <section class="mb-12">
     <div class="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/[0.02] mb-6">
       <div class="max-w-3xl mb-8">
-        <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-2">
+        <span
+          class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-2"
+        >
           {t("sfl.hub.whatIs.badge")}
         </span>
         <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-4">
@@ -224,7 +247,9 @@ const faqItems = [
       </div>
 
       <!-- 4 Pilares del Juego (Grid 2x2) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-white/5">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-white/5"
+      >
         {
           pillars.map((pillar) => (
             <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">
@@ -244,9 +269,13 @@ const faqItems = [
   <!-- 3. HUB DE HERRAMIENTAS OPERATIVAS (0xLeñador)             -->
   <!-- ═════════════════════════════════════════════════════════ -->
   <section id="herramientas" class="mb-12 scroll-mt-6">
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 border-b border-white/10">
+    <div
+      class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 border-b border-white/10"
+    >
       <div>
-        <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1">
+        <span
+          class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1"
+        >
           {t("sfl.hub.tools.badge")}
         </span>
         <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -272,7 +301,12 @@ const faqItems = [
                 <div class="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <img src={item.icon} alt={item.title} class="w-7 h-7 object-contain" />
                 </div>
-                <span class:list={["text-[10px] font-mono uppercase px-2.5 py-1 rounded-full border font-semibold", item.tagColor]}>
+                <span
+                  class:list={[
+                    "text-[10px] font-mono uppercase px-2.5 py-1 rounded-full border font-semibold",
+                    item.tagColor,
+                  ]}
+                >
                   {item.badge}
                 </span>
               </div>
@@ -300,7 +334,9 @@ const faqItems = [
   <!-- ═════════════════════════════════════════════════════════ -->
   <section class="mb-12">
     <div class="mb-6 pb-4 border-b border-white/10">
-      <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1">
+      <span
+        class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1"
+      >
         {t("sfl.hub.guides.badge")}
       </span>
       <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -328,9 +364,7 @@ const faqItems = [
               <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">
                 {guide.title}
               </h3>
-              <p class="text-xs text-white/50 leading-relaxed font-light mb-5">
-                {guide.desc}
-              </p>
+              <p class="text-xs text-white/50 leading-relaxed font-light mb-5">{guide.desc}</p>
             </div>
 
             <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/70 group-hover:text-white transition-colors">
@@ -349,7 +383,9 @@ const faqItems = [
   <section class="mb-14">
     <div class="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/[0.02]">
       <div class="mb-6">
-        <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1">
+        <span
+          class="text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-400 font-semibold block mb-1"
+        >
           {t("sfl.hub.tokenomics.badge")}
         </span>
         <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -359,7 +395,9 @@ const faqItems = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Token FLOWER -->
-        <div class="p-5 rounded-2xl bg-black/30 border border-white/5 flex flex-col justify-between">
+        <div
+          class="p-5 rounded-2xl bg-black/30 border border-white/5 flex flex-col justify-between"
+        >
           <div>
             <div class="flex items-center gap-3 mb-2">
               <img
@@ -377,7 +415,9 @@ const faqItems = [
             </p>
           </div>
 
-          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-emerald-400/90">
+          <div
+            class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-emerald-400/90"
+          >
             <span>Polygon PoS & Base</span>
             <a
               href={loc("/activos/sunflowerland")}
@@ -399,11 +439,19 @@ const faqItems = [
           <div>
             <div class="flex items-start justify-between gap-3 mb-3">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
-                  <img src="/img/cripto/yakkamon.webp" alt="Yakkamon" class="w-8 h-8 object-contain" />
+                <div
+                  class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden"
+                >
+                  <img
+                    src="/img/cripto/yakkamon.webp"
+                    alt="Yakkamon"
+                    class="w-8 h-8 object-contain"
+                  />
                 </div>
                 <div>
-                  <h3 class="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
+                  <h3
+                    class="text-lg font-bold text-white group-hover:text-purple-300 transition-colors"
+                  >
                     {t("sfl.hub.tokenomics.yakka.title")}
                   </h3>
                   <span class="text-xs font-mono text-purple-400/90 font-medium block">
@@ -411,7 +459,9 @@ const faqItems = [
                   </span>
                 </div>
               </div>
-              <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full border border-purple-500/30 text-purple-300 bg-purple-500/10 font-semibold shrink-0">
+              <span
+                class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full border border-purple-500/30 text-purple-300 bg-purple-500/10 font-semibold shrink-0"
+              >
                 {t("sfl.hub.tokenomics.yakka.badge")}
               </span>
             </div>
@@ -420,7 +470,9 @@ const faqItems = [
             </p>
           </div>
 
-          <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-purple-300 group-hover:text-purple-200 transition-colors">
+          <div
+            class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-purple-300 group-hover:text-purple-200 transition-colors"
+          >
             <span>{t("sfl.hub.tokenomics.yakka.cta")}</span>
             <span class="text-sm group-hover:translate-x-1 transition-transform">↗</span>
           </div>
@@ -433,11 +485,6 @@ const faqItems = [
   <!-- 6. PREGUNTAS FRECUENTES (FAQ)                              -->
   <!-- ═════════════════════════════════════════════════════════ -->
   <div slot="footer">
-    <FaqAccordion
-      titulo={t("sfl.hub.faq.title")}
-      startId={700}
-      items={faqItems}
-    />
+    <FaqAccordion titulo={t("sfl.hub.faq.title")} startId={700} items={faqItems} />
   </div>
 </SflToolLayout>
-

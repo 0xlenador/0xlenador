@@ -125,53 +125,49 @@
       }
     },
     "Collie Shrine": {
+      "id": 9032,
       "name": "Collie Shrine",
+      "boost": "x1.35 Cow & Sheep Sleep Speed, x0.95 Cow & Sheep Feed",
       "description": "A shrine to the collie",
       "type": "shrine",
       "image": "collie_shrine.webp",
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "cow_sheep",
+        "effect_type": "sleep",
+        "target": "cow,sheep",
         "mathematics_operation": "speed_multiplier",
         "calc": 1.35
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "speed_multiplier",
-        "calc": 1.35
-      },
-      "mathematics_3": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "cow_sheep",
+        "effect_type": "feed",
+        "target": "cow,sheep",
         "mathematics_operation": "multiply",
         "calc": 0.95
       }
     },
     "Bantam Shrine": {
+      "id": 9033,
       "name": "Bantam Shrine",
+      "boost": "x1.35 Chicken Sleep Speed, x0.95 Chicken Feed",
       "description": "A shrine to the bantam",
       "type": "shrine",
       "image": "bantam_shrine.webp",
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "chicken",
+        "effect_type": "sleep",
+        "target": "chicken",
         "mathematics_operation": "speed_multiplier",
         "calc": 1.35
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "chicken",
+        "effect_type": "feed",
+        "target": "chicken",
         "mathematics_operation": "multiply",
         "calc": 0.95
       }
@@ -826,6 +822,40 @@
         "calc": 1,
         "calc_by_rank": {
           "rank_1": 1
+        }
+      }
+    },
+    "Barn Manager": {
+      "id": 9030,
+      "name": "Barn Manager",
+      "description": "+0.1 Animal Produce",
+      "image": "/img/sunflowerland/build/barn.webp",
+      "mathematics_1": {
+        "category": "animals",
+        "subcategory": "all",
+        "effect_type": "yield",
+        "target": "barn_animals",
+        "mathematics_operation": "add",
+        "calc": 0.1,
+        "calc_by_rank": {
+          "rank_1": 0.1
+        }
+      }
+    },
+    "Wrangler": {
+      "id": 9031,
+      "name": "Wrangler",
+      "description": "x0.9 Animal Sleep Time",
+      "image": "/img/sunflowerland/cosmetics/wearables/Cowboy Hat.webp",
+      "mathematics_1": {
+        "category": "animals",
+        "subcategory": "all",
+        "effect_type": "sleep",
+        "target": "barn_animals",
+        "mathematics_operation": "multiply",
+        "calc": 0.9,
+        "calc_by_rank": {
+          "rank_1": 0.9
         }
       }
     }

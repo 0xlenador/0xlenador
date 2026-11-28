@@ -147,7 +147,7 @@ const baseSoftwareTools: BaseSoftwareTool[] = [
       "gaming",
       "sunflower land",
     ],
-    icon: "/img/sunflowerland/123/ramsey.webp",
+    icon: "/img/sunflowerland/123/Chicken.png",
     featured: true,
     inDirectoryTable: true,
   },

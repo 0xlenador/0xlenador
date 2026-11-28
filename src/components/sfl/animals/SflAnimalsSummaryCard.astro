@@ -1,0 +1,576 @@
+---
+// ============================================================
+// src/components/sfl/animals/SflAnimalsSummaryCard.astro
+// Tarjeta de resumen y controles de un animal:
+// - Info base + tiempo de sueño efectivo + botón Mud (solo Pig) + aplicar escarabajos a todo
+// - Cápsulas de Feed/XP/Care/Drops con valores automáticos de SflBoostsConfig + override manual + reset ↺
+// - Timeline 1..15 + Selector de Treats (Honey Treat / Salt Lick / Truffle Seasoning)
+// - Total acumulado de Profit hasta Nivel Objetivo
+// ============================================================
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+import type { AnimalProgressionResult } from "../../../lib/sfl/animals"
+import { BEETLES_LIST } from "../../../lib/sfl/animals"
+
+interface Props {
+  animal: AnimalProgressionResult
+  tabLabel: string
+}
+
+const { animal, tabLabel } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const careTools = animal.levels.find((l) => l.affectionTools.length > 0)?.affectionTools || [
+  {
+    id: "petting_hand",
+    name: "Petting Hand",
+    xp: 25,
+    baseXp: 25,
+    percent: 100,
+    image: "/img/sunflowerland/tools/Petting Hand.webp",
+  },
+  {
+    id: "brush",
+    name: "Brush",
+    xp: 40,
+    baseXp: 40,
+    percent: 0,
+    image: "/img/sunflowerland/tools/Brush.webp",
+  },
+  {
+    id: "music_box",
+    name: "Music Box",
+    xp: 50,
+    baseXp: 50,
+    percent: 0,
+    image: "/img/sunflowerland/tools/Music Box.webp",
+  },
+]
+
+const rawDrops = animal.levels[0]?.resources || []
+const primaryDrop = rawDrops.find((r) => r.isPrimary)
+const secondaryDrop =
+  rawDrops.find((r) => r.isSecondary) ||
+  (animal.animalId === "chicken"
+    ? { name: "Feather", image: "/img/sunflowerland/Feather.png" }
+    : undefined)
+---
+
+<div
+  class="bg-terminal-surface/95 border border-terminal-border rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5 shadow-lg backdrop-blur-md"
+>
+  <div class="flex flex-col xl:flex-row items-center justify-between gap-3 sm:gap-4 xl:gap-5">
+    <!-- Bloque Izquierdo: Especie, Sueño efectivo, Mud (Pig) y Escarabajos rápidos -->
+    <div class="flex flex-col gap-1.5 shrink-0 self-center xl:self-auto">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-11 h-11 sm:w-12 sm:h-12 bg-white/[0.04] border border-white/10 rounded-xl p-1.5 flex items-center justify-center shrink-0 shadow-sm"
+        >
+          <img
+            src={animal.icon}
+            alt={animal.name}
+            class="w-full h-full object-contain drop-shadow"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="flex flex-col justify-center">
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm sm:text-base font-bold text-white tracking-tight leading-none">
+              {tabLabel}
+            </h2>
+            <div
+              class="inline-flex items-center gap-1 bg-white/[0.04] border border-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono text-white/60"
+            >
+              <img
+                src={animal.buildingIcon}
+                alt={animal.buildingName}
+                class="w-3 h-3 object-contain opacity-70"
+              />
+              <span>{animal.buildingName}</span>
+            </div>
+            <span
+              class="animal-free-feed-badge hidden text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30"
+              data-animal={animal.animalId}
+            >
+              {t("sfl.animals.card.freeFeedBadge")}
+            </span>
+          </div>
+          <div class="flex items-center gap-2 mt-1 text-[11px] font-mono text-white/60">
+            <span
+              >{t("sfl.animals.card.cost")}: <strong class="text-emerald-400 font-semibold"
+                >{animal.costCoins}</strong
+              ></span
+            >
+            <span class="text-white/20">·</span>
+            <span>
+              {t("sfl.animals.card.sleep")}:{" "}
+              <strong
+                class="animal-sleep-hours-val text-white font-semibold"
+                data-animal={animal.animalId}
+              >
+                {animal.effectiveSleepHours}h
+              </strong>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de Escarabajos (Aplicar a todo) + Mud para Cerdo -->
+      <div class="flex items-center gap-2 pt-1 border-t border-white/5 flex-wrap">
+        <div class="flex items-center gap-1.5">
+          <span
+            class="text-[9px] font-mono text-white/40 tracking-tight select-none whitespace-nowrap"
+          >
+            {t("sfl.animals.card.applyToAll")}:
+          </span>
+          <div class="flex items-center gap-1">
+            {
+              BEETLES_LIST.map((beetle) => (
+                <button
+                  type="button"
+                  class="apply-all-food-btn group flex items-center justify-center p-1 bg-black/40 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-400 rounded-lg transition-all focus:outline-none cursor-pointer shrink-0"
+                  data-animal={animal.animalId}
+                  data-food-id={beetle.id}
+                  title={`${t("sfl.animals.card.applyToAll")}: ${beetle.name}`}
+                >
+                  <img
+                    src={beetle.img}
+                    alt={beetle.name}
+                    class="w-4 h-4 object-contain drop-shadow transition-transform group-hover:scale-110"
+                    loading="lazy"
+                  />
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        {
+          animal.animalId === "pig" && (
+            <button
+              type="button"
+              class="mud-toggle-btn group flex items-center gap-1 px-2 py-0.5 rounded-lg bg-black/40 border border-amber-700/40 hover:border-amber-500 text-[10px] font-mono text-amber-300/80 hover:text-amber-200 transition-all cursor-pointer select-none"
+              data-animal="pig"
+              title={t("sfl.animals.card.mudTooltip")}
+            >
+              <img
+                src="/img/sunflowerland/123/mud.webp"
+                alt="Mud"
+                class="w-3.5 h-3.5 object-contain shrink-0"
+              />
+              <span class="font-bold">{t("sfl.animals.card.mudBtn")}</span>
+            </button>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- Bloque Central: Cápsulas de Boosts + Timeline 1..15 con Selector de Treats -->
+    <div
+      class="flex-1 w-full min-w-0 flex flex-col items-center justify-center gap-2.5 px-0 xl:px-2 border-t xl:border-t-0 pt-2.5 xl:pt-0 border-white/5"
+    >
+      <!-- Cápsulas de Feeding, Care, Drops -->
+      <div class="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap w-full max-w-4xl">
+        <!-- Grupo 1: Feeding -->
+        <div
+          class="flex items-center gap-1.5 bg-terminal-bg/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0"
+        >
+          <span
+            class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none"
+          >
+            {t("sfl.animals.card.groupFeeding")}
+          </span>
+          <div class="w-px h-3 bg-white/10"></div>
+
+          <!-- Feed Qty Multiplier -->
+          <div class="flex items-center gap-1" title={t("sfl.animals.card.foodBoostTooltip")}>
+            <span class="text-[10px] sm:text-[11px] font-mono text-white/70"
+              >{t("sfl.animals.card.feedLabel")}</span
+            >
+            <div
+              class="animal-boost-box flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all"
+            >
+              <input
+                type="number"
+                step="any"
+                min="0"
+                value={animal.modifiers.effective.foodMultiplier}
+                data-animal={animal.animalId}
+                data-boost-type="food"
+                class="animal-boost-input w-9 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+              />
+              <span class="text-[9px] font-mono text-emerald-500/70 select-none font-bold">×</span>
+              <button
+                type="button"
+                class="animal-boost-reset-btn hidden ml-0.5 text-[10px] font-mono text-amber-300/80 hover:text-white px-0.5 cursor-pointer"
+                data-animal={animal.animalId}
+                data-boost-type="food"
+                title={t("sfl.animals.card.resetAutoTooltip")}>↺</button
+              >
+            </div>
+          </div>
+
+          <div class="w-px h-2.5 bg-white/10"></div>
+
+          <!-- Food XP Multiplier -->
+          <div class="flex items-center gap-1" title={t("sfl.animals.card.foodXpBoostTooltip")}>
+            <span class="text-[10px] sm:text-[11px] font-mono text-white/70"
+              >{t("sfl.animals.card.xpLabel")}</span
+            >
+            <div
+              class="animal-boost-box flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all"
+            >
+              <input
+                type="number"
+                step="any"
+                min="0.1"
+                value={animal.modifiers.effective.foodXpMultiplier}
+                data-animal={animal.animalId}
+                data-boost-type="foodXp"
+                class="animal-boost-input w-9 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+              />
+              <span class="text-[9px] font-mono text-emerald-500/70 select-none font-bold">×</span>
+              <button
+                type="button"
+                class="animal-boost-reset-btn hidden ml-0.5 text-[10px] font-mono text-amber-300/80 hover:text-white px-0.5 cursor-pointer"
+                data-animal={animal.animalId}
+                data-boost-type="foodXp"
+                title={t("sfl.animals.card.resetAutoTooltip")}>↺</button
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo 2: Care -->
+        <div
+          class="flex items-center gap-1.5 bg-terminal-bg/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0"
+          title={t("sfl.animals.card.careMultiplierTooltip")}
+        >
+          <span
+            class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none"
+          >
+            {t("sfl.animals.card.groupCare")}
+          </span>
+          <div class="w-px h-3 bg-white/10"></div>
+          <div
+            class="flex items-center bg-black/50 border border-white/5 rounded-lg px-1 py-0.5 -space-x-1 shrink-0"
+          >
+            {
+              careTools.map((tool, tIdx) => (
+                <img
+                  src={tool.image}
+                  alt={tool.name}
+                  title={`${tool.name} (+${tool.xp} XP)`}
+                  data-animal={animal.animalId}
+                  data-tool-id={tool.id}
+                  data-tool-name={tool.name}
+                  class="care-tool-icon w-4 h-4 object-contain drop-shadow hover:scale-125 transition-transform cursor-help relative"
+                  style={`z-index: ${tIdx + 1};`}
+                />
+              ))
+            }
+          </div>
+          <div
+            class="animal-boost-box flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all"
+          >
+            <input
+              type="number"
+              step="any"
+              min="0.1"
+              value={animal.modifiers.effective.affectionMultiplier}
+              data-animal={animal.animalId}
+              data-boost-type="careMultiplier"
+              class="animal-boost-input w-8 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+            />
+            <span class="text-[9px] font-mono text-emerald-500/70 select-none font-bold">×</span>
+            <button
+              type="button"
+              class="animal-boost-reset-btn hidden ml-0.5 text-[10px] font-mono text-amber-300/80 hover:text-white px-0.5 cursor-pointer"
+              data-animal={animal.animalId}
+              data-boost-type="careMultiplier"
+              title={t("sfl.animals.card.resetAutoTooltip")}>↺</button
+            >
+          </div>
+        </div>
+
+        <!-- Grupo 3: Drops -->
+        <div
+          class="flex items-center gap-1.5 bg-terminal-bg/90 border border-white/10 hover:border-white/20 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm transition-all shrink-0"
+        >
+          <span
+            class="text-[9px] font-mono uppercase tracking-wider text-emerald-400/80 font-bold select-none"
+          >
+            {t("sfl.animals.card.groupDrops")}
+          </span>
+          <div class="w-px h-3 bg-white/10"></div>
+
+          {
+            primaryDrop && (
+              <div
+                class="flex items-center gap-1"
+                title={`${t("sfl.animals.card.dropBonusTooltip")} (${primaryDrop.name})`}
+              >
+                <img
+                  src={primaryDrop.image}
+                  alt={primaryDrop.name}
+                  class="w-3.5 h-3.5 object-contain shrink-0"
+                />
+                <div class="animal-boost-box flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
+                  <span class="text-[10px] font-mono text-emerald-400/70 select-none font-bold mr-0.5">
+                    +
+                  </span>
+                  <input
+                    type="number"
+                    step="any"
+                    value={animal.modifiers.effective.primaryFlatBonus}
+                    data-animal={animal.animalId}
+                    data-boost-type="primaryDrop"
+                    class="animal-boost-input w-9 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    class="animal-boost-reset-btn hidden ml-0.5 text-[10px] font-mono text-amber-300/80 hover:text-white px-0.5 cursor-pointer"
+                    data-animal={animal.animalId}
+                    data-boost-type="primaryDrop"
+                    title={t("sfl.animals.card.resetAutoTooltip")}
+                  >
+                    ↺
+                  </button>
+                </div>
+              </div>
+            )
+          }
+
+          {
+            secondaryDrop && (
+              <>
+                <div class="w-px h-2.5 bg-white/10" />
+                <div
+                  class="flex items-center gap-1"
+                  title={`${t("sfl.animals.card.dropBonusTooltip")} (${secondaryDrop.name})`}
+                >
+                  <img
+                    src={secondaryDrop.image}
+                    alt={secondaryDrop.name}
+                    class="w-3.5 h-3.5 object-contain shrink-0"
+                  />
+                  <div class="animal-boost-box flex items-center bg-black/60 border border-white/10 rounded-md px-1 py-0.5 focus-within:border-emerald-400/80 transition-all">
+                    <span class="text-[10px] font-mono text-emerald-400/70 select-none font-bold mr-0.5">
+                      +
+                    </span>
+                    <input
+                      type="number"
+                      step="any"
+                      value={animal.modifiers.effective.secondaryFlatBonus}
+                      data-animal={animal.animalId}
+                      data-boost-type="secondaryDrop"
+                      class="animal-boost-input w-9 bg-transparent text-[11px] font-mono font-bold text-emerald-400 text-center focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      class="animal-boost-reset-btn hidden ml-0.5 text-[10px] font-mono text-amber-300/80 hover:text-white px-0.5 cursor-pointer"
+                      data-animal={animal.animalId}
+                      data-boost-type="secondaryDrop"
+                      title={t("sfl.animals.card.resetAutoTooltip")}
+                    >
+                      ↺
+                    </button>
+                  </div>
+                </div>
+              </>
+            )
+          }
+        </div>
+      </div>
+
+      <!-- Timeline 1..15 + Selector de Treats (Honey Treat / Salt Lick / Truffle Seasoning) -->
+      <div class="flex flex-col items-center w-full max-w-4xl px-1">
+        <div
+          class="flex items-center justify-between w-full mb-1.5 text-xs font-mono gap-2 flex-wrap"
+        >
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Target Level Indicator -->
+            <div
+              class="flex items-center gap-1.5 bg-terminal-bg/90 border border-white/10 rounded-lg px-2 py-0.5 text-white/70 shadow-sm"
+            >
+              <span class="text-[11px]">🎯</span>
+              <span class="text-white/40 uppercase text-[9px] tracking-wider font-semibold"
+                >{t("sfl.animals.card.targetLevel")}:</span
+              >
+              <strong
+                class="text-emerald-400 font-bold text-[11px] target-level-number"
+                data-animal={animal.animalId}
+              >
+                {t("sfl.animals.card.levelPrefix")}
+                {animal.targetLevel}
+              </strong>
+            </div>
+
+            <!-- Botón de activación Treat + Conmutador de tipo de Treat -->
+            <div class="flex items-center gap-1">
+              <button
+                type="button"
+                class="honey-treat-toggle-btn group flex items-center gap-1.5 bg-terminal-bg border border-amber-500/30 hover:border-amber-400 rounded-lg px-2 py-0.5 shadow-sm transition-all focus:outline-none cursor-pointer select-none"
+                data-animal={animal.animalId}
+                title={t("sfl.animals.card.honeyTreatTooltip")}
+              >
+                <img
+                  src="/img/sunflowerland/animals/honey_treat.webp"
+                  alt="Treat"
+                  class="treat-active-icon w-3.5 h-3.5 object-contain drop-shadow transition-transform group-hover:scale-110"
+                />
+                <span
+                  class="treat-active-name text-[10px] font-mono font-bold text-amber-400 group-hover:text-amber-300"
+                >
+                  {t("sfl.animals.card.honeyTreatBtn")}
+                </span>
+                <span
+                  class="honey-treat-indicator text-[9px] font-mono text-amber-300/60 hidden sm:inline"
+                >
+                  {t("sfl.animals.card.honeyShort")}
+                </span>
+                <span class="honey-treat-badge ml-0.5 w-1.5 h-1.5 rounded-full bg-amber-500/30"
+                ></span>
+              </button>
+
+              <!-- Switch compacto de Treat: Honey / Salt Lick / Truffle Seasoning -->
+              <div
+                class="flex items-center bg-black/50 border border-white/10 rounded-lg p-0.5 gap-0.5"
+              >
+                <button
+                  type="button"
+                  class="treat-type-btn active p-1 rounded bg-amber-500/20 text-amber-300 cursor-pointer transition-all"
+                  data-animal={animal.animalId}
+                  data-treat-type="honey_treat"
+                  title={t("sfl.animals.card.treatHoneyLabel")}
+                >
+                  <img
+                    src="/img/sunflowerland/animals/honey_treat.webp"
+                    alt="Honey Treat"
+                    class="w-3 h-3 object-contain"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="treat-type-btn p-1 rounded text-white/40 hover:text-cyan-300 cursor-pointer transition-all"
+                  data-animal={animal.animalId}
+                  data-treat-type="salt_lick"
+                  title={t("sfl.animals.card.treatSaltLabel")}
+                >
+                  <img
+                    src="/img/sunflowerland/animals/salt_lick.webp"
+                    alt="Salt Lick"
+                    class="w-3 h-3 object-contain"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="treat-type-btn p-1 rounded text-white/40 hover:text-purple-300 cursor-pointer transition-all"
+                  data-animal={animal.animalId}
+                  data-treat-type="truffle_seasoning"
+                  title={t("sfl.animals.card.treatTruffleLabel")}
+                >
+                  <img
+                    src="/img/sunflowerland/animals/truffle_seasoning.webp"
+                    alt="Truffle Seasoning"
+                    class="w-3 h-3 object-contain"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <span class="text-[10px] text-white/40 tracking-tight hidden md:inline"
+            >{t("sfl.animals.card.targetHint")}</span
+          >
+        </div>
+
+        <!-- Track interactivo 1..15 -->
+        <div
+          class="relative w-full flex items-center justify-between py-1 px-1 animal-target-track"
+          data-animal={animal.animalId}
+        >
+          <div
+            class="absolute left-2.5 right-2.5 top-1/2 -translate-y-1/2 h-1 bg-white/[0.08] rounded-full z-0"
+          >
+          </div>
+          <div
+            class="target-level-progress-bar absolute left-2.5 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-emerald-500/80 to-emerald-400 rounded-full z-0 transition-all duration-200"
+            data-animal={animal.animalId}
+            style="width: 100%;"
+          >
+          </div>
+
+          {
+            Array.from({ length: 15 }, (_, i) => i + 1).map((lvlNum) => {
+              const isSelected = lvlNum === animal.targetLevel
+              const defaultDotTitle = t("sfl.animals.card.targetLevelTooltip").replace(
+                "{lvl}",
+                String(lvlNum),
+              )
+              return (
+                <button
+                  type="button"
+                  class:list={[
+                    "target-level-dot relative rounded-full flex items-center justify-center font-mono select-none cursor-pointer transition-all duration-150 focus:outline-none",
+                    isSelected
+                      ? "z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 bg-emerald-400 text-black text-[10px] font-black border-2 border-emerald-200 ring-2 ring-emerald-400/40 scale-110 shadow-[0_0_12px_rgba(52,211,153,0.65)]"
+                      : "z-10 w-5 h-5 bg-terminal-bg text-emerald-400/90 border border-emerald-500/40 text-[9px] font-semibold hover:border-emerald-400 hover:scale-110 hover:text-emerald-300",
+                  ]}
+                  data-animal={animal.animalId}
+                  data-target-level={lvlNum}
+                  data-default-title={defaultDotTitle}
+                  title={defaultDotTitle}
+                >
+                  <span class="pointer-events-none">{lvlNum}</span>
+                </button>
+              )
+            })
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Profit Total Acumulado -->
+    <div
+      class="flex flex-col shrink-0 self-center xl:self-auto border-t xl:border-t-0 pt-2.5 xl:pt-0 border-white/5 w-full xl:w-auto"
+    >
+      <span
+        class="animal-total-profit-title text-[9px] font-mono uppercase tracking-wider text-white/40 mb-1 text-center xl:text-right"
+        data-animal={animal.animalId}
+      >
+        {t("sfl.animals.card.totalProfit")} ({t("sfl.animals.card.levelPrefix")} 1-{
+          animal.targetLevel
+        })
+      </span>
+      <div
+        class:list={[
+          "animal-total-profit-badge flex flex-col items-center xl:items-end justify-center px-3.5 py-1.5 rounded-xl border font-mono transition-colors min-w-[125px]",
+          animal.totals.totalProfitFlower >= 0
+            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+            : "bg-rose-500/10 border-rose-500/20 text-rose-400",
+        ]}
+        data-animal={animal.animalId}
+      >
+        <span
+          class="animal-total-profit-flower font-black text-sm sm:text-base leading-tight"
+          data-animal={animal.animalId}
+        >
+          {animal.totals.totalProfitFlower >= 0 ? "+" : ""}{
+            animal.totals.totalProfitFlower.toFixed(4)
+          } FL
+        </span>
+        <span
+          class="animal-total-profit-usd text-[10px] font-mono font-medium opacity-80"
+          data-animal={animal.animalId}
+        >
+          {animal.totals.totalProfitUsd >= 0 ? "+" : "-"}${
+            Math.abs(animal.totals.totalProfitUsd).toFixed(4)
+          } USD
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

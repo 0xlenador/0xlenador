@@ -18,7 +18,7 @@ Documentación técnica y operativa sobre la cría de animales, gestión de edif
 ### Barn (Establo)
 
 - **Animales permitidos:** Vacas (`Cow`) y Ovejas (`Sheep`).
-- **¿Qué se hace dentro?:** Alimentar con heno/slops, cepillar (`Brush`) para subir afecto, sanar con medicina de establo, ordeñar leche, esquilar lana y entregar animales maduros en los pedidos semanales.
+- **¿Qué se hace dentro?:** Alimentar con heno/slops, cepillar (`Brush`) o usar `Petting Hand` / `Music Box` para subir afecto, sanar con medicina de establo, ordeñar leche, recolectar cuero, esquilar lana y entregar animales maduros en los pedidos semanales.
 - **Mejoras y capacidades:**
   - **Nivel 1:** Capacidad de 10 animales (combinados) · Desbloquea hasta 10 bounties/semana (6 tickets, 4 coins).
   - **Nivel 2:** Capacidad de 15 animales (combinados) · Desbloquea hasta 15 bounties/semana (6 tickets, 9 coins).
@@ -27,7 +27,7 @@ Documentación técnica y operativa sobre la cría de animales, gestión de edif
 ### Pigpen (Pocilga)
 
 - **Animales permitidos:** Cerdos (`Pig`).
-- **¿Qué se hace dentro?:** Alimentar con mezclas de lodo/slops, relajar con música (`Music Box`), curar enfermedades, cosechar cerdas/pelos (_Bristles_), buscar trufas y canjear cerdos en los pedidos semanales.
+- **¿Qué se hace dentro?:** Alimentar con mezclas (_Slops_), relajar con música (`Music Box`) o herramientas de afecto, curar enfermedades, buscar trufas y canjear cerdos en los pedidos semanales (obteniendo _Pig Bristles_).
 - **Mejoras y capacidades:**
   - **Nivel 1:** Capacidad de 3 cerdos · Desbloquea hasta 3 bounties/semana (2 coins, 1 cerdas).
   - **Nivel 2:** Capacidad de 6 cerdos · Desbloquea hasta 7 bounties/semana (5 coins, 1 gemas, 1 cerdas).

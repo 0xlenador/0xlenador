@@ -24,13 +24,7 @@ import calculoBuffsDataRaw from "../../content/data/sfl/calculo_buffs.json"
 // Tipos e Interfaces
 // ----------------------------------------------------------------------------
 
-export type BuffType =
-  | "collectible"
-  | "wearable"
-  | "skill"
-  | "shrine"
-  | "consumable"
-  | "other"
+export type BuffType = "collectible" | "wearable" | "skill" | "shrine" | "consumable" | "other"
 
 export type BuffCategory =
   | "bumpkin_xp"
@@ -265,9 +259,7 @@ export function getBuffsByType(type: BuffType): BuffDefinition[] {
 }
 
 export function getBuffsByCategory(category: BuffCategory): BuffDefinition[] {
-  return getAllBuffs().filter((b) =>
-    b.effects.some((eff) => eff.category === category)
-  )
+  return getAllBuffs().filter((b) => b.effects.some((eff) => eff.category === category))
 }
 
 // ----------------------------------------------------------------------------
@@ -334,7 +326,7 @@ export function getCropBuffs(): BuffDefinition[] {
         eff.target === "crop" ||
         eff.target === "crop_plot" ||
         eff.target === "greenhouse" ||
-        eff.target === "crop_machine"
+        eff.target === "crop_machine",
     )
   })
 }
@@ -364,23 +356,41 @@ export function getMiningBuffs(): BuffDefinition[] {
         eff.target === "crimstone" ||
         eff.target === "mineral" ||
         eff.target === "mushroom" ||
-        eff.target === "Wild Mushroom"
+        eff.target === "Wild Mushroom",
     )
   })
 }
+
+const ANIMAL_BUFF_TARGETS = new Set([
+  "chicken",
+  "cow",
+  "sheep",
+  "pig",
+  "barn_animals",
+  "egg",
+  "feather",
+  "wool",
+  "merino_wool",
+  "milk",
+  "leather",
+  "truffle",
+  "bale",
+  "Mixed Grain",
+])
 
 /** Buffs relevantes para animales de granja */
 export function getAnimalBuffs(): BuffDefinition[] {
   return getAllBuffs().filter((b) => {
     if (b.type === "skill" && b.category === "Animals") return true
-    return b.effects.some(
-      (eff) =>
-        eff.target === "chicken" ||
-        eff.target === "cow" ||
-        eff.target === "sheep" ||
-        eff.target === "pig" ||
-        eff.target === "barn_animals"
-    )
+    return b.effects.some((eff) => {
+      if (eff.category === "animals") return true
+      if (eff.category && eff.category.startsWith("animals_")) return false
+      const targets = String(eff.target || "")
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+      return targets.some((t) => ANIMAL_BUFF_TARGETS.has(t))
+    })
   })
 }
 
@@ -425,7 +435,7 @@ export function isEffectTargetMatch(
     building?: string
     ingredients?: Array<{ name: string; amount?: number }>
     tags?: string[]
-  }
+  },
 ): boolean {
   if (!target || target === "all") return true
   const { itemName = "", building = "", ingredients = [], tags = [] } = context
@@ -492,7 +502,7 @@ export function calculateCompoundedMultiplier(
     building?: string
     ingredients?: Array<{ name: string; amount?: number }>
     tags?: string[]
-  }
+  },
 ): number {
   let multiplier = 1
 

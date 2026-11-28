@@ -1,0 +1,300 @@
+---
+// ============================================================
+// src/components/sfl/animals/SflAnimalsDashboard.astro
+// Dashboard Hero en vivo de Animales (similar a SflCookingView / SflFishingDashboard).
+// Muestra la especie más rentable según precios P2P + buffs activos de
+// SflBoostsConfig y un resumen operativo en vivo del corral activo.
+// ============================================================
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+import type { AnimalProgressionResult } from "../../../lib/sfl/animals"
+
+interface Props {
+  initialProgressions: AnimalProgressionResult[]
+  tabLabels: Record<string, string>
+  flowerUsd: number
+  bettyRatio: number
+  treatPrices: {
+    honeyTreatFlower: number
+    saltLickFlower: number
+    truffleSeasoningFlower: number
+  }
+}
+
+const { initialProgressions, tabLabels, flowerUsd, bettyRatio, treatPrices } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const sortedByProfit = [...initialProgressions].sort(
+  (a, b) => b.totals.totalProfitFlower - a.totals.totalProfitFlower,
+)
+const bestAnimal = sortedByProfit[0] || initialProgressions[0]
+const activeAnimal = initialProgressions[0]
+
+const formatSignedFlower = (val: number) => `${val >= 0 ? "+" : ""}${val.toFixed(4)} FL`
+const formatSignedUsd = (val: number) => `${val >= 0 ? "+" : "-"}$${Math.abs(val).toFixed(4)} USD`
+---
+
+<div class="w-full mb-8 relative z-10 flex flex-col gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
+    <!-- Bloque Izquierdo: Especie más rentable + Comparativa de 4 especies en vivo -->
+    <div
+      class="md:col-span-7 xl:col-span-8 bg-terminal-surface/90 border border-terminal-border rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative overflow-hidden"
+    >
+      <div
+        class="absolute left-1/4 top-1/2 -translate-y-1/2 w-64 h-32 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"
+      >
+      </div>
+
+      <div class="relative z-10">
+        <!-- Header -->
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/70">
+              {t("sfl.animals.dash.title")}
+            </span>
+          </div>
+          <div
+            class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>{t("sfl.animals.dash.liveBadge")}</span>
+          </div>
+        </div>
+
+        <!-- Especie Top Actual -->
+        {
+          bestAnimal && (
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 rounded-xl bg-black/35 border border-white/10 mb-4">
+              <div class="flex items-center gap-3.5 min-w-0">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/[0.04] border border-white/10 p-2 flex items-center justify-center shrink-0">
+                  <img
+                    id="dashBestAnimalImg"
+                    src={bestAnimal.icon}
+                    alt={bestAnimal.name}
+                    class="w-full h-full object-contain drop-shadow"
+                  />
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400/90 font-bold">
+                    {t("sfl.animals.dash.bestSpeciesBadge")}
+                  </span>
+                  <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <h2
+                      id="dashBestAnimalName"
+                      class="text-lg sm:text-xl font-black text-white tracking-tight"
+                    >
+                      {tabLabels[bestAnimal.animalId] || bestAnimal.name}
+                    </h2>
+                    <span
+                      id="dashBestAnimalTarget"
+                      class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-terminal-secondary"
+                    >
+                      1 → {bestAnimal.targetLevel}
+                    </span>
+                    <span
+                      id="dashBestAnimalRoi"
+                      class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold"
+                    >
+                      {t("sfl.animals.dash.roiLabel")}: {bestAnimal.totals.roiPercent}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:items-end shrink-0 font-mono">
+                <span class="text-[10px] uppercase tracking-wider text-terminal-muted">
+                  {t("sfl.animals.dash.netProfit")}
+                </span>
+                <span
+                  id="dashBestProfitFlower"
+                  class:list={[
+                    "text-lg sm:text-xl font-black leading-tight",
+                    bestAnimal.totals.totalProfitFlower >= 0 ? "text-emerald-400" : "text-rose-400",
+                  ]}
+                >
+                  {formatSignedFlower(bestAnimal.totals.totalProfitFlower)}
+                </span>
+                <span id="dashBestProfitUsd" class="text-[11px] text-terminal-secondary">
+                  {formatSignedUsd(bestAnimal.totals.totalProfitUsd)}
+                </span>
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Strip comparativa de las 4 especies -->
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-terminal-muted">
+            {t("sfl.animals.dash.comparisonTitle")}
+          </span>
+          <span class="text-[10px] font-mono text-terminal-muted">
+            {t("sfl.animals.dash.activeBoostsLabel")}:{" "}
+            <strong id="dashActiveBoostsCount" class="text-emerald-400">
+              {
+                activeAnimal?.modifiers.activeBoosts.length > 0
+                  ? activeAnimal.modifiers.activeBoosts.length
+                  : t("sfl.animals.dash.noBoostsActive")
+              }
+            </strong>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {
+            initialProgressions.map((prog, idx) => (
+              <button
+                type="button"
+                class:list={[
+                  "dash-species-card group text-left p-2.5 rounded-xl border transition-all cursor-pointer",
+                  idx === 0
+                    ? "bg-emerald-500/10 border-emerald-500/40"
+                    : "bg-black/30 border-white/5 hover:border-white/20 hover:bg-white/[0.04]",
+                ]}
+                data-animal-id={prog.animalId}
+              >
+                <div class="flex items-center justify-between gap-1.5 mb-1.5">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <img src={prog.icon} alt={prog.name} class="w-4 h-4 object-contain shrink-0" />
+                    <span class="text-[11px] font-bold text-white truncate">
+                      {tabLabels[prog.animalId] || prog.name}
+                    </span>
+                  </div>
+                  <span class="dash-card-target text-[9px] font-mono text-terminal-muted shrink-0">
+                    →{prog.targetLevel}
+                  </span>
+                </div>
+                <div
+                  class:list={[
+                    "dash-card-profit text-xs font-mono font-black leading-tight",
+                    prog.totals.totalProfitFlower >= 0 ? "text-emerald-400" : "text-rose-400",
+                  ]}
+                >
+                  {formatSignedFlower(prog.totals.totalProfitFlower)}
+                </div>
+                <div class="dash-card-meta text-[9px] font-mono text-terminal-muted mt-0.5 truncate">
+                  {prog.effectiveSleepHours}h · {prog.totals.totalFeeds}{" "}
+                  {t("sfl.animals.dash.feedsUnit")}
+                </div>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        class="mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-terminal-muted relative z-10"
+      >
+        <span>
+          {t("sfl.animals.dash.bettyRateLabel")}:{" "}
+          <strong id="dashBettyRatioVal" class="text-emerald-400"
+            >1 : {Math.round(bettyRatio)}</strong
+          >
+        </span>
+        <span>
+          FLOWER:{" "}
+          <strong id="dashFlowerPriceVal" class="text-white">${flowerUsd.toFixed(4)} USD</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- Bloque Derecho: Resumen Operativo del Corral Activo -->
+    {
+      activeAnimal && (
+        <div class="md:col-span-5 xl:col-span-4 bg-terminal-surface/90 border border-terminal-border rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative z-20">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="text-xs font-mono font-bold tracking-widest uppercase text-white/70">
+                {t("sfl.animals.dash.activeSummaryTitle")}
+              </span>
+              <span
+                id="dashActiveBadge"
+                class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-emerald-400 font-bold"
+              >
+                {tabLabels[activeAnimal.animalId] || activeAnimal.name} · 1 →{" "}
+                {activeAnimal.targetLevel}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between">
+                <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+                  {t("sfl.animals.dash.netProfit")}
+                </span>
+                <span
+                  id="dashActiveProfitFlower"
+                  class:list={[
+                    "text-base sm:text-lg font-mono font-black mt-1 leading-tight",
+                    activeAnimal.totals.totalProfitFlower >= 0
+                      ? "text-emerald-400"
+                      : "text-rose-400",
+                  ]}
+                >
+                  {formatSignedFlower(activeAnimal.totals.totalProfitFlower)}
+                </span>
+                <span
+                  id="dashActiveProfitUsd"
+                  class="text-[10px] font-mono text-terminal-secondary mt-0.5"
+                >
+                  {formatSignedUsd(activeAnimal.totals.totalProfitUsd)}
+                </span>
+              </div>
+
+              <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between">
+                <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+                  {t("sfl.animals.dash.feedAndTreats")}
+                </span>
+                <span
+                  id="dashActiveCostFlower"
+                  class="text-base sm:text-lg font-mono font-black text-white mt-1 leading-tight"
+                >
+                  {activeAnimal.totals.totalCostFlower.toFixed(4)} FL
+                </span>
+                <span
+                  id="dashActiveCostUsd"
+                  class="text-[10px] font-mono text-terminal-secondary mt-0.5"
+                >
+                  ${activeAnimal.totals.totalCostUsd.toFixed(4)} USD
+                </span>
+              </div>
+
+              <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between">
+                <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+                  {t("sfl.animals.dash.dropsRevenue")}
+                </span>
+                <span
+                  id="dashActiveRevenueFlower"
+                  class="text-sm sm:text-base font-mono font-bold text-cyan-400 mt-1"
+                >
+                  +{activeAnimal.totals.totalRevenueFlower.toFixed(4)} FL
+                </span>
+              </div>
+
+              <div class="bg-black/40 border border-white/5 rounded-xl p-3 flex flex-col justify-between">
+                <span class="text-[9px] font-mono text-terminal-muted uppercase tracking-wider">
+                  {t("sfl.animals.dash.cycleTimeFeeds")}
+                </span>
+                <span
+                  id="dashActiveTimeFeeds"
+                  class="text-sm sm:text-base font-mono font-bold text-white mt-1"
+                >
+                  {activeAnimal.totals.totalHours}h · {activeAnimal.totals.totalFeeds}{" "}
+                  {t("sfl.animals.dash.feedsUnit")}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between gap-2 text-[10px] font-mono text-terminal-muted">
+            <span class="truncate">{t("sfl.animals.dash.treatPricesLabel")}:</span>
+            <span id="dashTreatPricesVal" class="text-amber-300/90 font-semibold shrink-0">
+              {treatPrices.honeyTreatFlower.toFixed(4)} / {treatPrices.saltLickFlower.toFixed(4)} /{" "}
+              {treatPrices.truffleSeasoningFlower.toFixed(4)} FL
+            </span>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</div>

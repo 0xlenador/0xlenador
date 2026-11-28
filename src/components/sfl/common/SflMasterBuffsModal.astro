@@ -273,6 +273,8 @@ const formatDescription = (skill: any) => {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {allPowerups.map((buff) => {
             const isWearable = buff.type === "wearable"
+            const strId = String(buff.id)
+            const modalBuffId = isWearable && powerUpsData.collectibles?.[strId] ? buff.name : strId
             const isDisabled = Boolean(buff.raw?.disabled)
             const imgFile = buff.image
             const mainSrc = imgFile.startsWith("/")
@@ -287,7 +289,7 @@ const formatDescription = (skill: any) => {
                 class={`master-buff-card relative flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.02] transition-all select-none ${
                   isDisabled ? "opacity-30 grayscale pointer-events-none" : "hover:bg-white/[0.04] hover:border-white/10 cursor-pointer group"
                 }`}
-                data-buff-id={buff.id}
+                data-buff-id={modalBuffId}
                 data-name={buff.name.toLowerCase()}
                 data-desc={buff.description.toLowerCase()}
                 data-powerup-type={buff.type}

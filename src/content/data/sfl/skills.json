@@ -1584,7 +1584,7 @@
     "Efficient Feeding": {
       "id": 48,
       "name": "Efficient Feeding",
-      "description": "x0.95 feed to feed all animals",
+      "description": "x{math1} feed to feed all animals",
       "image": "/img/sunflowerland/skills/efficient_feeding.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1601,10 +1601,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -1617,7 +1617,7 @@
     "Restless Animals": {
       "id": 49,
       "name": "Restless Animals",
-      "description": "x0.9 Animal sleep time",
+      "description": "x{math1} Animal sleep time",
       "image": "/img/sunflowerland/skills/restless_animals.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1634,10 +1634,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "sleep",
+        "effect_type": "sleep",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -1650,7 +1650,7 @@
     "Fine Fibers": {
       "id": 50,
       "name": "Fine Fibers",
-      "description": "+0.1 Feather, Leather and Merino Wool yield",
+      "description": "+{math1} Feather, Leather and Merino Wool yield",
       "image": "/img/sunflowerland/skills/fine_fibers.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1667,10 +1667,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "feather,leather,merino_wool",
         "mathematics_operation": "add",
         "calc": null,
         "calc_by_rank": {
@@ -1683,7 +1683,7 @@
     "Bountiful Bounties": {
       "id": 51,
       "name": "Bountiful Bounties",
-      "description": "+50% Coins from Animal Bounties",
+      "description": "+{math1_pct}% Coins from Animal Bounties",
       "image": "/img/sunflowerland/skills/bountiful_bounties.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1700,10 +1700,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals_utility",
+        "subcategory": "bounty",
+        "effect_type": "bounty_coins",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -1716,7 +1716,7 @@
     "Double Bale": {
       "id": 52,
       "name": "Double Bale",
-      "description": "Double Bale's Effect",
+      "description": "{math1}x Bale's Effect",
       "image": "/img/sunflowerland/skills/double_bale.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1733,10 +1733,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "bale",
+        "effect_type": "yield",
+        "target": "bale",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -1749,53 +1749,30 @@
     "Bale Economy": {
       "id": 53,
       "name": "Bale Economy",
-      "description": "Bale affects milk and wool production | ?? -0.1 Leather & Merino Wool yield",
+      "description": "Bale affects milk and wool production (+0.1)",
       "image": "/img/sunflowerland/skills/bale_economy.webp",
       "cost_by_rank": {
         "rank_1": {
           "shards": 0,
           "skills": 1
-        },
-        "rank_2": {
-          "shards": 1,
-          "skills": 1
-        },
-        "rank_3": {
-          "shards": 1,
-          "skills": 1
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
-        "calc": null,
+        "category": "animals",
+        "subcategory": "bale",
+        "effect_type": "yield",
+        "target": "wool,milk",
+        "mathematics_operation": "add",
+        "calc": 0.1,
         "calc_by_rank": {
-          "rank_1": 0.35,
-          "rank_2": 0.45,
-          "rank_3": 0.55
-        }
-      },
-      "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
-        "calc": null,
-        "calc_by_rank": {
-          "rank_1": 0.1,
-          "rank_2": 0.15,
-          "rank_3": 0.2
+          "rank_1": 0.1
         }
       }
     },
     "Featherweight": {
       "id": 54,
       "name": "Featherweight",
-      "description": "+0.35 Feather yield | ?? -0.1 Leather & Merino Wool yield",
+      "description": "+{math1} Feather yield | -{math2} Leather & Merino Wool yield",
       "image": "/img/sunflowerland/skills/featherweight.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1812,11 +1789,11 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "feather",
+        "mathematics_operation": "add",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.35,
@@ -1825,11 +1802,11 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "leather,merino_wool",
+        "mathematics_operation": "subtract",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.1,
@@ -1841,7 +1818,7 @@
     "Abundant Harvest": {
       "id": 55,
       "name": "Abundant Harvest",
-      "description": "+0.2 Egg, Wool and Milk yield",
+      "description": "+{math1} Egg, Wool and Milk yield",
       "image": "/img/sunflowerland/skills/abundant_harvest.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1858,10 +1835,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "egg,wool,milk",
         "mathematics_operation": "add",
         "calc": null,
         "calc_by_rank": {
@@ -1874,7 +1851,7 @@
     "Heartwarming Instruments": {
       "id": 56,
       "name": "Heartwarming Instruments",
-      "description": "+50% Animal XP from Animal Affection tools",
+      "description": "+{math1_pct}% Animal XP from Animal Affection tools",
       "image": "/img/sunflowerland/skills/heartwarming_instruments.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1891,11 +1868,11 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "affection",
+        "effect_type": "affection_xp",
+        "target": "barn_animals",
+        "mathematics_operation": "add_pct",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.5,
@@ -1907,7 +1884,7 @@
     "Kale Mix": {
       "id": 57,
       "name": "Kale Mix",
-      "description": "Mixed Grain requires 3 kale to mix instead",
+      "description": "Mixed Grain requires {math1} Kale to mix instead",
       "image": "/img/sunflowerland/skills/kale_mix.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1924,11 +1901,11 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "add",
+        "category": "animals",
+        "subcategory": "feed_recipe",
+        "effect_type": "feed_recipe",
+        "target": "Mixed Grain",
+        "mathematics_operation": "set_amount",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 3,
@@ -1949,10 +1926,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals_utility",
+        "subcategory": "medicine",
+        "effect_type": "medicine_cost",
+        "target": "Barn Delight",
         "mathematics_operation": "subtract",
         "calc": null,
         "calc_by_rank": {
@@ -1963,7 +1940,7 @@
     "Healthy Livestock": {
       "id": 59,
       "name": "Healthy Livestock",
-      "description": "x0.5 chance of sickness",
+      "description": "x{math1} chance of sickness",
       "image": "/img/sunflowerland/skills/healthy_livestock.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -1980,10 +1957,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals_utility",
+        "subcategory": "sickness",
+        "effect_type": "sickness_chance",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -1993,10 +1970,10 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals_utility",
+        "subcategory": "sickness",
+        "effect_type": "sickness_chance",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2009,7 +1986,7 @@
     "Merino Whisperer": {
       "id": 60,
       "name": "Merino Whisperer",
-      "description": "+0.35 Merino Wool yield | ?? -0.1 Leather & Feather yield",
+      "description": "+{math1} Merino Wool yield | -{math2} Leather & Feather yield",
       "image": "/img/sunflowerland/skills/merino_whisperer.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2026,11 +2003,11 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "merino_wool",
+        "mathematics_operation": "add",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.35,
@@ -2039,11 +2016,11 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "feather,leather",
+        "mathematics_operation": "subtract",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.1,
@@ -2055,7 +2032,7 @@
     "Clucky Grazing": {
       "id": 61,
       "name": "Clucky Grazing",
-      "description": "x0.75 feed to feed Chickens | ?? +50% feed to feed other animals",
+      "description": "x{math1} feed to Chickens | x{math2} feed to other animals",
       "image": "/img/sunflowerland/skills/clucky_grazing.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2072,10 +2049,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "chicken",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2085,10 +2062,10 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "cow,sheep,pig",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2101,7 +2078,7 @@
     "Sheepwise Diet": {
       "id": 62,
       "name": "Sheepwise Diet",
-      "description": "x0.75 feed to feed Sheep | ?? +50% feed to feed other animals",
+      "description": "x{math1} feed to Sheep | x{math2} feed to other animals",
       "image": "/img/sunflowerland/skills/sheepwise_diet.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2118,10 +2095,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "sheep",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2131,10 +2108,10 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "chicken,cow,pig",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2147,7 +2124,7 @@
     "Chonky Feed": {
       "id": 63,
       "name": "Chonky Feed",
-      "description": "2x animal xp from animal feed | ?? +50% feed to feed all animals",
+      "description": "{math1}x animal XP from feed | x{math2} feed required",
       "image": "/img/sunflowerland/skills/chonky_feed.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2164,10 +2141,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "xp",
+        "effect_type": "feed_xp",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2177,10 +2154,10 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "barn_animals",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2193,7 +2170,7 @@
     "Leathercraft Mastery": {
       "id": 64,
       "name": "Leathercraft Mastery",
-      "description": "+0.35 Leather yield | ?? -0.1 Feather & Merino Wool yield",
+      "description": "+{math1} Leather yield | -{math2} Feather & Merino Wool yield",
       "image": "/img/sunflowerland/skills/leathercraft_mastery.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2210,11 +2187,11 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "leather",
+        "mathematics_operation": "add",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.35,
@@ -2223,11 +2200,11 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
-        "mathematics_operation": "multiply",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "feather,merino_wool",
+        "mathematics_operation": "subtract",
         "calc": null,
         "calc_by_rank": {
           "rank_1": 0.1,
@@ -2242,10 +2219,10 @@
       "description": "Instantly wakes up all animals",
       "image": "/img/sunflowerland/skills/barnyard_rouse.webp",
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals_utility",
+        "subcategory": "cooldown",
+        "effect_type": "instant_wake",
+        "target": "barn_animals",
         "mathematics_operation": "instant_wake",
         "calc": null,
         "calc_by_rank": {
@@ -2273,10 +2250,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "yield",
+        "effect_type": "yield",
+        "target": "truffle",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2289,7 +2266,7 @@
     "Cow-Smart Nutrition": {
       "id": 164,
       "name": "Cow-Smart Nutrition",
-      "description": "x{math1} feed to feed Cows | x{math2} feed to feed other animals",
+      "description": "x{math1} feed to feed Cows | x{math2} feed to other animals",
       "image": "/img/sunflowerland/skills/cow_smart_nutrition.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2306,10 +2283,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "cow",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2319,10 +2296,10 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "chicken,sheep,pig",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2335,7 +2312,7 @@
     "Swill Savvy": {
       "id": 165,
       "name": "Swill Savvy",
-      "description": "x{math1} feed to feed Pigs | x{math2} feed to feed other animals",
+      "description": "x{math1} feed to feed Pigs | x{math2} feed to other animals",
       "image": "/img/sunflowerland/skills/swill_savvy.webp",
       "cost_by_rank": {
         "rank_1": {
@@ -2352,10 +2329,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "pig",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2365,10 +2342,10 @@
         }
       },
       "mathematics_2": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals",
+        "subcategory": "feed",
+        "effect_type": "feed",
+        "target": "chicken,cow,sheep",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {
@@ -2398,10 +2375,10 @@
         }
       },
       "mathematics_1": {
-        "category": "",
-        "subcategory": "",
-        "effect_type": "",
-        "target": "",
+        "category": "animals_utility",
+        "subcategory": "bounty",
+        "effect_type": "bounty_bristles",
+        "target": "pig",
         "mathematics_operation": "multiply",
         "calc": null,
         "calc_by_rank": {

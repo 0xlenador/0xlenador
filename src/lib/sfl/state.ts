@@ -16,6 +16,30 @@ export interface CustomFishingCombo {
   chumAmount?: number | null
 }
 
+export interface AnimalManualBoosts {
+  food?: number | null
+  foodXp?: number | null
+  careMultiplier?: number | null
+  primaryDrop?: number | null
+  secondaryDrop?: number | null
+}
+
+export type AnimalTreatType = "honey_treat" | "salt_lick" | "truffle_seasoning"
+
+export interface AnimalUserConfig {
+  activeSpecies?: string
+  targetLevels?: Record<string, number>
+  selectedFoods?: Record<string, Record<number, string>>
+  treatMode?: Record<string, { type: AnimalTreatType; startLevel: number | null }>
+  /** Compatibilidad y acceso rápido para Honey Treat por animal (nivel inicial 2..15) */
+  honeyTreatLevels?: Record<string, number | null>
+  saltLickLevels?: Record<string, number | null>
+  truffleSeasoningLevels?: Record<string, number | null>
+  mudPigEnabled?: boolean
+  vibraphoneActive?: boolean
+  manualBoosts?: Record<string, AnimalManualBoosts>
+}
+
 export interface SflUserPreferences {
   flowerPriceUsd?: number
   coinsPerFlower?: number
@@ -26,6 +50,8 @@ export interface SflUserPreferences {
   customFishOilCost?: number | null
   /** Combinaciones personalizadas de cebo y chum por pez configuradas en sfl-fishing */
   fishingCombos?: Record<string, CustomFishingCombo>
+  /** Preferencias y ajustes locales de la calculadora de animales */
+  animalConfig?: AnimalUserConfig
 }
 
 export interface SflUserGameState {
@@ -93,8 +119,7 @@ function tryMigrateLegacyState(): SflUserGameState | null {
       migrated.preferences.customFishStickCost = Number(legacy.customFishStick)
     if (legacy.customCrabStick)
       migrated.preferences.customCrabStickCost = Number(legacy.customCrabStick)
-    if (legacy.customFishOil)
-      migrated.preferences.customFishOilCost = Number(legacy.customFishOil)
+    if (legacy.customFishOil) migrated.preferences.customFishOilCost = Number(legacy.customFishOil)
 
     return migrated
   } catch {
@@ -173,7 +198,7 @@ const BUFF_ID_ALIASES: Record<string, string[]> = {
   "9015": ["Fisher's Hourglass"],
   "Sunflower Rod": ["9021"],
   "9021": ["Sunflower Rod"],
-  "Trident": ["9022"],
+  Trident: ["9022"],
   "9022": ["Trident"],
   "Full Moon": ["9023"],
   "9023": ["Full Moon"],
@@ -191,6 +216,95 @@ const BUFF_ID_ALIASES: Record<string, string[]> = {
   "562": ["Shrimp Onesie"],
   "Otty the Otter": ["3050"],
   "3050": ["Otty the Otter"],
+  // Animales — Collectibles, Wearables, Shrines y Perks
+  "Farm Dog": ["406"],
+  "406": ["Farm Dog"],
+  "Chicken Coop": ["408"],
+  "408": ["Chicken Coop"],
+  "Gold Egg": ["409"],
+  "409": ["Gold Egg"],
+  "Ayam Cemani": ["445"],
+  "445": ["Ayam Cemani"],
+  "El Pollo Veloz": ["470"],
+  "470": ["El Pollo Veloz"],
+  "Speed Chicken": ["610"],
+  "610": ["Speed Chicken"],
+  "Fat Chicken": ["611"],
+  "611": ["Fat Chicken"],
+  "Rich Chicken": ["612"],
+  "612": ["Rich Chicken"],
+  "Undead Rooster": ["1114"],
+  "1114": ["Undead Rooster"],
+  "Longhorn Cowfish": ["1540"],
+  "1540": ["Longhorn Cowfish"],
+  "Moo-ver": ["2155"],
+  "2155": ["Moo-ver"],
+  Cluckulator: ["2157"],
+  "2157": ["Cluckulator"],
+  "Alien Chicken": ["2162"],
+  "2162": ["Alien Chicken"],
+  Mootant: ["2163"],
+  "2163": ["Mootant"],
+  "Toxic Tuft": ["2164"],
+  "2164": ["Toxic Tuft"],
+  "Golden Cow": ["2178"],
+  "2178": ["Golden Cow"],
+  Mammoth: ["2191"],
+  "2191": ["Mammoth"],
+  "Golden Sheep": ["2193"],
+  "2193": ["Golden Sheep"],
+  "Dr Cow": ["2256"],
+  "2256": ["Dr Cow"],
+  "Baby Cow": ["2525"],
+  "2525": ["Baby Cow"],
+  "Janitor Chicken": ["2528"],
+  "2528": ["Janitor Chicken"],
+  "Astronaut Sheep": ["2532"],
+  "2532": ["Astronaut Sheep"],
+  "Mermaid Sheep": ["2537"],
+  "2537": ["Mermaid Sheep"],
+  "Squid Chicken": ["2538"],
+  "2538": ["Squid Chicken"],
+  "Flamingo Chicken": ["2996"],
+  "2996": ["Flamingo Chicken"],
+  "Spa Cow": ["2998"],
+  "2998": ["Spa Cow"],
+  "Spa Sheep": ["2999"],
+  "2999": ["Spa Sheep"],
+  "Ascended Chicken": ["3033"],
+  "3033": ["Ascended Chicken"],
+  "Ascended Cow": ["3034"],
+  "3034": ["Ascended Cow"],
+  "Ascended Sheep": ["3035"],
+  "3035": ["Ascended Sheep"],
+  Vibraphone: ["3053"],
+  "3053": ["Vibraphone"],
+  Bale: ["3055"],
+  "3055": ["Bale"],
+  "Beetle Sheep": ["3056"],
+  "3056": ["Beetle Sheep"],
+  Cattlegrim: ["164"],
+  "164": ["Cattlegrim"],
+  "Infernal Bullwhip": ["400"],
+  "400": ["Infernal Bullwhip"],
+  "White Sheep Onesie": ["401"],
+  "401": ["White Sheep Onesie"],
+  "Black Sheep Onesie": ["402"],
+  "402": ["Black Sheep Onesie"],
+  "Merino Jumper": ["405"],
+  "405": ["Merino Jumper"],
+  "Training Whistle": ["501"],
+  "501": ["Training Whistle"],
+  "Pig Onesie": ["587"],
+  "587": ["Pig Onesie"],
+  "Collie Shrine": ["9032"],
+  "9032": ["Collie Shrine"],
+  "Bantam Shrine": ["9033"],
+  "9033": ["Bantam Shrine"],
+  "Barn Manager": ["9030"],
+  "9030": ["Barn Manager"],
+  Wrangler: ["9031"],
+  "9031": ["Wrangler"],
 }
 
 function getAllKeysForBuff(key: string): string[] {

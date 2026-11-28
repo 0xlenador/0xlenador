@@ -1,0 +1,452 @@
+---
+// ============================================================
+// src/components/sfl/animals/SflAnimalsTable.astro
+// Tabla responsiva (6 columnas desktop + tarjetas mobile) para
+// la progresión 0>1 .. 14>15 de una especie en SFL.
+// ============================================================
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils"
+import type { AnimalProgressionResult } from "../../../lib/sfl/animals"
+
+interface Props {
+  animal: AnimalProgressionResult
+}
+
+const { animal } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const resLabel = t("sfl.animals.table.xpResLabel")
+const affecLabel = t("sfl.animals.table.xpAffecLabel")
+const foodLabel = t("sfl.animals.table.xpFoodLabel")
+const surplusLabel = t("sfl.animals.table.surplus")
+
+const formatProfitFlower = (val: number) => `${val >= 0 ? "+" : ""}${val.toFixed(4)} FL`
+const formatProfitUsd = (val: number) => `${val >= 0 ? "+" : "-"}$${Math.abs(val).toFixed(4)}`
+
+const formatFoodUnitsPrefix = (units: number, isFree: boolean) => {
+  if (isFree) return "0x "
+  if (units === 0) return "0x "
+  if (units === 1) return ""
+  return `${units}x `
+}
+---
+
+<div class="w-full">
+  <!-- Header Tabla Desktop -->
+  <div
+    class="hidden lg:grid grid-cols-[16%_16%_22%_20%_13%_13%] p-3 bg-white/[0.02] border border-white/5 rounded-2xl mb-3 items-center text-xs font-mono text-terminal-muted uppercase tracking-wider font-semibold"
+  >
+    <div class="px-3">{t("sfl.animals.table.colLevelTime")}</div>
+    <div class="px-3">{t("sfl.animals.table.colAffection")}</div>
+    <div class="px-3">{t("sfl.animals.table.colFeed")}</div>
+    <div class="px-3">{t("sfl.animals.table.colXpCalc")}</div>
+    <div class="px-3">{t("sfl.animals.table.colYield")}</div>
+    <div class="px-3">{t("sfl.animals.table.colProfit")}</div>
+  </div>
+
+  <!-- Filas -->
+  <div
+    class="flex flex-col gap-3 lg:gap-0 lg:bg-white/[0.01] lg:border lg:border-white/5 lg:rounded-3xl lg:p-2 lg:overflow-hidden animal-rows-container"
+  >
+    {
+      animal.levels.map((lvl) => (
+        <div
+          class="animal-level-row hover:bg-white/[0.02] transition-colors group block border border-white/5 bg-white/[0.02] rounded-2xl p-4 lg:p-0 lg:border-0 lg:border-b lg:border-white/5 last:lg:border-b-0 lg:bg-transparent lg:rounded-none lg:grid lg:grid-cols-[16%_16%_22%_20%_13%_13%] lg:items-center lg:py-3.5"
+          data-animal={animal.animalId}
+          data-level={lvl.toLevel}
+          data-from-level={lvl.fromLevel}
+          data-search={`${lvl.fromLevel} ${lvl.toLevel} ${lvl.food.name} ${lvl.affectionTools.map((tool) => tool.name).join(" ")} ${lvl.resources.map((r) => r.name).join(" ")}`}
+        >
+          {/* Columna 1: Nivel & Tiempo */}
+          <div class="lg:px-3 flex flex-col justify-center mb-3 lg:mb-0">
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-white text-sm">
+                {lvl.fromLevel} &gt; {lvl.toLevel}
+              </span>
+              <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                {lvl.xpRequired} XP
+              </span>
+              {lvl.toLevel === 15 && (
+                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  CAP
+                </span>
+              )}
+            </div>
+            {lvl.isInstant ? (
+              <span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1 mt-0.5 font-semibold">
+                <span>⚡</span> {t("sfl.animals.table.instant")}
+              </span>
+            ) : (
+              <span class="text-[11px] font-mono text-terminal-muted flex items-center gap-1 mt-0.5">
+                <span>🕒</span> <span class="row-sleep-hours">{lvl.sleepHours}h</span>
+              </span>
+            )}
+          </div>
+
+          {/* Mobile Grid (2 columnas) */}
+          <div class="grid grid-cols-2 gap-2 mb-3 lg:hidden">
+            {/* Mobile: Afecto */}
+            <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+              <span class="text-[9px] text-white/40 uppercase font-mono">
+                {t("sfl.animals.table.colAffection")}
+              </span>
+              {lvl.affectionTools.length > 0 ? (
+                <div class="flex items-center justify-between gap-1 mt-1">
+                  <div class="flex items-center -space-x-1.5 shrink-0 row-affection-tools-wrap">
+                    {lvl.affectionTools.map((tool, tIdx) => (
+                      <img
+                        src={tool.image}
+                        alt={tool.name}
+                        title={`${tool.name} (${tool.percent}% · +${tool.xp} XP)`}
+                        class="w-4 h-4 object-contain rounded-full bg-black/60 border border-white/10 p-0.5 relative"
+                        style={`z-index: ${tIdx + 1};`}
+                      />
+                    ))}
+                  </div>
+                  <span class="row-affection-xp text-xs font-mono font-bold text-emerald-400">
+                    +{lvl.affectionXp} XP
+                  </span>
+                </div>
+              ) : (
+                <span class="text-xs font-mono text-white/30 italic mt-1">—</span>
+              )}
+            </div>
+
+            {/* Mobile: Alimento */}
+            <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+              <span class="text-[9px] text-white/40 uppercase font-mono">
+                {t("sfl.animals.table.colFeed")}
+              </span>
+              <div class="mt-1 flex flex-col">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <div class="relative shrink-0 flex items-center justify-center row-food-icon-wrap">
+                    <img
+                      src={lvl.food.image}
+                      alt={lvl.food.name}
+                      class="w-3.5 h-3.5 object-contain row-food-img"
+                    />
+                    <span
+                      class={`row-food-overlay-wrap ${lvl.food.ingredientImage ? "" : "hidden"}`}
+                    >
+                      {lvl.food.ingredientImage && (
+                        <img
+                          src={lvl.food.ingredientImage}
+                          alt={lvl.food.ingredientName || ""}
+                          title={lvl.food.ingredient}
+                          class="absolute -bottom-1 -right-1 w-2.5 h-2.5 object-contain drop-shadow"
+                          loading="lazy"
+                        />
+                      )}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    class="food-selector-trigger text-xs font-mono text-white truncate font-medium hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none flex items-center flex-wrap gap-1"
+                    data-animal={animal.animalId}
+                    data-level={lvl.toLevel}
+                    title={t("sfl.animals.table.chooseFoodTooltip")}
+                  >
+                    <span class="row-food-name">
+                      {formatFoodUnitsPrefix(lvl.food.units, lvl.food.isFree)}
+                      {lvl.food.name}
+                    </span>
+                    <span
+                      class="row-honey-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 shrink-0"
+                      title={t("sfl.animals.table.honeyActiveTooltip")}
+                    >
+                      🍯 -25%
+                    </span>
+                    <span
+                      class="row-salt-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[9px] font-mono border border-cyan-500/30 shrink-0"
+                      title={t("sfl.animals.table.saltActiveTooltip")}
+                    >
+                      🧂 +5%
+                    </span>
+                    <span
+                      class="row-truffle-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[9px] font-mono border border-purple-500/30 shrink-0"
+                      title={t("sfl.animals.table.truffleActiveTooltip")}
+                    >
+                      🍄 -50%h
+                    </span>
+                    <span
+                      class="row-mud-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-amber-700/25 text-amber-300 text-[9px] font-mono border border-amber-600/30 shrink-0"
+                      title={t("sfl.animals.table.mudActiveTooltip")}
+                    >
+                      Mud
+                    </span>
+                  </button>
+                </div>
+                <div class="flex items-center gap-1 mt-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight">
+                  <img
+                    src="/img/sunflowerland/flower.jpg"
+                    alt="FLOWER"
+                    class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                    loading="lazy"
+                  />
+                  <span class="row-food-flower">{lvl.food.costFlower.toFixed(4)}</span>
+                </div>
+                <span class="row-food-usd text-[9px] font-mono text-white/50 leading-tight mt-0.5">
+                  ${lvl.food.costUsd.toFixed(4)} USD
+                </span>
+              </div>
+            </div>
+
+            {/* Mobile: Cálculo XP */}
+            <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between col-span-2">
+              <span class="text-[9px] text-white/40 uppercase font-mono">
+                {t("sfl.animals.table.colXpCalc")}
+              </span>
+              <div class="mt-1 flex flex-col">
+                <span class="row-xp-total text-xs font-mono font-bold text-emerald-400">
+                  +{lvl.totalAvailable} XP
+                </span>
+                <span class="row-xp-breakdown text-[10px] font-mono text-white/70 mt-0.5">
+                  {lvl.residualXp} {resLabel} + {lvl.affectionXp} {affecLabel} + {lvl.totalFoodXp}{" "}
+                  {foodLabel}
+                </span>
+                <span class="row-xp-surplus text-[9px] font-mono text-white/40 mt-0.5">
+                  ({surplusLabel} +{lvl.residualGenerated} XP)
+                </span>
+              </div>
+            </div>
+
+            {/* Mobile: Recursos */}
+            <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+              <span class="text-[9px] text-white/40 uppercase font-mono">
+                {t("sfl.animals.table.colYield")}
+              </span>
+              <div class="mt-1 flex flex-col">
+                <div class="flex items-center gap-1.5 flex-wrap row-resources-wrap">
+                  {lvl.resources.map((res) => (
+                    <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
+                      <img src={res.image} alt={res.name} class="w-3.5 h-3.5 object-contain" />
+                      <span class="text-[11px] font-mono font-bold text-white">{res.amount}x</span>
+                    </div>
+                  ))}
+                </div>
+                <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-1">
+                  <img
+                    src="/img/sunflowerland/flower.jpg"
+                    alt="FLOWER"
+                    class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                    loading="lazy"
+                  />
+                  <span class="row-yield-flower">+{lvl.revenueFlower.toFixed(4)}</span>
+                </div>
+                <span class="row-yield-usd text-[9px] font-mono text-white/50 leading-tight">
+                  +${lvl.revenueUsd.toFixed(4)} USD
+                </span>
+              </div>
+            </div>
+
+            {/* Mobile: Profit */}
+            <div class="bg-black/30 border border-white/5 rounded-xl p-2.5 flex flex-col justify-between">
+              <span class="text-[9px] text-white/40 uppercase font-mono">
+                {t("sfl.animals.table.colProfit")}
+              </span>
+              <div class="mt-1 flex flex-col justify-center">
+                <span
+                  class:list={[
+                    "row-profit-flower text-xs font-mono font-bold leading-tight",
+                    lvl.profitFlower >= 0 ? "text-emerald-400" : "text-rose-400",
+                  ]}
+                >
+                  {formatProfitFlower(lvl.profitFlower)}
+                </span>
+                <span
+                  class:list={[
+                    "row-profit-usd text-[10px] font-mono mt-0.5",
+                    lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80",
+                  ]}
+                >
+                  {formatProfitUsd(lvl.profitUsd)} USD
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Columna 2 Desktop: Afecto */}
+          <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
+            {lvl.affectionTools.length > 0 ? (
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <div class="flex items-center -space-x-1.5 shrink-0 row-affection-tools-wrap">
+                    {lvl.affectionTools.map((tool, tIdx) => (
+                      <img
+                        src={tool.image}
+                        alt={tool.name}
+                        title={`${tool.name} (${tool.percent}% · +${tool.xp} XP)`}
+                        class="w-5 h-5 object-contain rounded-full bg-black/60 border border-white/10 p-0.5 hover:scale-125 transition-transform cursor-help relative"
+                        style={`z-index: ${tIdx + 1};`}
+                      />
+                    ))}
+                  </div>
+                  <span class="row-affection-xp font-mono text-xs font-bold text-emerald-400">
+                    +{lvl.affectionXp} XP
+                  </span>
+                </div>
+                <span class="text-[9px] font-mono text-white/40 uppercase tracking-wider">
+                  {t("sfl.animals.table.twoTimesAffection")}
+                </span>
+              </div>
+            ) : (
+              <span class="text-xs font-mono text-white/30 italic">
+                {t("sfl.animals.table.noAffection")}
+              </span>
+            )}
+          </div>
+
+          {/* Columna 3 Desktop: Alimento */}
+          <div class="hidden lg:flex px-3 items-center gap-2.5 min-w-0">
+            <div class="relative shrink-0 row-food-icon-wrap">
+              <img
+                src={lvl.food.image}
+                alt={lvl.food.name}
+                class="w-7 h-7 object-contain drop-shadow row-food-img"
+                loading="lazy"
+              />
+              <span class={`row-food-overlay-wrap ${lvl.food.ingredientImage ? "" : "hidden"}`}>
+                {lvl.food.ingredientImage && (
+                  <img
+                    src={lvl.food.ingredientImage}
+                    alt={lvl.food.ingredientName || ""}
+                    title={lvl.food.ingredient}
+                    class="absolute -bottom-1 -right-1 w-3.5 h-3.5 object-contain drop-shadow"
+                    loading="lazy"
+                  />
+                )}
+              </span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <button
+                type="button"
+                class="food-selector-trigger text-xs text-white font-medium truncate hover:text-emerald-400 transition-colors cursor-pointer text-left focus:outline-none flex items-center gap-1 min-w-0 flex-wrap"
+                data-animal={animal.animalId}
+                data-level={lvl.toLevel}
+                title={t("sfl.animals.table.chooseFoodTooltip")}
+              >
+                <span
+                  class="row-food-name truncate"
+                  title={
+                    lvl.food.ingredient
+                      ? `${lvl.food.name} (${lvl.food.ingredient})`
+                      : lvl.food.name
+                  }
+                >
+                  {formatFoodUnitsPrefix(lvl.food.units, lvl.food.isFree)}
+                  {lvl.food.name}
+                </span>
+                <span
+                  class="row-honey-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 shrink-0"
+                  title={t("sfl.animals.table.honeyActiveTooltip")}
+                >
+                  🍯 -25%
+                </span>
+                <span
+                  class="row-salt-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[9px] font-mono border border-cyan-500/30 shrink-0"
+                  title={t("sfl.animals.table.saltActiveTooltip")}
+                >
+                  🧂 +5%
+                </span>
+                <span
+                  class="row-truffle-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[9px] font-mono border border-purple-500/30 shrink-0"
+                  title={t("sfl.animals.table.truffleActiveTooltip")}
+                >
+                  🍄 -50%h
+                </span>
+                <span
+                  class="row-mud-badge hidden items-center gap-0.5 px-1 py-0.5 rounded bg-amber-700/25 text-amber-300 text-[9px] font-mono border border-amber-600/30 shrink-0"
+                  title={t("sfl.animals.table.mudActiveTooltip")}
+                >
+                  Mud
+                </span>
+              </button>
+              <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-0.5">
+                <img
+                  src="/img/sunflowerland/flower.jpg"
+                  alt="FLOWER"
+                  class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                  loading="lazy"
+                />
+                <span class="row-food-flower">{lvl.food.costFlower.toFixed(4)}</span>
+              </div>
+              <span class="row-food-usd text-[9px] font-mono text-white/50 leading-tight">
+                ${lvl.food.costUsd.toFixed(4)} USD
+              </span>
+            </div>
+          </div>
+
+          {/* Columna 4 Desktop: Cálculo XP */}
+          <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
+            <span class="row-xp-total font-mono font-bold text-sm text-emerald-400 leading-tight">
+              +{lvl.totalAvailable} XP
+            </span>
+            <span
+              class="row-xp-breakdown text-[10px] font-mono text-white/70 leading-tight mt-0.5 truncate"
+              title={`${lvl.residualXp} ${resLabel} + ${lvl.affectionXp} ${affecLabel} + ${lvl.totalFoodXp} ${foodLabel}`}
+            >
+              {lvl.residualXp} {resLabel} + {lvl.affectionXp} {affecLabel} + {lvl.totalFoodXp}{" "}
+              {foodLabel}
+            </span>
+            <span class="row-xp-surplus text-[9px] font-mono text-white/40 leading-tight mt-0.5">
+              ({surplusLabel} +{lvl.residualGenerated} XP)
+            </span>
+          </div>
+
+          {/* Columna 5 Desktop: Recursos Obtenidos */}
+          <div class="hidden lg:flex px-3 flex-col justify-center min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap row-resources-wrap">
+              {lvl.resources.map((res) => (
+                <div class="flex items-center gap-1 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
+                  <img src={res.image} alt={res.name} class="w-3.5 h-3.5 object-contain" />
+                  <span class="text-[11px] font-mono font-bold text-white">{res.amount}x</span>
+                </div>
+              ))}
+            </div>
+            <div class="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-400 leading-tight mt-0.5">
+              <img
+                src="/img/sunflowerland/flower.jpg"
+                alt="FLOWER"
+                class="w-2.5 h-2.5 object-contain rounded-full shrink-0"
+                loading="lazy"
+              />
+              <span class="row-yield-flower">+{lvl.revenueFlower.toFixed(4)}</span>
+            </div>
+            <span class="row-yield-usd text-[9px] font-mono text-white/50 leading-tight">
+              +${lvl.revenueUsd.toFixed(4)} USD
+            </span>
+          </div>
+
+          {/* Columna 6 Desktop: Profit */}
+          <div class="hidden lg:flex px-3 items-center">
+            <div
+              class:list={[
+                "row-profit-badge flex flex-col px-2.5 py-1 rounded-lg border font-mono",
+                lvl.profitFlower >= 0
+                  ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                  : "bg-rose-500/10 border-rose-500/20 text-rose-400",
+              ]}
+            >
+              <span class="row-profit-flower font-bold text-xs leading-tight">
+                {formatProfitFlower(lvl.profitFlower)}
+              </span>
+              <span
+                class:list={[
+                  "row-profit-usd text-[10px] leading-tight",
+                  lvl.profitUsd >= 0 ? "text-emerald-400/80" : "text-rose-400/80",
+                ]}
+              >
+                {formatProfitUsd(lvl.profitUsd)} USD
+              </span>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="animal-empty-state hidden py-10 px-4 text-center text-sm font-mono text-white/40">
+      {t("sfl.animals.table.empty")}
+    </div>
+  </div>
+</div>

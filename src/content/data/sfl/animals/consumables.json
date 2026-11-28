@@ -458,9 +458,9 @@
         "image": "/img/sunflowerland/fish/Muskellunge.png"
       },
       {
-        "name": "Magic Mushroom",
+        "name": "Wild Mushroom",
         "amount": 1,
-        "image": "/img/sunflowerland/123/magic_mushroom.webp"
+        "image": "/img/sunflowerland/123/wild_mushroom.webp"
       },
       {
         "name": "Isopod",
@@ -541,6 +541,16 @@
         "name": "Tuna",
         "amount": 1,
         "image": "/img/sunflowerland/fish/Tuna.png"
+      },
+      {
+        "name": "Tilapia",
+        "amount": 1,
+        "image": "/img/sunflowerland/fish/Tilapia.png"
+      },
+      {
+        "name": "Trout",
+        "amount": 1,
+        "image": "/img/sunflowerland/fish/Trout.png"
       },
       {
         "name": "Angelfish",
@@ -782,6 +792,29 @@
         "name": "Truffle",
         "amount": 10,
         "image": "/img/sunflowerland/truffle.webp"
+      }
+    ]
+  },
+  "salt_lick": {
+    "id": "salt_lick",
+    "name": "Salt Lick",
+    "description": "Animal seasoning crafted at the Aging Shed that increases animal produce yields by 5% for 3 harvests.",
+    "category": "treat",
+    "targetAnimals": [
+      "chicken",
+      "cow",
+      "sheep",
+      "pig"
+    ],
+    "durationCycles": 3,
+    "yieldMultiplier": 1.05,
+    "effect": "x1.05 animal produce yield for 3 harvests",
+    "image": "/img/sunflowerland/animals/salt_lick.webp",
+    "craftingIngredients": [
+      {
+        "name": "Refined Salt",
+        "amount": 5,
+        "image": "/img/sunflowerland/123/Refined Salt.png"
       }
     ]
   }
