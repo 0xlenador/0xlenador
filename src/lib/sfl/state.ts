@@ -35,7 +35,8 @@ export interface AnimalUserConfig {
   honeyTreatLevels?: Record<string, number | null>
   saltLickLevels?: Record<string, number | null>
   truffleSeasoningLevels?: Record<string, number | null>
-  mudPigEnabled?: boolean
+  /** Nivel único (1..15) donde se aplica Mud al Cerdo (+25% XP, sin Vibraphone, acumulable con treats) */
+  mudPigLevel?: number | null
   vibraphoneActive?: boolean
   manualBoosts?: Record<string, AnimalManualBoosts>
 }

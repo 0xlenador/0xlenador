@@ -45,6 +45,8 @@ interface AnimalsBootPayload {
     roiLabel: string
     feedsUnit: string
     honeyTreatBtn: string
+    mudBtn: string
+    mudShort: string
   }
 }
 
@@ -118,13 +120,15 @@ export function initAnimalsView(): void {
       targetLevels: { ...(prefs.animalConfig?.targetLevels || {}) },
       selectedFoods: JSON.parse(JSON.stringify(prefs.animalConfig?.selectedFoods || {})),
       treatMode: JSON.parse(JSON.stringify(prefs.animalConfig?.treatMode || {})),
-      mudPigEnabled: Boolean(prefs.animalConfig?.mudPigEnabled),
+      mudPigLevel:
+        typeof prefs.animalConfig?.mudPigLevel === "number" ? prefs.animalConfig.mudPigLevel : null,
       manualBoosts: JSON.parse(JSON.stringify(prefs.animalConfig?.manualBoosts || {})),
     }
   }
 
   let animalConfig = loadConfig()
   const treatPickerActive: Record<string, boolean> = {}
+  let mudPickerActive = false
   const progressionsCache: Partial<Record<AnimalId, AnimalProgressionResult>> = {}
 
   const saveConfig = () => {
@@ -455,13 +459,78 @@ export function initAnimalsView(): void {
       }
     }
 
+    // Bloque independiente de Mud (solo Cerdo, acumulable con treats, 1 nivel sin Vibraphone)
+    if (animalId === "pig") {
+      const mudBtn = document.querySelector<HTMLElement>(`.mud-picker-btn[data-animal="pig"]`)
+      if (mudBtn) {
+        const indicatorEl = mudBtn.querySelector<HTMLElement>(".mud-level-indicator")
+        const dotEl = mudBtn.querySelector<HTMLElement>(".mud-status-dot")
+        const mudLvl = prog.mudLevel
+
+        mudBtn.classList.remove(
+          "bg-amber-700/30",
+          "bg-amber-700/20",
+          "border-amber-400",
+          "border-orange-400",
+          "ring-2",
+          "ring-orange-400/50",
+          "shadow-[0_0_10px_rgba(234,88,12,0.4)]",
+          "border-amber-700/40",
+        )
+        mudBtn.classList.add("bg-terminal-bg")
+
+        if (mudPickerActive) {
+          mudBtn.classList.add(
+            "bg-amber-700/30",
+            "border-orange-400",
+            "ring-2",
+            "ring-orange-400/50",
+            "shadow-[0_0_10px_rgba(234,88,12,0.4)]",
+          )
+          mudBtn.classList.remove("bg-terminal-bg")
+          if (dotEl) {
+            dotEl.className =
+              "mud-status-dot ml-0.5 w-2 h-2 rounded-full bg-orange-400 animate-ping"
+          }
+          if (indicatorEl) {
+            indicatorEl.textContent = boot.labels.honeyTreatPickLevel
+            indicatorEl.className =
+              "mud-level-indicator text-[9px] font-mono font-bold text-orange-300 hidden sm:inline"
+          }
+        } else if (mudLvl !== null) {
+          mudBtn.classList.add("bg-amber-700/20", "border-orange-400")
+          mudBtn.classList.remove("bg-terminal-bg")
+          if (dotEl) {
+            dotEl.className = "mud-status-dot ml-0.5 w-2 h-2 rounded-full bg-orange-400"
+          }
+          if (indicatorEl) {
+            indicatorEl.textContent = `${boot.labels.levelPrefix} ${mudLvl} ${boot.labels.mudShort}`
+            indicatorEl.className =
+              "mud-level-indicator text-[9px] font-mono text-amber-300 hidden sm:inline"
+          }
+        } else {
+          mudBtn.classList.add("border-amber-700/40")
+          if (dotEl) {
+            dotEl.className = "mud-status-dot ml-0.5 w-1.5 h-1.5 rounded-full bg-white/25"
+          }
+          if (indicatorEl) {
+            indicatorEl.textContent = boot.labels.mudShort
+            indicatorEl.className =
+              "mud-level-indicator text-[9px] font-mono text-white/50 hidden sm:inline"
+          }
+        }
+      }
+    }
+
     // Timeline Dots 1..15
     document
       .querySelectorAll<HTMLElement>(`.target-level-dot[data-animal="${animalId}"]`)
       .forEach((dot) => {
         const dLvl = Number(dot.dataset.targetLevel)
         const defaultTitle = dot.dataset.defaultTitle || ""
+        const isMudModeHere = animalId === "pig" && mudPickerActive
         const isBlockedHoneyLvl1 =
+          !isMudModeHere &&
           isPicking &&
           treatType === "honey_treat" &&
           (dLvl === 1 || prog.modifiers.effective.isFreeFeed)
@@ -472,6 +541,7 @@ export function initAnimalsView(): void {
           dLvl >= startLvl &&
           dLvl < startLvl + prog.treatDurationCycles &&
           !(treatType === "honey_treat" && (dLvl === 1 || prog.modifiers.effective.isFreeFeed))
+        const hasMudHere = animalId === "pig" && prog.mudLevel !== null && dLvl === prog.mudLevel
 
         if (isBlockedHoneyLvl1) {
           dot.title = boot.labels.honeyTreatNoLvl1
@@ -482,7 +552,9 @@ export function initAnimalsView(): void {
           return
         }
 
-        if (defaultTitle) dot.title = defaultTitle
+        if (defaultTitle) {
+          dot.title = hasMudHere ? `${defaultTitle} · Mud (+25% XP)` : defaultTitle
+        }
         dot.removeAttribute("aria-disabled")
 
         if (isCovered) {
@@ -492,10 +564,19 @@ export function initAnimalsView(): void {
               : treatType === "truffle_seasoning"
                 ? "from-purple-300 via-purple-400 to-purple-500 border-purple-100 ring-purple-400/80 shadow-[0_0_14px_rgba(192,132,252,0.85)]"
                 : "from-amber-300 via-amber-400 to-amber-500 border-amber-100 ring-amber-400/80 shadow-[0_0_14px_rgba(251,191,36,0.85)]"
+          const mudComboOutline = hasMudHere
+            ? " outline outline-2 outline-orange-500 outline-offset-1"
+            : ""
 
           dot.className = isTarget
-            ? `target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b text-black border-2 ring-2 scale-115 ${grad}`
-            : `target-level-dot relative z-10 w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-mono text-[9px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b text-black border-2 ring-2 scale-105 ${grad}`
+            ? `target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b text-black border-2 ring-2 scale-115 ${grad}${mudComboOutline}`
+            : `target-level-dot relative z-10 w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-mono text-[9px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b text-black border-2 ring-2 scale-105 ${grad}${mudComboOutline}`
+        } else if (hasMudHere) {
+          const mudGrad =
+            "from-orange-300 via-amber-600 to-amber-700 border-amber-200 ring-orange-500/85 shadow-[0_0_12px_rgba(234,88,12,0.8)]"
+          dot.className = isTarget
+            ? `target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b text-white border-2 ring-2 scale-115 ${mudGrad}`
+            : `target-level-dot relative z-10 w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-mono text-[9px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-gradient-to-b text-white border-2 ring-2 scale-105 ${mudGrad}`
         } else if (isTarget) {
           dot.className =
             "target-level-dot relative z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center font-mono text-[10px] font-black select-none cursor-pointer transition-all duration-150 focus:outline-none bg-emerald-400 text-black border-2 border-emerald-200 ring-2 ring-emerald-400/40 scale-110 shadow-[0_0_12px_rgba(52,211,153,0.65)]"
@@ -528,7 +609,7 @@ export function initAnimalsView(): void {
       selectedFoods,
       treatType: treat?.type || "honey_treat",
       treatStartLevel: treat?.startLevel ?? null,
-      mudPigEnabled: animalId === "pig" ? Boolean(animalConfig.mudPigEnabled) : false,
+      mudPigLevel: animalId === "pig" ? (animalConfig.mudPigLevel ?? null) : null,
       manualBoosts: animalConfig.manualBoosts?.[animalId] || null,
     })
 
@@ -544,18 +625,6 @@ export function initAnimalsView(): void {
       `.animal-free-feed-badge[data-animal="${animalId}"]`,
     )
     if (freeBadge) freeBadge.classList.toggle("hidden", !prog.modifiers.effective.isFreeFeed)
-
-    if (animalId === "pig") {
-      const mudBtn = document.querySelector<HTMLElement>(`.mud-toggle-btn[data-animal="pig"]`)
-      if (mudBtn) {
-        const active = prog.mudEnabled
-        mudBtn.classList.toggle("bg-amber-700/35", active)
-        mudBtn.classList.toggle("border-amber-400", active)
-        mudBtn.classList.toggle("text-amber-200", active)
-        mudBtn.classList.toggle("bg-black/40", !active)
-        mudBtn.classList.toggle("border-amber-700/40", !active)
-      }
-    }
 
     // Sincronizar inputs numéricos (respetando overrides y foco actual)
     const fieldValues: Record<string, { val: number; isOverride: boolean }> = {
@@ -953,13 +1022,13 @@ export function initAnimalsView(): void {
         return
       }
 
-      const mudBtn = target.closest<HTMLElement>(".mud-toggle-btn")
-      if (mudBtn) {
+      const mudPickerBtn = target.closest<HTMLElement>(".mud-picker-btn")
+      if (mudPickerBtn) {
         e.stopPropagation()
-        animalConfig.mudPigEnabled = !animalConfig.mudPigEnabled
-        saveConfig()
-        recalculateAnimal("pig")
-        renderDashboard()
+        mudPickerActive = !mudPickerActive
+        if (mudPickerActive) treatPickerActive.pig = false
+        const prog = progressionsCache.pig
+        if (prog) updateTreatControlsUI(prog)
         return
       }
 
@@ -1011,6 +1080,7 @@ export function initAnimalsView(): void {
         const animalId = treatToggleBtn.dataset.animal as AnimalId | undefined
         if (!animalId) return
         treatPickerActive[animalId] = !treatPickerActive[animalId]
+        if (animalId === "pig" && treatPickerActive[animalId]) mudPickerActive = false
         const prog = progressionsCache[animalId]
         if (prog) updateTreatControlsUI(prog)
         return
@@ -1023,6 +1093,16 @@ export function initAnimalsView(): void {
         const clickedLvl = Number(dotBtn.dataset.targetLevel)
         if (!animalId || clickedLvl < 1 || clickedLvl > 15) return
         const prog = progressionsCache[animalId]
+
+        if (animalId === "pig" && mudPickerActive) {
+          const curMud = animalConfig.mudPigLevel ?? null
+          animalConfig.mudPigLevel = curMud === clickedLvl ? null : clickedLvl
+          mudPickerActive = false
+          saveConfig()
+          recalculateAnimal("pig")
+          renderDashboard()
+          return
+        }
 
         if (treatPickerActive[animalId]) {
           const treatType = animalConfig.treatMode?.[animalId]?.type || "honey_treat"

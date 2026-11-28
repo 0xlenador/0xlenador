@@ -117,7 +117,7 @@ const secondaryDrop =
         </div>
       </div>
 
-      <!-- Fila de Escarabajos (Aplicar a todo) + Mud para Cerdo -->
+      <!-- Fila de Escarabajos (Aplicar a todo) -->
       <div class="flex items-center gap-2 pt-1 border-t border-white/5 flex-wrap">
         <div class="flex items-center gap-1.5">
           <span
@@ -146,24 +146,6 @@ const secondaryDrop =
             }
           </div>
         </div>
-
-        {
-          animal.animalId === "pig" && (
-            <button
-              type="button"
-              class="mud-toggle-btn group flex items-center gap-1 px-2 py-0.5 rounded-lg bg-black/40 border border-amber-700/40 hover:border-amber-500 text-[10px] font-mono text-amber-300/80 hover:text-amber-200 transition-all cursor-pointer select-none"
-              data-animal="pig"
-              title={t("sfl.animals.card.mudTooltip")}
-            >
-              <img
-                src="/img/sunflowerland/123/mud.webp"
-                alt="Mud"
-                class="w-3.5 h-3.5 object-contain shrink-0"
-              />
-              <span class="font-bold">{t("sfl.animals.card.mudBtn")}</span>
-            </button>
-          )
-        }
       </div>
     </div>
 
@@ -479,6 +461,32 @@ const secondaryDrop =
                   />
                 </button>
               </div>
+
+              {
+                animal.animalId === "pig" && (
+                  <div class="flex items-center pl-1.5 ml-0.5 border-l border-white/10">
+                    <button
+                      type="button"
+                      class="mud-picker-btn group flex items-center gap-1.5 bg-terminal-bg border border-amber-700/40 hover:border-amber-500 rounded-lg px-2 py-0.5 shadow-sm transition-all focus:outline-none cursor-pointer select-none"
+                      data-animal="pig"
+                      title={t("sfl.animals.card.mudTooltip")}
+                    >
+                      <img
+                        src="/img/sunflowerland/123/mud.webp"
+                        alt="Mud"
+                        class="w-3.5 h-3.5 object-contain shrink-0 drop-shadow transition-transform group-hover:scale-110"
+                      />
+                      <span class="mud-btn-name text-[10px] font-mono font-bold text-amber-300 group-hover:text-amber-200">
+                        {t("sfl.animals.card.mudBtn")}
+                      </span>
+                      <span class="mud-level-indicator text-[9px] font-mono text-white/50 hidden sm:inline">
+                        {t("sfl.animals.card.mudShort")}
+                      </span>
+                      <span class="mud-status-dot ml-0.5 w-1.5 h-1.5 rounded-full bg-white/25" />
+                    </button>
+                  </div>
+                )
+              }
             </div>
           </div>
 

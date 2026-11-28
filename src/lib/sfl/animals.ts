@@ -318,7 +318,7 @@ export interface AnimalProgressionResult {
   treatType: AnimalTreatType
   treatStartLevel: number | null
   treatDurationCycles: number
-  mudEnabled: boolean
+  mudLevel: number | null
   levels: AnimalLevelCalculation[]
   totals: {
     targetLevel: number
@@ -344,7 +344,7 @@ export interface AnimalCalculationContext {
   selectedFoods?: Record<number, string>
   treatType?: AnimalTreatType
   treatStartLevel?: number | null
-  mudPigEnabled?: boolean
+  mudPigLevel?: number | null
   manualBoosts?: AnimalManualBoosts | null
   customUnitPriceResolver?: (name: string) => number
 }
@@ -1418,9 +1418,185 @@ export function getFoodOptionsForLevel(
 // Motor Completo de Progresión 0 → 15 por Especie
 // ---------------------------------------------------------------------------
 
+interface PrecomputedLevelStep {
+  toLvl: number
+  fromLvl: number
+  xpReq: number
+  isInstant: boolean
+  activeTreatHere: AnimalTreatType | null
+  treatStartsHere: boolean
+  hasSaltLick: boolean
+  hasTruffleSeasoning: boolean
+  sleepHours: number
+  loveProb: LoveProbabilities
+  affectionTools: AffectionToolItem[]
+  affectionXp: number
+  rawOptions: FoodCandidate[]
+  forcedFood?: FoodCandidate
+  treatCostFlower: number
+  mudAppliesHere: boolean
+  mudCostFlower: number
+}
+
+interface DpRouteNode {
+  residualXp: number
+  totalCost: number
+  lastSurplus: number
+  rankScore: number
+  chosenFoodId: string
+  parentIdx: number
+}
+
+function solveOptimalFoodRoute(
+  steps: PrecomputedLevelStep[],
+  startIdx: number,
+  endIdx: number,
+  initialCarryover: number,
+  isFreeFeedMode: boolean,
+  ignoreForcedOnFirstStep: boolean = false,
+): string[] {
+  if (startIdx > endIdx || startIdx < 0 || endIdx >= steps.length) return []
+
+  let frontier: Array<{ residualXp: number; totalCost: number; rankScore: number }> = [
+    {
+      residualXp: roundExact(Math.max(0, initialCarryover), 2),
+      totalCost: 0,
+      rankScore: 0,
+    },
+  ]
+  const layers: DpRouteNode[][] = []
+
+  const getRankScore = (cand: FoodCandidate, neededFeeds: number): number => {
+    const favPenalty = cand.isFav ? 0 : 1000
+    const nonGrainWhenZeroPenalty =
+      (neededFeeds === 0 || isFreeFeedMode) && (cand.isBeetle || cand.isOmnifeed) ? 5000 : 0
+    return (
+      nonGrainWhenZeroPenalty +
+      favPenalty +
+      (Number.isFinite(cand.costPerXp) ? cand.costPerXp : 999)
+    )
+  }
+
+  const calcStepOutcome = (
+    step: PrecomputedLevelStep,
+    parentResidual: number,
+    cand: FoodCandidate,
+  ) => {
+    const neededFromFood = Math.max(
+      0,
+      roundExact(step.xpReq - parentResidual - step.affectionXp, 4),
+    )
+    const unitFoodXp = Math.max(0.01, cand.effectiveXp)
+    const neededFeeds = neededFromFood > 0 ? Math.ceil(neededFromFood / unitFoodXp - 1e-9) : 0
+    const stepCost =
+      cand.isFree || isFreeFeedMode
+        ? 0
+        : cand.isBeetle
+          ? neededFeeds * cand.unitCostFlower
+          : neededFeeds * cand.effectivePerFeed * cand.unitCostFlower
+    const totalFoodXp = roundExact(neededFeeds * unitFoodXp, 2)
+    const totalAvailable = roundExact(parentResidual + step.affectionXp + totalFoodXp, 2)
+    const nextResidual = Math.max(0, roundExact(totalAvailable - step.xpReq, 2))
+    return { stepCost, nextResidual, neededFeeds }
+  }
+
+  for (let idx = startIdx; idx <= endIdx; idx++) {
+    const step = steps[idx]
+    const useForced = step.forcedFood && !(ignoreForcedOnFirstStep && idx === startIdx)
+    const allowed = useForced ? [step.forcedFood!] : step.rawOptions
+    const byResidual = new Map<number, DpRouteNode>()
+
+    for (let pIdx = 0; pIdx < frontier.length; pIdx++) {
+      const parent = frontier[pIdx]
+      for (const cand of allowed) {
+        const { stepCost, nextResidual, neededFeeds } = calcStepOutcome(
+          step,
+          parent.residualXp,
+          cand,
+        )
+        const totalCost = parent.totalCost + stepCost
+        const rankScore = parent.rankScore + getRankScore(cand, neededFeeds)
+        const existing = byResidual.get(nextResidual)
+
+        if (
+          !existing ||
+          totalCost < existing.totalCost - 1e-8 ||
+          (Math.abs(totalCost - existing.totalCost) <= 1e-8 &&
+            rankScore < existing.rankScore - 1e-8)
+        ) {
+          byResidual.set(nextResidual, {
+            residualXp: nextResidual,
+            totalCost,
+            lastSurplus: nextResidual,
+            rankScore,
+            chosenFoodId: cand.id,
+            parentIdx: pIdx,
+          })
+        }
+      }
+    }
+
+    let nextNodes = Array.from(byResidual.values())
+    if (idx < endIdx && !isFreeFeedMode) {
+      // Poda Pareto: con mayor o igual XP residual solo interesan rutas estrictamente más baratas
+      nextNodes.sort(
+        (a, b) =>
+          b.residualXp - a.residualXp || a.totalCost - b.totalCost || a.rankScore - b.rankScore,
+      )
+      const pruned: DpRouteNode[] = []
+      let minCostSeen = Infinity
+      for (const node of nextNodes) {
+        if (node.totalCost < minCostSeen - 1e-8) {
+          pruned.push(node)
+          minCostSeen = node.totalCost
+        }
+      }
+      nextNodes = pruned
+    } else if (idx < endIdx && isFreeFeedMode && nextNodes.length > 64) {
+      nextNodes.sort((a, b) => a.rankScore - b.rankScore || a.lastSurplus - b.lastSurplus)
+      nextNodes = nextNodes.slice(0, 64)
+    }
+
+    layers.push(nextNodes)
+    frontier = nextNodes.map((n) => ({
+      residualXp: n.residualXp,
+      totalCost: n.totalCost,
+      rankScore: n.rankScore,
+    }))
+  }
+
+  // En el nivel final del tramo, el excedente vale 0: elegir menor costo total (y menor sobrante ante empate)
+  const finalLayer = layers[layers.length - 1]
+  if (!finalLayer || finalLayer.length === 0) return []
+
+  let bestIdx = 0
+  for (let i = 1; i < finalLayer.length; i++) {
+    const a = finalLayer[i]
+    const b = finalLayer[bestIdx]
+    if (
+      a.totalCost < b.totalCost - 1e-6 ||
+      (Math.abs(a.totalCost - b.totalCost) <= 1e-6 &&
+        (a.lastSurplus < b.lastSurplus - 1e-6 ||
+          (Math.abs(a.lastSurplus - b.lastSurplus) <= 1e-6 && a.rankScore < b.rankScore)))
+    ) {
+      bestIdx = i
+    }
+  }
+
+  const chosenIds: string[] = new Array(endIdx - startIdx + 1)
+  let cursor = bestIdx
+  for (let layerIdx = layers.length - 1; layerIdx >= 0; layerIdx--) {
+    const node = layers[layerIdx][cursor]
+    chosenIds[layerIdx] = node.chosenFoodId
+    cursor = node.parentIdx
+  }
+  return chosenIds
+}
+
 /**
  * Calcula toda la progresión de 15 niveles (0→1 .. 14→15) para una especie,
- * aplicando todas las reglas oficiales de Sunflower Land.
+ * aplicando todas las reglas oficiales de Sunflower Land y minimizando el costo
+ * total de la ruta hasta `targetLevel` mediante programación dinámica.
  */
 export function calculateAnimalProgression(
   animalId: AnimalId,
@@ -1438,7 +1614,13 @@ export function calculateAnimalProgression(
 
   const targetLevel = Math.max(1, Math.min(15, ctx.targetLevel ?? 15))
   const treatType: AnimalTreatType = ctx.treatType || "honey_treat"
-  const mudEnabled = animalId === "pig" && Boolean(ctx.mudPigEnabled)
+  let mudLevel =
+    animalId === "pig" && ctx.mudPigLevel !== undefined && ctx.mudPigLevel !== null
+      ? Number(ctx.mudPigLevel)
+      : null
+  if (mudLevel !== null && (Number.isNaN(mudLevel) || mudLevel < 1 || mudLevel > 15)) {
+    mudLevel = null
+  }
 
   // Reglas de duración de treat (Honey Treat / Salt Lick: 3 cosechas × Vibraphone; Truffle Seasoning: 1 sueño × Vibraphone)
   const treatDurationCycles =
@@ -1466,21 +1648,15 @@ export function calculateAnimalProgression(
         : treatPrices.truffleSeasoningFlower
 
   const purchaseCostFlower = bettyRatio > 0 ? rawAnimal.purchaseCost.coins / bettyRatio : 0
-  let currentCarryover = 0
+  const hasFoodManualOverride = Boolean(modifiers.hasOverrides?.food)
+  const isFreeFeedMode = Boolean(modifiers.isFreeFeed && !hasFoodManualOverride)
 
-  let totalCostFlower = 0
-  let totalRevenueFlower = 0
-  let totalProfitFlower = 0
-  let totalHours = 0
-  let totalFeeds = 0
-  let totalXp = 0
-
-  const levels: AnimalLevelCalculation[] = rawAnimal.levels.map((lvlObj) => {
+  // Fase 1: Precomputar parámetros y opciones por cada nivel 1..15
+  const precomputedSteps: PrecomputedLevelStep[] = rawAnimal.levels.map((lvlObj) => {
     const toLvl = lvlObj.level
     const fromLvl = toLvl - 1
     const xpReq = lvlObj.xpRequired
     const isInstant = fromLvl === 0
-    const receivedResidual = isInstant ? 0 : currentCarryover
 
     // ¿Qué treat cubre este salto?
     const isTreatWindow =
@@ -1555,27 +1731,133 @@ export function calculateAnimalProgression(
 
     const affectionXp = isInstant ? 0 : roundExact(expectedSingleLoveXp * MAX_LOVES_PER_SLEEP, 2)
 
+    const mudAppliesHere = animalId === "pig" && mudLevel !== null && toLvl === mudLevel
+
     // Alimento para este nivel
-    const { optimal, options: foodOptions } = getFoodOptionsForLevel(animalId, fromLvl, {
+    const { options: rawOptions } = getFoodOptionsForLevel(animalId, fromLvl, {
       marketPrices,
       flowerPriceUsd: flowerUsd,
       coinsPerFlower: bettyRatio,
       modifiers: eff,
       hasHoneyTreat,
-      mudActive: mudEnabled,
+      mudActive: mudAppliesHere,
       userState: ctx.userState,
       customUnitPriceResolver: ctx.customUnitPriceResolver,
     })
 
     const requestedFoodId = ctx.selectedFoods?.[toLvl]
-    const chosenFood =
-      (requestedFoodId ? foodOptions.find((o) => o.id === requestedFoodId) : undefined) ||
-      optimal ||
-      foodOptions[0]
+    const forcedFood = requestedFoodId
+      ? rawOptions.find((o) => o.id === requestedFoodId)
+      : undefined
 
-    const neededFromFood = Math.max(0, xpReq - receivedResidual - affectionXp)
+    // Costo de treat: se imputa en el nivel donde se aplica; Mud solo cubre 1 nivel (sin Vibraphone) y coexiste con treats
+    const treatCostFlower = treatStartsHere ? treatUnitPrice : 0
+    const mudCostFlower = mudAppliesHere ? treatPrices.mudBathFlower : 0
+
+    return {
+      toLvl,
+      fromLvl,
+      xpReq,
+      isInstant,
+      activeTreatHere,
+      treatStartsHere,
+      hasSaltLick,
+      hasTruffleSeasoning,
+      sleepHours,
+      loveProb,
+      affectionTools,
+      affectionXp,
+      rawOptions,
+      forcedFood,
+      treatCostFlower,
+      mudAppliesHere,
+      mudCostFlower,
+    }
+  })
+
+  // Fase 2: Optimizar ruta principal (1 .. targetLevel) por costo total mínimo real
+  const targetEndIdx = targetLevel - 1
+  const optimalMainRouteIds = solveOptimalFoodRoute(
+    precomputedSteps,
+    0,
+    targetEndIdx,
+    0,
+    isFreeFeedMode,
+  )
+
+  // Fase 3: Simulación secuencial exacta de la progresión y optimización de niveles > targetLevel
+  let currentCarryover = 0
+  let tailRouteIds: string[] = []
+  let tailComputed = false
+
+  let totalCostFlower = 0
+  let totalRevenueFlower = 0
+  let totalProfitFlower = 0
+  let totalHours = 0
+  let totalFeeds = 0
+  let totalXp = 0
+
+  const levels: AnimalLevelCalculation[] = precomputedSteps.map((step, idx) => {
+    const receivedResidual = step.isInstant ? 0 : currentCarryover
+
+    if (idx > targetEndIdx && !tailComputed) {
+      tailComputed = true
+      tailRouteIds = solveOptimalFoodRoute(
+        precomputedSteps,
+        idx,
+        precomputedSteps.length - 1,
+        receivedResidual,
+        isFreeFeedMode,
+      )
+    }
+
+    const dpSelectedId =
+      idx <= targetEndIdx ? optimalMainRouteIds[idx] : tailRouteIds[idx - (targetEndIdx + 1)]
+
+    let optimalFoodId = dpSelectedId || step.rawOptions[0]?.id || ""
+    if (step.forcedFood && step.forcedFood.id !== optimalFoodId) {
+      const hypotheticalEndIdx = idx <= targetEndIdx ? targetEndIdx : precomputedSteps.length - 1
+      const hypo = solveOptimalFoodRoute(
+        precomputedSteps,
+        idx,
+        hypotheticalEndIdx,
+        receivedResidual,
+        isFreeFeedMode,
+        true,
+      )
+      if (hypo[0]) optimalFoodId = hypo[0]
+    }
+
+    const chosenFood =
+      step.forcedFood || step.rawOptions.find((o) => o.id === dpSelectedId) || step.rawOptions[0]
+
+    const neededFromFood = Math.max(
+      0,
+      roundExact(step.xpReq - receivedResidual - step.affectionXp, 4),
+    )
     const unitFoodXp = Math.max(0.01, chosenFood.effectiveXp)
     const neededFeeds = neededFromFood > 0 ? Math.ceil(neededFromFood / unitFoodXp - 1e-9) : 0
+
+    // Ordenar opciones del desplegable: óptimo real primero, luego por costo total para este nivel
+    const sortedOptions: FoodCandidate[] = step.rawOptions
+      .map((opt) => ({
+        ...opt,
+        isOptimal: opt.id === optimalFoodId,
+      }))
+      .sort((a, b) => {
+        if (a.isOptimal !== b.isOptimal) return a.isOptimal ? -1 : 1
+        const feedsA =
+          neededFromFood > 0 ? Math.ceil(neededFromFood / Math.max(0.01, a.effectiveXp) - 1e-9) : 0
+        const feedsB =
+          neededFromFood > 0 ? Math.ceil(neededFromFood / Math.max(0.01, b.effectiveXp) - 1e-9) : 0
+        const costA = isFreeFeedMode || a.isFree ? 0 : feedsA * a.costPerFeed
+        const costB = isFreeFeedMode || b.isFree ? 0 : feedsB * b.costPerFeed
+        if (Math.abs(costA - costB) > 1e-6) return costA - costB
+        const surpA = Math.max(0, feedsA * a.effectiveXp - neededFromFood)
+        const surpB = Math.max(0, feedsB * b.effectiveXp - neededFromFood)
+        if (Math.abs(surpA - surpB) > 1e-4) return surpA - surpB
+        return a.costPerXp - b.costPerXp
+      })
 
     // Escarabajos no reciben Honey Treat ni multiplicadores de comida
     const effectiveUnitsPerFeed = chosenFood.isBeetle
@@ -1586,36 +1868,28 @@ export function calculateAnimalProgression(
 
     const foodUnits = roundExact(neededFeeds * effectiveUnitsPerFeed, 2)
     const foodCostFlower =
-      chosenFood.isFree || (modifiers.isFreeFeed && !modifiers.hasOverrides?.food)
+      chosenFood.isFree || isFreeFeedMode
         ? 0
         : chosenFood.isBeetle
           ? neededFeeds * chosenFood.unitCostFlower
           : neededFeeds * effectiveUnitsPerFeed * chosenFood.unitCostFlower
 
-    // Costo de treat: se imputa en el nivel donde se aplica (o cuando empieza el Mud cada N cosechas)
-    const treatCostFlower = treatStartsHere ? treatUnitPrice : 0
-    // Mud: 25 Mud por cada `1 * vibraphoneMultiplier` cosechas (en el ciclo de 15 niveles equivale a 1 aplicación cada M niveles)
-    const mudAppliesHere = mudEnabled && !isInstant
-    const mudChargesPeriod = 1 * eff.vibraphoneMultiplier
-    const mudStartsHere = mudAppliesHere && (toLvl - 2) % mudChargesPeriod === 0
-    const mudCostFlower = mudStartsHere ? treatPrices.mudBathFlower : 0
-
-    const totalCycleCostFlower = foodCostFlower + treatCostFlower + mudCostFlower
+    const totalCycleCostFlower = foodCostFlower + step.treatCostFlower + step.mudCostFlower
     const totalCycleCostUsd = totalCycleCostFlower * flowerUsd
 
     const totalFoodXp = roundExact(neededFeeds * unitFoodXp, 2)
-    const totalXpObtained = roundExact(affectionXp + totalFoodXp, 2)
+    const totalXpObtained = roundExact(step.affectionXp + totalFoodXp, 2)
     const totalAvailable = roundExact(receivedResidual + totalXpObtained, 2)
-    const residualGenerated = Math.max(0, roundExact(totalAvailable - xpReq, 2))
+    const residualGenerated = Math.max(0, roundExact(totalAvailable - step.xpReq, 2))
     currentCarryover = residualGenerated
 
     // Recursos obtenidos (orden oficial: base * mult_salt_lick + bonos_planos)
-    const baseDrops = getDropsForAnimalLevel(animalId, toLvl)
+    const baseDrops = getDropsForAnimalLevel(animalId, step.toLvl)
     let revenueFlower = 0
     const resources: CalculatedDropItem[] = baseDrops.map((res) => {
       const mult =
         (res.isPrimary ? eff.primaryMultiplier : eff.secondaryMultiplier) *
-        (hasSaltLick ? SALT_LICK_YIELD_MULTIPLIER : 1)
+        (step.hasSaltLick ? SALT_LICK_YIELD_MULTIPLIER : 1)
       const flat = res.isPrimary ? eff.primaryFlatBonus : eff.secondaryFlatBonus
       const amount = Math.max(0, roundExact(res.amount * mult + flat, 2))
       const unitPrice =
@@ -1640,27 +1914,27 @@ export function calculateAnimalProgression(
     const profitFlower = revenueFlower - totalCycleCostFlower
     const profitUsd = profitFlower * flowerUsd
 
-    if (toLvl <= targetLevel) {
+    if (step.toLvl <= targetLevel) {
       totalCostFlower += totalCycleCostFlower
       totalRevenueFlower += revenueFlower
       totalProfitFlower += profitFlower
-      totalHours += sleepHours
+      totalHours += step.sleepHours
       totalFeeds += neededFeeds
       totalXp += totalXpObtained
     }
 
     return {
-      level: toLvl,
-      fromLevel: fromLvl,
-      toLevel: toLvl,
-      xpRequired: xpReq,
-      sleepHours,
-      isInstant,
+      level: step.toLvl,
+      fromLevel: step.fromLvl,
+      toLevel: step.toLvl,
+      xpRequired: step.xpReq,
+      sleepHours: step.sleepHours,
+      isInstant: step.isInstant,
       residualXp: receivedResidual,
       residualGenerated,
-      affectionTools,
-      affectionXp,
-      loveProb,
+      affectionTools: step.affectionTools,
+      affectionXp: step.affectionXp,
+      loveProb: step.loveProb,
       food: {
         id: chosenFood.id,
         name: chosenFood.name,
@@ -1679,22 +1953,22 @@ export function calculateAnimalProgression(
         isBeetle: chosenFood.isBeetle,
         isFree: Boolean(chosenFood.isFree),
         isFav: chosenFood.isFav,
-        isOptimal: chosenFood.id === optimal?.id,
+        isOptimal: chosenFood.id === optimalFoodId,
       },
       selectedFoodId: chosenFood.id,
-      optimalFoodId: optimal?.id || chosenFood.id,
-      options: foodOptions,
+      optimalFoodId,
+      options: sortedOptions,
       totalXpObtained,
       totalFoodXp,
       totalAvailable,
       resources,
       revenueFlower,
       revenueUsd,
-      treatApplied: activeTreatHere,
-      treatStartsHere,
-      treatCostFlower,
-      mudActive: mudAppliesHere,
-      mudCostFlower,
+      treatApplied: step.activeTreatHere,
+      treatStartsHere: step.treatStartsHere,
+      treatCostFlower: step.treatCostFlower,
+      mudActive: step.mudAppliesHere,
+      mudCostFlower: step.mudCostFlower,
       profitFlower,
       profitUsd,
     }
@@ -1721,7 +1995,7 @@ export function calculateAnimalProgression(
     treatType,
     treatStartLevel,
     treatDurationCycles,
-    mudEnabled,
+    mudLevel,
     levels,
     totals: {
       targetLevel,
